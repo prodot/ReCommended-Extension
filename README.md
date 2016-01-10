@@ -12,9 +12,19 @@ The most highlightings also have quick fixes for obvious solutions.
 
 Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReShaper annotations, putting ".ConfigureAwait(false)", etc.
 
+[show more...](/wiki)
+
 # Some Screenshots
+
+![](Screenshots/RedundantAssertion.png)
+
+![](Screenshots/InvalidAnnotation.png)
 
 # Requirements
 
 - ReSharper 10.0.1 or higher
 - for development: Visual Studio 2015
+
+# Limitations
+
+- The extension works only with C# files.
