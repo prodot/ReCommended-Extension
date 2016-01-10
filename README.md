@@ -12,7 +12,7 @@ The most highlightings also have quick fixes for obvious solutions.
 
 Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReShaper annotations, putting ".ConfigureAwait(false)", etc.
 
-[show more...](/wiki)
+[show more...](https://github.com/prodot/ReCommended-Extension/wiki)
 
 # Some Screenshots
 
