@@ -1,4 +1,4 @@
-# Summary
+# ![](Images/Icon.png) ReCommended Extension for ReSharper
 
 The ReCommended Extension for ReSharper augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
@@ -16,15 +16,18 @@ Another feature of the extension are new context actions that simply save time f
 
 # Some Screenshots
 
-![](Screenshots/RedundantAssertion.png)
+![](Images/RedundantAssertion.png)
 
-![](Screenshots/InvalidAnnotation.png)
+![](Images/InvalidAnnotation.png)
 
-# Requirements
+# Installation
 
-- ReSharper 10.0.1 or higher
-- for development: Visual Studio 2015
+To install the ReCommended Extension use the ReSharper's Extension Manager.
 
 # Limitations
 
 - The extension works only with C# files.
+
+# Bugs? Questions? Suggestions?
+
+Please feel free to [report them](https://github.com/prodot/ReCommended-Extension/issues).
