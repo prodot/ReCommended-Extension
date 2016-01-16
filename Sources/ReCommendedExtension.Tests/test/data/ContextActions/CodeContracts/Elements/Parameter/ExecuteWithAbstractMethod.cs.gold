@@ -1,0 +1,20 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+  [ContractClass(typeof (AbstractClassContract))]
+  internal abstract class AbstractClass
+    {
+        internal abstract void AbstractMethod([NotNull] string one{caret});
+    }
+
+  [ContractClassFor(typeof (AbstractClass))]
+  internal abstract class AbstractClassContract : AbstractClass
+  {
+    internal override void AbstractMethod(string one)
+    {
+      Contract.Requires(one != null);
+    }
+  }
+}

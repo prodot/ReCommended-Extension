@@ -1,0 +1,13 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class Execute
+    {
+        void Method(DateTime one{caret})
+        {
+          Contract.Requires(one.TimeOfDay == TimeSpan.Zero);
+        }
+    }
+}

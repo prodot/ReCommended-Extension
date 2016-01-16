@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+    <metadata>
+        <id>Prodot.{{AssemblyProduct}}</id>
+        <version>{{AssemblyFileVersion}}</version>
+        <title>{{AssemblyTitle}}</title>
+        <authors>{{AssemblyCompany}}</authors>
+        <owners>{{AssemblyCompany}}</owners>
+        <projectUrl>https://github.com/prodot/ReCommended-Extension</projectUrl>
+        <licenseUrl>https://github.com/prodot/ReCommended-Extension/blob/master/LICENSE</licenseUrl>
+        <iconUrl>https://github.com/prodot/ReCommended-Extension/blob/master/Images/Icon.png</iconUrl>
+        <summary>{{AssemblyDescription}}</summary>
+        <description>
+            The {{AssemblyTitle}} augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
+
+            - detection of redundant assertions,
+            - inappropriate use of "async void",
+            - incorrect use of ReShaper annotations,
+            - exception analyzer (exceptions that should never be thrown or caught),
+            - and lots more.
+
+            The most highlightings also have quick fixes for obvious solutions.
+
+            Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReShaper annotations, putting ".ConfigureAwait(false)", etc.
+        </description>
+        <copyright>{{AssemblyCopyright}}</copyright>
+        <tags>recommended extension resharper plugin addin prodot</tags>
+        <!-- The release notes only show up when viewing Updates for a package, so it doesn't make sense to add them to your first release. -->
+        <!--<releaseNotes>
+            - performance improvements and bug-fixes
+        </releaseNotes>-->
+        <dependencies>
+            <dependency id="Wave" version="[4.0,4.1)" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="" target="DotFiles" />
+    </files>
+</package>

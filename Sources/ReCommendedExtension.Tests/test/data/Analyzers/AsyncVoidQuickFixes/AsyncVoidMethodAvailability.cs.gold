@@ -1,0 +1,22 @@
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public class Class
+    {
+        void Method()
+        {
+            AsyncHandler(null, null);
+        }
+
+        async |void|(0) AsyncHandler(object sender, EventArgs e)
+        {
+            await Task.Yield();
+        }
+    }
+}
+------------------------------------------------
+0: 'async void' method used 1 time not as a direct event handler.
+QUICKFIXES:
+Change return type to 'Task'

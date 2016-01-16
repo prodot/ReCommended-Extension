@@ -1,0 +1,15 @@
+﻿using System;
+
+namespace Test
+{
+    internal class UncatchableException
+    {
+        void Method()
+        {
+            try { }
+            catch (|NullReferenceException|(0)) { }
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: The exception indicates a bug that can be avoided.

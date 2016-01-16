@@ -1,0 +1,26 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+  [ContractClass(typeof (InterfaceContract))]
+  internal interface IInterface
+    {
+        int this[[NotNull] string one{caret}] { get; set; }
+    }
+
+  [ContractClassFor(typeof (IInterface))]
+  internal abstract class InterfaceContract : IInterface
+  {
+    public int this[string one]
+    {
+      get
+      {
+        Contract.Requires(one != null);
+        
+        return default(int);
+      }
+      set { Contract.Requires(one != null); }
+    }
+  }
+}

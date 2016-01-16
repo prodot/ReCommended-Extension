@@ -1,0 +1,13 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Execute
+    {
+        void Method([NotNull] string one{caret})
+        {
+          Contract.Requires(one != null);
+        }
+    }
+}

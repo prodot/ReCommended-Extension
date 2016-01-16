@@ -1,0 +1,16 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Class
+    {
+        internal void Method([NotNull] out string three{caret})
+
+        {
+          Contract.Ensures(Contract.ValueAtReturn(out three) != null);
+          
+          three = "";
+        }
+    }
+}

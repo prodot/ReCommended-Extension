@@ -1,0 +1,17 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Class
+    {
+        internal void Method([NotNull] string one{caret})
+        {
+          Contract.Requires(one != null);
+          Contract.EnsuresOnThrow<InvalidOperationException>(true);
+
+            Console.WriteLine(one);
+        }
+    }
+}

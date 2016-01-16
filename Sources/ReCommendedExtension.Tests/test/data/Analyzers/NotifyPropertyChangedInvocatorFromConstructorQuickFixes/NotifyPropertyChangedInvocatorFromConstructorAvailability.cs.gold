@@ -1,0 +1,19 @@
+﻿using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class NotifyPropertyChangedInvocatorFromConstructor
+    {
+        public NotifyPropertyChangedInvocatorFromConstructor()
+        {
+            |Notify()|(0);
+        }
+
+        [NotifyPropertyChangedInvocator]
+        void Notify() { }
+    }
+}
+------------------------------------------------
+0: Invocation of a method annotated with [NotifyPropertyChangedInvocator] from a constructor is redundant.
+QUICKFIXES:
+Remove invocation

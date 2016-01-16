@@ -1,0 +1,26 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Class
+    {
+      [ContractClass(typeof (AbstractClassContract))]
+      internal abstract class AbstractClass<T> where T : class
+        {
+          [NotNull]
+          internal abstract T AbstractMethod{caret}();
+        }
+
+      [ContractClassFor(typeof (AbstractClass<>))]
+      private abstract class AbstractClassContract<T> : AbstractClass<T> where T : class
+      {
+        internal override T AbstractMethod()
+        {
+          Contract.Ensures(Contract.Result<T>() != null);
+          
+          return default(T);
+        }
+      }
+    }
+}

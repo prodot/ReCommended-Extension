@@ -1,0 +1,10 @@
+﻿using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class ExecuteNotAnnotatedMethod
+    {
+      [Pure]
+      void Meth{caret}od(out int one) { }
+    }
+}

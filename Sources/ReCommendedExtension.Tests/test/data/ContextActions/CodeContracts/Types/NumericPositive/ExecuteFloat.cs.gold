@@ -1,0 +1,12 @@
+﻿using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteFloat
+    {
+        void Method(float one{caret})
+        {
+          Contract.Requires(one > 0f);
+        }
+    }
+}

@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteDictionary
+    {
+        void Method(IDictionary<int, string> three{caret})
+        {
+          Contract.Requires(three.Count > 0);
+        }
+    }
+}

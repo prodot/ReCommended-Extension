@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteArray
+    {
+        void Method(string[] two{caret})
+        {
+          Contract.Requires(two.Length > 0);
+        }
+    }
+}

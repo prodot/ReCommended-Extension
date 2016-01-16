@@ -1,0 +1,25 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Class
+    {
+        [ContractClass(typeof(InterfaceContract))]
+        internal interface IInterface
+        {
+          [NotNull]
+          string InterfaceMethod{caret}();
+        }
+
+        [ContractClassFor(typeof(IInterface))]
+        private abstract class InterfaceContract : IInterface {
+          public string InterfaceMethod()
+          {
+            Contract.Ensures(Contract.Result<string>() != null);
+            
+            return default(string);
+          }
+        }
+    }
+}

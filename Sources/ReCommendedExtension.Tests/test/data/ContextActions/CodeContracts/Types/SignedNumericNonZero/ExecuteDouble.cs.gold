@@ -1,0 +1,13 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteDouble
+    {
+        void Method(double one{caret})
+        {
+          Contract.Requires(Math.Abs(one - 0d) > double.Epsilon);
+        }
+    }
+}

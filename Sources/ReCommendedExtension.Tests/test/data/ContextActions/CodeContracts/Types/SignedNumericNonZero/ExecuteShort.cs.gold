@@ -1,0 +1,12 @@
+﻿using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteShort
+    {
+        void Method(short one{caret})
+        {
+          Contract.Requires(one != 0);
+        }
+    }
+}

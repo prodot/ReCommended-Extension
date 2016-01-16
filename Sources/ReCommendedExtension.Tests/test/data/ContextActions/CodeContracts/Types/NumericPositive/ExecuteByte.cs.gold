@@ -1,0 +1,12 @@
+﻿using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteByte
+    {
+        void Method(byte one{caret})
+        {
+          Contract.Requires(one > 0);
+        }
+    }
+}

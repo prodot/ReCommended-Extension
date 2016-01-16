@@ -1,0 +1,10 @@
+﻿using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class BaseInterfaceImplementation : IBase
+    {
+        [Pure]{caret}
+        public int Conflicting() => 0;
+    }
+}

@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class ExecuteGenericCollection
+    {
+        void Method([ItemNotNull] ICollection<string> one{caret})
+        {
+          Contract.Requires(one.All(item => item != null));
+        }
+    }
+}

@@ -1,0 +1,14 @@
+﻿using System;
+
+namespace Test
+{
+    internal class UnthrowableException
+    {
+        void Method()
+        {
+            throw |new Exception()|(0);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: A more specific exception should be used.

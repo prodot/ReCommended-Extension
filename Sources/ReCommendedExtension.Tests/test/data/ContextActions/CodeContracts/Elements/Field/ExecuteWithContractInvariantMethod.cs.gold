@@ -1,0 +1,17 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Execute
+    {
+      [NotNull] string field{caret};
+
+        [ContractInvariantMethod]
+        void ObjectInvariant()
+        {
+          Contract.Invariant(true);
+          Contract.Invariant(field != null);
+        }
+    }
+}

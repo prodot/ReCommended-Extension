@@ -1,0 +1,14 @@
+﻿using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class NotifyPropertyChangedInvocatorFromConstructor
+    {
+        public NotifyPropertyChangedInvocatorFromConstructor()
+        {{caret}
+        }
+
+        [NotifyPropertyChangedInvocator]
+        void Notify() { }
+    }
+}

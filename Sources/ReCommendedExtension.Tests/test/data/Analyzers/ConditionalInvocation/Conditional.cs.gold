@@ -1,0 +1,33 @@
+﻿#define CUSTOM
+#undef DEBUG
+#define CUSTOM2
+
+using System.Diagnostics;
+
+namespace Test
+{
+    internal class Class
+    {
+        [Conditional("CUSTOM")]
+        static void Method() { }
+
+        [Conditional("CUSTOM")]
+        [Conditional("CUSTOM2")]
+        [Conditional("CUSTOM3")]
+        static void Method2() { }
+
+        static void Method3() { }
+
+        void Foo()
+        {
+            |Method();|(0)
+
+            |Method2();|(1)
+
+            Method3();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Method invocation will be skipped if the 'CUSTOM' condition is not defined.
+(1): ReSharper Dead Code: Method invocation will be skipped if none of the following conditions is defined: 'CUSTOM', 'CUSTOM2'.

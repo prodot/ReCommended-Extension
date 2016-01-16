@@ -1,0 +1,12 @@
+﻿using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteLong
+    {
+        void Method(long one{caret})
+        {
+          Contract.Requires(one <= 0L);
+        }
+    }
+}

@@ -1,0 +1,13 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteUIntPtr
+    {
+        void Method(UIntPtr two{caret})
+        {
+          Contract.Requires(two == UIntPtr.Zero);
+        }
+    }
+}

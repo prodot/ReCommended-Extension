@@ -1,0 +1,22 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteFourMembers
+    {
+        enum NumberWithFourMembers
+        {
+            One,
+            Two,
+            Three,
+            Four,
+        }
+
+        void Method(NumberWithFourMembers one{caret})
+        {
+          Contract.Requires(one == NumberWithFourMembers.One || one == NumberWithFourMembers.Two ||
+                            one == NumberWithFourMembers.Three || one == NumberWithFourMembers.Four);
+        }
+    }
+}

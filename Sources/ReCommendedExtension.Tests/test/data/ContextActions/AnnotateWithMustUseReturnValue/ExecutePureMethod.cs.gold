@@ -1,0 +1,10 @@
+﻿using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class ExecutePureMethod
+    {
+      [MustUseReturnValue]
+        string Meth{caret}od() => null;
+    }
+}

@@ -1,0 +1,681 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\JetBrains.ReSharper.SDK.Tests.10.0.20151116.81636\build\JetBrains.ReSharper.SDK.Tests.props" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.Tests.10.0.20151116.81636\build\JetBrains.ReSharper.SDK.Tests.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ReCommendedExtension.Tests</RootNamespace>
+    <AssemblyName>ReCommendedExtension.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="antlr.runtime, Version=2.7.7.1, Culture=neutral, PublicKeyToken=0f493c87b190d7e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr2.Runtime.2.7.7.02\lib\antlr.runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CookComputing.XmlRpcV2, Version=2.5.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
+      <HintPath>..\packages\xmlrpcnet.2.5.0\lib\net20\CookComputing.XmlRpcV2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Data.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20150224.0\lib\Net\DevExpress.Data.v7.1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20150224.0\lib\Net\DevExpress.Utils.v7.1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20150224.0\lib\Net\DevExpress.XtraEditors.v7.1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraTreeList.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20150224.0\lib\Net\DevExpress.XtraTreeList.v7.1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=25313d96c538ed3d, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.JetBrains.Stripped.0.86.20150204.1\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Deployment.Compression, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.Compression.Cab.2.0.20140304.0\lib\Microsoft.Deployment.Compression.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Deployment.Compression.Cab, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.Compression.Cab.2.0.20140304.0\lib\Microsoft.Deployment.Compression.Cab.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.WindowsInstaller.2.0.20140821.0\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\JetBrains.Platform.Lib.VisualStudio.AnyVs.ShellInterop.PrivateBuild.2.0.20140304.0\lib\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Windows7APICodePack.JetBrains.Stripped.1.1.20150225.0\lib\Net\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Windows7APICodePack.JetBrains.Stripped.1.1.20150225.0\lib\Net\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Mono.Posix.0.1\lib\net40\Mono.Posix.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft35.Json.7.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=2.8.60717.93, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Core.2.8.6\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NVelocity, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\NVelocity.1.0.3\lib\NVelocity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Sprache, Version=2.0.0.0, Culture=neutral, PublicKeyToken=23dafc55df9bd3a3, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sprache.JetBrains.2.0.0.44\lib\portable-net4+netcore45+win8+wp8+sl5+MonoAndroid1+MonoTouch1\Sprache.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.System.Windows.Interactivity.2.0.20140318.0\lib\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Vestris.ResourceLib, Version=1.4.33.0, Culture=neutral, PublicKeyToken=ec632d8ba5e5750d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vestris.ResourceLib.JetBrains.1.4.20150303.0\lib\Net\Vestris.ResourceLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WpfContrib, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.WpfContrib.2.0.20150225.0\lib\Net\WpfContrib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test\data\Analyzers\AnnotationQuickFixes\AnnotationAvailability.cs" />
+    <None Include="test\data\Analyzers\AnnotationQuickFixes\AnnotationAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\AnnotationQuickFixes\Conflicting.cs.gold" />
+    <None Include="test\data\Analyzers\AnnotationQuickFixes\NotAllowed.cs.gold" />
+    <None Include="test\data\Analyzers\AnnotationQuickFixes\Redundant.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethod.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethodAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs.gold" />
+    <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlowAvailability.cs" />
+    <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs" />
+    <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlowAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs.gold" />
+    <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructorAvailability.cs" />
+    <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs" />
+    <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructorAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\UncatchableException\UncatchableException.cs" />
+    <None Include="test\data\Analyzers\UnthrowableException\UnthrowableException.cs" />
+    <Compile Include="Analyzers\AnnotationQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\AnnotationQuickFixTests.cs" />
+    <Compile Include="Analyzers\AsyncVoidQuickFixChangeTypeTests.cs" />
+    <Compile Include="Analyzers\ControlFlowQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\ControlFlowQuickFixTests.cs" />
+    <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixTests.cs" />
+    <Compile Include="AssemblyTests.cs" />
+    <Compile Include="ContextActions\AddConfigureAwaitAvailabilityTests.cs" />
+    <Compile Include="Analyzers\UncatchableExceptionAnalyzerTests.cs" />
+    <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorAnalyzerTests.cs" />
+    <Compile Include="Analyzers\ControlFlowAnalyzerTests.cs" />
+    <Compile Include="Analyzers\ConditionalInvocationAnalyzerTests.cs" />
+    <Compile Include="Analyzers\AnnotationAnalyzerTestsConditional.cs" />
+    <Compile Include="Analyzers\AnnotationAnalyzerTests.cs" />
+    <Compile Include="Analyzers\AnnotationAnalyzerTestsForMsTestProjects.cs" />
+    <Compile Include="Analyzers\AsyncVoidAnalyzerTests.cs" />
+    <Compile Include="Analyzers\AsyncVoidQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\AsyncVoidQuickFixRemoveTests.cs" />
+    <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructor\NotifyPropertyChangedInvocatorFromConstructor.cs" />
+    <Compile Include="Analyzers\UnthrowableExceptionAnalyzerTests.cs" />
+    <Compile Include="ContextActionAvailabilityTestBase.cs" />
+    <Compile Include="ContextActionExecuteTestBase.cs" />
+    <Compile Include="ContextActions\AddConfigureAwaitExecuteTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithInstantHandleAvailabilityTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithInstantHandleExecuteTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithItemNotNullAvailabilityTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithItemNotNullExecuteTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithLinqTunnelAvailabilityTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithLinqTunnelExecuteTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithMustUseReturnValueAvailabilityTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithMustUseReturnValueExecuteTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithPureAvailabilityTests.cs" />
+    <Compile Include="ContextActions\AnnotateWithPureExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\FieldAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\FieldExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\MethodAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\MethodExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\OperatorAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\OperatorExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\ParameterAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\ParameterExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\PropertyAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Elements\PropertyExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\CollectionAllItemsNotNullAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\CollectionAllItemsNotNullExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\CollectionCountPositiveAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\CollectionCountPositiveExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\DateTimeTimeOfDayZeroAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\DateTimeTimeOfDayZeroExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\EnumBetweenFirstAndLastAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\EnumBetweenFirstAndLastExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\EnumFlagsAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\EnumFlagsExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\EnumKnownValuesAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\EnumKnownValuesExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\GuidNonEmptyAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\GuidNonEmptyExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZeroAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZeroExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\IntPtrUIntPtrZeroAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\IntPtrUIntPtrZeroExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\NotNullAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\NotNullExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\NumericPositiveAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\NumericPositiveExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\NumericZeroAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\NumericZeroExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\SignedNumericNegativeAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\SignedNumericNegativeExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\SignedNumericNonZeroAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\SignedNumericNonZeroExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\SignedNumericZeroOrNegativeAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\SignedNumericZeroOrNegativeExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\SignedNumericZeroOrPositiveAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\SignedNumericZeroOrPositiveExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\StringNotNullAndNotEmptyAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\StringNotNullAndNotEmptyExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanNegativeAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanNegativeExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanNonZeroAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanNonZeroExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanPositiveAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanPositiveExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanZeroAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanZeroExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanZeroOrNegativeAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanZeroOrNegativeExecuteTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanZeroOrPositiveAvailabilityTests.cs" />
+    <Compile Include="ContextActions\CodeContracts\Types\TimeSpanZeroOrPositiveExecuteTests.cs" />
+    <Compile Include="ContextActions\RemoveAssertNotNullAvailabilityTests.cs" />
+    <Compile Include="ContextActions\RemoveAssertNotNullExecuteTests.cs" />
+    <Compile Include="HighlightingTestBaseWithAnnotationAssemblyReference.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickFixAvailabilityTestBaseWithAnnotationAssemblyReference.cs" />
+    <Compile Include="TestEnvironmentAssembly.cs" />
+    <None Include="test\data\Analyzers\Annotation\AsyncMethod.cs" />
+    <None Include="test\data\Analyzers\Annotation\AsyncMethod.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\Conditional.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\ItemNotNull.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs" />
+    <None Include="test\data\Analyzers\Annotation\Other_Optimistic.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs" />
+    <None Include="test\data\Analyzers\Annotation\Other_Optimistic.cs" />
+    <None Include="test\data\Analyzers\Annotation\Override.cs" />
+    <None Include="test\data\Analyzers\Annotation\ItemNotNull.cs" />
+    <None Include="test\data\Analyzers\Annotation\PureWithMustUseReturnValue.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\SuppressMessage.cs" />
+    <None Include="test\data\Analyzers\Annotation\SuppressMessage_TestProject.cs" />
+    <None Include="test\data\Analyzers\Annotation\PureWithMustUseReturnValue.cs" />
+    <None Include="test\data\Analyzers\Annotation\Conditional.cs" />
+    <None Include="test\data\Analyzers\AsyncVoid\AnonymousMethod.cs" />
+    <None Include="test\data\Analyzers\AsyncVoid\AsyncVoidMethod.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoid\LambdaExpression.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AnonymousMethod.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AnonymousMethodAvailability.cs" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AnonymousMethod.cs" />
+    <None Include="test\data\Analyzers\AsyncVoid\LambdaExpression.cs" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\LambdaExpression.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\LambdaExpressionAvailability.cs" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\LambdaExpression.cs" />
+    <None Include="test\data\Analyzers\AsyncVoid\AsyncVoidMethod.cs" />
+    <None Include="test\data\Analyzers\ConditionalInvocation\Conditional.cs" />
+    <None Include="test\data\Analyzers\ControlFlow\ControlFlow.cs" />
+    <None Include="test\data\ContextActions\AddConfigureAwait\Availability.cs" />
+    <None Include="test\data\ContextActions\AddConfigureAwait\Execute.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithInstantHandle\Availability.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithInstantHandle\ExecuteDelegate.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithInstantHandle\ExecuteGenericEnumerable.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithInstantHandle\ExecuteDelegate.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\Availability.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteArrayOnMethod.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericCollectionOnParameter.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericListOnIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericListOnParameter.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericListOnProperty.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericTaskOnMethod.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteJaggedArrayOnField.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteJaggedArrayOnField.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteLazyOnDelegate.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteMultiDimensionalArrayOnField.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteArrayOnMethod.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericCollectionOnParameter.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericListOnProperty.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericListOnIndexer.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericListOnParameter.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericTaskOnMethod.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteLazyOnDelegate.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithLinqTunnel\Availability.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithLinqTunnel\Execute.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithMustUseReturnValue\ExecuteNonPureMethod.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithMustUseReturnValue\Availability.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithMustUseReturnValue\ExecuteNonPureMethod.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithMustUseReturnValue\ExecutePureMethod.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithPure\ExecuteAnnotatedMethod.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithPure\ExecuteAnnotatedMethod.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithPure\ExecuteNotAnnotatedMethod.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithPure\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Field\ExecuteWithContractInvariantMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Field\ExecuteWithoutContractInvariantMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithAbstractMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithAbstractMethod2.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithAbstractMethod3.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithEmptyMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithInterfaceMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithNonEmptyMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithNonEmptyMethod2.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithNonEmptyMethod3.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Operator\ExecuteConversion.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Operator\ExecuteOverload.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Operator\ExecuteOverloadNonEmpty.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithAbstractIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithAbstractMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithEmptyMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithInterfaceIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithInterfaceMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithNonEmptyMethod.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithNonEmptyMethod2.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithNonEmptyMethod3.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithOutParameter.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithRefParameter.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteAutoProperty.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteReadOnlyProperty.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractIndexer2.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractIndexer3.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractIndexer4.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty2.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty3.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty4.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithInterfaceIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithInterfaceProperty.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithReadOnlyIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithWriteOnlyIndexer.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWriteOnlyProperty.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\ExecuteArray.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\ExecuteCollection.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\ExecuteDictionary.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\ExecuteGenericCollection.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteArray.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteArrayType.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteCollection.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteDictionary.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteGenericCollection.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\DateTimeTimeOfDayZero\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumBetweenFirstAndLast\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumFlags\ExecuteWithoutZero.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumFlags\ExecuteWithZero.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumFlags\ExecuteWithZeroSingleMember.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumKnownValues\ExecuteFourMembers.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumKnownValues\ExecuteTwoMembers.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\GuidNonEmpty\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZero\ExecuteIntPtr.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZero\ExecuteUIntPtr.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrZero\ExecuteIntPtr.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrZero\ExecuteUIntPtr.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NotNull\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteFloat.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteDouble.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteDecimal.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteUshort.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteShort.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteSbyte.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteByte.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteUlong.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteLong.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteUInt.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteInt.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteByte.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteDecimal.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteDouble.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteFloat.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteInt.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteLong.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteSbyte.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteShort.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteUInt.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteUlong.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteUshort.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteDecimal.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteDouble.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteFloat.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteInt.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteLong.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteSbyte.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteShort.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteDecimal.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteDouble.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteFloat.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteInt.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteLong.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteSbyte.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteShort.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteDecimal.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteDouble.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteFloat.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteInt.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteLong.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteSbyte.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteShort.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteDecimal.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteDouble.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteFloat.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteInt.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteLong.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteSbyte.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteShort.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\StringNotNullAndNotEmpty\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanNegative\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanNonZero\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanPositive\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZeroOrNegative\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZeroOrPositive\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZero\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\RemoveAssertNotNull\Availability.cs" />
+    <None Include="test\data\ContextActions\RemoveAssertNotNull\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\ExecuteGenericCollection.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\ExecuteArray.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\ExecuteDictionary.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionAllItemsNotNull\ExecuteCollection.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteCollection.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteGenericCollection.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteArray.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteArrayType.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\CollectionCountPositive\ExecuteDictionary.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\DateTimeTimeOfDayZero\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\DateTimeTimeOfDayZero\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumBetweenFirstAndLast\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumBetweenFirstAndLast\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumFlags\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumFlags\ExecuteWithoutZero.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumFlags\ExecuteWithZero.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumFlags\ExecuteWithZeroSingleMember.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumKnownValues\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumKnownValues\ExecuteFourMembers.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\EnumKnownValues\ExecuteTwoMembers.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\GuidNonEmpty\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\GuidNonEmpty\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZero\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrZero\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZero\ExecuteUIntPtr.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZero\ExecuteIntPtr.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrZero\ExecuteIntPtr.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\IntPtrUIntPtrZero\ExecuteUIntPtr.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NotNull\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NotNull\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteInt.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\StringNotNullAndNotEmpty\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\StringNotNullAndNotEmpty\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanNegative\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanNegative\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanNonZero\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanNonZero\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZero\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZero\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZeroOrNegative\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZeroOrNegative\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZeroOrPositive\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanZeroOrPositive\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanPositive\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\TimeSpanPositive\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteUInt.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteLong.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteUlong.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteByte.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteSbyte.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteShort.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteUshort.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteDecimal.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteDouble.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericPositive\ExecuteFloat.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteByte.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteDecimal.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteInt.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteLong.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteSbyte.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteShort.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteUInt.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteUlong.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteUshort.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteDouble.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\NumericZero\ExecuteFloat.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteInt.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteLong.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteSbyte.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteShort.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteDecimal.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteDouble.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNegative\ExecuteFloat.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteInt.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteLong.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteSbyte.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteShort.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteDecimal.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteDouble.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericNonZero\ExecuteFloat.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteDecimal.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteDouble.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteFloat.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteInt.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteLong.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteSbyte.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrNegative\ExecuteShort.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteDecimal.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteDouble.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteFloat.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteInt.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteLong.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteSbyte.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive\ExecuteShort.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Field\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Field\ExecuteWithoutContractInvariantMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Field\ExecuteWithContractInvariantMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithNonEmptyMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithAbstractMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithInterfaceMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithEmptyMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Operator\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Operator\ExecuteConversion.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Operator\ExecuteOverload.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Operator\ExecuteOverloadNonEmpty.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithAbstractMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithInterfaceMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithEmptyMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithNonEmptyMethod.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithRefParameter.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithOutParameter.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithAbstractIndexer.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithInterfaceIndexer.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithIndexer.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\Availability.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractIndexer.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithInterfaceProperty.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithInterfaceIndexer.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\Execute.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithIndexer.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteReadOnlyProperty.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWriteOnlyProperty.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithReadOnlyIndexer.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithWriteOnlyIndexer.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteAutoProperty.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithNonEmptyMethod2.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Parameter\ExecuteWithNonEmptyMethod3.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithNonEmptyMethod2.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithNonEmptyMethod3.cs" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethodAvailability.cs" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethod.cs" />
+    <None Include="test\data\Analyzers\AnnotationQuickFixes\Redundant.cs" />
+    <None Include="test\data\Analyzers\AnnotationQuickFixes\NotAllowed.cs" />
+    <None Include="test\data\Analyzers\AnnotationQuickFixes\Conflicting.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractIndexer2.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractIndexer3.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractIndexer4.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithAbstractMethod2.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Method\ExecuteWithAbstractMethod3.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty2.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty3.cs" />
+    <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty4.cs" />
+    <Compile Include="Zone.cs" />
+    <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\Override.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\SuppressMessage.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\SuppressMessage_TestProject.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoid\AnonymousMethod.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AnonymousMethodAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\LambdaExpressionAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\ConditionalInvocation\Conditional.cs.gold" />
+    <None Include="test\data\Analyzers\ControlFlow\ControlFlow.cs.gold" />
+    <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructor\NotifyPropertyChangedInvocatorFromConstructor.cs.gold" />
+    <None Include="test\data\ContextActions\AddConfigureAwait\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithInstantHandle\ExecuteGenericEnumerable.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteMultiDimensionalArrayOnField.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithLinqTunnel\Execute.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithMustUseReturnValue\ExecutePureMethod.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithPure\ExecuteNotAnnotatedMethod.cs.gold" />
+    <None Include="test\data\ContextActions\RemoveAssertNotNull\Execute.cs.gold" />
+    <None Include="test\data\NuGet.config" />
+    <None Include="test\data\Analyzers\UncatchableException\UncatchableException.cs.gold" />
+    <None Include="test\data\Analyzers\UnthrowableException\UnthrowableException.cs.gold" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ReCommendedExtension\ReCommendedExtension.csproj">
+      <Project>{f5ba4109-a814-4071-a332-b23ea29498cd}</Project>
+      <Name>ReCommendedExtension</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets" Condition="Exists('..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20150812.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20150812.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Core.Shell.104.0.20151116.71530\build\JetBrains.Platform.Core.Shell.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Core.Shell.104.0.20151116.71530\build\JetBrains.Platform.Core.Shell.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Core.Text.104.0.20151116.72020\build\JetBrains.Platform.Core.Text.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Core.Text.104.0.20151116.72020\build\JetBrains.Platform.Core.Text.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Core.Ide.104.0.20151116.72020\build\JetBrains.Platform.Core.Ide.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Core.Ide.104.0.20151116.72020\build\JetBrains.Platform.Core.Ide.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Installer.104.0.20151116.72020\build\JetBrains.Platform.Installer.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Installer.104.0.20151116.72020\build\JetBrains.Platform.Installer.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.104.0.20151116.72020\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.104.0.20151116.72020\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Symbols.104.0.20151116.72020\build\JetBrains.Platform.Symbols.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Symbols.104.0.20151116.72020\build\JetBrains.Platform.Symbols.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Tests.Framework.104.0.20151116.72020\build\JetBrains.Platform.Tests.Framework.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Tests.Framework.104.0.20151116.72020\build\JetBrains.Platform.Tests.Framework.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.VisualStudio.104.0.20151116.72020\build\JetBrains.Platform.VisualStudio.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.VisualStudio.104.0.20151116.72020\build\JetBrains.Platform.VisualStudio.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.Tasks.104.0.20151116.72549\build\JetBrains.Psi.Features.Tasks.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.Tasks.104.0.20151116.72549\build\JetBrains.Psi.Features.Tasks.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.Core.104.0.20151116.72549\build\JetBrains.Psi.Features.Core.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.Core.104.0.20151116.72549\build\JetBrains.Psi.Features.Core.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.UnitTesting.104.0.20151116.72549\build\JetBrains.Psi.Features.UnitTesting.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.UnitTesting.104.0.20151116.72549\build\JetBrains.Psi.Features.UnitTesting.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.src.104.0.20151116.72549\build\JetBrains.Psi.Features.src.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.src.104.0.20151116.72549\build\JetBrains.Psi.Features.src.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.test.Framework.104.0.20151116.72549\build\JetBrains.Psi.Features.test.Framework.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.test.Framework.104.0.20151116.72549\build\JetBrains.Psi.Features.test.Framework.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.VisualStudio.104.0.20151116.72549\build\JetBrains.Psi.Features.VisualStudio.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.VisualStudio.104.0.20151116.72549\build\JetBrains.Psi.Features.VisualStudio.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.SolutionBuilder.104.0.20151116.72549\build\JetBrains.Psi.Features.SolutionBuilder.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.SolutionBuilder.104.0.20151116.72549\build\JetBrains.Psi.Features.SolutionBuilder.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.Cpp.src.104.0.20151116.74357\build\JetBrains.Psi.Features.Cpp.src.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.Cpp.src.104.0.20151116.74357\build\JetBrains.Psi.Features.Cpp.src.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.ReSharper.SDK.Internal.104.0.20151116.81636\build\JetBrains.ReSharper.SDK.Internal.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.ReSharper.SDK.Internal.104.0.20151116.81636\build\JetBrains.ReSharper.SDK.Internal.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.ReSharper.SDK.Tests.10.0.20151116.81636\build\JetBrains.ReSharper.SDK.Tests.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.ReSharper.SDK.Tests.10.0.20151116.81636\build\JetBrains.ReSharper.SDK.Tests.props'))" />
+  </Target>
+  <Import Project="..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20150812.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets" Condition="Exists('..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20150812.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Core.Shell.104.0.20151116.71530\build\JetBrains.Platform.Core.Shell.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Shell.104.0.20151116.71530\build\JetBrains.Platform.Core.Shell.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Core.Text.104.0.20151116.72020\build\JetBrains.Platform.Core.Text.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Text.104.0.20151116.72020\build\JetBrains.Platform.Core.Text.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Core.Ide.104.0.20151116.72020\build\JetBrains.Platform.Core.Ide.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Ide.104.0.20151116.72020\build\JetBrains.Platform.Core.Ide.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Installer.104.0.20151116.72020\build\JetBrains.Platform.Installer.Targets" Condition="Exists('..\packages\JetBrains.Platform.Installer.104.0.20151116.72020\build\JetBrains.Platform.Installer.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.104.0.20151116.72020\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Targets" Condition="Exists('..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.104.0.20151116.72020\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Symbols.104.0.20151116.72020\build\JetBrains.Platform.Symbols.Targets" Condition="Exists('..\packages\JetBrains.Platform.Symbols.104.0.20151116.72020\build\JetBrains.Platform.Symbols.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Tests.Framework.104.0.20151116.72020\build\JetBrains.Platform.Tests.Framework.Targets" Condition="Exists('..\packages\JetBrains.Platform.Tests.Framework.104.0.20151116.72020\build\JetBrains.Platform.Tests.Framework.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.VisualStudio.104.0.20151116.72020\build\JetBrains.Platform.VisualStudio.Targets" Condition="Exists('..\packages\JetBrains.Platform.VisualStudio.104.0.20151116.72020\build\JetBrains.Platform.VisualStudio.Targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.Tasks.104.0.20151116.72549\build\JetBrains.Psi.Features.Tasks.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.Tasks.104.0.20151116.72549\build\JetBrains.Psi.Features.Tasks.Targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.Core.104.0.20151116.72549\build\JetBrains.Psi.Features.Core.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.Core.104.0.20151116.72549\build\JetBrains.Psi.Features.Core.Targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.UnitTesting.104.0.20151116.72549\build\JetBrains.Psi.Features.UnitTesting.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.UnitTesting.104.0.20151116.72549\build\JetBrains.Psi.Features.UnitTesting.Targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.src.104.0.20151116.72549\build\JetBrains.Psi.Features.src.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.src.104.0.20151116.72549\build\JetBrains.Psi.Features.src.Targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.test.Framework.104.0.20151116.72549\build\JetBrains.Psi.Features.test.Framework.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.test.Framework.104.0.20151116.72549\build\JetBrains.Psi.Features.test.Framework.Targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.VisualStudio.104.0.20151116.72549\build\JetBrains.Psi.Features.VisualStudio.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.VisualStudio.104.0.20151116.72549\build\JetBrains.Psi.Features.VisualStudio.Targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.SolutionBuilder.104.0.20151116.72549\build\JetBrains.Psi.Features.SolutionBuilder.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.SolutionBuilder.104.0.20151116.72549\build\JetBrains.Psi.Features.SolutionBuilder.Targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.Cpp.src.104.0.20151116.74357\build\JetBrains.Psi.Features.Cpp.src.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.Cpp.src.104.0.20151116.74357\build\JetBrains.Psi.Features.Cpp.src.Targets')" />
+  <Import Project="..\packages\JetBrains.ReSharper.SDK.Internal.104.0.20151116.81636\build\JetBrains.ReSharper.SDK.Internal.Targets" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.Internal.104.0.20151116.81636\build\JetBrains.ReSharper.SDK.Internal.Targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

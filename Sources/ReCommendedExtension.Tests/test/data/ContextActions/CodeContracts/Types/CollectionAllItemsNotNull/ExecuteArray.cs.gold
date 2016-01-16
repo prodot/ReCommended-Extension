@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class ExecuteArray
+    {
+        void Method([ItemNotNull] string[] two{caret})
+        {
+          Contract.Requires(two.All(item => item != null));
+        }
+    }
+}

@@ -1,0 +1,99 @@
+﻿using JetBrains.Annotations;
+
+namespace Test
+{
+    internal interface IBase
+    {
+        string Method1(string p1);
+
+        string Property1 { get; set; }
+
+        string Property2 { get; }
+
+        string this[string index] { get; set; }
+
+        string this[string index, string index2] { get; }
+    }
+
+    internal class BaseInterfaceImplementation : IBase
+    {
+        [|NotNull|(0)]
+        public string Method1([|NotNull|(1)] string p1) => "";
+
+        [|NotNull|(2)]
+        public string Property1 { get; set; }
+
+        [|NotNull|(3)]
+        public string Property2 { get; }
+
+        [|NotNull|(4)]
+        public string this[[|NotNull|(5)] string index]
+        {
+            get
+            {
+                return "";
+            }
+            set { }
+        }
+
+        [|NotNull|(6)]
+        public string this[[|NotNull|(7)] string index, [|NotNull|(8)] string index2] => "";
+    }
+
+    internal abstract class Base
+    {
+        internal abstract string Method1(string p1);
+
+        internal abstract string Property1 { get; set; }
+
+        internal abstract string Property2 { get; }
+
+        internal abstract string this[string index] { get; set; }
+
+        internal abstract string this[string index, string index2] { get; }
+    }
+
+    internal class BaseClassImplementation : Base
+    {
+        [|NotNull|(9)]
+        internal override string Method1([|NotNull|(10)] string p1) => "";
+
+        [|NotNull|(11)]
+        internal override string Property1 { get; set; }
+
+        [|NotNull|(12)]
+        internal override string Property2 { get; }
+
+        [|NotNull|(13)]
+        internal override string this[[|NotNull|(14)] string index]
+        {
+            get
+            {
+                return "";
+            }
+            set { }
+        }
+
+        [|NotNull|(15)]
+        internal override string this[[|NotNull|(16)] string index, [|NotNull|(17)] string index2] => "";
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(1): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(2): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(3): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(4): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(5): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(6): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(7): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(8): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(9): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(10): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(11): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(12): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(13): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(14): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(15): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(16): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(17): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.

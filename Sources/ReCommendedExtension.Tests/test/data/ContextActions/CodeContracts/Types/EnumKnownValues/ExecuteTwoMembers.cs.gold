@@ -1,0 +1,23 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteTwoMembers
+    {
+        enum NumberWithTwoMembers
+        {
+            One,
+
+            [Obsolete]
+            Two,
+
+            Three,
+        }
+
+        void Method(NumberWithTwoMembers two{caret})
+        {
+          Contract.Requires(two == NumberWithTwoMembers.One || two == NumberWithTwoMembers.Three);
+        }
+    }
+}

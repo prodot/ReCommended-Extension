@@ -1,0 +1,114 @@
+﻿using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    public class Class
+    {
+        public async |void|(0) UsedPublicMethod()
+        {
+            await Task.Yield();
+        }
+
+        public async |void|(1) UnusedPublicMethod()
+        {
+            await Task.Yield();
+        }
+
+        [UsedImplicitly]
+        public async void UnusedAnnotatedPublicMethod()
+        {
+            await Task.Yield();
+        }
+
+        void Method()
+        {
+            Notify += AsyncHandler;
+            Notify -= AsyncHandler;
+
+            Notify += new EventHandler(AsyncHandler);
+            Notify -= new EventHandler(AsyncHandler);
+
+            UsedPublicMethod();
+
+            AsyncHandler2(null, null);
+            AsyncHandler3(null, null);
+            AsyncHandler3(null, null);
+        }
+
+        async void AsyncHandler(object sender, EventArgs e)
+        {
+            await Task.Yield();
+        }
+
+        async |void|(2) AsyncHandler2(object sender, EventArgs e)
+        {
+            await Task.Yield();
+        }
+
+        async |void|(3) AsyncHandler3(object sender, EventArgs e)
+        {
+            await Task.Yield();
+        }
+
+        void Method2()
+        {
+            Notify += SyncHandler;
+            Notify -= SyncHandler;
+
+            Notify += new EventHandler(SyncHandler);
+            Notify -= new EventHandler(SyncHandler);
+        }
+
+        void SyncHandler(object sender, EventArgs e) { }
+
+        async void Handler2(object sender, EventArgs e)
+        {
+            await Task.Yield();
+        }
+
+        event EventHandler Notify;
+
+        void Method3()
+        {
+            EventHandlerWithReturnValue += AsyncHandler;
+            EventHandlerWithReturnValue -= AsyncHandler;
+
+            EventHandlerWithReturnValue += new Func<int, Task<int>>(AsyncHandler);
+            EventHandlerWithReturnValue -= new Func<int, Task<int>>(AsyncHandler);
+        }
+
+        async Task<int> AsyncHandler(int e)
+        {
+            await Task.Yield();
+            return 0;
+        }
+
+        event Func<int, Task<int>> EventHandlerWithReturnValue;
+    }
+
+    internal class Base
+    {
+        internal virtual void Method() { }
+    }
+
+    internal interface IBase
+    {
+        void Method2();
+    }
+
+    internal class Derived : Base, IBase
+    {
+        internal override async |void|(4) Method() { }
+
+        public async |void|(5) Method2() { }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: 'async void' public surface area method with detected usages.
+(1): ReSharper Warning: 'async void' public surface area method without detected usages.
+(2): ReSharper Warning: 'async void' method used 1 time not as a direct event handler.
+(3): ReSharper Warning: 'async void' method used 2 times not as a direct event handler.
+(4): ReSharper Warning: 'void' method overridden or implemented as 'async void'.
+(5): ReSharper Warning: 'void' method overridden or implemented as 'async void'.

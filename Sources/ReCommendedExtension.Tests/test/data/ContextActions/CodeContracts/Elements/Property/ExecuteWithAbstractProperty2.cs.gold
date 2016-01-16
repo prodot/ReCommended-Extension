@@ -1,0 +1,22 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    [ContractClass(typeof(AbstractClassContract))]
+    internal abstract class AbstractClass
+    {
+      [NotNull]
+      internal abstract string AbstractProperty{caret} { get; set; }
+    }
+
+    [ContractClassFor(typeof(AbstractClass))]
+    internal abstract class AbstractClassContract : AbstractClass
+    {
+        internal override string AbstractProperty
+        {
+            get { Contract.Ensures(Contract.Result<string>() != null); }
+          set { Contract.Requires(value != null); }
+        }
+    }
+}

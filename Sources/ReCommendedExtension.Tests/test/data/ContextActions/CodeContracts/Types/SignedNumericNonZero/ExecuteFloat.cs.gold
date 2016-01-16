@@ -1,0 +1,13 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteFloat
+    {
+        void Method(float one{caret})
+        {
+          Contract.Requires(Math.Abs(one - 0f) > float.Epsilon);
+        }
+    }
+}

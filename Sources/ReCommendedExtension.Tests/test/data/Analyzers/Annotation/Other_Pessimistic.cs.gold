@@ -1,0 +1,218 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class AnnotatedWithNotNull
+    {
+        [NotNull]
+        string Method1([NotNull] string p1)
+        {
+            return "";
+        }
+
+        [NotNull]
+        string Method2([NotNull] string p1) => "";
+
+        [NotNull]
+        string Property1
+        {
+            get
+            {
+                return "";
+            }
+            set { }
+        }
+
+        [NotNull]
+        string Property2 { get; set; }
+
+        [NotNull]
+        string Property3
+        {
+            get
+            {
+                return "";
+            }
+        }
+
+        [NotNull]
+        string Property4 => "";
+
+        [NotNull]
+        string Property5 { get; set; } = "";
+
+        [NotNull]
+        string Property6 { get; } = "";
+
+        [NotNull]
+        string this[[NotNull] string index]
+        {
+            get
+            {
+                return "";
+            }
+            set { }
+        }
+
+        [NotNull]
+        string this[[NotNull] string index1, [NotNull] string index2]
+        {
+            get
+            {
+                return "";
+            }
+        }
+
+        [NotNull]
+        string this[[NotNull] string index1, [NotNull] string index2, [NotNull] string index3] => "";
+
+        [NotNull]
+        string field1;
+    }
+
+    internal class AnnotatedWithCanBeNull
+    {
+        [|CanBeNull|(0)]
+        string Method1([|CanBeNull|(1)] string p1)
+        {
+            return null;
+        }
+
+        [|CanBeNull|(2)]
+        string Method2([|CanBeNull|(3)] string p1) => null;
+
+        [|CanBeNull|(4)]
+        string Property1
+        {
+            get
+            {
+                return null;
+            }
+            set { }
+        }
+
+        [|CanBeNull|(5)]
+        string Property2 { get; set; }
+
+        [|CanBeNull|(6)]
+        string Property3
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        [|CanBeNull|(7)]
+        string Property4 => null;
+
+        [|CanBeNull|(8)]
+        string Property5 { get; set; } = null;
+
+        [|CanBeNull|(9)]
+        string Property6 { get; } = null;
+
+        [|CanBeNull|(10)]
+        string this[[|CanBeNull|(11)] string index]
+        {
+            get
+            {
+                return null;
+            }
+            set { }
+        }
+
+        [|CanBeNull|(12)]
+        string this[[|CanBeNull|(13)] string index1, [|CanBeNull|(14)] string index2]
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        [|CanBeNull|(15)]
+        string this[[|CanBeNull|(16)] string index1, [|CanBeNull|(17)] string index2, [|CanBeNull|(18)] string index3] => null;
+
+        [|CanBeNull|(19)]
+        string field1;
+    }
+
+    internal class NotAnnotated
+    {
+        string Method1(string p1)
+        {
+            return null;
+        }
+
+        string Method2(string p1) => null;
+
+        string Property1
+        {
+            get
+            {
+                return null;
+            }
+            set { }
+        }
+
+        string Property2 { get; set; }
+
+        string Property3
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        string Property4 => null;
+
+        string Property5 { get; set; } = null;
+
+        string Property6 { get; } = null;
+
+        string this[string index]
+        {
+            get
+            {
+                return null;
+            }
+            set { }
+        }
+
+        string this[string index1, string index2]
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        string this[string index1, string index2, string index3] => null;
+
+        string field1;
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(1): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(2): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(3): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(4): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(5): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(6): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(7): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(8): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(9): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(10): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(11): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(12): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(13): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(14): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(15): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(16): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(17): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(18): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.
+(19): ReSharper Suggestion: Annotation is redundant because the declared element can be null by default.

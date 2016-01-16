@@ -1,0 +1,39 @@
+﻿using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class AsyncMethod
+    {
+        [|NotNull|(0)]
+        async Task Method1() => await Method2();
+
+        [|NotNull|(1)]
+        async Task<int> Method2()
+        {
+            throw new NotImplementedException();
+        }
+
+        [|CanBeNull|(2)]
+        async Task Method3() => await Method4();
+
+        [|CanBeNull|(3)]
+        async Task<int> Method4()
+        {
+            throw new NotImplementedException();
+        }
+
+        async Task Method5() => await Method6();
+
+        async Task<int> Method6()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Annotation is redundant because the declared element can never be null by default.
+(1): ReSharper Suggestion: Annotation is redundant because the declared element can never be null by default.
+(2): ReSharper Warning: Annotation is not valid because the declared element can never be null by default.
+(3): ReSharper Warning: Annotation is not valid because the declared element can never be null by default.

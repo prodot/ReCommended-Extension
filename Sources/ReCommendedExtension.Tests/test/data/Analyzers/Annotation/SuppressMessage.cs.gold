@@ -1,0 +1,14 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Test
+{
+    [|SuppressMessage("C", "Id")|(0)]
+    internal class Class
+    {
+        [|SuppressMessage("C", "Id", Justification = "")|(1)]
+        void Foo() { }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Suppression justification is missing for C:Id.
+(1): ReSharper Warning: Suppression justification is missing for C:Id.

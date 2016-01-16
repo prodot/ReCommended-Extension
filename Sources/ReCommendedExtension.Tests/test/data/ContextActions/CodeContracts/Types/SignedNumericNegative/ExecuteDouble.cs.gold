@@ -1,0 +1,12 @@
+﻿using System.Diagnostics.Contracts;
+
+namespace Test
+{
+    internal class ExecuteDouble
+    {
+        void Method(double one{caret})
+        {
+          Contract.Requires(one < 0d);
+        }
+    }
+}

@@ -1,0 +1,26 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Class
+    {
+      [NotNull]
+      string Property{caret}
+        {
+            get
+            {
+              Contract.Ensures(Contract.Result<string>() != null);
+              
+              return "";
+            }
+        set
+        {
+          Contract.Requires(value != nu
+          ll);
+          Console.WriteLine(value);
+        }
+        }
+    }
+}

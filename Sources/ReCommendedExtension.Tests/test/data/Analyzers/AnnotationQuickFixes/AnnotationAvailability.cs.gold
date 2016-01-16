@@ -1,0 +1,40 @@
+﻿using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal interface IBase
+    {
+        string NotAllowed();
+    }
+
+    internal class BaseInterfaceImplementation : IBase
+    {
+        [|NotNull|(0)]
+        public string NotAllowed() => "";
+
+        [|Pure|(1)]
+        [|MustUseReturnValue|(2)]
+        public int Conflicting() => 0;
+
+        [|NotNull|(3)]
+        async Task<int> Redundant()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+------------------------------------------------
+0: Annotation is not allowed because the declared element overrides or implements the inherited member.
+QUICKFIXES:
+Remove attribute
+1: Annotation conflicts with 'MustUseReturnValueAttribute' annotation.
+QUICKFIXES:
+Remove attribute
+2: Annotation conflicts with 'PureAttribute' annotation.
+QUICKFIXES:
+Remove attribute
+3: Annotation is redundant because the declared element can never be null by default.
+QUICKFIXES:
+Remove attribute

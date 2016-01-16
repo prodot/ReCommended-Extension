@@ -1,0 +1,38 @@
+﻿#define CUSTOM
+#define CUSTOM2
+
+using System;
+using System.Diagnostics;
+
+namespace Test
+{
+    [Conditional("CUSTOM")]
+    internal sealed class CustomAttribute : Attribute { }
+
+    [Conditional("CUSTOM")]
+    [Conditional("CUSTOM2")]
+    internal sealed class Custom2Attribute : Attribute { }
+
+    internal class Class
+    {
+#if CUSTOM
+        |[Custom]|(0)
+        void Method() { }
+#else
+        [Custom]
+        void Method() { }
+#endif
+
+#if CUSTOM || CUSTOM2
+        |[Custom2]|(1)
+        void Method2() { }
+#else
+        [Custom2]
+        void Method2() { }
+#endif
+
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Attribute will be ignored if the 'CUSTOM' condition is not defined.
+(1): ReSharper Dead Code: Attribute will be ignored if none of the following conditions is defined: 'CUSTOM', 'CUSTOM2'.

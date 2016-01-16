@@ -1,0 +1,19 @@
+﻿using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Class
+    {
+        int this[[NotNull] string one{caret}]
+        { 
+            get
+            {
+              Contract.Requires(one != null);
+              
+              return 0;
+            }
+          set { Contract.Requires(one != null); }
+        }
+    }
+}
