@@ -1,8 +1,8 @@
-﻿using JetBrains.TestFramework;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.TestFramework;
 using NUnit.Framework;
+using ReCommendedExtension.Tests;
 
-namespace ReCommendedExtension.Tests
-{
-    [SetUpFixture]
-    public sealed class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IReCommendedExtensionTestZone> { }
-}
+[SetUpFixture]
+[SuppressMessage("ReSharper", "CheckNamespace", Justification = "Must be in the global namespace.")]
+public sealed class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IReCommendedExtensionTestZone> { }
