@@ -8,7 +8,7 @@
         <owners>{{AssemblyCompany}}</owners>
         <projectUrl>https://github.com/prodot/ReCommended-Extension</projectUrl>
         <licenseUrl>https://github.com/prodot/ReCommended-Extension/blob/master/LICENSE</licenseUrl>
-        <iconUrl>https://github.com/prodot/ReCommended-Extension/blob/master/Images/Icon.png</iconUrl>
+        <iconUrl>https://raw.githubusercontent.com/prodot/ReCommended-Extension/master/Images/Icon.png</iconUrl>
         <summary>{{AssemblyDescription}}</summary>
         <description>
             The {{AssemblyTitle}} augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
