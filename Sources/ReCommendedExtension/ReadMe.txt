@@ -12,6 +12,10 @@ Resharper Platform is installed into the experimental hive "ReSharper"
 
 2. install the package into the experimental hive "ReSharper"
 
+3. make suse the HostFullIdentifier property in the .csproj file is initialized
+
+	<HostFullIdentifier>ReSharperPlatformVs14ReSharper</HostFullIdentifier>
+
 -----------DEBUGGING
 
 To debug your plug-in, simply make sure it is selected as the start-up
