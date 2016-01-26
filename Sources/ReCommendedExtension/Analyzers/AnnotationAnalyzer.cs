@@ -53,9 +53,9 @@ namespace ReCommendedExtension.Analyzers
 
         static bool CanContainNullnessAttributes([NotNull] IAttributesOwnerDeclaration declaration)
         {
-            // excluding type, constant, property/indexer/event accessor, event, type parameter declarations
-            if (declaration is ICSharpTypeDeclaration || declaration is IConstantDeclaration || declaration is IAccessorDeclaration ||
-                declaration is IEventDeclaration || declaration is ITypeParameterDeclaration)
+            // excluding type, constant, enum member, property/indexer/event accessor, event, type parameter declarations
+            if (declaration is ICSharpTypeDeclaration || declaration is IConstantDeclaration || declaration is IEnumMemberDeclaration ||
+                declaration is IAccessorDeclaration || declaration is IEventDeclaration || declaration is ITypeParameterDeclaration)
             {
                 return false;
             }

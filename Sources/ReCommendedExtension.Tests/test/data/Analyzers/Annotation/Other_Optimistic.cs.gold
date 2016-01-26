@@ -141,6 +141,13 @@ namespace Test
 
     internal class NotAnnotated
     {
+        internal enum NotAnnotatedEnum
+        {
+            One,
+            Two,
+            Three,
+        }
+
         string |Method1|(0)(string |p1|(1))
         {
             return null;
