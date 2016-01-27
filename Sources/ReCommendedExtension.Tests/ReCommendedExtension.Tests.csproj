@@ -147,6 +147,7 @@
     <None Include="test\data\Analyzers\AnnotationQuickFixes\Conflicting.cs.gold" />
     <None Include="test\data\Analyzers\AnnotationQuickFixes\NotAllowed.cs.gold" />
     <None Include="test\data\Analyzers\AnnotationQuickFixes\Redundant.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\WithoutAnnotations.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethod.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethodAvailability.cs.gold" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs.gold" />
@@ -159,6 +160,7 @@
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructorAvailability.cs.gold" />
     <None Include="test\data\Analyzers\UncatchableException\UncatchableException.cs" />
     <None Include="test\data\Analyzers\UnthrowableException\UnthrowableException.cs" />
+    <Compile Include="Analyzers\AnnotationAnalyzerTestsWithoutAnnotations.cs" />
     <Compile Include="Analyzers\AnnotationQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\AnnotationQuickFixTests.cs" />
     <Compile Include="Analyzers\AsyncVoidQuickFixChangeTypeTests.cs" />
@@ -592,6 +594,7 @@
     <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty2.cs" />
     <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty3.cs" />
     <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty4.cs" />
+    <None Include="test\data\Analyzers\Annotation\WithoutAnnotations.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
