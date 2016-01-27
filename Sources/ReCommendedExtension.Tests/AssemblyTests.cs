@@ -26,10 +26,15 @@ namespace ReCommendedExtension.Tests
         public void TestVersions()
         {
             var assembly = typeof(IReCommendedExtensionZone).Assembly;
-            var version = assembly.GetName().Version;
+
+            var assemblyVersion = assembly.GetName().Version;
+            Assert.AreEqual(0, assemblyVersion.Revision);
+
             var fileVersionAttribute = assembly.GetAttribute<AssemblyFileVersionAttribute>();
 
-            Assert.AreEqual(version, new Version(fileVersionAttribute.Version));
+            Assert.AreEqual(
+                new Version(assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build),
+                new Version(fileVersionAttribute.Version));
         }
     }
 }

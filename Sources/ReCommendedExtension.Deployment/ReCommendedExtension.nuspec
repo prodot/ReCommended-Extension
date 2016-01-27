@@ -25,10 +25,6 @@
         </description>
         <copyright>{{AssemblyCopyright}}</copyright>
         <tags>recommended extension resharper plugin addin prodot</tags>
-        <!-- The release notes only show up when viewing Updates for a package, so it doesn't make sense to add them to your first release. -->
-        <!--<releaseNotes>
-            - performance improvements and bug-fixes
-        </releaseNotes>-->
         <dependencies>
             <dependency id="Wave" version="[4.0,4.1)" />
         </dependencies>
