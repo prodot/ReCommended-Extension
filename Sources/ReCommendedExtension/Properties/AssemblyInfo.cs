@@ -8,10 +8,10 @@ using ReCommendedExtension;
 [assembly: AssemblyDescription(ZoneMarker.ExtensionDescription)]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("prodot GmbH")]
-[assembly: AssemblyProduct("ReCommendedExtension")]
+[assembly: AssemblyProduct(ZoneMarker.ExtensionId)]
 [assembly: AssemblyCopyright("© 2012-2016 prodot GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0")]
+[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyFileVersion("1.0.1")]

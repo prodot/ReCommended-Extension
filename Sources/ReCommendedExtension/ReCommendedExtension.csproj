@@ -245,6 +245,9 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <HostFullIdentifier>ReSharperPlatformVs14ReSharper</HostFullIdentifier>
+  </PropertyGroup>
   <Target Name="CopyPdbFile" AfterTargets="CopyPlugin" Condition="'$(HostFullIdentifier)' != ''">
     <Copy Condition="Exists('@(InstallFolder)')" SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="@(InstallFolder)" />
   </Target>

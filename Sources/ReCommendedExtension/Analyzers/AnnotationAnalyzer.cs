@@ -53,9 +53,9 @@ namespace ReCommendedExtension.Analyzers
 
         static bool CanContainNullnessAttributes([NotNull] IAttributesOwnerDeclaration declaration)
         {
-            // excluding type, constant, property/indexer/event accessor, event, type parameter declarations
-            if (declaration is ICSharpTypeDeclaration || declaration is IConstantDeclaration || declaration is IAccessorDeclaration ||
-                declaration is IEventDeclaration || declaration is ITypeParameterDeclaration)
+            // excluding type, constant, enum member, property/indexer/event accessor, event, type parameter declarations
+            if (declaration is ICSharpTypeDeclaration || declaration is IConstantDeclaration || declaration is IEnumMemberDeclaration ||
+                declaration is IAccessorDeclaration || declaration is IEventDeclaration || declaration is ITypeParameterDeclaration)
             {
                 return false;
             }
@@ -230,12 +230,18 @@ namespace ReCommendedExtension.Analyzers
                 }
                 else
                 {
-                    consumer.AddHighlighting(
-                        new MissingAnnotationHighlighting(
-                            string.Format(
-                                "Declared element can never be null by default, but is not annotated with '{0}'.",
-                                CodeAnnotationsCache.NotNullAttributeShortName),
-                            attributesOwnerDeclaration));
+                    var nonNullAnnotationAttributeType = codeAnnotationsCache.GetAttributeTypeForElement(
+                        attributesOwnerDeclaration,
+                        CodeAnnotationsCache.NotNullAttributeShortName);
+                    if (nonNullAnnotationAttributeType != null)
+                    {
+                        consumer.AddHighlighting(
+                            new MissingAnnotationHighlighting(
+                                string.Format(
+                                    "Declared element can never be null by default, but is not annotated with '{0}'.",
+                                    CodeAnnotationsCache.NotNullAttributeShortName),
+                                attributesOwnerDeclaration));
+                    }
                     break;
                 }
             }
@@ -254,13 +260,22 @@ namespace ReCommendedExtension.Analyzers
                     {
                         if (attributeMark == null)
                         {
-                            consumer.AddHighlighting(
-                                new MissingAnnotationHighlighting(
-                                    string.Format(
-                                        "Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
-                                        CodeAnnotationsCache.NotNullAttributeShortName,
-                                        CodeAnnotationsCache.CanBeNullAttributeShortName),
-                                    attributesOwnerDeclaration));
+                            var nonNullAnnotationAttributeType = codeAnnotationsCache.GetAttributeTypeForElement(
+                                attributesOwnerDeclaration,
+                                CodeAnnotationsCache.NotNullAttributeShortName);
+                            var canBeNullAnnotationAttributeType = codeAnnotationsCache.GetAttributeTypeForElement(
+                                attributesOwnerDeclaration,
+                                CodeAnnotationsCache.CanBeNullAttributeShortName);
+                            if (nonNullAnnotationAttributeType != null || canBeNullAnnotationAttributeType != null)
+                            {
+                                consumer.AddHighlighting(
+                                    new MissingAnnotationHighlighting(
+                                        string.Format(
+                                            "Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
+                                            CodeAnnotationsCache.NotNullAttributeShortName,
+                                            CodeAnnotationsCache.CanBeNullAttributeShortName),
+                                        attributesOwnerDeclaration));
+                            }
                             break;
                         }
                     }

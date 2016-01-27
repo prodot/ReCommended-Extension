@@ -14,6 +14,11 @@ namespace ReCommendedExtension
     [ZoneMarker]
     public sealed class ZoneMarker : IRequire<IReCommendedExtensionZone>
     {
+        internal const string ExtensionId = "ReCommendedExtension"
+#if DEBUG
+                                              + "_DEBUG"
+#endif
+            ;
         internal const string ExtensionName = "ReCommended Extension for ReSharper"
 #if DEBUG
                                               + " (DEBUG)"
