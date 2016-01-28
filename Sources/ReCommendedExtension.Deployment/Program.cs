@@ -128,7 +128,7 @@ namespace ReCommendedExtension.Deployment
             var nuspec = File.ReadAllText(nuspecPath, Encoding.UTF8);
 
             ReplacePlaceholders(ref nuspec, assembly);
-            nuspec = nuspec.Replace("%AssemblyPath%", assemblyPath);
+
             File.WriteAllText(nuspecPath, nuspec, Encoding.UTF8);
 
             Console.WriteLine("done");
