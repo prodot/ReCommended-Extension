@@ -148,6 +148,10 @@ namespace Test
             Three,
         }
 
+        static NotAnnotated() { }
+
+        public NotAnnotated() { }
+
         string |Method1|(0)(string |p1|(1))
         {
             return null;
