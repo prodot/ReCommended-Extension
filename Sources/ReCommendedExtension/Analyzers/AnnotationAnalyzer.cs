@@ -55,7 +55,8 @@ namespace ReCommendedExtension.Analyzers
         {
             // excluding type, constant, enum member, property/indexer/event accessor, event, type parameter declarations
             if (declaration is ICSharpTypeDeclaration || declaration is IConstantDeclaration || declaration is IEnumMemberDeclaration ||
-                declaration is IAccessorDeclaration || declaration is IEventDeclaration || declaration is ITypeParameterDeclaration)
+                declaration is IAccessorDeclaration || declaration is IEventDeclaration || declaration is ITypeParameterDeclaration ||
+                declaration is IConstructorDeclaration)
             {
                 return false;
             }
