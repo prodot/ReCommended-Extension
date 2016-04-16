@@ -5,7 +5,7 @@ namespace Test
 {
     internal class Execute
     {
-      [NotNull] string field{caret};
+        [NotNull] string field{caret};
 
         [ContractInvariantMethod]
         void ObjectInvariant()

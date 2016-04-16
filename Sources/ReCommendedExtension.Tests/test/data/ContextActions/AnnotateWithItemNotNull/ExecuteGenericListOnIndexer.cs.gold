@@ -8,7 +8,7 @@ namespace Test
 {
     internal class ExecuteGenericListOnIndexer
     {
-      [ItemNotNull]
-      List<string> th{caret}is[List<string> list] => null;
+        [ItemNotNull]
+        List<string> th{caret}is[List<string> list] => null;
     }
 }

@@ -8,7 +8,7 @@ namespace Test
 {
     internal class ExecuteArrayOnMethod
     {
-      [ItemNotNull]
-      string[] Met{caret}hod() => null;
+        [ItemNotNull]
+        string[] Met{caret}hod() => null;
     }
 }

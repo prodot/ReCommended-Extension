@@ -115,7 +115,7 @@ namespace ReCommendedExtension.Analyzers
                 }
                 else
                 {
-                    var useKindFlags = psiServices.GetCodeAnnotationsCache().IsImplicitlyUsed(method);
+                    var useKindFlags = psiServices.GetCodeAnnotationsCache().GetProvider<ImplicitUseAnnotationProvider>().IsImplicitlyUsed(method);
                     if (useKindFlags == null)
                     {
                         // [UsedImplicitly] annotation not applied

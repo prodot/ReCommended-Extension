@@ -34,9 +34,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             {
                 var attributesOwnerDeclaration = Provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
 
-                var codeAnnotationsCache = attributesOwnerDeclaration?.GetPsiServices().GetCodeAnnotationsCache();
+                var codeAnnotationsConfiguration = attributesOwnerDeclaration?.GetPsiServices().GetComponent<CodeAnnotationsConfiguration>();
 
-                var attributeType = codeAnnotationsCache?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
+                var attributeType = codeAnnotationsConfiguration?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
 
                 if (attributeType != null &&
                     attributesOwnerDeclaration.AttributesEnumerable.All(

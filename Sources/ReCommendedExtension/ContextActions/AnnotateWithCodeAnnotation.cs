@@ -26,7 +26,7 @@ namespace ReCommendedExtension.ContextActions
         {
             var attributeType =
                 attributesOwnerDeclaration.GetPsiServices()
-                    .GetCodeAnnotationsCache()
+                    .GetComponent<CodeAnnotationsConfiguration>()
                     .GetAttributeTypeForElement(attributesOwnerDeclaration, AnnotationAttributeTypeName);
             if (attributeType != null && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration, module))
             {

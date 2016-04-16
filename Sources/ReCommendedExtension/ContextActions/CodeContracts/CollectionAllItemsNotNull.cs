@@ -93,6 +93,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             return expression;
         }
 
-        protected override string TryGetAnnotationAttributeTypeName() => isDictionary ? null : CodeAnnotationsCache.ItemNotNullAttributeShortName;
+        protected override string TryGetAnnotationAttributeTypeName()
+            => isDictionary ? null : ContainerElementNullnessProvider.ItemNotNullAttributeShortName;
     }
 }

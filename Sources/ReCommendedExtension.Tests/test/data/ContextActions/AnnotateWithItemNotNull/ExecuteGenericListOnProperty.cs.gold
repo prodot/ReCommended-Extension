@@ -8,7 +8,7 @@ namespace Test
 {
     internal class ExecuteGenericListOnProperty
     {
-      [ItemNotNull]
-      IList<string> Prope{caret}rty { get; set; }
+        [ItemNotNull]
+        IList<string> Prope{caret}rty { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace ReCommendedExtension.ContextActions
         {
             get
             {
-                Debug.Assert(CodeAnnotationsCache.LinqTunnelAttributeShortName != null);
+                Debug.Assert(LinqTunnelAnnotationProvider.LinqTunnelAttributeShortName != null);
 
-                return CodeAnnotationsCache.LinqTunnelAttributeShortName;
+                return LinqTunnelAnnotationProvider.LinqTunnelAttributeShortName;
             }
         }
 

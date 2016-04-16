@@ -5,7 +5,7 @@ namespace Test
 {
     internal class Execute
     {
-      [LinqTunnel]
-      IEnumerable<string> Meth{caret}od(IEnumerable<int> arg) => null;
+        [LinqTunnel]
+        IEnumerable<string> Meth{caret}od(IEnumerable<int> arg) => null;
     }
 }

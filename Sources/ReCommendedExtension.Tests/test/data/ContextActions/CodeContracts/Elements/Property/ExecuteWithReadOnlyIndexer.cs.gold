@@ -5,8 +5,8 @@ namespace Test
 {
     internal class Class
     {
-      [NotNull]
-      string this{caret}[int one]
+        [NotNull]
+        string this{caret}[int one]
         {
             get
             {

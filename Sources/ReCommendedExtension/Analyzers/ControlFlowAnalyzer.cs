@@ -32,7 +32,11 @@ namespace ReCommendedExtension.Analyzers
         {
             var codeAnnotationsCache = rootNode.GetPsiServices().GetCodeAnnotationsCache();
 
-            var assertions = Assertion.CollectAssertions(codeAnnotationsCache, rootNode);
+            var nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
+            var assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
+            var assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
+
+            var assertions = Assertion.CollectAssertions(assertionMethodAnnotationProvider, assertionConditionAnnotationProvider, rootNode);
 
             assertions.ExceptWith(
                 from highlightingInfo in consumer.Highlightings
@@ -57,7 +61,7 @@ namespace ReCommendedExtension.Analyzers
                     case AssertionConditionType.IS_TRUE:
                         AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
                             consumer,
-                            codeAnnotationsCache,
+                            nullnessProvider,
                             inspector,
                             alwaysSuccessTryCastExpressions,
                             assertion,
@@ -67,7 +71,7 @@ namespace ReCommendedExtension.Analyzers
                     case AssertionConditionType.IS_FALSE:
                         AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
                             consumer,
-                            codeAnnotationsCache,
+                            nullnessProvider,
                             inspector,
                             alwaysSuccessTryCastExpressions,
                             assertion,
@@ -77,7 +81,7 @@ namespace ReCommendedExtension.Analyzers
                     case AssertionConditionType.IS_NOT_NULL:
                         AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
                             consumer,
-                            codeAnnotationsCache,
+                            nullnessProvider,
                             inspector,
                             alwaysSuccessTryCastExpressions,
                             assertion,
@@ -87,7 +91,7 @@ namespace ReCommendedExtension.Analyzers
                     case AssertionConditionType.IS_NULL:
                         AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
                             consumer,
-                            codeAnnotationsCache,
+                            nullnessProvider,
                             inspector,
                             alwaysSuccessTryCastExpressions,
                             assertion,
@@ -99,7 +103,7 @@ namespace ReCommendedExtension.Analyzers
 
         static void AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
             IHighlightingConsumer context,
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] CSharpControlFlowGraphInspector inspector,
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] Assertion assertion,
@@ -127,7 +131,7 @@ namespace ReCommendedExtension.Analyzers
                     var expression = TryGetOtherOperand(equalityExpression, EqualityExpressionType.NE, CSharpTokenType.NULL_KEYWORD);
                     if (expression != null)
                     {
-                        switch (GetExpressionNullReferenceState(codeAnnotationsCache, inspector, alwaysSuccessTryCastExpressions, expression))
+                        switch (GetExpressionNullReferenceState(nullnessProvider, inspector, alwaysSuccessTryCastExpressions, expression))
                         {
                             case CSharpControlFlowNullReferenceState.NOT_NULL:
                                 if (isKnownToBeTrue)
@@ -155,7 +159,7 @@ namespace ReCommendedExtension.Analyzers
                     expression = TryGetOtherOperand(equalityExpression, EqualityExpressionType.EQEQ, CSharpTokenType.NULL_KEYWORD);
                     if (expression != null)
                     {
-                        switch (GetExpressionNullReferenceState(codeAnnotationsCache, inspector, alwaysSuccessTryCastExpressions, expression))
+                        switch (GetExpressionNullReferenceState(nullnessProvider, inspector, alwaysSuccessTryCastExpressions, expression))
                         {
                             case CSharpControlFlowNullReferenceState.NOT_NULL:
                                 if (!isKnownToBeTrue)
@@ -184,7 +188,7 @@ namespace ReCommendedExtension.Analyzers
 
         static void AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
             IHighlightingConsumer context,
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] CSharpControlFlowGraphInspector inspector,
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] Assertion assertion,
@@ -204,8 +208,7 @@ namespace ReCommendedExtension.Analyzers
                 }
 
                 // pattern: Assert(x); when x is known to be null or not null
-                switch (
-                    GetExpressionNullReferenceState(codeAnnotationsCache, inspector, alwaysSuccessTryCastExpressions, assertionStatement.Expression))
+                switch (GetExpressionNullReferenceState(nullnessProvider, inspector, alwaysSuccessTryCastExpressions, assertionStatement.Expression))
                 {
                     case CSharpControlFlowNullReferenceState.NOT_NULL:
                         if (!isKnownToBeNull)
@@ -234,7 +237,7 @@ namespace ReCommendedExtension.Analyzers
                 var inlineAssertion = assertion as InlineAssertion;
                 if (inlineAssertion != null &&
                     GetExpressionNullReferenceState(
-                        codeAnnotationsCache,
+                        nullnessProvider,
                         inspector,
                         alwaysSuccessTryCastExpressions,
                         inlineAssertion.QualifierExpression) == CSharpControlFlowNullReferenceState.NOT_NULL)
@@ -247,7 +250,7 @@ namespace ReCommendedExtension.Analyzers
 
         [Pure]
         static CSharpControlFlowNullReferenceState GetExpressionNullReferenceState(
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] CSharpControlFlowGraphInspector inspector,
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             ICSharpExpression expression)
@@ -259,7 +262,7 @@ namespace ReCommendedExtension.Analyzers
 
                 if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN)
                 {
-                    return GetExpressionNullReferenceStateByAnnotations(codeAnnotationsCache, referenceExpression);
+                    return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, referenceExpression);
                 }
 
                 return nullReferenceState;
@@ -279,7 +282,7 @@ namespace ReCommendedExtension.Analyzers
             var invokedExpression = (expression as IInvocationExpression)?.InvokedExpression as IReferenceExpression;
             if (invokedExpression != null)
             {
-                return GetExpressionNullReferenceStateByAnnotations(codeAnnotationsCache, invokedExpression);
+                return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, invokedExpression);
             }
 
             return CSharpControlFlowNullReferenceState.UNKNOWN;
@@ -287,13 +290,13 @@ namespace ReCommendedExtension.Analyzers
 
         [Pure]
         static CSharpControlFlowNullReferenceState GetExpressionNullReferenceStateByAnnotations(
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] IReferenceExpression referenceExpression)
         {
             var declaredElement = referenceExpression.Reference.GetResolveResult().DeclaredElement;
 
             var function = declaredElement as IFunction;
-            if (function != null && codeAnnotationsCache.GetNullableAttribute(function) == CodeAnnotationNullableValue.NOT_NULL)
+            if (function != null && nullnessProvider.GetInfo(function) == CodeAnnotationNullableValue.NOT_NULL)
             {
                 return CSharpControlFlowNullReferenceState.NOT_NULL;
             }
@@ -302,7 +305,7 @@ namespace ReCommendedExtension.Analyzers
             if (typeOwner != null && !typeOwner.Type.IsDelegateType())
             {
                 var attributesOwner = typeOwner as IAttributesOwner;
-                if (attributesOwner != null && codeAnnotationsCache.GetNullableAttribute(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
+                if (attributesOwner != null && nullnessProvider.GetInfo(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
                 {
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
                 }

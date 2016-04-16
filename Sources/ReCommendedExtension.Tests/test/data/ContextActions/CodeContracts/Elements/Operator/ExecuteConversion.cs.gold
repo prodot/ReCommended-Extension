@@ -5,10 +5,10 @@ namespace Test
 {
     internal class Class
     {
-      [NotNull]
-      public static explicit operator{caret} string(Class parameter)
-      {
-        Contract.Ensures(Contract.Result<string>() != null);
-      }
+        [NotNull]
+        public static explicit operator{caret} string(Class parameter)
+        {
+          Contract.Ensures(Contract.Result<string>() != null);
+        }
     }
 }

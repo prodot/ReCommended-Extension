@@ -12,16 +12,17 @@ namespace ReCommendedExtension.Assertions
     {
         internal static AssertionStatement TryFromInvocationExpression(
             [NotNull] IInvocationExpression invocationExpression,
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache)
+            [NotNull] AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
+            [NotNull] AssertionConditionAnnotationProvider assertionConditionAnnotationProvider)
         {
             var method = invocationExpression.Reference?.GetResolveResult().DeclaredElement as IMethod;
-            if (method != null && codeAnnotationsCache.IsAssertionMethod(method))
+            if (method != null && assertionMethodAnnotationProvider.GetInfo(method))
             {
                 foreach (var parameter in method.Parameters)
                 {
                     Debug.Assert(parameter != null);
 
-                    var parameterAssertionCondition = codeAnnotationsCache.GetParameterAssertionCondition(parameter);
+                    var parameterAssertionCondition = assertionConditionAnnotationProvider.GetInfo(parameter);
 
                     if (parameterAssertionCondition == null && parameter.Type.IsBool())
                     {

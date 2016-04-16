@@ -8,6 +8,6 @@ namespace Test
 {
     internal class ExecuteJaggedArrayOnField
     {
-      [ItemNotNull] int[][] fie{caret}ld1;
+        [ItemNotNull] int[][] fie{caret}ld1;
     }
 }

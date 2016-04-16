@@ -35,7 +35,7 @@ namespace ReCommendedExtension.Assertions
                             methodDeclaration.AttributesEnumerable.Any(
                                 attribute =>
                                     attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                                    CodeAnnotationsCache.NotNullAttributeShortName))
+                                    NullnessProvider.NotNullAttributeShortName))
                         {
                             return new InlineAssertion(invocationExpression, qualifierExpression, method.ShortName);
                         }

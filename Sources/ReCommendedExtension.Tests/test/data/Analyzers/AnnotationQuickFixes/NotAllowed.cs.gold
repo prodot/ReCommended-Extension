@@ -9,6 +9,6 @@ namespace Test
 
     internal class BaseInterfaceImplementation : IBase
     {
-      {caret}public string NotAllowed() => "";
+        {caret}public string NotAllowed() => "";
     }
 }

@@ -5,8 +5,8 @@ namespace Test
 {
     internal class Class
     {
-      [NotNull]
-      string ReadOnlyProperty{caret}
+        [NotNull]
+        string ReadOnlyProperty{caret}
         {
             get
             {

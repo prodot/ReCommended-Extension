@@ -8,7 +8,7 @@ namespace Test
 {
     internal class ExecuteGenericTaskOnMethod
     {
-      [ItemNotNull]
-      Task<string> Me{caret}thod3() => null;
+        [ItemNotNull]
+        Task<string> Me{caret}thod3() => null;
     }
 }

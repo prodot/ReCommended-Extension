@@ -8,6 +8,6 @@ namespace Test
 {
     internal class ExecuteMultiDimensionalArrayOnField
     {
-      [ItemNotNull] string[,] fi{caret}eld2;
+        [ItemNotNull] string[,] fi{caret}eld2;
     }
 }

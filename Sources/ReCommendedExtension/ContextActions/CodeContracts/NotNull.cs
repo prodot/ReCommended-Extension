@@ -21,6 +21,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
             => factory.CreateExpression("$0 != null", contractExpression);
 
-        protected override string TryGetAnnotationAttributeTypeName() => CodeAnnotationsCache.NotNullAttributeShortName;
+        protected override string TryGetAnnotationAttributeTypeName() => NullnessProvider.NotNullAttributeShortName;
     }
 }

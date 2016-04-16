@@ -13,7 +13,10 @@ namespace ReCommendedExtension.Assertions
     {
         [NotNull]
         [ItemNotNull]
-        internal static HashSet<Assertion> CollectAssertions([NotNull] CodeAnnotationsCache codeAnnotationsCache, [NotNull] ICSharpTreeNode rootNode)
+        internal static HashSet<Assertion> CollectAssertions(
+            [NotNull] AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
+            [NotNull] AssertionConditionAnnotationProvider assertionConditionAnnotationProvider,
+            [NotNull] ICSharpTreeNode rootNode)
         {
             var forTypeLevelInitializersOnly = rootNode is IClassLikeDeclaration;
 
@@ -32,7 +35,10 @@ namespace ReCommendedExtension.Assertions
                     continue;
                 }
 
-                var assertionStatement = AssertionStatement.TryFromInvocationExpression(invocationExpression, codeAnnotationsCache);
+                var assertionStatement = AssertionStatement.TryFromInvocationExpression(
+                    invocationExpression,
+                    assertionMethodAnnotationProvider,
+                    assertionConditionAnnotationProvider);
                 if (assertionStatement != null)
                 {
                     assertions.Add(assertionStatement);

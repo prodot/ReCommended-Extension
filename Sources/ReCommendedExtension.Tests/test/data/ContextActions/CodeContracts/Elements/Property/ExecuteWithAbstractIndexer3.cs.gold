@@ -3,14 +3,14 @@ using JetBrains.Annotations;
 
 namespace Test
 {
-  [ContractClass(typeof (AbstractClassContract))]
-  internal abstract class AbstractClass
+    [ContractClass(typeof(AbstractClassContract))]
+    internal abstract class AbstractClass
     {
-      [NotNull]
-      internal abstract string this{caret}[int one] { get; }
+        [NotNull]
+        internal abstract string this{caret}[int one] { get; }
     }
 
-  [ContractClassFor(typeof (AbstractClass))]
+  [ContractClassFor(typeof(AbstractClass))]
   internal abstract class AbstractClassContract : AbstractClass
   {
     internal override string this[int one]
