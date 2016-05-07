@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Daemon.Stages.Dispatcher;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -32,7 +31,7 @@ namespace ReCommendedExtension.Analyzers
         }
 
         /// <summary>
-        /// Returns the object creation expression <c>new EventHandler(</c><paramref name="argument"/><c>)</c> if used in the pattern 
+        /// Returns the object creation expression <c>new EventHandler(</c><paramref name="argument"/><c>)</c> if used in the pattern
         /// <c>new EventHandler(</c><paramref name="argument"/><c>)</c> or <c>null</c>.
         /// </summary>
         static IObjectCreationExpression TryGetDelegateCreation([NotNull] ICSharpArgument argument)
@@ -115,7 +114,11 @@ namespace ReCommendedExtension.Analyzers
                 }
                 else
                 {
-                    var useKindFlags = psiServices.GetCodeAnnotationsCache().GetProvider<ImplicitUseAnnotationProvider>().IsImplicitlyUsed(method);
+                    var implicitUseAnnotationProvider = psiServices.GetCodeAnnotationsCache().GetProvider<ImplicitUseAnnotationProvider>();
+
+                    Debug.Assert(implicitUseAnnotationProvider != null);
+
+                    var useKindFlags = implicitUseAnnotationProvider.IsImplicitlyUsed(method);
                     if (useKindFlags == null)
                     {
                         // [UsedImplicitly] annotation not applied

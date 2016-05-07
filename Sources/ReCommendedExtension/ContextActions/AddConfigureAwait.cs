@@ -78,8 +78,6 @@ namespace ReCommendedExtension.ContextActions
             {
                 using (WriteLockCookie.Create())
                 {
-                    Debug.Assert(provider.PsiModule != null);
-
                     var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
 
                     ModificationUtil.ReplaceChild(

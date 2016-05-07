@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel.Properties.Flavours;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Daemon.Stages.Dispatcher;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -15,7 +14,6 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using JetBrains.Util.Special;
 using ReCommendedExtension.Highlightings;
 
 namespace ReCommendedExtension.Analyzers
@@ -72,7 +70,7 @@ namespace ReCommendedExtension.Analyzers
             var typeOwner = declaration as ITypeOwnerDeclaration;
             if (typeOwner != null)
             {
-                // first check if declaration is a IMethodDeclaration and its TypeUsage is null 
+                // first check if declaration is a IMethodDeclaration and its TypeUsage is null
                 // (otherwise the Type property throws the NullReferenceException)
                 var methodDeclaration = typeOwner as IMethodDeclaration;
                 if (methodDeclaration != null && methodDeclaration.TypeUsage == null)
@@ -537,6 +535,8 @@ namespace ReCommendedExtension.Analyzers
             var psiServices = element.GetPsiServices();
             var nullnessProvider = psiServices.GetCodeAnnotationsCache().GetProvider<NullnessProvider>();
             var codeAnnotationsConfiguration = psiServices.GetComponent<CodeAnnotationsConfiguration>();
+
+            Debug.Assert(nullnessProvider != null);
 
             // [NotNull], [CanBeNull] annotations
             switch (TryGetAnnotationCase(element))

@@ -31,6 +31,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                         return numericTypeInfo.TryCreateEnumContractInfoForEnumBetweenFirstAndLast(enumType.EnumMembers);
                     }
                 }
+
                 return null;
             }
 

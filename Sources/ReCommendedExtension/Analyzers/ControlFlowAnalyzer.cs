@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Daemon.Stages.Dispatcher;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -35,6 +34,10 @@ namespace ReCommendedExtension.Analyzers
             var nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
             var assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
             var assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
+
+            Debug.Assert(nullnessProvider != null);
+            Debug.Assert(assertionMethodAnnotationProvider != null);
+            Debug.Assert(assertionConditionAnnotationProvider != null);
 
             var assertions = Assertion.CollectAssertions(assertionMethodAnnotationProvider, assertionConditionAnnotationProvider, rootNode);
 
@@ -102,7 +105,7 @@ namespace ReCommendedExtension.Analyzers
         }
 
         static void AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
-            IHighlightingConsumer context,
+            [NotNull] IHighlightingConsumer context,
             [NotNull] NullnessProvider nullnessProvider,
             [NotNull] CSharpControlFlowGraphInspector inspector,
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
@@ -187,7 +190,7 @@ namespace ReCommendedExtension.Analyzers
         }
 
         static void AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
-            IHighlightingConsumer context,
+            [NotNull] IHighlightingConsumer context,
             [NotNull] NullnessProvider nullnessProvider,
             [NotNull] CSharpControlFlowGraphInspector inspector,
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,

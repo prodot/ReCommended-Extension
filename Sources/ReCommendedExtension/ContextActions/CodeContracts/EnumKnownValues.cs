@@ -48,9 +48,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             const int maxItemsToShow = 3;
 
             return
-                string.Join(
-                    " || ",
-                    from field in members.Take(maxItemsToShow) select string.Format("{0} == {1}", contractIdentifier, field.AssertNotNull().ShortName)) +
+                string.Join(" || ", from field in members.Take(maxItemsToShow) select $"{contractIdentifier} == {field.AssertNotNull().ShortName}") +
                 (members.Count > maxItemsToShow ? "..." : "");
         }
 
@@ -72,7 +70,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                 var index = i + 1;
 
-                pattern.AppendFormat("$0 == ${0}", index);
+                pattern.Append($"$0 == ${index}");
                 args[index] = members[i];
             }
 

@@ -43,8 +43,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                         attribute =>
                             attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
                 {
-                    Debug.Assert(Provider.PsiModule != null);
-
                     var factory = CSharpElementFactory.GetInstance(Provider.PsiModule);
 
                     var attribute = factory.CreateAttribute(attributeType);
@@ -94,7 +92,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             AddAnnotation();
 
             Debug.Assert(contractInfo != null);
-            Debug.Assert(Provider.PsiModule != null);
 
             ICollection<ICSharpStatement> firstNonContractStatements;
             contractInfo.AddContracts(

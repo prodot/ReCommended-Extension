@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
@@ -20,17 +19,13 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         protected override bool IsAvailableForType(IType type)
             => TypesUtil.IsPredefinedTypeFromAssembly(type, ClrTypeNames.Guid, assembly => assembly.AssertNotNull().IsMscorlib);
 
-        protected override string GetContractTextForUI(string contractIdentifier)
-            => string.Format("{0} != {1}", contractIdentifier, nameof(Guid.Empty));
+        protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != {nameof(Guid.Empty)}";
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
-        {
-            Debug.Assert(Provider.PsiModule != null);
-
-            return factory.CreateExpression(
-                string.Format("$0 != $1.{0}", nameof(Guid.Empty)),
-                contractExpression,
-                new DeclaredTypeFromCLRName(ClrTypeNames.Guid, Provider.PsiModule).GetTypeElement());
-        }
+            =>
+                factory.CreateExpression(
+                    string.Format("$0 != $1.{0}", nameof(Guid.Empty)),
+                    contractExpression,
+                    new DeclaredTypeFromCLRName(ClrTypeNames.Guid, Provider.PsiModule).GetTypeElement());
     }
 }

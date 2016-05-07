@@ -16,7 +16,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         protected override bool IsAvailableForType(IType type) => type.Classify == TypeClassification.REFERENCE_TYPE;
 
-        protected override string GetContractTextForUI(string contractIdentifier) => string.Format("{0} != null", contractIdentifier);
+        protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != null";
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
             => factory.CreateExpression("$0 != null", contractExpression);

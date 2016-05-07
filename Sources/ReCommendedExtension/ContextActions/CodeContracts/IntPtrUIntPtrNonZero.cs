@@ -16,12 +16,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
     {
         public IntPtrUIntPtrNonZero([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
-        protected override string GetContractTextForUI(string contractIdentifier)
-            => string.Format("{0} != {1}", contractIdentifier, nameof(IntPtr.Zero));
+        protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != {nameof(IntPtr.Zero)}";
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
         {
-            Debug.Assert(Provider.PsiModule != null);
             Debug.Assert(nameof(IntPtr.Zero) == nameof(UIntPtr.Zero));
 
             return factory.CreateExpression(

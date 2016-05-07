@@ -15,12 +15,11 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
     {
         public SignedNumericNonZero([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
 
-        protected override string GetContractTextForUI(string contractIdentifier) => string.Format("{0} != 0", contractIdentifier);
+        protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != 0";
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
         {
             Debug.Assert(NumericTypeInfo != null);
-            Debug.Assert(Provider.PsiModule != null);
 
             return NumericTypeInfo.EpsilonLiteral != null
                 ? factory.CreateExpression(
