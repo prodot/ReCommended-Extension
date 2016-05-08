@@ -54,9 +54,9 @@ namespace ReCommendedExtension.ContextActions
         {
             get
             {
-                Debug.Assert(CodeAnnotationsCache.ItemNotNullAttributeShortName != null);
+                Debug.Assert(ContainerElementNullnessProvider.ItemNotNullAttributeShortName != null);
 
-                return CodeAnnotationsCache.ItemNotNullAttributeShortName;
+                return ContainerElementNullnessProvider.ItemNotNullAttributeShortName;
             }
         }
 

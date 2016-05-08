@@ -8,7 +8,7 @@ namespace Test
 {
     internal class ExecuteLazyOnDelegate
     {
-      [ItemNotNull]
-      delegate Lazy<string> Call{caret}back();
+        [ItemNotNull]
+        delegate Lazy<string> Call{caret}back();
     }
 }

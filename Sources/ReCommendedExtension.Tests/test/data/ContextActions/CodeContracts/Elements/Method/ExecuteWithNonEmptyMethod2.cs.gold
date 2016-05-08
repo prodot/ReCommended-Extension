@@ -5,13 +5,13 @@ namespace Test
 {
     internal class Class
     {
-      [NotNull]
-      internal string Method{caret}()
+        [NotNull]
+        internal string Method{caret}()
         {
             Contract.Ensures(true);
-        Contract.Ensures(Contract.Result<string>() != null);
+          Contract.Ensures(Contract.Result<string>() != null);
 
-        return "";
+          return "";
         }
     }
 }

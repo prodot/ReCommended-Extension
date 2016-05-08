@@ -22,9 +22,9 @@ namespace ReCommendedExtension.ContextActions
         {
             get
             {
-                Debug.Assert(CodeAnnotationsCache.PureAttributeShortName != null);
+                Debug.Assert(PureAnnotationProvider.PureAttributeShortName != null);
 
-                return CodeAnnotationsCache.PureAttributeShortName;
+                return PureAnnotationProvider.PureAttributeShortName;
             }
         }
 
@@ -44,6 +44,6 @@ namespace ReCommendedExtension.ContextActions
                 ownerDeclaration.AttributesEnumerable.FirstOrDefault(
                     attribute =>
                         attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                        CodeAnnotationsCache.MustUseReturnValueAttributeShortName);
+                        MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName);
     }
 }

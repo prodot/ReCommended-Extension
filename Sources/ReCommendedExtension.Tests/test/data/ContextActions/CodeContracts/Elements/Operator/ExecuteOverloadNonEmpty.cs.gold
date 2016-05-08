@@ -5,12 +5,12 @@ namespace Test
 {
     internal class Class
     {
-      [NotNull]
-      public static string operator{caret} +(Class x, Class y)
-      {
-        Contract.Ensures(Contract.Result<string>() != null);
-        
-        return "";
-      }
+        [NotNull]
+        public static string operator{caret} +(Class x, Class y)
+        {
+          Contract.Ensures(Contract.Result<string>() != null);
+          
+          return "";
+        }
     }
 }

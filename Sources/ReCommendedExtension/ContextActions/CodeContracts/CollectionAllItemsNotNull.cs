@@ -66,8 +66,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
         {
-            Debug.Assert(Provider.PsiModule != null);
-
             var expression = isDictionary
                 ? factory.CreateExpression(
                     string.Format("$0.{0}(pair => pair.{1} != null)", nameof(Enumerable.All), nameof(KeyValuePair<int, int>.Value)),
@@ -93,6 +91,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             return expression;
         }
 
-        protected override string TryGetAnnotationAttributeTypeName() => isDictionary ? null : CodeAnnotationsCache.ItemNotNullAttributeShortName;
+        protected override string TryGetAnnotationAttributeTypeName()
+            => isDictionary ? null : ContainerElementNullnessProvider.ItemNotNullAttributeShortName;
     }
 }

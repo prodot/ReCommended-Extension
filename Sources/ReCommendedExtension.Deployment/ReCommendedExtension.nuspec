@@ -15,18 +15,18 @@
 
             - detection of redundant assertions,
             - inappropriate use of "async void",
-            - incorrect use of ReShaper annotations,
+            - incorrect use of ReSharper annotations,
             - exception analyzer (exceptions that should never be thrown or caught),
             - and lots more.
 
             The most highlightings also have quick fixes for obvious solutions.
 
-            Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReShaper annotations, putting ".ConfigureAwait(false)", etc.
+            Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReSharper annotations, putting ".ConfigureAwait(false)", etc.
         </description>
         <copyright>{{AssemblyCopyright}}</copyright>
         <tags>recommended extension resharper plugin addin prodot</tags>
         <dependencies>
-            <dependency id="Wave" version="[4.0,4.1)" />
+            <dependency id="Wave" version="[5.0,5.1)" />
         </dependencies>
     </metadata>
     <files>

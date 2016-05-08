@@ -45,8 +45,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             Func<IExpression, IExpression> getContractExpression,
             out ICollection<ICSharpStatement> firstNonContractStatements)
         {
-            Debug.Assert(provider.PsiModule != null);
-
             var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
 
             IBlock body;

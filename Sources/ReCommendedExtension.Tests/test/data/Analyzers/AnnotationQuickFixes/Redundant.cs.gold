@@ -6,7 +6,7 @@ namespace Test
 {
     internal class BaseInterfaceImplementation : IBase
     {
-      {caret}async Task<int> Redundant()
+        {caret}async Task<int> Redundant()
         {
             throw new NotImplementedException();
         }

@@ -49,8 +49,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             Func<IExpression, IExpression> getContractExpression,
             out ICollection<ICSharpStatement> firstNonContractStatements)
         {
-            Debug.Assert(provider.PsiModule != null);
-
             var contractInvariantMethodDeclaration = classLikeDeclaration.EnsureContractInvariantMethod(provider.PsiModule);
 
             if (contractInvariantMethodDeclaration.Body != null)

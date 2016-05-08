@@ -6,8 +6,8 @@ namespace Test
 {
     internal class Class
     {
-      [NotNull]
-      string Property{caret}
+        [NotNull]
+        string Property{caret}
         {
             get
             {
@@ -15,12 +15,12 @@ namespace Test
               
               return "";
             }
-        set
-        {
-          Contract.Requires(value != nu
-          ll);
-          Console.WriteLine(value);
-        }
+          set
+          {
+            Contract.Requires(value != null
+            );
+            Console.WriteLine(value);
+          }
         }
     }
 }

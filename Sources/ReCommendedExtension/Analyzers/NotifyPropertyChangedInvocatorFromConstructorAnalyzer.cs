@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using JetBrains.Annotations;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Daemon.Stages.Dispatcher;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -34,14 +33,19 @@ namespace ReCommendedExtension.Analyzers
                 return false; // cannot analyze
             }
 
-            return method.GetPsiServices().GetCodeAnnotationsCache().HasNotifyPropertyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
+            var notifyPropertyChangedAnnotationProvider =
+                method.GetPsiServices().GetCodeAnnotationsCache().GetProvider<NotifyPropertyChangedAnnotationProvider>();
+
+            Debug.Assert(notifyPropertyChangedAnnotationProvider != null);
+
+            return notifyPropertyChangedAnnotationProvider.ContainsNotifyPropetyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
         }
 
         protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
             if (IsNotifyPropertyChangedInvocatorFromConstructor(element))
             {
-                var typeName = CodeAnnotationsCache.NotifyPropertyChangedInvocatorAttributeShortName;
+                var typeName = NotifyPropertyChangedAnnotationProvider.NotifyPropertyChangedInvocatorAttributeShortName;
 
                 Debug.Assert(typeName != null);
 

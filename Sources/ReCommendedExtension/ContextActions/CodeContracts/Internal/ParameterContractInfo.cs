@@ -22,8 +22,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] IBlock body,
             out ICSharpStatement firstNonContractStatement)
         {
-            Debug.Assert(provider.PsiModule != null);
-
             var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
 
             var parameterExpression = factory.CreateExpression("$0", parameter);
@@ -39,8 +37,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] IBlock body,
             out ICSharpStatement firstNonContractStatement)
         {
-            Debug.Assert(provider.PsiModule != null);
-
             var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
 
             var contractType = new DeclaredTypeFromCLRName(ClrTypeNames.Contract, provider.PsiModule).GetTypeElement();
@@ -138,8 +134,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             Func<IExpression, IExpression> getContractExpression,
             out ICollection<ICSharpStatement> firstNonContractStatements)
         {
-            Debug.Assert(provider.PsiModule != null);
-
             var parameter = declaration.DeclaredElement;
 
             Debug.Assert(parameter != null);

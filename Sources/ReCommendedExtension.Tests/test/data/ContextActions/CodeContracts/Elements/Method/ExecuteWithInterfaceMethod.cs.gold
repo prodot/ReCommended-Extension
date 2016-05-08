@@ -8,8 +8,8 @@ namespace Test
         [ContractClass(typeof(InterfaceContract))]
         internal interface IInterface
         {
-          [NotNull]
-          string InterfaceMethod{caret}();
+            [NotNull]
+            string InterfaceMethod{caret}();
         }
 
         [ContractClassFor(typeof(IInterface))]

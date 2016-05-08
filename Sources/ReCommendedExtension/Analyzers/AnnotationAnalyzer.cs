@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel.Properties.Flavours;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Daemon.Stages.Dispatcher;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -71,7 +70,7 @@ namespace ReCommendedExtension.Analyzers
             var typeOwner = declaration as ITypeOwnerDeclaration;
             if (typeOwner != null)
             {
-                // first check if declaration is a IMethodDeclaration and its TypeUsage is null 
+                // first check if declaration is a IMethodDeclaration and its TypeUsage is null
                 // (otherwise the Type property throws the NullReferenceException)
                 var methodDeclaration = typeOwner as IMethodDeclaration;
                 if (methodDeclaration != null && methodDeclaration.TypeUsage == null)
@@ -120,7 +119,7 @@ namespace ReCommendedExtension.Analyzers
 
         [NotNull]
         static IEnumerable<AttributeMark> GetAttributeMarks(
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] IAttributesOwnerDeclaration declaration)
         {
             var markFound = false;
@@ -129,7 +128,7 @@ namespace ReCommendedExtension.Analyzers
             {
                 Debug.Assert(attribute != null);
 
-                var mark = codeAnnotationsCache.GetNullableAttributeMark(attribute.GetAttributeInstance());
+                var mark = nullnessProvider.GetNullableAttributeMark(attribute.GetAttributeInstance());
                 if (mark != null)
                 {
                     yield return new AttributeMark((CodeAnnotationNullableValue)mark, attribute);
@@ -182,10 +181,10 @@ namespace ReCommendedExtension.Analyzers
 
         static void AnalyzeAsyncMethod(
             [NotNull] IHighlightingConsumer consumer,
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
-            foreach (var attributeMark in GetAttributeMarks(codeAnnotationsCache, attributesOwnerDeclaration))
+            foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
             {
                 if (attributeMark != null)
                 {
@@ -214,9 +213,10 @@ namespace ReCommendedExtension.Analyzers
         static void AnalyzeIteratorMethod(
             [NotNull] IHighlightingConsumer consumer,
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache)
+            [NotNull] NullnessProvider nullnessProvider,
+            [NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration)
         {
-            foreach (var attributeMark in GetAttributeMarks(codeAnnotationsCache, attributesOwnerDeclaration))
+            foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
             {
                 if (attributeMark != null)
                 {
@@ -231,16 +231,16 @@ namespace ReCommendedExtension.Analyzers
                 }
                 else
                 {
-                    var nonNullAnnotationAttributeType = codeAnnotationsCache.GetAttributeTypeForElement(
+                    var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
                         attributesOwnerDeclaration,
-                        CodeAnnotationsCache.NotNullAttributeShortName);
+                        NullnessProvider.NotNullAttributeShortName);
                     if (nonNullAnnotationAttributeType != null)
                     {
                         consumer.AddHighlighting(
                             new MissingAnnotationHighlighting(
                                 string.Format(
                                     "Declared element can never be null by default, but is not annotated with '{0}'.",
-                                    CodeAnnotationsCache.NotNullAttributeShortName),
+                                    NullnessProvider.NotNullAttributeShortName),
                                 attributesOwnerDeclaration));
                     }
                     break;
@@ -251,30 +251,31 @@ namespace ReCommendedExtension.Analyzers
         static void AnalyzeOther(
             ValueAnalysisMode valueAnalysisMode,
             [NotNull] IHighlightingConsumer consumer,
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] NullnessProvider nullnessProvider,
+            [NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             switch (valueAnalysisMode)
             {
                 case ValueAnalysisMode.OPTIMISTIC:
-                    foreach (var attributeMark in GetAttributeMarks(codeAnnotationsCache, attributesOwnerDeclaration))
+                    foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
                     {
                         if (attributeMark == null)
                         {
-                            var nonNullAnnotationAttributeType = codeAnnotationsCache.GetAttributeTypeForElement(
+                            var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
                                 attributesOwnerDeclaration,
-                                CodeAnnotationsCache.NotNullAttributeShortName);
-                            var canBeNullAnnotationAttributeType = codeAnnotationsCache.GetAttributeTypeForElement(
+                                NullnessProvider.NotNullAttributeShortName);
+                            var canBeNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
                                 attributesOwnerDeclaration,
-                                CodeAnnotationsCache.CanBeNullAttributeShortName);
+                                NullnessProvider.CanBeNullAttributeShortName);
                             if (nonNullAnnotationAttributeType != null || canBeNullAnnotationAttributeType != null)
                             {
                                 consumer.AddHighlighting(
                                     new MissingAnnotationHighlighting(
                                         string.Format(
                                             "Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
-                                            CodeAnnotationsCache.NotNullAttributeShortName,
-                                            CodeAnnotationsCache.CanBeNullAttributeShortName),
+                                            NullnessProvider.NotNullAttributeShortName,
+                                            NullnessProvider.CanBeNullAttributeShortName),
                                         attributesOwnerDeclaration));
                             }
                             break;
@@ -283,7 +284,7 @@ namespace ReCommendedExtension.Analyzers
                     break;
 
                 case ValueAnalysisMode.PESSIMISTIC:
-                    foreach (var attributeMark in GetAttributeMarks(codeAnnotationsCache, attributesOwnerDeclaration))
+                    foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
                     {
                         if (attributeMark != null && attributeMark.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
                         {
@@ -300,10 +301,10 @@ namespace ReCommendedExtension.Analyzers
 
         static void AnalyzeOverride(
             [NotNull] IHighlightingConsumer consumer,
-            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
-            foreach (var attributeMark in GetAttributeMarks(codeAnnotationsCache, attributesOwnerDeclaration))
+            foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
             {
                 if (attributeMark != null)
                 {
@@ -324,7 +325,7 @@ namespace ReCommendedExtension.Analyzers
                 attributesOwnerDeclaration.AttributesEnumerable.FirstOrDefault(
                     attribute =>
                         attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                        CodeAnnotationsCache.ItemNotNullAttributeShortName);
+                        ContainerElementNullnessProvider.ItemNotNullAttributeShortName);
             if (itemNotNullAttribute != null)
             {
                 if (attributesOwnerDeclaration.OverridesInheritedMember())
@@ -460,7 +461,8 @@ namespace ReCommendedExtension.Analyzers
                 from attribute in attributesOwnerDeclaration.AttributesEnumerable
                 let shortName = attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName
                 where
-                    shortName == CodeAnnotationsCache.PureAttributeShortName || shortName == CodeAnnotationsCache.MustUseReturnValueAttributeShortName
+                    shortName == PureAnnotationProvider.PureAttributeShortName ||
+                    shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
                 group attribute by shortName).ToList();
             if (groupings.Count > 1)
             {
@@ -471,12 +473,12 @@ namespace ReCommendedExtension.Analyzers
                     var shortName = grouping.Key;
 
                     Debug.Assert(
-                        shortName == CodeAnnotationsCache.PureAttributeShortName ||
-                        shortName == CodeAnnotationsCache.MustUseReturnValueAttributeShortName);
+                        shortName == PureAnnotationProvider.PureAttributeShortName ||
+                        shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName);
 
-                    var conflictingAnnotation = shortName == CodeAnnotationsCache.PureAttributeShortName
-                            ? CodeAnnotationsCache.MustUseReturnValueAttributeShortName
-                            : CodeAnnotationsCache.PureAttributeShortName;
+                    var conflictingAnnotation = shortName == PureAnnotationProvider.PureAttributeShortName
+                            ? MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
+                            : PureAnnotationProvider.PureAttributeShortName;
 
                     foreach (var attribute in grouping)
                     {
@@ -530,25 +532,29 @@ namespace ReCommendedExtension.Analyzers
 
         protected override void Run(IAttributesOwnerDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
-            var codeAnnotationsCache = element.GetPsiServices().GetCodeAnnotationsCache();
+            var psiServices = element.GetPsiServices();
+            var nullnessProvider = psiServices.GetCodeAnnotationsCache().GetProvider<NullnessProvider>();
+            var codeAnnotationsConfiguration = psiServices.GetComponent<CodeAnnotationsConfiguration>();
+
+            Debug.Assert(nullnessProvider != null);
 
             // [NotNull], [CanBeNull] annotations
             switch (TryGetAnnotationCase(element))
             {
                 case AnnotationCase.AsyncMethod:
-                    AnalyzeAsyncMethod(consumer, codeAnnotationsCache, element);
+                    AnalyzeAsyncMethod(consumer, nullnessProvider, element);
                     break;
 
                 case AnnotationCase.IteratorMethod:
-                    AnalyzeIteratorMethod(consumer, element, codeAnnotationsCache);
+                    AnalyzeIteratorMethod(consumer, element, nullnessProvider, codeAnnotationsConfiguration);
                     break;
 
                 case AnnotationCase.Other:
-                    AnalyzeOther(data.GetValueAnalysisMode(), consumer, codeAnnotationsCache, element);
+                    AnalyzeOther(data.GetValueAnalysisMode(), consumer, nullnessProvider, codeAnnotationsConfiguration, element);
                     break;
 
                 case AnnotationCase.Override:
-                    AnalyzeOverride(consumer, codeAnnotationsCache, element);
+                    AnalyzeOverride(consumer, nullnessProvider, element);
                     break;
             }
 

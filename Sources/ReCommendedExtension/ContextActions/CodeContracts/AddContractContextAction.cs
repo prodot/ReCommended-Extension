@@ -34,17 +34,15 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             {
                 var attributesOwnerDeclaration = Provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
 
-                var codeAnnotationsCache = attributesOwnerDeclaration?.GetPsiServices().GetCodeAnnotationsCache();
+                var codeAnnotationsConfiguration = attributesOwnerDeclaration?.GetPsiServices().GetComponent<CodeAnnotationsConfiguration>();
 
-                var attributeType = codeAnnotationsCache?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
+                var attributeType = codeAnnotationsConfiguration?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
 
                 if (attributeType != null &&
                     attributesOwnerDeclaration.AttributesEnumerable.All(
                         attribute =>
                             attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
                 {
-                    Debug.Assert(Provider.PsiModule != null);
-
                     var factory = CSharpElementFactory.GetInstance(Provider.PsiModule);
 
                     var attribute = factory.CreateAttribute(attributeType);
@@ -94,7 +92,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             AddAnnotation();
 
             Debug.Assert(contractInfo != null);
-            Debug.Assert(Provider.PsiModule != null);
 
             ICollection<ICSharpStatement> firstNonContractStatements;
             contractInfo.AddContracts(

@@ -3,13 +3,13 @@ using JetBrains.Annotations;
 
 namespace Test
 {
-  [ContractClass(typeof (InterfaceContract))]
-  internal interface IInterface
+    [ContractClass(typeof(InterfaceContract))]
+    internal interface IInterface
     {
         int this[[NotNull] string one{caret}] { get; set; }
     }
 
-  [ContractClassFor(typeof (IInterface))]
+  [ContractClassFor(typeof(IInterface))]
   internal abstract class InterfaceContract : IInterface
   {
     public int this[string one]

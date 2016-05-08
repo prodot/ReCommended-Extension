@@ -16,8 +16,6 @@ namespace ReCommendedExtension.Highlightings
 
         public string ErrorStripeToolTip => message;
 
-        public int NavigationOffsetPatch => 0;
-
         public string ToolTip => message;
 
         public bool IsValid() => true;

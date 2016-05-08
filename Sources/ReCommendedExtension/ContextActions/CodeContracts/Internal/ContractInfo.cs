@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using JetBrains.Annotations;
-using JetBrains.Metadata.Reader.API;
-using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Intentions.Util;
 using JetBrains.ReSharper.Psi;
@@ -50,6 +48,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                                 list.Add(new ContractStatementInfo(ContractKind.Invariant, expressionStatement));
                                 continue;
                         }
+
                         break;
                     }
                 }
@@ -68,10 +67,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull]
             public ICSharpStatement Statement { get; }
         }
-
-        [NotNull]
-        static readonly IClrTypeName contractClassForAttributeClrTypeName = new ClrTypeName(
-            typeof(ContractClassForAttribute).FullName.AssertNotNull());
 
         protected static bool CanAcceptContracts([NotNull] ITypeMember typeMember)
         {

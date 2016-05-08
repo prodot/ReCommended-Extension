@@ -66,8 +66,6 @@ namespace ReCommendedExtension.ContextActions
             if (attributesOwnerDeclaration != null && attributesOwnerDeclaration.GetNameRange().Contains(provider.TreeOffset) &&
                 !attributesOwnerDeclaration.OverridesInheritedMember() && !attributesOwnerDeclaration.AttributesEnumerable.Any(IsAttribute))
             {
-                Debug.Assert(provider.PsiModule != null);
-
                 createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, provider.PsiModule, out attributeToRemove);
 
                 if (createAttributeFactory != null)
@@ -92,8 +90,6 @@ namespace ReCommendedExtension.ContextActions
             {
                 using (WriteLockCookie.Create())
                 {
-                    Debug.Assert(provider.PsiModule != null);
-
                     var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
 
                     var attribute = createAttributeFactory(factory);

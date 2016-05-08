@@ -32,6 +32,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                         return numericTypeInfo.TryCreateEnumFlags(enumType.EnumMembers);
                     }
                 }
+
                 return null;
             }
 
@@ -132,11 +133,11 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             public override string GetContractTextForUI(string contractIdentifier)
             {
-                var zeroExpression = zeroMember != null ? string.Format("{0}", zeroMember.ShortName) : "0";
+                var zeroExpression = zeroMember?.ShortName ?? "0";
 
                 if (valueMembers.Count == 0)
                 {
-                    return string.Format("{0} == {1}", contractIdentifier, zeroExpression);
+                    return $"{contractIdentifier} == {zeroExpression}";
                 }
 
                 const int maxItemsToShow = 3;
@@ -184,7 +185,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                     var index = i + 2;
 
-                    pattern.AppendFormat("${0}", index);
+                    pattern.Append($"${index}");
                     args[index] = fields[i];
                 }
                 if (fields.Count > 1)

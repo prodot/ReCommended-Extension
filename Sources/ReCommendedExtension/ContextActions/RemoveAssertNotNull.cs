@@ -51,7 +51,7 @@ namespace ReCommendedExtension.ContextActions
 
             try
             {
-                // changing the tree with the ModificationUtil does not retrigger the analysis for the current statement => changing the text directly 
+                // changing the tree with the ModificationUtil does not retrigger the analysis for the current statement => changing the text directly
                 // does retrigger the analysis
 
                 var textRange = assertion.InvocationExpression.GetDocumentRange().TextRange;

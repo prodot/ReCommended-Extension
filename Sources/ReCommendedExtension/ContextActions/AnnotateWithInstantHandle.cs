@@ -21,9 +21,9 @@ namespace ReCommendedExtension.ContextActions
         {
             get
             {
-                Debug.Assert(CodeAnnotationsCache.InstantHandleAttributeShortName != null);
+                Debug.Assert(InstantHandleAnnotationProvider.InstantHandleAttributeShortName != null);
 
-                return CodeAnnotationsCache.InstantHandleAttributeShortName;
+                return InstantHandleAnnotationProvider.InstantHandleAttributeShortName;
             }
         }
 
