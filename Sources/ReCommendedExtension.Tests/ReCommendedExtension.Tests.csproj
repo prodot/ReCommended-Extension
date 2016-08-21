@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ReCommendedExtension.Tests</RootNamespace>
     <AssemblyName>ReCommendedExtension.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkProfile />
@@ -26,6 +26,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\Release\</OutputPath>
@@ -36,6 +37,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="antlr.runtime, Version=2.7.7.1, Culture=neutral, PublicKeyToken=0f493c87b190d7e9, processorArchitecture=MSIL">
@@ -166,7 +168,8 @@
     <None Include="test\data\Analyzers\AnnotationQuickFixes\Conflicting.cs.gold" />
     <None Include="test\data\Analyzers\AnnotationQuickFixes\NotAllowed.cs.gold" />
     <None Include="test\data\Analyzers\AnnotationQuickFixes\Redundant.cs.gold" />
-    <None Include="test\data\Analyzers\Annotation\WithoutAnnotations.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Optimistic.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Pessimistic.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethod.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethodAvailability.cs.gold" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs.gold" />
@@ -613,7 +616,8 @@
     <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty2.cs" />
     <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty3.cs" />
     <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty4.cs" />
-    <None Include="test\data\Analyzers\Annotation\WithoutAnnotations.cs" />
+    <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Pessimistic.cs" />
+    <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Optimistic.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />

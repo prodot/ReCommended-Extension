@@ -13,7 +13,7 @@ namespace Test
               
               return 0;
             }
-          set { Contract.Requires(one != null); }
+            set { Contract.Requires(one != null); }
         }
     }
 }

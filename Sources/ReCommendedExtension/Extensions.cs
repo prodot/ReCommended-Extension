@@ -454,9 +454,7 @@ namespace ReCommendedExtension
             {
                 for (var i = 1; i < 16; i++)
                 {
-                    if (type.IsImplicitlyConvertibleTo(
-                        TypeFactory.CreateArrayType(elementType, i),
-                        new CSharpTypeConversionRule(context.GetPsiModule())))
+                    if (type.IsImplicitlyConvertibleTo(TypeFactory.CreateArrayType(elementType, i), context.GetTypeConversionRule()))
                     {
                         return true;
                     }

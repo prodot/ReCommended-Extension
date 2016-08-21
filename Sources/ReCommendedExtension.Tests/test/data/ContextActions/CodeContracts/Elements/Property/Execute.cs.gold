@@ -15,12 +15,12 @@ namespace Test
               
               return "";
             }
-          set
-          {
-            Contract.Requires(value != null
-            );
-            Console.WriteLine(value);
-          }
+            set
+            {
+              Contract.Requires(value != null);
+              
+              Console.WriteLine(value);
+            }
         }
     }
 }

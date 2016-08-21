@@ -19,9 +19,9 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile)
             => highlighting is MissingAnnotationHighlighting;
 
-        [TestCase("WithoutAnnotations.cs", ValueAnalysisMode.PESSIMISTIC)]
-        [TestCase("WithoutAnnotations.cs", ValueAnalysisMode.OPTIMISTIC)]
-        [TestCase("WithoutAnnotations.cs", ValueAnalysisMode.OFF)]
+        [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.PESSIMISTIC)]
+        [TestCase("WithoutAnnotations_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
+        [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.OFF)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode) => ExecuteWithinSettingsTransaction(
             store =>

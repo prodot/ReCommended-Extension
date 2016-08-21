@@ -16,7 +16,7 @@ namespace ReCommendedExtension.Analyzers
     {
         static bool IsNotifyPropertyChangedInvocatorFromConstructor([NotNull] IInvocationExpression invocationExpression)
         {
-            var containingTypeMemberDeclaration = invocationExpression.GetContainingTypeMemberDeclaration();
+            var containingTypeMemberDeclaration = invocationExpression.GetContainingTypeMemberDeclarationIgnoringClosures();
             if (!(containingTypeMemberDeclaration is IConstructorDeclaration))
             {
                 return false; // not a constructor => do not highlight
