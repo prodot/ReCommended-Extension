@@ -14,7 +14,7 @@ namespace Test
               
               return "";
             }
-          set { Contract.Requires(value != null); }
+            set { Contract.Requires(value != null); }
         }
     }
 }

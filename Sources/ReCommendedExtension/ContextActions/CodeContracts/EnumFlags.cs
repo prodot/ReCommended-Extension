@@ -143,7 +143,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 const int maxItemsToShow = 3;
 
                 var totalExpression = string.Join(
-                    " | ", from value in valueMembers.Keys.Take(maxItemsToShow) orderby value select valueMembers[value].AssertNotNull().ShortName);
+                    " | ",
+                    from value in valueMembers.Keys.Take(maxItemsToShow) orderby value select valueMembers[value].ShortName);
 
                 return string.Format(
                     "{0} >= {1} && {0} <= {2}",

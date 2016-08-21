@@ -149,6 +149,7 @@ namespace ReCommendedExtension.Deployment
                 {
                     break;
                 }
+
                 var end = nuspec.IndexOf(endToken, start + startToken.Length, StringComparison.Ordinal);
 
                 var shortAttributeTypeName = nuspec.Substring(start + startToken.Length, end - start - endToken.Length);

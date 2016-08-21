@@ -34,7 +34,7 @@ namespace ReCommendedExtension.ContextActions
                    (parameter.Type.IsGenericIEnumerable() ||
                     parameter.Type.IsImplicitlyConvertibleTo(
                         new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, module),
-                        new CSharpTypeConversionRule(module)));
+                        context.GetTypeConversionRule()));
         }
     }
 }
