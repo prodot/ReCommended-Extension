@@ -157,7 +157,7 @@ namespace ReCommendedExtension
             if (contractClassDeclaration == null)
             {
                 var typeParameters = typeDeclaration.TypeParametersEnumerable.Any()
-                    ? $"<{string.Join(", ", from typeParameter in typeDeclaration.TypeParametersEnumerable select typeParameter.AssertNotNull().DeclaredName)}>"
+                    ? $"<{string.Join(", ", from typeParameter in typeDeclaration.TypeParametersEnumerable select typeParameter.DeclaredName)}>"
                     : "";
                 var typeParametersForAttribute = typeDeclaration.TypeParametersEnumerable.Any()
                     ? $"<{new string(',', typeDeclaration.TypeParametersEnumerable.Count() - 1)}>"
@@ -237,11 +237,10 @@ namespace ReCommendedExtension
 
             var overriddenMethodDeclaration = (
                 from d in contractClassDeclaration.MethodDeclarationsEnumerable
-                let element = d.AssertNotNull().DeclaredElement
                 where
-                    element != null &&
-                    element.GetImmediateSuperMembers()
-                        .Any(overridableMemberInstance => overridableMemberInstance.AssertNotNull().GetHashCode() == declaredElement.GetHashCode())
+                d.DeclaredElement != null &&
+                d.DeclaredElement.GetImmediateSuperMembers()
+                    .Any(overridableMemberInstance => overridableMemberInstance.GetHashCode() == declaredElement.GetHashCode())
                 select d).FirstOrDefault();
 
             if (overriddenMethodDeclaration == null)
@@ -251,8 +250,7 @@ namespace ReCommendedExtension
                         "<{0}>",
                         string.Join(
                             ", ",
-                            from typeParameter in methodDeclaration.TypeParameterDeclarationsEnumerable
-                            select typeParameter.AssertNotNull().DeclaredName))
+                            from typeParameter in methodDeclaration.TypeParameterDeclarationsEnumerable select typeParameter.DeclaredName))
                     : "";
 
                 overriddenMethodDeclaration =
@@ -311,14 +309,12 @@ namespace ReCommendedExtension
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenIndexerDeclaration = (
                 from d in contractClassDeclaration.IndexerDeclarationsEnumerable
-                let element = d.AssertNotNull().DeclaredElement
                 where
-                    element != null &&
-                    element.GetImmediateSuperMembers()
-                        .Any(
-                            overridableMemberInstance =>
-                                overridableMemberInstance.AssertNotNull().GetHashCode() ==
-                                indexerDeclaration.DeclaredElement.AssertNotNull().GetHashCode())
+                d.DeclaredElement != null &&
+                d.DeclaredElement.GetImmediateSuperMembers()
+                    .Any(
+                        overridableMemberInstance =>
+                                overridableMemberInstance.GetHashCode() == indexerDeclaration.DeclaredElement.AssertNotNull().GetHashCode())
                 select d).FirstOrDefault();
 
             if (overriddenIndexerDeclaration == null)
@@ -374,14 +370,12 @@ namespace ReCommendedExtension
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenPropertyDeclaration = (
                 from d in contractClassDeclaration.PropertyDeclarationsEnumerable
-                let element = d.AssertNotNull().DeclaredElement
                 where
-                    element != null &&
-                    element.GetImmediateSuperMembers()
-                        .Any(
-                            overridableMemberInstance =>
-                                overridableMemberInstance.AssertNotNull().GetHashCode() ==
-                                propertyDeclaration.DeclaredElement.AssertNotNull().GetHashCode())
+                d.DeclaredElement != null &&
+                d.DeclaredElement.GetImmediateSuperMembers()
+                    .Any(
+                        overridableMemberInstance =>
+                                overridableMemberInstance.GetHashCode() == propertyDeclaration.DeclaredElement.AssertNotNull().GetHashCode())
                 select d).FirstOrDefault();
 
             if (overriddenPropertyDeclaration == null)
@@ -481,7 +475,7 @@ namespace ReCommendedExtension
         }
 
         internal static ValueAnalysisMode GetValueAnalysisMode([NotNull] this ElementProblemAnalyzerData data)
-            => data.SettingsStore?.GetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode) ?? default(ValueAnalysisMode);
+            => data.SettingsStore.GetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode);
 
         /// <summary>
         /// Returns <c>true</c> if used in the pattern <c>button.Click ±= </c><paramref name="assignmentExpression"/><c>;</c>.

@@ -43,7 +43,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                     var declaredType = type as IDeclaredType;
                     if (declaredType != null &&
                         (declaredType.GetKeyValueTypesForGenericDictionary() ?? Enumerable.Empty<JetBrains.Util.Pair<IType, IType>>()).Any(
-                            pair => pair.Second.AssertNotNull().Classify == TypeClassification.REFERENCE_TYPE))
+                            pair => pair.Second.Classify == TypeClassification.REFERENCE_TYPE))
                     {
                         isDictionary = true;
                         return true;

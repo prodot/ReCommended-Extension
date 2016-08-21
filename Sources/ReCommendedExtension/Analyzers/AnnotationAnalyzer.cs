@@ -423,7 +423,7 @@ namespace ReCommendedExtension.Analyzers
 
             var suppressMessageAttributes =
                 from attribute in attributesOwnerDeclaration.AttributesEnumerable
-                let attributeInstance = attribute.AssertNotNull().GetAttributeInstance()
+                let attributeInstance = attribute.GetAttributeInstance()
                 where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute)
                 where attributeInstance.PositionParameterCount == 2
                 let categoryConstantValue = attributeInstance.PositionParameter(0).ConstantValue
@@ -434,8 +434,8 @@ namespace ReCommendedExtension.Analyzers
                 where checkIdConstantValue.IsString()
                 let justificationConstantValue = attributeInstance.NamedParameter(nameof(SuppressMessageAttribute.Justification)).ConstantValue
                 where
-                    justificationConstantValue == null || !justificationConstantValue.IsString() ||
-                    string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
+                justificationConstantValue == null || !justificationConstantValue.IsString() ||
+                string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
                 select new { Attribute = attribute, Category = (string)categoryConstantValue.Value, CheckId = (string)checkIdConstantValue.Value };
 
             foreach (var suppressMessageAttribute in suppressMessageAttributes)
@@ -445,7 +445,7 @@ namespace ReCommendedExtension.Analyzers
                 consumer.AddHighlighting(
                     new MissingSuppressionJustificationHighlighting(
                         attributesOwnerDeclaration,
-                        suppressMessageAttribute.Attribute.AssertNotNull(),
+                        suppressMessageAttribute.Attribute,
                         string.Format(
                             "Suppression justification is missing for {0}:{1}.",
                             suppressMessageAttribute.Category,
@@ -459,10 +459,10 @@ namespace ReCommendedExtension.Analyzers
         {
             var groupings = (
                 from attribute in attributesOwnerDeclaration.AttributesEnumerable
-                let shortName = attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName
+                let shortName = attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
                 where
-                    shortName == PureAnnotationProvider.PureAttributeShortName ||
-                    shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
+                shortName == PureAnnotationProvider.PureAttributeShortName ||
+                shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
                 group attribute by shortName).ToList();
             if (groupings.Count > 1)
             {
@@ -498,12 +498,12 @@ namespace ReCommendedExtension.Analyzers
         {
             var conditionalAttributes =
                 from attribute in attributesOwnerDeclaration.AttributesEnumerable
-                let typeElement = attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetTypeElement()
+                let typeElement = attribute.GetAttributeInstance().GetAttributeType().GetTypeElement()
                 where typeElement != null
                 let conditions = (
                     from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
                     where attributeInstance.AssertNotNull().PositionParameterCount == 1
-                    let constantValue = attributeInstance.AssertNotNull().PositionParameter(0).ConstantValue
+                    let constantValue = attributeInstance.PositionParameter(0).ConstantValue
                     where constantValue != null
                     where constantValue.IsString()
                     let condition = (string)constantValue.Value
@@ -519,11 +519,9 @@ namespace ReCommendedExtension.Analyzers
                 consumer.AddHighlighting(
                     new ConditionalAnnotationHighlighting(
                         attributesOwnerDeclaration,
-                        conditionalAttribute.Attribute.AssertNotNull(),
-                        conditionalAttribute.Conditions.AssertNotNull().Count == 1
-                            ? string.Format(
-                                "Attribute will be ignored if the '{0}' condition is not defined.",
-                                conditionalAttribute.Conditions.AssertNotNull()[0])
+                        conditionalAttribute.Attribute,
+                        conditionalAttribute.Conditions.Count == 1
+                            ? string.Format("Attribute will be ignored if the '{0}' condition is not defined.", conditionalAttribute.Conditions[0])
                             : string.Format(
                                 "Attribute will be ignored if none of the following conditions is defined: {0}.",
                                 string.Join(", ", from condition in conditionalAttribute.Conditions orderby condition select $"'{condition}'"))));
@@ -535,8 +533,6 @@ namespace ReCommendedExtension.Analyzers
             var psiServices = element.GetPsiServices();
             var nullnessProvider = psiServices.GetCodeAnnotationsCache().GetProvider<NullnessProvider>();
             var codeAnnotationsConfiguration = psiServices.GetComponent<CodeAnnotationsConfiguration>();
-
-            Debug.Assert(nullnessProvider != null);
 
             // [NotNull], [CanBeNull] annotations
             switch (TryGetAnnotationCase(element))
