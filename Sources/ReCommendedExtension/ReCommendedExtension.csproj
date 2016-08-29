@@ -156,7 +156,6 @@
     <Compile Include="ContextActions\AnnotateWith[A].cs" />
     <Compile Include="ContextActions\AnnotateWith.cs" />
     <Compile Include="ContextActions\AnnotateWithCodeAnnotation.cs" />
-    <Compile Include="ContextActions\AnnotateWithItemNotNull.cs" />
     <Compile Include="ContextActions\AnnotateWithLinqTunnel.cs" />
     <Compile Include="Highlightings\AsyncVoidFunctionExpressionHighlighting.cs" />
     <Compile Include="Highlightings\ConflictingAnnotationHighlighting.cs" />
