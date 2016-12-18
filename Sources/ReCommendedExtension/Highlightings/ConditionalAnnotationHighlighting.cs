@@ -7,7 +7,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(ConditionalAnnotationHighlighting.SeverityId, null, HighlightingGroupIds.CodeInfo,
-        "Attribute will be ignored if the specific condition is not defined" + ZoneMarker.Suffix, "", Severity.HINT, false)]
+        "Attribute will be ignored if the specific condition is not defined" + ZoneMarker.Suffix, "", Severity.HINT)]
 
 namespace ReCommendedExtension.Highlightings
 {

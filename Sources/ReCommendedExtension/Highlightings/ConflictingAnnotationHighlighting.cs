@@ -7,7 +7,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(ConflictingAnnotationHighlighting.SeverityId, null, HighlightingGroupIds.CodeSmell,
-        "Annotation conflicts with another annotation" + ZoneMarker.Suffix, "", Severity.WARNING, false)]
+        "Annotation conflicts with another annotation" + ZoneMarker.Suffix, "", Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

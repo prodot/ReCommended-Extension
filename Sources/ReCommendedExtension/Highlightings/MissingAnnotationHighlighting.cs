@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(MissingAnnotationHighlighting.SeverityId, null, HighlightingGroupIds.ConstraintViolation,
-        "Missing nullability annotation" + ZoneMarker.Suffix, "", Severity.WARNING, false)]
+        "Missing nullability annotation" + ZoneMarker.Suffix, "", Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

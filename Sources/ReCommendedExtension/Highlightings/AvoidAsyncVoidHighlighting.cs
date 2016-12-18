@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(AvoidAsyncVoidHighlighting.SeverityId, null, HighlightingGroupIds.CodeSmell, "Avoid 'async void'" + ZoneMarker.Suffix,
-        "", Severity.WARNING, true)]
+        "", Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

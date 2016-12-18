@@ -7,7 +7,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(MissingSuppressionJustificationHighlighting.SeverityId, null, HighlightingGroupIds.BestPractice,
-        "Missing suppression justification" + ZoneMarker.Suffix, "", Severity.WARNING, false)]
+        "Missing suppression justification" + ZoneMarker.Suffix, "", Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

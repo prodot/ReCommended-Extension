@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(RedundantAssertionStatementHighlighting.SeverityId, null, HighlightingGroupIds.CodeRedundancy,
-        "Redundant assertion statement" + ZoneMarker.Suffix, "", Severity.SUGGESTION, false)]
+        "Redundant assertion statement" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
 
 namespace ReCommendedExtension.Highlightings
 {

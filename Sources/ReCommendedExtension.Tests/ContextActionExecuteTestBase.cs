@@ -5,6 +5,6 @@ namespace ReCommendedExtension.Tests
 {
     public abstract class ContextActionExecuteTestBase<T> : CSharpContextActionExecuteTestBase<T> where T : class, IContextAction
     {
-        protected override string ExtraPath => null;
+        protected override string ExtraPath => "";
     }
 }
