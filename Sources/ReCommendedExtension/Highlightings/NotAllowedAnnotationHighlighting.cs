@@ -7,7 +7,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(NotAllowedAnnotationHighlighting.SeverityId, null, HighlightingGroupIds.ConstraintViolation,
-        "Nullability annotation is not allowed" + ZoneMarker.Suffix, "", Severity.WARNING, false)]
+        "Nullability annotation is not allowed" + ZoneMarker.Suffix, "", Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

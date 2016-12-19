@@ -63,7 +63,7 @@ namespace ReCommendedExtension.ContextActions
         {
             attributesOwnerDeclaration = provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
 
-            if (attributesOwnerDeclaration != null && attributesOwnerDeclaration.GetNameRange().Contains(provider.TreeOffset) &&
+            if (attributesOwnerDeclaration != null && attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange) &&
                 !attributesOwnerDeclaration.OverridesInheritedMember() && !attributesOwnerDeclaration.AttributesEnumerable.Any(IsAttribute))
             {
                 createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, provider.PsiModule, out attributeToRemove);

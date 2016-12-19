@@ -8,7 +8,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(NotifyPropertyChangedInvocatorFromConstructorHighlighting.SeverityId, null, HighlightingGroupIds.CodeRedundancy,
-        "Redundant invocation of the property change notifiers from the constructor" + ZoneMarker.Suffix, "", Severity.WARNING, false)]
+        "Redundant invocation of the property change notifiers from the constructor" + ZoneMarker.Suffix, "", Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

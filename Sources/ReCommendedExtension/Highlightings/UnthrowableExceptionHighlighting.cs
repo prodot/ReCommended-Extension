@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(UnthrowableExceptionHighlighting.SeverityId, null, HighlightingGroupIds.BestPractice,
-        "Exception should never be thrown" + ZoneMarker.Suffix, "", Severity.WARNING, false)]
+        "Exception should never be thrown" + ZoneMarker.Suffix, "", Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

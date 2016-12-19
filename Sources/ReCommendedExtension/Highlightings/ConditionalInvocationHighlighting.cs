@@ -12,7 +12,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(ConditionalInvocationHighlighting.SeverityId, null, HighlightingGroupIds.CodeInfo,
-        "Method invocation will be skipped if the specific condition is not defined" + ZoneMarker.Suffix, "", Severity.HINT, false)]
+        "Method invocation will be skipped if the specific condition is not defined" + ZoneMarker.Suffix, "", Severity.HINT)]
 
 namespace ReCommendedExtension.Highlightings
 {

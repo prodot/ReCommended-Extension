@@ -11,7 +11,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(RedundantInlineAssertionHighlighting.SeverityId, null, HighlightingGroupIds.CodeRedundancy,
-        "Redundant inline assertion expression" + ZoneMarker.Suffix, "", Severity.SUGGESTION, false)]
+        "Redundant inline assertion expression" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
 
 namespace ReCommendedExtension.Highlightings
 {

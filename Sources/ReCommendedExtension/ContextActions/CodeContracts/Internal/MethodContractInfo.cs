@@ -15,9 +15,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
     internal sealed class MethodContractInfo : ContractInfo
     {
         public static MethodContractInfo TryCreate(
-            [NotNull] IMethodDeclaration declaration, TreeOffset treeOffset, [NotNull] Func<IType, bool> isAvailableForType)
+            [NotNull] IMethodDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(treeOffset) && declaration.ArrowExpression == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowExpression == null)
             {
                 var method = declaration.DeclaredElement;
 

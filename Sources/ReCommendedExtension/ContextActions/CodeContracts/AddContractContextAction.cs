@@ -69,7 +69,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         {
             var declaration = Provider.GetSelectedElement<IDeclaration>(true, false);
 
-            contractInfo = ContractInfo.TryCreate(declaration, Provider.TreeOffset, IsAvailableForType);
+            contractInfo = ContractInfo.TryCreate(declaration, Provider.SelectedTreeRange, IsAvailableForType);
 
             return contractInfo != null;
         }

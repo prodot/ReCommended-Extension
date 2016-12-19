@@ -296,7 +296,7 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] NullnessProvider nullnessProvider,
             [NotNull] IReferenceExpression referenceExpression)
         {
-            var declaredElement = referenceExpression.Reference.GetResolveResult().DeclaredElement;
+            var declaredElement = referenceExpression.Reference.Resolve().DeclaredElement;
 
             var function = declaredElement as IFunction;
             if (function != null && nullnessProvider.GetInfo(function) == CodeAnnotationNullableValue.NOT_NULL)

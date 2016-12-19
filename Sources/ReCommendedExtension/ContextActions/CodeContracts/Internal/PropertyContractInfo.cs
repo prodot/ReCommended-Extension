@@ -15,9 +15,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
     internal sealed class PropertyContractInfo : ContractInfo
     {
         public static PropertyContractInfo TryCreate(
-            [NotNull] IPropertyDeclaration declaration, TreeOffset treeOffset, [NotNull] Func<IType, bool> isAvailableForType)
+            [NotNull] IPropertyDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(treeOffset) && declaration.ArrowExpression == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowExpression == null)
             {
                 var property = declaration.DeclaredElement;
 
@@ -41,9 +41,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         }
 
         public static PropertyContractInfo TryCreate(
-            [NotNull] IIndexerDeclaration declaration, TreeOffset treeOffset, [NotNull] Func<IType, bool> isAvailableForType)
+            [NotNull] IIndexerDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(treeOffset) && declaration.ArrowExpression == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowExpression == null)
             {
                 var property = declaration.DeclaredElement;
 

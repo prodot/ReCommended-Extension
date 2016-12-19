@@ -15,7 +15,6 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -33,11 +32,11 @@ namespace ReCommendedExtension
         {
             var referenceExpression = (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression as IReferenceExpression;
 
-            return
-                ((referenceExpression?.QualifierExpression as IReferenceExpression)?.Reference.GetResolveResult().DeclaredElement as IClass)?
-                    .GetClrName().FullName == classFullName
-                    ? referenceExpression.Reference.GetName()
-                    : null;
+            return referenceExpression != null &&
+                   ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
+                   .FullName == classFullName
+                ? referenceExpression.Reference.GetName()
+                : null;
         }
 
         static void CopyTypeParameterConstraints<P>(
@@ -101,10 +100,6 @@ namespace ReCommendedExtension
 
             return value;
         }
-
-        [NotNull]
-        internal static ResolveResultWithInfo GetResolveResult([NotNull] this IReference reference)
-            => reference.CurrentResolveResult ?? reference.Resolve();
 
         internal static bool OverridesInheritedMember([NotNull] this IDeclaration declaration)
         {
@@ -497,7 +492,7 @@ namespace ReCommendedExtension
                 return false;
             }
 
-            return (assignmentExpression.Dest as IReferenceExpression)?.Reference.GetResolveResult().DeclaredElement is IEvent;
+            return (assignmentExpression.Dest as IReferenceExpression)?.Reference.Resolve().DeclaredElement is IEvent;
         }
 
         /// <remarks>

@@ -15,9 +15,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
     internal sealed class OperatorContractInfo : ContractInfo
     {
         public static OperatorContractInfo TryCreate(
-            [NotNull] IOperatorDeclaration declaration, TreeOffset treeOffset, [NotNull] Func<IType, bool> isAvailableForType)
+            [NotNull] IOperatorDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(treeOffset) && declaration.ArrowExpression == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowExpression == null)
             {
                 var operatorElement = declaration.DeclaredElement;
 

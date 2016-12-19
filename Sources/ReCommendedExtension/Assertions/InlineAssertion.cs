@@ -18,7 +18,7 @@ namespace ReCommendedExtension.Assertions
             var qualifierExpression = referenceExpression?.QualifierExpression;
             if (qualifierExpression != null)
             {
-                var method = referenceExpression.Reference.GetResolveResult().DeclaredElement as IMethod;
+                var method = referenceExpression.Reference.Resolve().DeclaredElement as IMethod;
                 if (method != null && method.ShortName.StartsWith("AssertNotNull", StringComparison.Ordinal) && method.IsExtensionMethod &&
                     method.Parameters.Count == 1)
                 {

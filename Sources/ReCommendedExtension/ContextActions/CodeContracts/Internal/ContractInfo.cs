@@ -198,7 +198,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             ContextActionUtils.FormatWithDefaultProfile(statement);
         }
 
-        public static ContractInfo TryCreate(IDeclaration declaration, TreeOffset treeOffset, [NotNull] Func<IType, bool> isAvailableForType)
+        public static ContractInfo TryCreate(
+            IDeclaration declaration,
+            TreeTextRange selectedTreeRange,
+            [NotNull] Func<IType, bool> isAvailableForType)
         {
             var parameterDeclaration = declaration as IParameterDeclaration;
             if (parameterDeclaration != null)
@@ -209,19 +212,19 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             var methodDeclaration = declaration as IMethodDeclaration;
             if (methodDeclaration != null)
             {
-                return MethodContractInfo.TryCreate(methodDeclaration, treeOffset, isAvailableForType);
+                return MethodContractInfo.TryCreate(methodDeclaration, selectedTreeRange, isAvailableForType);
             }
 
             var propertyDeclaration = declaration as IPropertyDeclaration;
             if (propertyDeclaration != null)
             {
-                return PropertyContractInfo.TryCreate(propertyDeclaration, treeOffset, isAvailableForType);
+                return PropertyContractInfo.TryCreate(propertyDeclaration, selectedTreeRange, isAvailableForType);
             }
 
             var indexerDeclaration = declaration as IIndexerDeclaration;
             if (indexerDeclaration != null)
             {
-                return PropertyContractInfo.TryCreate(indexerDeclaration, treeOffset, isAvailableForType);
+                return PropertyContractInfo.TryCreate(indexerDeclaration, selectedTreeRange, isAvailableForType);
             }
 
             var fieldDeclaration = declaration as IFieldDeclaration;
@@ -233,7 +236,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             var operatorDeclaration = declaration as IOperatorDeclaration;
             if (operatorDeclaration != null)
             {
-                return OperatorContractInfo.TryCreate(operatorDeclaration, treeOffset, isAvailableForType);
+                return OperatorContractInfo.TryCreate(operatorDeclaration, selectedTreeRange, isAvailableForType);
             }
 
             return null;
