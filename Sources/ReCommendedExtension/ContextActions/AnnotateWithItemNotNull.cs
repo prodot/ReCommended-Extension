@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
+using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
@@ -28,7 +29,7 @@ namespace ReCommendedExtension.ContextActions
 
             if (type.IsGenericTask())
             {
-                var resultType = type.GetTaskUnderlyingType();
+                var resultType = type.GetTasklikeUnderlyingType(context);
                 if (resultType != null && resultType.Classify == TypeClassification.REFERENCE_TYPE)
                 {
                     return true;
@@ -62,37 +63,26 @@ namespace ReCommendedExtension.ContextActions
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module)
         {
-            var method = declaredElement as IMethod;
-            if (method != null && IsAvailableForType(method.ReturnType, context))
+            switch (declaredElement)
             {
-                return true;
-            }
+                case IMethod method when IsAvailableForType(method.ReturnType, context):
+                    return true;
 
-            var parameter = declaredElement as IParameter;
-            if (parameter != null && IsAvailableForType(parameter.Type, context))
-            {
-                return true;
-            }
+                case IParameter parameter when IsAvailableForType(parameter.Type, context):
+                    return true;
 
-            var property = declaredElement as IProperty;
-            if (property != null && IsAvailableForType(property.Type, context))
-            {
-                return true;
-            }
+                case IProperty property when IsAvailableForType(property.Type, context):
+                    return true;
 
-            var delegateType = declaredElement as IDelegate;
-            if (delegateType != null && IsAvailableForType(delegateType.InvokeMethod.ReturnType, context))
-            {
-                return true;
-            }
+                case IDelegate delegateType when IsAvailableForType(delegateType.InvokeMethod.ReturnType, context):
+                    return true;
 
-            var field = declaredElement as IField;
-            if (field != null && IsAvailableForType(field.Type, context))
-            {
-                return true;
-            }
+                case IField field when IsAvailableForType(field.Type, context):
+                    return true;
 
-            return false;
+                default:
+                    return false;
+            }
         }
     }
 }

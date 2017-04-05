@@ -25,11 +25,9 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly IInvocationExpression invocationExpression;
 
-        internal ConditionalInvocationHighlighting([NotNull] string message, [NotNull] IInvocationExpression invocationExpression)
-            : base(message)
-        {
-            this.invocationExpression = invocationExpression;
-        }
+        internal ConditionalInvocationHighlighting(
+            [NotNull] string message,
+            [NotNull] IInvocationExpression invocationExpression) : base(message) => this.invocationExpression = invocationExpression;
 
         public override DocumentRange CalculateRange()
         {

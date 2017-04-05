@@ -104,7 +104,7 @@ namespace ReCommendedExtension.Analyzers
             Debug.Assert(SearchDomainFactory.Instance != null);
 
             var solutionSearchDomain = SearchDomainFactory.Instance.CreateSearchDomain(psiServices.Solution, false);
-            var references = psiServices.Finder.FindReferences(method, solutionSearchDomain, NullProgressIndicator.Instance);
+            var references = psiServices.Finder.FindReferences(method, solutionSearchDomain, NullProgressIndicator.Create());
 
             if (IsPublicSurfaceArea(method))
             {

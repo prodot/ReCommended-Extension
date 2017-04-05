@@ -134,7 +134,7 @@ namespace ReCommendedExtension
         [NotNull]
         internal static IClassDeclaration EnsureContractClass([NotNull] this ICSharpTypeDeclaration typeDeclaration, [NotNull] IPsiModule module)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(typeDeclaration);
 
             IClassDeclaration contractClassDeclaration = null;
 
@@ -162,7 +162,7 @@ namespace ReCommendedExtension
                     (IClassDeclaration)
                         factory.CreateTypeMemberDeclaration(
                             string.Format(
-                                "[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
+                                @"[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
                                 GetSuggestedContractClassName(typeDeclaration),
                                 typeParameters,
                                 typeParametersForAttribute),
@@ -180,7 +180,7 @@ namespace ReCommendedExtension
                     : "";
                 var typeofExpression =
                     (ITypeofExpression)
-                        factory.CreateExpression(string.Format("typeof($0{0})", attributeTypeParameters), contractClassDeclaration.DeclaredElement);
+                        factory.CreateExpression(string.Format(@"typeof($0{0})", attributeTypeParameters), contractClassDeclaration.DeclaredElement);
 
                 // todo: the generated "typeof" expression doesn't contain generics: "<,>"
                 var contractClassAttributeTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassAttribute, module);
@@ -220,9 +220,10 @@ namespace ReCommendedExtension
 
         [NotNull]
         internal static IMethodDeclaration EnsureOverriddenMethodInContractClass(
-            [NotNull] this IMethodDeclaration methodDeclaration, [NotNull] IClassDeclaration contractClassDeclaration, [NotNull] IPsiModule module)
+            [NotNull] this IMethodDeclaration methodDeclaration,
+            [NotNull] IClassDeclaration contractClassDeclaration)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(methodDeclaration);
 
             var declaredElement = methodDeclaration.DeclaredElement;
 
@@ -297,9 +298,10 @@ namespace ReCommendedExtension
 
         [NotNull]
         internal static IIndexerDeclaration EnsureOverriddenIndexerInContractClass(
-            [NotNull] this IIndexerDeclaration indexerDeclaration, [NotNull] IClassDeclaration contractClassDeclaration, [NotNull] IPsiModule module)
+            [NotNull] this IIndexerDeclaration indexerDeclaration,
+            [NotNull] IClassDeclaration contractClassDeclaration)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(indexerDeclaration);
 
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenIndexerDeclaration = (
@@ -358,9 +360,10 @@ namespace ReCommendedExtension
 
         [NotNull]
         internal static IPropertyDeclaration EnsureOverriddenPropertyInContractClass(
-            [NotNull] this IPropertyDeclaration propertyDeclaration, [NotNull] IClassDeclaration contractClassDeclaration, [NotNull] IPsiModule module)
+            [NotNull] this IPropertyDeclaration propertyDeclaration,
+            [NotNull] IClassDeclaration contractClassDeclaration)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(propertyDeclaration);
 
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenPropertyDeclaration = (
@@ -403,7 +406,7 @@ namespace ReCommendedExtension
         internal static IMethodDeclaration EnsureContractInvariantMethod(
             [NotNull] this IClassLikeDeclaration classLikeDeclaration, [NotNull] IPsiModule module)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(classLikeDeclaration);
 
             var contractInvariantMethodDeclaration = classLikeDeclaration.MethodDeclarationsEnumerable.FirstOrDefault(
                 methodDeclaration =>

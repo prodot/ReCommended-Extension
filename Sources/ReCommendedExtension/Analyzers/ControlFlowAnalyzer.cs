@@ -296,25 +296,23 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] NullnessProvider nullnessProvider,
             [NotNull] IReferenceExpression referenceExpression)
         {
-            var declaredElement = referenceExpression.Reference.Resolve().DeclaredElement;
-
-            var function = declaredElement as IFunction;
-            if (function != null && nullnessProvider.GetInfo(function) == CodeAnnotationNullableValue.NOT_NULL)
+            switch (referenceExpression.Reference.Resolve().DeclaredElement)
             {
-                return CSharpControlFlowNullReferenceState.NOT_NULL;
-            }
-
-            var typeOwner = declaredElement as ITypeOwner;
-            if (typeOwner != null && !typeOwner.Type.IsDelegateType())
-            {
-                var attributesOwner = typeOwner as IAttributesOwner;
-                if (attributesOwner != null && nullnessProvider.GetInfo(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
-                {
+                case IFunction function when nullnessProvider.GetInfo(function) == CodeAnnotationNullableValue.NOT_NULL:
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
-                }
-            }
 
-            return CSharpControlFlowNullReferenceState.UNKNOWN;
+                case ITypeOwner typeOwner when !typeOwner.Type.IsDelegateType():
+                    var attributesOwner = typeOwner as IAttributesOwner;
+                    if (attributesOwner != null && nullnessProvider.GetInfo(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
+                    {
+                        return CSharpControlFlowNullReferenceState.NOT_NULL;
+                    }
+
+                    goto default;
+
+                default:
+                    return CSharpControlFlowNullReferenceState.UNKNOWN;
+            }
         }
 
         [Pure]

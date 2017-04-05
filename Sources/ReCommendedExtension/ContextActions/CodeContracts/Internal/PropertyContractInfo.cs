@@ -17,7 +17,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         public static PropertyContractInfo TryCreate(
             [NotNull] IPropertyDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowExpression == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
             {
                 var property = declaration.DeclaredElement;
 
@@ -43,7 +43,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         public static PropertyContractInfo TryCreate(
             [NotNull] IIndexerDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowExpression == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
             {
                 var property = declaration.DeclaredElement;
 
@@ -84,7 +84,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             Func<IExpression, IExpression> getContractExpression,
             out ICollection<ICSharpStatement> firstNonContractStatements)
         {
-            var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
+            var factory = CSharpElementFactory.GetInstance(declaration);
 
             var propertyDeclaration = declaration as IPropertyDeclaration;
             if (propertyDeclaration != null && propertyDeclaration.IsAuto)
@@ -130,15 +130,13 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 if (propertyDeclaration != null)
                 {
-                    overriddenAccessorOwnerDeclaration = propertyDeclaration.EnsureOverriddenPropertyInContractClass(
-                        contractClassDeclaration, provider.PsiModule);
+                    overriddenAccessorOwnerDeclaration = propertyDeclaration.EnsureOverriddenPropertyInContractClass(contractClassDeclaration);
                 }
 
                 var indexerDeclaration = declaration as IIndexerDeclaration;
                 if (indexerDeclaration != null)
                 {
-                    overriddenAccessorOwnerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(
-                        contractClassDeclaration, provider.PsiModule);
+                    overriddenAccessorOwnerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);
                 }
 
                 Debug.Assert(overriddenAccessorOwnerDeclaration != null);

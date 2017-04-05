@@ -144,7 +144,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                 var totalExpression = string.Join(
                     " | ",
-                    from value in valueMembers.Keys.Take(maxItemsToShow) orderby value select valueMembers[value].ShortName);
+                    from value in valueMembers.Keys.Take(maxItemsToShow) orderby value select valueMembers[value].AssertNotNull().ShortName);
 
                 return string.Format(
                     "{0} >= {1} && {0} <= {2}",

@@ -21,11 +21,9 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly ISpecificCatchClause catchClause;
 
-        internal UncatchableExceptionHighlighting([NotNull] string message, [NotNull] ISpecificCatchClause catchClause)
-            : base(message)
-        {
-            this.catchClause = catchClause;
-        }
+        internal UncatchableExceptionHighlighting(
+            [NotNull] string message,
+            [NotNull] ISpecificCatchClause catchClause) : base(message) => this.catchClause = catchClause;
 
         public override DocumentRange CalculateRange() => catchClause.ExceptionTypeUsage.GetDocumentRange();
     }

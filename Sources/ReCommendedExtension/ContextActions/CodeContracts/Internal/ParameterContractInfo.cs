@@ -22,7 +22,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] IBlock body,
             out ICSharpStatement firstNonContractStatement)
         {
-            var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
+            var factory = CSharpElementFactory.GetInstance(body);
 
             var parameterExpression = factory.CreateExpression("$0", parameter);
 
@@ -37,7 +37,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] IBlock body,
             out ICSharpStatement firstNonContractStatement)
         {
-            var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
+            var factory = CSharpElementFactory.GetInstance(body);
 
             var contractType = new DeclaredTypeFromCLRName(ClrTypeNames.Contract, provider.PsiModule).GetTypeElement();
 
@@ -53,7 +53,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
         public static ParameterContractInfo TryCreate([NotNull] IParameterDeclaration declaration, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.PathToRoot().OfType<IExpressionBodyOwnerDeclaration>().FirstOrDefault()?.ArrowExpression != null)
+            if (declaration.PathToRoot().OfType<IExpressionBodyOwnerDeclaration>().FirstOrDefault()?.ArrowClause != null)
             {
                 return null;
             }
@@ -118,8 +118,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 case ContractKind.RequiresAndEnsures:
                     AddContractForEnsures(provider, getContractExpression, parameter, body, out firstNonContractStatement);
 
-                    ICSharpStatement dummy;
-                    AddContractForRequires(provider, getContractExpression, parameter, body, out dummy);
+                    AddContractForRequires(provider, getContractExpression, parameter, body, out _);
                     break;
 
                 default:
@@ -155,8 +154,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                     var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
 
-                    var overriddenMethodDeclaration = methodDeclaration.EnsureOverriddenMethodInContractClass(
-                        contractClassDeclaration, provider.PsiModule);
+                    var overriddenMethodDeclaration = methodDeclaration.EnsureOverriddenMethodInContractClass(contractClassDeclaration);
 
                     body = overriddenMethodDeclaration.Body;
                 }
@@ -195,8 +193,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                     var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
 
-                    var overriddenIndexerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(
-                        contractClassDeclaration, provider.PsiModule);
+                    var overriddenIndexerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);
 
                     accessorDeclarations = overriddenIndexerDeclaration.AccessorDeclarations;
                 }

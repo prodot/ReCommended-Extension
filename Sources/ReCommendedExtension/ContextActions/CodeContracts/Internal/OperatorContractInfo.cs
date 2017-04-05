@@ -17,7 +17,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         public static OperatorContractInfo TryCreate(
             [NotNull] IOperatorDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowExpression == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
             {
                 var operatorElement = declaration.DeclaredElement;
 
@@ -35,10 +35,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         [NotNull]
         readonly IOperatorDeclaration declaration;
 
-        OperatorContractInfo([NotNull] IOperatorDeclaration declaration, [NotNull] IType type) : base(ContractKind.Ensures, type)
-        {
-            this.declaration = declaration;
-        }
+        OperatorContractInfo(
+            [NotNull] IOperatorDeclaration declaration,
+            [NotNull] IType type) : base(ContractKind.Ensures, type) => this.declaration = declaration;
 
         public override string GetContractIdentifierForUI() => "result";
 
@@ -49,7 +48,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         {
             if (declaration.Body != null)
             {
-                var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
+                var factory = CSharpElementFactory.GetInstance(declaration);
 
                 var contractType = new DeclaredTypeFromCLRName(ClrTypeNames.Contract, provider.PsiModule).GetTypeElement();
 

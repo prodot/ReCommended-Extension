@@ -21,10 +21,7 @@ namespace ReCommendedExtension.ContextActions
 
         InlineAssertion assertion;
 
-        public RemoveAssertNotNull([NotNull] ICSharpContextActionDataProvider provider)
-        {
-            this.provider = provider;
-        }
+        public RemoveAssertNotNull([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
 
         public override string Text
         {

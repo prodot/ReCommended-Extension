@@ -26,10 +26,7 @@ namespace ReCommendedExtension.ContextActions
 
         IUnaryExpression awaitedExpression;
 
-        public AddConfigureAwait([NotNull] ICSharpContextActionDataProvider provider)
-        {
-            this.provider = provider;
-        }
+        public AddConfigureAwait([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
 
         public override string Text => $"Add '{configureAwaitMethodName}(false)'";
 
@@ -78,7 +75,7 @@ namespace ReCommendedExtension.ContextActions
             {
                 using (WriteLockCookie.Create())
                 {
-                    var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
+                    var factory = CSharpElementFactory.GetInstance(awaitedExpression);
 
                     ModificationUtil.ReplaceChild(
                         awaitedExpression,

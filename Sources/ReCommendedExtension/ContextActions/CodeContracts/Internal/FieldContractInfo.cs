@@ -53,7 +53,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
             if (contractInvariantMethodDeclaration.Body != null)
             {
-                var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
+                var factory = CSharpElementFactory.GetInstance(declaration);
 
                 var expression = factory.CreateExpression("$0", declaration.DeclaredElement);
 

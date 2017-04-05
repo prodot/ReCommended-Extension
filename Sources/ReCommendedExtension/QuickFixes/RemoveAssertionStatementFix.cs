@@ -20,10 +20,7 @@ namespace ReCommendedExtension.QuickFixes
         [NotNull]
         readonly RedundantAssertionStatementHighlighting highlighting;
 
-        public RemoveAssertionStatementFix([NotNull] RedundantAssertionStatementHighlighting highlighting)
-        {
-            this.highlighting = highlighting;
-        }
+        public RemoveAssertionStatementFix([NotNull] RedundantAssertionStatementHighlighting highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

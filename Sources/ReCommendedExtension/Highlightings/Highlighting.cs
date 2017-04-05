@@ -9,10 +9,7 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly string message;
 
-        internal Highlighting([NotNull] string message)
-        {
-            this.message = message;
-        }
+        internal Highlighting([NotNull] string message) => this.message = message;
 
         public string ErrorStripeToolTip => message;
 

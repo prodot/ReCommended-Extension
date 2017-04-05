@@ -18,9 +18,7 @@ namespace ReCommendedExtension.Deployment
             {
                 var executionDirectoryPath = GetExecutionDirectoryPath();
 
-                string assemblyPath;
-                bool isReleaseBuild;
-                CopyAssembly(executionDirectoryPath, out assemblyPath, out isReleaseBuild);
+                CopyAssembly(executionDirectoryPath, out var assemblyPath, out var isReleaseBuild);
 
                 if (isReleaseBuild)
                 {
@@ -33,11 +31,9 @@ namespace ReCommendedExtension.Deployment
                     ResignAssembly(assemblyPath, snkPath);
                 }
 
-                string nuspecPath;
-                UpdateNuspec(executionDirectoryPath, assemblyPath, out nuspecPath);
+                UpdateNuspec(executionDirectoryPath, assemblyPath, out var nuspecPath);
 
-                string packageFileName;
-                SetAssemblyReference(nuspecPath, assemblyPath, out packageFileName);
+                SetAssemblyReference(nuspecPath, assemblyPath, out var packageFileName);
 
                 BuildPackage(nuspecPath);
 
@@ -97,7 +93,7 @@ namespace ReCommendedExtension.Deployment
 
         static void UpdateNuspec([NotNull] string executionDirectoryPath, [NotNull] string assemblyPath, [NotNull] out string nuspecPath)
         {
-            Console.Write("Updating nuspec...");
+            Console.Write(@"Updating nuspec...");
 
             var assembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
             Debug.Assert(assembly != null);

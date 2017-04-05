@@ -18,10 +18,9 @@ namespace ReCommendedExtension.Highlightings
     {
         internal const string SeverityId = "AvoidAsyncVoid";
 
-        internal AvoidAsyncVoidHighlighting([NotNull] string message, [NotNull] IMethodDeclaration methodDeclaration) : base(message)
-        {
-            MethodDeclaration = methodDeclaration;
-        }
+        internal AvoidAsyncVoidHighlighting(
+            [NotNull] string message,
+            [NotNull] IMethodDeclaration methodDeclaration) : base(message) => MethodDeclaration = methodDeclaration;
 
         [NotNull]
         internal IMethodDeclaration MethodDeclaration { get; }

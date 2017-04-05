@@ -21,10 +21,9 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly IAttributesOwnerDeclaration declaration;
 
-        internal MissingAnnotationHighlighting([NotNull] string message, [NotNull] IAttributesOwnerDeclaration declaration) : base(message)
-        {
-            this.declaration = declaration;
-        }
+        internal MissingAnnotationHighlighting(
+            [NotNull] string message,
+            [NotNull] IAttributesOwnerDeclaration declaration) : base(message) => this.declaration = declaration;
 
         public override DocumentRange CalculateRange() => declaration.GetNameDocumentRange();
     }
