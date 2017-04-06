@@ -28,6 +28,16 @@ namespace Test
         Lazy<string> this[Lazy<string> index] { get; set; }
 
         Lazy<string> this[Lazy<string> index, Lazy<string> index2] { get; }
+
+        ValueTask<string> AsyncMethod();
+
+        ValueTask<string> AsyncProperty1 { get; set; }
+
+        ValueTask<string> AsyncProperty2 { get; }
+
+        ValueTask<string> this[ValueTask<string> index] { get; set; }
+
+        ValueTask<string> this[ValueTask<string> index, ValueTask<string> index2] { get; }
     }
 
     internal class BaseImplementation : IBase
@@ -105,6 +115,67 @@ namespace Test
 
         [|ItemNotNull|(31)]
         string Other([|ItemNotNull|(32)] int p) => null;
+
+        [|ItemNotNull|(33)]
+        IEnumerable<(int, string)> IteratorWithValueTypes2([|ItemNotNull|(34)] IEnumerable<(int, string)> p) => null;
+
+        [|ItemNotNull|(35)]
+        (int, string)[] IteratorWithValueTypes2([|ItemNotNull|(36)] (int, string)[] p) => null;
+
+        [|ItemNotNull|(37)]
+        Task<(int, string)> TaskPropertyWithValueType2 { get; set; }
+
+        [|ItemNotNull|(38)]
+        Task<(int, string)> this[[|ItemNotNull|(39)] Task<(int, string)> index] => null;
+
+        [|ItemNotNull|(40)]
+        Lazy<(int, string)> lazyField2;
+
+        [|ItemNotNull|(41)]
+        delegate Task<(int, string)> DelegateWithValueType2([|ItemNotNull|(42)] Task<(int, string)> p);
+
+        [|ItemNotNull|(43)]
+        string Other([|ItemNotNull|(44)] (int, string) p) => null;
+
+        [|ItemNotNull|(45)]
+        public ValueTask<string> AsyncMethod() => null;
+
+        [|ItemNotNull|(46)]
+        public ValueTask<string> AsyncProperty1 { get; set; }
+
+        [|ItemNotNull|(47)]
+        public ValueTask<string> AsyncProperty2 { get; }
+
+        [|ItemNotNull|(48)]
+        ValueTask<string> IBase.this[[|ItemNotNull|(49)] ValueTask<string> index]
+        {
+            get
+            {
+                return null;
+            }
+            set { }
+        }
+
+        [|ItemNotNull|(50)]
+        ValueTask<string> IBase.this[[|ItemNotNull|(51)] ValueTask<string> index, [|ItemNotNull|(52)] ValueTask<string> index2] => null;
+
+        [|ItemNotNull|(53)]
+        ValueTask TaskProperty { get; set; }
+
+        [|ItemNotNull|(54)]
+        ValueTask<int> TaskPropertyWithValueType { get; set; }
+
+        [|ItemNotNull|(55)]
+        ValueTask this[[|ItemNotNull|(56)] ValueTask index] => null;
+
+        [|ItemNotNull|(57)]
+        ValueTask<int> this[[|ItemNotNull|(58)] ValueTask<int> index] => null;
+
+        [|ItemNotNull|(59)]
+        delegate ValueTask<int> DelegateWithValueType([|ItemNotNull|(60)] ValueTask<int> p);
+
+        [|ItemNotNull|(61)]
+        delegate ValueTask<(int, string)> DelegateWithValueType2([|ItemNotNull|(62)] ValueTask<(int, string)> p);
     }
 }
 ---------------------------------------------------------
@@ -130,14 +201,44 @@ namespace Test
 (19): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
 (20): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
 (21): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
-(22): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a Task<T>, or a Lazy<T>.
+(22): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a generic task-like type, or a Lazy<T>.
 (23): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
-(24): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a Task<T>, or a Lazy<T>.
-(25): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a Task<T>, or a Lazy<T>.
+(24): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a generic task-like type, or a Lazy<T>.
+(25): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a generic task-like type, or a Lazy<T>.
 (26): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
 (27): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
 (28): ReSharper Warning: Annotation is not allowed because the declared lazy value type is not a reference type.
 (29): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
 (30): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
 (31): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
-(32): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a Task<T>, or a Lazy<T>.
+(32): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a generic task-like type, or a Lazy<T>.
+(33): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
+(34): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
+(35): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
+(36): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
+(37): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(38): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(39): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(40): ReSharper Warning: Annotation is not allowed because the declared lazy value type is not a reference type.
+(41): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(42): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(43): ReSharper Warning: Annotation is not allowed because the declared element type is not a reference type.
+(44): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a generic task-like type, or a Lazy<T>.
+(45): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(46): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(47): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(48): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(49): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(50): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(51): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(52): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
+(53): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(54): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(55): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(56): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(57): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(58): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(59): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(60): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(61): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(62): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.

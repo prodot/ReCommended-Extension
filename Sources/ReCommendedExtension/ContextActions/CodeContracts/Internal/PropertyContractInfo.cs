@@ -17,7 +17,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         public static PropertyContractInfo TryCreate(
             [NotNull] IPropertyDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null &&
+                declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause == null))
             {
                 var property = declaration.DeclaredElement;
 
@@ -43,7 +44,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         public static PropertyContractInfo TryCreate(
             [NotNull] IIndexerDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null &&
+                declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause == null))
             {
                 var property = declaration.DeclaredElement;
 
@@ -99,13 +101,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 {
                     var expression = factory.CreateExpression("$0", declaration.DeclaredElement);
 
-                    ICSharpStatement firstNonContractStatement;
                     AddContract(
                         ContractKind.Invariant,
                         contractInvariantMethodDeclaration.Body,
                         provider.PsiModule,
                         () => getContractExpression(expression),
-                        out firstNonContractStatement);
+                        out var firstNonContractStatement);
                     firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
                 }
                 else
@@ -133,8 +134,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     overriddenAccessorOwnerDeclaration = propertyDeclaration.EnsureOverriddenPropertyInContractClass(contractClassDeclaration);
                 }
 
-                var indexerDeclaration = declaration as IIndexerDeclaration;
-                if (indexerDeclaration != null)
+                if (declaration is IIndexerDeclaration indexerDeclaration)
                 {
                     overriddenAccessorOwnerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);
                 }
@@ -167,13 +167,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                                 contractType,
                                 Type);
 
-                            ICSharpStatement firstNonContractStatement;
                             AddContract(
                                 ContractKind.Ensures,
                                 accessorDeclaration.Body,
                                 provider.PsiModule,
                                 () => getContractExpression(resultExpression),
-                                out firstNonContractStatement);
+                                out var firstNonContractStatement);
 
                             if (firstNonContractStatement != null)
                             {
@@ -186,13 +185,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                         {
                             var valueExpression = factory.CreateExpression("value");
 
-                            ICSharpStatement firstNonContractStatement;
                             AddContract(
                                 ContractKind.Requires,
                                 accessorDeclaration.Body,
                                 provider.PsiModule,
                                 () => getContractExpression(valueExpression),
-                                out firstNonContractStatement);
+                                out var firstNonContractStatement);
 
                             if (firstNonContractStatement != null)
                             {

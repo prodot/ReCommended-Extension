@@ -17,13 +17,9 @@ namespace ReCommendedExtension.Analyzers
                 return; // not an "async delegate (...) { ... }" that returns void
             }
 
-            var assignmentExpression = element.Parent as IAssignmentExpression;
-            if (assignmentExpression != null)
+            if (element.Parent is IAssignmentExpression assignmentExpression && assignmentExpression.IsEventSubscriptionOrUnSubscription())
             {
-                if (assignmentExpression.IsEventSubscriptionOrUnSubscription())
-                {
-                    return; // direct event target
-                }
+                return; // direct event target
             }
 
             Debug.Assert(element.AsyncKeyword != null);

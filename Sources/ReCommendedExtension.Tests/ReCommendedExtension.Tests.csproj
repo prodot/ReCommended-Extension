@@ -214,6 +214,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.System.Windows.Interactivity.3.0.40218\lib\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -249,6 +252,8 @@
     <None Include="test\data\Analyzers\AnnotationQuickFixes\Redundant.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Optimistic.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Pessimistic.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunction.cs.gold" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunctionAvailability.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethod.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethodAvailability.cs.gold" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs.gold" />
@@ -399,6 +404,7 @@
     <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericListOnParameter.cs.gold" />
     <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericListOnProperty.cs.gold" />
     <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericTaskOnMethod.cs.gold" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericValueTaskOnMethod.cs.gold" />
     <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteJaggedArrayOnField.cs" />
     <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteJaggedArrayOnField.cs.gold" />
     <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteLazyOnDelegate.cs.gold" />
@@ -697,6 +703,9 @@
     <None Include="test\data\ContextActions\CodeContracts\Elements\Property\ExecuteWithAbstractProperty4.cs" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Pessimistic.cs" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Optimistic.cs" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunctionAvailability.cs" />
+    <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunction.cs" />
+    <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericValueTaskOnMethod.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />

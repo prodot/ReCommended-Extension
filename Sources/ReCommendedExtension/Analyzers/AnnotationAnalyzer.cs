@@ -68,13 +68,11 @@ namespace ReCommendedExtension.Analyzers
             }
 
             // excluding members of non-reference types (value, nullable value, unspecified generic types)
-            var typeOwner = declaration as ITypeOwnerDeclaration;
-            if (typeOwner != null)
+            if (declaration is ITypeOwnerDeclaration typeOwner)
             {
                 // first check if declaration is a IMethodDeclaration and its TypeUsage is null
                 // (otherwise the Type property throws the NullReferenceException)
-                var methodDeclaration = typeOwner as IMethodDeclaration;
-                if (methodDeclaration != null && methodDeclaration.TypeUsage == null)
+                if (typeOwner is IMethodDeclaration methodDeclaration && methodDeclaration.TypeUsage == null)
                 {
                     return false;
                 }
@@ -92,9 +90,7 @@ namespace ReCommendedExtension.Analyzers
         {
             if (CanContainNullnessAttributes(declaration))
             {
-                var methodDeclaration = declaration as IMethodDeclaration;
-
-                if (methodDeclaration != null)
+                if (declaration is IMethodDeclaration methodDeclaration)
                 {
                     if (methodDeclaration.IsAsync)
                     {
@@ -348,19 +344,16 @@ namespace ReCommendedExtension.Analyzers
                         return;
                     }
 
-                    if (type.IsGenericTask())
+                    var resultType = type.GetTasklikeUnderlyingType(attributesOwnerDeclaration);
+                    if (resultType != null)
                     {
-                        var resultType = type.GetTasklikeUnderlyingType(attributesOwnerDeclaration);
-                        if (resultType != null)
+                        if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
                         {
-                            if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
-                            {
-                                consumer.AddHighlighting(
-                                    new NotAllowedAnnotationHighlighting(
-                                        attributesOwnerDeclaration,
-                                        itemNotNullAttribute,
-                                        "Annotation is not allowed because the declared task result type is not a reference type."));
-                            }
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationHighlighting(
+                                    attributesOwnerDeclaration,
+                                    itemNotNullAttribute,
+                                    "Annotation is not allowed because the declared task result type is not a reference type."));
                         }
                         return;
                     }
@@ -390,9 +383,8 @@ namespace ReCommendedExtension.Analyzers
                             itemNotNullAttribute,
                             string.Format(
                                 "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), " +
-                                "or a {1}<T>, or a {2}<T>.",
+                                "or a generic task-like type, or a {1}<T>.",
                                 nameof(IEnumerable<int>),
-                                "Task",
                                 "Lazy")));
                 }
             }

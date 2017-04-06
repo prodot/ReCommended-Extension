@@ -23,7 +23,7 @@ namespace ReCommendedExtension.QuickFixes
         {
             this.highlighting = highlighting;
 
-            var psiModule = highlighting.MethodDeclaration.GetPsiModule();
+            var psiModule = highlighting.Declaration.GetPsiModule();
 
             var predefinedType = psiModule.GetPredefinedType();
 
@@ -36,7 +36,7 @@ namespace ReCommendedExtension.QuickFixes
         {
             using (WriteLockCookie.Create())
             {
-                highlighting.MethodDeclaration.SetType(taskType.ToIType());
+                highlighting.Declaration.SetType(taskType.ToIType());
             }
 
             return _ => { };

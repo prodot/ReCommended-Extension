@@ -28,6 +28,16 @@ namespace Test
         Lazy<string> this[Lazy<string> index] { get; set; }
 
         Lazy<string> this[Lazy<string> index, Lazy<string> index2] { get; }
+
+        ValueTask<string> AsyncMethod();
+
+        ValueTask<string> AsyncProperty1 { get; set; }
+
+        ValueTask<string> AsyncProperty2 { get; }
+
+        ValueTask<string> this[ValueTask<string> index] { get; set; }
+
+        ValueTask<string> this[ValueTask<string> index, ValueTask<string> index2] { get; }
     }
 
     internal class BaseImplementation : IBase
@@ -105,5 +115,66 @@ namespace Test
 
         [ItemNotNull]
         string Other([ItemNotNull] int p) => null;
+
+        [ItemNotNull]
+        IEnumerable<(int, string)> IteratorWithValueTypes2([ItemNotNull] IEnumerable<(int, string)> p) => null;
+
+        [ItemNotNull]
+        (int, string)[] IteratorWithValueTypes2([ItemNotNull] (int, string)[] p) => null;
+
+        [ItemNotNull]
+        Task<(int, string)> TaskPropertyWithValueType2 { get; set; }
+
+        [ItemNotNull]
+        Task<(int, string)> this[[ItemNotNull] Task<(int, string)> index] => null;
+
+        [ItemNotNull]
+        Lazy<(int, string)> lazyField2;
+
+        [ItemNotNull]
+        delegate Task<(int, string)> DelegateWithValueType2([ItemNotNull] Task<(int, string)> p);
+
+        [ItemNotNull]
+        string Other([ItemNotNull] (int, string) p) => null;
+
+        [ItemNotNull]
+        public ValueTask<string> AsyncMethod() => null;
+
+        [ItemNotNull]
+        public ValueTask<string> AsyncProperty1 { get; set; }
+
+        [ItemNotNull]
+        public ValueTask<string> AsyncProperty2 { get; }
+
+        [ItemNotNull]
+        ValueTask<string> IBase.this[[ItemNotNull] ValueTask<string> index]
+        {
+            get
+            {
+                return null;
+            }
+            set { }
+        }
+
+        [ItemNotNull]
+        ValueTask<string> IBase.this[[ItemNotNull] ValueTask<string> index, [ItemNotNull] ValueTask<string> index2] => null;
+
+        [ItemNotNull]
+        ValueTask TaskProperty { get; set; }
+
+        [ItemNotNull]
+        ValueTask<int> TaskPropertyWithValueType { get; set; }
+
+        [ItemNotNull]
+        ValueTask this[[ItemNotNull] ValueTask index] => null;
+
+        [ItemNotNull]
+        ValueTask<int> this[[ItemNotNull] ValueTask<int> index] => null;
+
+        [ItemNotNull]
+        delegate ValueTask<int> DelegateWithValueType([ItemNotNull] ValueTask<int> p);
+
+        [ItemNotNull]
+        delegate ValueTask<(int, string)> DelegateWithValueType2([ItemNotNull] ValueTask<(int, string)> p);
     }
 }

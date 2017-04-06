@@ -53,14 +53,24 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
         public static ParameterContractInfo TryCreate([NotNull] IParameterDeclaration declaration, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.PathToRoot().OfType<IExpressionBodyOwnerDeclaration>().FirstOrDefault()?.ArrowClause != null)
+            var expressionBodyOwnerDeclaration = declaration.PathToRoot().OfType<IExpressionBodyOwnerDeclaration>().FirstOrDefault();
+            if (expressionBodyOwnerDeclaration?.ArrowClause != null)
             {
                 return null;
             }
 
+            switch (expressionBodyOwnerDeclaration)
+            {
+                case IPropertyDeclaration propertyDeclaration when propertyDeclaration.AccessorDeclarations.All(
+                    accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause != null):
+                case IIndexerDeclaration indexerDeclaration when indexerDeclaration.AccessorDeclarations.All(
+                    accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause != null):
+                    return null;
+            }
+
             var parameter = declaration.DeclaredElement;
-            var typeMember = parameter?.ContainingParametersOwner as ITypeMember;
-            if (typeMember != null && CanAcceptContracts(typeMember) && isAvailableForType(parameter.Type))
+            if (parameter?.ContainingParametersOwner is ITypeMember typeMember && CanAcceptContracts(typeMember) &&
+                isAvailableForType(parameter.Type))
             {
                 ContractKind contractKind;
                 switch (parameter.Kind)
@@ -138,15 +148,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             Debug.Assert(parameter != null);
 
             var function = parameter.ContainingParametersOwner as IFunction;
-            var functionDeclaration =
-                function?.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, function)) as
-                    ICSharpFunctionDeclaration;
-            if (functionDeclaration != null)
+            if (function?.GetDeclarationsIn(provider.SourceFile)
+                .FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, function)) is ICSharpFunctionDeclaration functionDeclaration)
             {
                 IBlock body;
 
-                var methodDeclaration = functionDeclaration as IMethodDeclaration;
-                if (methodDeclaration != null && methodDeclaration.IsAbstract)
+                if (functionDeclaration is IMethodDeclaration methodDeclaration && methodDeclaration.IsAbstract)
                 {
                     var containingTypeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
 
@@ -165,8 +172,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 if (body != null)
                 {
-                    ICSharpStatement firstNonContractStatement;
-                    AddContract(provider, getContractExpression, parameter, body, out firstNonContractStatement);
+                    AddContract(provider, getContractExpression, parameter, body, out var firstNonContractStatement);
                     firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
                 }
                 else
@@ -178,10 +184,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             }
 
             var property = parameter.ContainingParametersOwner as IProperty;
-            var indexerDeclaration =
-                property?.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, property)) as
-                    IIndexerDeclaration;
-            if (indexerDeclaration != null)
+            if (property?.GetDeclarationsIn(provider.SourceFile)
+                .FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, property)) is IIndexerDeclaration indexerDeclaration)
             {
                 IEnumerable<IAccessorDeclaration> accessorDeclarations;
 
@@ -209,13 +213,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                     if (accessorDeclaration.Body != null)
                     {
-                        ICSharpStatement firstNonContractStatement;
                         AddContract(
                             provider,
                             getContractExpression,
                             parameter,
                             accessorDeclaration.Body,
-                            out firstNonContractStatement);
+                            out var firstNonContractStatement);
                         if (firstNonContractStatement != null)
                         {
                             firstNonContractStatements.Add(firstNonContractStatement);

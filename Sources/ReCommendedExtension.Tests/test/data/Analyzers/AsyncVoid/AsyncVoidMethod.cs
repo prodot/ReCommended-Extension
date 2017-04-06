@@ -86,6 +86,23 @@ namespace Test
         }
 
         event Func<int, Task<int>> EventHandlerWithReturnValue;
+
+        void Method4()
+        {
+            async void LocalFunction(object sender, EventArgs e) => await Task.Yield();
+            async void LocalFunction2(object sender, EventArgs e) => await Task.Yield();
+            async void LocalFunction3(object sender, EventArgs e) => await Task.Yield();
+
+            Notify += LocalFunction;
+            Notify -= LocalFunction;
+
+            Notify += new EventHandler(LocalFunction);
+            Notify -= new EventHandler(LocalFunction);
+
+            LocalFunction2(null, null);
+            LocalFunction3(null, null);
+            LocalFunction3(null, null);
+        }
     }
 
     internal class Base

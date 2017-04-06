@@ -52,13 +52,11 @@ namespace ReCommendedExtension.Analyzers
                 new HashSet<string>(from preProcessingDirective in sourceFile.Properties.GetDefines() select preProcessingDirective.Name);
 
             // process file-level conditions
-            var file = invocationExpression.GetContainingFile() as ICSharpFile;
-            if (file != null)
+            if (invocationExpression.GetContainingFile() is ICSharpFile file)
             {
                 foreach (var treeNode in file.Descendants())
                 {
-                    var defineDirective = treeNode as IDefineDirective;
-                    if (defineDirective != null)
+                    if (treeNode is IDefineDirective defineDirective)
                     {
                         if (!string.IsNullOrEmpty(defineDirective.SymbolName))
                         {
@@ -67,8 +65,7 @@ namespace ReCommendedExtension.Analyzers
                         continue;
                     }
 
-                    var undefDirective = treeNode as IUndefDirective;
-                    if (undefDirective != null)
+                    if (treeNode is IUndefDirective undefDirective)
                     {
                         if (!string.IsNullOrEmpty(undefDirective.SymbolName))
                         {

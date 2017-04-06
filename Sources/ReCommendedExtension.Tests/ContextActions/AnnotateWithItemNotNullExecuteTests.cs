@@ -36,5 +36,8 @@ namespace ReCommendedExtension.Tests.ContextActions
 
         [Test]
         public void TestExecuteLazyOnDelegate() => DoNamedTest2();
+
+        [Test]
+        public void TestExecuteGenericValueTaskOnMethod() => DoNamedTest2();
     }
 }

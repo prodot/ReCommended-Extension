@@ -28,16 +28,12 @@ namespace ReCommendedExtension
         [NotNull]
         static readonly string contractClassFullName = typeof(Contract).FullName.AssertNotNull();
 
-        static string TryGetMemberName([NotNull] this IExpressionStatement expressionStatement, [NotNull] string classFullName)
-        {
-            var referenceExpression = (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression as IReferenceExpression;
-
-            return referenceExpression != null &&
-                   ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
-                   .FullName == classFullName
+        static string TryGetMemberName([NotNull] this IExpressionStatement expressionStatement, [NotNull] string classFullName) =>
+            (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression is IReferenceExpression referenceExpression &&
+            ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
+            .FullName == classFullName
                 ? referenceExpression.Reference.GetName()
                 : null;
-        }
 
         static void CopyTypeParameterConstraints<P>(
             [NotNull] CSharpElementFactory factory,
@@ -108,14 +104,13 @@ namespace ReCommendedExtension
                 return false;
             }
 
-            var overridableMember = declaration.DeclaredElement as IOverridableMember;
-            if (overridableMember != null && overridableMember.GetImmediateSuperMembers().Any())
+            if (declaration.DeclaredElement is IOverridableMember overridableMember && overridableMember.GetImmediateSuperMembers().Any())
             {
                 return true;
             }
 
-            var parameterOverridableMember = (declaration.DeclaredElement as IParameter)?.ContainingParametersOwner as IOverridableMember;
-            if (parameterOverridableMember != null && parameterOverridableMember.GetImmediateSuperMembers().Any())
+            if ((declaration.DeclaredElement as IParameter)?.ContainingParametersOwner is IOverridableMember parameterOverridableMember &&
+                parameterOverridableMember.GetImmediateSuperMembers().Any())
             {
                 return true;
             }
@@ -191,8 +186,7 @@ namespace ReCommendedExtension
 
                 typeDeclaration.AddAttributeAfter(attribute, null);
 
-                var parentTypeDeclaration = typeDeclaration.GetContainingTypeDeclaration() as IClassLikeDeclaration;
-                if (parentTypeDeclaration != null)
+                if (typeDeclaration.GetContainingTypeDeclaration() is IClassLikeDeclaration parentTypeDeclaration)
                 {
                     contractClassDeclaration.SetAccessRights(AccessRights.PRIVATE);
 
@@ -476,6 +470,53 @@ namespace ReCommendedExtension
             => data.SettingsStore.GetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode);
 
         /// <summary>
+        /// Returns the object creation expression <c>new EventHandler(</c><paramref name="argument"/><c>)</c> if used in the pattern
+        /// <c>new EventHandler(</c><paramref name="argument"/><c>)</c> or <c>null</c>.
+        /// </summary>
+        static IObjectCreationExpression TryGetDelegateCreation([NotNull] ICSharpArgument argument)
+        {
+            var argumentList = argument.Parent as IArgumentList;
+
+            if (argumentList?.ArgumentsEnumerable.Count() != 1)
+            {
+                return null;
+            }
+
+            return argumentList.Parent as IObjectCreationExpression;
+        }
+
+        internal static bool IsEventTarget([NotNull] this IReference reference)
+        {
+            var treeNode = reference.GetTreeNode();
+
+            var assignmentExpression = treeNode.Parent as IAssignmentExpression;
+            if (assignmentExpression != null)
+            {
+                return assignmentExpression.IsEventSubscriptionOrUnSubscription();
+            }
+
+            if (treeNode.Parent is ICSharpArgument argument)
+            {
+                var delegateCreation = TryGetDelegateCreation(argument);
+                if (delegateCreation != null)
+                {
+                    assignmentExpression = delegateCreation.Parent as IAssignmentExpression;
+                    if (assignmentExpression != null)
+                    {
+                        return assignmentExpression.IsEventSubscriptionOrUnSubscription();
+                    }
+                }
+            }
+
+            if (reference is IReferenceToDelegateCreation referenceToDelegateCreation)
+            {
+                return referenceToDelegateCreation.IsEventSubscription;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Returns <c>true</c> if used in the pattern <c>button.Click ±= </c><paramref name="assignmentExpression"/><c>;</c>.
         /// </summary>
         internal static bool IsEventSubscriptionOrUnSubscription([NotNull] this IAssignmentExpression assignmentExpression)
@@ -496,6 +537,18 @@ namespace ReCommendedExtension
             }
 
             return (assignmentExpression.Dest as IReferenceExpression)?.Reference.Resolve().DeclaredElement is IEvent;
+        }
+
+        internal static bool IsVoidMethodDeclaration([NotNull] this ILocalFunctionDeclaration localFunctionDeclaration)
+        {
+            var predefinedTypeName = (localFunctionDeclaration.TypeUsage as IPredefinedTypeUsage)?.ScalarPredefinedTypeName;
+
+            if (predefinedTypeName?.TypeKeyword == null)
+            {
+                return false;
+            }
+
+            return predefinedTypeName.TypeKeyword.GetTokenType() == CSharpTokenType.VOID_KEYWORD;
         }
 
         /// <remarks>

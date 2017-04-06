@@ -112,8 +112,7 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] Assertion assertion,
             bool isKnownToBeTrue)
         {
-            var assertionStatement = assertion as AssertionStatement;
-            if (assertionStatement != null)
+            if (assertion is AssertionStatement assertionStatement)
             {
                 // pattern: Assert(true); or Assert(false);
                 Debug.Assert(CSharpTokenType.TRUE_KEYWORD != null);
@@ -126,8 +125,7 @@ namespace ReCommendedExtension.Analyzers
                             assertionStatement));
                 }
 
-                var equalityExpression = assertionStatement.Expression as IEqualityExpression;
-                if (equalityExpression != null)
+                if (assertionStatement.Expression is IEqualityExpression equalityExpression)
                 {
                     // pattern: Assert(x != null); when x is known to be null or not null
                     Debug.Assert(CSharpTokenType.NULL_KEYWORD != null);
@@ -197,8 +195,7 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] Assertion assertion,
             bool isKnownToBeNull)
         {
-            var assertionStatement = assertion as AssertionStatement;
-            if (assertionStatement != null)
+            if (assertion is AssertionStatement assertionStatement)
             {
                 // pattern: Assert(null);
                 Debug.Assert(CSharpTokenType.NULL_KEYWORD != null);
@@ -235,19 +232,14 @@ namespace ReCommendedExtension.Analyzers
                 }
             }
 
-            if (!isKnownToBeNull)
+            if (!isKnownToBeNull && assertion is InlineAssertion inlineAssertion && GetExpressionNullReferenceState(
+                    nullnessProvider,
+                    inspector,
+                    alwaysSuccessTryCastExpressions,
+                    inlineAssertion.QualifierExpression) == CSharpControlFlowNullReferenceState.NOT_NULL)
             {
-                var inlineAssertion = assertion as InlineAssertion;
-                if (inlineAssertion != null &&
-                    GetExpressionNullReferenceState(
-                        nullnessProvider,
-                        inspector,
-                        alwaysSuccessTryCastExpressions,
-                        inlineAssertion.QualifierExpression) == CSharpControlFlowNullReferenceState.NOT_NULL)
-                {
-                    context.AddHighlighting(
-                        new RedundantInlineAssertionHighlighting("Assertion is redundant because the expression is never null.", inlineAssertion));
-                }
+                context.AddHighlighting(
+                    new RedundantInlineAssertionHighlighting("Assertion is redundant because the expression is never null.", inlineAssertion));
             }
         }
 
@@ -258,37 +250,35 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             ICSharpExpression expression)
         {
-            var referenceExpression = expression as IReferenceExpression;
-            if (referenceExpression != null)
+            switch (expression)
             {
-                var nullReferenceState = inspector.GetExpressionNullReferenceState(referenceExpression, true);
+                case IReferenceExpression referenceExpression:
+                    var nullReferenceState = inspector.GetExpressionNullReferenceState(referenceExpression, true);
 
-                if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN)
-                {
-                    return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, referenceExpression);
-                }
+                    if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN)
+                    {
+                        return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, referenceExpression);
+                    }
 
-                return nullReferenceState;
+                    return nullReferenceState;
+
+                case IAsExpression asExpression when alwaysSuccessTryCastExpressions.Contains(asExpression):
+                    return CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                case IObjectCreationExpression _:
+                    return CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                case IInvocationExpression invocationExpression:
+                    if (invocationExpression.InvokedExpression is IReferenceExpression invokedExpression)
+                    {
+                        return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, invokedExpression);
+                    }
+
+                    goto default;
+
+                default:
+                    return CSharpControlFlowNullReferenceState.UNKNOWN;
             }
-
-            var asExpression = expression as IAsExpression;
-            if (asExpression != null && alwaysSuccessTryCastExpressions.Contains(asExpression))
-            {
-                return CSharpControlFlowNullReferenceState.NOT_NULL;
-            }
-
-            if (expression is IObjectCreationExpression)
-            {
-                return CSharpControlFlowNullReferenceState.NOT_NULL;
-            }
-
-            var invokedExpression = (expression as IInvocationExpression)?.InvokedExpression as IReferenceExpression;
-            if (invokedExpression != null)
-            {
-                return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, invokedExpression);
-            }
-
-            return CSharpControlFlowNullReferenceState.UNKNOWN;
         }
 
         [Pure]
@@ -302,8 +292,8 @@ namespace ReCommendedExtension.Analyzers
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
 
                 case ITypeOwner typeOwner when !typeOwner.Type.IsDelegateType():
-                    var attributesOwner = typeOwner as IAttributesOwner;
-                    if (attributesOwner != null && nullnessProvider.GetInfo(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
+                    if (typeOwner is IAttributesOwner attributesOwner && nullnessProvider.GetInfo(attributesOwner) ==
+                        CodeAnnotationNullableValue.NOT_NULL)
                     {
                         return CSharpControlFlowNullReferenceState.NOT_NULL;
                     }

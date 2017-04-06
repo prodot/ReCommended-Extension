@@ -30,14 +30,10 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string TextSuffix => "no observable state changes";
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module)
-        {
-            var method = declaredElement as IMethod;
-
-            return method != null &&
-                   (!method.ReturnType.IsVoid() || method.Parameters.Any(parameter => parameter.AssertNotNull().Kind == ParameterKind.OUTPUT)) &&
-                   method.Parameters.All(parameter => parameter.AssertNotNull().Kind != ParameterKind.REFERENCE);
-        }
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module) =>
+            declaredElement is IMethod method &&
+            (!method.ReturnType.IsVoid() || method.Parameters.Any(parameter => parameter.AssertNotNull().Kind == ParameterKind.OUTPUT)) &&
+            method.Parameters.All(parameter => parameter.AssertNotNull().Kind != ParameterKind.REFERENCE);
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
             =>

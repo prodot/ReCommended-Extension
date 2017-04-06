@@ -219,13 +219,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyzers\AsyncVoidLocalFunctionAnalyzer.cs" />
+    <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowExpressions.cs" />
+    <Compile Include="Analyzers\UnthrowableExceptions.cs" />
     <Compile Include="Assertions\Assertion.cs" />
     <Compile Include="Assertions\AssertionStatement.cs" />
     <Compile Include="Assertions\InlineAssertion.cs" />
     <Compile Include="Analyzers\ConditionalInvocationAnalyzer.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorAnalyzer.cs" />
     <Compile Include="Analyzers\UncatchableExceptionAnalyzer.cs" />
-    <Compile Include="Analyzers\UnthrowableExceptionAnalyzer.cs" />
+    <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowStatements.cs" />
     <Compile Include="Analyzers\AsyncVoidAnonymousMethodAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidLambdaExpressionAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidMethodAnalyzer.cs" />

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.Application.platforms;
 using JetBrains.Metadata.Reader.API;
@@ -17,6 +18,7 @@ namespace ReCommendedExtension.Tests
             }
 
             yield return typeof(NotNullAttribute).Assembly.Location; // add reference to the annotations assembly
+            yield return typeof(ValueTask<>).Assembly.Location;
         }
     }
 }

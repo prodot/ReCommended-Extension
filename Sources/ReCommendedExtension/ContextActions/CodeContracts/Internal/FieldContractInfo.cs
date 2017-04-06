@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
@@ -14,16 +13,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
     {
         public static FieldContractInfo TryCreate([NotNull] IFieldDeclaration declaration, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (!declaration.IsStatic)
+            if (!declaration.IsStatic && declaration.GetContainingTypeDeclaration() is IClassLikeDeclaration classLikeDeclaration &&
+                declaration.DeclaredElement != null && isAvailableForType(declaration.DeclaredElement.Type))
             {
-                var classLikeDeclaration = declaration.GetContainingTypeDeclaration() as IClassLikeDeclaration;
-
-                Debug.Assert(declaration.DeclaredElement != null);
-
-                if (classLikeDeclaration != null && isAvailableForType(declaration.DeclaredElement.Type))
-                {
-                    return new FieldContractInfo(declaration, classLikeDeclaration, declaration.DeclaredElement.Type);
-                }
+                return new FieldContractInfo(declaration, classLikeDeclaration, declaration.DeclaredElement.Type);
             }
 
             return null;
@@ -57,14 +50,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 var expression = factory.CreateExpression("$0", declaration.DeclaredElement);
 
-                ICSharpStatement firstNonContractStatement;
-
                 AddContract(
                     ContractKind.Invariant,
                     contractInvariantMethodDeclaration.Body,
                     provider.PsiModule,
                     () => getContractExpression(expression),
-                    out firstNonContractStatement);
+                    out var firstNonContractStatement);
                 firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
             }
             else

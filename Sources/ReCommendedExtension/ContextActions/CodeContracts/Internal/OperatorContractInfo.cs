@@ -59,13 +59,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     contractType,
                     declaration.DeclaredElement.ReturnType);
 
-                ICSharpStatement firstNonContractStatement;
                 AddContract(
                     ContractKind.Ensures,
                     declaration.Body,
                     provider.PsiModule,
                     () => getContractExpression(expression),
-                    out firstNonContractStatement);
+                    out var firstNonContractStatement);
                 firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
             }
             else

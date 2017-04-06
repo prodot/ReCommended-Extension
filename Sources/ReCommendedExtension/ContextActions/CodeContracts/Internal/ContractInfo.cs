@@ -27,8 +27,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 foreach (var statement in body.StatementsEnumerable)
                 {
-                    var expressionStatement = statement as IExpressionStatement;
-                    if (expressionStatement != null)
+                    if (statement is IExpressionStatement expressionStatement)
                     {
                         switch (expressionStatement.TryGetContractName())
                         {
@@ -75,8 +74,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 return false;
             }
 
-            var overridableMember = typeMember as IOverridableMember;
-            if (overridableMember != null && overridableMember.GetImmediateSuperMembers().Any())
+            if (typeMember is IOverridableMember overridableMember && overridableMember.GetImmediateSuperMembers().Any())
             {
                 return false;
             }

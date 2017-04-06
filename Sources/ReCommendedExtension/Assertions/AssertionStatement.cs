@@ -15,8 +15,7 @@ namespace ReCommendedExtension.Assertions
             [NotNull] AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
             [NotNull] AssertionConditionAnnotationProvider assertionConditionAnnotationProvider)
         {
-            var method = invocationExpression.Reference?.Resolve().DeclaredElement as IMethod;
-            if (method != null && assertionMethodAnnotationProvider.GetInfo(method))
+            if (invocationExpression.Reference?.Resolve().DeclaredElement is IMethod method && assertionMethodAnnotationProvider.GetInfo(method))
             {
                 foreach (var parameter in method.Parameters)
                 {

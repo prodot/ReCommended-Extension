@@ -8,8 +8,12 @@ namespace Test
         {
             try { }
             catch (|NullReferenceException|(0)) { }
+
+            try { }
+            catch (|NullReferenceException|(1) e) when (e.Message != null) { }
         }
     }
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: The exception indicates a bug that can be avoided.
+(1): ReSharper Warning: The exception indicates a bug that can be avoided.

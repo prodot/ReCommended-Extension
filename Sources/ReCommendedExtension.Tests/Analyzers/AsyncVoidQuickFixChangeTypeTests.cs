@@ -13,5 +13,8 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [Test]
         public void TestAsyncVoidMethod() => DoNamedTest2();
+
+        [Test]
+        public void TestAsyncVoidLocalFunction() => DoNamedTest2();
     }
 }

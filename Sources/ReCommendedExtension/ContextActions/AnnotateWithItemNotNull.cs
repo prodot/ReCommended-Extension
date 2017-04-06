@@ -27,13 +27,10 @@ namespace ReCommendedExtension.ContextActions
                 }
             }
 
-            if (type.IsGenericTask())
+            var resultType = type.GetTasklikeUnderlyingType(context);
+            if (resultType != null && resultType.Classify == TypeClassification.REFERENCE_TYPE)
             {
-                var resultType = type.GetTasklikeUnderlyingType(context);
-                if (resultType != null && resultType.Classify == TypeClassification.REFERENCE_TYPE)
-                {
-                    return true;
-                }
+                return true;
             }
 
             if (type.IsLazy())

@@ -79,8 +79,7 @@ namespace ReCommendedExtension.Analyzers
 
         protected override void Run(ISpecificCatchClause element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
-            string reason;
-            if (uncatchableExceptions.TryGetValue(element.ExceptionType.ToString(), out reason))
+            if (uncatchableExceptions.TryGetValue(element.ExceptionType.ToString(), out var reason))
             {
                 Debug.Assert(reason != null);
 

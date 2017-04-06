@@ -86,6 +86,23 @@ namespace Test
         }
 
         event Func<int, Task<int>> EventHandlerWithReturnValue;
+
+        void Method4()
+        {
+            async void LocalFunction(object sender, EventArgs e) => await Task.Yield();
+            async |void|(4) LocalFunction2(object sender, EventArgs e) => await Task.Yield();
+            async |void|(5) LocalFunction3(object sender, EventArgs e) => await Task.Yield();
+
+            Notify += LocalFunction;
+            Notify -= LocalFunction;
+
+            Notify += new EventHandler(LocalFunction);
+            Notify -= new EventHandler(LocalFunction);
+
+            LocalFunction2(null, null);
+            LocalFunction3(null, null);
+            LocalFunction3(null, null);
+        }
     }
 
     internal class Base
@@ -100,9 +117,9 @@ namespace Test
 
     internal class Derived : Base, IBase
     {
-        internal override async |void|(4) Method() { }
+        internal override async |void|(6) Method() { }
 
-        public async |void|(5) Method2() { }
+        public async |void|(7) Method2() { }
     }
 }
 ---------------------------------------------------------
@@ -110,5 +127,7 @@ namespace Test
 (1): ReSharper Warning: 'async void' public surface area method without detected usages.
 (2): ReSharper Warning: 'async void' method used 1 time not as a direct event handler.
 (3): ReSharper Warning: 'async void' method used 2 times not as a direct event handler.
-(4): ReSharper Warning: 'void' method overridden or implemented as 'async void'.
-(5): ReSharper Warning: 'void' method overridden or implemented as 'async void'.
+(4): ReSharper Warning: 'async void' local function used 1 time not as a direct event handler.
+(5): ReSharper Warning: 'async void' local function used 2 times not as a direct event handler.
+(6): ReSharper Warning: 'void' method overridden or implemented as 'async void'.
+(7): ReSharper Warning: 'void' method overridden or implemented as 'async void'.

@@ -8,6 +8,9 @@ namespace Test
         {
             try { }
             catch (NullReferenceException) { }
+
+            try { }
+            catch (NullReferenceException e) when (e.Message != null) { }
         }
     }
 }
