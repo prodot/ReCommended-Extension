@@ -87,6 +87,7 @@ namespace ReCommendedExtension.Deployment
             Console.WriteLine("Resigning assembly...");
 
             Console.WriteLine($"Tool path: {Settings.Default.SnPath}");
+            Console.WriteLine($"Key path: {snkPath}");
 
             RunConsoleApplication($"\"{Settings.Default.SnPath}\"", $"-R \"{assemblyPath}\" \"{snkPath}\"");
         }
