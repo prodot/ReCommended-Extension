@@ -19,10 +19,7 @@ namespace ReCommendedExtension.Highlightings
 
         internal NotifyPropertyChangedInvocatorFromConstructorHighlighting(
             [NotNull] IInvocationExpression invocationExpression,
-            [NotNull] string message) : base(message)
-        {
-            InvocationExpression = invocationExpression;
-        }
+            [NotNull] string message) : base(message) => InvocationExpression = invocationExpression;
 
         [NotNull]
         internal IInvocationExpression InvocationExpression { get; }

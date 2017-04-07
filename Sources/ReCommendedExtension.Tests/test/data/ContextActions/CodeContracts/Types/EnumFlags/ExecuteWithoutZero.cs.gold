@@ -16,10 +16,8 @@ namespace Test
 
         void Available(NumbersWithoutZero two{caret})
         {
-          Contract.Requires(two >= 0 &&
-                            two <=
-                            (NumbersWithoutZero.One | NumbersWithoutZero.Two | NumbersWithoutZero.Four |
-                             NumbersWithoutZero.Eight));
+          Contract.Requires(two >= 0 && two <= (NumbersWithoutZero.One | NumbersWithoutZero.Two |
+                                                NumbersWithoutZero.Four | NumbersWithoutZero.Eight));
         }
     }
 }

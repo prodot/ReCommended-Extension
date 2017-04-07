@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
@@ -67,13 +68,11 @@ namespace ReCommendedExtension.Analyzers
             }
 
             // excluding members of non-reference types (value, nullable value, unspecified generic types)
-            var typeOwner = declaration as ITypeOwnerDeclaration;
-            if (typeOwner != null)
+            if (declaration is ITypeOwnerDeclaration typeOwner)
             {
                 // first check if declaration is a IMethodDeclaration and its TypeUsage is null
                 // (otherwise the Type property throws the NullReferenceException)
-                var methodDeclaration = typeOwner as IMethodDeclaration;
-                if (methodDeclaration != null && methodDeclaration.TypeUsage == null)
+                if (typeOwner is IMethodDeclaration methodDeclaration && methodDeclaration.TypeUsage == null)
                 {
                     return false;
                 }
@@ -91,9 +90,7 @@ namespace ReCommendedExtension.Analyzers
         {
             if (CanContainNullnessAttributes(declaration))
             {
-                var methodDeclaration = declaration as IMethodDeclaration;
-
-                if (methodDeclaration != null)
+                if (declaration is IMethodDeclaration methodDeclaration)
                 {
                     if (methodDeclaration.IsAsync)
                     {
@@ -146,37 +143,26 @@ namespace ReCommendedExtension.Analyzers
         [SuppressMessage("ReSharper", "UseNullPropagation", Justification = "Preserve code symmetry.")]
         static IType TryGetTypeForIfCanBeAnnotatedWithItemNotNull([NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
-            var method = attributesOwnerDeclaration.DeclaredElement as IMethod;
-            if (method != null)
+            switch (attributesOwnerDeclaration.DeclaredElement)
             {
-                return method.ReturnType;
-            }
+                case IMethod method:
+                    return method.ReturnType;
 
-            var parameter = attributesOwnerDeclaration.DeclaredElement as IParameter;
-            if (parameter != null)
-            {
-                return parameter.Type;
-            }
+                case IParameter parameter:
+                    return parameter.Type;
 
-            var property = attributesOwnerDeclaration.DeclaredElement as IProperty;
-            if (property != null)
-            {
-                return property.Type;
-            }
+                case IProperty property:
+                    return property.Type;
 
-            var delegateType = attributesOwnerDeclaration.DeclaredElement as IDelegate;
-            if (delegateType != null)
-            {
-                return delegateType.InvokeMethod.ReturnType;
-            }
+                case IDelegate delegateType:
+                    return delegateType.InvokeMethod.ReturnType;
 
-            var field = attributesOwnerDeclaration.DeclaredElement as IField;
-            if (field != null)
-            {
-                return field.Type;
-            }
+                case IField field:
+                    return field.Type;
 
-            return null;
+                default:
+                    return null;
+            }
         }
 
         static void AnalyzeAsyncMethod(
@@ -273,7 +259,7 @@ namespace ReCommendedExtension.Analyzers
                                 consumer.AddHighlighting(
                                     new MissingAnnotationHighlighting(
                                         string.Format(
-                                            "Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
+                                            @"Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
                                             NullnessProvider.NotNullAttributeShortName,
                                             NullnessProvider.CanBeNullAttributeShortName),
                                         attributesOwnerDeclaration));
@@ -358,19 +344,16 @@ namespace ReCommendedExtension.Analyzers
                         return;
                     }
 
-                    if (type.IsGenericTask())
+                    var resultType = type.GetTasklikeUnderlyingType(attributesOwnerDeclaration);
+                    if (resultType != null)
                     {
-                        var resultType = type.GetTaskUnderlyingType();
-                        if (resultType != null)
+                        if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
                         {
-                            if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
-                            {
-                                consumer.AddHighlighting(
-                                    new NotAllowedAnnotationHighlighting(
-                                        attributesOwnerDeclaration,
-                                        itemNotNullAttribute,
-                                        "Annotation is not allowed because the declared task result type is not a reference type."));
-                            }
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationHighlighting(
+                                    attributesOwnerDeclaration,
+                                    itemNotNullAttribute,
+                                    "Annotation is not allowed because the declared task result type is not a reference type."));
                         }
                         return;
                     }
@@ -400,9 +383,8 @@ namespace ReCommendedExtension.Analyzers
                             itemNotNullAttribute,
                             string.Format(
                                 "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), " +
-                                "or a {1}<T>, or a {2}<T>.",
+                                "or a generic task-like type, or a {1}<T>.",
                                 nameof(IEnumerable<int>),
-                                "Task",
                                 "Lazy")));
                 }
             }

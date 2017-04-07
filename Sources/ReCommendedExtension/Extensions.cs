@@ -28,16 +28,12 @@ namespace ReCommendedExtension
         [NotNull]
         static readonly string contractClassFullName = typeof(Contract).FullName.AssertNotNull();
 
-        static string TryGetMemberName([NotNull] this IExpressionStatement expressionStatement, [NotNull] string classFullName)
-        {
-            var referenceExpression = (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression as IReferenceExpression;
-
-            return referenceExpression != null &&
-                   ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
-                   .FullName == classFullName
+        static string TryGetMemberName([NotNull] this IExpressionStatement expressionStatement, [NotNull] string classFullName) =>
+            (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression is IReferenceExpression referenceExpression &&
+            ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
+            .FullName == classFullName
                 ? referenceExpression.Reference.GetName()
                 : null;
-        }
 
         static void CopyTypeParameterConstraints<P>(
             [NotNull] CSharpElementFactory factory,
@@ -108,14 +104,13 @@ namespace ReCommendedExtension
                 return false;
             }
 
-            var overridableMember = declaration.DeclaredElement as IOverridableMember;
-            if (overridableMember != null && overridableMember.GetImmediateSuperMembers().Any())
+            if (declaration.DeclaredElement is IOverridableMember overridableMember && overridableMember.GetImmediateSuperMembers().Any())
             {
                 return true;
             }
 
-            var parameterOverridableMember = (declaration.DeclaredElement as IParameter)?.ContainingParametersOwner as IOverridableMember;
-            if (parameterOverridableMember != null && parameterOverridableMember.GetImmediateSuperMembers().Any())
+            if ((declaration.DeclaredElement as IParameter)?.ContainingParametersOwner is IOverridableMember parameterOverridableMember &&
+                parameterOverridableMember.GetImmediateSuperMembers().Any())
             {
                 return true;
             }
@@ -134,7 +129,7 @@ namespace ReCommendedExtension
         [NotNull]
         internal static IClassDeclaration EnsureContractClass([NotNull] this ICSharpTypeDeclaration typeDeclaration, [NotNull] IPsiModule module)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(typeDeclaration);
 
             IClassDeclaration contractClassDeclaration = null;
 
@@ -162,7 +157,7 @@ namespace ReCommendedExtension
                     (IClassDeclaration)
                         factory.CreateTypeMemberDeclaration(
                             string.Format(
-                                "[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
+                                @"[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
                                 GetSuggestedContractClassName(typeDeclaration),
                                 typeParameters,
                                 typeParametersForAttribute),
@@ -180,7 +175,7 @@ namespace ReCommendedExtension
                     : "";
                 var typeofExpression =
                     (ITypeofExpression)
-                        factory.CreateExpression(string.Format("typeof($0{0})", attributeTypeParameters), contractClassDeclaration.DeclaredElement);
+                        factory.CreateExpression(string.Format(@"typeof($0{0})", attributeTypeParameters), contractClassDeclaration.DeclaredElement);
 
                 // todo: the generated "typeof" expression doesn't contain generics: "<,>"
                 var contractClassAttributeTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassAttribute, module);
@@ -191,8 +186,7 @@ namespace ReCommendedExtension
 
                 typeDeclaration.AddAttributeAfter(attribute, null);
 
-                var parentTypeDeclaration = typeDeclaration.GetContainingTypeDeclaration() as IClassLikeDeclaration;
-                if (parentTypeDeclaration != null)
+                if (typeDeclaration.GetContainingTypeDeclaration() is IClassLikeDeclaration parentTypeDeclaration)
                 {
                     contractClassDeclaration.SetAccessRights(AccessRights.PRIVATE);
 
@@ -220,9 +214,10 @@ namespace ReCommendedExtension
 
         [NotNull]
         internal static IMethodDeclaration EnsureOverriddenMethodInContractClass(
-            [NotNull] this IMethodDeclaration methodDeclaration, [NotNull] IClassDeclaration contractClassDeclaration, [NotNull] IPsiModule module)
+            [NotNull] this IMethodDeclaration methodDeclaration,
+            [NotNull] IClassDeclaration contractClassDeclaration)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(methodDeclaration);
 
             var declaredElement = methodDeclaration.DeclaredElement;
 
@@ -287,8 +282,6 @@ namespace ReCommendedExtension
 
                 overriddenMethodDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenMethodDeclaration);
 
-                Debug.Assert(overriddenMethodDeclaration != null);
-
                 ContextActionUtils.FormatWithDefaultProfile(overriddenMethodDeclaration);
             }
 
@@ -297,9 +290,10 @@ namespace ReCommendedExtension
 
         [NotNull]
         internal static IIndexerDeclaration EnsureOverriddenIndexerInContractClass(
-            [NotNull] this IIndexerDeclaration indexerDeclaration, [NotNull] IClassDeclaration contractClassDeclaration, [NotNull] IPsiModule module)
+            [NotNull] this IIndexerDeclaration indexerDeclaration,
+            [NotNull] IClassDeclaration contractClassDeclaration)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(indexerDeclaration);
 
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenIndexerDeclaration = (
@@ -348,8 +342,6 @@ namespace ReCommendedExtension
 
                 overriddenIndexerDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenIndexerDeclaration);
 
-                Debug.Assert(overriddenIndexerDeclaration != null);
-
                 ContextActionUtils.FormatWithDefaultProfile(overriddenIndexerDeclaration);
             }
 
@@ -358,9 +350,10 @@ namespace ReCommendedExtension
 
         [NotNull]
         internal static IPropertyDeclaration EnsureOverriddenPropertyInContractClass(
-            [NotNull] this IPropertyDeclaration propertyDeclaration, [NotNull] IClassDeclaration contractClassDeclaration, [NotNull] IPsiModule module)
+            [NotNull] this IPropertyDeclaration propertyDeclaration,
+            [NotNull] IClassDeclaration contractClassDeclaration)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(propertyDeclaration);
 
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenPropertyDeclaration = (
@@ -391,8 +384,6 @@ namespace ReCommendedExtension
 
                 overriddenPropertyDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenPropertyDeclaration);
 
-                Debug.Assert(overriddenPropertyDeclaration != null);
-
                 ContextActionUtils.FormatWithDefaultProfile(overriddenPropertyDeclaration);
             }
 
@@ -403,7 +394,7 @@ namespace ReCommendedExtension
         internal static IMethodDeclaration EnsureContractInvariantMethod(
             [NotNull] this IClassLikeDeclaration classLikeDeclaration, [NotNull] IPsiModule module)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(classLikeDeclaration);
 
             var contractInvariantMethodDeclaration = classLikeDeclaration.MethodDeclarationsEnumerable.FirstOrDefault(
                 methodDeclaration =>
@@ -427,8 +418,6 @@ namespace ReCommendedExtension
                 contractInvariantMethodDeclaration =
                     (IMethodDeclaration)factory.CreateTypeMemberDeclaration("[$0] private void ObjectInvariant() { }", factoryArgs.ToArray());
                 contractInvariantMethodDeclaration = classLikeDeclaration.AddClassMemberDeclaration(contractInvariantMethodDeclaration);
-
-                Debug.Assert(contractInvariantMethodDeclaration != null);
 
                 ContextActionUtils.FormatWithDefaultProfile(contractInvariantMethodDeclaration);
             }
@@ -473,6 +462,53 @@ namespace ReCommendedExtension
             => data.SettingsStore.GetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode);
 
         /// <summary>
+        /// Returns the object creation expression <c>new EventHandler(</c><paramref name="argument"/><c>)</c> if used in the pattern
+        /// <c>new EventHandler(</c><paramref name="argument"/><c>)</c> or <c>null</c>.
+        /// </summary>
+        static IObjectCreationExpression TryGetDelegateCreation([NotNull] ICSharpArgument argument)
+        {
+            var argumentList = argument.Parent as IArgumentList;
+
+            if (argumentList?.ArgumentsEnumerable.Count() != 1)
+            {
+                return null;
+            }
+
+            return argumentList.Parent as IObjectCreationExpression;
+        }
+
+        internal static bool IsEventTarget([NotNull] this IReference reference)
+        {
+            var treeNode = reference.GetTreeNode();
+
+            var assignmentExpression = treeNode.Parent as IAssignmentExpression;
+            if (assignmentExpression != null)
+            {
+                return assignmentExpression.IsEventSubscriptionOrUnSubscription();
+            }
+
+            if (treeNode.Parent is ICSharpArgument argument)
+            {
+                var delegateCreation = TryGetDelegateCreation(argument);
+                if (delegateCreation != null)
+                {
+                    assignmentExpression = delegateCreation.Parent as IAssignmentExpression;
+                    if (assignmentExpression != null)
+                    {
+                        return assignmentExpression.IsEventSubscriptionOrUnSubscription();
+                    }
+                }
+            }
+
+            if (reference is IReferenceToDelegateCreation referenceToDelegateCreation)
+            {
+                return referenceToDelegateCreation.IsEventSubscription;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Returns <c>true</c> if used in the pattern <c>button.Click ±= </c><paramref name="assignmentExpression"/><c>;</c>.
         /// </summary>
         internal static bool IsEventSubscriptionOrUnSubscription([NotNull] this IAssignmentExpression assignmentExpression)
@@ -493,6 +529,18 @@ namespace ReCommendedExtension
             }
 
             return (assignmentExpression.Dest as IReferenceExpression)?.Reference.Resolve().DeclaredElement is IEvent;
+        }
+
+        internal static bool IsVoidMethodDeclaration([NotNull] this ILocalFunctionDeclaration localFunctionDeclaration)
+        {
+            var predefinedTypeName = (localFunctionDeclaration.TypeUsage as IPredefinedTypeUsage)?.ScalarPredefinedTypeName;
+
+            if (predefinedTypeName?.TypeKeyword == null)
+            {
+                return false;
+            }
+
+            return predefinedTypeName.TypeKeyword.GetTokenType() == CSharpTokenType.VOID_KEYWORD;
         }
 
         /// <remarks>

@@ -6,6 +6,11 @@ namespace Test
     {
         string Meth{on}od() => null;
 
+        void MethodWithLocalFunction()
+        {
+            string Local{off}Function() => null;
+        }
+
         void Method{off}2() => null;
 
         async Task Method{off}3() => await Task.Yield();

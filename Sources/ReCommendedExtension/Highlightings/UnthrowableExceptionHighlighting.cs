@@ -21,11 +21,9 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly ICSharpExpression thrownStatementExpression;
 
-        internal UnthrowableExceptionHighlighting([NotNull] string message, [NotNull] ICSharpExpression thrownStatementExpression)
-            : base(message)
-        {
-            this.thrownStatementExpression = thrownStatementExpression;
-        }
+        internal UnthrowableExceptionHighlighting(
+            [NotNull] string message,
+            [NotNull] ICSharpExpression thrownStatementExpression) : base(message) => this.thrownStatementExpression = thrownStatementExpression;
 
         public override DocumentRange CalculateRange() => thrownStatementExpression.GetDocumentRange();
     }

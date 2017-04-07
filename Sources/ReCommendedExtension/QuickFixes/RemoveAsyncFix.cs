@@ -15,10 +15,7 @@ namespace ReCommendedExtension.QuickFixes
         [NotNull]
         readonly AsyncVoidFunctionExpressionHighlighting highlighting;
 
-        public RemoveAsyncFix([NotNull] AsyncVoidFunctionExpressionHighlighting highlighting)
-        {
-            this.highlighting = highlighting;
-        }
+        public RemoveAsyncFix([NotNull] AsyncVoidFunctionExpressionHighlighting highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

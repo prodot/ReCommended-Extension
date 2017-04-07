@@ -7,7 +7,6 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Search;
 using ReCommendedExtension.Highlightings;
 
@@ -28,55 +27,6 @@ namespace ReCommendedExtension.Analyzers
                 default:
                     return false;
             }
-        }
-
-        /// <summary>
-        /// Returns the object creation expression <c>new EventHandler(</c><paramref name="argument"/><c>)</c> if used in the pattern
-        /// <c>new EventHandler(</c><paramref name="argument"/><c>)</c> or <c>null</c>.
-        /// </summary>
-        static IObjectCreationExpression TryGetDelegateCreation([NotNull] ICSharpArgument argument)
-        {
-            var argumentList = argument.Parent as IArgumentList;
-
-            if (argumentList?.ArgumentsEnumerable.Count() != 1)
-            {
-                return null;
-            }
-
-            return argumentList.Parent as IObjectCreationExpression;
-        }
-
-        static bool IsEventTarget([NotNull] IReference reference)
-        {
-            var treeNode = reference.GetTreeNode();
-
-            var assignmentExpression = treeNode.Parent as IAssignmentExpression;
-            if (assignmentExpression != null)
-            {
-                return assignmentExpression.IsEventSubscriptionOrUnSubscription();
-            }
-
-            var argument = treeNode.Parent as ICSharpArgument;
-            if (argument != null)
-            {
-                var delegateCreation = TryGetDelegateCreation(argument);
-                if (delegateCreation != null)
-                {
-                    assignmentExpression = delegateCreation.Parent as IAssignmentExpression;
-                    if (assignmentExpression != null)
-                    {
-                        return assignmentExpression.IsEventSubscriptionOrUnSubscription();
-                    }
-                }
-            }
-
-            var referenceToDelegateCreation = reference as IReferenceToDelegateCreation;
-            if (referenceToDelegateCreation != null)
-            {
-                return referenceToDelegateCreation.IsEventSubscription;
-            }
-
-            return false;
         }
 
         protected override void Run(IMethodDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
@@ -104,7 +54,7 @@ namespace ReCommendedExtension.Analyzers
             Debug.Assert(SearchDomainFactory.Instance != null);
 
             var solutionSearchDomain = SearchDomainFactory.Instance.CreateSearchDomain(psiServices.Solution, false);
-            var references = psiServices.Finder.FindReferences(method, solutionSearchDomain, NullProgressIndicator.Instance);
+            var references = psiServices.Finder.FindReferences(method, solutionSearchDomain, NullProgressIndicator.Create());
 
             if (IsPublicSurfaceArea(method))
             {
@@ -115,8 +65,6 @@ namespace ReCommendedExtension.Analyzers
                 else
                 {
                     var implicitUseAnnotationProvider = psiServices.GetCodeAnnotationsCache().GetProvider<ImplicitUseAnnotationProvider>();
-
-                    Debug.Assert(implicitUseAnnotationProvider != null);
 
                     var useKindFlags = implicitUseAnnotationProvider.IsImplicitlyUsed(method);
                     if (useKindFlags == null)
@@ -129,12 +77,15 @@ namespace ReCommendedExtension.Analyzers
             }
             else
             {
-                var count = references.Count(reference => !IsEventTarget(reference.AssertNotNull()));
+                var count = references.Count(reference => !reference.AssertNotNull().IsEventTarget());
                 if (count > 0)
                 {
                     consumer.AddHighlighting(
                         new AvoidAsyncVoidHighlighting(
-                            string.Format("'async void' method used {0} time{1} not as a direct event handler.", count, count == 1 ? "" : "s"),
+                            string.Format(
+                                "'async void' method used {0} time{1} not as a direct event handler.",
+                                count.ToString(),
+                                count == 1 ? "" : "s"),
                             element));
                 }
             }

@@ -40,8 +40,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                         return true;
                     }
 
-                    var declaredType = type as IDeclaredType;
-                    if (declaredType != null &&
+                    if (type is IDeclaredType declaredType &&
                         (declaredType.GetKeyValueTypesForGenericDictionary() ?? Enumerable.Empty<JetBrains.Util.Pair<IType, IType>>()).Any(
                             pair => pair.Second.Classify == TypeClassification.REFERENCE_TYPE))
                     {

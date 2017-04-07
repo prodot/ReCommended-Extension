@@ -1,4 +1,4 @@
-# ![](Images/Icon.png) ReCommended Extension for ReSharper [![ReSharper-Gallery](https://img.shields.io/badge/resharper--gallery-v1.0.5-lightgrey.svg)](https://resharper-plugins.jetbrains.com/packages/Prodot.ReCommendedExtension/)
+# ![](Images/Icon.png) ReCommended Extension for ReSharper [![ReSharper-Gallery](https://img.shields.io/badge/resharper--gallery-v1.0.6-lightgrey.svg)](https://resharper-plugins.jetbrains.com/packages/Prodot.ReCommendedExtension/)
 
 The ReCommended Extension for ReSharper augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 

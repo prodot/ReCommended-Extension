@@ -18,14 +18,23 @@ namespace ReCommendedExtension.Highlightings
     {
         internal const string SeverityId = "AvoidAsyncVoid";
 
+        readonly ITypeUsage typeUsage;
+
         internal AvoidAsyncVoidHighlighting([NotNull] string message, [NotNull] IMethodDeclaration methodDeclaration) : base(message)
         {
-            MethodDeclaration = methodDeclaration;
+            Declaration = methodDeclaration;
+            typeUsage = methodDeclaration.TypeUsage;
+        }
+
+        internal AvoidAsyncVoidHighlighting([NotNull] string message, [NotNull] ILocalFunctionDeclaration localFunctionDeclaration) : base(message)
+        {
+            Declaration = localFunctionDeclaration;
+            typeUsage = localFunctionDeclaration.TypeUsage;
         }
 
         [NotNull]
-        internal IMethodDeclaration MethodDeclaration { get; }
+        internal ITypeOwnerDeclaration Declaration { get; }
 
-        public override DocumentRange CalculateRange() => MethodDeclaration.TypeUsage.GetDocumentRange();
+        public override DocumentRange CalculateRange() => typeUsage.GetDocumentRange();
     }
 }

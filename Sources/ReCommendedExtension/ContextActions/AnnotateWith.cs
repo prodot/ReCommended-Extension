@@ -25,10 +25,7 @@ namespace ReCommendedExtension.ContextActions
         Func<CSharpElementFactory, IAttribute> createAttributeFactory;
         IAttribute attributeToRemove;
 
-        protected AnnotateWith([NotNull] ICSharpContextActionDataProvider provider)
-        {
-            this.provider = provider;
-        }
+        protected AnnotateWith([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
 
         [NotNull]
         protected abstract string AnnotationAttributeTypeName { get; }
@@ -90,10 +87,11 @@ namespace ReCommendedExtension.ContextActions
             {
                 using (WriteLockCookie.Create())
                 {
-                    var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
+                    var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 
                     var attribute = createAttributeFactory(factory);
 
+                    Debug.Assert(attributesOwnerDeclaration != null);
                     Debug.Assert(attribute != null);
 
                     attributesOwnerDeclaration.AddAttributeAfter(attribute, attributeToRemove);

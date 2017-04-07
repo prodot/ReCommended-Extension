@@ -6,6 +6,13 @@
 
         void Meth{on}od2(out int one) { }
 
+        void MethodWithLocalFunctions()
+        {
+            string Local{off}Function1() => null;
+
+            void Local{off}Function2(out int one) { }
+        }
+
         void Meth{off}od3(ref int one) { }
 
         void Meth{off}od4(int one) { }

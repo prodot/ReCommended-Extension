@@ -24,6 +24,8 @@
 
         internal string Method{on}()
         {
+            string Local{off}Function() => null;
+
             throw new System.NotImplementedException();
         }
 

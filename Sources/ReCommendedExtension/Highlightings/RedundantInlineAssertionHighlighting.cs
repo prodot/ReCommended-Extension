@@ -23,10 +23,9 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly InlineAssertion assertion;
 
-        internal RedundantInlineAssertionHighlighting([NotNull] string message, [NotNull] InlineAssertion assertion) : base(message)
-        {
-            this.assertion = assertion;
-        }
+        internal RedundantInlineAssertionHighlighting(
+            [NotNull] string message,
+            [NotNull] InlineAssertion assertion) : base(message) => this.assertion = assertion;
 
         internal override Assertion Assertion => assertion;
 

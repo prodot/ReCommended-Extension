@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
@@ -22,10 +21,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
     {
         ContractInfo contractInfo;
 
-        internal AddContractContextAction([NotNull] ICSharpContextActionDataProvider provider)
-        {
-            Provider = provider;
-        }
+        internal AddContractContextAction([NotNull] ICSharpContextActionDataProvider provider) => Provider = provider;
 
         void AddAnnotation()
         {
@@ -43,7 +39,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                         attribute =>
                             attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
                 {
-                    var factory = CSharpElementFactory.GetInstance(Provider.PsiModule);
+                    var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 
                     var attribute = factory.CreateAttribute(attributeType);
 
@@ -93,11 +89,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             Debug.Assert(contractInfo != null);
 
-            ICollection<ICSharpStatement> firstNonContractStatements;
             contractInfo.AddContracts(
                 Provider,
-                expression => GetExpression(CSharpElementFactory.GetInstance(Provider.PsiModule), expression.AssertNotNull()),
-                out firstNonContractStatements);
+                expression => GetExpression(CSharpElementFactory.GetInstance(expression.AssertNotNull()), expression.AssertNotNull()),
+                out var firstNonContractStatements);
 
             return textControl =>
             {

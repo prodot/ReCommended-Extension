@@ -17,7 +17,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         public static MethodContractInfo TryCreate(
             [NotNull] IMethodDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowExpression == null)
+            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
             {
                 var method = declaration.DeclaredElement;
 
@@ -34,9 +34,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         readonly IMethodDeclaration declaration;
 
         MethodContractInfo([NotNull] IMethodDeclaration declaration, [NotNull] IType type) : base(ContractKind.Ensures, type)
-        {
-            this.declaration = declaration;
-        }
+            => this.declaration = declaration;
 
         public override string GetContractIdentifierForUI() => "result";
 
@@ -45,7 +43,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             Func<IExpression, IExpression> getContractExpression,
             out ICollection<ICSharpStatement> firstNonContractStatements)
         {
-            var factory = CSharpElementFactory.GetInstance(provider.PsiModule);
+            var factory = CSharpElementFactory.GetInstance(declaration);
 
             IBlock body;
 
@@ -57,7 +55,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
 
-                var overriddenMethodDeclaration = declaration.EnsureOverriddenMethodInContractClass(contractClassDeclaration, provider.PsiModule);
+                var overriddenMethodDeclaration = declaration.EnsureOverriddenMethodInContractClass(contractClassDeclaration);
 
                 body = overriddenMethodDeclaration.Body;
             }
@@ -79,9 +77,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     contractType,
                     declaredElement.ReturnType);
 
-                ICSharpStatement firstNonContractStatement;
-
-                AddContract(ContractKind.Ensures, body, provider.PsiModule, () => getContractExpression(expression), out firstNonContractStatement);
+                AddContract(
+                    ContractKind.Ensures,
+                    body,
+                    provider.PsiModule,
+                    () => getContractExpression(expression),
+                    out var firstNonContractStatement);
 
                 firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
             }

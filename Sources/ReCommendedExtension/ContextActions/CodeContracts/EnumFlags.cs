@@ -103,8 +103,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                     if (Range(one, max, isLessOrEquals, getMultipliedWithTwo).All(valueMembers.ContainsKey))
                     {
-                        IField zeroMember;
-                        valueMembers.TryGetValue(default(E), out zeroMember);
+                        valueMembers.TryGetValue(default(E), out var zeroMember);
                         valueMembers.Remove(default(E));
                         return new EnumContractInfo<E>(zeroMember, valueMembers, cSharpLiteralSuffix);
                     }
@@ -144,7 +143,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                 var totalExpression = string.Join(
                     " | ",
-                    from value in valueMembers.Keys.Take(maxItemsToShow) orderby value select valueMembers[value].ShortName);
+                    from value in valueMembers.Keys.Take(maxItemsToShow) orderby value select valueMembers[value].AssertNotNull().ShortName);
 
                 return string.Format(
                     "{0} >= {1} && {0} <= {2}",
@@ -186,7 +185,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                     var index = i + 2;
 
-                    pattern.Append($"${index}");
+                    pattern.Append($"${index.ToString()}");
                     args[index] = fields[i];
                 }
                 if (fields.Count > 1)

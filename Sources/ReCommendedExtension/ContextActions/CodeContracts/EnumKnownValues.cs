@@ -70,7 +70,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                 var index = i + 1;
 
-                pattern.Append($"$0 == ${index}");
+                pattern.Append($"$0 == ${index.ToString()}");
                 args[index] = members[i];
             }
 

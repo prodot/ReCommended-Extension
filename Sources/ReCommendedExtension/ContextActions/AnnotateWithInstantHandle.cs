@@ -27,14 +27,9 @@ namespace ReCommendedExtension.ContextActions
             }
         }
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module)
-        {
-            var parameter = declaredElement as IParameter;
-            return parameter != null &&
-                   (parameter.Type.IsGenericIEnumerable() ||
-                    parameter.Type.IsImplicitlyConvertibleTo(
-                        new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, module),
-                        context.GetTypeConversionRule()));
-        }
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module) =>
+            declaredElement is IParameter parameter && (parameter.Type.IsGenericIEnumerable() || parameter.Type.IsImplicitlyConvertibleTo(
+                                                            new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, module),
+                                                            context.GetTypeConversionRule()));
     }
 }

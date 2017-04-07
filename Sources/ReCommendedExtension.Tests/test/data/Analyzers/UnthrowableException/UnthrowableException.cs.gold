@@ -8,7 +8,15 @@ namespace Test
         {
             throw |new Exception()|(0);
         }
+
+        void Method2() => throw |new Exception()|(1);
+
+        string x;
+
+        void Method3(string value) => x = value ?? throw |new Exception()|(2);
     }
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: A more specific exception should be used.
+(1): ReSharper Warning: A more specific exception should be used.
+(2): ReSharper Warning: A more specific exception should be used.

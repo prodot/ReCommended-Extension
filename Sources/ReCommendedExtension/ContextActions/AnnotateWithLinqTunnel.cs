@@ -26,16 +26,8 @@ namespace ReCommendedExtension.ContextActions
             }
         }
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module)
-        {
-            var method = declaredElement as IMethod;
-
-            if (method != null)
-            {
-                return method.ReturnType.IsGenericIEnumerable() && method.Parameters.Any(p => p.AssertNotNull().Type.IsGenericIEnumerable());
-            }
-
-            return false;
-        }
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module) =>
+            declaredElement is IMethod method && method.ReturnType.IsGenericIEnumerable() &&
+            method.Parameters.Any(p => p.AssertNotNull().Type.IsGenericIEnumerable());
     }
 }

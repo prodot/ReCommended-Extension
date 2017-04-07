@@ -36,8 +36,6 @@ namespace ReCommendedExtension.Analyzers
             var notifyPropertyChangedAnnotationProvider =
                 method.GetPsiServices().GetCodeAnnotationsCache().GetProvider<NotifyPropertyChangedAnnotationProvider>();
 
-            Debug.Assert(notifyPropertyChangedAnnotationProvider != null);
-
             return notifyPropertyChangedAnnotationProvider.ContainsNotifyPropetyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
         }
 

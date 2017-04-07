@@ -103,5 +103,38 @@
         static extern string ExternProperty{off} { get; set; }
 
         string ExpressionBodiedProperty{off} => "";
+
+        string ExpressionBodiedPropertyWithGetter{off}
+        {
+            get => "";
+        }
+
+        string ExpressionBodiedPropertyWithSetter{off}
+        {
+            set => AutoProperty = value;
+        }
+
+        string ExpressionBodiedPropertyWithGetterAndSetter{off}
+        {
+            get => "";
+            set => AutoProperty = value;
+        }
+
+    
+        string this{off}[int one, int two, int three]
+        {
+            get => "";
+        }
+
+        string this{off}[int one, int two, bool three]
+        {
+            set => AutoProperty = value;
+        }
+
+        string this{off}[int one, int two, bool three]
+        {
+            get => "";
+            set => AutoProperty = value;
+        }
     }
 }

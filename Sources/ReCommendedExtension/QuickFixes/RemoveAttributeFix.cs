@@ -15,20 +15,11 @@ namespace ReCommendedExtension.QuickFixes
         [NotNull]
         readonly AttributeHighlighting highlighting;
 
-        public RemoveAttributeFix([NotNull] NotAllowedAnnotationHighlighting highlighting)
-        {
-            this.highlighting = highlighting;
-        }
+        public RemoveAttributeFix([NotNull] NotAllowedAnnotationHighlighting highlighting) => this.highlighting = highlighting;
 
-        public RemoveAttributeFix([NotNull] ConflictingAnnotationHighlighting highlighting)
-        {
-            this.highlighting = highlighting;
-        }
+        public RemoveAttributeFix([NotNull] ConflictingAnnotationHighlighting highlighting) => this.highlighting = highlighting;
 
-        public RemoveAttributeFix([NotNull] RedundantAnnotationHighlighting highlighting)
-        {
-            this.highlighting = highlighting;
-        }
+        public RemoveAttributeFix([NotNull] RedundantAnnotationHighlighting highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

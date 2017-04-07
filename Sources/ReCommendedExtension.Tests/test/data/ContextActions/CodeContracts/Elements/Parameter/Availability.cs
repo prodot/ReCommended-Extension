@@ -16,6 +16,10 @@
 
     internal class Class : AbstractClass, IInterface
     {
+        string x;
+
+        public Class(string one{off}) => x = one;
+
         internal override void AbstractMethod(string one{off}, ref string two{off}, out string three{off})
         {
             three = "";
@@ -28,6 +32,8 @@
 
         internal void Method(string one{on}, ref string two{on}, out string three{on})
         {
+            void LocalFunction(string first{off}, ref string second{off}, out string third{off}) { third = null;}
+
             three = "";
         }
 
@@ -61,6 +67,22 @@
         }
 
         int this[string one{off}, int two, bool three] => 0;
+
+        int this[string one{off}, int two, bool three]
+        {
+            get => 0;
+        }
+
+        int this[string one{off}, int two, bool three]
+        {
+            set => throw new ArgumentException();
+        }
+
+        int this[string one{off}, int two, bool three]
+        {
+            get => 0;
+            set => throw new ArgumentException();
+        }
 
         static extern string ExternMethod(string one{off}, ref string two{off}, out string three{off});
     }

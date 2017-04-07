@@ -27,8 +27,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 foreach (var statement in body.StatementsEnumerable)
                 {
-                    var expressionStatement = statement as IExpressionStatement;
-                    if (expressionStatement != null)
+                    if (statement is IExpressionStatement expressionStatement)
                     {
                         switch (expressionStatement.TryGetContractName())
                         {
@@ -75,8 +74,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 return false;
             }
 
-            var overridableMember = typeMember as IOverridableMember;
-            if (overridableMember != null && overridableMember.GetImmediateSuperMembers().Any())
+            if (typeMember is IOverridableMember overridableMember && overridableMember.GetImmediateSuperMembers().Any())
             {
                 return false;
             }
@@ -88,7 +86,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         static ICSharpStatement CreateContractStatement(
             ContractKind contractKind, [NotNull] IPsiModule module, [NotNull] IExpression contractExpression)
         {
-            var factory = CSharpElementFactory.GetInstance(module);
+            var factory = CSharpElementFactory.GetInstance(contractExpression);
 
             var contractType = new DeclaredTypeFromCLRName(ClrTypeNames.Contract, module).GetTypeElement();
 
@@ -203,43 +201,29 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             TreeTextRange selectedTreeRange,
             [NotNull] Func<IType, bool> isAvailableForType)
         {
-            var parameterDeclaration = declaration as IParameterDeclaration;
-            if (parameterDeclaration != null)
+            switch (declaration)
             {
-                return ParameterContractInfo.TryCreate(parameterDeclaration, isAvailableForType);
-            }
+                case IParameterDeclaration parameterDeclaration:
+                    return ParameterContractInfo.TryCreate(parameterDeclaration, isAvailableForType);
 
-            var methodDeclaration = declaration as IMethodDeclaration;
-            if (methodDeclaration != null)
-            {
-                return MethodContractInfo.TryCreate(methodDeclaration, selectedTreeRange, isAvailableForType);
-            }
+                case IMethodDeclaration methodDeclaration:
+                    return MethodContractInfo.TryCreate(methodDeclaration, selectedTreeRange, isAvailableForType);
 
-            var propertyDeclaration = declaration as IPropertyDeclaration;
-            if (propertyDeclaration != null)
-            {
-                return PropertyContractInfo.TryCreate(propertyDeclaration, selectedTreeRange, isAvailableForType);
-            }
+                case IPropertyDeclaration propertyDeclaration:
+                    return PropertyContractInfo.TryCreate(propertyDeclaration, selectedTreeRange, isAvailableForType);
 
-            var indexerDeclaration = declaration as IIndexerDeclaration;
-            if (indexerDeclaration != null)
-            {
-                return PropertyContractInfo.TryCreate(indexerDeclaration, selectedTreeRange, isAvailableForType);
-            }
+                case IIndexerDeclaration indexerDeclaration:
+                    return PropertyContractInfo.TryCreate(indexerDeclaration, selectedTreeRange, isAvailableForType);
 
-            var fieldDeclaration = declaration as IFieldDeclaration;
-            if (fieldDeclaration != null)
-            {
-                return FieldContractInfo.TryCreate(fieldDeclaration, isAvailableForType);
-            }
+                case IFieldDeclaration fieldDeclaration:
+                    return FieldContractInfo.TryCreate(fieldDeclaration, isAvailableForType);
 
-            var operatorDeclaration = declaration as IOperatorDeclaration;
-            if (operatorDeclaration != null)
-            {
-                return OperatorContractInfo.TryCreate(operatorDeclaration, selectedTreeRange, isAvailableForType);
-            }
+                case IOperatorDeclaration operatorDeclaration:
+                    return OperatorContractInfo.TryCreate(operatorDeclaration, selectedTreeRange, isAvailableForType);
 
-            return null;
+                default:
+                    return null;
+            }
         }
 
         protected ContractInfo(ContractKind contractKind, [NotNull] IType type)
