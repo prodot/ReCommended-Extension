@@ -66,8 +66,6 @@ namespace ReCommendedExtension.Analyzers
                 {
                     var implicitUseAnnotationProvider = psiServices.GetCodeAnnotationsCache().GetProvider<ImplicitUseAnnotationProvider>();
 
-                    Debug.Assert(implicitUseAnnotationProvider != null);
-
                     var useKindFlags = implicitUseAnnotationProvider.IsImplicitlyUsed(method);
                     if (useKindFlags == null)
                     {

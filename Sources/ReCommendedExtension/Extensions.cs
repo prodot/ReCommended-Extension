@@ -282,8 +282,6 @@ namespace ReCommendedExtension
 
                 overriddenMethodDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenMethodDeclaration);
 
-                Debug.Assert(overriddenMethodDeclaration != null);
-
                 ContextActionUtils.FormatWithDefaultProfile(overriddenMethodDeclaration);
             }
 
@@ -344,8 +342,6 @@ namespace ReCommendedExtension
 
                 overriddenIndexerDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenIndexerDeclaration);
 
-                Debug.Assert(overriddenIndexerDeclaration != null);
-
                 ContextActionUtils.FormatWithDefaultProfile(overriddenIndexerDeclaration);
             }
 
@@ -388,8 +384,6 @@ namespace ReCommendedExtension
 
                 overriddenPropertyDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenPropertyDeclaration);
 
-                Debug.Assert(overriddenPropertyDeclaration != null);
-
                 ContextActionUtils.FormatWithDefaultProfile(overriddenPropertyDeclaration);
             }
 
@@ -424,8 +418,6 @@ namespace ReCommendedExtension
                 contractInvariantMethodDeclaration =
                     (IMethodDeclaration)factory.CreateTypeMemberDeclaration("[$0] private void ObjectInvariant() { }", factoryArgs.ToArray());
                 contractInvariantMethodDeclaration = classLikeDeclaration.AddClassMemberDeclaration(contractInvariantMethodDeclaration);
-
-                Debug.Assert(contractInvariantMethodDeclaration != null);
 
                 ContextActionUtils.FormatWithDefaultProfile(contractInvariantMethodDeclaration);
             }

@@ -35,10 +35,6 @@ namespace ReCommendedExtension.Analyzers
             var assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
             var assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
 
-            Debug.Assert(nullnessProvider != null);
-            Debug.Assert(assertionMethodAnnotationProvider != null);
-            Debug.Assert(assertionConditionAnnotationProvider != null);
-
             var assertions = Assertion.CollectAssertions(assertionMethodAnnotationProvider, assertionConditionAnnotationProvider, rootNode);
 
             assertions.ExceptWith(
