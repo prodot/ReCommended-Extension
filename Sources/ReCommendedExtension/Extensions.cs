@@ -204,8 +204,6 @@ namespace ReCommendedExtension
                     }
                 }
 
-                Debug.Assert(contractClassDeclaration != null);
-
                 ContextActionUtils.FormatWithDefaultProfile(contractClassDeclaration);
             }
 
@@ -481,8 +479,7 @@ namespace ReCommendedExtension
         {
             var treeNode = reference.GetTreeNode();
 
-            var assignmentExpression = treeNode.Parent as IAssignmentExpression;
-            if (assignmentExpression != null)
+            if (treeNode.Parent is IAssignmentExpression assignmentExpression)
             {
                 return assignmentExpression.IsEventSubscriptionOrUnSubscription();
             }

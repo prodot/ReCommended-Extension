@@ -313,6 +313,7 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>true</DelaySign>
@@ -325,6 +326,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <HostFullIdentifier>ReSharperPlatformVs14ReSharper</HostFullIdentifier>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <Target Name="CopyPdbFile" AfterTargets="CopyPlugin" Condition="'$(HostFullIdentifier)' != ''">
     <Copy Condition="Exists('@(InstallFolder)')" SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="@(InstallFolder)" />
