@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using JetBrains.UI.Extensions;
+using JetBrains.Application.UI.Extensions;
 using NUnit.Framework;
 
 namespace ReCommendedExtension.Tests

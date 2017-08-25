@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
@@ -16,8 +15,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
     {
         public GuidNonEmpty([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
-        protected override bool IsAvailableForType(IType type)
-            => TypesUtil.IsPredefinedTypeFromAssembly(type, ClrTypeNames.Guid, assembly => assembly.AssertNotNull().IsMscorlib);
+        protected override bool IsAvailableForType(IType type) => type.IsGuid();
 
         protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != {nameof(Guid.Empty)}";
 
