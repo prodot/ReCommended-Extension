@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Util;
+using JetBrains.ReSharper.Psi.Impl;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
@@ -11,16 +11,28 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         protected sealed override bool IsAvailableForType(IType type)
         {
-            if (TypesUtil.IsPredefinedTypeFromAssembly(type, PredefinedType.INTPTR_FQN, assembly => assembly.AssertNotNull().IsMscorlib))
+            if (type is IDeclaredType declaredType)
             {
-                IsSigned = true;
-                return true;
-            }
+                var typeElement = declaredType.GetTypeElement();
 
-            if (TypesUtil.IsPredefinedTypeFromAssembly(type, PredefinedType.UINTPTR_FQN, assembly => assembly.AssertNotNull().IsMscorlib))
-            {
-                IsSigned = false;
-                return true;
+                if (typeElement != null)
+                {
+                    if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(
+                        typeElement,
+                        typeElement.Module.GetPredefinedType().TryGetType(PredefinedType.INTPTR_FQN)?.GetTypeElement()))
+                    {
+                        IsSigned = true;
+                        return true;
+                    }
+
+                    if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(
+                        typeElement,
+                        typeElement.Module.GetPredefinedType().TryGetType(PredefinedType.UINTPTR_FQN)?.GetTypeElement()))
+                    {
+                        IsSigned = false;
+                        return true;
+                    }
+                }
             }
 
             return false;

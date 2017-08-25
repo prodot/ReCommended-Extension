@@ -18,7 +18,7 @@ namespace Test
             set
             {
               Contract.Requires(value != null);
-              
+
               Console.WriteLine(value);
             }
         }

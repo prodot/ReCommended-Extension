@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Deployment
 {
     internal static class Program
     {
-        static int Main([NotNull] string[] args)
+        static int Main([NotNull] [ItemNotNull] string[] args)
         {
             try
             {

@@ -70,7 +70,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                     if (value != null)
                     {
                         var t = (E)value;
-                        if (isLessOrEquals(t, default(E)) && !isZero(t))
+                        if (isLessOrEquals(t, default) && !isZero(t))
                         {
                             return null;
                         }
@@ -96,15 +96,15 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                     if (isZero(max))
                     {
-                        var zeroMember = valueMembers[default(E)];
-                        valueMembers.Remove(default(E));
+                        var zeroMember = valueMembers[default];
+                        valueMembers.Remove(default);
                         return new EnumContractInfo<E>(zeroMember, valueMembers, cSharpLiteralSuffix);
                     }
 
                     if (Range(one, max, isLessOrEquals, getMultipliedWithTwo).All(valueMembers.ContainsKey))
                     {
-                        valueMembers.TryGetValue(default(E), out var zeroMember);
-                        valueMembers.Remove(default(E));
+                        valueMembers.TryGetValue(default, out var zeroMember);
+                        valueMembers.Remove(default);
                         return new EnumContractInfo<E>(zeroMember, valueMembers, cSharpLiteralSuffix);
                     }
                 }
@@ -122,7 +122,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             EnumContractInfo(IField zeroMember, [NotNull] Dictionary<E, IField> valueMembers, [NotNull] string cSharpLiteralSuffix)
             {
-                Debug.Assert(!valueMembers.ContainsKey(default(E)));
+                Debug.Assert(!valueMembers.ContainsKey(default));
                 Debug.Assert(zeroMember != null || valueMembers.Count > 0);
 
                 this.zeroMember = zeroMember;
