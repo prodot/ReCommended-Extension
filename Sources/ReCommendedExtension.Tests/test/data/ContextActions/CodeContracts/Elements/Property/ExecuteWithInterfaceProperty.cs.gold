@@ -6,8 +6,7 @@ namespace Test
     [ContractClass(typeof(InterfaceContract))]
     internal interface IInterface
     {
-        [NotNull]
-        string InterfaceProperty{caret} { get; set; }
+        [NotNull] string InterfaceProperty{caret} { get; set; }
     }
 
   [ContractClassFor(typeof(IInterface))]
