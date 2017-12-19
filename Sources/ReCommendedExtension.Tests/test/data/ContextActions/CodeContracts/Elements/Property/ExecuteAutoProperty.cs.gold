@@ -5,8 +5,7 @@ namespace Test
 {
     internal class Class
     {
-        [NotNull]
-        string AutoProperty{caret} { get; set; }
+        [NotNull] string AutoProperty{caret} { get; set; }
 
       [ContractInvariantMethod]
       private void ObjectInvariant()

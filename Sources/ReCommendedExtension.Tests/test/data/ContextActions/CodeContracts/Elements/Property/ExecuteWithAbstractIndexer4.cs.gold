@@ -6,8 +6,7 @@ namespace Test
     [ContractClass(typeof(AbstractClassContract))]
     internal abstract class AbstractClass
     {
-        [NotNull]
-        internal abstract string this{caret}[int one] { set; }
+        [NotNull] internal abstract string this{caret}[int one] { set; }
     }
 
   [ContractClassFor(typeof(AbstractClass))]
