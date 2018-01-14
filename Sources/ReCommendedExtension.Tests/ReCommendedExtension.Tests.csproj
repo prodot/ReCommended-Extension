@@ -284,6 +284,9 @@
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructorAvailability.cs" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructorAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\Region\EmptyRegion.cs.gold" />
+    <None Include="test\data\Analyzers\Region\RegionWithinTypeMemberBody.cs.gold" />
+    <None Include="test\data\Analyzers\Region\RegionWithSingleElement.cs.gold" />
     <None Include="test\data\Analyzers\UncatchableException\UncatchableException.cs" />
     <None Include="test\data\Analyzers\UnthrowableException\UnthrowableException.cs" />
     <Compile Include="Analyzers\AnnotationAnalyzerTestsWithoutAnnotations.cs" />
@@ -294,6 +297,7 @@
     <Compile Include="Analyzers\ControlFlowQuickFixTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixTests.cs" />
+    <Compile Include="Analyzers\RegionAnalyzerTests.cs" />
     <Compile Include="AssemblyTests.cs" />
     <Compile Include="ContextActions\AddConfigureAwaitAvailabilityTests.cs" />
     <Compile Include="Analyzers\UncatchableExceptionAnalyzerTests.cs" />
@@ -726,6 +730,9 @@
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunctionAvailability.cs" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunction.cs" />
     <None Include="test\data\ContextActions\AnnotateWithItemNotNull\ExecuteGenericValueTaskOnMethod.cs" />
+    <None Include="test\data\Analyzers\Region\EmptyRegion.cs" />
+    <None Include="test\data\Analyzers\Region\RegionWithinTypeMemberBody.cs" />
+    <None Include="test\data\Analyzers\Region\RegionWithSingleElement.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />

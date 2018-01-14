@@ -1,0 +1,156 @@
+﻿namespace Test
+{
+    public class Class
+    {
+        #region region within a type
+
+        void M() { }
+
+        void M2() { }
+
+        #endregion
+
+        void Method()
+        {
+            #|region|(0) region within a method
+
+            M();
+            M2();
+
+            #endregion
+        }
+
+        int Property
+        {
+            get
+            {
+                #|region|(1) region within a property getter
+
+                M();
+                M2();
+
+                #endregion
+
+                return 0;
+            }
+            set
+            {
+                #|region|(2) region within a property setter
+
+                M();
+                M2();
+
+                #endregion
+            }
+        }
+
+        string this[int index]
+        {
+            get
+            {
+                #|region|(3) region within an indexer getter
+
+                M();
+                M2();
+
+                #endregion
+
+                return null;
+            }
+            set
+            {
+                #|region|(4) region within an indexer setter
+
+                M();
+                M2();
+
+                #endregion
+            }
+        }
+
+        Class()
+        {
+            #|region|(5) region within a constructor
+
+            M();
+            M2();
+
+            #endregion
+
+            Action action = () =>
+            {
+                #|region|(6) region within a lambda
+
+                M();
+                M2();
+
+                #endregion
+            };
+
+            void LocalFunction()
+            {
+                #|region|(7) region within a local function
+
+                M();
+                M2();
+
+                #endregion
+            }
+        }
+
+        ~Class()
+        {
+            #|region|(8) region within a destructor
+
+            M();
+            M2();
+
+            #endregion
+        }
+
+        public static bool operator ==(Class x, Class y)
+        {
+            #|region|(9) region within an operator
+
+            M();
+            M2();
+
+            #endregion
+        }
+
+        event EventHandler Changed
+        {
+            add
+            {
+                #|region|(10) region within an event
+
+                M();
+                M2();
+
+                #endregion
+            }
+            remove
+            {
+                #|region|(11) region within an event
+
+                M();
+                M2();
+
+                #endregion
+            }
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: The region is contained within a type member body.
+(1): ReSharper Warning: The region is contained within a type member body.
+(2): ReSharper Warning: The region is contained within a type member body.
+(3): ReSharper Warning: The region is contained within a type member body.
+(4): ReSharper Warning: The region is contained within a type member body.
+(5): ReSharper Warning: The region is contained within a type member body.
+(6): ReSharper Warning: The region is contained within a type member body.
+(7): ReSharper Warning: The region is contained within a type member body.
+(8): ReSharper Warning: The region is contained within a type member body.
+(9): ReSharper Warning: The region is contained within a type member body.
+(10): ReSharper Warning: The region is contained within a type member body.
+(11): ReSharper Warning: The region is contained within a type member body.
