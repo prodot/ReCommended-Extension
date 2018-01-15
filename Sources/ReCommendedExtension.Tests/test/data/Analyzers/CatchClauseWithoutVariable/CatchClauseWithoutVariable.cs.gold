@@ -1,0 +1,28 @@
+﻿using System;
+
+namespace Test
+{
+    internal class CatchClauseWithoutVariable
+    {
+        void Method()
+        {
+            try { }
+            catch |(Exception)|(0) { }
+
+            try { }
+            catch |(Exception)|(1) when (true) { }
+
+            try { }
+            catch (Exception e) { }
+
+            try { }
+            catch (Exception e) when (e.Message != null) { }
+
+            try { }
+            catch (InvalidOperationException) { }
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Redundant declaration without exception variable.
+(1): ReSharper Suggestion: Redundant declaration without exception variable.

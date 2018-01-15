@@ -236,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyzers\AsyncVoidLocalFunctionAnalyzer.cs" />
+    <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzer.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzer.cs" />
     <Compile Include="Analyzers\RegionAnalyzer.cs" />
     <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowExpressions.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="ContextActions\AnnotateWithItemNotNull.cs" />
     <Compile Include="ContextActions\AnnotateWithLinqTunnel.cs" />
     <Compile Include="Highlightings\AsyncVoidFunctionExpressionHighlighting.cs" />
+    <Compile Include="Highlightings\CatchClauseWithoutVariableHighlighting.cs" />
     <Compile Include="Highlightings\ConflictingAnnotationHighlighting.cs" />
     <Compile Include="Highlightings\EmptyRegionHighlighting.cs" />
     <Compile Include="Highlightings\LocalSuppressionHighlighting.cs" />
@@ -277,6 +279,7 @@
     <Compile Include="QuickFixes\RemoveAttributeFix.cs" />
     <Compile Include="Highlightings\NotifyPropertyChangedInvocatorFromConstructorHighlighting.cs" />
     <Compile Include="Highlightings\ConditionalInvocationHighlighting.cs" />
+    <Compile Include="QuickFixes\RemoveExceptionTypeDeclarationFromCatchClauseFix.cs" />
     <Compile Include="QuickFixes\RemoveNotifyPropertyChangedInvocatorFix.cs" />
     <Compile Include="ContextActions\CodeContracts\Internal\CSharpNumericTypeInfo[N].cs" />
     <Compile Include="ContextActions\AddConfigureAwait.cs" />

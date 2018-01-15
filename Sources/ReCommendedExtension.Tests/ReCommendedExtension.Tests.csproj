@@ -276,6 +276,10 @@
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunctionAvailability.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethod.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethodAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariable.cs.gold" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariable2.cs.gold" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariableAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariable\CatchClauseWithoutVariable.cs.gold" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs.gold" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlowAvailability.cs" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs" />
@@ -294,6 +298,9 @@
     <Compile Include="Analyzers\AnnotationQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\AnnotationQuickFixTests.cs" />
     <Compile Include="Analyzers\AsyncVoidQuickFixChangeTypeTests.cs" />
+    <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzerTests.cs" />
+    <Compile Include="Analyzers\CatchClauseWithoutVariableQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\CatchClauseWithoutVariableQuickFixTests.cs" />
     <Compile Include="Analyzers\ControlFlowQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\ControlFlowQuickFixTests.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzerTests.cs" />
@@ -736,6 +743,10 @@
     <None Include="test\data\Analyzers\Region\RegionWithinTypeMemberBody.cs" />
     <None Include="test\data\Analyzers\Region\RegionWithSingleElement.cs" />
     <None Include="test\data\Analyzers\LocalSuppression\LocalSuppression.cs" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariable\CatchClauseWithoutVariable.cs" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariableAvailability.cs" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariable.cs" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariable2.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
