@@ -280,6 +280,7 @@
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlowAvailability.cs" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlowAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\LocalSuppression\LocalSuppression.cs.gold" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs.gold" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructorAvailability.cs" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs" />
@@ -295,6 +296,7 @@
     <Compile Include="Analyzers\AsyncVoidQuickFixChangeTypeTests.cs" />
     <Compile Include="Analyzers\ControlFlowQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\ControlFlowQuickFixTests.cs" />
+    <Compile Include="Analyzers\LocalSuppressionAnalyzerTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixTests.cs" />
     <Compile Include="Analyzers\RegionAnalyzerTests.cs" />
@@ -733,6 +735,7 @@
     <None Include="test\data\Analyzers\Region\EmptyRegion.cs" />
     <None Include="test\data\Analyzers\Region\RegionWithinTypeMemberBody.cs" />
     <None Include="test\data\Analyzers\Region\RegionWithSingleElement.cs" />
+    <None Include="test\data\Analyzers\LocalSuppression\LocalSuppression.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />

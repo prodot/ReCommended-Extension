@@ -1,0 +1,34 @@
+﻿using JetBrains.Annotations;
+// |ReSharper disable|(0) AssignNullToNotNullAttribute
+
+namespace Test
+{
+    public class LocalSuppression
+    {
+        [NotNull]
+        string text;
+
+        /// <summary>
+        /// the summary.
+        /// </summary>
+        void Method()
+        {
+            //    |ReSharper disable once|(1) AssignNullToNotNullAttribute
+            text = null;
+
+            // 		|ReSharper disable once|(2) AssignNullToNotNullAttribute
+            text = null;
+
+            // |ReSharper disable|(3) AssignNullToNotNullAttribute
+            text = null;
+            // ReSharper restore AssignNullToNotNullAttribute
+
+            // sample comment
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Local suppression.
+(1): ReSharper Warning: Local suppression.
+(2): ReSharper Warning: Local suppression.
+(3): ReSharper Warning: Local suppression.
