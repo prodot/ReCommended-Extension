@@ -284,6 +284,10 @@
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlowAvailability.cs" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlowAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke.cs.gold" />
+    <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke2.cs.gold" />
+    <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvokeAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\DelegateInvoke\DelegateInvoke.cs.gold" />
     <None Include="test\data\Analyzers\LocalSuppression\LocalSuppression.cs.gold" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs.gold" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructorAvailability.cs" />
@@ -303,6 +307,9 @@
     <Compile Include="Analyzers\CatchClauseWithoutVariableQuickFixTests.cs" />
     <Compile Include="Analyzers\ControlFlowQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\ControlFlowQuickFixTests.cs" />
+    <Compile Include="Analyzers\DelegateInvokeAnalyzerTests.cs" />
+    <Compile Include="Analyzers\DelegateInvokeQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\DelegateInvokeQuickFixTests.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzerTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixTests.cs" />
@@ -747,6 +754,10 @@
     <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariableAvailability.cs" />
     <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariable.cs" />
     <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariable2.cs" />
+    <None Include="test\data\Analyzers\DelegateInvoke\DelegateInvoke.cs" />
+    <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvokeAvailability.cs" />
+    <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke.cs" />
+    <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke2.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />

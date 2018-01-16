@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace Test
+{
+    public class DelegateInvoke
+    {
+        void Method(Action action)
+        {
+            action|.Invoke|(0)();
+
+            action |. Invoke|(1)();
+        }
+    }
+}
+------------------------------------------------
+0: Redundant 'Invoke' expression.
+QUICKFIXES:
+Remove 'Invoke'
+1: Redundant 'Invoke' expression.
+QUICKFIXES:
+Remove 'Invoke'

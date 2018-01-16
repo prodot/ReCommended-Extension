@@ -237,6 +237,7 @@
   <ItemGroup>
     <Compile Include="Analyzers\AsyncVoidLocalFunctionAnalyzer.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzer.cs" />
+    <Compile Include="Analyzers\DelegateInvokeAnalyzer.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzer.cs" />
     <Compile Include="Analyzers\RegionAnalyzer.cs" />
     <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowExpressions.cs" />
@@ -264,6 +265,7 @@
     <Compile Include="Highlightings\LocalSuppressionHighlighting.cs" />
     <Compile Include="Highlightings\RedundantAssertionHighlighting.cs" />
     <Compile Include="Highlightings\RedundantAssertionStatementHighlighting.cs" />
+    <Compile Include="Highlightings\RedundantDelegateInvokeHighlighting.cs" />
     <Compile Include="Highlightings\RedundantInlineAssertionHighlighting.cs" />
     <Compile Include="Highlightings\RegionHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithinTypeMemberBodyHighlighting.cs" />
@@ -274,6 +276,7 @@
     <Compile Include="Highlightings\MissingSuppressionJustificationHighlighting.cs" />
     <Compile Include="Highlightings\AttributeHighlighting.cs" />
     <Compile Include="Highlightings\NotAllowedAnnotationHighlighting.cs" />
+    <Compile Include="QuickFixes\RemoveDelegateInvokeFix.cs" />
     <Compile Include="QuickFixes\RemoveAssertionStatementFix.cs" />
     <Compile Include="QuickFixes\RemoveAsyncFix.cs" />
     <Compile Include="QuickFixes\RemoveAttributeFix.cs" />
