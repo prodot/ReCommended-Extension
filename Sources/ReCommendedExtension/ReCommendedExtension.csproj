@@ -235,6 +235,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyzers\ArgumentExceptionConstructorArgumentAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidLocalFunctionAnalyzer.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzer.cs" />
     <Compile Include="Analyzers\DelegateInvokeAnalyzer.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="ContextActions\AnnotateWithCodeAnnotation.cs" />
     <Compile Include="ContextActions\AnnotateWithItemNotNull.cs" />
     <Compile Include="ContextActions\AnnotateWithLinqTunnel.cs" />
+    <Compile Include="Highlightings\ArgumentExceptionConstructorArgumentHighlighting.cs" />
     <Compile Include="Highlightings\AsyncVoidFunctionExpressionHighlighting.cs" />
     <Compile Include="Highlightings\CatchClauseWithoutVariableHighlighting.cs" />
     <Compile Include="Highlightings\ConflictingAnnotationHighlighting.cs" />

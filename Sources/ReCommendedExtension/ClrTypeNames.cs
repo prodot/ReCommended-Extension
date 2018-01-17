@@ -42,5 +42,15 @@ namespace ReCommendedExtension
 
         [NotNull]
         internal static readonly IClrTypeName SuppressMessageAttribute = new ClrTypeName(typeof(SuppressMessageAttribute).FullName.AssertNotNull());
+
+        [NotNull]
+        internal static readonly IClrTypeName ArgumentException = new ClrTypeName(typeof(ArgumentException).FullName.AssertNotNull());
+
+        [NotNull]
+        internal static readonly IClrTypeName ArgumentNullException = new ClrTypeName(typeof(ArgumentNullException).FullName.AssertNotNull());
+
+        [NotNull]
+        internal static readonly IClrTypeName ArgumentOutOfRangeException =
+            new ClrTypeName(typeof(ArgumentOutOfRangeException).FullName.AssertNotNull());
     }
 }

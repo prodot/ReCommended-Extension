@@ -272,6 +272,7 @@
     <None Include="test\data\Analyzers\AnnotationQuickFixes\Redundant.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Optimistic.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Pessimistic.cs.gold" />
+    <None Include="test\data\Analyzers\ArgumentExceptionConstructorArgument\ArgumentExceptionConstructorArgument.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunction.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunctionAvailability.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethod.cs.gold" />
@@ -301,6 +302,7 @@
     <Compile Include="Analyzers\AnnotationAnalyzerTestsWithoutAnnotations.cs" />
     <Compile Include="Analyzers\AnnotationQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\AnnotationQuickFixTests.cs" />
+    <Compile Include="Analyzers\ArgumentExceptionConstructorArgumentAnalyzerTests.cs" />
     <Compile Include="Analyzers\AsyncVoidQuickFixChangeTypeTests.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzerTests.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableQuickFixAvailabilityTests.cs" />
@@ -758,6 +760,7 @@
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvokeAvailability.cs" />
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke.cs" />
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke2.cs" />
+    <None Include="test\data\Analyzers\ArgumentExceptionConstructorArgument\ArgumentExceptionConstructorArgument.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
