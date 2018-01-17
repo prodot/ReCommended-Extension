@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
     RegisterConfigurableSeverity(
         RegionWithinTypeMemberBodyHighlighting.SeverityId,
         null,
-        HighlightingGroupIds.CodeSmell,
+        HighlightingGroupIds.CodeStyleIssues,
         "Region is contained within a type member body" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
