@@ -243,6 +243,7 @@
     <Compile Include="Analyzers\RegionAnalyzer.cs" />
     <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowExpressions.cs" />
     <Compile Include="Analyzers\UnthrowableExceptions.cs" />
+    <Compile Include="Analyzers\YieldReturnWithinLockAnalyzer.cs" />
     <Compile Include="Assertions\Assertion.cs" />
     <Compile Include="Assertions\AssertionStatement.cs" />
     <Compile Include="Assertions\InlineAssertion.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Highlightings\RegionHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithinTypeMemberBodyHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithSingleElementHighlighting.cs" />
+    <Compile Include="Highlightings\YieldReturnWithinLockHighlighting.cs" />
     <Compile Include="QuickFixes\ChangeToAsyncTaskFix.cs" />
     <Compile Include="Highlightings\ConditionalAnnotationHighlighting.cs" />
     <Compile Include="Highlightings\AvoidAsyncVoidHighlighting.cs" />

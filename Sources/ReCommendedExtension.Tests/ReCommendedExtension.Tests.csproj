@@ -316,6 +316,7 @@
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixTests.cs" />
     <Compile Include="Analyzers\RegionAnalyzerTests.cs" />
+    <Compile Include="Analyzers\YieldReturnWithinLockAnalyzerTests.cs" />
     <Compile Include="AssemblyTests.cs" />
     <Compile Include="ContextActions\AddConfigureAwaitAvailabilityTests.cs" />
     <Compile Include="Analyzers\UncatchableExceptionAnalyzerTests.cs" />
@@ -433,6 +434,7 @@
     <None Include="test\data\Analyzers\AsyncVoid\AsyncVoidMethod.cs" />
     <None Include="test\data\Analyzers\ConditionalInvocation\Conditional.cs" />
     <None Include="test\data\Analyzers\ControlFlow\ControlFlow.cs" />
+    <None Include="test\data\Analyzers\YieldReturnWithinLock\YieldReturnWithinLock.cs.gold" />
     <None Include="test\data\ContextActions\AddConfigureAwait\Availability.cs" />
     <None Include="test\data\ContextActions\AddConfigureAwait\Execute.cs" />
     <None Include="test\data\ContextActions\AnnotateWithInstantHandle\Availability.cs" />
@@ -761,6 +763,7 @@
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke.cs" />
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke2.cs" />
     <None Include="test\data\Analyzers\ArgumentExceptionConstructorArgument\ArgumentExceptionConstructorArgument.cs" />
+    <None Include="test\data\Analyzers\YieldReturnWithinLock\YieldReturnWithinLock.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
