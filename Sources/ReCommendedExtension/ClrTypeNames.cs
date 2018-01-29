@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Windows.Data;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
@@ -52,5 +53,8 @@ namespace ReCommendedExtension
         [NotNull]
         internal static readonly IClrTypeName ArgumentOutOfRangeException =
             new ClrTypeName(typeof(ArgumentOutOfRangeException).FullName.AssertNotNull());
+
+        [NotNull]
+        internal static readonly IClrTypeName MultiBinding = new ClrTypeName(typeof(MultiBinding).FullName.AssertNotNull());
     }
 }

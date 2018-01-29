@@ -187,6 +187,7 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="SharpCompress, Version=0.11.6.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
       <HintPath>..\packages\sharpcompress.0.11.6\lib\net40\SharpCompress.dll</HintPath>
     </Reference>
@@ -243,6 +244,7 @@
     <Compile Include="Analyzers\RegionAnalyzer.cs" />
     <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowExpressions.cs" />
     <Compile Include="Analyzers\UnthrowableExceptions.cs" />
+    <Compile Include="Analyzers\XamlBindingWithoutModeAnalyzer.cs" />
     <Compile Include="Analyzers\YieldReturnWithinLockAnalyzer.cs" />
     <Compile Include="Assertions\Assertion.cs" />
     <Compile Include="Assertions\AssertionStatement.cs" />
@@ -273,6 +275,7 @@
     <Compile Include="Highlightings\RegionHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithinTypeMemberBodyHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithSingleElementHighlighting.cs" />
+    <Compile Include="Highlightings\XamlBindingWithoutModeHighlighting.cs" />
     <Compile Include="Highlightings\YieldReturnWithinLockHighlighting.cs" />
     <Compile Include="QuickFixes\ChangeToAsyncTaskFix.cs" />
     <Compile Include="Highlightings\ConditionalAnnotationHighlighting.cs" />

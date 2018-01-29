@@ -316,6 +316,7 @@
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixTests.cs" />
     <Compile Include="Analyzers\RegionAnalyzerTests.cs" />
+    <Compile Include="Analyzers\XamlBindingWithoutMode.cs" />
     <Compile Include="Analyzers\YieldReturnWithinLockAnalyzerTests.cs" />
     <Compile Include="AssemblyTests.cs" />
     <Compile Include="ContextActions\AddConfigureAwaitAvailabilityTests.cs" />
@@ -434,6 +435,7 @@
     <None Include="test\data\Analyzers\AsyncVoid\AsyncVoidMethod.cs" />
     <None Include="test\data\Analyzers\ConditionalInvocation\Conditional.cs" />
     <None Include="test\data\Analyzers\ControlFlow\ControlFlow.cs" />
+    <None Include="test\data\Analyzers\XamlBindingWithoutMode\XamlBindingWithoutMode.xaml.gold" />
     <None Include="test\data\Analyzers\YieldReturnWithinLock\YieldReturnWithinLock.cs.gold" />
     <None Include="test\data\ContextActions\AddConfigureAwait\Availability.cs" />
     <None Include="test\data\ContextActions\AddConfigureAwait\Execute.cs" />
@@ -796,6 +798,9 @@
       <Name>ReCommendedExtension</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test\data\Analyzers\XamlBindingWithoutMode\XamlBindingWithoutMode.xaml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets" Condition="Exists('..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -889,7 +894,7 @@
   <Import Project="..\packages\JetBrains.Psi.Features.UIInteractive.Features.111.0.20171222.80257\build\net45\JetBrains.Psi.Features.UIInteractive.Features.targets" Condition="Exists('..\packages\JetBrains.Psi.Features.UIInteractive.Features.111.0.20171222.80257\build\net45\JetBrains.Psi.Features.UIInteractive.Features.targets')" />
   <Import Project="..\packages\JetBrains.Psi.Features.VisualStudio.111.0.20171222.80257\build\net46\JetBrains.Psi.Features.VisualStudio.targets" Condition="Exists('..\packages\JetBrains.Psi.Features.VisualStudio.111.0.20171222.80257\build\net46\JetBrains.Psi.Features.VisualStudio.targets')" />
   <Import Project="..\packages\JetBrains.ReSharper.SDK.Internal.111.0.20171222.84312\build\net45\JetBrains.ReSharper.SDK.Internal.targets" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.Internal.111.0.20171222.84312\build\net45\JetBrains.ReSharper.SDK.Internal.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
