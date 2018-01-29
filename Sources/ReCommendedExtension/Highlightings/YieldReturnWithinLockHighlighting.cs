@@ -21,9 +21,10 @@ namespace ReCommendedExtension.Highlightings
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class YieldReturnWithinLockHighlighting : Highlighting
     {
+        internal const string SeverityId = "YieldReturnWithinLock";
+
         [NotNull]
         readonly IYieldStatement yieldReturnStatement;
-        internal const string SeverityId = "YieldReturnWithinLock";
 
         internal YieldReturnWithinLockHighlighting([NotNull] string message, [NotNull] IYieldStatement yieldReturnStatement) : base(message)
             => this.yieldReturnStatement = yieldReturnStatement;
