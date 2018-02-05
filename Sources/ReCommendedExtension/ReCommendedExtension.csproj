@@ -256,6 +256,7 @@
     <Compile Include="Analyzers\AsyncVoidAnonymousMethodAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidLambdaExpressionAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidMethodAnalyzer.cs" />
+    <Compile Include="ContextActions\SetLanguageInjection.cs" />
     <Compile Include="ContextActions\AnnotateWithMustUseReturnValue.cs" />
     <Compile Include="ContextActions\AnnotateWith[A].cs" />
     <Compile Include="ContextActions\AnnotateWith.cs" />

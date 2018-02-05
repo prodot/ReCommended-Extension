@@ -1,0 +1,14 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class Execute
+    {
+        void Method() { }
+
+        // language=JSON
+        const string constant = "{ \"one\": null{caret} }";
+
+        void Method2() { }
+    }
+}

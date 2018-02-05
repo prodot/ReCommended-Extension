@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Test
+{
+    public class Execute
+    {
+        void Method()
+        {
+            Console.WriteLine();
+
+            // language=HTML
+            const string constant = "<html {caret}/>";
+
+            Console.WriteLine();
+        }
+    }
+}

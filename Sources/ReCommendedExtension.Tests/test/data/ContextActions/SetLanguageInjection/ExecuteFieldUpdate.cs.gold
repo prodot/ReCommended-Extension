@@ -1,0 +1,14 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class Execute
+    {
+        void Method() { }
+
+        // language=JSON
+        string field = "{ \"one\": null{caret} }";
+
+        void Method2() { }
+    }
+}
