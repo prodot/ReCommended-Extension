@@ -7,6 +7,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Feature.Services.LinqTools;
 using JetBrains.ReSharper.Intentions.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
@@ -450,6 +451,61 @@ namespace ReCommendedExtension
             if (typeElement != null && typeElement.IsDescendantOf(typeElement.Module.GetPredefinedType().GenericIEnumerable.GetTypeElement()))
             {
                 return true;
+            }
+
+            return false;
+        }
+
+        [JetBrains.Annotations.Pure]
+        internal static bool IsDefaultValueOf([NotNull] this ITreeNode element, [NotNull] IType type)
+        {
+            switch (element)
+            {
+                case ICSharpLiteralExpression literalExpression when literalExpression.Literal?.GetTokenType() == CSharpTokenType.DEFAULT_KEYWORD:
+                case IDefaultExpression defaultExpression when Equals(defaultExpression.Type(), type):
+                    return true;
+            }
+
+            if (type.IsUnconstrainedGenericType())
+            {
+                // unconstrained generic type
+            }
+            else if (type.IsValueType())
+            {
+                // value type (non-nullable and nullable)
+
+                switch (element)
+                {
+                    case IConstantValueOwner constantValueOwner when type.IsNullable()
+                        ? constantValueOwner.ConstantValue.IsNull()
+                        : constantValueOwner.ConstantValue.IsDefaultValue(type, element):
+
+                    case IObjectCreationExpression objectCreationExpression
+                        when Equals(objectCreationExpression.Type(), type) && objectCreationExpression.Arguments.Count == 0:
+
+                    case IAsExpression asExpression when asExpression.Operand != null &&
+                                                         asExpression.Operand.ConstantValue.IsNull() &&
+                                                         Equals(asExpression.Operand.Type(), type) &&
+                                                         type.IsNullable():
+
+                        return true;
+                }
+            }
+            else
+            {
+                // reference type
+
+                switch (element)
+                {
+                    case IConstantValueOwner constantValueOwner
+                        when constantValueOwner.ConstantValue.IsNull() || constantValueOwner.ConstantValue.IsDefaultValue(type, element):
+
+                    case IAsExpression asExpression when asExpression.Operand != null &&
+                                                         asExpression.Operand.ConstantValue.IsNull() &&
+                                                         Equals(asExpression.Operand.Type(), type):
+
+                        return true;
+                }
             }
 
             return false;

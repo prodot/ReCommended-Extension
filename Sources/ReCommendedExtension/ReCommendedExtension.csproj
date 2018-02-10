@@ -237,6 +237,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyzers\ArgumentExceptionConstructorArgumentAnalyzer.cs" />
+    <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationAnalyzer.cs" />
+    <Compile Include="Analyzers\EmptyArrayInitializationAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidLocalFunctionAnalyzer.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzer.cs" />
     <Compile Include="Analyzers\DelegateInvokeAnalyzer.cs" />
@@ -264,9 +266,11 @@
     <Compile Include="ContextActions\AnnotateWithItemNotNull.cs" />
     <Compile Include="ContextActions\AnnotateWithLinqTunnel.cs" />
     <Compile Include="Highlightings\ArgumentExceptionConstructorArgumentHighlighting.cs" />
+    <Compile Include="Highlightings\ArrayWithDefaultValuesInitializationHighlighting.cs" />
     <Compile Include="Highlightings\AsyncVoidFunctionExpressionHighlighting.cs" />
     <Compile Include="Highlightings\CatchClauseWithoutVariableHighlighting.cs" />
     <Compile Include="Highlightings\ConflictingAnnotationHighlighting.cs" />
+    <Compile Include="Highlightings\EmptyArrayInitializationHighlighting.cs" />
     <Compile Include="Highlightings\EmptyRegionHighlighting.cs" />
     <Compile Include="Highlightings\LocalSuppressionHighlighting.cs" />
     <Compile Include="Highlightings\RedundantAssertionHighlighting.cs" />
@@ -278,12 +282,14 @@
     <Compile Include="Highlightings\RegionWithSingleElementHighlighting.cs" />
     <Compile Include="Highlightings\XamlBindingWithoutModeHighlighting.cs" />
     <Compile Include="Highlightings\YieldReturnWithinLockHighlighting.cs" />
+    <Compile Include="QuickFixes\ArrayWithDefaultValuesInitializationFix.cs" />
     <Compile Include="QuickFixes\ChangeToAsyncTaskFix.cs" />
     <Compile Include="Highlightings\ConditionalAnnotationHighlighting.cs" />
     <Compile Include="Highlightings\AvoidAsyncVoidHighlighting.cs" />
     <Compile Include="Highlightings\MissingSuppressionJustificationHighlighting.cs" />
     <Compile Include="Highlightings\AttributeHighlighting.cs" />
     <Compile Include="Highlightings\NotAllowedAnnotationHighlighting.cs" />
+    <Compile Include="QuickFixes\EmptyArrayInitializationFix.cs" />
     <Compile Include="QuickFixes\RemoveDelegateInvokeFix.cs" />
     <Compile Include="QuickFixes\RemoveAssertionStatementFix.cs" />
     <Compile Include="QuickFixes\RemoveAsyncFix.cs" />

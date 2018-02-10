@@ -273,6 +273,17 @@
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Optimistic.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Pessimistic.cs.gold" />
     <None Include="test\data\Analyzers\ArgumentExceptionConstructorArgument\ArgumentExceptionConstructorArgument.cs.gold" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization.cs.gold" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization2.cs.gold" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization3.cs.gold" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization4.cs.gold" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitializationAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitialization\ArrayWithDefaultValuesInitialization.cs.gold" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization.cs.gold" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization2.cs.gold" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization3.cs.gold" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitializationAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\EmptyArrayInitialization\EmptyArrayInitialization.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunction.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidLocalFunctionAvailability.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AsyncVoidMethod.cs.gold" />
@@ -303,6 +314,12 @@
     <Compile Include="Analyzers\AnnotationQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\AnnotationQuickFixTests.cs" />
     <Compile Include="Analyzers\ArgumentExceptionConstructorArgumentAnalyzerTests.cs" />
+    <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationAnalyzerTests.cs" />
+    <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationQuickFixTests.cs" />
+    <Compile Include="Analyzers\EmptyArrayInitializationAnalyzerTests.cs" />
+    <Compile Include="Analyzers\EmptyArrayInitializationQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\EmptyArrayInitializationQuickFixTests.cs" />
     <Compile Include="Analyzers\AsyncVoidQuickFixChangeTypeTests.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzerTests.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableQuickFixAvailabilityTests.cs" />
@@ -791,6 +808,17 @@
     <None Include="test\data\ContextActions\SetLanguageInjection\ExecuteAssignmentUpdate.cs" />
     <None Include="test\data\ContextActions\SetLanguageInjection\ExecuteObjectInitializationAdd.cs" />
     <None Include="test\data\ContextActions\SetLanguageInjection\ExecuteObjectInitializationUpdate.cs" />
+    <None Include="test\data\Analyzers\EmptyArrayInitialization\EmptyArrayInitialization.cs" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitializationAvailability.cs" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization.cs" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization2.cs" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization3.cs" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitialization\ArrayWithDefaultValuesInitialization.cs" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitializationAvailability.cs" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization.cs" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization2.cs" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization3.cs" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization4.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
@@ -828,6 +856,7 @@
   <ItemGroup>
     <None Include="test\data\Analyzers\XamlBindingWithoutMode\XamlBindingWithoutMode.xaml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets" Condition="Exists('..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
