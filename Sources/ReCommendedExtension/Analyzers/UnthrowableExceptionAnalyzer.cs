@@ -1,14 +1,17 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Highlightings;
 
 namespace ReCommendedExtension.Analyzers
 {
-    internal static class UnthrowableExceptions
+    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(UnthrowableExceptionHighlighting) })]
+    public sealed class UnthrowableExceptionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         [NotNull]
-        static readonly Dictionary<string, string> data = new Dictionary<string, string>(StringComparer.Ordinal)
+        static readonly Dictionary<string, string> unthrowableExceptions = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             { "System.Exception", "A more specific exception should be used." },
             { "Microsoft.Build.BuildEngine.InternalLoggerException", "The exception should only be thrown by the MSBuild engine." },
@@ -123,7 +126,32 @@ namespace ReCommendedExtension.Analyzers
             { "System.Threading.BarrierPostPhaseException", "The exception should only be thrown by the CLR." },
         };
 
-        public static string TryGetReason([NotNull] ICSharpExpression throwExpression)
-            => data.TryGetValue(throwExpression.GetExpressionType().ToString(), out var reason) ? reason : null;
+        protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+        {
+            ICSharpExpression exception;
+            switch (element)
+            {
+                case IThrowStatement throwStatement:
+                    exception = throwStatement.Exception;
+                    break;
+
+                case IThrowExpression throwExpression:
+                    exception = throwExpression.Exception;
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (exception == null)
+            {
+                return;
+            }
+
+            if (unthrowableExceptions.TryGetValue(exception.GetExpressionType().ToString(), out var reason))
+            {
+                consumer.AddHighlighting(new UnthrowableExceptionHighlighting(reason, exception));
+            }
+        }
     }
 }

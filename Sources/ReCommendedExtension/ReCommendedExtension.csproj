@@ -245,8 +245,7 @@
     <Compile Include="Analyzers\LocalSuppressionAnalyzer.cs" />
     <Compile Include="Analyzers\RegionAnalyzer.cs" />
     <Compile Include="Analyzers\ThrowExceptionInUnexpectedLocationAnalyzer.cs" />
-    <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowExpressions.cs" />
-    <Compile Include="Analyzers\UnthrowableExceptions.cs" />
+    <Compile Include="Analyzers\UnthrowableExceptionAnalyzer.cs" />
     <Compile Include="Analyzers\XamlBindingWithoutModeAnalyzer.cs" />
     <Compile Include="Analyzers\YieldReturnWithinLockAnalyzer.cs" />
     <Compile Include="Assertions\Assertion.cs" />
@@ -255,7 +254,6 @@
     <Compile Include="Analyzers\ConditionalInvocationAnalyzer.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorAnalyzer.cs" />
     <Compile Include="Analyzers\UncatchableExceptionAnalyzer.cs" />
-    <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowStatements.cs" />
     <Compile Include="Analyzers\AsyncVoidAnonymousMethodAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidLambdaExpressionAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidMethodAnalyzer.cs" />
