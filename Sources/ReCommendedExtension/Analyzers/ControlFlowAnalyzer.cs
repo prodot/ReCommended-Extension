@@ -48,7 +48,7 @@ namespace ReCommendedExtension.Analyzers
                 return; // no (new) assertions found
             }
 
-            var inspector = CSharpControlFlowGraphInspector.Inspect((CSharpControlFlowGraph)controlFlowGraph, data.GetValueAnalysisMode());
+            var inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
 
             var alwaysSuccessTryCastExpressions = new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions ?? new IAsExpression[] { });
 
