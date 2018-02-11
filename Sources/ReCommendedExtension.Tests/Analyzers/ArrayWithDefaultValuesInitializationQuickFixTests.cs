@@ -5,7 +5,7 @@ using ReCommendedExtension.QuickFixes;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
-    public sealed class ArrayWithDefaultValuesInitializationQuickFixTests : QuickFixTestBase<ArrayWithDefaultValuesInitializationFix>
+    public sealed class ArrayWithDefaultValuesInitializationQuickFixTests : QuickFixTestBase<ReplaceWithNewArrayWithLengthFix>
     {
         protected override string RelativeTestDataPath => @"Analyzers\ArrayWithDefaultValuesInitializationQuickFixes";
 

@@ -282,14 +282,14 @@
     <Compile Include="Highlightings\ThrowExceptionInUnexpectedLocationHighlighting.cs" />
     <Compile Include="Highlightings\XamlBindingWithoutModeHighlighting.cs" />
     <Compile Include="Highlightings\YieldReturnWithinLockHighlighting.cs" />
-    <Compile Include="QuickFixes\ArrayWithDefaultValuesInitializationFix.cs" />
+    <Compile Include="QuickFixes\ReplaceWithNewArrayWithLengthFix.cs" />
     <Compile Include="QuickFixes\ChangeToAsyncTaskFix.cs" />
     <Compile Include="Highlightings\ConditionalAnnotationHighlighting.cs" />
     <Compile Include="Highlightings\AvoidAsyncVoidHighlighting.cs" />
     <Compile Include="Highlightings\MissingSuppressionJustificationHighlighting.cs" />
     <Compile Include="Highlightings\AttributeHighlighting.cs" />
     <Compile Include="Highlightings\NotAllowedAnnotationHighlighting.cs" />
-    <Compile Include="QuickFixes\EmptyArrayInitializationFix.cs" />
+    <Compile Include="QuickFixes\ReplaceWithArrayEmptyFix.cs" />
     <Compile Include="QuickFixes\RemoveDelegateInvokeFix.cs" />
     <Compile Include="QuickFixes\RemoveAssertionStatementFix.cs" />
     <Compile Include="QuickFixes\RemoveAsyncFix.cs" />

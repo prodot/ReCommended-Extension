@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestNetFramework46]
     [TestFixture]
-    public sealed class EmptyArrayInitializationQuickFixTests : QuickFixTestBase<EmptyArrayInitializationFix>
+    public sealed class EmptyArrayInitializationQuickFixTests : QuickFixTestBase<ReplaceWithArrayEmptyFix>
     {
         protected override string RelativeTestDataPath => @"Analyzers\EmptyArrayInitializationQuickFixes";
 

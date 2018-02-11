@@ -16,12 +16,12 @@ using ReCommendedExtension.Highlightings;
 namespace ReCommendedExtension.QuickFixes
 {
     [QuickFix]
-    public sealed class ArrayWithDefaultValuesInitializationFix : QuickFixBase
+    public sealed class ReplaceWithNewArrayWithLengthFix : QuickFixBase
     {
         [NotNull]
         readonly ArrayWithDefaultValuesInitializationHighlighting highlighting;
 
-        public ArrayWithDefaultValuesInitializationFix([NotNull] ArrayWithDefaultValuesInitializationHighlighting highlighting)
+        public ReplaceWithNewArrayWithLengthFix([NotNull] ArrayWithDefaultValuesInitializationHighlighting highlighting)
             => this.highlighting = highlighting;
 
         public override bool IsAvailable(IUserDataHolder cache) => true;
