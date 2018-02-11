@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
@@ -10,6 +12,7 @@ using JetBrains.Metadata.Reader.Impl;
 
 namespace ReCommendedExtension
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Original type names used.")]
     internal static class ClrTypeNames
     {
         [NotNull]
@@ -53,6 +56,18 @@ namespace ReCommendedExtension
         [NotNull]
         internal static readonly IClrTypeName ArgumentOutOfRangeException =
             new ClrTypeName(typeof(ArgumentOutOfRangeException).FullName.AssertNotNull());
+
+        [NotNull]
+        internal static readonly IClrTypeName NotSupportedException = new ClrTypeName(typeof(NotSupportedException).FullName.AssertNotNull());
+
+        [NotNull]
+        internal static readonly IClrTypeName KeyNotFoundException = new ClrTypeName(typeof(KeyNotFoundException).FullName.AssertNotNull());
+
+        [NotNull]
+        internal static readonly IClrTypeName IEqualityComparerGeneric = new ClrTypeName(typeof(IEqualityComparer<>).FullName.AssertNotNull());
+
+        [NotNull]
+        internal static readonly IClrTypeName IEqualityComparer = new ClrTypeName(typeof(IEqualityComparer).FullName.AssertNotNull());
 
         [NotNull]
         internal static readonly IClrTypeName MultiBinding = new ClrTypeName(typeof(MultiBinding).FullName.AssertNotNull());

@@ -244,6 +244,7 @@
     <Compile Include="Analyzers\DelegateInvokeAnalyzer.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzer.cs" />
     <Compile Include="Analyzers\RegionAnalyzer.cs" />
+    <Compile Include="Analyzers\ThrowExceptionInUnexpectedLocationAnalyzer.cs" />
     <Compile Include="Analyzers\UnthrowableExceptionAnalyzerForThrowExpressions.cs" />
     <Compile Include="Analyzers\UnthrowableExceptions.cs" />
     <Compile Include="Analyzers\XamlBindingWithoutModeAnalyzer.cs" />
@@ -280,6 +281,7 @@
     <Compile Include="Highlightings\RegionHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithinTypeMemberBodyHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithSingleElementHighlighting.cs" />
+    <Compile Include="Highlightings\ThrowExceptionInUnexpectedLocationHighlighting.cs" />
     <Compile Include="Highlightings\XamlBindingWithoutModeHighlighting.cs" />
     <Compile Include="Highlightings\YieldReturnWithinLockHighlighting.cs" />
     <Compile Include="QuickFixes\ArrayWithDefaultValuesInitializationFix.cs" />
