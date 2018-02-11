@@ -26,7 +26,7 @@ namespace ReCommendedExtension.Analyzers
         [Pure]
         [NotNull]
         internal static ITypeElement GetArrayType([NotNull] IPsiModule psiModule)
-            => TypeElementUtil.FindReferencedTypeElement(PredefinedType.ARRAY_FQN.FullName, @"mscorlib", psiModule).AssertNotNull();
+            => TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARRAY_FQN, psiModule).AssertNotNull();
 
         [NotNull]
         static string CreateHighlightingMessage([NotNull] IType arrayElementType)

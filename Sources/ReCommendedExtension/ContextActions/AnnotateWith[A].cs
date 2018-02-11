@@ -23,7 +23,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected sealed override Func<CSharpElementFactory, IAttribute> CreateAttributeFactoryIfAvailable(
             IAttributesOwnerDeclaration attributesOwnerDeclaration,
-            IPsiModule module,
+            IPsiModule psiModule,
             out IAttribute attributeToRemove)
         {
             attributeToRemove = null;
@@ -38,7 +38,7 @@ namespace ReCommendedExtension.ContextActions
 
                     Debug.Assert(fullName != null);
 
-                    return factory.CreateAttribute(new SpecialAttributeInstance(new ClrTypeName(fullName), module));
+                    return factory.CreateAttribute(new SpecialAttributeInstance(new ClrTypeName(fullName), psiModule));
                 };
             }
 

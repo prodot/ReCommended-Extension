@@ -5,8 +5,8 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
@@ -25,7 +25,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             return factory.CreateExpression(
                 string.Format("$0 != $1.{0}", nameof(IntPtr.Zero)),
                 contractExpression,
-                new DeclaredTypeFromCLRName(IsSigned ? PredefinedType.INTPTR_FQN : PredefinedType.UINTPTR_FQN, Provider.PsiModule).GetTypeElement());
+                TypeElementUtil.GetTypeElementByClrName(IsSigned ? PredefinedType.INTPTR_FQN : PredefinedType.UINTPTR_FQN, Provider.PsiModule));
         }
     }
 }

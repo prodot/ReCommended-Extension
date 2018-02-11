@@ -4,8 +4,8 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
@@ -21,10 +21,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             => string.Format("{0}.{1} == {2}", contractIdentifier, nameof(DateTime.TimeOfDay), nameof(System.TimeSpan.Zero));
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
-            =>
-                factory.CreateExpression(
-                    string.Format("$0.{0} == $1.{1}", nameof(DateTime.TimeOfDay), nameof(System.TimeSpan.Zero)),
-                    contractExpression,
-                    new DeclaredTypeFromCLRName(ClrTypeNames.TimeSpan, Provider.PsiModule).GetTypeElement());
+            => factory.CreateExpression(
+                string.Format("$0.{0} == $1.{1}", nameof(DateTime.TimeOfDay), nameof(System.TimeSpan.Zero)),
+                contractExpression,
+                TypeElementUtil.GetTypeElementByClrName(PredefinedType.TIMESPAN_FQN, Provider.PsiModule));
     }
 }

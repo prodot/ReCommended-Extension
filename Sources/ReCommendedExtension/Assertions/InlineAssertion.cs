@@ -31,7 +31,7 @@ namespace ReCommendedExtension.Assertions
                             methodDeclaration.AttributesEnumerable.Any(
                                 attribute =>
                                     attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().FullName ==
-                                    ClrTypeNames.DebuggerStepThroughAttribute.FullName) &&
+                                    PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName) &&
                             methodDeclaration.AttributesEnumerable.Any(
                                 attribute =>
                                     attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==

@@ -33,7 +33,7 @@ namespace ReCommendedExtension.ContextActions
         protected override bool CanBeAnnotated(
             IDeclaredElement declaredElement,
             ITreeNode context,
-            IPsiModule module) => declaredElement is IMethod method && !method.ReturnType.IsVoid() && !method.IsAsync;
+            IPsiModule psiModule) => declaredElement is IMethod method && !method.ReturnType.IsVoid() && !method.IsAsync;
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
             =>

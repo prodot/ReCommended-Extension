@@ -8,7 +8,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
@@ -77,7 +76,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             var allMethodReference = invokedExpression.Reference;
 
-            var enumerableType = new DeclaredTypeFromCLRName(ClrTypeNames.Enumerable, Provider.PsiModule).GetTypeElement();
+            var enumerableType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.ENUMERABLE_CLASS, Provider.PsiModule);
 
             Debug.Assert(enumerableType != null);
 

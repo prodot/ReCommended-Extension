@@ -9,9 +9,9 @@ using JetBrains.ReSharper.Intentions.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 {
@@ -84,11 +84,11 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
         [NotNull]
         static ICSharpStatement CreateContractStatement(
-            ContractKind contractKind, [NotNull] IPsiModule module, [NotNull] IExpression contractExpression)
+            ContractKind contractKind, [NotNull] IPsiModule psiModule, [NotNull] IExpression contractExpression)
         {
             var factory = CSharpElementFactory.GetInstance(contractExpression);
 
-            var contractType = new DeclaredTypeFromCLRName(ClrTypeNames.Contract, module).GetTypeElement();
+            var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, psiModule);
 
             switch (contractKind)
             {
@@ -109,7 +109,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         protected static void AddContract(
             ContractKind contractKind,
             [NotNull] IBlock body,
-            [NotNull] IPsiModule module,
+            [NotNull] IPsiModule psiModule,
             [NotNull] Func<IExpression> getContractExpression,
             out ICSharpStatement firstNonContractStatement)
         {
@@ -117,7 +117,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
             Debug.Assert(contractExpression != null);
 
-            var statement = CreateContractStatement(contractKind, module, contractExpression);
+            var statement = CreateContractStatement(contractKind, psiModule, contractExpression);
 
             var contractStatements = ContractStatementInfo.CreateContractStatementInfos(body);
 

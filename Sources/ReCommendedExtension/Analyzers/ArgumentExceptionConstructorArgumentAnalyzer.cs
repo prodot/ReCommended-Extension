@@ -21,9 +21,9 @@ namespace ReCommendedExtension.Analyzers
 
             var typeName = ((IConstructor)declaredElement).GetContainingType().AssertNotNull().GetClrName();
 
-            if (typeName.Equals(ClrTypeNames.ArgumentException) ||
-                typeName.Equals(ClrTypeNames.ArgumentNullException) ||
-                typeName.Equals(ClrTypeNames.ArgumentOutOfRangeException))
+            if (typeName.Equals(PredefinedType.ARGUMENTEXCEPTION_FQN) ||
+                typeName.Equals(PredefinedType.ARGUMENTNULLEXCEPTION_FQN) ||
+                typeName.Equals(PredefinedType.ARGUMENTOUTOFRANGEEXCEPTION_FQN))
             {
                 var messageArgument = element.Arguments.FirstOrDefault(a => a.AssertNotNull().MatchingParameter?.Element.ShortName == "message");
                 if (messageArgument != null)
@@ -49,7 +49,7 @@ namespace ReCommendedExtension.Analyzers
                                 break;
 
                             case IInvocationExpression invocationExpression:
-                                if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == "nameof" &&
+                                if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == @"nameof" &&
                                     invocationExpression.Arguments.Count == 1 &&
                                     (invocationExpression.Arguments[0].AssertNotNull().Value as IReferenceExpression)?.Reference.Resolve()
                                     .DeclaredElement is IParameter parameter &&

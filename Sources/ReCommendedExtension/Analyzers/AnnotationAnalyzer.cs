@@ -11,7 +11,6 @@ using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Highlightings;
@@ -359,8 +358,7 @@ namespace ReCommendedExtension.Analyzers
 
                     if (type.IsLazy())
                     {
-                        var typeElement =
-                            new DeclaredTypeFromCLRName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule()).GetTypeElement();
+                        var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule());
                         var valueType = type.GetGenericUnderlyingType(typeElement);
                         if (valueType != null)
                         {

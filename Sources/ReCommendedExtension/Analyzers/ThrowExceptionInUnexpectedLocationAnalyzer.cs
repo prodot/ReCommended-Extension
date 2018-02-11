@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
@@ -41,10 +40,6 @@ namespace ReCommendedExtension.Analyzers
         const string disposeMethodName = "Dispose";
 
         [NotNull]
-        static ITypeElement GetType([NotNull] IClrTypeName typeName, [NotNull] IPsiModule psiModule)
-            => TypeElementUtil.FindReferencedTypeElement(typeName.FullName, @"mscorlib", psiModule).AssertNotNull();
-
-        [NotNull]
         static IMethod GetMethod([NotNull] ITypeElement type, [NotNull] string name) => type.Methods.First(m => m.ShortName == name).AssertNotNull();
 
         static Location? TryGetLocation([NotNull] ICSharpTreeNode element, [NotNull] ElementProblemAnalyzerData data)
@@ -80,7 +75,7 @@ namespace ReCommendedExtension.Analyzers
                 case IMethodDeclaration methodDeclaration when methodDeclaration.DeclaredElement != null:
                     var psiModule = element.GetPsiModule();
 
-                    var objectClass = GetType(PredefinedType.OBJECT_FQN, psiModule);
+                    var objectClass = TypeElementUtil.GetTypeElementByClrName(PredefinedType.OBJECT_FQN, psiModule).AssertNotNull();
                     if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(objectClass, nameof(object.Equals))))
                     {
                         return Location.EqualsMethod;
@@ -95,12 +90,15 @@ namespace ReCommendedExtension.Analyzers
                     }
 
                     if (methodDeclaration.DeclaredElement.OverridesOrImplements(
-                        GetMethod(GetType(PredefinedType.GENERIC_IEQUATABLE_FQN, psiModule), nameof(IEquatable<int>.Equals))))
+                        GetMethod(
+                            TypeElementUtil.GetTypeElementByClrName(PredefinedType.GENERIC_IEQUATABLE_FQN, psiModule).AssertNotNull(),
+                            nameof(IEquatable<int>.Equals))))
                     {
                         return Location.EqualsMethod;
                     }
 
-                    var equalityComparerGenericInterface = GetType(ClrTypeNames.IEqualityComparerGeneric, psiModule);
+                    var equalityComparerGenericInterface = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IEqualityComparerGeneric, psiModule)
+                        .AssertNotNull();
                     if (methodDeclaration.DeclaredElement.OverridesOrImplements(
                         GetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<int>.Equals))))
                     {
@@ -112,7 +110,8 @@ namespace ReCommendedExtension.Analyzers
                         return Location.GetHashCodeMethodWithParameter;
                     }
 
-                    var equalityComparerInterface = GetType(ClrTypeNames.IEqualityComparer, psiModule);
+                    var equalityComparerInterface =
+                        TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IEqualityComparer, psiModule).AssertNotNull();
                     if (methodDeclaration.DeclaredElement.OverridesOrImplements(
                         GetMethod(equalityComparerInterface, nameof(IEqualityComparer.Equals))))
                     {
@@ -125,7 +124,9 @@ namespace ReCommendedExtension.Analyzers
                     }
 
                     if (methodDeclaration.DeclaredElement.OverridesOrImplements(
-                        GetMethod(GetType(PredefinedType.IDISPOSABLE_FQN, psiModule), nameof(IDisposable.Dispose))))
+                        GetMethod(
+                            TypeElementUtil.GetTypeElementByClrName(PredefinedType.IDISPOSABLE_FQN, psiModule).AssertNotNull(),
+                            nameof(IDisposable.Dispose))))
                     {
                         return Location.DisposeMethod;
                     }
@@ -193,23 +194,23 @@ namespace ReCommendedExtension.Analyzers
             switch (location)
             {
                 case Location.PropertyGetter:
-                    yield return GetType(PredefinedType.INVALIDOPERATIONEXCEPTION_FQN, psiModule);
-                    yield return GetType(ClrTypeNames.NotSupportedException, psiModule);
+                    yield return TypeElementUtil.GetTypeElementByClrName(PredefinedType.INVALIDOPERATIONEXCEPTION_FQN, psiModule).AssertNotNull();
+                    yield return TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.NotSupportedException, psiModule).AssertNotNull();
                     break;
 
                 case Location.IndexerGetter:
-                    yield return GetType(PredefinedType.ARGUMENTEXCEPTION_FQN, psiModule);
-                    yield return GetType(ClrTypeNames.KeyNotFoundException, psiModule);
+                    yield return TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARGUMENTEXCEPTION_FQN, psiModule).AssertNotNull();
+                    yield return TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.KeyNotFoundException, psiModule).AssertNotNull();
                     goto case Location.PropertyGetter;
 
                 case Location.EventAccessor:
-                    yield return GetType(PredefinedType.INVALIDOPERATIONEXCEPTION_FQN, psiModule);
-                    yield return GetType(ClrTypeNames.NotSupportedException, psiModule);
-                    yield return GetType(PredefinedType.ARGUMENTEXCEPTION_FQN, psiModule);
+                    yield return TypeElementUtil.GetTypeElementByClrName(PredefinedType.INVALIDOPERATIONEXCEPTION_FQN, psiModule).AssertNotNull();
+                    yield return TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.NotSupportedException, psiModule).AssertNotNull();
+                    yield return TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARGUMENTEXCEPTION_FQN, psiModule).AssertNotNull();
                     break;
 
                 case Location.GetHashCodeMethodWithParameter:
-                    yield return GetType(PredefinedType.ARGUMENTEXCEPTION_FQN, psiModule);
+                    yield return TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARGUMENTEXCEPTION_FQN, psiModule).AssertNotNull();
                     break;
             }
         }

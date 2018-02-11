@@ -21,14 +21,14 @@ namespace ReCommendedExtension.ContextActions
 
         protected sealed override Func<CSharpElementFactory, IAttribute> CreateAttributeFactoryIfAvailable(
             IAttributesOwnerDeclaration attributesOwnerDeclaration,
-            IPsiModule module,
+            IPsiModule psiModule,
             out IAttribute attributeToRemove)
         {
             var attributeType =
                 attributesOwnerDeclaration.GetPsiServices()
                     .GetComponent<CodeAnnotationsConfiguration>()
                     .GetAttributeTypeForElement(attributesOwnerDeclaration, AnnotationAttributeTypeName);
-            if (attributeType != null && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration, module))
+            if (attributeType != null && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration, psiModule))
             {
                 attributeToRemove = TryGetAttributeToReplace(attributesOwnerDeclaration);
 
@@ -46,6 +46,6 @@ namespace ReCommendedExtension.ContextActions
 
         protected virtual IAttribute TryGetAttributeToReplace([NotNull] IAttributesOwnerDeclaration ownerDeclaration) => null;
 
-        protected abstract bool CanBeAnnotated(IDeclaredElement declaredElement, [NotNull] ITreeNode context, [NotNull] IPsiModule module);
+        protected abstract bool CanBeAnnotated(IDeclaredElement declaredElement, [NotNull] ITreeNode context, [NotNull] IPsiModule psiModule);
     }
 }

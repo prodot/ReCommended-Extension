@@ -34,7 +34,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected abstract Func<CSharpElementFactory, IAttribute> CreateAttributeFactoryIfAvailable(
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
-            [NotNull] IPsiModule module,
+            [NotNull] IPsiModule psiModule,
             out IAttribute attributeToRemove);
 
         [NotNull]

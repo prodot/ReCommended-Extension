@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Windows.Data;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
@@ -15,18 +13,6 @@ namespace ReCommendedExtension
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Original type names used.")]
     internal static class ClrTypeNames
     {
-        [NotNull]
-        internal static readonly IClrTypeName Contract = new ClrTypeName(typeof(Contract).FullName.AssertNotNull());
-
-        [NotNull]
-        internal static readonly IClrTypeName Enumerable = new ClrTypeName(typeof(Enumerable).FullName.AssertNotNull());
-
-        [NotNull]
-        internal static readonly IClrTypeName Guid = new ClrTypeName(typeof(Guid).FullName.AssertNotNull());
-
-        [NotNull]
-        internal static readonly IClrTypeName TimeSpan = new ClrTypeName(typeof(TimeSpan).FullName.AssertNotNull());
-
         [NotNull]
         internal static readonly IClrTypeName Math = new ClrTypeName(typeof(Math).FullName.AssertNotNull());
 
@@ -41,21 +27,7 @@ namespace ReCommendedExtension
             new ClrTypeName(typeof(ContractInvariantMethodAttribute).FullName.AssertNotNull());
 
         [NotNull]
-        internal static readonly IClrTypeName DebuggerStepThroughAttribute =
-            new ClrTypeName(typeof(DebuggerStepThroughAttribute).FullName.AssertNotNull());
-
-        [NotNull]
         internal static readonly IClrTypeName SuppressMessageAttribute = new ClrTypeName(typeof(SuppressMessageAttribute).FullName.AssertNotNull());
-
-        [NotNull]
-        internal static readonly IClrTypeName ArgumentException = new ClrTypeName(typeof(ArgumentException).FullName.AssertNotNull());
-
-        [NotNull]
-        internal static readonly IClrTypeName ArgumentNullException = new ClrTypeName(typeof(ArgumentNullException).FullName.AssertNotNull());
-
-        [NotNull]
-        internal static readonly IClrTypeName ArgumentOutOfRangeException =
-            new ClrTypeName(typeof(ArgumentOutOfRangeException).FullName.AssertNotNull());
 
         [NotNull]
         internal static readonly IClrTypeName NotSupportedException = new ClrTypeName(typeof(NotSupportedException).FullName.AssertNotNull());

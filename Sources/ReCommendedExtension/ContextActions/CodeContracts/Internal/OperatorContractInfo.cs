@@ -7,8 +7,8 @@ using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 {
@@ -50,7 +50,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             {
                 var factory = CSharpElementFactory.GetInstance(declaration);
 
-                var contractType = new DeclaredTypeFromCLRName(ClrTypeNames.Contract, provider.PsiModule).GetTypeElement();
+                var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, provider.PsiModule);
 
                 Debug.Assert(declaration.DeclaredElement != null);
 

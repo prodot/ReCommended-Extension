@@ -15,7 +15,6 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Conversions;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
@@ -127,7 +126,7 @@ namespace ReCommendedExtension
             => expressionStatement.TryGetMemberName(contractClassFullName);
 
         [NotNull]
-        internal static IClassDeclaration EnsureContractClass([NotNull] this ICSharpTypeDeclaration typeDeclaration, [NotNull] IPsiModule module)
+        internal static IClassDeclaration EnsureContractClass([NotNull] this ICSharpTypeDeclaration typeDeclaration, [NotNull] IPsiModule psiModule)
         {
             var factory = CSharpElementFactory.GetInstance(typeDeclaration);
 
@@ -153,16 +152,14 @@ namespace ReCommendedExtension
                     ? $"<{new string(',', typeDeclaration.TypeParametersEnumerable.Count() - 1)}>"
                     : "";
 
-                contractClassDeclaration =
-                    (IClassDeclaration)
-                        factory.CreateTypeMemberDeclaration(
-                            string.Format(
-                                @"[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
-                                GetSuggestedContractClassName(typeDeclaration),
-                                typeParameters,
-                                typeParametersForAttribute),
-                            new DeclaredTypeFromCLRName(ClrTypeNames.ContractClassForAttribute, module).GetTypeElement(),
-                            typeDeclaration.DeclaredElement);
+                contractClassDeclaration = (IClassDeclaration)factory.CreateTypeMemberDeclaration(
+                    string.Format(
+                        @"[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
+                        GetSuggestedContractClassName(typeDeclaration),
+                        typeParameters,
+                        typeParametersForAttribute),
+                    TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassForAttribute, psiModule),
+                    typeDeclaration.DeclaredElement);
 
                 CopyTypeParameterConstraints(
                     factory,
@@ -178,7 +175,7 @@ namespace ReCommendedExtension
                         factory.CreateExpression(string.Format(@"typeof($0{0})", attributeTypeParameters), contractClassDeclaration.DeclaredElement);
 
                 // todo: the generated "typeof" expression doesn't contain generics: "<,>"
-                var contractClassAttributeTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassAttribute, module);
+                var contractClassAttributeTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassAttribute, psiModule);
                 var attribute = factory.CreateAttribute(
                     contractClassAttributeTypeElement,
                     new[] { new AttributeValue(typeofExpression.ArgumentType) },
@@ -390,7 +387,7 @@ namespace ReCommendedExtension
 
         [NotNull]
         internal static IMethodDeclaration EnsureContractInvariantMethod(
-            [NotNull] this IClassLikeDeclaration classLikeDeclaration, [NotNull] IPsiModule module)
+            [NotNull] this IClassLikeDeclaration classLikeDeclaration, [NotNull] IPsiModule psiModule)
         {
             var factory = CSharpElementFactory.GetInstance(classLikeDeclaration);
 
@@ -408,13 +405,9 @@ namespace ReCommendedExtension
 
             if (contractInvariantMethodDeclaration == null)
             {
-                var factoryArgs = new List<object>
-                {
-                    new DeclaredTypeFromCLRName(ClrTypeNames.ContractInvariantMethodAttribute, module).GetTypeElement()
-                };
-
-                contractInvariantMethodDeclaration =
-                    (IMethodDeclaration)factory.CreateTypeMemberDeclaration("[$0] private void ObjectInvariant() { }", factoryArgs.ToArray());
+                contractInvariantMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(
+                    "[$0] private void ObjectInvariant() { }",
+                    TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractInvariantMethodAttribute, psiModule));
                 contractInvariantMethodDeclaration = classLikeDeclaration.AddClassMemberDeclaration(contractInvariantMethodDeclaration);
 
                 ContextActionUtils.FormatWithDefaultProfile(contractInvariantMethodDeclaration);

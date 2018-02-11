@@ -5,7 +5,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Util;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
@@ -35,7 +34,7 @@ namespace ReCommendedExtension.ContextActions
 
             if (type.IsLazy())
             {
-                var typeElement = new DeclaredTypeFromCLRName(PredefinedType.LAZY_FQN, context.GetPsiModule()).GetTypeElement();
+                var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, context.GetPsiModule());
                 var valueType = type.GetGenericUnderlyingType(typeElement);
                 if (valueType != null && valueType.Classify == TypeClassification.REFERENCE_TYPE)
                 {
@@ -58,7 +57,7 @@ namespace ReCommendedExtension.ContextActions
             }
         }
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module)
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
         {
             switch (declaredElement)
             {
