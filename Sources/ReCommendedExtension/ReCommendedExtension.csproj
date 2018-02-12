@@ -238,8 +238,8 @@
   <ItemGroup>
     <Compile Include="Analyzers\ArgumentExceptionConstructorArgumentAnalyzer.cs" />
     <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationAnalyzer.cs" />
+    <Compile Include="Analyzers\AsyncVoidAnalyzer.cs" />
     <Compile Include="Analyzers\EmptyArrayInitializationAnalyzer.cs" />
-    <Compile Include="Analyzers\AsyncVoidLocalFunctionAnalyzer.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzer.cs" />
     <Compile Include="Analyzers\DelegateInvokeAnalyzer.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzer.cs" />
@@ -254,9 +254,6 @@
     <Compile Include="Analyzers\ConditionalInvocationAnalyzer.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorAnalyzer.cs" />
     <Compile Include="Analyzers\UncatchableExceptionAnalyzer.cs" />
-    <Compile Include="Analyzers\AsyncVoidAnonymousMethodAnalyzer.cs" />
-    <Compile Include="Analyzers\AsyncVoidLambdaExpressionAnalyzer.cs" />
-    <Compile Include="Analyzers\AsyncVoidMethodAnalyzer.cs" />
     <Compile Include="ContextActions\SetLanguageInjection.cs" />
     <Compile Include="ContextActions\AnnotateWithMustUseReturnValue.cs" />
     <Compile Include="ContextActions\AnnotateWith[A].cs" />
