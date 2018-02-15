@@ -243,6 +243,7 @@
     <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzer.cs" />
     <Compile Include="Analyzers\DelegateInvokeAnalyzer.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzer.cs" />
+    <Compile Include="Analyzers\LockOnObjectWithWeakIdentityAnalyzer.cs" />
     <Compile Include="Analyzers\RegionAnalyzer.cs" />
     <Compile Include="Analyzers\ThrowExceptionInUnexpectedLocationAnalyzer.cs" />
     <Compile Include="Analyzers\UnthrowableExceptionAnalyzer.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="Highlightings\EmptyArrayInitializationHighlighting.cs" />
     <Compile Include="Highlightings\EmptyRegionHighlighting.cs" />
     <Compile Include="Highlightings\LocalSuppressionHighlighting.cs" />
+    <Compile Include="Highlightings\LockOnObjectWithWeakIdentityHighlighting.cs" />
     <Compile Include="Highlightings\RedundantAssertionHighlighting.cs" />
     <Compile Include="Highlightings\RedundantAssertionStatementHighlighting.cs" />
     <Compile Include="Highlightings\RedundantDelegateInvokeHighlighting.cs" />

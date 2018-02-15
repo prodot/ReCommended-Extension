@@ -301,6 +301,7 @@
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvokeAvailability.cs.gold" />
     <None Include="test\data\Analyzers\DelegateInvoke\DelegateInvoke.cs.gold" />
     <None Include="test\data\Analyzers\LocalSuppression\LocalSuppression.cs.gold" />
+    <None Include="test\data\Analyzers\LockOnObjectWithWeakIdentity\LockOnObjectWithWeakIdentity.cs.gold" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs.gold" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructorAvailability.cs" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="Analyzers\DelegateInvokeQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\DelegateInvokeQuickFixTests.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzerTests.cs" />
+    <Compile Include="Analyzers\LockOnObjectWithWeakIdentityAnalyzerTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixTests.cs" />
     <Compile Include="Analyzers\RegionAnalyzerTests.cs" />
@@ -822,6 +824,7 @@
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization3.cs" />
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization4.cs" />
     <None Include="test\data\Analyzers\ThrowExceptionInUnexpectedLocation\ThrowExceptionInUnexpectedLocation.cs" />
+    <None Include="test\data\Analyzers\LockOnObjectWithWeakIdentity\LockOnObjectWithWeakIdentity.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
