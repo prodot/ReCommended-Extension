@@ -10,7 +10,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
         RegionWithSingleElementHighlighting.SeverityId,
         null,
         HighlightingGroupIds.DeclarationRedundancy,
-        "Region is empty" + ZoneMarker.Suffix,
+        "Region contains a single element" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
 
