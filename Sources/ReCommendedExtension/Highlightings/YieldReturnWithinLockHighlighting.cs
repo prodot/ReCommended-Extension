@@ -12,7 +12,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
         YieldReturnWithinLockHighlighting.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
-        "'yield return' within 'lock' statement" + ZoneMarker.Suffix,
+        "'yield return' used inside the 'lock' block" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
 

@@ -32,7 +32,7 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Warning: 'yield return' within 'lock' statement.
-(1): ReSharper Warning: 'yield return' within 'lock' statement.
-(2): ReSharper Warning: 'yield return' within 'lock' statement.
-(3): ReSharper Warning: 'yield return' within 'lock' statement.
+(0): ReSharper Warning: 'yield return' used inside the 'lock' block.
+(1): ReSharper Warning: 'yield return' used inside the 'lock' block.
+(2): ReSharper Warning: 'yield return' used inside the 'lock' block.
+(3): ReSharper Warning: 'yield return' used inside the 'lock' block.

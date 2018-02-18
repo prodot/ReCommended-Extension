@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Analyzers
                 switch (treeNode)
                 {
                     case ILockStatement _:
-                        consumer.AddHighlighting(new YieldReturnWithinLockHighlighting("'yield return' within 'lock' statement.", element));
+                        consumer.AddHighlighting(new YieldReturnWithinLockHighlighting("'yield return' used inside the 'lock' block.", element));
                         return;
 
                     case ILocalFunctionDeclaration _:
