@@ -1,6 +1,9 @@
 ﻿using System;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Psi.CSharp.Impl.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Highlightings;
 
@@ -13,7 +16,9 @@ namespace ReCommendedExtension.Analyzers
         {
             if (element.QualifierExpression != null &&
                 !element.HasConditionalAccessSign &&
-                element.Reference.Resolve().DeclaredElement.IsDelegateInvokeMethod())
+                element.Reference.Resolve().DeclaredElement.IsDelegateInvokeMethod() &&
+                element.GetNextMeaningfulSibling() is CSharpTokenBase token &&
+                token.GetTokenType() == CSharpTokenType.LPARENTH)
             {
                 consumer.AddHighlighting(new RedundantDelegateInvokeHighlighting($"Redundant '{nameof(Action.Invoke)}' expression.", element));
             }

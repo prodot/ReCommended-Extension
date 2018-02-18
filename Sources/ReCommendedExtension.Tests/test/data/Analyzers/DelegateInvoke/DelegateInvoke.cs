@@ -7,6 +7,9 @@ namespace Test
         void Method(Action action, Action<int> action2, Func<int> func, Func<int, int> func2)
         {
             action.Invoke();
+
+            var methodName = nameof(Action.Invoke);
+
             action?.Invoke();
             action();
 
@@ -22,7 +25,7 @@ namespace Test
             func2?.Invoke(1);
             func2(1);
 
-            action . Invoke();
+            action . Invoke   ();
         }
     }
 }
