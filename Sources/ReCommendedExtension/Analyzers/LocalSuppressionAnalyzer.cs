@@ -38,14 +38,20 @@ namespace ReCommendedExtension.Analyzers
 
             if (commentText.StartsWith("ReSharper disable once", StringComparison.Ordinal))
             {
-                consumer.AddHighlighting(new LocalSuppressionHighlighting("Local suppression.", element, leadingWhitespaceCharacterCount, true));
+                consumer.AddHighlighting(
+                    new LocalSuppressionHighlighting("Avoid local suppression.", element, leadingWhitespaceCharacterCount, true));
+                return;
             }
-            else
+
+            if (commentText.StartsWith("ReSharper disable All", StringComparison.Ordinal))
             {
-                if (commentText.StartsWith("ReSharper disable", StringComparison.Ordinal))
-                {
-                    consumer.AddHighlighting(new LocalSuppressionHighlighting("Local suppression.", element, leadingWhitespaceCharacterCount, false));
-                }
+                return;
+            }
+
+            if (commentText.StartsWith("ReSharper disable", StringComparison.Ordinal))
+            {
+                consumer.AddHighlighting(
+                    new LocalSuppressionHighlighting("Avoid local suppression.", element, leadingWhitespaceCharacterCount, false));
             }
         }
     }

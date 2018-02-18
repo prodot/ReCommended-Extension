@@ -23,12 +23,14 @@ namespace Test
             text = null;
             // ReSharper restore AssignNullToNotNullAttribute
 
+            // ReSharper disable All
+
             // sample comment
         }
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Warning: Local suppression.
-(1): ReSharper Warning: Local suppression.
-(2): ReSharper Warning: Local suppression.
-(3): ReSharper Warning: Local suppression.
+(0): ReSharper Warning: Avoid local suppression.
+(1): ReSharper Warning: Avoid local suppression.
+(2): ReSharper Warning: Avoid local suppression.
+(3): ReSharper Warning: Avoid local suppression.

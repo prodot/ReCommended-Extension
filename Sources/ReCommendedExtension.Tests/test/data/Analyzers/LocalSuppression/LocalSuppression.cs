@@ -23,6 +23,8 @@ namespace Test
             text = null;
             // ReSharper restore AssignNullToNotNullAttribute
 
+            // ReSharper disable All
+
             // sample comment
         }
     }
