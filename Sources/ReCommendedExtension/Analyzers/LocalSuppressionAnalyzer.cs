@@ -1,13 +1,13 @@
 ﻿using System;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Highlightings;
 
 namespace ReCommendedExtension.Analyzers
 {
-    [ElementProblemAnalyzer(typeof(ICommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionHighlighting) })]
-    public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICommentNode>
+    [ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionHighlighting) })]
+    public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCommentNode>
     {
         static int GetLeadingWhitespaceCharacterCount([NotNull] string commentText)
         {
@@ -30,8 +30,13 @@ namespace ReCommendedExtension.Analyzers
             return leadingWhitespaceCharacters;
         }
 
-        protected override void Run(ICommentNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+        protected override void Run(ICSharpCommentNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
+            if (element.GetContainingFunctionLikeDeclarationOrClosure() == null)
+            {
+                return;
+            }
+
             var leadingWhitespaceCharacterCount = GetLeadingWhitespaceCharacterCount(element.CommentText);
 
             var commentText = element.CommentText.Remove(0, leadingWhitespaceCharacterCount);
@@ -40,18 +45,14 @@ namespace ReCommendedExtension.Analyzers
             {
                 consumer.AddHighlighting(
                     new LocalSuppressionHighlighting("Avoid local suppression.", element, leadingWhitespaceCharacterCount, true));
-                return;
             }
-
-            if (commentText.StartsWith("ReSharper disable All", StringComparison.Ordinal))
+            else
             {
-                return;
-            }
-
-            if (commentText.StartsWith("ReSharper disable", StringComparison.Ordinal))
-            {
-                consumer.AddHighlighting(
-                    new LocalSuppressionHighlighting("Avoid local suppression.", element, leadingWhitespaceCharacterCount, false));
+                if (commentText.StartsWith("ReSharper disable", StringComparison.Ordinal))
+                {
+                    consumer.AddHighlighting(
+                        new LocalSuppressionHighlighting("Avoid local suppression.", element, leadingWhitespaceCharacterCount, false));
+                }
             }
         }
     }
