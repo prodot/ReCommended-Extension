@@ -1,11 +1,22 @@
-﻿namespace Test
+﻿using System;
+
+namespace Test
 {
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
+    public class ArrayAttribute : Attribute
+    {
+        public ArrayAttribute(int[] array = null) => Array = array;
+
+        public int[] Array { get; set; }
+    }
+
     public class NonGenericClass
     {
         int[] field = { };
 
         int[] field_ = { 1, 2, 3 };
 
+        [Array(new int[] { })]
         void Method()
         {
             var array1 = new int[] { };
@@ -29,6 +40,7 @@
             var array9_ = new int[,][] { };
         }
 
+        [Array(Array = new int[] { })]
         int[] Property { get; } = { };
 
         int[] Property_ { get; } = { 1, 2, 3 };

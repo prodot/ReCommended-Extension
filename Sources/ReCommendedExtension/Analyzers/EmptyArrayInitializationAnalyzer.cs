@@ -70,36 +70,39 @@ namespace ReCommendedExtension.Analyzers
                     break;
 
                 case IArrayCreationExpression creationExpression:
-                    var dimensions = creationExpression.Dimensions;
-                    if (dimensions.Length == 1 && dimensions[0] == 1)
+                    if (creationExpression.GetContainingNode<IAttribute>() == null)
                     {
-                        var arrayElementType = creationExpression.GetElementType();
-
-                        if (creationExpression.DimInits.Count == 0 && creationExpression.ArrayInitializer?.InitializerElements.Count == 0)
+                        var dimensions = creationExpression.Dimensions;
+                        if (dimensions.Length == 1 && dimensions[0] == 1)
                         {
-                            // new T[] { }
+                            var arrayElementType = creationExpression.GetElementType();
 
-                            consumer.AddHighlighting(
-                                new EmptyArrayInitializationHighlighting(
-                                    CreateHighlightingMessage(arrayElementType),
-                                    creationExpression,
-                                    arrayElementType));
-                        }
+                            if (creationExpression.DimInits.Count == 0 && creationExpression.ArrayInitializer?.InitializerElements.Count == 0)
+                            {
+                                // new T[] { }
 
-                        if (creationExpression.DimInits.Count == 1 &&
-                            creationExpression.DimInits[0] != null &&
-                            creationExpression.DimInits[0].Type().IsInt() &&
-                            creationExpression.DimInits[0].IsDefaultValueOf(creationExpression.DimInits[0].Type()) &&
-                            (creationExpression.ArrayInitializer == null || creationExpression.ArrayInitializer.InitializerElements.Count == 0))
-                        {
-                            // new T[0]
-                            // new T[0] { }
+                                consumer.AddHighlighting(
+                                    new EmptyArrayInitializationHighlighting(
+                                        CreateHighlightingMessage(arrayElementType),
+                                        creationExpression,
+                                        arrayElementType));
+                            }
 
-                            consumer.AddHighlighting(
-                                new EmptyArrayInitializationHighlighting(
-                                    CreateHighlightingMessage(arrayElementType),
-                                    creationExpression,
-                                    arrayElementType));
+                            if (creationExpression.DimInits.Count == 1 &&
+                                creationExpression.DimInits[0] != null &&
+                                creationExpression.DimInits[0].Type().IsInt() &&
+                                creationExpression.DimInits[0].IsDefaultValueOf(creationExpression.DimInits[0].Type()) &&
+                                (creationExpression.ArrayInitializer == null || creationExpression.ArrayInitializer.InitializerElements.Count == 0))
+                            {
+                                // new T[0]
+                                // new T[0] { }
+
+                                consumer.AddHighlighting(
+                                    new EmptyArrayInitializationHighlighting(
+                                        CreateHighlightingMessage(arrayElementType),
+                                        creationExpression,
+                                        arrayElementType));
+                            }
                         }
                     }
                     break;
