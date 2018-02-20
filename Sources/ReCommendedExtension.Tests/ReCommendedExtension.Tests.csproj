@@ -273,12 +273,14 @@
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Optimistic.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Pessimistic.cs.gold" />
     <None Include="test\data\Analyzers\ArgumentExceptionConstructorArgument\ArgumentExceptionConstructorArgument.cs.gold" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization5.cs.gold" />
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization.cs.gold" />
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization2.cs.gold" />
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization3.cs.gold" />
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization4.cs.gold" />
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitializationAvailability.cs.gold" />
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitialization\ArrayWithDefaultValuesInitialization.cs.gold" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization4.cs.gold" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization.cs.gold" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization2.cs.gold" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization3.cs.gold" />
@@ -825,6 +827,8 @@
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization4.cs" />
     <None Include="test\data\Analyzers\ThrowExceptionInUnexpectedLocation\ThrowExceptionInUnexpectedLocation.cs" />
     <None Include="test\data\Analyzers\LockOnObjectWithWeakIdentity\LockOnObjectWithWeakIdentity.cs" />
+    <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization4.cs" />
+    <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization5.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />

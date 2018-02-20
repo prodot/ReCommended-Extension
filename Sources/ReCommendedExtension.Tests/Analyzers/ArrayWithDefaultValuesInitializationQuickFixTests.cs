@@ -20,5 +20,8 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [Test]
         public void TestArrayWithDefaultValuesInitialization4() => DoNamedTest2();
+
+        [Test]
+        public void TestArrayWithDefaultValuesInitialization5() => DoNamedTest2();
     }
 }

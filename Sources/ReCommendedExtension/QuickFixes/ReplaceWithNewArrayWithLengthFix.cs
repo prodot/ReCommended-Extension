@@ -60,9 +60,15 @@ namespace ReCommendedExtension.QuickFixes
 
                 var factory = CSharpElementFactory.GetInstance(node);
 
+                Debug.Assert(CSharpLanguage.Instance != null);
+
                 ModificationUtil.ReplaceChild(
                     node,
-                    factory.CreateExpression($"new $0[{highlighting.ElementCount.ToString()}]", highlighting.ArrayElementType));
+                    factory.CreateExpression(
+                        string.Format(
+                            "new {0}[{1}]",
+                            highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance),
+                            highlighting.ElementCount.ToString())));
             }
 
             return _ => { };
