@@ -20,7 +20,8 @@ namespace ReCommendedExtension.Analyzers
                         new XamlBindingWithoutModeHighlighting("Binding mode is not set explicitly.", bindingMarkup.NameNode));
                     break;
 
-                case IBindingElement bindingElement when bindingElement.Mode == BindingMode.UNKNOWN:
+                case IBindingElement bindingElement when ClrTypeNames.Binding.Equals((bindingElement.Type as IDeclaredType)?.GetClrName()) &&
+                    bindingElement.Mode == BindingMode.UNKNOWN:
                     consumer.AddHighlighting(
                         new XamlBindingWithoutModeHighlighting("Binding mode is not set explicitly.", bindingElement.Header.Name));
                     break;

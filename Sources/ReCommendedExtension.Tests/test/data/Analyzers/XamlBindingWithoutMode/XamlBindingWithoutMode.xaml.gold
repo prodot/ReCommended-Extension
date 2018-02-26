@@ -5,6 +5,10 @@
 
     <StackPanel>
 
+        <InputBindings>
+            <KeyBinding Gesture="Ctrl+O" />
+        </InputBindings>
+
         <TextBlock Text="{|Binding|(0) Caption}" />
         <TextBlock Text="{Binding Caption, Mode=OneTime}" />
 

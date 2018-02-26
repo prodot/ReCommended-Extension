@@ -60,6 +60,9 @@ namespace ReCommendedExtension
 #pragma warning restore 618
 
         [NotNull]
+        internal static readonly IClrTypeName Binding = new ClrTypeName(typeof(Binding).FullName.AssertNotNull());
+
+        [NotNull]
         internal static readonly IClrTypeName MultiBinding = new ClrTypeName(typeof(MultiBinding).FullName.AssertNotNull());
     }
 }
