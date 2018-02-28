@@ -15,8 +15,12 @@
 
             - detection of redundant assertions,
             - inappropriate use of "async void",
+            - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
+            - array initializers (empty arrays or arrays initialized with default values),
+            - incorrect use of "ArgumentException" constructor parameters,
+            - locking on weak identity objects,
+            - using "yield return" inside the "lock" blocks,
             - incorrect use of ReSharper annotations,
-            - exception analyzer (exceptions that should never be thrown or caught),
             - and lots more.
 
             The most highlightings also have quick fixes for obvious solutions.
