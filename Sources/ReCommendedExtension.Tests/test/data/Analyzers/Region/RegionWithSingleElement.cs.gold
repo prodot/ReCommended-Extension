@@ -1,0 +1,85 @@
+﻿namespace Test
+{
+    public class Class
+    {
+        #|region|(0) region with one member
+
+        void M() { }
+
+        #endregion
+
+        #region region with more members
+
+        void M2() { }
+
+        void M3() { }
+
+        #endregion
+
+        void Method()
+        {
+            #||region|(1)|(2) region with one statement
+
+            M();
+
+            #endregion
+
+            #|region|(3) region with more statements
+
+            M2();
+            M3();
+
+            #endregion
+        }
+
+        #region region with one nested region
+
+        #|region|(4) nested region with one member
+
+        void M4() { }
+
+        #endregion
+
+        #endregion
+
+        #region region with more nested regions
+
+        #|region|(5) nested region with one member
+
+        void M5() { }
+
+        #endregion
+
+        #region nested region with more members
+
+        void M6() { }
+
+        void M7() { }
+
+        #endregion
+
+        #endregion
+    }
+
+    #|region|(6) region with one type
+
+    class Class2 { }
+
+    #endregion
+
+    #region region with more types
+
+    class Class3 { }
+
+    class Class4 { }
+
+    #endregion
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The region contains a single element.
+(1): ReSharper Suggestion: The region contains a single element.
+(2): ReSharper Warning: The region is contained within a type member body.
+(3): ReSharper Warning: The region is contained within a type member body.
+(4): ReSharper Suggestion: The region contains a single element.
+(5): ReSharper Suggestion: The region contains a single element.
+(6): ReSharper Suggestion: The region contains a single element.

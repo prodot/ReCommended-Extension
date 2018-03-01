@@ -1,0 +1,37 @@
+﻿using System;
+
+namespace Test
+{
+    public class DelegateInvoke
+    {
+        void Method(Action action, Action<int> action2, Func<int> func, Func<int, int> func2)
+        {
+            action|.Invoke|(0)();
+
+            var methodName = nameof(Action.Invoke);
+
+            action?.Invoke();
+            action();
+
+            action2|.Invoke|(1)(1);
+            action2?.Invoke(1);
+            action2(1);
+
+            func|.Invoke|(2)();
+            func?.Invoke();
+            func();
+
+            func2|.Invoke|(3)(1);
+            func2?.Invoke(1);
+            func2(1);
+
+            action |. Invoke|(4)   ();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Redundant 'Invoke' expression.
+(1): ReSharper Suggestion: Redundant 'Invoke' expression.
+(2): ReSharper Suggestion: Redundant 'Invoke' expression.
+(3): ReSharper Suggestion: Redundant 'Invoke' expression.
+(4): ReSharper Suggestion: Redundant 'Invoke' expression.

@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Deployment
 {
     internal static class Program
     {
-        static int Main([NotNull] [ItemNotNull] string[] args)
+        static int Main([NotNull][ItemNotNull] string[] args)
         {
             try
             {
@@ -201,21 +201,19 @@ namespace ReCommendedExtension.Deployment
 
         static void RunConsoleApplication([NotNull] string executablePath, [NotNull] string arguments)
         {
-            using (
-                var process = new Process
+            using (var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
                 {
-                    StartInfo =
-                        new ProcessStartInfo
-                        {
-                            FileName = executablePath,
-                            Arguments = arguments,
-                            CreateNoWindow = true,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false,
-                        },
-                    EnableRaisingEvents = true,
-                })
+                    FileName = executablePath,
+                    Arguments = arguments,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                },
+                EnableRaisingEvents = true,
+            })
             {
                 process.OutputDataReceived += Process_DataReceived;
                 process.ErrorDataReceived += Process_DataReceived;

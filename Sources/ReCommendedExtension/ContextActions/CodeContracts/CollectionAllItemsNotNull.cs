@@ -8,19 +8,20 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: all collection items are not null" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: all collection items are not null" + ZoneMarker.Suffix,
         Description = "Adds a contract that all collection items (or dictionary values) are not null.")]
     public sealed class CollectionAllItemsNotNull : AddContractContextAction
     {
         bool isDictionary;
 
-        public CollectionAllItemsNotNull([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        public CollectionAllItemsNotNull([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected override bool IsAvailableForType(IType type)
         {
@@ -54,14 +55,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         }
 
         protected override string GetContractTextForUI(string contractIdentifier)
-            =>
-                isDictionary
-                    ? string.Format(
-                        "{0}.{1}(pair => pair.{2} != null)",
-                        contractIdentifier,
-                        nameof(Enumerable.All),
-                        nameof(KeyValuePair<int, int>.Value))
-                    : string.Format("{0}.{1}(item => item != null)", contractIdentifier, nameof(Enumerable.All));
+            => isDictionary
+                ? string.Format("{0}.{1}(pair => pair.{2} != null)", contractIdentifier, nameof(Enumerable.All), nameof(KeyValuePair<int, int>.Value))
+                : string.Format("{0}.{1}(item => item != null)", contractIdentifier, nameof(Enumerable.All));
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
         {
@@ -77,7 +73,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             var allMethodReference = invokedExpression.Reference;
 
-            var enumerableType = new DeclaredTypeFromCLRName(ClrTypeNames.Enumerable, Provider.PsiModule).GetTypeElement();
+            var enumerableType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.ENUMERABLE_CLASS, Provider.PsiModule);
 
             Debug.Assert(enumerableType != null);
 

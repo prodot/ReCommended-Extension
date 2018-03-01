@@ -12,7 +12,9 @@ using ReCommendedExtension.Assertions;
 
 namespace ReCommendedExtension.ContextActions
 {
-    [ContextAction(Group = "C#", Name = "Remove inline assertion for non-nullness" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Remove inline assertion for non-nullness" + ZoneMarker.Suffix,
         Description = "Removes inline assertion for non-nullness.")]
     public sealed class RemoveAssertNotNull : ContextActionBase
     {
@@ -48,8 +50,8 @@ namespace ReCommendedExtension.ContextActions
 
             try
             {
-                // changing the tree with the ModificationUtil does not retrigger the analysis for the current statement => changing the text directly
-                // does retrigger the analysis
+                // changing the tree with the ModificationUtil does not re-trigger the analysis for the current statement => changing the text
+                // directly does re-trigger the analysis
 
                 var textRange = assertion.InvocationExpression.GetDocumentRange().TextRange;
                 var qualifierExpressionText = assertion.QualifierExpression.GetText();

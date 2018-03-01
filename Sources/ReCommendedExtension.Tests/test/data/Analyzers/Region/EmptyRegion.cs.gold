@@ -1,0 +1,74 @@
+﻿namespace Test
+{
+    public class Class
+    {
+        #|region|(0) region without members
+
+        #endregion
+
+        #region region with members
+
+        void M() { }
+
+        void M2() { }
+
+        #endregion
+
+        void Method()
+        {
+            #||region|(1)|(2) region without statements
+			
+            
+            #endregion
+
+            #|region|(3) region with statements
+
+            M();
+            M2();
+
+            #endregion
+        }
+
+        #region
+
+
+        #|region|(4) nested region without members
+
+  
+        #endregion
+
+        #endregion
+
+        #region
+
+        #region nested region with members
+
+        void M3() { }
+
+        void M4() { }
+
+        #endregion
+
+        #endregion
+    }
+
+    #|region|(5) region without types
+    
+
+    #endregion
+
+    #region region with types
+
+    class Class2 { }
+
+    class Class3 { }
+
+    #endregion
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The region is empty.
+(1): ReSharper Warning: The region is contained within a type member body.
+(2): ReSharper Suggestion: The region is empty.
+(3): ReSharper Warning: The region is contained within a type member body.
+(4): ReSharper Suggestion: The region is empty.
+(5): ReSharper Suggestion: The region is empty.

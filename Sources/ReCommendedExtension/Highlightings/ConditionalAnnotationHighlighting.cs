@@ -6,12 +6,20 @@ using ReCommendedExtension.Highlightings;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
-    RegisterConfigurableSeverity(ConditionalAnnotationHighlighting.SeverityId, null, HighlightingGroupIds.CodeInfo,
-        "Attribute will be ignored if the specific condition is not defined" + ZoneMarker.Suffix, "", Severity.HINT)]
+    RegisterConfigurableSeverity(
+        ConditionalAnnotationHighlighting.SeverityId,
+        null,
+        HighlightingGroupIds.CodeInfo,
+        "Attribute will be ignored if the specific condition is not defined" + ZoneMarker.Suffix,
+        "",
+        Severity.HINT)]
 
 namespace ReCommendedExtension.Highlightings
 {
-    [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name, AttributeId = HighlightingAttributeIds.DEADCODE_ATTRIBUTE,
+    [ConfigurableSeverityHighlighting(
+        SeverityId,
+        CSharpLanguage.Name,
+        AttributeId = HighlightingAttributeIds.DEADCODE_ATTRIBUTE,
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class ConditionalAnnotationHighlighting : AttributeHighlighting
     {

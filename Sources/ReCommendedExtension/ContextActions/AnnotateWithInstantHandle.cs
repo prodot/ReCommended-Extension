@@ -11,7 +11,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions
 {
-    [ContextAction(Group = "C#", Name = "Annotate parameter with [InstantHandle] attribute" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Annotate parameter with [InstantHandle] attribute" + ZoneMarker.Suffix,
         Description = "Annotates a parameter (or property) with the [InstantHandle] attribute.")]
     public sealed class AnnotateWithInstantHandle : AnnotateWithCodeAnnotation
     {
@@ -27,9 +29,11 @@ namespace ReCommendedExtension.ContextActions
             }
         }
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module) =>
-            declaredElement is IParameter parameter && (parameter.Type.IsGenericIEnumerable() || parameter.Type.IsImplicitlyConvertibleTo(
-                                                            new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, module),
-                                                            context.GetTypeConversionRule()));
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+            => declaredElement is IParameter parameter &&
+                (parameter.Type.IsGenericIEnumerable() ||
+                    parameter.Type.IsImplicitlyConvertibleTo(
+                        new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, psiModule),
+                        context.GetTypeConversionRule()));
     }
 }

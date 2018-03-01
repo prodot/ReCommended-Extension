@@ -8,7 +8,9 @@ namespace ReCommendedExtension
 {
     [ZoneDefinition]
     [ZoneDefinitionConfigurableFeature(
-        ZoneMarker.ExtensionName, ZoneMarker.ExtensionDescription, false /* true -> in "Products", false -> in "Features" */)]
+        ZoneMarker.ExtensionName,
+        ZoneMarker.ExtensionDescription,
+        false /* true -> in "Products", false -> in "Features" */)]
     public interface IReCommendedExtensionZone : IZone, IRequire<ILanguageCSharpZone>, IRequire<ILanguageXamlZone> { }
 
     [ZoneMarker]
@@ -16,14 +18,16 @@ namespace ReCommendedExtension
     {
         internal const string ExtensionId = "ReCommendedExtension"
 #if DEBUG
-                                              + "_DEBUG"
+                + "_DEBUG"
 #endif
             ;
+
         internal const string ExtensionName = "ReCommended Extension for ReSharper"
 #if DEBUG
-                                              + " (DEBUG)"
+                + " (DEBUG)"
 #endif
             ;
+
         internal const string ExtensionDescription = "Code analysis improvements and context actions.";
         internal const string Suffix = " (ReCommended Extension)";
     }

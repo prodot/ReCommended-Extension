@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Test
+{
+    public class Execute
+    {
+        void Method()
+        {
+            Console.WriteLine();
+
+            string variable;
+
+            // language=HTML
+            variable = "<html {caret}/>";
+
+            Console.WriteLine();
+        }
+    }
+}

@@ -8,8 +8,13 @@ using ReCommendedExtension.Highlightings;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
-    RegisterConfigurableSeverity(RedundantAssertionStatementHighlighting.SeverityId, null, HighlightingGroupIds.CodeRedundancy,
-        "Redundant assertion statement" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
+    RegisterConfigurableSeverity(
+        RedundantAssertionStatementHighlighting.SeverityId,
+        null,
+        HighlightingGroupIds.CodeRedundancy,
+        "Redundant assertion statement" + ZoneMarker.Suffix,
+        "",
+        Severity.SUGGESTION)]
 
 namespace ReCommendedExtension.Highlightings
 {
@@ -21,9 +26,8 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly AssertionStatement assertion;
 
-        internal RedundantAssertionStatementHighlighting(
-            [NotNull] string message,
-            [NotNull] AssertionStatement assertion) : base(message) => this.assertion = assertion;
+        internal RedundantAssertionStatementHighlighting([NotNull] string message, [NotNull] AssertionStatement assertion) : base(message)
+            => this.assertion = assertion;
 
         internal override Assertion Assertion => assertion;
 

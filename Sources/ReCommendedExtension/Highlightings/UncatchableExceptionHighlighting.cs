@@ -8,8 +8,13 @@ using ReCommendedExtension.Highlightings;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
-    RegisterConfigurableSeverity(UncatchableExceptionHighlighting.SeverityId, null, HighlightingGroupIds.CodeSmell,
-        "Exception should never be caught" + ZoneMarker.Suffix, "", Severity.WARNING)]
+    RegisterConfigurableSeverity(
+        UncatchableExceptionHighlighting.SeverityId,
+        null,
+        HighlightingGroupIds.CodeSmell,
+        "Exception should never be caught" + ZoneMarker.Suffix,
+        "",
+        Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {
@@ -21,9 +26,8 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly ISpecificCatchClause catchClause;
 
-        internal UncatchableExceptionHighlighting(
-            [NotNull] string message,
-            [NotNull] ISpecificCatchClause catchClause) : base(message) => this.catchClause = catchClause;
+        internal UncatchableExceptionHighlighting([NotNull] string message, [NotNull] ISpecificCatchClause catchClause) : base(message)
+            => this.catchClause = catchClause;
 
         public override DocumentRange CalculateRange() => catchClause.ExceptionTypeUsage.GetDocumentRange();
     }

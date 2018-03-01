@@ -11,21 +11,19 @@ using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Highlightings;
 
 namespace ReCommendedExtension.Analyzers
 {
-    [ElementProblemAnalyzer(typeof(IAttributesOwnerDeclaration),
-        HighlightingTypes =
-            new[]
-            {
-                typeof(RedundantAnnotationHighlighting), typeof(NotAllowedAnnotationHighlighting), typeof(MissingAnnotationHighlighting),
-                typeof(MissingSuppressionJustificationHighlighting), typeof(ConflictingAnnotationHighlighting),
-                typeof(ConditionalAnnotationHighlighting)
-            })]
+    [ElementProblemAnalyzer(
+        typeof(IAttributesOwnerDeclaration),
+        HighlightingTypes = new[]
+        {
+            typeof(RedundantAnnotationHighlighting), typeof(NotAllowedAnnotationHighlighting), typeof(MissingAnnotationHighlighting),
+            typeof(MissingSuppressionJustificationHighlighting), typeof(ConflictingAnnotationHighlighting), typeof(ConditionalAnnotationHighlighting)
+        })]
     public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
     {
         enum AnnotationCase
@@ -53,8 +51,12 @@ namespace ReCommendedExtension.Analyzers
         static bool CanContainNullnessAttributes([NotNull] IAttributesOwnerDeclaration declaration)
         {
             // excluding type, constant, enum member, property/indexer/event accessor, event, type parameter declarations
-            if (declaration is ICSharpTypeDeclaration || declaration is IConstantDeclaration || declaration is IEnumMemberDeclaration ||
-                declaration is IAccessorDeclaration || declaration is IEventDeclaration || declaration is ITypeParameterDeclaration ||
+            if (declaration is ICSharpTypeDeclaration ||
+                declaration is IConstantDeclaration ||
+                declaration is IEnumMemberDeclaration ||
+                declaration is IAccessorDeclaration ||
+                declaration is IEventDeclaration ||
+                declaration is ITypeParameterDeclaration ||
                 declaration is IConstructorDeclaration)
             {
                 return false;
@@ -306,11 +308,9 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] IHighlightingConsumer consumer,
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
-            var itemNotNullAttribute =
-                attributesOwnerDeclaration.AttributesEnumerable.FirstOrDefault(
-                    attribute =>
-                        attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                        ContainerElementNullnessProvider.ItemNotNullAttributeShortName);
+            var itemNotNullAttribute = attributesOwnerDeclaration.AttributesEnumerable.FirstOrDefault(
+                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
+                    ContainerElementNullnessProvider.ItemNotNullAttributeShortName);
             if (itemNotNullAttribute != null)
             {
                 if (attributesOwnerDeclaration.OverridesInheritedMember())
@@ -359,8 +359,7 @@ namespace ReCommendedExtension.Analyzers
 
                     if (type.IsLazy())
                     {
-                        var typeElement =
-                            new DeclaredTypeFromCLRName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule()).GetTypeElement();
+                        var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule());
                         var valueType = type.GetGenericUnderlyingType(typeElement);
                         if (valueType != null)
                         {
@@ -414,9 +413,9 @@ namespace ReCommendedExtension.Analyzers
                 where categoryConstantValue.IsString()
                 where checkIdConstantValue.IsString()
                 let justificationConstantValue = attributeInstance.NamedParameter(nameof(SuppressMessageAttribute.Justification)).ConstantValue
-                where
-                justificationConstantValue == null || !justificationConstantValue.IsString() ||
-                string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
+                where justificationConstantValue == null ||
+                    !justificationConstantValue.IsString() ||
+                    string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
                 select new { Attribute = attribute, Category = (string)categoryConstantValue.Value, CheckId = (string)checkIdConstantValue.Value };
 
             foreach (var suppressMessageAttribute in suppressMessageAttributes)
@@ -441,9 +440,8 @@ namespace ReCommendedExtension.Analyzers
             var groupings = (
                 from attribute in attributesOwnerDeclaration.AttributesEnumerable
                 let shortName = attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
-                where
-                shortName == PureAnnotationProvider.PureAttributeShortName ||
-                shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
+                where shortName == PureAnnotationProvider.PureAttributeShortName ||
+                    shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
                 group attribute by shortName).ToList();
             if (groupings.Count > 1)
             {
@@ -458,8 +456,8 @@ namespace ReCommendedExtension.Analyzers
                         shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName);
 
                     var conflictingAnnotation = shortName == PureAnnotationProvider.PureAttributeShortName
-                            ? MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
-                            : PureAnnotationProvider.PureAttributeShortName;
+                        ? MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
+                        : PureAnnotationProvider.PureAttributeShortName;
 
                     foreach (var attribute in grouping)
                     {
@@ -481,15 +479,15 @@ namespace ReCommendedExtension.Analyzers
                 from attribute in attributesOwnerDeclaration.AttributesEnumerable
                 let typeElement = attribute.GetAttributeInstance().GetAttributeType().GetTypeElement()
                 where typeElement != null
-                let conditions = (
-                    from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
-                    where attributeInstance.AssertNotNull().PositionParameterCount == 1
-                    let constantValue = attributeInstance.PositionParameter(0).ConstantValue
-                    where constantValue != null
-                    where constantValue.IsString()
-                    let condition = (string)constantValue.Value
-                    where !string.IsNullOrEmpty(condition)
-                    select condition).ToList()
+                let conditions =
+                    (from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
+                        where attributeInstance.AssertNotNull().PositionParameterCount == 1
+                        let constantValue = attributeInstance.PositionParameter(0).ConstantValue
+                        where constantValue != null
+                        where constantValue.IsString()
+                        let condition = (string)constantValue.Value
+                        where !string.IsNullOrEmpty(condition)
+                        select condition).ToList()
                 where conditions.Count > 0
                 select new { Attribute = attribute, Conditions = conditions };
 

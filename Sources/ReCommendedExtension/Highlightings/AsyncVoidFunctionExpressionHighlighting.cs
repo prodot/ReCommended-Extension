@@ -8,8 +8,12 @@ using ReCommendedExtension.Highlightings;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
-    RegisterConfigurableSeverity(AsyncVoidFunctionExpressionHighlighting.SeverityId, null, HighlightingGroupIds.CodeSmell,
-        "Async void function expression" + ZoneMarker.Suffix, "'async void' lambda or anonymous method expression not used as a direct event handler.",
+    RegisterConfigurableSeverity(
+        AsyncVoidFunctionExpressionHighlighting.SeverityId,
+        null,
+        HighlightingGroupIds.CodeSmell,
+        "Async void function expression" + ZoneMarker.Suffix,
+        "'async void' lambda or anonymous method expression not used as a direct event handler.",
         Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings

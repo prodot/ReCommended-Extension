@@ -8,11 +8,13 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: a nullable value is not null" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: a nullable value is not null" + ZoneMarker.Suffix,
         Description = "Adds a contract that a nullable value is not null.")]
     public sealed class NotNull : AddContractContextAction
     {
-        public NotNull([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        public NotNull([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected override bool IsAvailableForType(IType type) => type.Classify == TypeClassification.REFERENCE_TYPE;
 

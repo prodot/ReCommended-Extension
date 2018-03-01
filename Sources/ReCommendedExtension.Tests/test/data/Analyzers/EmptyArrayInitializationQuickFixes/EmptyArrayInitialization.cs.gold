@@ -1,0 +1,9 @@
+﻿using System;
+
+namespace Test
+{
+    public class NonGenericClass
+    {
+        int[] field = {caret}Array.Empty<int>();
+    }
+}

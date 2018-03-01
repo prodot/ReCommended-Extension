@@ -11,13 +11,15 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: collection is not empty" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: collection is not empty" + ZoneMarker.Suffix,
         Description = "Adds a contract that the collection is not empty.")]
     public sealed class CollectionCountPositive : AddContractContextAction
     {
         bool isArray;
 
-        public CollectionCountPositive([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        public CollectionCountPositive([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected override bool IsAvailableForType(IType type)
         {
@@ -43,15 +45,13 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         }
 
         protected override string GetContractTextForUI(string contractIdentifier)
-            =>
-                isArray
-                    ? string.Format("{0}.{1} > 0", contractIdentifier, nameof(Array.Length))
-                    : string.Format("{0}.{1} > 0", contractIdentifier, nameof(ICollection<int>.Count));
+            => isArray
+                ? string.Format("{0}.{1} > 0", contractIdentifier, nameof(Array.Length))
+                : string.Format("{0}.{1} > 0", contractIdentifier, nameof(ICollection<int>.Count));
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
-            =>
-                isArray
-                    ? factory.CreateExpression(string.Format("$0.{0} > 0", nameof(Array.Length)), contractExpression)
-                    : factory.CreateExpression(string.Format("$0.{0} > 0", nameof(ICollection<int>.Count)), contractExpression);
+            => isArray
+                ? factory.CreateExpression(string.Format("$0.{0} > 0", nameof(Array.Length)), contractExpression)
+                : factory.CreateExpression(string.Format("$0.{0} > 0", nameof(ICollection<int>.Count)), contractExpression);
     }
 }

@@ -14,7 +14,9 @@ using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: enum value has the valid flags" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: enum value has the valid flags" + ZoneMarker.Suffix,
         Description = "Adds a contract that the enum value has the valid flags.")]
     public sealed class EnumFlags : AddContractContextAction
     {
@@ -55,7 +57,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             }
 
             public static EnumContractInfo<E> TryCreate(
-                [NotNull] [ItemNotNull] IList<IField> members,
+                [NotNull][ItemNotNull] IList<IField> members,
                 E one,
                 [NotNull] Func<E, double> convertToDouble,
                 [NotNull] Func<E, bool> isZero,
@@ -199,7 +201,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         EnumContractInfo contractInfo;
 
-        public EnumFlags([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        public EnumFlags([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected override bool IsAvailableForType(IType type)
         {

@@ -16,9 +16,10 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile)
-            =>
-                highlighting is RedundantAnnotationHighlighting || highlighting is NotAllowedAnnotationHighlighting ||
-                highlighting is MissingAnnotationHighlighting || highlighting is MissingSuppressionJustificationHighlighting ||
+            => highlighting is RedundantAnnotationHighlighting ||
+                highlighting is NotAllowedAnnotationHighlighting ||
+                highlighting is MissingAnnotationHighlighting ||
+                highlighting is MissingSuppressionJustificationHighlighting ||
                 highlighting is ConflictingAnnotationHighlighting;
 
         [Test]
@@ -38,12 +39,13 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestCase("Override.cs", ValueAnalysisMode.PESSIMISTIC)]
         [TestCase("ItemNotNull.cs", ValueAnalysisMode.PESSIMISTIC)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode) => ExecuteWithinSettingsTransaction(
-            store =>
-            {
-                RunGuarded(() => store.SetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode, valueAnalysisMode));
+        public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
+            => ExecuteWithinSettingsTransaction(
+                store =>
+                {
+                    RunGuarded(() => store.SetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode, valueAnalysisMode));
 
-                DoTestSolution(file);
-            });
+                    DoTestSolution(file);
+                });
     }
 }

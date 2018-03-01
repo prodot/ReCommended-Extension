@@ -7,15 +7,17 @@ using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 {
     internal sealed class OperatorContractInfo : ContractInfo
     {
         public static OperatorContractInfo TryCreate(
-            [NotNull] IOperatorDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
+            [NotNull] IOperatorDeclaration declaration,
+            TreeTextRange selectedTreeRange,
+            [NotNull] Func<IType, bool> isAvailableForType)
         {
             if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
             {
@@ -35,9 +37,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         [NotNull]
         readonly IOperatorDeclaration declaration;
 
-        OperatorContractInfo(
-            [NotNull] IOperatorDeclaration declaration,
-            [NotNull] IType type) : base(ContractKind.Ensures, type) => this.declaration = declaration;
+        OperatorContractInfo([NotNull] IOperatorDeclaration declaration, [NotNull] IType type) : base(ContractKind.Ensures, type)
+            => this.declaration = declaration;
 
         public override string GetContractIdentifierForUI() => "result";
 
@@ -50,7 +51,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             {
                 var factory = CSharpElementFactory.GetInstance(declaration);
 
-                var contractType = new DeclaredTypeFromCLRName(ClrTypeNames.Contract, provider.PsiModule).GetTypeElement();
+                var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, provider.PsiModule);
 
                 Debug.Assert(declaration.DeclaredElement != null);
 

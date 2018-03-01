@@ -12,7 +12,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions
 {
-    [ContextAction(Group = "C#", Name = "Annotate method with [Pure] attribute" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Annotate method with [Pure] attribute" + ZoneMarker.Suffix,
         Description = "Annotates a method with the [Pure] attribute.")]
     public sealed class AnnotateWithPure : AnnotateWithCodeAnnotation
     {
@@ -30,16 +32,14 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string TextSuffix => "no observable state changes";
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module) =>
-            declaredElement is IMethod method &&
-            (!method.ReturnType.IsVoid() || method.Parameters.Any(parameter => parameter.AssertNotNull().Kind == ParameterKind.OUTPUT)) &&
-            method.Parameters.All(parameter => parameter.AssertNotNull().Kind != ParameterKind.REFERENCE);
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+            => declaredElement is IMethod method &&
+                (!method.ReturnType.IsVoid() || method.Parameters.Any(parameter => parameter.AssertNotNull().Kind == ParameterKind.OUTPUT)) &&
+                method.Parameters.All(parameter => parameter.AssertNotNull().Kind != ParameterKind.REFERENCE);
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
-            =>
-                ownerDeclaration.AttributesEnumerable.FirstOrDefault(
-                    attribute =>
-                        attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                        MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName);
+            => ownerDeclaration.AttributesEnumerable.FirstOrDefault(
+                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
+                    MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName);
     }
 }

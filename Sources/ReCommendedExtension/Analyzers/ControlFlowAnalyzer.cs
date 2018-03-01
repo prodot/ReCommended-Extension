@@ -18,7 +18,8 @@ using ReCommendedExtension.Highlightings;
 
 namespace ReCommendedExtension.Analyzers
 {
-    [ElementProblemAnalyzer(typeof(ICSharpTreeNode),
+    [ElementProblemAnalyzer(
+        typeof(ICSharpTreeNode),
         HighlightingTypes = new[] { typeof(RedundantAssertionStatementHighlighting), typeof(RedundantInlineAssertionHighlighting) })]
     public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
@@ -48,7 +49,7 @@ namespace ReCommendedExtension.Analyzers
                 return; // no (new) assertions found
             }
 
-            var inspector = CSharpControlFlowGraphInspector.Inspect((CSharpControlFlowGraph)controlFlowGraph, data.GetValueAnalysisMode());
+            var inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
 
             var alwaysSuccessTryCastExpressions = new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions ?? new IAsExpression[] { });
 
@@ -227,11 +228,10 @@ namespace ReCommendedExtension.Analyzers
                 }
             }
 
-            if (!isKnownToBeNull && assertion is InlineAssertion inlineAssertion && GetExpressionNullReferenceState(
-                    nullnessProvider,
-                    inspector,
-                    alwaysSuccessTryCastExpressions,
-                    inlineAssertion.QualifierExpression) == CSharpControlFlowNullReferenceState.NOT_NULL)
+            if (!isKnownToBeNull &&
+                assertion is InlineAssertion inlineAssertion &&
+                GetExpressionNullReferenceState(nullnessProvider, inspector, alwaysSuccessTryCastExpressions, inlineAssertion.QualifierExpression) ==
+                CSharpControlFlowNullReferenceState.NOT_NULL)
             {
                 context.AddHighlighting(
                     new RedundantInlineAssertionHighlighting("Assertion is redundant because the expression is never null.", inlineAssertion));
@@ -287,8 +287,8 @@ namespace ReCommendedExtension.Analyzers
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
 
                 case ITypeOwner typeOwner when !typeOwner.Type.IsDelegateType():
-                    if (typeOwner is IAttributesOwner attributesOwner && nullnessProvider.GetInfo(attributesOwner) ==
-                        CodeAnnotationNullableValue.NOT_NULL)
+                    if (typeOwner is IAttributesOwner attributesOwner &&
+                        nullnessProvider.GetInfo(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
                     {
                         return CSharpControlFlowNullReferenceState.NOT_NULL;
                     }

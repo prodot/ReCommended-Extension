@@ -36,8 +36,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                 if (attributeType != null &&
                     attributesOwnerDeclaration.AttributesEnumerable.All(
-                        attribute =>
-                            attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
+                        attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName !=
+                            annotationAttributeTypeName))
                 {
                     var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 

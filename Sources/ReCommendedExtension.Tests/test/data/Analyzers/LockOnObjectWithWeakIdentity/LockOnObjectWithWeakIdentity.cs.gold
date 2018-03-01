@@ -1,0 +1,74 @@
+﻿using System;
+using System.IO;
+using System.Threading;
+
+namespace Test
+{
+    public class LockOnObjectWithWeakIdentity
+    {
+        public void Method(int parameter)
+        {
+            lock (|"string"|(0)) { }
+
+            lock (|new char[0]|(1)) { }
+            lock (new char[0][]) { }
+            lock (|new char[0, 0]|(2)) { }
+
+            lock (|new sbyte[0]|(3)) { }
+            lock (|new byte[0]|(4)) { }
+            lock (|new short[0]|(5)) { }
+            lock (|new ushort[0]|(6)) { }
+            lock (|new int[0]|(7)) { }
+            lock (|new uint[0]|(8)) { }
+            lock (|new long[0]|(9)) { }
+            lock (|new ulong[0]|(10)) { }
+
+            lock (|new float[0]|(11)) { }
+            lock (|new double[0]|(12)) { }
+
+            lock (|new bool[0]|(13)) { }
+
+            using (var marshalByRefObject = new MemoryStream())
+            {
+                lock (|marshalByRefObject|(14)) { }
+            }
+
+            lock (|typeof(LockOnObjectWithWeakIdentity)|(15)) { }
+
+            var methodInfo = typeof(LockOnObjectWithWeakIdentity).GetMethod(nameof(Method));
+            lock (|methodInfo|(16)) { }
+            lock (|methodInfo.GetParameters()[0]|(17)) { }
+
+            lock (|new OutOfMemoryException()|(18)) { }
+
+            lock (|new StackOverflowException()|(19)) { }
+
+            lock (|new ExecutionEngineException()|(20)) { }
+
+            lock (|Thread.CurrentThread|(21)) { }
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Do not lock on strings.
+(1): ReSharper Warning: Do not lock on arrays of value types.
+(2): ReSharper Warning: Do not lock on arrays of value types.
+(3): ReSharper Warning: Do not lock on arrays of value types.
+(4): ReSharper Warning: Do not lock on arrays of value types.
+(5): ReSharper Warning: Do not lock on arrays of value types.
+(6): ReSharper Warning: Do not lock on arrays of value types.
+(7): ReSharper Warning: Do not lock on arrays of value types.
+(8): ReSharper Warning: Do not lock on arrays of value types.
+(9): ReSharper Warning: Do not lock on arrays of value types.
+(10): ReSharper Warning: Do not lock on arrays of value types.
+(11): ReSharper Warning: Do not lock on arrays of value types.
+(12): ReSharper Warning: Do not lock on arrays of value types.
+(13): ReSharper Warning: Do not lock on arrays of value types.
+(14): ReSharper Warning: Do not lock on objects derived from the 'MarshalByRefObject' class.
+(15): ReSharper Warning: Do not lock on objects derived from the 'MemberInfo' class.
+(16): ReSharper Warning: Do not lock on objects derived from the 'MemberInfo' class.
+(17): ReSharper Warning: Do not lock on 'ParameterInfo' objects or objects derived from the 'ParameterInfo' class.
+(18): ReSharper Warning: Do not lock on 'OutOfMemoryException' objects or objects derived from the 'OutOfMemoryException' class.
+(19): ReSharper Warning: Do not lock on 'StackOverflowException' objects.
+(20): ReSharper Warning: Do not lock on 'ExecutionEngineException' objects.
+(21): ReSharper Warning: Do not lock on 'Thread' objects.

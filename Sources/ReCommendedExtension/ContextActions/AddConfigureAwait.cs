@@ -15,7 +15,9 @@ using JetBrains.TextControl;
 
 namespace ReCommendedExtension.ContextActions
 {
-    [ContextAction(Group = "C#", Name = "Add '.ConfigureAwait(false)' to the await expression" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add '.ConfigureAwait(false)' to the await expression" + ZoneMarker.Suffix,
         Description = "Adds '.ConfigureAwait(false)' to the await expression.")]
     public sealed class AddConfigureAwait : ContextActionBase
     {

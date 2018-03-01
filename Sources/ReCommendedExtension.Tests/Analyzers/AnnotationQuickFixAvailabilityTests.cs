@@ -13,8 +13,8 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile)
-            =>
-                highlighting is NotAllowedAnnotationHighlighting || highlighting is ConflictingAnnotationHighlighting ||
+            => highlighting is NotAllowedAnnotationHighlighting ||
+                highlighting is ConflictingAnnotationHighlighting ||
                 highlighting is RedundantAnnotationHighlighting;
 
         [Test]

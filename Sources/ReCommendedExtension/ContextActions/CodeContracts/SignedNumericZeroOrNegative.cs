@@ -7,7 +7,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: number is zero or negative" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: number is zero or negative" + ZoneMarker.Suffix,
         Description = "Adds a contract that a number (signed) is less than or equal to 0.")]
     public sealed class SignedNumericZeroOrNegative : SignedNumeric
     {

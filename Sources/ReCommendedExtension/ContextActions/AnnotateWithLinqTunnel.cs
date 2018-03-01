@@ -10,7 +10,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions
 {
-    [ContextAction(Group = "C#", Name = "Annotate method with [LinqTunnel] attribute" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Annotate method with [LinqTunnel] attribute" + ZoneMarker.Suffix,
         Description = "Annotates a method with the [LinqTunnel] attribute.")]
     public sealed class AnnotateWithLinqTunnel : AnnotateWithCodeAnnotation
     {
@@ -26,8 +28,9 @@ namespace ReCommendedExtension.ContextActions
             }
         }
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule module) =>
-            declaredElement is IMethod method && method.ReturnType.IsGenericIEnumerable() &&
-            method.Parameters.Any(p => p.AssertNotNull().Type.IsGenericIEnumerable());
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+            => declaredElement is IMethod method &&
+                method.ReturnType.IsGenericIEnumerable() &&
+                method.Parameters.Any(p => p.AssertNotNull().Type.IsGenericIEnumerable());
     }
 }

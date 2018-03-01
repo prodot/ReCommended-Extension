@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:g="clr-namespace:System.Globalization;assembly=mscorlib">
+
+    <StackPanel>
+
+        <InputBindings>
+            <KeyBinding Gesture="Ctrl+O" />
+        </InputBindings>
+
+        <TextBlock Text="{Binding Caption}" />
+        <TextBlock Text="{Binding Caption, Mode=OneTime}" />
+
+        <TextBlock>
+            <TextBlock.Text>
+                <Binding Path="Caption" />
+            </TextBlock.Text>
+        </TextBlock>
+
+        <TextBlock>
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0:d} - {1:d}" ConverterCulture="{x:Static g:CultureInfo.CurrentCulture}">
+                    <Binding Path="FirstDate" Mode="OneTime" />
+                    <Binding Path="LastDate" Mode="OneTime" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <TextBlock>
+            <TextBlock.Text>
+                <MultiBinding Mode="OneTime" StringFormat="{}{0:d} - {1:d}" ConverterCulture="{x:Static g:CultureInfo.CurrentCulture}">
+                    <Binding Path="FirstDate" Mode="OneTime" />
+                    <Binding Path="LastDate" Mode="OneTime" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+
+        <TextBlock>
+            <TextBlock.Text>
+                <PriorityBinding>
+                    <Binding Path="Name1" Mode="OneWay" />
+                    <Binding Path="Name2" Mode="OneWay" />
+                </PriorityBinding>
+            </TextBlock.Text>
+        </TextBlock>
+
+    </StackPanel>
+</Page>

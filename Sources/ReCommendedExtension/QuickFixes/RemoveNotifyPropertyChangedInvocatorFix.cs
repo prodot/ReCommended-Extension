@@ -19,8 +19,8 @@ namespace ReCommendedExtension.QuickFixes
         [NotNull]
         readonly NotifyPropertyChangedInvocatorFromConstructorHighlighting highlighting;
 
-        public RemoveNotifyPropertyChangedInvocatorFix(
-            [NotNull] NotifyPropertyChangedInvocatorFromConstructorHighlighting highlighting) => this.highlighting = highlighting;
+        public RemoveNotifyPropertyChangedInvocatorFix([NotNull] NotifyPropertyChangedInvocatorFromConstructorHighlighting highlighting)
+            => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

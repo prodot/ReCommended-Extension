@@ -26,9 +26,8 @@ namespace ReCommendedExtension.Assertions
             {
                 Debug.Assert(invocationExpression != null);
 
-                var isInTypeLevelInitializer =
-                    invocationExpression.PathToRoot()
-                        .Any(node => node is IExpressionInitializer && (node.Parent is IFieldDeclaration || node.Parent is IPropertyDeclaration));
+                var isInTypeLevelInitializer = invocationExpression.PathToRoot()
+                    .Any(node => node is IExpressionInitializer && (node.Parent is IFieldDeclaration || node.Parent is IPropertyDeclaration));
 
                 if (forTypeLevelInitializersOnly != isInTypeLevelInitializer)
                 {

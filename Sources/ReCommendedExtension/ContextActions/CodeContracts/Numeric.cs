@@ -7,7 +7,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     public abstract class Numeric : AddContractContextAction
     {
-        internal Numeric([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        internal Numeric([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected sealed override bool IsAvailableForType(IType type)
         {

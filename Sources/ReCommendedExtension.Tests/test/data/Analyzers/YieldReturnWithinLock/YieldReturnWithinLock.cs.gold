@@ -1,0 +1,38 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class YieldReturnWithinLock
+    {
+        readonly object sync = new object();
+
+        IEnumerable<int> Method()
+        {
+            yield return 0;
+
+            lock (sync)
+            {
+                |yield return|(0) 1;
+                |yield return|(1) 2;
+                |yield return|(2) 3;
+
+                IEnumerable<string> LocalFunction()
+                {
+                    yield return "one";
+                }
+
+                foreach (var s in LocalFunction())
+                {
+                    |yield return|(3) s.Length;
+                }
+            }
+
+            yield return 4;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: 'yield return' used inside the 'lock' block.
+(1): ReSharper Warning: 'yield return' used inside the 'lock' block.
+(2): ReSharper Warning: 'yield return' used inside the 'lock' block.
+(3): ReSharper Warning: 'yield return' used inside the 'lock' block.
