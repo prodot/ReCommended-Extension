@@ -12,7 +12,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions
 {
-    [ContextAction(Group = "C#", Name = "Annotate method with [MustUseReturnValue] attribute" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Annotate method with [MustUseReturnValue] attribute" + ZoneMarker.Suffix,
         Description = "Annotates a method with the [MustUseReturnValue] attribute.")]
     public sealed class AnnotateWithMustUseReturnValue : AnnotateWithCodeAnnotation
     {
@@ -30,16 +32,12 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string TextSuffix => "with observable state changes";
 
-        protected override bool CanBeAnnotated(
-            IDeclaredElement declaredElement,
-            ITreeNode context,
-            IPsiModule psiModule) => declaredElement is IMethod method && !method.ReturnType.IsVoid() && !method.IsAsync;
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+            => declaredElement is IMethod method && !method.ReturnType.IsVoid() && !method.IsAsync;
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
-            =>
-                ownerDeclaration.AttributesEnumerable.FirstOrDefault(
-                    attribute =>
-                        attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                        PureAnnotationProvider.PureAttributeShortName);
+            => ownerDeclaration.AttributesEnumerable.FirstOrDefault(
+                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
+                    PureAnnotationProvider.PureAttributeShortName);
     }
 }

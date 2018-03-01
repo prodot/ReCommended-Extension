@@ -84,7 +84,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
         [NotNull]
         static ICSharpStatement CreateContractStatement(
-            ContractKind contractKind, [NotNull] IPsiModule psiModule, [NotNull] IExpression contractExpression)
+            ContractKind contractKind,
+            [NotNull] IPsiModule psiModule,
+            [NotNull] IExpression contractExpression)
         {
             var factory = CSharpElementFactory.GetInstance(contractExpression);
 
@@ -124,8 +126,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             switch (contractKind)
             {
                 case ContractKind.Requires:
-                    var lastRequiresStatement =
-                        (from s in contractStatements where s.ContractKind == ContractKind.Requires select s.Statement).LastOrDefault();
+                    var lastRequiresStatement = (from s in contractStatements where s.ContractKind == ContractKind.Requires select s.Statement)
+                        .LastOrDefault();
                     if (lastRequiresStatement != null)
                     {
                         statement = body.AddStatementAfter(statement, lastRequiresStatement);
@@ -181,8 +183,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     break;
 
                 case ContractKind.Invariant:
-                    var lastInvariantStatement =
-                        (from s in contractStatements where s.ContractKind == ContractKind.Invariant select s.Statement).LastOrDefault();
+                    var lastInvariantStatement = (from s in contractStatements where s.ContractKind == ContractKind.Invariant select s.Statement)
+                        .LastOrDefault();
                     statement = body.AddStatementAfter(statement, lastInvariantStatement);
 
                     firstNonContractStatement = null;
@@ -229,7 +231,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         protected ContractInfo(ContractKind contractKind, [NotNull] IType type)
         {
             Debug.Assert(
-                contractKind == ContractKind.Requires || contractKind == ContractKind.Ensures || contractKind == ContractKind.RequiresAndEnsures ||
+                contractKind == ContractKind.Requires ||
+                contractKind == ContractKind.Ensures ||
+                contractKind == ContractKind.RequiresAndEnsures ||
                 contractKind == ContractKind.Invariant);
 
             ContractKind = contractKind;

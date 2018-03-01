@@ -47,8 +47,8 @@ namespace ReCommendedExtension.Analyzers
             }
 
             // initialize with assembly-level conditions
-            var currentConditions =
-                new HashSet<string>(from preProcessingDirective in sourceFile.Properties.GetDefines() select preProcessingDirective.Name);
+            var currentConditions = new HashSet<string>(
+                from preProcessingDirective in sourceFile.Properties.GetDefines() select preProcessingDirective.Name);
 
             // process file-level conditions
             if (invocationExpression.GetContainingFile() is ICSharpFile file)
@@ -73,7 +73,9 @@ namespace ReCommendedExtension.Analyzers
                         continue;
                     }
 
-                    if (treeNode == invocationExpression || treeNode is IUsingList || treeNode is ICSharpNamespaceDeclaration ||
+                    if (treeNode == invocationExpression ||
+                        treeNode is IUsingList ||
+                        treeNode is ICSharpNamespaceDeclaration ||
                         treeNode is ICSharpTypeDeclaration)
                     {
                         break;

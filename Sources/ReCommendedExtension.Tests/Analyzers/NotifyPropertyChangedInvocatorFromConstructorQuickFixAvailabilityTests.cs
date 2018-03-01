@@ -6,7 +6,8 @@ using ReCommendedExtension.Highlightings;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
-    public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests : QuickFixAvailabilityTestBaseWithAnnotationAssemblyReference
+    public sealed class
+        NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests : QuickFixAvailabilityTestBaseWithAnnotationAssemblyReference
     {
         protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes";
 

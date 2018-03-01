@@ -16,8 +16,7 @@ namespace ReCommendedExtension.Analyzers
             switch (element)
             {
                 case IBindingMarkup bindingMarkup when bindingMarkup.Mode == BindingMode.UNKNOWN && bindingMarkup.NameNode != null:
-                    consumer.AddHighlighting(
-                        new XamlBindingWithoutModeHighlighting("Binding mode is not set explicitly.", bindingMarkup.NameNode));
+                    consumer.AddHighlighting(new XamlBindingWithoutModeHighlighting("Binding mode is not set explicitly.", bindingMarkup.NameNode));
                     break;
 
                 case IBindingElement bindingElement when ClrTypeNames.Binding.Equals((bindingElement.Type as IDeclaredType)?.GetClrName()) &&
@@ -27,9 +26,8 @@ namespace ReCommendedExtension.Analyzers
                     break;
 
                 case IXamlObjectElement objectElement when objectElement is ITypeOwnerDeclaration typeOwnerDeclaration &&
-                                                           ClrTypeNames.MultiBinding.Equals(
-                                                               (typeOwnerDeclaration.Type as IDeclaredType)?.GetClrName()) &&
-                                                           objectElement.GetAttribute("Mode") == null:
+                    ClrTypeNames.MultiBinding.Equals((typeOwnerDeclaration.Type as IDeclaredType)?.GetClrName()) &&
+                    objectElement.GetAttribute("Mode") == null:
                     consumer.AddHighlighting(
                         new XamlBindingWithoutModeHighlighting("Binding mode is not set explicitly.", objectElement.Header.Name));
                     break;

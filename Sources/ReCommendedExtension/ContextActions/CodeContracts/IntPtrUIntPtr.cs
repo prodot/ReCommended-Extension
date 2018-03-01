@@ -7,7 +7,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     public abstract class IntPtrUIntPtr : AddContractContextAction
     {
-        internal IntPtrUIntPtr([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        internal IntPtrUIntPtr([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected sealed override bool IsAvailableForType(IType type)
         {

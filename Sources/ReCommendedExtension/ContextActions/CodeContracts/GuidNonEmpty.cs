@@ -9,7 +9,9 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: Guid is not empty" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: Guid is not empty" + ZoneMarker.Suffix,
         Description = "Adds a contract that the Guid is not empty.")]
     public sealed class GuidNonEmpty : AddContractContextAction
     {

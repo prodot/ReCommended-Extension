@@ -27,7 +27,8 @@ namespace ReCommendedExtension.Analyzers
                     var messageArgument = element.Arguments.FirstOrDefault(a => a.AssertNotNull().MatchingParameter?.Element.ShortName == "message");
                     if (messageArgument != null)
                     {
-                        var parameters = ((IParametersOwner)element.GetContainingTypeMemberDeclarationIgnoringClosures()?.DeclaredElement)?.Parameters;
+                        var parameters = ((IParametersOwner)element.GetContainingTypeMemberDeclarationIgnoringClosures()?.DeclaredElement)
+                            ?.Parameters;
                         if (parameters != null)
                         {
                             switch (messageArgument.Value)

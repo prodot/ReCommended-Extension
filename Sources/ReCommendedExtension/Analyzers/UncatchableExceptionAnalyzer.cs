@@ -9,7 +9,7 @@ using ReCommendedExtension.Highlightings;
 namespace ReCommendedExtension.Analyzers
 {
     [ElementProblemAnalyzer(typeof(ISpecificCatchClause), HighlightingTypes = new[] { typeof(UncatchableExceptionHighlighting) })]
-    public sealed class UncatchableExceptionAnalyzer: ElementProblemAnalyzer<ISpecificCatchClause>
+    public sealed class UncatchableExceptionAnalyzer : ElementProblemAnalyzer<ISpecificCatchClause>
     {
         [NotNull]
         static readonly Dictionary<string, string> uncatchableExceptions = new Dictionary<string, string>(StringComparer.Ordinal)

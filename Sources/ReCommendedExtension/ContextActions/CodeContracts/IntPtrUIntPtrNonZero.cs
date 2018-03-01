@@ -10,7 +10,9 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: IntPtr is not zero" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: IntPtr is not zero" + ZoneMarker.Suffix,
         Description = "Adds a contract that the IntPtr (or UIntPtr) value is not zero.")]
     public sealed class IntPtrUIntPtrNonZero : IntPtrUIntPtr
     {

@@ -8,8 +8,13 @@ using ReCommendedExtension.Highlightings;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
-    RegisterConfigurableSeverity(UnthrowableExceptionHighlighting.SeverityId, null, HighlightingGroupIds.BestPractice,
-        "Exception should never be thrown" + ZoneMarker.Suffix, "", Severity.WARNING)]
+    RegisterConfigurableSeverity(
+        UnthrowableExceptionHighlighting.SeverityId,
+        null,
+        HighlightingGroupIds.BestPractice,
+        "Exception should never be thrown" + ZoneMarker.Suffix,
+        "",
+        Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {
@@ -21,9 +26,8 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly ICSharpExpression thrownStatementExpression;
 
-        internal UnthrowableExceptionHighlighting(
-            [NotNull] string message,
-            [NotNull] ICSharpExpression thrownStatementExpression) : base(message) => this.thrownStatementExpression = thrownStatementExpression;
+        internal UnthrowableExceptionHighlighting([NotNull] string message, [NotNull] ICSharpExpression thrownStatementExpression) : base(message)
+            => this.thrownStatementExpression = thrownStatementExpression;
 
         public override DocumentRange CalculateRange() => thrownStatementExpression.GetDocumentRange();
     }

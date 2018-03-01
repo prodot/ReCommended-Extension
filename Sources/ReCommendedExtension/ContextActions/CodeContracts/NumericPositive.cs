@@ -7,7 +7,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: number is positive" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: number is positive" + ZoneMarker.Suffix,
         Description = "Adds a contract that a number is greater than 0.")]
     public sealed class NumericPositive : Numeric
     {

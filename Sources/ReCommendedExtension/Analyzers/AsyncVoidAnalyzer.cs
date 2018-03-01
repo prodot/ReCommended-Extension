@@ -46,7 +46,8 @@ namespace ReCommendedExtension.Analyzers
 
             if (method.GetImmediateSuperMembers().Any())
             {
-                consumer.AddHighlighting(new AvoidAsyncVoidHighlighting("'void' method overridden or implemented as 'async void'.", methodDeclaration));
+                consumer.AddHighlighting(
+                    new AvoidAsyncVoidHighlighting("'void' method overridden or implemented as 'async void'.", methodDeclaration));
                 return;
             }
 
@@ -62,7 +63,8 @@ namespace ReCommendedExtension.Analyzers
             {
                 if (references.Length > 0)
                 {
-                    consumer.AddHighlighting(new AvoidAsyncVoidHighlighting("'async void' public surface area method with detected usages.", methodDeclaration));
+                    consumer.AddHighlighting(
+                        new AvoidAsyncVoidHighlighting("'async void' public surface area method with detected usages.", methodDeclaration));
                 }
                 else
                 {
@@ -105,7 +107,10 @@ namespace ReCommendedExtension.Analyzers
             Debug.Assert(SearchDomainFactory.Instance != null);
 
             var solutionSearchDomain = SearchDomainFactory.Instance.CreateSearchDomain(psiServices.Solution, false);
-            var references = psiServices.Finder.FindReferences(localFunctionDeclaration.DeclaredElement, solutionSearchDomain, NullProgressIndicator.Create());
+            var references = psiServices.Finder.FindReferences(
+                localFunctionDeclaration.DeclaredElement,
+                solutionSearchDomain,
+                NullProgressIndicator.Create());
             var count = references.Count(reference => !reference.AssertNotNull().IsEventTarget());
             if (count > 0)
             {
@@ -147,7 +152,8 @@ namespace ReCommendedExtension.Analyzers
                 return; // not an "async delegate (...) { ... }" that returns void
             }
 
-            if (anonymousMethodExpression.Parent is IAssignmentExpression assignmentExpression && assignmentExpression.IsEventSubscriptionOrUnSubscription())
+            if (anonymousMethodExpression.Parent is IAssignmentExpression assignmentExpression &&
+                assignmentExpression.IsEventSubscriptionOrUnSubscription())
             {
                 return; // direct event target
             }

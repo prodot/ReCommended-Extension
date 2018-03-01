@@ -9,7 +9,8 @@ using ReCommendedExtension.Highlightings;
 
 namespace ReCommendedExtension.Analyzers
 {
-    [ElementProblemAnalyzer(typeof(IInvocationExpression),
+    [ElementProblemAnalyzer(
+        typeof(IInvocationExpression),
         HighlightingTypes = new[] { typeof(NotifyPropertyChangedInvocatorFromConstructorHighlighting) })]
     public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     {
@@ -35,7 +36,8 @@ namespace ReCommendedExtension.Analyzers
             var notifyPropertyChangedAnnotationProvider =
                 method.GetPsiServices().GetCodeAnnotationsCache().GetProvider<NotifyPropertyChangedAnnotationProvider>();
 
-            return notifyPropertyChangedAnnotationProvider.ContainsNotifyPropetyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
+            return notifyPropertyChangedAnnotationProvider
+                .ContainsNotifyPropetyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
         }
 
         protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

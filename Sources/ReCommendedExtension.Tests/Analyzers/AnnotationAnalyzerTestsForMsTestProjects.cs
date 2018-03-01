@@ -16,7 +16,7 @@ namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFlavours("3AC096D0-A1C2-E12C-1390-A8335801FDAB")] // todo: does not work
     [TestFixture]
-    public sealed class AnnotationAnalyzerTestsForMsTestProjects: CSharpHighlightingTestBase
+    public sealed class AnnotationAnalyzerTestsForMsTestProjects : CSharpHighlightingTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 

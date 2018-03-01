@@ -12,8 +12,8 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile)
             => highlighting is EmptyRegionHighlighting ||
-               highlighting is RegionWithSingleElementHighlighting ||
-               highlighting is RegionWithinTypeMemberBodyHighlighting;
+                highlighting is RegionWithSingleElementHighlighting ||
+                highlighting is RegionWithinTypeMemberBodyHighlighting;
 
         [Test]
         public void TestEmptyRegion() => DoNamedTest2();

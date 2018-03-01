@@ -8,8 +8,13 @@ using ReCommendedExtension.Highlightings;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
-    RegisterConfigurableSeverity(AvoidAsyncVoidHighlighting.SeverityId, null, HighlightingGroupIds.CodeSmell, "Avoid 'async void'" + ZoneMarker.Suffix,
-        "", Severity.WARNING)]
+    RegisterConfigurableSeverity(
+        AvoidAsyncVoidHighlighting.SeverityId,
+        null,
+        HighlightingGroupIds.CodeSmell,
+        "Avoid 'async void'" + ZoneMarker.Suffix,
+        "",
+        Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

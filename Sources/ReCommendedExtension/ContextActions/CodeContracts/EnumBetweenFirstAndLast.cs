@@ -13,7 +13,9 @@ using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: enum value is within the valid enum range" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: enum value is within the valid enum range" + ZoneMarker.Suffix,
         Description = "Adds a contract that the enum value is within the valid enum range.")]
     public sealed class EnumBetweenFirstAndLast : AddContractContextAction
     {
@@ -54,7 +56,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             }
 
             public static EnumContractInfo<E> TryCreate(
-                [NotNull] [ItemNotNull] IList<IField> members,
+                [NotNull][ItemNotNull] IList<IField> members,
                 [NotNull] Func<E, E, bool> isLessOrEquals,
                 [NotNull] Func<E, E> getNext)
             {
@@ -111,7 +113,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         EnumContractInfo contractInfo;
 
-        public EnumBetweenFirstAndLast([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        public EnumBetweenFirstAndLast([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected override bool IsAvailableForType(IType type)
         {

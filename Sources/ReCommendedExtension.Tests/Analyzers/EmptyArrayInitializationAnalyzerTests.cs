@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -18,6 +19,7 @@ namespace ReCommendedExtension.Tests.Analyzers
             => highlighting is EmptyArrayInitializationHighlighting;
 
         [Test]
+        [SuppressMessage("ReSharper", "EmptyArrayInitialization")]
         public void Compiler()
         {
             int[] ParamsArray(params int[] items) => items;

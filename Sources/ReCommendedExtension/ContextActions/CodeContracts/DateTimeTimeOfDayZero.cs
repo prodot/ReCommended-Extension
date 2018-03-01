@@ -9,7 +9,9 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: date/time doesn't have a time part" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: date/time doesn't have a time part" + ZoneMarker.Suffix,
         Description = "Adds a contract that the date/time doesn't have a time part.")]
     public sealed class DateTimeTimeOfDayZero : AddContractContextAction
     {

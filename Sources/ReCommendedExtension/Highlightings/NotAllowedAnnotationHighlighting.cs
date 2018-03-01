@@ -6,8 +6,13 @@ using ReCommendedExtension.Highlightings;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
-    RegisterConfigurableSeverity(NotAllowedAnnotationHighlighting.SeverityId, null, HighlightingGroupIds.ConstraintViolation,
-        "Nullability annotation is not allowed" + ZoneMarker.Suffix, "", Severity.WARNING)]
+    RegisterConfigurableSeverity(
+        NotAllowedAnnotationHighlighting.SeverityId,
+        null,
+        HighlightingGroupIds.ConstraintViolation,
+        "Nullability annotation is not allowed" + ZoneMarker.Suffix,
+        "",
+        Severity.WARNING)]
 
 namespace ReCommendedExtension.Highlightings
 {

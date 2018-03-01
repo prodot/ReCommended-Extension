@@ -19,7 +19,8 @@ namespace ReCommendedExtension.Assertions
             if (qualifierExpression != null)
             {
                 if (referenceExpression.Reference.Resolve().DeclaredElement is IMethod method &&
-                    method.ShortName.StartsWith("AssertNotNull", StringComparison.Ordinal) && method.IsExtensionMethod &&
+                    method.ShortName.StartsWith("AssertNotNull", StringComparison.Ordinal) &&
+                    method.IsExtensionMethod &&
                     method.Parameters.Count == 1)
                 {
                     Debug.Assert(method.Parameters[0] != null);
@@ -29,12 +30,10 @@ namespace ReCommendedExtension.Assertions
                         var methodDeclaration = method.GetSingleDeclaration<IMethodDeclaration>();
                         if (methodDeclaration != null &&
                             methodDeclaration.AttributesEnumerable.Any(
-                                attribute =>
-                                    attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().FullName ==
+                                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().FullName ==
                                     PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName) &&
                             methodDeclaration.AttributesEnumerable.Any(
-                                attribute =>
-                                    attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
+                                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
                                     NullnessProvider.NotNullAttributeShortName))
                         {
                             return new InlineAssertion(invocationExpression, qualifierExpression, method.ShortName);

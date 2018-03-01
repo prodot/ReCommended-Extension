@@ -24,10 +24,9 @@ namespace ReCommendedExtension.ContextActions
             IPsiModule psiModule,
             out IAttribute attributeToRemove)
         {
-            var attributeType =
-                attributesOwnerDeclaration.GetPsiServices()
-                    .GetComponent<CodeAnnotationsConfiguration>()
-                    .GetAttributeTypeForElement(attributesOwnerDeclaration, AnnotationAttributeTypeName);
+            var attributeType = attributesOwnerDeclaration.GetPsiServices()
+                .GetComponent<CodeAnnotationsConfiguration>()
+                .GetAttributeTypeForElement(attributesOwnerDeclaration, AnnotationAttributeTypeName);
             if (attributeType != null && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration, psiModule))
             {
                 attributeToRemove = TryGetAttributeToReplace(attributesOwnerDeclaration);

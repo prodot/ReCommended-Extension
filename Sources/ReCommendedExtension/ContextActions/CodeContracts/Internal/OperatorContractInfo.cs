@@ -15,7 +15,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
     internal sealed class OperatorContractInfo : ContractInfo
     {
         public static OperatorContractInfo TryCreate(
-            [NotNull] IOperatorDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
+            [NotNull] IOperatorDeclaration declaration,
+            TreeTextRange selectedTreeRange,
+            [NotNull] Func<IType, bool> isAvailableForType)
         {
             if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
             {
@@ -35,9 +37,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         [NotNull]
         readonly IOperatorDeclaration declaration;
 
-        OperatorContractInfo(
-            [NotNull] IOperatorDeclaration declaration,
-            [NotNull] IType type) : base(ContractKind.Ensures, type) => this.declaration = declaration;
+        OperatorContractInfo([NotNull] IOperatorDeclaration declaration, [NotNull] IType type) : base(ContractKind.Ensures, type)
+            => this.declaration = declaration;
 
         public override string GetContractIdentifierForUI() => "result";
 

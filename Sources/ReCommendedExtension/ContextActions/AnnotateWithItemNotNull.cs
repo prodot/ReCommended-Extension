@@ -11,7 +11,9 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions
 {
-    [ContextAction(Group = "C#", Name = "Annotate with [ItemNotNull] attribute" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Annotate with [ItemNotNull] attribute" + ZoneMarker.Suffix,
         Description = "Annotates with the [ItemNotNull] attribute.")]
     public sealed class AnnotateWithItemNotNull : AnnotateWithCodeAnnotation
     {

@@ -12,13 +12,15 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: enum value has valid values" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: enum value has valid values" + ZoneMarker.Suffix,
         Description = "Adds a contract that the enum value has the valid values.")]
     public sealed class EnumKnownValues : AddContractContextAction
     {
         IList<IField> members;
 
-        public EnumKnownValues([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        public EnumKnownValues([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected override bool IsAvailableForType(IType type)
         {
@@ -47,8 +49,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             const int maxItemsToShow = 3;
 
-            return
-                string.Join(" || ", from field in members.Take(maxItemsToShow) select $"{contractIdentifier} == {field.AssertNotNull().ShortName}") +
+            return string.Join(
+                    " || ",
+                    from field in members.Take(maxItemsToShow) select $"{contractIdentifier} == {field.AssertNotNull().ShortName}") +
                 (members.Count > maxItemsToShow ? "..." : "");
         }
 

@@ -15,9 +15,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
     internal sealed class PropertyContractInfo : ContractInfo
     {
         public static PropertyContractInfo TryCreate(
-            [NotNull] IPropertyDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
+            [NotNull] IPropertyDeclaration declaration,
+            TreeTextRange selectedTreeRange,
+            [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null &&
+            if (declaration.GetNameRange().Contains(selectedTreeRange) &&
+                declaration.ArrowClause == null &&
                 declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause == null))
             {
                 var property = declaration.DeclaredElement;
@@ -26,11 +29,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 if (CanAcceptContracts(property) && isAvailableForType(property.Type))
                 {
-                    var contractKind = declaration.IsAuto
-                                           ? (declaration.IsStatic ? (ContractKind?)null : ContractKind.Invariant)
-                                           : property.IsReadable
-                                                 ? (property.IsWritable ? ContractKind.RequiresAndEnsures : ContractKind.Ensures)
-                                                 : (property.IsWritable ? (ContractKind?)ContractKind.Requires : null);
+                    var contractKind = declaration.IsAuto ? (declaration.IsStatic ? (ContractKind?)null : ContractKind.Invariant) :
+                        property.IsReadable ? (property.IsWritable ? ContractKind.RequiresAndEnsures : ContractKind.Ensures) :
+                        (property.IsWritable ? (ContractKind?)ContractKind.Requires : null);
                     if (contractKind != null)
                     {
                         return new PropertyContractInfo((ContractKind)contractKind, declaration, property.Type);
@@ -42,9 +43,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         }
 
         public static PropertyContractInfo TryCreate(
-            [NotNull] IIndexerDeclaration declaration, TreeTextRange selectedTreeRange, [NotNull] Func<IType, bool> isAvailableForType)
+            [NotNull] IIndexerDeclaration declaration,
+            TreeTextRange selectedTreeRange,
+            [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null &&
+            if (declaration.GetNameRange().Contains(selectedTreeRange) &&
+                declaration.ArrowClause == null &&
                 declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause == null))
             {
                 var property = declaration.DeclaredElement;
@@ -54,8 +58,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 if (CanAcceptContracts(property) && isAvailableForType(property.Type))
                 {
                     var contractKind = property.IsReadable
-                                           ? (property.IsWritable ? ContractKind.RequiresAndEnsures : ContractKind.Ensures)
-                                           : (property.IsWritable ? (ContractKind?)ContractKind.Requires : null);
+                        ? (property.IsWritable ? ContractKind.RequiresAndEnsures : ContractKind.Ensures)
+                        : (property.IsWritable ? (ContractKind?)ContractKind.Requires : null);
                     if (contractKind != null)
                     {
                         return new PropertyContractInfo((ContractKind)contractKind, declaration, property.Type);
@@ -69,11 +73,14 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         [NotNull]
         readonly IAccessorOwnerDeclaration declaration;
 
-        PropertyContractInfo(ContractKind contractKind, [NotNull] IAccessorOwnerDeclaration declaration, [NotNull] IType type)
-            : base(contractKind, type)
+        PropertyContractInfo(ContractKind contractKind, [NotNull] IAccessorOwnerDeclaration declaration, [NotNull] IType type) : base(
+            contractKind,
+            type)
         {
             Debug.Assert(
-                contractKind == ContractKind.Requires || contractKind == ContractKind.Ensures || contractKind == ContractKind.RequiresAndEnsures ||
+                contractKind == ContractKind.Requires ||
+                contractKind == ContractKind.Ensures ||
+                contractKind == ContractKind.RequiresAndEnsures ||
                 contractKind == ContractKind.Invariant);
 
             this.declaration = declaration;

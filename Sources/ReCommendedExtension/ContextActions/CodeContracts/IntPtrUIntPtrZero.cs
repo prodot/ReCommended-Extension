@@ -10,11 +10,13 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: IntPtr is zero" + ZoneMarker.Suffix,
+    [ContextAction(
+        Group = "C#",
+        Name = "Add contract: IntPtr is zero" + ZoneMarker.Suffix,
         Description = "Adds a contract that the IntPtr (or UIntPtr) value is zero.")]
     public sealed class IntPtrUIntPtrZero : IntPtrUIntPtr
     {
-        public IntPtrUIntPtrZero([NotNull] ICSharpContextActionDataProvider provider) : base(provider) {}
+        public IntPtrUIntPtrZero([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
         protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} == {nameof(IntPtr.Zero)}";
 

@@ -75,9 +75,9 @@ namespace ReCommendedExtension.ContextActions
 
                     switch (node.Parent)
                     {
-                        case IExpressionInitializer expressionInitializer when
-                        expressionInitializer.Parent is IMultipleDeclarationMember declarationMember &&
-                        declarationMember.MultipleDeclaration?.Declarators.Count == 1:
+                        case IExpressionInitializer expressionInitializer
+                            when expressionInitializer.Parent is IMultipleDeclarationMember declarationMember &&
+                            declarationMember.MultipleDeclaration?.Declarators.Count == 1:
                             node = declarationMember.MultipleDeclaration;
                             commentType = CommentType.END_OF_LINE_COMMENT;
                             break;
@@ -101,7 +101,7 @@ namespace ReCommendedExtension.ContextActions
 
                     if (previousNonWhitespaceToken is ICSharpCommentNode currentCommentNode &&
                         (currentCommentNode.CommentType == CommentType.END_OF_LINE_COMMENT ||
-                         currentCommentNode.CommentType == CommentType.MULTILINE_COMMENT) &&
+                            currentCommentNode.CommentType == CommentType.MULTILINE_COMMENT) &&
                         LanguageEqualsCommentTexts.Contains(currentCommentNode.CommentText.Trim()))
                     {
                         currentCommentNode.ReplaceBy(CreateCommentNode(factory, currentCommentNode.CommentType));
@@ -174,7 +174,7 @@ namespace ReCommendedExtension.ContextActions
                 where node != null && injectorProvider.IsSupportedLiteralForInjection(node)
                 let languageInjectorProviderInLiterals = injectorProvider as ILanguageInjectorProviderInLiterals
                 where (languageInjectorProviderInLiterals == null || !languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage)) &&
-                      languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage)
+                    languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage)
                 orderby injectorProvider.Priority
                 select new InjectLanguageActionItem(injectorProvider, node)).ToList();
 
