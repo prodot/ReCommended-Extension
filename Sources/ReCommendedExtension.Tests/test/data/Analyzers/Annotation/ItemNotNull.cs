@@ -29,11 +29,11 @@ namespace Test
 
         Lazy<string> this[Lazy<string> index, Lazy<string> index2] { get; }
 
-        ValueTask<string> AsyncMethod();
+        ValueTask<string> AsyncMethod2();
 
-        ValueTask<string> AsyncProperty1 { get; set; }
+        ValueTask<string> AsyncProperty3 { get; set; }
 
-        ValueTask<string> AsyncProperty2 { get; }
+        ValueTask<string> AsyncProperty4 { get; }
 
         ValueTask<string> this[ValueTask<string> index] { get; set; }
 
@@ -138,13 +138,13 @@ namespace Test
         string Other([ItemNotNull] (int, string) p) => null;
 
         [ItemNotNull]
-        public ValueTask<string> AsyncMethod() => null;
+        public ValueTask<string> AsyncMethod2() => null;
 
         [ItemNotNull]
-        public ValueTask<string> AsyncProperty1 { get; set; }
+        public ValueTask<string> AsyncProperty3 { get; set; }
 
         [ItemNotNull]
-        public ValueTask<string> AsyncProperty2 { get; }
+        public ValueTask<string> AsyncProperty4 { get; }
 
         [ItemNotNull]
         ValueTask<string> IBase.this[[ItemNotNull] ValueTask<string> index]
@@ -160,10 +160,10 @@ namespace Test
         ValueTask<string> IBase.this[[ItemNotNull] ValueTask<string> index, [ItemNotNull] ValueTask<string> index2] => null;
 
         [ItemNotNull]
-        ValueTask TaskProperty { get; set; }
+        ValueTask TaskProperty2 { get; set; }
 
         [ItemNotNull]
-        ValueTask<int> TaskPropertyWithValueType { get; set; }
+        ValueTask<int> TaskPropertyWithValueType3 { get; set; }
 
         [ItemNotNull]
         ValueTask this[[ItemNotNull] ValueTask index] => null;
@@ -172,9 +172,9 @@ namespace Test
         ValueTask<int> this[[ItemNotNull] ValueTask<int> index] => null;
 
         [ItemNotNull]
-        delegate ValueTask<int> DelegateWithValueType([ItemNotNull] ValueTask<int> p);
+        delegate ValueTask<int> DelegateWithValueType3([ItemNotNull] ValueTask<int> p);
 
         [ItemNotNull]
-        delegate ValueTask<(int, string)> DelegateWithValueType2([ItemNotNull] ValueTask<(int, string)> p);
+        delegate ValueTask<(int, string)> DelegateWithValueType4([ItemNotNull] ValueTask<(int, string)> p);
     }
 }
