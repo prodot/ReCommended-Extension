@@ -26,8 +26,7 @@ namespace ReCommendedExtension.Analyzers
                 case AccessibilityDomain.AccessibilityDomainType.PROTECTED_OR_INTERNAL:
                     return true;
 
-                default:
-                    return false;
+                default: return false;
             }
         }
 

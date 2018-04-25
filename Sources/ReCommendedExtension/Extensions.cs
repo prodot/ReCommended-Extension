@@ -222,7 +222,8 @@ namespace ReCommendedExtension
 
             // todo: find a better way to compare instances (than using hash codes)
 
-            var overriddenMethodDeclaration = (
+            var overriddenMethodDeclaration =
+            (
                 from d in contractClassDeclaration.MethodDeclarationsEnumerable
                 where d.DeclaredElement != null &&
                     d.DeclaredElement.GetImmediateSuperMembers()
@@ -474,7 +475,6 @@ namespace ReCommendedExtension
                         asExpression.Operand.ConstantValue.IsNull() &&
                         Equals(asExpression.Operand.Type(), type) &&
                         type.IsNullable():
-
                         return true;
                 }
             }
@@ -490,7 +490,6 @@ namespace ReCommendedExtension
                     case IAsExpression asExpression when asExpression.Operand != null &&
                         asExpression.Operand.ConstantValue.IsNull() &&
                         Equals(asExpression.Operand.Type(), type):
-
                         return true;
                 }
             }
@@ -558,8 +557,7 @@ namespace ReCommendedExtension
                 case AssignmentType.MINUSEQ:
                     break;
 
-                default:
-                    return false;
+                default: return false;
             }
 
             if (assignmentExpression.OperatorOperands.Count != 2)

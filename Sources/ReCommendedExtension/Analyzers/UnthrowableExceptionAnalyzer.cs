@@ -139,8 +139,7 @@ namespace ReCommendedExtension.Analyzers
                     exception = throwExpression.Exception;
                     break;
 
-                default:
-                    return;
+                default: return;
             }
 
             if (exception == null)

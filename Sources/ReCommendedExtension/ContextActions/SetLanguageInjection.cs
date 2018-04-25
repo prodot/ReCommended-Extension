@@ -47,14 +47,11 @@ namespace ReCommendedExtension.ContextActions
             {
                 switch (commentType)
                 {
-                    case CommentType.END_OF_LINE_COMMENT:
-                        return factory.CreateComment("// " + InjectorProvider.LanguageEqualsCommentText);
+                    case CommentType.END_OF_LINE_COMMENT: return factory.CreateComment("// " + InjectorProvider.LanguageEqualsCommentText);
 
-                    case CommentType.MULTILINE_COMMENT:
-                        return factory.CreateComment("/* " + InjectorProvider.LanguageEqualsCommentText + " */");
+                    case CommentType.MULTILINE_COMMENT: return factory.CreateComment("/* " + InjectorProvider.LanguageEqualsCommentText + " */");
 
-                    default:
-                        throw new NotSupportedException();
+                    default: throw new NotSupportedException();
                 }
             }
 

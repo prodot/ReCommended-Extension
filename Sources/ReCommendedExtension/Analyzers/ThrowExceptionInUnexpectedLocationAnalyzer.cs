@@ -52,11 +52,9 @@ namespace ReCommendedExtension.Analyzers
                         case AccessorKind.GETTER:
                             switch (accessorDeclaration.Parent)
                             {
-                                case IPropertyDeclaration _:
-                                    return Location.PropertyGetter;
+                                case IPropertyDeclaration _: return Location.PropertyGetter;
 
-                                case IIndexerDeclaration _:
-                                    return Location.IndexerGetter;
+                                case IIndexerDeclaration _: return Location.IndexerGetter;
                             }
                             break;
 
@@ -66,11 +64,9 @@ namespace ReCommendedExtension.Analyzers
                     }
                     break;
 
-                case IPropertyDeclaration _:
-                    return Location.PropertyGetter;
+                case IPropertyDeclaration _: return Location.PropertyGetter;
 
-                case IIndexerDeclaration _:
-                    return Location.IndexerGetter;
+                case IIndexerDeclaration _: return Location.IndexerGetter;
 
                 case IMethodDeclaration methodDeclaration when methodDeclaration.DeclaredElement != null:
                     var psiModule = element.GetPsiModule();
@@ -159,11 +155,9 @@ namespace ReCommendedExtension.Analyzers
                     }
                     break;
 
-                case IConstructorDeclaration constructorDeclaration when constructorDeclaration.IsStatic:
-                    return Location.StaticConstructor;
+                case IConstructorDeclaration constructorDeclaration when constructorDeclaration.IsStatic: return Location.StaticConstructor;
 
-                case IDestructorDeclaration _:
-                    return Location.Finalizer;
+                case IDestructorDeclaration _: return Location.Finalizer;
 
                 case ISignOperatorDeclaration signOperator:
                     var tokenType = signOperator.OperatorSign?.GetTokenType();
@@ -223,44 +217,31 @@ namespace ReCommendedExtension.Analyzers
                 case Location.IndexerGetter:
                     return "property getters";
 
-                case Location.EventAccessor:
-                    return @"event accessors";
+                case Location.EventAccessor: return @"event accessors";
 
-                case Location.EqualsMethod:
-                    return $"'{nameof(object.Equals)}' methods";
+                case Location.EqualsMethod: return $"'{nameof(object.Equals)}' methods";
 
-                case Location.EqualsMethodWithParameters:
-                    return $"'{nameof(IEquatable<int>.Equals)}' methods";
+                case Location.EqualsMethodWithParameters: return $"'{nameof(IEquatable<int>.Equals)}' methods";
 
-                case Location.GetHashCodeMethod:
-                    return $"'{nameof(GetHashCode)}' methods";
+                case Location.GetHashCodeMethod: return $"'{nameof(GetHashCode)}' methods";
 
-                case Location.GetHashCodeMethodWithParameter:
-                    return $"'{nameof(IEqualityComparer<int>.GetHashCode)}' methods";
+                case Location.GetHashCodeMethodWithParameter: return $"'{nameof(IEqualityComparer<int>.GetHashCode)}' methods";
 
-                case Location.ToStringMethod:
-                    return $"'{nameof(ToString)}' methods";
+                case Location.ToStringMethod: return $"'{nameof(ToString)}' methods";
 
-                case Location.StaticConstructor:
-                    return "static constructors";
+                case Location.StaticConstructor: return "static constructors";
 
-                case Location.Finalizer:
-                    return "finalizers";
+                case Location.Finalizer: return "finalizers";
 
-                case Location.DisposeMethod:
-                    return $"'{nameof(IDisposable.Dispose)}' methods";
+                case Location.DisposeMethod: return $"'{nameof(IDisposable.Dispose)}' methods";
 
-                case Location.DisposeMethodWithParameterFalseCodePath:
-                    return $"'{disposeMethodName}(false)' code paths";
+                case Location.DisposeMethodWithParameterFalseCodePath: return $"'{disposeMethodName}(false)' code paths";
 
-                case Location.EqualityOperator:
-                    return "equality operators";
+                case Location.EqualityOperator: return "equality operators";
 
-                case Location.ImplicitCastOperator:
-                    return "implicit cast operators";
+                case Location.ImplicitCastOperator: return "implicit cast operators";
 
-                default:
-                    throw new NotSupportedException();
+                default: throw new NotSupportedException();
             }
         }
 
@@ -277,8 +258,7 @@ namespace ReCommendedExtension.Analyzers
                     exceptionType = throwExpression.Exception?.GetExpressionType();
                     break;
 
-                default:
-                    return;
+                default: return;
             }
 
             if (exceptionType == null)

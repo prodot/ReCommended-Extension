@@ -63,23 +63,17 @@ namespace ReCommendedExtension.ContextActions
         {
             switch (declaredElement)
             {
-                case IMethod method when IsAvailableForType(method.ReturnType, context):
-                    return true;
+                case IMethod method when IsAvailableForType(method.ReturnType, context): return true;
 
-                case IParameter parameter when IsAvailableForType(parameter.Type, context):
-                    return true;
+                case IParameter parameter when IsAvailableForType(parameter.Type, context): return true;
 
-                case IProperty property when IsAvailableForType(property.Type, context):
-                    return true;
+                case IProperty property when IsAvailableForType(property.Type, context): return true;
 
-                case IDelegate delegateType when IsAvailableForType(delegateType.InvokeMethod.ReturnType, context):
-                    return true;
+                case IDelegate delegateType when IsAvailableForType(delegateType.InvokeMethod.ReturnType, context): return true;
 
-                case IField field when IsAvailableForType(field.Type, context):
-                    return true;
+                case IField field when IsAvailableForType(field.Type, context): return true;
 
-                default:
-                    return false;
+                default: return false;
             }
         }
     }

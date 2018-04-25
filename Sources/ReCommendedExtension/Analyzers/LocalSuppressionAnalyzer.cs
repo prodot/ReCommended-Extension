@@ -22,8 +22,7 @@ namespace ReCommendedExtension.Analyzers
                         leadingWhitespaceCharacters++;
                         break;
 
-                    default:
-                        return leadingWhitespaceCharacters;
+                    default: return leadingWhitespaceCharacters;
                 }
             }
 

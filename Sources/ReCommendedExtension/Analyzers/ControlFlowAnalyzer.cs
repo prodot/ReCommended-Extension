@@ -260,8 +260,7 @@ namespace ReCommendedExtension.Analyzers
                 case IAsExpression asExpression when alwaysSuccessTryCastExpressions.Contains(asExpression):
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
 
-                case IObjectCreationExpression _:
-                    return CSharpControlFlowNullReferenceState.NOT_NULL;
+                case IObjectCreationExpression _: return CSharpControlFlowNullReferenceState.NOT_NULL;
 
                 case IInvocationExpression invocationExpression:
                     if (invocationExpression.InvokedExpression is IReferenceExpression invokedExpression)
@@ -271,8 +270,7 @@ namespace ReCommendedExtension.Analyzers
 
                     goto default;
 
-                default:
-                    return CSharpControlFlowNullReferenceState.UNKNOWN;
+                default: return CSharpControlFlowNullReferenceState.UNKNOWN;
             }
         }
 
@@ -295,8 +293,7 @@ namespace ReCommendedExtension.Analyzers
 
                     goto default;
 
-                default:
-                    return CSharpControlFlowNullReferenceState.UNKNOWN;
+                default: return CSharpControlFlowNullReferenceState.UNKNOWN;
             }
         }
 
