@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Analyzers
         [Pure]
         static bool IsPublicSurfaceArea([NotNull] IMethod method)
         {
-            switch (method.AccessibilityDomain?.DomainType)
+            switch (method.AccessibilityDomain.DomainType)
             {
                 case AccessibilityDomain.AccessibilityDomainType.PUBLIC:
                 case AccessibilityDomain.AccessibilityDomainType.PROTECTED:

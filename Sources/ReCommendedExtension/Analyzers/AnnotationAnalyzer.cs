@@ -399,14 +399,13 @@ namespace ReCommendedExtension.Analyzers
             var suppressMessageAttributes =
                 from attribute in attributesOwnerDeclaration.AttributesEnumerable
                 let attributeInstance = attribute.GetAttributeInstance()
-                where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute)
-                where attributeInstance.PositionParameterCount == 2
+                where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute) && attributeInstance.PositionParameterCount == 2
                 let categoryConstantValue = attributeInstance.PositionParameter(0).ConstantValue
                 let checkIdConstantValue = attributeInstance.PositionParameter(1).ConstantValue
-                where categoryConstantValue != null
-                where checkIdConstantValue != null
-                where categoryConstantValue.IsString()
-                where checkIdConstantValue.IsString()
+                where categoryConstantValue != null &&
+                    checkIdConstantValue != null &&
+                    categoryConstantValue.IsString() &&
+                    checkIdConstantValue.IsString()
                 let justificationConstantValue = attributeInstance.NamedParameter(nameof(SuppressMessageAttribute.Justification)).ConstantValue
                 where justificationConstantValue == null ||
                     !justificationConstantValue.IsString() ||
@@ -479,8 +478,7 @@ namespace ReCommendedExtension.Analyzers
                     from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
                     where attributeInstance.AssertNotNull().PositionParameterCount == 1
                     let constantValue = attributeInstance.PositionParameter(0).ConstantValue
-                    where constantValue != null
-                    where constantValue.IsString()
+                    where constantValue != null && constantValue.IsString()
                     let condition = (string)constantValue.Value
                     where !string.IsNullOrEmpty(condition)
                     select condition).ToList()
