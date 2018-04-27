@@ -29,11 +29,11 @@ namespace Test
 
         Lazy<string> this[Lazy<string> index, Lazy<string> index2] { get; }
 
-        ValueTask<string> AsyncMethod();
+        ValueTask<string> AsyncMethod2();
 
-        ValueTask<string> AsyncProperty1 { get; set; }
+        ValueTask<string> AsyncProperty3 { get; set; }
 
-        ValueTask<string> AsyncProperty2 { get; }
+        ValueTask<string> AsyncProperty4 { get; }
 
         ValueTask<string> this[ValueTask<string> index] { get; set; }
 
@@ -138,13 +138,13 @@ namespace Test
         string Other([|ItemNotNull|(44)] (int, string) p) => null;
 
         [|ItemNotNull|(45)]
-        public ValueTask<string> AsyncMethod() => null;
+        public ValueTask<string> AsyncMethod2() => null;
 
         [|ItemNotNull|(46)]
-        public ValueTask<string> AsyncProperty1 { get; set; }
+        public ValueTask<string> AsyncProperty3 { get; set; }
 
         [|ItemNotNull|(47)]
-        public ValueTask<string> AsyncProperty2 { get; }
+        public ValueTask<string> AsyncProperty4 { get; }
 
         [|ItemNotNull|(48)]
         ValueTask<string> IBase.this[[|ItemNotNull|(49)] ValueTask<string> index]
@@ -160,10 +160,10 @@ namespace Test
         ValueTask<string> IBase.this[[|ItemNotNull|(51)] ValueTask<string> index, [|ItemNotNull|(52)] ValueTask<string> index2] => null;
 
         [|ItemNotNull|(53)]
-        ValueTask TaskProperty { get; set; }
+        ValueTask TaskProperty2 { get; set; }
 
         [|ItemNotNull|(54)]
-        ValueTask<int> TaskPropertyWithValueType { get; set; }
+        ValueTask<int> TaskPropertyWithValueType3 { get; set; }
 
         [|ItemNotNull|(55)]
         ValueTask this[[|ItemNotNull|(56)] ValueTask index] => null;
@@ -172,10 +172,10 @@ namespace Test
         ValueTask<int> this[[|ItemNotNull|(58)] ValueTask<int> index] => null;
 
         [|ItemNotNull|(59)]
-        delegate ValueTask<int> DelegateWithValueType([|ItemNotNull|(60)] ValueTask<int> p);
+        delegate ValueTask<int> DelegateWithValueType3([|ItemNotNull|(60)] ValueTask<int> p);
 
         [|ItemNotNull|(61)]
-        delegate ValueTask<(int, string)> DelegateWithValueType2([|ItemNotNull|(62)] ValueTask<(int, string)> p);
+        delegate ValueTask<(int, string)> DelegateWithValueType4([|ItemNotNull|(62)] ValueTask<(int, string)> p);
     }
 }
 ---------------------------------------------------------

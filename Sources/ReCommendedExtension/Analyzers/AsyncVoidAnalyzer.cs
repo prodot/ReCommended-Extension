@@ -19,15 +19,14 @@ namespace ReCommendedExtension.Analyzers
         [Pure]
         static bool IsPublicSurfaceArea([NotNull] IMethod method)
         {
-            switch (method.AccessibilityDomain?.DomainType)
+            switch (method.AccessibilityDomain.DomainType)
             {
                 case AccessibilityDomain.AccessibilityDomainType.PUBLIC:
                 case AccessibilityDomain.AccessibilityDomainType.PROTECTED:
                 case AccessibilityDomain.AccessibilityDomainType.PROTECTED_OR_INTERNAL:
                     return true;
 
-                default:
-                    return false;
+                default: return false;
             }
         }
 

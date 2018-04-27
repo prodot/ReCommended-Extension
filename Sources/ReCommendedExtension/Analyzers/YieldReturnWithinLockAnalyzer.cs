@@ -17,8 +17,7 @@ namespace ReCommendedExtension.Analyzers
                         consumer.AddHighlighting(new YieldReturnWithinLockHighlighting("'yield return' used inside the 'lock' block.", element));
                         return;
 
-                    case ILocalFunctionDeclaration _:
-                        return;
+                    case ILocalFunctionDeclaration _: return;
                 }
             }
         }

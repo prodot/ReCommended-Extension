@@ -93,7 +93,6 @@ namespace ReCommendedExtension.ContextActions
 
                     var attribute = createAttributeFactory(factory);
 
-                    Debug.Assert(attributesOwnerDeclaration != null);
                     Debug.Assert(attribute != null);
 
                     attributesOwnerDeclaration.AddAttributeAfter(attribute, attributeToRemove);

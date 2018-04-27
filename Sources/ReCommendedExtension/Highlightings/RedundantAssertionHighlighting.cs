@@ -5,7 +5,7 @@ namespace ReCommendedExtension.Highlightings
 {
     public abstract class RedundantAssertionHighlighting : Highlighting
     {
-        internal RedundantAssertionHighlighting([NotNull] string message) : base(message) { }
+        private protected RedundantAssertionHighlighting([NotNull] string message) : base(message) { }
 
         [NotNull]
         internal abstract Assertion Assertion { get; }

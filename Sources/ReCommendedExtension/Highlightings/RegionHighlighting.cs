@@ -10,7 +10,8 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         readonly IStartRegion startRegion;
 
-        internal RegionHighlighting([NotNull] string message, [NotNull] IStartRegion startRegion) : base(message) => this.startRegion = startRegion;
+        private protected RegionHighlighting([NotNull] string message, [NotNull] IStartRegion startRegion) : base(message)
+            => this.startRegion = startRegion;
 
         public sealed override DocumentRange CalculateRange() => startRegion.Directive.GetDocumentRange();
     }

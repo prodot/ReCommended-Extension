@@ -103,8 +103,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 case ContractKind.Invariant:
                     return factory.CreateStatement(string.Format("$0.{0}($1);", nameof(Contract.Invariant)), contractType, contractExpression);
 
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(contractKind));
+                default: throw new ArgumentOutOfRangeException(nameof(contractKind));
             }
         }
 
@@ -137,9 +136,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     else
                     {
                         var firstEnsuresOrEnsuresOnThrowStatement =
-                            (from s in contractStatements
-                                where s.ContractKind == ContractKind.Ensures || s.ContractKind == ContractKind.EnsuresOnThrow
-                                select s.Statement).FirstOrDefault();
+                        (
+                            from s in contractStatements
+                            where s.ContractKind == ContractKind.Ensures || s.ContractKind == ContractKind.EnsuresOnThrow
+                            select s.Statement).FirstOrDefault();
                         if (firstEnsuresOrEnsuresOnThrowStatement != null)
                         {
                             statement = body.AddStatementBefore(statement, firstEnsuresOrEnsuresOnThrowStatement);
@@ -191,8 +191,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                     break;
 
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(contractKind));
+                default: throw new ArgumentOutOfRangeException(nameof(contractKind));
             }
 
             ContextActionUtils.FormatWithDefaultProfile(statement);
@@ -205,8 +204,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         {
             switch (declaration)
             {
-                case IParameterDeclaration parameterDeclaration:
-                    return ParameterContractInfo.TryCreate(parameterDeclaration, isAvailableForType);
+                case IParameterDeclaration parameterDeclaration: return ParameterContractInfo.TryCreate(parameterDeclaration, isAvailableForType);
 
                 case IMethodDeclaration methodDeclaration:
                     return MethodContractInfo.TryCreate(methodDeclaration, selectedTreeRange, isAvailableForType);
@@ -217,14 +215,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 case IIndexerDeclaration indexerDeclaration:
                     return PropertyContractInfo.TryCreate(indexerDeclaration, selectedTreeRange, isAvailableForType);
 
-                case IFieldDeclaration fieldDeclaration:
-                    return FieldContractInfo.TryCreate(fieldDeclaration, isAvailableForType);
+                case IFieldDeclaration fieldDeclaration: return FieldContractInfo.TryCreate(fieldDeclaration, isAvailableForType);
 
                 case IOperatorDeclaration operatorDeclaration:
                     return OperatorContractInfo.TryCreate(operatorDeclaration, selectedTreeRange, isAvailableForType);
 
-                default:
-                    return null;
+                default: return null;
             }
         }
 
@@ -250,20 +246,15 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         {
             switch (ContractKind)
             {
-                case ContractKind.Requires:
-                    return "requires";
+                case ContractKind.Requires: return "requires";
 
-                case ContractKind.Ensures:
-                    return "ensures";
+                case ContractKind.Ensures: return "ensures";
 
-                case ContractKind.RequiresAndEnsures:
-                    return "requires & ensures";
+                case ContractKind.RequiresAndEnsures: return "requires & ensures";
 
-                case ContractKind.Invariant:
-                    return "invariant";
+                case ContractKind.Invariant: return "invariant";
 
-                default:
-                    throw new NotSupportedException();
+                default: throw new NotSupportedException();
             }
         }
 

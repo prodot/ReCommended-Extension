@@ -21,7 +21,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
     {
         ContractInfo contractInfo;
 
-        internal AddContractContextAction([NotNull] ICSharpContextActionDataProvider provider) => Provider = provider;
+        private protected AddContractContextAction([NotNull] ICSharpContextActionDataProvider provider) => Provider = provider;
 
         void AddAnnotation()
         {

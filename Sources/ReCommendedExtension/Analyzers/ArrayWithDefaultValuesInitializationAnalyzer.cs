@@ -40,8 +40,7 @@ namespace ReCommendedExtension.Analyzers
                         arrayElementType = creationExpression.GetElementType();
                         break;
 
-                    default:
-                        return;
+                    default: return;
                 }
 
                 if (element.InitializerElements.All(

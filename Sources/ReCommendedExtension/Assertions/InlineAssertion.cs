@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Assertions
 {
     internal sealed class InlineAssertion : Assertion
     {
-        internal static InlineAssertion TryFromInvocationExpression([NotNull] IInvocationExpression invocationExpression)
+        public static InlineAssertion TryFromInvocationExpression([NotNull] IInvocationExpression invocationExpression)
         {
             var referenceExpression = invocationExpression.InvokedExpression as IReferenceExpression;
             var qualifierExpression = referenceExpression?.QualifierExpression;

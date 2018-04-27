@@ -54,8 +54,7 @@ namespace ReCommendedExtension.QuickFixes
                         node = creationExpression;
                         break;
 
-                    default:
-                        throw new NotSupportedException();
+                    default: throw new NotSupportedException();
                 }
 
                 var factory = CSharpElementFactory.GetInstance(node);

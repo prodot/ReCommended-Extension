@@ -92,8 +92,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                         contractKind = ContractKind.Ensures;
                         break;
 
-                    default:
-                        return null;
+                    default: return null;
                 }
 
                 return new ParameterContractInfo(contractKind, declaration, parameter.Type);
@@ -136,8 +135,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     AddContractForRequires(provider, getContractExpression, parameter, body, out _);
                     break;
 
-                default:
-                    throw new NotSupportedException();
+                default: throw new NotSupportedException();
             }
         }
 

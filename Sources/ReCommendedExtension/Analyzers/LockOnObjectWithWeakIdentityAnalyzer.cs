@@ -57,7 +57,7 @@ namespace ReCommendedExtension.Analyzers
                     var objectType = (IClass)TypeElementUtil.GetTypeElementByClrName(type, psiModule).AssertNotNull();
                     if (monitorTypeElement.IsDescendantOf(objectType))
                     {
-                        var typeName = objectType.WithIdSubstitution().AssertNotNull().GetPresentableName(CSharpLanguage.Instance);
+                        var typeName = objectType.WithIdSubstitution().GetPresentableName(CSharpLanguage.Instance);
 
                         if (objectType.IsAbstract)
                         {

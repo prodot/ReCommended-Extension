@@ -7,7 +7,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     public abstract class SignedNumeric : AddContractContextAction
     {
-        internal SignedNumeric([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
+        private protected SignedNumeric([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
+
+        private protected CSharpNumericTypeInfo NumericTypeInfo { get; private set; }
 
         protected sealed override bool IsAvailableForType(IType type)
         {
@@ -25,7 +27,5 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             return false;
         }
-
-        internal CSharpNumericTypeInfo NumericTypeInfo { get; private set; }
     }
 }

@@ -24,7 +24,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         [NotNull]
         readonly Func<N, double> convertToDouble;
 
-        internal CSharpNumericTypeInfo(
+        public CSharpNumericTypeInfo(
             bool isSigned,
             N one,
             [NotNull] string literalSuffix,

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -146,23 +147,17 @@ namespace ReCommendedExtension.Analyzers
         {
             switch (attributesOwnerDeclaration.DeclaredElement)
             {
-                case IMethod method:
-                    return method.ReturnType;
+                case IMethod method: return method.ReturnType;
 
-                case IParameter parameter:
-                    return parameter.Type;
+                case IParameter parameter: return parameter.Type;
 
-                case IProperty property:
-                    return property.Type;
+                case IProperty property: return property.Type;
 
-                case IDelegate delegateType:
-                    return delegateType.InvokeMethod.ReturnType;
+                case IDelegate delegateType: return delegateType.InvokeMethod.ReturnType;
 
-                case IField field:
-                    return field.Type;
+                case IField field: return field.Type;
 
-                default:
-                    return null;
+                default: return null;
             }
         }
 
@@ -383,7 +378,7 @@ namespace ReCommendedExtension.Analyzers
                                 "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), " +
                                 "or a generic task-like type, or a {1}<T>.",
                                 nameof(IEnumerable<int>),
-                                "Lazy")));
+                                nameof(Lazy<int>))));
                 }
             }
         }
@@ -404,14 +399,13 @@ namespace ReCommendedExtension.Analyzers
             var suppressMessageAttributes =
                 from attribute in attributesOwnerDeclaration.AttributesEnumerable
                 let attributeInstance = attribute.GetAttributeInstance()
-                where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute)
-                where attributeInstance.PositionParameterCount == 2
+                where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute) && attributeInstance.PositionParameterCount == 2
                 let categoryConstantValue = attributeInstance.PositionParameter(0).ConstantValue
                 let checkIdConstantValue = attributeInstance.PositionParameter(1).ConstantValue
-                where categoryConstantValue != null
-                where checkIdConstantValue != null
-                where categoryConstantValue.IsString()
-                where checkIdConstantValue.IsString()
+                where categoryConstantValue != null &&
+                    checkIdConstantValue != null &&
+                    categoryConstantValue.IsString() &&
+                    checkIdConstantValue.IsString()
                 let justificationConstantValue = attributeInstance.NamedParameter(nameof(SuppressMessageAttribute.Justification)).ConstantValue
                 where justificationConstantValue == null ||
                     !justificationConstantValue.IsString() ||
@@ -480,14 +474,14 @@ namespace ReCommendedExtension.Analyzers
                 let typeElement = attribute.GetAttributeInstance().GetAttributeType().GetTypeElement()
                 where typeElement != null
                 let conditions =
-                    (from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
-                        where attributeInstance.AssertNotNull().PositionParameterCount == 1
-                        let constantValue = attributeInstance.PositionParameter(0).ConstantValue
-                        where constantValue != null
-                        where constantValue.IsString()
-                        let condition = (string)constantValue.Value
-                        where !string.IsNullOrEmpty(condition)
-                        select condition).ToList()
+                (
+                    from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
+                    where attributeInstance.AssertNotNull().PositionParameterCount == 1
+                    let constantValue = attributeInstance.PositionParameter(0).ConstantValue
+                    where constantValue != null && constantValue.IsString()
+                    let condition = (string)constantValue.Value
+                    where !string.IsNullOrEmpty(condition)
+                    select condition).ToList()
                 where conditions.Count > 0
                 select new { Attribute = attribute, Conditions = conditions };
 

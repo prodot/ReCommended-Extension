@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Assertions
     {
         [NotNull]
         [ItemNotNull]
-        internal static HashSet<Assertion> CollectAssertions(
+        public static HashSet<Assertion> CollectAssertions(
             [NotNull] AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
             [NotNull] AssertionConditionAnnotationProvider assertionConditionAnnotationProvider,
             [NotNull] ICSharpTreeNode rootNode)

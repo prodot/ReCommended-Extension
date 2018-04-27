@@ -22,6 +22,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value * 2,
                     value => value);
             }
+
             if (type.IsUint())
             {
                 return new CSharpNumericTypeInfo<uint>(
@@ -35,6 +36,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value * 2u,
                     value => value);
             }
+
             if (type.IsLong())
             {
                 return new CSharpNumericTypeInfo<long>(
@@ -48,6 +50,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value * 2L,
                     value => value);
             }
+
             if (type.IsUlong())
             {
                 return new CSharpNumericTypeInfo<ulong>(
@@ -61,6 +64,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value * 2ul,
                     value => value);
             }
+
             if (type.IsByte())
             {
                 return new CSharpNumericTypeInfo<byte>(
@@ -74,6 +78,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => (byte)(value * 2),
                     value => value);
             }
+
             if (type.IsSbyte())
             {
                 return new CSharpNumericTypeInfo<sbyte>(
@@ -87,6 +92,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => (sbyte)(value * 2),
                     value => value);
             }
+
             if (type.IsShort())
             {
                 return new CSharpNumericTypeInfo<short>(
@@ -100,6 +106,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => (short)(value * 2),
                     value => value);
             }
+
             if (type.IsUshort())
             {
                 return new CSharpNumericTypeInfo<ushort>(
@@ -113,6 +120,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => (ushort)(value * 2),
                     value => value);
             }
+
             if (type.IsDecimal())
             {
                 return new CSharpNumericTypeInfo<decimal>(
@@ -126,6 +134,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value * 2m,
                     value => (double)value);
             }
+
             if (type.IsDouble())
             {
                 return new CSharpNumericTypeInfo<double>(
@@ -139,6 +148,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value * 2d,
                     value => value);
             }
+
             if (type.IsFloat())
             {
                 return new CSharpNumericTypeInfo<float>(
