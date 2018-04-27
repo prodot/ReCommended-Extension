@@ -91,14 +91,14 @@ namespace ReCommendedExtension
 
         [DebuggerStepThrough]
         [NotNull]
-        internal static T AssertNotNull<T>(this T value) where T : class
+        public static T AssertNotNull<T>(this T value) where T : class
         {
             Debug.Assert(value != null);
 
             return value;
         }
 
-        internal static bool OverridesInheritedMember([NotNull] this IDeclaration declaration)
+        public static bool OverridesInheritedMember([NotNull] this IDeclaration declaration)
         {
             if (!declaration.IsValid())
             {
@@ -121,14 +121,14 @@ namespace ReCommendedExtension
 
         [NotNull]
         [ItemNotNull]
-        internal static IEnumerable<T> WithoutObsolete<T>([NotNull][ItemNotNull] this IEnumerable<T> fields) where T : class, IAttributesOwner
+        public static IEnumerable<T> WithoutObsolete<T>([NotNull][ItemNotNull] this IEnumerable<T> fields) where T : class, IAttributesOwner
             => from field in fields where !field.HasAttributeInstance(PredefinedType.OBSOLETE_ATTRIBUTE_CLASS, false) select field;
 
-        internal static string TryGetContractName([NotNull] this IExpressionStatement expressionStatement)
+        public static string TryGetContractName([NotNull] this IExpressionStatement expressionStatement)
             => expressionStatement.TryGetMemberName(contractClassFullName);
 
         [NotNull]
-        internal static IClassDeclaration EnsureContractClass([NotNull] this ICSharpTypeDeclaration typeDeclaration, [NotNull] IPsiModule psiModule)
+        public static IClassDeclaration EnsureContractClass([NotNull] this ICSharpTypeDeclaration typeDeclaration, [NotNull] IPsiModule psiModule)
         {
             var factory = CSharpElementFactory.GetInstance(typeDeclaration);
 
@@ -210,7 +210,7 @@ namespace ReCommendedExtension
         }
 
         [NotNull]
-        internal static IMethodDeclaration EnsureOverriddenMethodInContractClass(
+        public static IMethodDeclaration EnsureOverriddenMethodInContractClass(
             [NotNull] this IMethodDeclaration methodDeclaration,
             [NotNull] IClassDeclaration contractClassDeclaration)
         {
@@ -284,7 +284,7 @@ namespace ReCommendedExtension
         }
 
         [NotNull]
-        internal static IIndexerDeclaration EnsureOverriddenIndexerInContractClass(
+        public static IIndexerDeclaration EnsureOverriddenIndexerInContractClass(
             [NotNull] this IIndexerDeclaration indexerDeclaration,
             [NotNull] IClassDeclaration contractClassDeclaration)
         {
@@ -341,7 +341,7 @@ namespace ReCommendedExtension
         }
 
         [NotNull]
-        internal static IPropertyDeclaration EnsureOverriddenPropertyInContractClass(
+        public static IPropertyDeclaration EnsureOverriddenPropertyInContractClass(
             [NotNull] this IPropertyDeclaration propertyDeclaration,
             [NotNull] IClassDeclaration contractClassDeclaration)
         {
@@ -380,7 +380,7 @@ namespace ReCommendedExtension
         }
 
         [NotNull]
-        internal static IMethodDeclaration EnsureContractInvariantMethod(
+        public static IMethodDeclaration EnsureContractInvariantMethod(
             [NotNull] this IClassLikeDeclaration classLikeDeclaration,
             [NotNull] IPsiModule psiModule)
         {
@@ -411,7 +411,7 @@ namespace ReCommendedExtension
             return contractInvariantMethodDeclaration;
         }
 
-        internal static bool IsGenericArray([NotNull] this IType type, [NotNull] ITreeNode context)
+        public static bool IsGenericArray([NotNull] this IType type, [NotNull] ITreeNode context)
         {
             var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, context);
             if (elementType != null)
@@ -428,7 +428,7 @@ namespace ReCommendedExtension
             return false;
         }
 
-        internal static bool IsGenericEnumerableOrDescendant([NotNull] this IType type)
+        public static bool IsGenericEnumerableOrDescendant([NotNull] this IType type)
         {
             if (type.IsGenericIEnumerable())
             {
@@ -445,7 +445,7 @@ namespace ReCommendedExtension
         }
 
         [JetBrains.Annotations.Pure]
-        internal static bool IsDefaultValueOf([NotNull] this ITreeNode element, [NotNull] IType type)
+        public static bool IsDefaultValueOf([NotNull] this ITreeNode element, [NotNull] IType type)
         {
             switch (element)
             {
@@ -497,7 +497,7 @@ namespace ReCommendedExtension
             return false;
         }
 
-        internal static ValueAnalysisMode GetValueAnalysisMode([NotNull] this ElementProblemAnalyzerData data)
+        public static ValueAnalysisMode GetValueAnalysisMode([NotNull] this ElementProblemAnalyzerData data)
             => data.SettingsStore.GetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode);
 
         /// <summary>
@@ -516,7 +516,7 @@ namespace ReCommendedExtension
             return argumentList.Parent as IObjectCreationExpression;
         }
 
-        internal static bool IsEventTarget([NotNull] this IReference reference)
+        public static bool IsEventTarget([NotNull] this IReference reference)
         {
             var treeNode = reference.GetTreeNode();
 
@@ -549,7 +549,7 @@ namespace ReCommendedExtension
         /// <summary>
         /// Returns <c>true</c> if used in the pattern <c>button.Click ±= </c><paramref name="assignmentExpression"/><c>;</c>.
         /// </summary>
-        internal static bool IsEventSubscriptionOrUnSubscription([NotNull] this IAssignmentExpression assignmentExpression)
+        public static bool IsEventSubscriptionOrUnSubscription([NotNull] this IAssignmentExpression assignmentExpression)
         {
             switch (assignmentExpression.AssignmentType)
             {
@@ -568,7 +568,7 @@ namespace ReCommendedExtension
             return (assignmentExpression.Dest as IReferenceExpression)?.Reference.Resolve().DeclaredElement is IEvent;
         }
 
-        internal static bool IsVoidMethodDeclaration([NotNull] this ILocalFunctionDeclaration localFunctionDeclaration)
+        public static bool IsVoidMethodDeclaration([NotNull] this ILocalFunctionDeclaration localFunctionDeclaration)
         {
             var predefinedTypeName = (localFunctionDeclaration.TypeUsage as IPredefinedTypeUsage)?.ScalarPredefinedTypeName;
 
@@ -583,7 +583,7 @@ namespace ReCommendedExtension
         /// <remarks>
         /// This method has been removed from ReSharper 10 SDK.
         /// </remarks>
-        internal static bool IsVoidMethodDeclaration([NotNull] this IMethodDeclaration methodDeclaration)
+        public static bool IsVoidMethodDeclaration([NotNull] this IMethodDeclaration methodDeclaration)
         {
             var predefinedTypeName = (methodDeclaration.TypeUsage as IPredefinedTypeUsage)?.ScalarPredefinedTypeName;
 
@@ -598,7 +598,7 @@ namespace ReCommendedExtension
         /// <remarks>
         /// This method (<c>CSharpDaemonUtil.IsUnderAnonymousMethod</c>) has been removed from ReSharper 10 SDK.
         /// </remarks>
-        internal static bool IsUnderAnonymousMethod(this ITreeNode element)
+        public static bool IsUnderAnonymousMethod(this ITreeNode element)
         {
             foreach (var treeNode in element.ContainingNodes())
             {
@@ -615,7 +615,7 @@ namespace ReCommendedExtension
         /// This method (<c>CollectionTypeUtil.GetKeyValueTypesForGenericDictionary</c>) has been removed from ReSharper 10 SDK.
         /// </remarks>
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute", Justification = "The method was imported.")]
-        internal static IList<JetBrains.Util.Pair<IType, IType>> GetKeyValueTypesForGenericDictionary([NotNull] this IDeclaredType declaredType)
+        public static IList<JetBrains.Util.Pair<IType, IType>> GetKeyValueTypesForGenericDictionary([NotNull] this IDeclaredType declaredType)
         {
             var typeElement1 = declaredType.GetTypeElement();
             if (typeElement1 == null)

@@ -36,7 +36,7 @@ namespace ReCommendedExtension.ContextActions
             [NotNull]
             readonly ITreeNode injectorOwnerNode;
 
-            internal InjectLanguageActionItem([NotNull] IInjectorProviderInLiterals injectorProvider, [NotNull] ITreeNode injectorOwnerNode)
+            public InjectLanguageActionItem([NotNull] IInjectorProviderInLiterals injectorProvider, [NotNull] ITreeNode injectorOwnerNode)
             {
                 InjectorProvider = injectorProvider;
                 this.injectorOwnerNode = injectorOwnerNode;
@@ -56,10 +56,10 @@ namespace ReCommendedExtension.ContextActions
             }
 
             [NotNull]
-            internal IInjectorProviderInLiterals InjectorProvider { get; }
+            public IInjectorProviderInLiterals InjectorProvider { get; }
 
             [ItemNotNull]
-            internal HashSet<string> LanguageEqualsCommentTexts { get; set; }
+            public HashSet<string> LanguageEqualsCommentTexts { get; set; }
 
             public override string Text => InjectorProvider.InjectDescription.AssertNotNull();
 

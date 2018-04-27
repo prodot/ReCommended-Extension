@@ -7,7 +7,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     public abstract class IntPtrUIntPtr : AddContractContextAction
     {
-        internal IntPtrUIntPtr([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
+        private protected IntPtrUIntPtr([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
+
+        private protected bool IsSigned { get; private set; }
 
         protected sealed override bool IsAvailableForType(IType type)
         {
@@ -37,7 +39,5 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             return false;
         }
-
-        internal bool IsSigned { get; private set; }
     }
 }

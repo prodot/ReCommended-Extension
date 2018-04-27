@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Highlightings
     {
         readonly bool includeAttributeBracketsInRange;
 
-        internal AttributeHighlighting(
+        private protected AttributeHighlighting(
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
             [NotNull] IAttribute attribute,
             bool includeAttributeBracketsInRange,

@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Assertions
 {
     internal sealed class AssertionStatement : Assertion
     {
-        internal static AssertionStatement TryFromInvocationExpression(
+        public static AssertionStatement TryFromInvocationExpression(
             [NotNull] IInvocationExpression invocationExpression,
             [NotNull] AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
             [NotNull] AssertionConditionAnnotationProvider assertionConditionAnnotationProvider)
