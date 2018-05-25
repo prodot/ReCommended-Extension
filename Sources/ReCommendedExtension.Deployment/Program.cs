@@ -111,11 +111,13 @@ namespace ReCommendedExtension.Deployment
                     return Assembly.ReflectionOnlyLoad(e.Name);
                 }
 
-                var assemblyDirectoryPath = Path.GetDirectoryName(assemblyPath);
-                Debug.Assert(assemblyDirectoryPath != null);
-
-                var packagesPath = Path.Combine(assemblyDirectoryPath, @"..\..\..\packages");
-                var file = Directory.EnumerateFiles(packagesPath, name + ".dll", SearchOption.AllDirectories).Single();
+                var packagesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages");
+                var file = (
+                    from f in Directory.EnumerateFiles(packagesPath, name + ".dll", SearchOption.AllDirectories)
+                    let version = FileVersionInfo.GetVersionInfo(f)
+                    orderby version.FileMajorPart descending, version.FileMinorPart descending, version.FileBuildPart descending, version
+                        .FilePrivatePart descending
+                    select f).First();
                 Debug.Assert(file != null);
 
                 return Assembly.ReflectionOnlyLoadFrom(file);
