@@ -9,7 +9,14 @@ namespace ReCommendedExtension.Tests
     {
         [NotNull]
         [ItemNotNull]
+        static readonly string[] pathFragmentsToExclude = { "preview", "-rc" };
+
+        [NotNull]
+        [ItemNotNull]
         public static IEnumerable<string> GetReferencedAssemblies([NotNull][ItemNotNull] this IEnumerable<string> baseReferencedAssemblies)
-            => from assembly in baseReferencedAssemblies where assembly.IndexOf("preview", StringComparison.OrdinalIgnoreCase) == -1 select assembly;
+            =>
+                from assembly in baseReferencedAssemblies
+                where pathFragmentsToExclude.All(f => assembly.IndexOf(f, StringComparison.OrdinalIgnoreCase) == -1)
+                select assembly;
     }
 }
