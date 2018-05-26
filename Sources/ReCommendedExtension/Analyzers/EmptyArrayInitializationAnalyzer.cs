@@ -16,12 +16,10 @@ namespace ReCommendedExtension.Analyzers
     [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(EmptyArrayInitializationHighlighting) })]
     public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
-        internal const string ArrayEmptyMethodName = "Empty"; // todo: use 'nameof(Array.Empty)' when .NET Framework 4.6 is used
-
         [Pure]
         static bool ArrayEmptyMethodExists([NotNull] IPsiModule psiModule)
             => GetArrayType(psiModule)
-                .Methods.Any(method => method.IsStatic && method.ShortName == ArrayEmptyMethodName && method.Parameters.Count == 0);
+                .Methods.Any(method => method.IsStatic && method.ShortName == nameof(Array.Empty) && method.Parameters.Count == 0);
 
         [Pure]
         [NotNull]
@@ -36,7 +34,7 @@ namespace ReCommendedExtension.Analyzers
             return string.Format(
                 "Use '{0}.{1}<{2}>()'.",
                 nameof(Array),
-                ArrayEmptyMethodName,
+                nameof(Array.Empty),
                 arrayElementType.GetPresentableName(CSharpLanguage.Instance));
         }
 
