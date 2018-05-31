@@ -4,7 +4,7 @@ using ReCommendedExtension.ContextActions;
 
 namespace ReCommendedExtension.Tests.ContextActions
 {
-    [TestNetFramework4]
+    [TestNetFramework45]
     [TestFixture]
     public sealed class AnnotateWithItemNotNullExecuteTests : ContextActionExecuteTestBase<AnnotateWithItemNotNull>
     {
