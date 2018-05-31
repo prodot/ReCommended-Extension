@@ -232,10 +232,10 @@ namespace Test
 (50): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
 (51): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
 (52): ReSharper Warning: Annotation is not allowed because the declared element overrides or implements the inherited member.
-(53): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(53): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a generic task-like type, or a Lazy<T>.
 (54): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
-(55): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
-(56): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
+(55): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a generic task-like type, or a Lazy<T>.
+(56): ReSharper Warning: Annotation is not allowed because the declared element must be an IEnumerable<T> (or its descendant), or a generic task-like type, or a Lazy<T>.
 (57): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
 (58): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
 (59): ReSharper Warning: Annotation is not allowed because the declared task result type is not a reference type.
