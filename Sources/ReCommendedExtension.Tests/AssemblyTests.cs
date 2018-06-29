@@ -1,7 +1,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using JetBrains.Application.UI.Extensions;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using NUnit.Framework;
 
 namespace ReCommendedExtension.Tests
@@ -35,6 +37,23 @@ namespace ReCommendedExtension.Tests
             Assert.AreEqual(
                 new Version(assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build),
                 new Version(fileVersionAttribute.Version));
+        }
+
+        [Test]
+        public void TestDuplicateTexts()
+        {
+            var assembly = typeof(IReCommendedExtensionZone).Assembly;
+
+            var attributes =
+                from a in assembly.GetCustomAttributes<RegisterConfigurableSeverityAttribute>()
+                group a by a.Title
+                into groupings
+                where groupings.Count() > 1
+                select groupings.Key;
+
+            var duplicateTitle = attributes.FirstOrDefault();
+
+            Assert.IsNull(duplicateTitle, $"Duplicate {nameof(RegisterConfigurableSeverityAttribute.Title)} \"{duplicateTitle}\" detected.");
         }
     }
 }
