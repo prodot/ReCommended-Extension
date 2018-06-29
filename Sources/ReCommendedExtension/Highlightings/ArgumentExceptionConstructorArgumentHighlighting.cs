@@ -11,7 +11,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
         ArgumentExceptionConstructorArgumentHighlighting.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
-        "Redundant invocation of the property change notifiers from the constructor" + ZoneMarker.Suffix,
+        "Parameter name used for the exception message" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
 
