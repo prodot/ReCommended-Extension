@@ -1,4 +1,5 @@
-﻿using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -12,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
     {
         protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile)
+        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
             => highlighting is NotAllowedAnnotationHighlighting ||
                 highlighting is ConflictingAnnotationHighlighting ||
                 highlighting is RedundantAnnotationHighlighting;

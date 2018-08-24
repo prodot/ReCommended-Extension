@@ -45,11 +45,13 @@ namespace ReCommendedExtension.ContextActions
             [NotNull]
             ICSharpCommentNode CreateCommentNode([NotNull] CSharpElementFactory factory, CommentType commentType)
             {
+                Debug.Assert(InjectorProvider.LanguageEqualsCommentTexts != null);
+
                 switch (commentType)
                 {
-                    case CommentType.END_OF_LINE_COMMENT: return factory.CreateComment("// " + InjectorProvider.LanguageEqualsCommentText);
+                    case CommentType.END_OF_LINE_COMMENT: return factory.CreateComment("// " + InjectorProvider.LanguageEqualsCommentTexts[0]);
 
-                    case CommentType.MULTILINE_COMMENT: return factory.CreateComment("/* " + InjectorProvider.LanguageEqualsCommentText + " */");
+                    case CommentType.MULTILINE_COMMENT: return factory.CreateComment("/* " + InjectorProvider.LanguageEqualsCommentTexts[0] + " */");
 
                     default: throw new NotSupportedException();
                 }
@@ -176,7 +178,7 @@ namespace ReCommendedExtension.ContextActions
                 select new InjectLanguageActionItem(injectorProvider, node)).ToList();
 
             var languageEqualsCommentTexts = new HashSet<string>(
-                from actionItem in actionItems select actionItem.AssertNotNull().InjectorProvider.LanguageEqualsCommentText,
+                from actionItem in actionItems select actionItem.AssertNotNull().InjectorProvider.LanguageEqualsCommentTexts.AssertNotNull()[0],
                 StringComparer.OrdinalIgnoreCase);
 
             foreach (var actionItem in actionItems)

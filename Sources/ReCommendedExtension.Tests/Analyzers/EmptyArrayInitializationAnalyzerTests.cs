@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -15,7 +16,7 @@ namespace ReCommendedExtension.Tests.Analyzers
     {
         protected override string RelativeTestDataPath => @"Analyzers\EmptyArrayInitialization";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile)
+        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
             => highlighting is EmptyArrayInitializationHighlighting;
 
         [Test]

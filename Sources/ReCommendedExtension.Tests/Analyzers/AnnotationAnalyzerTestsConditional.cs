@@ -1,4 +1,5 @@
-﻿using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
@@ -11,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers
     {
         protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile)
+        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
             => highlighting is ConditionalAnnotationHighlighting;
 
         [Test]

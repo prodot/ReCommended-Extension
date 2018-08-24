@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -20,7 +21,7 @@ namespace ReCommendedExtension.Tests.Analyzers
     {
         protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile)
+        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
             => highlighting is MissingSuppressionJustificationHighlighting;
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
