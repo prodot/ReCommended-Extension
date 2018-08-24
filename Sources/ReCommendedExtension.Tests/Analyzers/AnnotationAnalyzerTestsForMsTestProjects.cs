@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -28,7 +26,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override void DoTest(IProject project)
         {
             // patch the project type guids (applying [TestFlavours("3AC096D0-A1C2-E12C-1390-A8335801FDAB")] doesn't work)
-            var projectTypeGuids = new HashSet<Guid>(project.ProjectProperties.ProjectTypeGuids ?? Enumerable.Empty<Guid>());
+            var projectTypeGuids = project.ProjectProperties.ProjectTypeGuids.ToHashSet();
             if (projectTypeGuids.Add(MsTestProjectFlavor.MsTestProjectFlavorGuid))
             {
                 var field = project.ProjectProperties.GetType()
