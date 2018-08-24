@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
@@ -33,7 +34,7 @@ namespace ReCommendedExtension.QuickFixes
                 return string.Format(
                     "Replace with '{0}.{1}<{2}>()'",
                     nameof(Array),
-                    EmptyArrayInitializationAnalyzer.ArrayEmptyMethodName,
+                    nameof(Array.Empty),
                     highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance));
             }
         }
@@ -47,7 +48,7 @@ namespace ReCommendedExtension.QuickFixes
                 ModificationUtil.ReplaceChild(
                     highlighting.TreeNode,
                     factory.CreateExpression(
-                        $"$0.{EmptyArrayInitializationAnalyzer.ArrayEmptyMethodName}<$1>()",
+                        $"$0.{nameof(Array.Empty)}<$1>()",
                         EmptyArrayInitializationAnalyzer.GetArrayType(highlighting.TreeNode.GetPsiModule()),
                         highlighting.ArrayElementType));
             }
