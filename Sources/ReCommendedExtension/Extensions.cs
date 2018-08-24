@@ -19,6 +19,7 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using JetBrains.Util;
 
 namespace ReCommendedExtension
 {
@@ -181,7 +182,7 @@ namespace ReCommendedExtension
                 var attribute = factory.CreateAttribute(
                     contractClassAttributeTypeElement,
                     new[] { new AttributeValue(typeofExpression.ArgumentType) },
-                    new JetBrains.Util.Pair<string, AttributeValue>[] { });
+                    Array.Empty<Pair<string, AttributeValue>>());
 
                 typeDeclaration.AddAttributeAfter(attribute, null);
 
