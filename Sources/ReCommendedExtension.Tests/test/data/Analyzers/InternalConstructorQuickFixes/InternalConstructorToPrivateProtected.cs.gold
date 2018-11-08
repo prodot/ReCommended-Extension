@@ -1,0 +1,7 @@
+﻿namespace ReCommendedExtension.Tests.test.data.Analyzers.InternalConstructor
+{
+    public abstract class InternalConstructor
+    {
+      private{caret} protected InternalConstructor(string x) { }
+    }
+}

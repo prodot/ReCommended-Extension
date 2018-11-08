@@ -100,6 +100,10 @@
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke2.cs.gold" />
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvokeAvailability.cs.gold" />
     <None Include="test\data\Analyzers\DelegateInvoke\DelegateInvoke.cs.gold" />
+    <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorAvailability.cs.gold" />
+    <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorToPrivateProtected.cs.gold" />
+    <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorToProtected.cs.gold" />
+    <None Include="test\data\Analyzers\InternalConstructor\InternalConstructor.cs.gold" />
     <None Include="test\data\Analyzers\LocalSuppression\LocalSuppression.cs.gold" />
     <None Include="test\data\Analyzers\LockOnObjectWithWeakIdentity\LockOnObjectWithWeakIdentity.cs.gold" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes\NotifyPropertyChangedInvocatorFromConstructor.cs.gold" />
@@ -131,6 +135,9 @@
     <Compile Include="Analyzers\DelegateInvokeAnalyzerTests.cs" />
     <Compile Include="Analyzers\DelegateInvokeQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\DelegateInvokeQuickFixTests.cs" />
+    <Compile Include="Analyzers\InternalConstructorAnalyzerTests.cs" />
+    <Compile Include="Analyzers\InternalConstructorQuickFixAvailabilityTests.cs" />
+    <Compile Include="Analyzers\InternalConstructorQuickFixTests.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzerTests.cs" />
     <Compile Include="Analyzers\LockOnObjectWithWeakIdentityAnalyzerTests.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests.cs" />
@@ -628,6 +635,10 @@
     <None Include="test\data\Analyzers\LockOnObjectWithWeakIdentity\LockOnObjectWithWeakIdentity.cs" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization4.cs" />
     <None Include="test\data\Analyzers\ArrayWithDefaultValuesInitializationQuickFixes\ArrayWithDefaultValuesInitialization5.cs" />
+    <None Include="test\data\Analyzers\InternalConstructor\InternalConstructor.cs" />
+    <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorAvailability.cs" />
+    <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorToProtected.cs" />
+    <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorToPrivateProtected.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
