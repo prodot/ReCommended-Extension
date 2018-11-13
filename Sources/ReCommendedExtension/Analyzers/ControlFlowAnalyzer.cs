@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -51,7 +52,8 @@ namespace ReCommendedExtension.Analyzers
 
             var inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
 
-            var alwaysSuccessTryCastExpressions = new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions ?? new IAsExpression[] { });
+            var alwaysSuccessTryCastExpressions =
+                new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions ?? Array.Empty<IAsExpression>());
 
             foreach (var assertion in assertions)
             {

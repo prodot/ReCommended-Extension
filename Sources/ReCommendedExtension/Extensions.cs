@@ -645,7 +645,7 @@ namespace ReCommendedExtension
         /// This method (<c>CollectionTypeUtil.GetKeyValueTypesForGenericDictionary</c>) has been removed from ReSharper 10 SDK.
         /// </remarks>
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute", Justification = "The method was imported.")]
-        public static IList<JetBrains.Util.Pair<IType, IType>> GetKeyValueTypesForGenericDictionary([NotNull] this IDeclaredType declaredType)
+        public static IList<Pair<IType, IType>> GetKeyValueTypesForGenericDictionary([NotNull] this IDeclaredType declaredType)
         {
             var typeElement1 = declaredType.GetTypeElement();
             if (typeElement1 == null)
@@ -665,14 +665,14 @@ namespace ReCommendedExtension
             }
 
             var ancestorSubstitution = typeElement1.GetAncestorSubstitution(typeElement2);
-            var localList = new JetBrains.Util.LocalList<JetBrains.Util.Pair<IType, IType>>();
+            var localList = new LocalList<Pair<IType, IType>>();
             foreach (var substitution1 in ancestorSubstitution)
             {
                 var substitution2 = declaredType.GetSubstitution().Apply(substitution1);
                 var typeParameters = typeElement2.TypeParameters;
                 var first = substitution2[typeParameters[0]];
                 var second = substitution2[typeParameters[1]];
-                localList.Add(JetBrains.Util.Pair.Of(first, second));
+                localList.Add(Pair.Of(first, second));
             }
 
             return localList.ResultingList();

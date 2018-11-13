@@ -13,16 +13,13 @@ namespace ReCommendedExtension.Analyzers
     public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     {
         [NotNull]
-        static readonly string[] emptyList = { };
-
-        [NotNull]
         static IList<string> GetConditionsIfConditionalMethodInvoked([NotNull] IInvocationExpression invocationExpression)
         {
             var method = invocationExpression.Reference?.Resolve().DeclaredElement as IMethod;
 
             if (method == null)
             {
-                return emptyList; // cannot analyze => do not highlight
+                return System.Array.Empty<string>(); // cannot analyze => do not highlight
             }
 
             var declaredConditions = (
@@ -36,13 +33,13 @@ namespace ReCommendedExtension.Analyzers
 
             if (declaredConditions.Count == 0)
             {
-                return emptyList; // no declared conditions => do not highlight
+                return System.Array.Empty<string>(); // no declared conditions => do not highlight
             }
 
             var sourceFile = invocationExpression.GetSourceFile();
             if (sourceFile == null)
             {
-                return emptyList; // cannot analyze => do not highlight
+                return System.Array.Empty<string>(); // cannot analyze => do not highlight
             }
 
             // initialize with assembly-level conditions
