@@ -18,7 +18,11 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 namespace ReCommendedExtension.Highlightings
 {
-    [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
+    [ConfigurableSeverityHighlighting(
+        SeverityId,
+        CSharpLanguage.Name,
+        AttributeId = HighlightingAttributeIds.DEADCODE_ATTRIBUTE,
+        OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class RedundantAwaitHighlighting : Highlighting
     {
         internal const string SeverityId = "RedundantAwait";
