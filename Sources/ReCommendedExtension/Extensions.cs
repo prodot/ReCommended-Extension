@@ -596,6 +596,35 @@ namespace ReCommendedExtension
             return predefinedTypeName.TypeKeyword.GetTokenType() == CSharpTokenType.VOID_KEYWORD;
         }
 
+        public static bool IsConfigureAwaitAvailable(this IUnaryExpression awaitedExpression)
+        {
+            var typeElement = (awaitedExpression?.Type() as IDeclaredType)?.GetTypeElement();
+            if (typeElement != null)
+            {
+                var hasConfigureAwaitMethod = typeElement.Methods.Any(
+                    method =>
+                    {
+                        Debug.Assert(method != null);
+
+                        if (method.ShortName == ClrMethodsNames.ConfigureAwait && method.Parameters.Count == 1)
+                        {
+                            Debug.Assert(method.Parameters[0] != null);
+
+                            return method.Parameters[0].Type.IsBool();
+                        }
+
+                        return false;
+                    });
+
+                if (hasConfigureAwaitMethod)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /// <remarks>
         /// This method (<c>CSharpDaemonUtil.IsUnderAnonymousMethod</c>) has been removed from ReSharper 10 SDK.
         /// </remarks>

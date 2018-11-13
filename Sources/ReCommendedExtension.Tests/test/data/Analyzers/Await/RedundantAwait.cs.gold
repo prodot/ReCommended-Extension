@@ -1,0 +1,724 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
+{
+    public class AwaitForMethods
+    {
+        |async|(0) Task Method()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(1) Task.Delay(10);
+        }
+
+        |async|(2) Task Method_WithConfigureAwait()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(3) Task.Delay(10)|.ConfigureAwait(false)|(4);
+        }
+
+        |async|(5) Task Method_AsExpressionBodied() => |await|(6) Task.Delay(10);
+
+        |async|(7) Task Method_AsExpressionBodied_WithConfigureAwait() => |await|(8) Task.Delay(10)|.ConfigureAwait(false)|(9);
+
+        |async|(10) Task<int> Method2()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(11) Task.FromResult(LocalFunction());
+
+            int LocalFunction() => 3;
+        }
+
+        |async|(12) Task<int> Method2_WithConfigureAwait()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(13) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(14);
+
+            int LocalFunction() => 3;
+        }
+
+        |async|(15) Task<int> Method2_AsExpressionBodied() => |await|(16) Task.FromResult(3);
+
+        |async|(17) Task<int> Method2_AsExpressionBodied_WithConfigureAwait() => |await|(18) Task.FromResult(3)|.ConfigureAwait(false)|(19);
+
+        |async|(20) Task Method4()
+        {
+            Console.WriteLine();
+            |await|(21) Task.FromResult("one");
+        }
+
+        |async|(22) Task Method4_WithConfigureAwait()
+        {
+            Console.WriteLine();
+            |await|(23) Task.FromResult("one")|.ConfigureAwait(false)|(24);
+        }
+
+        |async|(25) Task Method4_AsExpressionBodied() => |await|(26) Task.FromResult("one");
+
+        |async|(27) Task Method4_AsExpressionBodied_WithConfigureAwait() => |await|(28) Task.FromResult("one")|.ConfigureAwait(false)|(29);
+
+        async Task<bool> Method_MultipleAwaits()
+        {
+            return await Task.FromResult(await Task.FromResult(false));
+        }
+
+        async Task<bool> MethodA_MultipleAwaits_AsExpressionBodied() => await Task.FromResult(await Task.FromResult(false));
+
+        async Task Method_AwaitNonLast()
+        {
+            await Task.Delay(10);
+            Console.WriteLine();
+        }
+
+        async Task<object> Method_Covariant()
+        {
+            return await Task.FromResult("one");
+        }
+
+        async Task<object> Method_Covariant_AsExpressionBodied() => await Task.FromResult("one");
+
+        async Task<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex()
+        {
+            return await Task.FromResult(new Dictionary<int, IList<string>>());
+        }
+
+        async Task<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex_AsExpressionBodied()
+            => await Task.FromResult(new Dictionary<int, IList<string>>());
+
+        async Task Method_AwaitNonTask()
+        {
+            await Task.Yield();
+        }
+
+        async Task Method_AwaitNonTask_AsExpressionBodied() => await Task.Yield();
+    }
+
+    public class AwaitForLambdaVariables
+    {
+        void Method()
+        {
+            Func<Task> Method = |async|(30) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(31) Task.Delay(10);
+            };
+
+            Func<Task> Method_WithConfigureAwait = |async|(32) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(33) Task.Delay(10)|.ConfigureAwait(false)|(34);
+            };
+
+            Func<Task> Method_AsExpressionBodied = |async|(35) () => |await|(36) Task.Delay(10);
+
+            Func<Task> Method_AsExpressionBodied_WithConfigureAwait = |async|(37) () => |await|(38) Task.Delay(10)|.ConfigureAwait(false)|(39);
+
+            Func<Task<int>> Method2 = |async|(40) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(41) Task.FromResult(LocalFunction());
+
+                int LocalFunction() => 3;
+            };
+
+            Func<Task<int>> Method2_WithConfigureAwait = |async|(42) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(43) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(44);
+
+                int LocalFunction() => 3;
+            };
+
+            Func<Task<int>> Method2_AsExpressionBodied = |async|(45) () => |await|(46) Task.FromResult(3);
+
+            Func<Task<int>> Method2_AsExpressionBodied_WithConfigureAwait = |async|(47) () => |await|(48) Task.FromResult(3)|.ConfigureAwait(false)|(49);
+
+            Func<Task> Method4 = |async|(50) () =>
+            {
+                Console.WriteLine();
+                |await|(51) Task.FromResult("one");
+            };
+
+            Func<Task> Method4_WithConfigureAwait = |async|(52) () =>
+            {
+                Console.WriteLine();
+                |await|(53) Task.FromResult("one")|.ConfigureAwait(false)|(54);
+            };
+
+            Func<Task> Method4_AsExpressionBodied = |async|(55) () => |await|(56) Task.FromResult("one");
+
+            Func<Task> Method4_AsExpressionBodied_WithConfigureAwait = |async|(57) () => |await|(58) Task.FromResult("one")|.ConfigureAwait(false)|(59);
+
+            Func<Task<bool>> Method_MultipleAwaits = async () => { return await Task.FromResult(await Task.FromResult(false)); };
+
+            Func<Task<bool>> MethodA_MultipleAwaits_AsExpressionBodied = async () => await Task.FromResult(await Task.FromResult(false));
+
+            Func<Task> Method_AwaitNonLast = async () =>
+            {
+                await Task.Delay(10);
+                Console.WriteLine();
+            };
+
+            Func<Task<object>> Method_Covariant = async () => { return await Task.FromResult("one"); };
+
+            Func<Task<object>> Method_Covariant_AsExpressionBodied = async () => await Task.FromResult("one");
+
+            Func<Task<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex = async () =>
+            {
+                return await Task.FromResult(new Dictionary<int, IList<string>>());
+            };
+
+            Func<Task<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex_AsExpressionBodied = async ()
+                => await Task.FromResult(new Dictionary<int, IList<string>>());
+
+            Func<Task> Method_AwaitNonTask = async () => { await Task.Yield(); };
+
+            Func<Task> Method_AwaitNonTask_AsExpressionBodied = async () => await Task.Yield();
+        }
+    }
+
+    public class AwaitForLambdaFields
+    {
+        Func<Task> Method = |async|(60) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(61) Task.Delay(10);
+        };
+
+        Func<Task> Method_WithConfigureAwait = |async|(62) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(63) Task.Delay(10)|.ConfigureAwait(false)|(64);
+        };
+
+        Func<Task> Method_AsExpressionBodied = |async|(65) () => |await|(66) Task.Delay(10);
+
+        Func<Task> Method_AsExpressionBodied_WithConfigureAwait = |async|(67) () => |await|(68) Task.Delay(10)|.ConfigureAwait(false)|(69);
+
+        Func<Task<int>> Method2 = |async|(70) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(71) Task.FromResult(LocalFunction());
+
+            int LocalFunction() => 3;
+        };
+
+        Func<Task<int>> Method2_WithConfigureAwait = |async|(72) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(73) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(74);
+
+            int LocalFunction() => 3;
+        };
+
+        Func<Task<int>> Method2_AsExpressionBodied = |async|(75) () => |await|(76) Task.FromResult(3);
+
+        Func<Task<int>> Method2_AsExpressionBodied_WithConfigureAwait = |async|(77) () => |await|(78) Task.FromResult(3)|.ConfigureAwait(false)|(79);
+
+        Func<Task> Method4 = |async|(80) () =>
+        {
+            Console.WriteLine();
+            |await|(81) Task.FromResult("one");
+        };
+
+        Func<Task> Method4_WithConfigureAwait = |async|(82) () =>
+        {
+            Console.WriteLine();
+            |await|(83) Task.FromResult("one")|.ConfigureAwait(false)|(84);
+        };
+
+        Func<Task> Method4_AsExpressionBodied = |async|(85) () => |await|(86) Task.FromResult("one");
+
+        Func<Task> Method4_AsExpressionBodied_WithConfigureAwait = |async|(87) () => |await|(88) Task.FromResult("one")|.ConfigureAwait(false)|(89);
+
+        Func<Task<bool>> Method_MultipleAwaits = async () => { return await Task.FromResult(await Task.FromResult(false)); };
+
+        Func<Task<bool>> MethodA_MultipleAwaits_AsExpressionBodied = async () => await Task.FromResult(await Task.FromResult(false));
+
+        Func<Task> Method_AwaitNonLast = async () =>
+        {
+            await Task.Delay(10);
+            Console.WriteLine();
+        };
+
+        Func<Task<object>> Method_Covariant = async () => { return await Task.FromResult("one"); };
+
+        Func<Task<object>> Method_Covariant_AsExpressionBodied = async () => await Task.FromResult("one");
+
+        Func<Task<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex = async () =>
+        {
+            return await Task.FromResult(new Dictionary<int, IList<string>>());
+        };
+
+        Func<Task<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex_AsExpressionBodied = async ()
+            => await Task.FromResult(new Dictionary<int, IList<string>>());
+
+        Func<Task> Method_AwaitNonTask = async () => { await Task.Yield(); };
+
+        Func<Task> Method_AwaitNonTask_AsExpressionBodied = async () => await Task.Yield();
+    }
+
+    public class AwaitForAnonymousMethodVariables
+    {
+        void Method()
+        {
+            Func<Task> Method = |async|(90) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(91) Task.Delay(10);
+            };
+
+            Func<Task> Method_WithConfigureAwait = |async|(92) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(93) Task.Delay(10)|.ConfigureAwait(false)|(94);
+            };
+
+            Func<Task<int>> Method2 = |async|(95) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(96) Task.FromResult(LocalFunction());
+
+                int LocalFunction() => 3;
+            };
+
+            Func<Task<int>> Method2_WithConfigureAwait = |async|(97) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(98) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(99);
+
+                int LocalFunction() => 3;
+            };
+
+            Func<Task> Method4 = |async|(100) delegate
+            {
+                Console.WriteLine();
+                |await|(101) Task.FromResult("one");
+            };
+
+            Func<Task> Method4_WithConfigureAwait = |async|(102) delegate
+            {
+                Console.WriteLine();
+                |await|(103) Task.FromResult("one")|.ConfigureAwait(false)|(104);
+            };
+
+            Func<Task<bool>> Method_MultipleAwaits = async delegate { return await Task.FromResult(await Task.FromResult(false)); };
+
+            Func<Task> Method_AwaitNonLast = async delegate
+            {
+                await Task.Delay(10);
+                Console.WriteLine();
+            };
+
+            Func<Task<object>> Method_Covariant = async delegate { return await Task.FromResult("one"); };
+
+            Func<Task<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex = async delegate
+            {
+                return await Task.FromResult(new Dictionary<int, IList<string>>());
+            };
+
+            Func<Task> Method_AwaitNonTask = async delegate { await Task.Yield(); };
+        }
+    }
+
+    public class AwaitForAnonymousMethodFields
+    {
+        Func<Task> Method = |async|(105) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(106) Task.Delay(10);
+        };
+
+        Func<Task> Method_WithConfigureAwait = |async|(107) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(108) Task.Delay(10)|.ConfigureAwait(false)|(109);
+        };
+
+        Func<Task<int>> Method2 = |async|(110) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(111) Task.FromResult(LocalFunction());
+
+            int LocalFunction() => 3;
+        };
+
+        Func<Task<int>> Method2_WithConfigureAwait = |async|(112) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(113) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(114);
+
+            int LocalFunction() => 3;
+        };
+
+        Func<Task> Method4 = |async|(115) delegate
+        {
+            Console.WriteLine();
+            |await|(116) Task.FromResult("one");
+        };
+
+        Func<Task> Method4_WithConfigureAwait = |async|(117) delegate
+        {
+            Console.WriteLine();
+            |await|(118) Task.FromResult("one")|.ConfigureAwait(false)|(119);
+        };
+
+        Func<Task<bool>> Method_MultipleAwaits = async delegate { return await Task.FromResult(await Task.FromResult(false)); };
+
+        Func<Task> Method_AwaitNonLast = async delegate
+        {
+            await Task.Delay(10);
+            Console.WriteLine();
+        };
+
+        Func<Task<object>> Method_Covariant = async delegate { return await Task.FromResult("one"); };
+
+        Func<Task<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex = async delegate
+        {
+            return await Task.FromResult(new Dictionary<int, IList<string>>());
+        };
+
+        Func<Task> Method_AwaitNonTask = async delegate { await Task.Yield(); };
+    }
+
+    public class AwaitForLocalFunctions
+    {
+        void Method()
+        {
+            |async|(120) Task Method()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(121) Task.Delay(10);
+            }
+
+            |async|(122) Task Method_WithConfigureAwait()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(123) Task.Delay(10)|.ConfigureAwait(false)|(124);
+            }
+
+            |async|(125) Task Method_AsExpressionBodied() => |await|(126) Task.Delay(10);
+
+            |async|(127) Task Method_AsExpressionBodied_WithConfigureAwait() => |await|(128) Task.Delay(10)|.ConfigureAwait(false)|(129);
+
+            |async|(130) Task<int> Method2()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(131) Task.FromResult(LocalFunction());
+
+                int LocalFunction() => 3;
+            }
+
+            |async|(132) Task<int> Method2_WithConfigureAwait()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(133) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(134);
+
+                int LocalFunction() => 3;
+            }
+
+            |async|(135) Task<int> Method2_AsExpressionBodied() => |await|(136) Task.FromResult(3);
+
+            |async|(137) Task<int> Method2_AsExpressionBodied_WithConfigureAwait() => |await|(138) Task.FromResult(3)|.ConfigureAwait(false)|(139);
+
+            |async|(140) Task Method4()
+            {
+                Console.WriteLine();
+                |await|(141) Task.FromResult("one");
+            }
+
+            |async|(142) Task Method4_WithConfigureAwait()
+            {
+                Console.WriteLine();
+                |await|(143) Task.FromResult("one")|.ConfigureAwait(false)|(144);
+            }
+
+            |async|(145) Task Method4_AsExpressionBodied() => |await|(146) Task.FromResult("one");
+
+            |async|(147) Task Method4_AsExpressionBodied_WithConfigureAwait() => |await|(148) Task.FromResult("one")|.ConfigureAwait(false)|(149);
+
+            async Task<bool> Method_MultipleAwaits()
+            {
+                return await Task.FromResult(await Task.FromResult(false));
+            }
+
+            async Task<bool> MethodA_MultipleAwaits_AsExpressionBodied() => await Task.FromResult(await Task.FromResult(false));
+
+            async Task Method_AwaitNonLast()
+            {
+                await Task.Delay(10);
+                Console.WriteLine();
+            }
+
+            async Task<object> Method_Covariant()
+            {
+                return await Task.FromResult("one");
+            }
+
+            async Task<object> Method_Covariant_AsExpressionBodied() => await Task.FromResult("one");
+
+            async Task<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex()
+            {
+                return await Task.FromResult(new Dictionary<int, IList<string>>());
+            }
+
+            async Task<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex_AsExpressionBodied()
+                => await Task.FromResult(new Dictionary<int, IList<string>>());
+
+            async Task Method_AwaitNonTask()
+            {
+                await Task.Yield();
+            }
+
+            async Task Method_AwaitNonTask_AsExpressionBodied() => await Task.Yield();
+        }
+    }
+}
+---------------------------------------------------------
+(0):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(1): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(2):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(3): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(4):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(5):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(6): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(7):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(8): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(9):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(10):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(11): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(12):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(13): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(14):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(15):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(16): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(17):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(18): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(19):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(20):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(21): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(22):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(23): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(24):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(25):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(26): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(27):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(28): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(29):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(30):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(31): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(32):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(33): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(34):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(35):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(36): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(37):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(38): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(39):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(40):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(41): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(42):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(43): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(44):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(45):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(46): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(47):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(48): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(49):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(50):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(51): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(52):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(53): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(54):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(55):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(56): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(57):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(58): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(59):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(60):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(61): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(62):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(63): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(64):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(65):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(66): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(67):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(68): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(69):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(70):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(71): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(72):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(73): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(74):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(75):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(76): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(77):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(78): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(79):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(80):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(81): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(82):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(83): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(84):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(85):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(86): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(87):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(88): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(89):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(90):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(91): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(92):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(93): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(94):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(95):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(96): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(97):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(98): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(99):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(100):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(101): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(102):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(103): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(104):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(105):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(106): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(107):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(108): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(109):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(110):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(111): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(112):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(113): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(114):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(115):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(116): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(117):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(118): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(119):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(120):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(121): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(122):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(123): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(124):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(125):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(126): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(127):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(128): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(129):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(130):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(131): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(132):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(133): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(134):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(135):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(136): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(137):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(138): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(139):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(140):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(141): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(142):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(143): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(144):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(145):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(146): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await')
+(147):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(148): ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(149):<secondary> ReSharper Suggestion: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')

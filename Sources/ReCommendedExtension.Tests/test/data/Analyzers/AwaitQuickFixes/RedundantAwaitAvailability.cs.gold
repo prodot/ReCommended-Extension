@@ -1,0 +1,867 @@
+﻿using System;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
+{
+    public class AwaitForMethods
+    {
+        |async|(0) Task Method()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(1) Task.Delay(10);
+        }
+
+        |async|(2) Task Method_WithConfigureAwait()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(3) Task.Delay(10)|.ConfigureAwait(false)|(4);
+        }
+
+        |async|(5) Task Method_AsExpressionBodied() => |await|(6) Task.Delay(10);
+
+        |async|(7) Task Method_AsExpressionBodied_WithConfigureAwait() => |await|(8) Task.Delay(10)|.ConfigureAwait(false)|(9);
+
+        |async|(10) Task<int> Method2()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(11) Task.FromResult(LocalFunction());
+
+            int LocalFunction() => 3;
+        }
+
+        |async|(12) Task<int> Method2_WithConfigureAwait()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(13) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(14);
+
+            int LocalFunction() => 3;
+        }
+
+        |async|(15) Task<int> Method2_AsExpressionBodied() => |await|(16) Task.FromResult(3);
+
+        |async|(17) Task<int> Method2_AsExpressionBodied_WithConfigureAwait() => |await|(18) Task.FromResult(3)|.ConfigureAwait(false)|(19);
+
+        |async|(20) Task Method4()
+        {
+            Console.WriteLine();
+            |await|(21) Task.FromResult("one");
+        }
+
+        |async|(22) Task Method4_WithConfigureAwait()
+        {
+            Console.WriteLine();
+            |await|(23) Task.FromResult("one")|.ConfigureAwait(false)|(24);
+        }
+
+        |async|(25) Task Method4_AsExpressionBodied() => |await|(26) Task.FromResult("one");
+
+        |async|(27) Task Method4_AsExpressionBodied_WithConfigureAwait() => |await|(28) Task.FromResult("one")|.ConfigureAwait(false)|(29);
+    }
+
+    public class AwaitForLambdaVariables
+    {
+        void Method()
+        {
+            Func<Task> Method = |async|(30) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(31) Task.Delay(10);
+            };
+
+            Func<Task> Method_WithConfigureAwait = |async|(32) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(33) Task.Delay(10)|.ConfigureAwait(false)|(34);
+            };
+
+            Func<Task> Method_AsExpressionBodied = |async|(35) () => |await|(36) Task.Delay(10);
+
+            Func<Task> Method_AsExpressionBodied_WithConfigureAwait = |async|(37) () => |await|(38) Task.Delay(10)|.ConfigureAwait(false)|(39);
+
+            Func<Task<int>> Method2 = |async|(40) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(41) Task.FromResult(LocalFunction());
+
+                int LocalFunction() => 3;
+            };
+
+            Func<Task<int>> Method2_WithConfigureAwait = |async|(42) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(43) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(44);
+
+                int LocalFunction() => 3;
+            };
+
+            Func<Task<int>> Method2_AsExpressionBodied = |async|(45) () => |await|(46) Task.FromResult(3);
+
+            Func<Task<int>> Method2_AsExpressionBodied_WithConfigureAwait = |async|(47) () => |await|(48) Task.FromResult(3)|.ConfigureAwait(false)|(49);
+
+            Func<Task> Method4 = |async|(50) () =>
+            {
+                Console.WriteLine();
+                |await|(51) Task.FromResult("one");
+            };
+
+            Func<Task> Method4_WithConfigureAwait = |async|(52) () =>
+            {
+                Console.WriteLine();
+                |await|(53) Task.FromResult("one")|.ConfigureAwait(false)|(54);
+            };
+
+            Func<Task> Method4_AsExpressionBodied = |async|(55) () => |await|(56) Task.FromResult("one");
+
+            Func<Task> Method4_AsExpressionBodied_WithConfigureAwait = |async|(57) () => |await|(58) Task.FromResult("one")|.ConfigureAwait(false)|(59);
+        }
+    }
+
+    public class AwaitForLambdaFields
+    {
+        Func<Task> Method = |async|(60) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(61) Task.Delay(10);
+        };
+
+        Func<Task> Method_WithConfigureAwait = |async|(62) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(63) Task.Delay(10)|.ConfigureAwait(false)|(64);
+        };
+
+        Func<Task> Method_AsExpressionBodied = |async|(65) () => |await|(66) Task.Delay(10);
+
+        Func<Task> Method_AsExpressionBodied_WithConfigureAwait = |async|(67) () => |await|(68) Task.Delay(10)|.ConfigureAwait(false)|(69);
+
+        Func<Task<int>> Method2 = |async|(70) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(71) Task.FromResult(LocalFunction());
+
+            int LocalFunction() => 3;
+        };
+
+        Func<Task<int>> Method2_WithConfigureAwait = |async|(72) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(73) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(74);
+
+            int LocalFunction() => 3;
+        };
+
+        Func<Task<int>> Method2_AsExpressionBodied = |async|(75) () => |await|(76) Task.FromResult(3);
+
+        Func<Task<int>> Method2_AsExpressionBodied_WithConfigureAwait = |async|(77) () => |await|(78) Task.FromResult(3)|.ConfigureAwait(false)|(79);
+
+        Func<Task> Method4 = |async|(80) () =>
+        {
+            Console.WriteLine();
+            |await|(81) Task.FromResult("one");
+        };
+
+        Func<Task> Method4_WithConfigureAwait = |async|(82) () =>
+        {
+            Console.WriteLine();
+            |await|(83) Task.FromResult("one")|.ConfigureAwait(false)|(84);
+        };
+
+        Func<Task> Method4_AsExpressionBodied = |async|(85) () => |await|(86) Task.FromResult("one");
+
+        Func<Task> Method4_AsExpressionBodied_WithConfigureAwait = |async|(87) () => |await|(88) Task.FromResult("one")|.ConfigureAwait(false)|(89);
+    }
+
+    public class AwaitForAnonymousMethodVariables
+    {
+        void Method()
+        {
+            Func<Task> Method = |async|(90) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(91) Task.Delay(10);
+            };
+
+            Func<Task> Method_WithConfigureAwait = |async|(92) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(93) Task.Delay(10)|.ConfigureAwait(false)|(94);
+            };
+
+            Func<Task<int>> Method2 = |async|(95) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(96) Task.FromResult(LocalFunction());
+
+                int LocalFunction() => 3;
+            };
+
+            Func<Task<int>> Method2_WithConfigureAwait = |async|(97) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(98) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(99);
+
+                int LocalFunction() => 3;
+            };
+
+            Func<Task> Method4 = |async|(100) delegate
+            {
+                Console.WriteLine();
+                |await|(101) Task.FromResult("one");
+            };
+
+            Func<Task> Method4_WithConfigureAwait = |async|(102) delegate
+            {
+                Console.WriteLine();
+                |await|(103) Task.FromResult("one")|.ConfigureAwait(false)|(104);
+            };
+        }
+    }
+
+    public class AwaitForAnonymousMethodFields
+    {
+        Func<Task> Method = |async|(105) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(106) Task.Delay(10);
+        };
+
+        Func<Task> Method_WithConfigureAwait = |async|(107) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(108) Task.Delay(10)|.ConfigureAwait(false)|(109);
+        };
+
+        Func<Task<int>> Method2 = |async|(110) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(111) Task.FromResult(LocalFunction());
+
+            int LocalFunction() => 3;
+        };
+
+        Func<Task<int>> Method2_WithConfigureAwait = |async|(112) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(113) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(114);
+
+            int LocalFunction() => 3;
+        };
+
+        Func<Task> Method4 = |async|(115) delegate
+        {
+            Console.WriteLine();
+            |await|(116) Task.FromResult("one");
+        };
+
+        Func<Task> Method4_WithConfigureAwait = |async|(117) delegate
+        {
+            Console.WriteLine();
+            |await|(118) Task.FromResult("one")|.ConfigureAwait(false)|(119);
+        };
+    }
+
+    public class AwaitForLocalFunctions
+    {
+        void Method()
+        {
+            |async|(120) Task Method()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(121) Task.Delay(10);
+            }
+
+            |async|(122) Task Method_WithConfigureAwait()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(123) Task.Delay(10)|.ConfigureAwait(false)|(124);
+            }
+
+            |async|(125) Task Method_AsExpressionBodied() => |await|(126) Task.Delay(10);
+
+            |async|(127) Task Method_AsExpressionBodied_WithConfigureAwait() => |await|(128) Task.Delay(10)|.ConfigureAwait(false)|(129);
+
+            |async|(130) Task<int> Method2()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(131) Task.FromResult(LocalFunction());
+
+                int LocalFunction() => 3;
+            }
+
+            |async|(132) Task<int> Method2_WithConfigureAwait()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(133) Task.FromResult(LocalFunction())|.ConfigureAwait(false)|(134);
+
+                int LocalFunction() => 3;
+            }
+
+            |async|(135) Task<int> Method2_AsExpressionBodied() => |await|(136) Task.FromResult(3);
+
+            |async|(137) Task<int> Method2_AsExpressionBodied_WithConfigureAwait() => |await|(138) Task.FromResult(3)|.ConfigureAwait(false)|(139);
+
+            |async|(140) Task Method4()
+            {
+                Console.WriteLine();
+                |await|(141) Task.FromResult("one");
+            }
+
+            |async|(142) Task Method4_WithConfigureAwait()
+            {
+                Console.WriteLine();
+                |await|(143) Task.FromResult("one")|.ConfigureAwait(false)|(144);
+            }
+
+            |async|(145) Task Method4_AsExpressionBodied() => |await|(146) Task.FromResult("one");
+
+            |async|(147) Task Method4_AsExpressionBodied_WithConfigureAwait() => |await|(148) Task.FromResult("one")|.ConfigureAwait(false)|(149);
+        }
+    }
+}
+------------------------------------------------
+0: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+1: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+2: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+3: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+4: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+5: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+6: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+7: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+8: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+9: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+10: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+11: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+12: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+13: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+14: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+15: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+16: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+17: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+18: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+19: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+20: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+21: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+22: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+23: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+24: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+25: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+26: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+27: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+28: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+29: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+30: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+31: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+32: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+33: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+34: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+35: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+36: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+37: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+38: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+39: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+40: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+41: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+42: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+43: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+44: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+45: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+46: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+47: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+48: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+49: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+50: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+51: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+52: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+53: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+54: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+55: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+56: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+57: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+58: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+59: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+60: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+61: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+62: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+63: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+64: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+65: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+66: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+67: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+68: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+69: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+70: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+71: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+72: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+73: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+74: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+75: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+76: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+77: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+78: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+79: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+80: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+81: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+82: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+83: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+84: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+85: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+86: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+87: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+88: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+89: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+90: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+91: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+92: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+93: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+94: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+95: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+96: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+97: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+98: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+99: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+100: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+101: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+102: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+103: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+104: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+105: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+106: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+107: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+108: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+109: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+110: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+111: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+112: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+113: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+114: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+115: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+116: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+117: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+118: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+119: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+120: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+121: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+122: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+123: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+124: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+125: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+126: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+127: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+128: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+129: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+130: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+131: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+132: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+133: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+134: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+135: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+136: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+137: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+138: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+139: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+140: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+141: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+142: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+143: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+144: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+145: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+146: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+147: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+148: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+149: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'

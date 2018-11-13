@@ -1,0 +1,10 @@
+﻿using System;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
+{
+    public class AwaitForLambdaFields
+    {
+        Func<Task<int>> LambdaField2_AsExpressionBodied_WithConfigureAwait = () => {caret}Task.FromResult(3);
+    }
+}

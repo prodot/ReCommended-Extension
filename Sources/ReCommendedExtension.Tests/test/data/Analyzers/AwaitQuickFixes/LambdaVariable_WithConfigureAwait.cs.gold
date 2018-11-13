@@ -1,0 +1,21 @@
+﻿using System;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
+{
+    public class AwaitForLambdaVariables
+    {
+        void Method()
+        {
+            Func<Task> LambdaVariable_WithConfigureAwait = () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                ret{caret}urn Task.Delay(10);
+            };
+        }
+    }
+}
