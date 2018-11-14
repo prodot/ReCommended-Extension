@@ -17,11 +17,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 namespace ReCommendedExtension.Highlightings
 {
-    [ConfigurableSeverityHighlighting(
-        SeverityId,
-        CSharpLanguage.Name,
-        AttributeId = HighlightingAttributeIds.DEADCODE_ATTRIBUTE,
-        OverlapResolve = OverlapResolveKind.DEADCODE)]
+    [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class NotifyPropertyChangedInvocatorFromConstructorHighlighting : Highlighting
     {
         internal const string SeverityId = "NotifyPropertyChangedInvocatorFromConstructor";

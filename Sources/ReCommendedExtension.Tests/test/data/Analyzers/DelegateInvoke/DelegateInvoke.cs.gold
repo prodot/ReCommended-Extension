@@ -30,8 +30,8 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Redundant 'Invoke' expression.
-(1): ReSharper Suggestion: Redundant 'Invoke' expression.
-(2): ReSharper Suggestion: Redundant 'Invoke' expression.
-(3): ReSharper Suggestion: Redundant 'Invoke' expression.
-(4): ReSharper Suggestion: Redundant 'Invoke' expression.
+(0): ReSharper Dead Code: Redundant 'Invoke' expression.
+(1): ReSharper Dead Code: Redundant 'Invoke' expression.
+(2): ReSharper Dead Code: Redundant 'Invoke' expression.
+(3): ReSharper Dead Code: Redundant 'Invoke' expression.
+(4): ReSharper Dead Code: Redundant 'Invoke' expression.

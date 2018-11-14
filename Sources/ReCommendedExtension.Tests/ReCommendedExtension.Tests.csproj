@@ -68,6 +68,7 @@
     <None Include="test\data\Analyzers\AnnotationQuickFixes\Conflicting.cs.gold" />
     <None Include="test\data\Analyzers\AnnotationQuickFixes\NotAllowed.cs.gold" />
     <None Include="test\data\Analyzers\AnnotationQuickFixes\Redundant.cs.gold" />
+    <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Optimistic.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\WithoutAnnotations_Pessimistic.cs.gold" />
     <None Include="test\data\Analyzers\ArgumentExceptionConstructorArgument\ArgumentExceptionConstructorArgument.cs.gold" />
@@ -141,6 +142,8 @@
     <None Include="test\data\Analyzers\AwaitQuickFixes\RedundantAwaitAvailability.cs.gold" />
     <None Include="test\data\Analyzers\Await\RedundantAwait.cs.gold" />
     <None Include="test\data\Analyzers\Await\RedundantCapturedContext.cs.gold" />
+    <None Include="test\data\Analyzers\CatchClauseWithoutVariable\CatchClauseWithoutVariable.cs.gold" />
+    <None Include="test\data\Analyzers\DelegateInvoke\DelegateInvoke.cs.gold" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization4.cs.gold" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization.cs.gold" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization2.cs.gold" />
@@ -154,7 +157,6 @@
     <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariable.cs.gold" />
     <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariable2.cs.gold" />
     <None Include="test\data\Analyzers\CatchClauseWithoutVariableQuickFixes\CatchClauseWithoutVariableAvailability.cs.gold" />
-    <None Include="test\data\Analyzers\CatchClauseWithoutVariable\CatchClauseWithoutVariable.cs.gold" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs.gold" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlowAvailability.cs" />
     <None Include="test\data\Analyzers\ControlFlowQuickFixes\ControlFlow.cs" />
@@ -162,7 +164,6 @@
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke.cs.gold" />
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvoke2.cs.gold" />
     <None Include="test\data\Analyzers\DelegateInvokeQuickFixes\DelegateInvokeAvailability.cs.gold" />
-    <None Include="test\data\Analyzers\DelegateInvoke\DelegateInvoke.cs.gold" />
     <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorAvailability.cs.gold" />
     <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorToPrivateProtected.cs.gold" />
     <None Include="test\data\Analyzers\InternalConstructorQuickFixes\InternalConstructorToProtected.cs.gold" />
@@ -771,7 +772,6 @@
     <None Include="test\data\Analyzers\AwaitQuickFixes\LocalFunction_WithConfigureAwait.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
-    <None Include="test\data\Analyzers\Annotation\Other_Pessimistic.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Override.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\SuppressMessage.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\SuppressMessage_TestProject.cs.gold" />
