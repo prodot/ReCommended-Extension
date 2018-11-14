@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
-using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -387,13 +386,9 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] IHighlightingConsumer consumer,
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
-            var project = attributesOwnerDeclaration.GetProject();
-            if (project != null)
+            if (attributesOwnerDeclaration.IsDeclaredInMsTestProject())
             {
-                if (project.HasFlavour<MsTestProjectFlavor>())
-                {
-                    return;
-                }
+                return;
             }
 
             var suppressMessageAttributes =

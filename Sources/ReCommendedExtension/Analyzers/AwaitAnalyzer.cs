@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Metadata.Reader.API;
+using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -17,6 +20,9 @@ namespace ReCommendedExtension.Analyzers
         HighlightingTypes = new[] { typeof(RedundantAwaitHighlighting), typeof(RedundantCapturedContextHighlighting) })]
     public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
     {
+        [NotNull]
+        static readonly IClrTypeName testMethodAttribute = new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
+
         [Pure]
         static void TryGetContainerTypeAndAsyncKeyword(
             [NotNull] IParametersOwnerDeclaration container,
@@ -145,6 +151,30 @@ namespace ReCommendedExtension.Analyzers
             }
         }
 
+        [Pure]
+        static bool IsTestMethod(IMethodDeclaration methodDeclaration)
+        {
+            if (methodDeclaration == null || !methodDeclaration.IsDeclaredInMsTestProject())
+            {
+                return false;
+            }
+
+            var testMethodAttributeType = TypeFactory.CreateTypeByCLRName(testMethodAttribute, methodDeclaration.GetPsiModule());
+
+            return methodDeclaration.AttributesEnumerable.Any(
+                attribute =>
+                {
+                    if (attribute == null)
+                    {
+                        return false;
+                    }
+
+                    var attributeType = attribute.GetAttributeInstance().GetAttributeType();
+                    return attributeType.Equals(testMethodAttributeType, TypeEqualityComparer.Default) ||
+                        attributeType.IsSubtypeOf(testMethodAttributeType);
+                });
+        }
+
         static void AddRedundantAwaitHighlightings(
             [NotNull] IHighlightingConsumer consumer,
             [NotNull] ITokenNode asyncKeyword,
@@ -196,7 +226,9 @@ namespace ReCommendedExtension.Analyzers
             bool returnStatementRequired,
             [NotNull] IHighlightingConsumer consumer)
         {
-            if (isLastExpression && !GetAllChildrenRecursive(container).OfType<IAwaitExpression>().HasMoreThan(1))
+            if (isLastExpression &&
+                !IsTestMethod(container as IMethodDeclaration) &&
+                !GetAllChildrenRecursive(container).OfType<IAwaitExpression>().HasMoreThan(1))
             {
                 TryGetContainerTypeAndAsyncKeyword(
                     container,

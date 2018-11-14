@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.LinqTools;
 using JetBrains.ReSharper.Intentions.Util;
@@ -623,6 +624,12 @@ namespace ReCommendedExtension
             }
 
             return false;
+        }
+
+        public static bool IsDeclaredInMsTestProject([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            var project = attributesOwnerDeclaration.GetProject();
+            return project != null && project.HasFlavour<MsTestProjectFlavor>();
         }
 
         /// <remarks>
