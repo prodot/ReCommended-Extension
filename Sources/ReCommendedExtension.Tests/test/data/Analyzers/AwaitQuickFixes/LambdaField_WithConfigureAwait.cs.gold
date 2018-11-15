@@ -7,12 +7,12 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
     {
         Func<Task> LambdaField_WithConfigureAwait = () =>
         {
-            if (Environment.UserInteractive)
+          if (Environment.UserInteractive)
             {
                 Console.WriteLine();
             }
 
-            ret{caret}urn Task.Delay(10);
+          ret{caret}urn Task.Delay(10);
         };
     }
 }

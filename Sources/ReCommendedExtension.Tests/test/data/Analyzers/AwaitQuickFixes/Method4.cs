@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
         async Task Method4()
         {
             Console.WriteLine();
-            {caret}await Task.FromResult("one");}
+            {caret}await Task.FromResult("one");
         }
     }
 }

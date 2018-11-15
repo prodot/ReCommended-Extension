@@ -8,10 +8,10 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
         void Method()
         {
           Task LocalFunction4()
-            {
-                Console.WriteLine();
-                return{caret} Task.FromResult("one");
-            }
+          {
+            Console.WriteLine();
+            return{caret} Task.FromResult("one");
+          }
         }
     }
 }

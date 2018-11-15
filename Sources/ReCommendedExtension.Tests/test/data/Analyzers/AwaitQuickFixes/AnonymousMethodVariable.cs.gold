@@ -9,12 +9,12 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
         {
             Func<Task> AnonymousMethodVariable = delegate
             {
-                if (Environment.UserInteractive)
+              if (Environment.UserInteractive)
                 {
                     Console.WriteLine();
                 }
 
-                return{caret} Task.Delay(10);}
+              return{caret} Task.Delay(10);
             };
         }
     }

@@ -91,7 +91,7 @@ namespace ReCommendedExtension.Analyzers
         static bool IsLastExpression(
             [NotNull] IParametersOwnerDeclaration container,
             [NotNull] ICSharpExpression expression,
-            out bool returnStatementRequired)
+            out IExpressionStatement statementToBeReplacedWithReturnStatement)
         {
             var block = null as IBlock;
 
@@ -100,7 +100,7 @@ namespace ReCommendedExtension.Analyzers
                 case IMethodDeclaration methodDeclaration:
                     if (methodDeclaration.ArrowClause?.Expression == expression)
                     {
-                        returnStatementRequired = false;
+                        statementToBeReplacedWithReturnStatement = null;
                         return true;
                     }
 
@@ -110,7 +110,7 @@ namespace ReCommendedExtension.Analyzers
                 case ILambdaExpression lambdaExpression:
                     if (lambdaExpression.BodyExpression == expression)
                     {
-                        returnStatementRequired = false;
+                        statementToBeReplacedWithReturnStatement = null;
                         return true;
                     }
 
@@ -124,7 +124,7 @@ namespace ReCommendedExtension.Analyzers
                 case ILocalFunctionDeclaration localFunctionDeclaration:
                     if (localFunctionDeclaration.ArrowClause?.Expression == expression)
                     {
-                        returnStatementRequired = false;
+                        statementToBeReplacedWithReturnStatement = null;
                         return true;
                     }
 
@@ -137,16 +137,16 @@ namespace ReCommendedExtension.Analyzers
 
             switch (lastStatement)
             {
-                case IExpressionStatement expressionStatement when expressionStatement.Expression == expression: 
-                    returnStatementRequired = true;
+                case IExpressionStatement expressionStatement when expressionStatement.Expression == expression:
+                    statementToBeReplacedWithReturnStatement = expressionStatement;
                     return true;
 
                 case IReturnStatement returnStatement when returnStatement.Value == expression:
-                    returnStatementRequired = false;
+                    statementToBeReplacedWithReturnStatement = null;
                     return true;
 
                 default:
-                    returnStatementRequired = default;
+                    statementToBeReplacedWithReturnStatement = null;
                     return false;
             }
         }
@@ -180,7 +180,7 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] ITokenNode asyncKeyword,
             [NotNull] Action removeAsync,
             [NotNull] IAwaitExpression awaitExpression,
-            bool returnStatementRequired,
+            IExpressionStatement statementToBeReplacedWithReturnStatement,
             [NotNull] ICSharpExpression expressionToReturn,
             IAttributesOwnerDeclaration attributesOwnerDeclaration,
             IInvocationExpression configureAwaitInvocationExpression = null)
@@ -193,7 +193,7 @@ namespace ReCommendedExtension.Analyzers
                 $"Redundant 'await' (remove 'async'/'await'{(highlightConfigureAwait ? "/'" + ClrMethodsNames.ConfigureAwait + "(...)'" : "")})",
                 removeAsync,
                 awaitExpression,
-                returnStatementRequired,
+                statementToBeReplacedWithReturnStatement,
                 expressionToReturn,
                 attributesOwnerDeclaration);
 
@@ -223,7 +223,7 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] IAwaitExpression awaitExpression,
             bool isLastExpression,
             [NotNull] IParametersOwnerDeclaration container,
-            bool returnStatementRequired,
+            IExpressionStatement statementToBeReplacedWithReturnStatement,
             [NotNull] IHighlightingConsumer consumer)
         {
             if (isLastExpression &&
@@ -249,7 +249,7 @@ namespace ReCommendedExtension.Analyzers
                             asyncKeyword,
                             removeAsync,
                             awaitExpression,
-                            returnStatementRequired,
+                            statementToBeReplacedWithReturnStatement,
                             awaitExpression.Task,
                             attributesOwnerDeclaration);
                         return true;
@@ -265,7 +265,7 @@ namespace ReCommendedExtension.Analyzers
                             asyncKeyword,
                             removeAsync,
                             awaitExpression,
-                            returnStatementRequired,
+                            statementToBeReplacedWithReturnStatement,
                             awaitExpression.Task,
                             attributesOwnerDeclaration);
                         return true;
@@ -295,7 +295,7 @@ namespace ReCommendedExtension.Analyzers
                                         asyncKeyword,
                                         removeAsync,
                                         awaitExpression,
-                                        returnStatementRequired,
+                                        statementToBeReplacedWithReturnStatement,
                                         awaitExpressionWithoutConfigureAwait,
                                         attributesOwnerDeclaration,
                                         configureAwaitInvocationExpression);
@@ -313,7 +313,7 @@ namespace ReCommendedExtension.Analyzers
                                         asyncKeyword,
                                         removeAsync,
                                         awaitExpression,
-                                        returnStatementRequired,
+                                        statementToBeReplacedWithReturnStatement,
                                         awaitExpressionWithoutConfigureAwait,
                                         attributesOwnerDeclaration,
                                         configureAwaitInvocationExpression);
@@ -355,9 +355,9 @@ namespace ReCommendedExtension.Analyzers
                 return;
             }
 
-            var isLastExpression = IsLastExpression(container, element, out var returnStatementRequired);
+            var isLastExpression = IsLastExpression(container, element, out var statementToBeReplacedWithReturnStatement);
 
-            var highlightingsAdded = AnalyzeRedundantAwait(element, isLastExpression, container, returnStatementRequired, consumer);
+            var highlightingsAdded = AnalyzeRedundantAwait(element, isLastExpression, container, statementToBeReplacedWithReturnStatement, consumer);
 
             if (!highlightingsAdded)
             {

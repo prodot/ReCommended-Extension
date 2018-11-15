@@ -7,8 +7,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
     {
         Func<Task> AnonymousMethodField4 = delegate
         {
-            Console.WriteLine();
-            return{caret} Task.FromResult("one");
+          Console.WriteLine();
+          return{caret} Task.FromResult("one");
         };
     }
 }

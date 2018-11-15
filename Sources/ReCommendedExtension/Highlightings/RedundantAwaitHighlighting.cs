@@ -31,13 +31,13 @@ namespace ReCommendedExtension.Highlightings
             [NotNull] string message,
             [NotNull] Action removeAsync,
             [NotNull] IAwaitExpression awaitExpression,
-            bool returnStatementRequired,
+            IExpressionStatement statementToBeReplacedWithReturnStatement,
             [NotNull] ICSharpExpression expressionToReturn,
             IAttributesOwnerDeclaration attributesOwnerDeclaration) : base(message)
         {
             RemoveAsync = removeAsync;
             AwaitExpression = awaitExpression;
-            ReturnStatementRequired = returnStatementRequired;
+            StatementToBeReplacedWithReturnStatement = statementToBeReplacedWithReturnStatement;
             ExpressionToReturn = expressionToReturn;
             AttributesOwnerDeclaration = attributesOwnerDeclaration;
         }
@@ -48,7 +48,7 @@ namespace ReCommendedExtension.Highlightings
         [NotNull]
         internal IAwaitExpression AwaitExpression { get; }
 
-        internal bool ReturnStatementRequired { get; }
+        internal IExpressionStatement StatementToBeReplacedWithReturnStatement { get; }
 
         internal ICSharpExpression ExpressionToReturn { get; }
 

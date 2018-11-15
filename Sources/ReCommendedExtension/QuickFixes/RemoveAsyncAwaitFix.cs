@@ -70,12 +70,12 @@ namespace ReCommendedExtension.QuickFixes
                 // remove 'async'
                 highlighting.RemoveAsync();
 
-                if (highlighting.ReturnStatementRequired)
+                if (highlighting.StatementToBeReplacedWithReturnStatement != null)
                 {
                     // replace 'await' with 'return' (and remove 'ConfigureAwait' if available)
                     ModificationUtil.ReplaceChild(
-                        highlighting.AwaitExpression,
-                        factory.CreateStatement("return $0", highlighting.ExpressionToReturn));
+                        highlighting.StatementToBeReplacedWithReturnStatement,
+                        factory.CreateStatement("return $0;", highlighting.ExpressionToReturn));
                 }
                 else
                 {

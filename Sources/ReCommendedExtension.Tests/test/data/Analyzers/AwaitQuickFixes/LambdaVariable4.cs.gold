@@ -9,8 +9,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
         {
             Func<Task> LambdaVariable4 = () =>
             {
-                Console.WriteLine();
-                return{caret} Task.FromResult("one");
+              Console.WriteLine();
+              return{caret} Task.FromResult("one");
             };
         }
     }

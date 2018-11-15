@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
                     Console.WriteLine();
                 }
 
-                await{caret} Task.Delay(10);}
+                await{caret} Task.Delay(10);
             };
         }
     }
