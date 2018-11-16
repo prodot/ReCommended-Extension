@@ -44,9 +44,11 @@
     <Compile Include="Analyzers\ArgumentExceptionConstructorArgumentAnalyzer.cs" />
     <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationAnalyzer.cs" />
     <Compile Include="Analyzers\AsyncVoidAnalyzer.cs" />
+    <Compile Include="Analyzers\AwaitAnalyzer.cs" />
     <Compile Include="Analyzers\EmptyArrayInitializationAnalyzer.cs" />
     <Compile Include="Analyzers\CatchClauseWithoutVariableAnalyzer.cs" />
     <Compile Include="Analyzers\DelegateInvokeAnalyzer.cs" />
+    <Compile Include="Analyzers\InternalConstructorVisibilityAnalyzer.cs" />
     <Compile Include="Analyzers\LocalSuppressionAnalyzer.cs" />
     <Compile Include="Analyzers\LockOnObjectWithWeakIdentityAnalyzer.cs" />
     <Compile Include="Analyzers\RegionAnalyzer.cs" />
@@ -60,6 +62,7 @@
     <Compile Include="Analyzers\ConditionalInvocationAnalyzer.cs" />
     <Compile Include="Analyzers\NotifyPropertyChangedInvocatorFromConstructorAnalyzer.cs" />
     <Compile Include="Analyzers\UncatchableExceptionAnalyzer.cs" />
+    <Compile Include="ClrMethodsNames.cs" />
     <Compile Include="ContextActions\SetLanguageInjection.cs" />
     <Compile Include="ContextActions\AnnotateWithMustUseReturnValue.cs" />
     <Compile Include="ContextActions\AnnotateWith[A].cs" />
@@ -67,6 +70,7 @@
     <Compile Include="ContextActions\AnnotateWithCodeAnnotation.cs" />
     <Compile Include="ContextActions\AnnotateWithItemNotNull.cs" />
     <Compile Include="ContextActions\AnnotateWithLinqTunnel.cs" />
+    <Compile Include="Highlightings\RedundantCapturedContextHighlighting.cs" />
     <Compile Include="Highlightings\ArgumentExceptionConstructorArgumentHighlighting.cs" />
     <Compile Include="Highlightings\ArrayWithDefaultValuesInitializationHighlighting.cs" />
     <Compile Include="Highlightings\AsyncVoidFunctionExpressionHighlighting.cs" />
@@ -74,6 +78,7 @@
     <Compile Include="Highlightings\ConflictingAnnotationHighlighting.cs" />
     <Compile Include="Highlightings\EmptyArrayInitializationHighlighting.cs" />
     <Compile Include="Highlightings\EmptyRegionHighlighting.cs" />
+    <Compile Include="Highlightings\InternalConstructorVisibilityHighlighting.cs" />
     <Compile Include="Highlightings\LocalSuppressionHighlighting.cs" />
     <Compile Include="Highlightings\LockOnObjectWithWeakIdentityHighlighting.cs" />
     <Compile Include="Highlightings\RedundantAssertionHighlighting.cs" />
@@ -83,9 +88,12 @@
     <Compile Include="Highlightings\RegionHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithinTypeMemberBodyHighlighting.cs" />
     <Compile Include="Highlightings\RegionWithSingleElementHighlighting.cs" />
+    <Compile Include="Highlightings\RedundantAwaitHighlighting.cs" />
     <Compile Include="Highlightings\ThrowExceptionInUnexpectedLocationHighlighting.cs" />
     <Compile Include="Highlightings\XamlBindingWithoutModeHighlighting.cs" />
     <Compile Include="Highlightings\YieldReturnWithinLockHighlighting.cs" />
+    <Compile Include="QuickFixes\ChangeConstructorVisibilityFix.cs" />
+    <Compile Include="QuickFixes\RemoveAsyncAwaitFix.cs" />
     <Compile Include="QuickFixes\ReplaceWithNewArrayWithLengthFix.cs" />
     <Compile Include="QuickFixes\ChangeToAsyncTaskFix.cs" />
     <Compile Include="Highlightings\ConditionalAnnotationHighlighting.cs" />
@@ -161,6 +169,9 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations">
+      <Version>11.1.0</Version>
+    </PackageReference>
     <PackageReference Include="JetBrains.ReSharper.SDK">
       <Version>2018.2.3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

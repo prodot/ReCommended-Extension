@@ -1,0 +1,7 @@
+﻿namespace ReCommendedExtension.Tests.test.data.Analyzers.InternalConstructor
+{
+    internal abstract class InternalConstructor
+    {
+      prote{caret}cted InternalConstructor(string x) { }
+    }
+}

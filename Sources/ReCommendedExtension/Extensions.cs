@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.LinqTools;
 using JetBrains.ReSharper.Intentions.Util;
@@ -596,6 +597,41 @@ namespace ReCommendedExtension
             return predefinedTypeName.TypeKeyword.GetTokenType() == CSharpTokenType.VOID_KEYWORD;
         }
 
+        public static bool IsConfigureAwaitAvailable(this IUnaryExpression awaitedExpression)
+        {
+            var typeElement = (awaitedExpression?.Type() as IDeclaredType)?.GetTypeElement();
+            if (typeElement != null)
+            {
+                var hasConfigureAwaitMethod = typeElement.Methods.Any(
+                    method =>
+                    {
+                        Debug.Assert(method != null);
+
+                        if (method.ShortName == ClrMethodsNames.ConfigureAwait && method.Parameters.Count == 1)
+                        {
+                            Debug.Assert(method.Parameters[0] != null);
+
+                            return method.Parameters[0].Type.IsBool();
+                        }
+
+                        return false;
+                    });
+
+                if (hasConfigureAwaitMethod)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsDeclaredInMsTestProject([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            var project = attributesOwnerDeclaration.GetProject();
+            return project != null && project.HasFlavour<MsTestProjectFlavor>();
+        }
+
         /// <remarks>
         /// This method (<c>CSharpDaemonUtil.IsUnderAnonymousMethod</c>) has been removed from ReSharper 10 SDK.
         /// </remarks>
@@ -616,7 +652,7 @@ namespace ReCommendedExtension
         /// This method (<c>CollectionTypeUtil.GetKeyValueTypesForGenericDictionary</c>) has been removed from ReSharper 10 SDK.
         /// </remarks>
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute", Justification = "The method was imported.")]
-        public static IList<JetBrains.Util.Pair<IType, IType>> GetKeyValueTypesForGenericDictionary([NotNull] this IDeclaredType declaredType)
+        public static IList<Pair<IType, IType>> GetKeyValueTypesForGenericDictionary([NotNull] this IDeclaredType declaredType)
         {
             var typeElement1 = declaredType.GetTypeElement();
             if (typeElement1 == null)
@@ -636,14 +672,14 @@ namespace ReCommendedExtension
             }
 
             var ancestorSubstitution = typeElement1.GetAncestorSubstitution(typeElement2);
-            var localList = new JetBrains.Util.LocalList<JetBrains.Util.Pair<IType, IType>>();
+            var localList = new LocalList<Pair<IType, IType>>();
             foreach (var substitution1 in ancestorSubstitution)
             {
                 var substitution2 = declaredType.GetSubstitution().Apply(substitution1);
                 var typeParameters = typeElement2.TypeParameters;
                 var first = substitution2[typeParameters[0]];
                 var second = substitution2[typeParameters[1]];
-                localList.Add(JetBrains.Util.Pair.Of(first, second));
+                localList.Add(Pair.Of(first, second));
             }
 
             return localList.ResultingList();

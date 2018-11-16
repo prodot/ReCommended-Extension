@@ -1,4 +1,4 @@
-# ![](Images/Icon.png) ReCommended Extension for ReSharper [![ReSharper-Gallery](https://img.shields.io/badge/resharper--gallery-v2.1.6-lightgrey.svg)](https://resharper-plugins.jetbrains.com/packages/Prodot.ReCommendedExtension/)
+# ![](Images/Icon.png) ReCommended Extension for ReSharper [![ReSharper-Gallery](https://img.shields.io/badge/resharper--gallery-v3.0.0-lightgrey.svg)](https://resharper-plugins.jetbrains.com/packages/Prodot.ReCommendedExtension/)
 
 The ReCommended Extension for ReSharper augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
@@ -6,6 +6,7 @@ The ReCommended Extension for ReSharper augments the sophisticated code analysis
 - inappropriate use of `async void`,
 - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
 - array initializers (empty arrays or arrays initialized with default values),
+- `await` expression analyzer (add `.ConfigureAwait(false)` for last expressions, remove `async`/`await` for single expressions),
 - incorrect use of `ArgumentException` constructor parameters,
 - locking on weak identity objects,
 - using `yield return` inside the `lock` blocks,
