@@ -141,6 +141,7 @@
     <None Include="test\data\Analyzers\AwaitQuickFixes\Method_WithConfigureAwait.cs.gold" />
     <None Include="test\data\Analyzers\AwaitQuickFixes\RedundantAwaitAvailability.cs.gold" />
     <None Include="test\data\Analyzers\Await\RedundantAwait.cs.gold" />
+    <None Include="test\data\Analyzers\Await\RedundantAwait_TestProject.cs.gold" />
     <None Include="test\data\Analyzers\Await\RedundantCapturedContext.cs.gold" />
     <None Include="test\data\Analyzers\CatchClauseWithoutVariable\CatchClauseWithoutVariable.cs.gold" />
     <None Include="test\data\Analyzers\DelegateInvoke\DelegateInvoke.cs.gold" />
@@ -187,6 +188,7 @@
     <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationAnalyzerTests.cs" />
     <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationQuickFixAvailabilityTests.cs" />
     <Compile Include="Analyzers\ArrayWithDefaultValuesInitializationQuickFixTests.cs" />
+    <Compile Include="Analyzers\AwaitAnalyzerTestsRedundantAwaitForMsTestProjects.cs" />
     <Compile Include="Analyzers\AwaitAnalyzerTestsRedundantCapturedContext.cs" />
     <Compile Include="Analyzers\AwaitAnalyzerTestsRedundantAwait.cs" />
     <Compile Include="Analyzers\AwaitAnalyzerTestsRedundantAwaitQuickFixAvailabilityTests.cs" />
@@ -770,6 +772,7 @@
     <None Include="test\data\Analyzers\AwaitQuickFixes\LocalFunction_AsExpressionBodied.cs" />
     <None Include="test\data\Analyzers\AwaitQuickFixes\LocalFunction_AsExpressionBodied_WithConfigureAwait.cs" />
     <None Include="test\data\Analyzers\AwaitQuickFixes\LocalFunction_WithConfigureAwait.cs" />
+    <None Include="test\data\Analyzers\Await\RedundantAwait_TestProject.cs" />
     <Compile Include="Zone.cs" />
     <None Include="test\data\Analyzers\Annotation\IteratorMethod.cs.gold" />
     <None Include="test\data\Analyzers\Annotation\Override.cs.gold" />
@@ -814,6 +817,9 @@
       <Version>2018.2.3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestFramework">
+      <Version>1.3.2</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
       <Version>2.6.4</Version>
