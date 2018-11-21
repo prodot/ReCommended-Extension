@@ -12,7 +12,7 @@ Resharper Platform is installed into the experimental hive "ReSharper"
 
 2. install the package into the experimental hive "ReSharper"
 
-3. make suse the HostFullIdentifier property in the .csproj file is initialized
+3. make suse the HostFullIdentifier property in the .csproj file is initialized (use the value suggested in the build output)
 
 	<HostFullIdentifier>ReSharperPlatformVs15ReSharper</HostFullIdentifier>
 

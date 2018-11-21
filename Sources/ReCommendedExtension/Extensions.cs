@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
+using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.LinqTools;
@@ -629,7 +630,21 @@ namespace ReCommendedExtension
         public static bool IsDeclaredInMsTestProject([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             var project = attributesOwnerDeclaration.GetProject();
-            return project != null && project.HasFlavour<MsTestProjectFlavor>();
+            if (project != null)
+            {
+                if (project.HasFlavour<MsTestProjectFlavor>())
+                {
+                    return true;
+                }
+
+                if (project.GetModuleReferences(project.GetCurrentTargetFrameworkId())
+                    .Any(m => m?.Name == "Microsoft.VisualStudio.TestPlatform.TestFramework"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <remarks>
