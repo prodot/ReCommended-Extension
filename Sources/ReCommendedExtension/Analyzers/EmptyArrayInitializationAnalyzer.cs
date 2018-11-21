@@ -18,13 +18,15 @@ namespace ReCommendedExtension.Analyzers
     {
         [Pure]
         static bool ArrayEmptyMethodExists([NotNull] IPsiModule psiModule)
-            => GetArrayType(psiModule)
-                .Methods.Any(method => method.IsStatic && method.ShortName == nameof(Array.Empty) && method.Parameters.Count == 0);
+        {
+            var arrayType = TryGetArrayType(psiModule);
+            return arrayType != null &&
+                arrayType.Methods.Any(method => method.IsStatic && method.ShortName == nameof(Array.Empty) && method.Parameters.Count == 0);
+        }
 
         [Pure]
-        [NotNull]
-        internal static ITypeElement GetArrayType([NotNull] IPsiModule psiModule)
-            => TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARRAY_FQN, psiModule).AssertNotNull();
+        internal static ITypeElement TryGetArrayType([NotNull] IPsiModule psiModule)
+            => TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARRAY_FQN, psiModule);
 
         [NotNull]
         static string CreateHighlightingMessage([NotNull] IType arrayElementType)

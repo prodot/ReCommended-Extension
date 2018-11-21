@@ -49,7 +49,7 @@ namespace ReCommendedExtension.QuickFixes
                     highlighting.TreeNode,
                     factory.CreateExpression(
                         $"$0.{nameof(Array.Empty)}<$1>()",
-                        EmptyArrayInitializationAnalyzer.GetArrayType(highlighting.TreeNode.GetPsiModule()),
+                        EmptyArrayInitializationAnalyzer.TryGetArrayType(highlighting.TreeNode.GetPsiModule()),
                         highlighting.ArrayElementType));
             }
 
