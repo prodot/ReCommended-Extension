@@ -205,7 +205,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <HostFullIdentifier>ReSharperPlatformVs14ReSharper</HostFullIdentifier>
+    <HostFullIdentifier>ReSharperPlatformVs15ReSharper</HostFullIdentifier>
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
