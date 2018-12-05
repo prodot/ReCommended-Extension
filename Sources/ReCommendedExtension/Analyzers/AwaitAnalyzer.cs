@@ -21,7 +21,17 @@ namespace ReCommendedExtension.Analyzers
     public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
     {
         [NotNull]
-        static readonly IClrTypeName testMethodAttribute = new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
+        [ItemNotNull]
+        static readonly IClrTypeName[] testMethodAttributes =
+        {
+            new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute"),
+            new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.TestInitializeAttribute"),
+            new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute"),
+            new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.AssemblyInitializeAttribute"),
+            new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.TestCleanupAttribute"),
+            new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute"),
+            new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.AssemblyCleanupAttribute"),
+        };
 
         [Pure]
         static void TryGetContainerTypeAndAsyncKeyword(
@@ -159,7 +169,7 @@ namespace ReCommendedExtension.Analyzers
                 return false;
             }
 
-            var testMethodAttributeType = TypeFactory.CreateTypeByCLRName(testMethodAttribute, methodDeclaration.GetPsiModule());
+            var testMethodAttributeTypes = null as IDeclaredType[];
 
             return methodDeclaration.AttributesEnumerable.Any(
                 attribute =>
@@ -169,9 +179,19 @@ namespace ReCommendedExtension.Analyzers
                         return false;
                     }
 
+                    if (testMethodAttributeTypes == null)
+                    {
+                        testMethodAttributeTypes = new IDeclaredType[testMethodAttributes.Length];
+                        for (var i = 0; i < testMethodAttributes.Length; i++)
+                        {
+                            testMethodAttributeTypes[i] = TypeFactory.CreateTypeByCLRName(testMethodAttributes[i], methodDeclaration.GetPsiModule());
+                        }
+                    }
+
                     var attributeType = attribute.GetAttributeInstance().GetAttributeType();
-                    return attributeType.Equals(testMethodAttributeType, TypeEqualityComparer.Default) ||
-                        attributeType.IsSubtypeOf(testMethodAttributeType);
+
+                    return testMethodAttributeTypes.Any(
+                        type => attributeType.Equals(type, TypeEqualityComparer.Default) || attributeType.IsSubtypeOf(type));
                 });
         }
 
