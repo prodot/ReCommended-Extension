@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.TestFramework;
@@ -11,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestNetFramework45]
     [TestFixture]
-    public sealed class AnnotationAnalyzerTests : HighlightingTestBaseWithAnnotationAssemblyReference
+    public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 

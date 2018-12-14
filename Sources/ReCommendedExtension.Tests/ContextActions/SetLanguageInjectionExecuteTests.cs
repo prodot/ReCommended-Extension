@@ -1,11 +1,14 @@
+using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
 namespace ReCommendedExtension.Tests.ContextActions
 {
     [TestFixture]
-    public sealed class SetLanguageInjectionExecuteTests : ContextActionExecuteTestBase<SetLanguageInjection>
+    public sealed class SetLanguageInjectionExecuteTests : CSharpContextActionExecuteTestBase<SetLanguageInjection>
     {
+        protected override string ExtraPath => "";
+
         protected override string RelativeTestDataPath => @"ContextActions\SetLanguageInjection";
 
         [Test]

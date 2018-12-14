@@ -1,11 +1,14 @@
+using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
 namespace ReCommendedExtension.Tests.ContextActions
 {
     [TestFixture]
-    public sealed class AnnotateWithInstantHandleExecuteTests : ContextActionExecuteTestBase<AnnotateWithInstantHandle>
+    public sealed class AnnotateWithInstantHandleExecuteTests : CSharpContextActionExecuteTestBase<AnnotateWithInstantHandle>
     {
+        protected override string ExtraPath => "";
+
         protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithInstantHandle";
 
         [Test]
