@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.Flavours;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Assert = NUnit.Framework.Assert;
+using NUnit.Framework;
 
 namespace ReCommendedExtension.Tests
 {
@@ -51,11 +50,6 @@ namespace ReCommendedExtension.Tests
         [ItemNotNull]
         public static IEnumerable<string> EnsureAnnotationsAssembly([NotNull][ItemNotNull] this IEnumerable<string> baseReferencedAssemblies)
             => baseReferencedAssemblies.EnsureAssembly(typeof(NotNullAttribute).Assembly);
-
-        [NotNull]
-        [ItemNotNull]
-        public static IEnumerable<string> EnsureMsTestAssembly([NotNull][ItemNotNull] this IEnumerable<string> baseReferencedAssemblies)
-            => baseReferencedAssemblies.EnsureAssembly(typeof(TestMethodAttribute).Assembly);
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public static void PatchProjectAddMsTestProjectFlavor([NotNull] this IProject project)
