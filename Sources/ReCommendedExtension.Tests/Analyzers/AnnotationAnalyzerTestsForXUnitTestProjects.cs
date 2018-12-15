@@ -1,21 +1,23 @@
-﻿using JetBrains.Application.Settings;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Highlightings;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
-    public sealed class LockOnObjectWithWeakIdentityAnalyzerTests : CSharpHighlightingTestBase
+    [TestPackages("xunit.core")]
+    public sealed class AnnotationAnalyzerTestsForXUnitTestProjects : CSharpHighlightingTestBase
     {
-        protected override string RelativeTestDataPath => @"Analyzers\LockOnObjectWithWeakIdentity";
+        protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is LockOnObjectWithWeakIdentityHighlighting;
+            => highlighting is MissingSuppressionJustificationHighlighting;
 
         [Test]
-        public void TestLockOnObjectWithWeakIdentity() => DoNamedTest2();
+        public void TestSuppressMessage_TestProject() => DoNamedTest2();
     }
 }

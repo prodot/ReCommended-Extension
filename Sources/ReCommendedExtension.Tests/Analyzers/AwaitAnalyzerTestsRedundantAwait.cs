@@ -1,5 +1,6 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestNetFramework45]
     [TestFixture]
-    public sealed class AwaitAnalyzerTestsRedundantAwait : HighlightingTestBaseWithAnnotationAssemblyReference
+    public sealed class AwaitAnalyzerTestsRedundantAwait : CSharpHighlightingTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\Await";
 

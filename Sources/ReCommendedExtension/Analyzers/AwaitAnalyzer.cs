@@ -162,9 +162,9 @@ namespace ReCommendedExtension.Analyzers
         }
 
         [Pure]
-        static bool IsTestMethod(IMethodDeclaration methodDeclaration)
+        static bool IsTestMethodOfOldMsTest(IMethodDeclaration methodDeclaration)
         {
-            if (methodDeclaration == null || !methodDeclaration.IsDeclaredInMsTestProject())
+            if (methodDeclaration == null || !methodDeclaration.IsDeclaredInOldMsTestProject())
             {
                 return false;
             }
@@ -247,7 +247,7 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] IHighlightingConsumer consumer)
         {
             if (isLastExpression &&
-                !IsTestMethod(container as IMethodDeclaration) &&
+                !IsTestMethodOfOldMsTest(container as IMethodDeclaration) &&
                 !GetAllChildrenRecursive(container).OfType<IAwaitExpression>().HasMoreThan(1))
             {
                 TryGetContainerTypeAndAsyncKeyword(

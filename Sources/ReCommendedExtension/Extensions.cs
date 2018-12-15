@@ -30,6 +30,16 @@ namespace ReCommendedExtension
         [NotNull]
         static readonly string contractClassFullName = typeof(Contract).FullName.AssertNotNull();
 
+        [NotNull]
+        [ItemNotNull]
+        static readonly HashSet<string> wellKnownUnitTestingAssemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "Microsoft.VisualStudio.TestPlatform.TestFramework", @"nunit.framework", "xunit.core"
+        };
+
+        [NotNull]
+        static readonly Version msTest14MinFileVersion = new Version(14, 0, 3021, 1);
+
         static string TryGetMemberName([NotNull] this IExpressionStatement expressionStatement, [NotNull] string classFullName)
             => (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression is IReferenceExpression referenceExpression &&
                 ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
@@ -627,18 +637,56 @@ namespace ReCommendedExtension
             return false;
         }
 
-        public static bool IsDeclaredInMsTestProject([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        public static bool IsDeclaredInTestProject([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             var project = attributesOwnerDeclaration.GetProject();
             if (project != null)
             {
+                // todo: detect <ProjectCapability Include="TestContainer" /> added by NUnit and xUnit.net (and by MSTest in the future as well) packages
+
                 if (project.HasFlavour<MsTestProjectFlavor>())
                 {
                     return true;
                 }
 
-                if (project.GetModuleReferences(project.GetCurrentTargetFrameworkId())
-                    .Any(m => m?.Name == "Microsoft.VisualStudio.TestPlatform.TestFramework"))
+                if (project.GetAssemblyReferences(project.GetCurrentTargetFrameworkId())
+                    .Any(assemblyReference => wellKnownUnitTestingAssemblyNames.Contains(assemblyReference?.Name)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        [SuppressMessage("ReSharper", "EmptyGeneralCatchClause", Justification = "The local function should return false in case of any exception.")]
+        public static bool IsDeclaredInOldMsTestProject([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            var project = attributesOwnerDeclaration.GetProject();
+            if (project != null)
+            {
+                bool IsReferenceToOldMsTestAssembly(IProjectToAssemblyReference assemblyReference)
+                {
+                    if (assemblyReference?.Name == "Microsoft.VisualStudio.TestPlatform.TestFramework" &&
+                        assemblyReference.ReferenceTarget.HintLocation?.FileAccessPath != null)
+                    {
+                        try
+                        {
+                            var fileVersion = FileVersionInfo.GetVersionInfo(assemblyReference.ReferenceTarget.HintLocation.FileAccessPath);
+                            return new Version(
+                                    fileVersion.FileMajorPart,
+                                    fileVersion.FileMinorPart,
+                                    fileVersion.FileBuildPart,
+                                    fileVersion.FilePrivatePart) <
+                                msTest14MinFileVersion;
+                        }
+                        catch { }
+                    }
+
+                    return false;
+                }
+
+                if (project.GetAssemblyReferences(project.GetCurrentTargetFrameworkId()).Any(IsReferenceToOldMsTestAssembly))
                 {
                     return true;
                 }

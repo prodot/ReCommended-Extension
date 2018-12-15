@@ -1,5 +1,6 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -8,8 +9,9 @@ using ReCommendedExtension.Highlightings;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestNetFramework45]
+    [TestPackagesWithAnnotations]
     [TestFixture]
-    public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTestBaseWithAnnotationAssemblyReference
+    public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
 
