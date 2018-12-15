@@ -9,8 +9,8 @@ using ReCommendedExtension.Highlightings;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
-    [TestPackages("MSTest.TestFramework")]
-    public sealed class AnnotationAnalyzerTestsForMsTestProjects : CSharpHighlightingTestBase
+    [TestPackages("nunit")]
+    public sealed class AnnotationAnalyzerTestsForNUnitTestProjects : CSharpHighlightingTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 

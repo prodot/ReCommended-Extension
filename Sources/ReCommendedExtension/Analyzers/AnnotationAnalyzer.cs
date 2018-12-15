@@ -386,7 +386,7 @@ namespace ReCommendedExtension.Analyzers
             [NotNull] IHighlightingConsumer consumer,
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
-            if (attributesOwnerDeclaration.IsDeclaredInMsTestProject())
+            if (attributesOwnerDeclaration.IsDeclaredInTestProject())
             {
                 return;
             }
