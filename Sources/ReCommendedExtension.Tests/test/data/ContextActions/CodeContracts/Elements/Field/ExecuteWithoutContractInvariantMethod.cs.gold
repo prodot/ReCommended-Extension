@@ -7,10 +7,10 @@ namespace Test
     {
         [NotNull] string field{caret};
 
-      [ContractInvariantMethod]
-      private void ObjectInvariant()
-      {
-        Contract.Invariant(field != null);
-      }
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+          Contract.Invariant(field != null);
+        }
     }
 }

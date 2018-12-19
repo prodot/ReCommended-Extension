@@ -11,8 +11,8 @@ namespace Test
 
             string variable;
 
-          // language=HTML
-          variable = "<html {caret}/>";
+            // language=HTML
+            variable = "<html {caret}/>";
 
             Console.WriteLine();
         }

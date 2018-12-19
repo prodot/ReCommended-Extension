@@ -9,12 +9,12 @@ namespace Test
         void InterfaceMethod([NotNull] string one{caret});
     }
 
-  [ContractClassFor(typeof(IInterface))]
-  internal abstract class InterfaceContract : IInterface
-  {
-    public void InterfaceMethod(string one)
+    [ContractClassFor(typeof(IInterface))]
+    internal abstract class InterfaceContract : IInterface
     {
-      Contract.Requires(one != null);
+      public void InterfaceMethod(string one)
+      {
+        Contract.Requires(one != null);
+      }
     }
-  }
 }

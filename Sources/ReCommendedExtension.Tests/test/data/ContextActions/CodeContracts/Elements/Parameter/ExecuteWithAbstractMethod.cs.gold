@@ -9,12 +9,12 @@ namespace Test
         internal abstract void AbstractMethod([NotNull] string one{caret});
     }
 
-  [ContractClassFor(typeof(AbstractClass))]
-  internal abstract class AbstractClassContract : AbstractClass
-  {
-    internal override void AbstractMethod(string one)
+    [ContractClassFor(typeof(AbstractClass))]
+    internal abstract class AbstractClassContract : AbstractClass
     {
-      Contract.Requires(one != null);
+      internal override void AbstractMethod(string one)
+      {
+        Contract.Requires(one != null);
+      }
     }
-  }
 }

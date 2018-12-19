@@ -9,18 +9,18 @@ namespace Test
         [NotNull] internal abstract string this{caret}[int one] { get; set; }
     }
 
-  [ContractClassFor(typeof(AbstractClass))]
-  internal abstract class AbstractClassContract : AbstractClass
-  {
-    internal override string this[int one]
+    [ContractClassFor(typeof(AbstractClass))]
+    internal abstract class AbstractClassContract : AbstractClass
     {
-      get
+      internal override string this[int one]
       {
-        Contract.Ensures(Contract.Result<string>() != null);
-        
-        return default(string);
+        get
+        {
+          Contract.Ensures(Contract.Result<string>() != null);
+          
+          return default(string);
+        }
+        set { Contract.Requires(value != null); }
       }
-      set { Contract.Requires(value != null); }
     }
-  }
 }
