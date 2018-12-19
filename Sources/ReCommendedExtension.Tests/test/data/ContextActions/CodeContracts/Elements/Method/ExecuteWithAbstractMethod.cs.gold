@@ -12,15 +12,15 @@ namespace Test
             internal abstract T AbstractMethod{caret}();
         }
 
-      [ContractClassFor(typeof(AbstractClass<>))]
-      private abstract class AbstractClassContract<T> : AbstractClass<T> where T : class
-      {
-        internal override T AbstractMethod()
+        [ContractClassFor(typeof(AbstractClass<>))]
+        private abstract class AbstractClassContract<T> : AbstractClass<T> where T : class
         {
-          Contract.Ensures(Contract.Result<T>() != null);
-          
-          return default(T);
+          internal override T AbstractMethod()
+          {
+            Contract.Ensures(Contract.Result<T>() != null);
+            
+            return default(T);
+          }
         }
-      }
     }
 }

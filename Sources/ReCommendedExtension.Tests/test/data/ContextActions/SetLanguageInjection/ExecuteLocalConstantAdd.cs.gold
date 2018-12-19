@@ -9,8 +9,8 @@ namespace Test
         {
             Console.WriteLine();
 
-          // language=HTML
-          const string constant = "<html {caret}/>";
+            // language=HTML
+            const string constant = "<html {caret}/>";
 
             Console.WriteLine();
         }

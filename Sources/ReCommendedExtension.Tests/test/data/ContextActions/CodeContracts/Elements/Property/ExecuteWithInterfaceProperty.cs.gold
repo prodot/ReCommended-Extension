@@ -9,18 +9,18 @@ namespace Test
         [NotNull] string InterfaceProperty{caret} { get; set; }
     }
 
-  [ContractClassFor(typeof(IInterface))]
-  internal abstract class InterfaceContract : IInterface
-  {
-    public string InterfaceProperty
+    [ContractClassFor(typeof(IInterface))]
+    internal abstract class InterfaceContract : IInterface
     {
-      get
+      public string InterfaceProperty
       {
-        Contract.Ensures(Contract.Result<string>() != null);
-        
-        return default(string);
+        get
+        {
+          Contract.Ensures(Contract.Result<string>() != null);
+          
+          return default(string);
+        }
+        set { Contract.Requires(value != null); }
       }
-      set { Contract.Requires(value != null); }
     }
-  }
 }

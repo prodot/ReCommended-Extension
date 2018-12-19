@@ -6,8 +6,8 @@ namespace Test
     {
         void Method() { }
 
-      // language=JSON
-      string field = "{ \"one\": n{caret}ull }";
+        // language=JSON
+        string field = "{ \"one\": n{caret}ull }";
 
         void Method2() { }
     }

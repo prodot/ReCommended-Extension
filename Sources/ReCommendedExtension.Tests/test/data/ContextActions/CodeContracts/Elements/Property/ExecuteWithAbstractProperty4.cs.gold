@@ -9,12 +9,12 @@ namespace Test
         [NotNull] internal abstract string AbstractProperty{caret} { set; }
     }
 
-  [ContractClassFor(typeof(AbstractClass))]
-  internal abstract class AbstractClassContract : AbstractClass
-  {
-    internal override string AbstractProperty
+    [ContractClassFor(typeof(AbstractClass))]
+    internal abstract class AbstractClassContract : AbstractClass
     {
-      set { Contract.Requires(value != null); }
+      internal override string AbstractProperty
+      {
+        set { Contract.Requires(value != null); }
+      }
     }
-  }
 }

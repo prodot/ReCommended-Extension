@@ -9,9 +9,9 @@ namespace Test
         internal void Method([NotNull] string one{caret})
         {
             Contract.Requires(true);
-          Contract.Requires(one != null);
+            Contract.Requires(one != null);
 
-          Console.WriteLine(one);
+            Console.WriteLine(one);
         }
     }
 }

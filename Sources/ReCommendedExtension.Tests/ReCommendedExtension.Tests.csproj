@@ -144,6 +144,7 @@
     <None Include="test\data\Analyzers\Await\RedundantAwait_TestProject.cs.gold" />
     <None Include="test\data\Analyzers\Await\RedundantCapturedContext.cs.gold" />
     <None Include="test\data\Analyzers\CatchClauseWithoutVariable\CatchClauseWithoutVariable.cs.gold" />
+    <None Include="test\data\Analyzers\ControlFlow\ControlFlow.cs.gold" />
     <None Include="test\data\Analyzers\DelegateInvoke\DelegateInvoke.cs.gold" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization4.cs.gold" />
     <None Include="test\data\Analyzers\EmptyArrayInitializationQuickFixes\EmptyArrayInitialization.cs.gold" />
@@ -780,7 +781,6 @@
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\AnonymousMethodAvailability.cs.gold" />
     <None Include="test\data\Analyzers\AsyncVoidQuickFixes\LambdaExpressionAvailability.cs.gold" />
     <None Include="test\data\Analyzers\ConditionalInvocation\Conditional.cs.gold" />
-    <None Include="test\data\Analyzers\ControlFlow\ControlFlow.cs.gold" />
     <None Include="test\data\Analyzers\NotifyPropertyChangedInvocatorFromConstructor\NotifyPropertyChangedInvocatorFromConstructor.cs.gold" />
     <None Include="test\data\ContextActions\AddConfigureAwait\Execute.cs.gold" />
     <None Include="test\data\ContextActions\AnnotateWithInstantHandle\ExecuteGenericEnumerable.cs.gold" />
@@ -809,7 +809,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.ReSharper.SDK.Tests">
-      <Version>2018.2.3</Version>
+      <Version>2018.3.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

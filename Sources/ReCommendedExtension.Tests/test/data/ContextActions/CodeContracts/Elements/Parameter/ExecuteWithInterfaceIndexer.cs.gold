@@ -9,18 +9,18 @@ namespace Test
         int this[[NotNull] string one{caret}] { get; set; }
     }
 
-  [ContractClassFor(typeof(IInterface))]
-  internal abstract class InterfaceContract : IInterface
-  {
-    public int this[string one]
+    [ContractClassFor(typeof(IInterface))]
+    internal abstract class InterfaceContract : IInterface
     {
-      get
+      public int this[string one]
       {
-        Contract.Requires(one != null);
-        
-        return default(int);
+        get
+        {
+          Contract.Requires(one != null);
+          
+          return default(int);
+        }
+        set { Contract.Requires(one != null); }
       }
-      set { Contract.Requires(one != null); }
     }
-  }
 }

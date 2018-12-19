@@ -7,10 +7,10 @@ namespace Test
     {
         [NotNull] string AutoProperty{caret} { get; set; }
 
-      [ContractInvariantMethod]
-      private void ObjectInvariant()
-      {
-        Contract.Invariant(AutoProperty != null);
-      }
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+          Contract.Invariant(AutoProperty != null);
+        }
     }
 }

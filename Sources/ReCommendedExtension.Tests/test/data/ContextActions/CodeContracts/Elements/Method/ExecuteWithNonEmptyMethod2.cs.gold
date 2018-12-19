@@ -9,9 +9,9 @@ namespace Test
         internal string Method{caret}()
         {
             Contract.Ensures(true);
-          Contract.Ensures(Contract.Result<string>() != null);
+            Contract.Ensures(Contract.Result<string>() != null);
 
-          return "";
+            return "";
         }
     }
 }

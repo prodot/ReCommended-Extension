@@ -9,8 +9,8 @@ namespace Test
         {
             Console.WriteLine();
 
-          // language=HTML
-          var variable = "<html {caret}/>";
+            // language=HTML
+            var variable = "<html {caret}/>";
 
             Console.WriteLine();
         }
