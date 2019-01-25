@@ -1,4 +1,4 @@
-# ![](Images/Icon.png) Contributing to ReCommended Extension for ReSharper
+# <img src="Images/Icon.png" width="32" height="32" /> Contributing to ReCommended Extension for ReSharper
 
 ## Versioning Guidelines
 
