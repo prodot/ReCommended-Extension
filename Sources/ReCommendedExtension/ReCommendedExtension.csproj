@@ -164,7 +164,6 @@
     <Compile Include="Zone.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Exceptions.xlsx" />
     <None Include="Properties\ReCommendedExtension.public.snk" />
     <None Include="ReadMe.txt" />
   </ItemGroup>

@@ -67,13 +67,15 @@ namespace ReCommendedExtension.Analyzers
             { "System.NullReferenceException", "The exception indicates a bug that can be avoided." },
             { "System.OutOfMemoryException", "The exception represents an unrecoverable state." },
             { "System.RankException", "The exception indicates a bug that can be avoided." },
-            { @"System.Runtime.InteropServices.InvalidComObjectException", "The exception indicates a bug that can be avoided." },
-            { @"System.Runtime.InteropServices.InvalidOleVariantTypeException", "The exception indicates a bug that can be avoided." },
-            { @"System.Runtime.InteropServices.MarshalDirectiveException", "The exception indicates a bug that can be avoided." },
-            { @"System.Runtime.InteropServices.SafeArrayRankMismatchException", "The exception indicates a bug that can be avoided." },
+            { "System.Runtime.InteropServices.InvalidComObjectException", "The exception indicates a bug that can be avoided." },
+            { "System.Runtime.InteropServices.InvalidOleVariantTypeException", "The exception indicates a bug that can be avoided." },
+            { "System.Runtime.InteropServices.MarshalDirectiveException", "The exception indicates a bug that can be avoided." },
+            { "System.Runtime.InteropServices.SafeArrayRankMismatchException", "The exception indicates a bug that can be avoided." },
             { "System.Security.HostProtectionException", "The exception cannot be caught." },
             { "System.StackOverflowException", "The exception represents an unrecoverable state." },
             { "System.Threading.ThreadAbortException", "The exception indicates a bug that can be avoided." },
+
+            { "System.Diagnostics.Contracts.ContractException", "The exception indicates a bug that can be avoided." },
         };
 
         protected override void Run(ISpecificCatchClause element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
