@@ -809,7 +809,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.ReSharper.SDK.Tests">
-      <Version>2018.3.2</Version>
+      <Version>2018.3.3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
