@@ -31,6 +31,8 @@
   <ItemGroup>
     <Compile Remove="test\data\**\*.cs" />
     <None Include="test\data\**\*.cs" />
+    <None Update="test\data\**\*.cs.gold" DependentUpon="%(Filename)" />
+    <None Update="test\data\**\*.xaml.gold" DependentUpon="%(Filename)" />
   </ItemGroup>
 
 </Project>

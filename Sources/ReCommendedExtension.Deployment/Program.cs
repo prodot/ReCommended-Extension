@@ -75,7 +75,16 @@ namespace ReCommendedExtension.Deployment
 
             isReleaseBuild = string.Equals(executionDirectory, "release", StringComparison.OrdinalIgnoreCase);
 
-            var sourceAssemblyPath = Path.Combine(executionDirectoryPath, @"..\..\..\..\..\ReCommendedExtension\bin", executionDirectory, fileName);
+            var projectDirectory = Path.Combine(executionDirectoryPath, @"..\..\..\..\..\ReCommendedExtension");
+
+            var projectFilePath = Path.Combine(projectDirectory, "ReCommendedExtension.csproj");
+            var projectFile = XDocument.Load(projectFilePath);
+            Debug.Assert(projectFile.Root != null);
+
+            var platform = (string)projectFile.Root.Elements("PropertyGroup").Elements("Platforms").First();
+            var targetFramework = (string)projectFile.Root.Elements("PropertyGroup").Elements("TargetFramework").First();
+
+            var sourceAssemblyPath = Path.Combine(projectDirectory, "bin", platform, executionDirectory, targetFramework, fileName);
             assemblyPath = Path.Combine(executionDirectoryPath, fileName);
             File.Copy(sourceAssemblyPath, assemblyPath, true);
 
