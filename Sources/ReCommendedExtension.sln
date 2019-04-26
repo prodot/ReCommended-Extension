@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCommendedExtension", "ReC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCommendedExtension.Tests", "ReCommendedExtension.Tests\ReCommendedExtension.Tests.csproj", "{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCommendedExtension.Deployment", "ReCommendedExtension.Deployment\ReCommendedExtension.Deployment.csproj", "{6D7F13F4-7212-4D02-BEE8-4F1109534EB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReCommendedExtension.Deployment", "ReCommendedExtension.Deployment\ReCommendedExtension.Deployment.csproj", "{C0B602DC-72D5-438F-A0EF-620F2A9B544B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F5BA4109-A814-4071-A332-B23EA29498CD} = {F5BA4109-A814-4071-A332-B23EA29498CD}
 	EndProjectSection
@@ -39,10 +39,10 @@ Global
 		{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}.Debug|x86.Build.0 = Debug|x86
 		{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}.Release|x86.ActiveCfg = Release|x86
 		{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}.Release|x86.Build.0 = Release|x86
-		{6D7F13F4-7212-4D02-BEE8-4F1109534EB0}.Debug|x86.ActiveCfg = Debug|x86
-		{6D7F13F4-7212-4D02-BEE8-4F1109534EB0}.Debug|x86.Build.0 = Debug|x86
-		{6D7F13F4-7212-4D02-BEE8-4F1109534EB0}.Release|x86.ActiveCfg = Release|x86
-		{6D7F13F4-7212-4D02-BEE8-4F1109534EB0}.Release|x86.Build.0 = Release|x86
+		{C0B602DC-72D5-438F-A0EF-620F2A9B544B}.Debug|x86.ActiveCfg = Debug|x86
+		{C0B602DC-72D5-438F-A0EF-620F2A9B544B}.Debug|x86.Build.0 = Debug|x86
+		{C0B602DC-72D5-438F-A0EF-620F2A9B544B}.Release|x86.ActiveCfg = Release|x86
+		{C0B602DC-72D5-438F-A0EF-620F2A9B544B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
