@@ -18,12 +18,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2BC8ED
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCommendedExtension", "ReCommendedExtension\ReCommendedExtension.csproj", "{F5BA4109-A814-4071-A332-B23EA29498CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCommendedExtension.Tests", "ReCommendedExtension.Tests\ReCommendedExtension.Tests.csproj", "{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReCommendedExtension.Deployment", "ReCommendedExtension.Deployment\ReCommendedExtension.Deployment.csproj", "{C0B602DC-72D5-438F-A0EF-620F2A9B544B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F5BA4109-A814-4071-A332-B23EA29498CD} = {F5BA4109-A814-4071-A332-B23EA29498CD}
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReCommendedExtension.Tests", "ReCommendedExtension.Tests\ReCommendedExtension.Tests.csproj", "{39C6D2C4-8298-4F58-A1B5-14B57665C08D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,14 +35,14 @@ Global
 		{F5BA4109-A814-4071-A332-B23EA29498CD}.Debug|x86.Build.0 = Debug|x86
 		{F5BA4109-A814-4071-A332-B23EA29498CD}.Release|x86.ActiveCfg = Release|x86
 		{F5BA4109-A814-4071-A332-B23EA29498CD}.Release|x86.Build.0 = Release|x86
-		{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}.Debug|x86.ActiveCfg = Debug|x86
-		{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}.Debug|x86.Build.0 = Debug|x86
-		{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}.Release|x86.ActiveCfg = Release|x86
-		{0BBA8808-478A-4BC9-8AA9-6EF2E53C0E31}.Release|x86.Build.0 = Release|x86
 		{C0B602DC-72D5-438F-A0EF-620F2A9B544B}.Debug|x86.ActiveCfg = Debug|x86
 		{C0B602DC-72D5-438F-A0EF-620F2A9B544B}.Debug|x86.Build.0 = Debug|x86
 		{C0B602DC-72D5-438F-A0EF-620F2A9B544B}.Release|x86.ActiveCfg = Release|x86
 		{C0B602DC-72D5-438F-A0EF-620F2A9B544B}.Release|x86.Build.0 = Release|x86
+		{39C6D2C4-8298-4F58-A1B5-14B57665C08D}.Debug|x86.ActiveCfg = Debug|x86
+		{39C6D2C4-8298-4F58-A1B5-14B57665C08D}.Debug|x86.Build.0 = Debug|x86
+		{39C6D2C4-8298-4F58-A1B5-14B57665C08D}.Release|x86.ActiveCfg = Release|x86
+		{39C6D2C4-8298-4F58-A1B5-14B57665C08D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
