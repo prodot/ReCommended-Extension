@@ -4,7 +4,7 @@ using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
-using ReCommendedExtension.Highlightings;
+using ReCommendedExtension.Analyzers.Await;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {

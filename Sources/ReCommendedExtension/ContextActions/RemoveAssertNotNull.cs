@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
-using ReCommendedExtension.Assertions;
+using ReCommendedExtension.Analyzers.ControlFlow;
 
 namespace ReCommendedExtension.ContextActions
 {

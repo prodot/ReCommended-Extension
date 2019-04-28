@@ -1,7 +1,7 @@
 ﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
-using ReCommendedExtension.QuickFixes;
+using ReCommendedExtension.Analyzers.EmptyArrayInitialization;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
