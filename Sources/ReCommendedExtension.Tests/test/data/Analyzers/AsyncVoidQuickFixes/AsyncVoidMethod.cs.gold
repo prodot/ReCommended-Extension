@@ -10,7 +10,7 @@ namespace Test
             AsyncHandler(null, null);
         }
 
-        async {caret}Task AsyncHandler(object sender, EventArgs e)
+        async Task{caret} AsyncHandler(object sender, EventArgs e)
         {
             await Task.Yield();
         }

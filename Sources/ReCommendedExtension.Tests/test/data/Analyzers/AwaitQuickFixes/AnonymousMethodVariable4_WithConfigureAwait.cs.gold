@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
             Func<Task> AnonymousMethodVariable4_WithConfigureAwait = delegate
             {
               Console.WriteLine();
-              ret{caret}urn Task.FromResult("one");
+              return{caret} Task.FromResult("one");
             };
         }
     }

@@ -321,17 +321,14 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 {
                     if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(attributesOwnerDeclaration))
                     {
-                        var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, attributesOwnerDeclaration);
-                        if (elementType != null)
+                        var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, attributesOwnerDeclaration, false);
+                        if (elementType != null && elementType.Classify != TypeClassification.REFERENCE_TYPE)
                         {
-                            if (elementType.Classify != TypeClassification.REFERENCE_TYPE)
-                            {
-                                consumer.AddHighlighting(
-                                    new NotAllowedAnnotationHighlighting(
-                                        attributesOwnerDeclaration,
-                                        itemNotNullAttribute,
-                                        "Annotation is not allowed because the declared element type is not a reference type."));
-                            }
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationHighlighting(
+                                    attributesOwnerDeclaration,
+                                    itemNotNullAttribute,
+                                    "Annotation is not allowed because the declared element type is not a reference type."));
                         }
                         return;
                     }

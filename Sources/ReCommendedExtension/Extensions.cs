@@ -426,12 +426,14 @@ namespace ReCommendedExtension
 
         public static bool IsGenericArray([NotNull] this IType type, [NotNull] ITreeNode context)
         {
-            var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, context);
+            var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, context, false);
             if (elementType != null)
             {
                 for (var i = 1; i < 16; i++)
                 {
-                    if (type.IsImplicitlyConvertibleTo(TypeFactory.CreateArrayType(elementType, i), context.GetTypeConversionRule()))
+                    if (type.IsImplicitlyConvertibleTo(
+                        TypeFactory.CreateArrayType(elementType, i, NullableAnnotation.Unknown),
+                        context.GetTypeConversionRule()))
                     {
                         return true;
                     }

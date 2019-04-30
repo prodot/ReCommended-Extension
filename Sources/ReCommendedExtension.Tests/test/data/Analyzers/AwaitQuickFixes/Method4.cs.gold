@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
         Task Method4()
         {
           Console.WriteLine();
-          {caret}return Task.FromResult("one");
+          re{caret}turn Task.FromResult("one");
         }
     }
 }

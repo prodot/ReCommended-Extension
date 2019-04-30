@@ -7,7 +7,7 @@ namespace Test
     {
         void Method()
         {
-            var array = Array.Empty<List<T>{caret}>();
+            var array = Array.Empty<List<T>>(){caret};
         }
     }
 }

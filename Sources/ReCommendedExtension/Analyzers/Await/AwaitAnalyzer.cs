@@ -183,7 +183,10 @@ namespace ReCommendedExtension.Analyzers.Await
                         testMethodAttributeTypes = new IDeclaredType[testMethodAttributes.Length];
                         for (var i = 0; i < testMethodAttributes.Length; i++)
                         {
-                            testMethodAttributeTypes[i] = TypeFactory.CreateTypeByCLRName(testMethodAttributes[i], methodDeclaration.GetPsiModule());
+                            testMethodAttributeTypes[i] = TypeFactory.CreateTypeByCLRName(
+                                testMethodAttributes[i],
+                                NullableAnnotation.Unknown,
+                                methodDeclaration.GetPsiModule());
                         }
                     }
 

@@ -2,6 +2,6 @@
 {
     public abstract class InternalConstructor
     {
-      private{caret} protected InternalConstructor(string x) { }
+      private p{caret}rotected InternalConstructor(string x) { }
     }
 }

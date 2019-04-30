@@ -7,7 +7,7 @@ namespace Test
     {
         static void Method(string one)
         {
-            var length = {caret}one.Length;
+            var length = one{caret}.Length;
         }
 
         [DebuggerStepThrough]

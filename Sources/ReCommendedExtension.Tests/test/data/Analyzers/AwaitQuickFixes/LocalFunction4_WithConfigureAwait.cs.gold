@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
           Task LocalFunction4_WithConfigureAwait()
           {
             Console.WriteLine();
-            ret{caret}urn Task.FromResult("one");
+            return{caret} Task.FromResult("one");
           }
         }
     }
