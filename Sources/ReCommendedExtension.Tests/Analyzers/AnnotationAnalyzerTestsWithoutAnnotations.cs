@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
-using ReCommendedExtension.Highlightings;
+using ReCommendedExtension.Analyzers.Annotation;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {

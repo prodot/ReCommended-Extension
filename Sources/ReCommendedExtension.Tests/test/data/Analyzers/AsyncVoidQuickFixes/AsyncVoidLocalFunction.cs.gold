@@ -7,7 +7,7 @@ namespace Test
     {
         void Method()
         {
-            async {caret}Task AsyncHandler(object sender, EventArgs e)
+            async Task{caret} AsyncHandler(object sender, EventArgs e)
             {
                 await Task.Yield();
             }

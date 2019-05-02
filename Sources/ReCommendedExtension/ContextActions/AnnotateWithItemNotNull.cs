@@ -21,7 +21,7 @@ namespace ReCommendedExtension.ContextActions
         {
             if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(context))
             {
-                var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, context);
+                var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, context, false);
                 if (elementType != null && elementType.Classify == TypeClassification.REFERENCE_TYPE)
                 {
                     return true;

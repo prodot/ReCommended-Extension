@@ -4,6 +4,6 @@ namespace Test
 {
     public class NonGenericClass
     {
-        int?[] field = {caret}Array.Empty<int?>();
+        int?[] field = Array.Empty<int?>(){caret};
     }
 }

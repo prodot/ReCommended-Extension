@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
-using ReCommendedExtension.Highlightings;
+using ReCommendedExtension.Analyzers.InternalConstructor;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {

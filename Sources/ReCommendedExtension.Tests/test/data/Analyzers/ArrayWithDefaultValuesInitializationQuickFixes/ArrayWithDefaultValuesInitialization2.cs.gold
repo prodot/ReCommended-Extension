@@ -4,7 +4,7 @@
     {
         void Method()
         {
-            var variable = new T{caret}[2];
+            var variable = new T[2]{caret};
         }
     }
 }

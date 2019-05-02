@@ -2,6 +2,6 @@
 {
     public class NonGenericClass
     {
-        int?[] field = new int{caret}?[3];
+        int?[] field = new int?[3]{caret};
     }
 }

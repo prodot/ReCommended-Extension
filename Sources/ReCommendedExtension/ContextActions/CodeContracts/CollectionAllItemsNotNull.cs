@@ -31,7 +31,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             if ((type.IsCollectionLike() || type.IsGenericArray(context)) && !type.IsGenericIEnumerable() && !type.IsArray())
             {
-                var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, context);
+                var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, context, false);
 
                 if (elementType != null)
                 {

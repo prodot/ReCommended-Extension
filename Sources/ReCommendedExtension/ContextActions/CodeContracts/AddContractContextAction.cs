@@ -102,7 +102,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 {
                     foreach (var firstNonContractStatement in firstNonContractStatements)
                     {
-                        var originalPosition = textControl.Caret.PositionValue;
+                        var originalPosition = textControl.Caret.Position.Value;
 
                         var coordinates = textControl.Document.GetCoordsByOffset(firstNonContractStatement.GetDocumentRange().TextRange.StartOffset);
                         textControl.Caret.MoveTo(coordinates, CaretVisualPlacement.DontScrollIfVisible);

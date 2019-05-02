@@ -21,7 +21,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 {
                     if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(
                         typeElement,
-                        typeElement.Module.GetPredefinedType().TryGetType(PredefinedType.INTPTR_FQN)?.GetTypeElement()))
+                        typeElement.Module.GetPredefinedType().TryGetType(PredefinedType.INTPTR_FQN, NullableAnnotation.Unknown)?.GetTypeElement()))
                     {
                         IsSigned = true;
                         return true;
@@ -29,7 +29,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                     if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(
                         typeElement,
-                        typeElement.Module.GetPredefinedType().TryGetType(PredefinedType.UINTPTR_FQN)?.GetTypeElement()))
+                        typeElement.Module.GetPredefinedType().TryGetType(PredefinedType.UINTPTR_FQN, NullableAnnotation.Unknown)?.GetTypeElement()))
                     {
                         IsSigned = false;
                         return true;

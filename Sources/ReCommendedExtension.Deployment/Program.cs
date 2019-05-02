@@ -6,13 +6,16 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ReCommendedExtension.Deployment.Properties;
 
 namespace ReCommendedExtension.Deployment
 {
     internal static class Program
     {
-        static int Main([NotNull][ItemNotNull] string[] args)
+        static int Main()
         {
             try
             {
@@ -22,13 +25,7 @@ namespace ReCommendedExtension.Deployment
 
                 if (isReleaseBuild)
                 {
-                    if (args.Length == 0)
-                    {
-                        throw new ArgumentException("SNK file not specified.");
-                    }
-
-                    var snkPath = args[0];
-                    ResignAssembly(assemblyPath, snkPath);
+                    ResignAssembly(executionDirectoryPath, assemblyPath);
                 }
 
                 UpdateNuspec(executionDirectoryPath, assemblyPath, out var nuspecPath);
@@ -72,21 +69,55 @@ namespace ReCommendedExtension.Deployment
 
             const string fileName = "ReCommendedExtension.dll";
 
-            var executionDirectory = Path.GetFileName(executionDirectoryPath);
+            var executionDirectory = Path.GetFileName(Path.GetDirectoryName(executionDirectoryPath));
+
+            Debug.Assert(executionDirectory != null);
+
             isReleaseBuild = string.Equals(executionDirectory, "release", StringComparison.OrdinalIgnoreCase);
 
-            var sourceAssemblyPath = Path.Combine(executionDirectoryPath, @"..\..\..\ReCommendedExtension\bin", executionDirectory, fileName);
+            var projectDirectory = Path.Combine(executionDirectoryPath, @"..\..\..\..\..\ReCommendedExtension");
+
+            var projectFilePath = Path.Combine(projectDirectory, "ReCommendedExtension.csproj");
+            var projectFile = XDocument.Load(projectFilePath);
+            Debug.Assert(projectFile.Root != null);
+
+            var platform = (string)projectFile.Root.Elements("PropertyGroup").Elements("Platforms").First();
+            var targetFramework = (string)projectFile.Root.Elements("PropertyGroup").Elements("TargetFramework").First();
+
+            var sourceAssemblyPath = Path.Combine(projectDirectory, "bin", platform, executionDirectory, targetFramework, fileName);
             assemblyPath = Path.Combine(executionDirectoryPath, fileName);
             File.Copy(sourceAssemblyPath, assemblyPath, true);
 
             Console.WriteLine("done");
         }
 
-        static void ResignAssembly([NotNull] string assemblyPath, [NotNull] string snkPath)
+        static void ResignAssembly([NotNull] string executionDirectoryPath, [NotNull] string assemblyPath)
         {
             Console.WriteLine("Resigning assembly...");
 
+            Debug.Assert(Settings.Default != null);
+
             Console.WriteLine($"Tool path: {Settings.Default.SnPath}");
+
+            // switch to project directory
+            // set a secret: > dotnet user-secrets set "SNKey" "..."
+            // list secrets: > dotnet user-secrets list
+
+            var projectFilePath = Path.Combine(executionDirectoryPath, @"..\..\..\..", "ReCommendedExtension.Deployment.csproj");
+            var projectFile = XDocument.Load(projectFilePath);
+            Debug.Assert(projectFile.Root != null);
+
+            var userSecretId = (string)projectFile.Root.Elements("PropertyGroup").Elements("UserSecretsId").First();
+            Debug.Assert(userSecretId != null);
+
+            var secretsPath = PathHelper.GetSecretsPathFromSecretsId(userSecretId);
+            // must be: %APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
+
+            var json = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(secretsPath));
+            Debug.Assert(json != null);
+
+            var snkPath = (string)json["SNKey"];
+
             Console.WriteLine($"Key path: {snkPath}");
 
             RunConsoleApplication($"\"{Settings.Default.SnPath}\"", $"-R \"{assemblyPath}\" \"{snkPath}\"");
@@ -197,7 +228,7 @@ namespace ReCommendedExtension.Deployment
             Debug.Assert(nuspecDirectoryPath != null);
 
             RunConsoleApplication(
-                $"\"{Path.Combine(nuspecDirectoryPath, @"..\..\..\.nuget\NuGet.exe")}\"",
+                $"\"{Path.Combine(nuspecDirectoryPath, @"..\..\..\..\..\.nuget\NuGet.exe")}\"",
                 $"pack \"{nuspecPath}\" -OutputDirectory \"{nuspecDirectoryPath}\" -NoPackageAnalysis -Verbosity detailed");
         }
 

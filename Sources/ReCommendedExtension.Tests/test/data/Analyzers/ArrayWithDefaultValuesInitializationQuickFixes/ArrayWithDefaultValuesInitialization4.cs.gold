@@ -6,7 +6,7 @@ namespace Test
     {
         void Method()
         {
-            var variable = new List<T>{caret}[3];
+            var variable = new List<T>[3]{caret};
         }
     }
 }

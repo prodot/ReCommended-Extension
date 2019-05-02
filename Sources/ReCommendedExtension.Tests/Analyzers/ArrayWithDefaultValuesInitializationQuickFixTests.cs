@@ -1,6 +1,6 @@
 ﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using NUnit.Framework;
-using ReCommendedExtension.QuickFixes;
+using ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {

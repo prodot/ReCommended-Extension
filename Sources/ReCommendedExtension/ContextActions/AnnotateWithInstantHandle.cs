@@ -33,7 +33,7 @@ namespace ReCommendedExtension.ContextActions
             => declaredElement is IParameter parameter &&
                 (parameter.Type.IsGenericIEnumerable() ||
                     parameter.Type.IsImplicitlyConvertibleTo(
-                        new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, psiModule),
+                        new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, NullableAnnotation.Unknown, psiModule),
                         context.GetTypeConversionRule()));
     }
 }
