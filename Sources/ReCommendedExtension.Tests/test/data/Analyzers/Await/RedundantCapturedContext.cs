@@ -88,6 +88,69 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         }
 
         async Task Method_WithConfigureAwait_AsExpressionBodied() => await Task.Delay(10).ConfigureAwait(false);
+
+        async Task<int> Method_NestedInUsingScope()
+        {
+            using (new Process())
+            {
+                return await Task.FromResult(3);
+            }
+        }
+
+        async Task<int> Method_NestedInUsingScope(int x)
+        {
+            using (new Process())
+            {
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            }
+        }
+
+        async Task<int> Method_UsingDeclaration()
+        {
+            using var p = new Process();
+
+            return await Task.FromResult(3);
+        }
+
+        async Task<int> Method_UsingDeclaration(int x)
+        {
+            using var p = new Process();
+
+            if (x > 2)
+            {
+                return await Task.FromResult(3);
+            }
+        }
+
+        async Task<int> Method_NestedInTryBlock()
+        {
+            try
+            {
+                return await Task.FromResult(3);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        async Task<int> Method_NestedInTryBlock(int x)
+        {
+            try
+            {
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 
     public class AwaitForLambdaVariables
@@ -173,6 +236,69 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             Func<Task> Method_WithConfigureAwait = async () => { await Task.Delay(10).ConfigureAwait(false); };
 
             Func<Task> Method_WithConfigureAwait_AsExpressionBodied = async () => await Task.Delay(10).ConfigureAwait(false);
+
+            Func<Task<int>> Method_NestedInUsingScope = async () =>
+            {
+                using (new Process())
+                {
+                    return await Task.FromResult(3);
+                }
+            };
+
+            Func<Task<int>> Method_NestedInUsingScope = async (int x) =>
+            {
+                using (new Process())
+                {
+                    if (x > 2)
+                    {
+                        return await Task.FromResult(3);
+                    }
+                }
+            };
+
+            Func<Task<int>> Method_UsingDeclaration = async () =>
+            {
+                using var p = new Process();
+
+                return await Task.FromResult(3);
+            };
+
+            Func<Task<int>> Method_UsingDeclaration = async (int x) =>
+            {
+                using var p = new Process();
+
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            };
+
+            Func<Task<int>> Method_NestedInTryBlock = async () =>
+            {
+                try
+                {
+                    return await Task.FromResult(3);
+                }
+                catch
+                {
+                    throw;
+                }
+            };
+
+            Func<Task<int>> Method_NestedInTryBlock = async (int x) =>
+            {
+                try
+                {
+                    if (x > 2)
+                    {
+                        return await Task.FromResult(3);
+                    }
+                }
+                catch
+                {
+                    throw;
+                }
+            };
         }
     }
 
@@ -257,6 +383,69 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         Func<Task> Method_WithConfigureAwait = async () => { await Task.Delay(10).ConfigureAwait(false); };
 
         Func<Task> Method_WithConfigureAwait_AsExpressionBodied = async () => await Task.Delay(10).ConfigureAwait(false);
+
+        Func<Task<int>> Method_NestedInUsingScope = async () =>
+        {
+            using (new Process())
+            {
+                return await Task.FromResult(3);
+            }
+        };
+
+        Func<Task<int>> Method_NestedInUsingScope = async (int x) =>
+        {
+            using (new Process())
+            {
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            }
+        };
+
+        Func<Task<int>> Method_UsingDeclaration = async () =>
+        {
+            using var p = new Process();
+
+            return await Task.FromResult(3);
+        };
+
+        Func<Task<int>> Method_UsingDeclaration = async (int x) =>
+        {
+            using var p = new Process();
+
+            if (x > 2)
+            {
+                return await Task.FromResult(3);
+            }
+        };
+
+        Func<Task<int>> Method_NestedInTryBlock = async () =>
+        {
+            try
+            {
+                return await Task.FromResult(3);
+            }
+            catch
+            {
+                throw;
+            }
+        };
+
+        Func<Task<int>> Method_NestedInTryBlock = async (int x) =>
+        {
+            try
+            {
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        };
     }
 
     public class AwaitForAnonymousMethodVariables
@@ -342,6 +531,69 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             Func<Task> Method_WithConfigureAwait = async delegate { await Task.Delay(10).ConfigureAwait(false); };
 
             Func<Task> Method_WithConfigureAwait_AsExpressionBodied = async delegate { await Task.Delay(10).ConfigureAwait(false); };
+
+            Func<Task<int>> Method_NestedInUsingScope = async delegate
+            {
+                using (new Process())
+                {
+                    return await Task.FromResult(3);
+                }
+            };
+
+            Func<Task<int>> Method_NestedInUsingScope = async delegate(int x)
+            {
+                using (new Process())
+                {
+                    if (x > 2)
+                    {
+                        return await Task.FromResult(3);
+                    }
+                }
+            };
+
+            Func<Task<int>> Method_UsingDeclaration = async delegate
+            {
+                using var p = new Process();
+
+                return await Task.FromResult(3);
+            };
+
+            Func<Task<int>> Method_UsingDeclaration = async delegate(int x)
+            {
+                using var p = new Process();
+
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            };
+
+            Func<Task<int>> Method_NestedInTryBlock = async delegate
+            {
+                try
+                {
+                    return await Task.FromResult(3);
+                }
+                catch
+                {
+                    throw;
+                }
+            };
+
+            Func<Task<int>> Method_NestedInTryBlock = async delegate(int x)
+            {
+                try
+                {
+                    if (x > 2)
+                    {
+                        return await Task.FromResult(3);
+                    }
+                }
+                catch
+                {
+                    throw;
+                }
+            };
         }
     }
 
@@ -426,6 +678,69 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         Func<Task> Method_WithConfigureAwait = async delegate { await Task.Delay(10).ConfigureAwait(false); };
 
         Func<Task> Method_WithConfigureAwait_AsExpressionBodied = async delegate { await Task.Delay(10).ConfigureAwait(false); };
+
+        Func<Task<int>> Method_NestedInUsingScope = async delegate
+        {
+            using (new Process())
+            {
+                return await Task.FromResult(3);
+            }
+        };
+
+        Func<Task<int>> Method_NestedInUsingScope = async delegate(int x)
+        {
+            using (new Process())
+            {
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            }
+        };
+
+        Func<Task<int>> Method_UsingDeclaration = async delegate
+        {
+            using var p = new Process();
+
+            return await Task.FromResult(3);
+        };
+
+        Func<Task<int>> Method_UsingDeclaration = async delegate(int x)
+        {
+            using var p = new Process();
+
+            if (x > 2)
+            {
+                return await Task.FromResult(3);
+            }
+        };
+
+        Func<Task<int>> Method_NestedInTryBlock = async delegate
+        {
+            try
+            {
+                return await Task.FromResult(3);
+            }
+            catch
+            {
+                throw;
+            }
+        };
+
+        Func<Task<int>> Method_NestedInTryBlock = async delegate(int x)
+        {
+            try
+            {
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        };
     }
 
     public class AwaitForLocalFunctions
@@ -514,6 +829,69 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
 
             async Task Method_WithConfigureAwait_AsExpressionBodied() => await Task.Delay(10).ConfigureAwait(false);
+
+            async Task<int> Method_NestedInUsingScope()
+            {
+                using (new Process())
+                {
+                    return await Task.FromResult(3);
+                }
+            }
+
+            async Task<int> Method_NestedInUsingScope(int x)
+            {
+                using (new Process())
+                {
+                    if (x > 2)
+                    {
+                        return await Task.FromResult(3);
+                    }
+                }
+            }
+
+            async Task<int> Method_UsingDeclaration()
+            {
+                using var p = new Process();
+
+                return await Task.FromResult(3);
+            }
+
+            async Task<int> Method_UsingDeclaration(int x)
+            {
+                using var p = new Process();
+
+                if (x > 2)
+                {
+                    return await Task.FromResult(3);
+                }
+            }
+
+            async Task<int> Method_NestedInTryBlock()
+            {
+                try
+                {
+                    return await Task.FromResult(3);
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+
+            async Task<int> Method_NestedInTryBlock(int x)
+            {
+                try
+                {
+                    if (x > 2)
+                    {
+                        return await Task.FromResult(3);
+                    }
+                }
+                catch
+                {
+                    throw;
+                }
+            }
         }
     }
 }
