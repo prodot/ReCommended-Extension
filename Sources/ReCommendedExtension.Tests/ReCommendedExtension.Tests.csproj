@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);Packages\**</DefaultItemExcludes>
     <LangVersion>latest</LangVersion>
     <Platforms>x86</Platforms>

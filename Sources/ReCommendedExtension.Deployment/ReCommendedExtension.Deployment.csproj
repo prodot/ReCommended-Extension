@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <Platforms>x86</Platforms>
     <LangVersion>latest</LangVersion>
     <UserSecretsId>960c5dc0-8d5f-4cf4-a50a-79fd8a439eaa</UserSecretsId>
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Settings.settings" />
+    <Compile Update="Properties\Settings.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Settings.settings" DesignTimeSharedInput="True" />
     <None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />
     <None Update="ReCommendedExtension.nuspec" CopyToOutputDirectory="Always" />
   </ItemGroup>
