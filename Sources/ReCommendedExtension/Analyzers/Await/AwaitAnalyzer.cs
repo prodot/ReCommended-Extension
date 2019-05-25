@@ -350,11 +350,25 @@ namespace ReCommendedExtension.Analyzers.Await
         }
 
         static void AnalyzeRedundantCapturedContext(
+            [NotNull] IParametersOwnerDeclaration container,
             [NotNull] IAwaitExpression awaitExpression,
             bool isLastExpression,
             [NotNull] IHighlightingConsumer consumer)
         {
-            if ((isLastExpression || awaitExpression.Parent is IReturnStatement) && awaitExpression.Task.IsConfigureAwaitAvailable())
+            var hasRedundantCapturedContext = isLastExpression ||
+                awaitExpression.Parent is IReturnStatement returnStatement &&
+                !returnStatement.PathToRoot()
+                    .Skip(1)
+                    .TakeWhile(node => node != container)
+                    .Any(node => node is IUsingStatement || node is ITryStatement) &&
+                !returnStatement.PathToRoot()
+                    .TakeWhile(node => node != container)
+                    .Any(
+                        node => node.AssertNotNull()
+                            .LeftSiblings()
+                            .Any(s => ((s as IDeclarationStatement)?.Declaration as IMultipleLocalVariableDeclaration)?.UsingKeyword != null));
+
+            if (hasRedundantCapturedContext && awaitExpression.Task.IsConfigureAwaitAvailable())
             {
                 consumer.AddHighlighting(
                     new RedundantCapturedContextHighlighting(
@@ -383,7 +397,7 @@ namespace ReCommendedExtension.Analyzers.Await
 
             if (!highlightingsAdded)
             {
-                AnalyzeRedundantCapturedContext(element, isLastExpression, consumer);
+                AnalyzeRedundantCapturedContext(container, element, isLastExpression, consumer);
             }
         }
     }
