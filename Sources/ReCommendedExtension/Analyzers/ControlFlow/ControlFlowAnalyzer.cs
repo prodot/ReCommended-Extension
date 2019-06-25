@@ -245,32 +245,46 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             ICSharpExpression expression)
         {
-            switch (expression)
+            while (true)
             {
-                case IReferenceExpression referenceExpression:
-                    var nullReferenceState = inspector.GetExpressionNullReferenceState(referenceExpression, true);
+                switch (expression)
+                {
+                    case IReferenceExpression referenceExpression:
+                        if (referenceExpression is IConditionalAccessExpression conditionalAccessExpression &&
+                            conditionalAccessExpression.HasConditionalAccessSign)
+                        {
+                            var referenceState = GetExpressionNullReferenceStateByAnnotations(nullnessProvider, referenceExpression);
+                            if (referenceState == CSharpControlFlowNullReferenceState.NOT_NULL)
+                            {
+                                expression = conditionalAccessExpression.ConditionalQualifier;
+                                continue;
+                            }
+                        }
 
-                    if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN)
-                    {
-                        return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, referenceExpression);
-                    }
+                        var nullReferenceState = inspector.GetExpressionNullReferenceState(referenceExpression, true);
 
-                    return nullReferenceState;
+                        if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN)
+                        {
+                            return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, referenceExpression);
+                        }
 
-                case IAsExpression asExpression when alwaysSuccessTryCastExpressions.Contains(asExpression):
-                    return CSharpControlFlowNullReferenceState.NOT_NULL;
+                        return nullReferenceState;
 
-                case IObjectCreationExpression _: return CSharpControlFlowNullReferenceState.NOT_NULL;
+                    case IAsExpression asExpression when alwaysSuccessTryCastExpressions.Contains(asExpression):
+                        return CSharpControlFlowNullReferenceState.NOT_NULL;
 
-                case IInvocationExpression invocationExpression:
-                    if (invocationExpression.InvokedExpression is IReferenceExpression invokedExpression)
-                    {
-                        return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, invokedExpression);
-                    }
+                    case IObjectCreationExpression _: return CSharpControlFlowNullReferenceState.NOT_NULL;
 
-                    goto default;
+                    case IInvocationExpression invocationExpression:
+                        if (invocationExpression.InvokedExpression is IReferenceExpression invokedExpression)
+                        {
+                            return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, invokedExpression);
+                        }
 
-                default: return CSharpControlFlowNullReferenceState.UNKNOWN;
+                        goto default;
+
+                    default: return CSharpControlFlowNullReferenceState.UNKNOWN;
+                }
             }
         }
 

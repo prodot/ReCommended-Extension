@@ -143,6 +143,32 @@ namespace Test
             x.AssertNotNull();
         }
 
+        class A
+        {
+            [NotNull]
+            public string NotNull { get; set; }
+
+            public string CanBeNull { get; set; }
+        }
+
+        static void NullPropagation1(A canBeNull) => AssertThatTrue(canBeNull?.NotNull != null);
+
+        static void NullPropagation2(A canBeNull) => AssertThatNotNull(canBeNull?.NotNull);
+
+        static void NullPropagation3(A canBeNull) => canBeNull?.NotNull.AssertNotNull();
+
+        static void NullPropagation4([NotNull] A notNull) => AssertThatTrue(notNull?.NotNull != null);
+
+        static void NullPropagation5([NotNull] A notNull) => AssertThatNotNull(notNull?.NotNull);
+
+        static void NullPropagation6([NotNull] A notNull) => notNull?.NotNull.AssertNotNull();
+
+        static void NullPropagation7([NotNull] A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
+
+        static void NullPropagation8([NotNull] A notNull) => AssertThatNotNull(notNull?.CanBeNull);
+
+        static void NullPropagation9([NotNull] A notNull) => notNull?.CanBeNull.AssertNotNull();
+
         [AssertionMethod]
         [ContractAnnotation("false => void")]
         static void AssertThatTrue([AssertionCondition(AssertionConditionType.IS_TRUE)] bool condition) => Debug.Assert(condition);
