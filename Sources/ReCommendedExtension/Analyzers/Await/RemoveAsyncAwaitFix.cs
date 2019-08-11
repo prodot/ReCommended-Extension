@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
@@ -33,7 +34,9 @@ namespace ReCommendedExtension.Analyzers.Await
 
                 if (highlighting.QuickFixRemovesConfigureAwait)
                 {
-                    builder.Append($"/'{ClrMethodsNames.ConfigureAwait}(...)'");
+                    builder.Append("/'");
+                    builder.Append(nameof(Task.ConfigureAwait));
+                    builder.Append("(...)'");
                 }
 
                 return builder.ToString();

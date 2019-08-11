@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
@@ -212,7 +213,7 @@ namespace ReCommendedExtension.Analyzers.Await
             var highlightConfigureAwait = configureAwaitNode != null && configureAwaitInvocationExpression.ArgumentList != null;
 
             var highlighting = new RedundantAwaitHighlighting(
-                $"Redundant 'await' (remove 'async'/'await'{(highlightConfigureAwait ? "/'" + ClrMethodsNames.ConfigureAwait + "(...)'" : "")})",
+                $"Redundant 'await' (remove 'async'/'await'{(highlightConfigureAwait ? "/'" + nameof(Task.ConfigureAwait) + "(...)'" : "")})",
                 removeAsync,
                 awaitExpression,
                 statementToBeReplacedWithReturnStatement,
@@ -296,7 +297,7 @@ namespace ReCommendedExtension.Analyzers.Await
                     if (awaitExpression.Task is IInvocationExpression configureAwaitInvocationExpression)
                     {
                         var method = configureAwaitInvocationExpression.InvocationExpressionReference.Resolve().DeclaredElement as IMethod;
-                        if (method?.ShortName == ClrMethodsNames.ConfigureAwait)
+                        if (method?.ShortName == nameof(Task.ConfigureAwait))
                         {
                             var methodContainingTypeElement = method.GetContainingType();
                             if (methodContainingTypeElement != null)
@@ -372,7 +373,7 @@ namespace ReCommendedExtension.Analyzers.Await
             {
                 consumer.AddHighlighting(
                     new RedundantCapturedContextHighlighting(
-                        $"Redundant captured context (add '.{ClrMethodsNames.ConfigureAwait}(false)')",
+                        $"Redundant captured context (add '.{nameof(Task.ConfigureAwait)}(false)')",
                         awaitExpression));
             }
         }

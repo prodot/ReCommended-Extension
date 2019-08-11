@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
@@ -15,8 +16,8 @@ namespace ReCommendedExtension.ContextActions
 {
     [ContextAction(
         Group = "C#",
-        Name = "Add '." + ClrMethodsNames.ConfigureAwait + "(false)' to the await expression" + ZoneMarker.Suffix,
-        Description = "Adds '." + ClrMethodsNames.ConfigureAwait + "(false)' to the await expression.")]
+        Name = "Add '." + nameof(Task.ConfigureAwait) + "(false)' to the await expression" + ZoneMarker.Suffix,
+        Description = "Adds '." + nameof(Task.ConfigureAwait) + "(false)' to the await expression.")]
     public sealed class AddConfigureAwait : ContextActionBase
     {
         [NotNull]
@@ -26,7 +27,7 @@ namespace ReCommendedExtension.ContextActions
 
         public AddConfigureAwait([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
 
-        public override string Text => $"Add '{ClrMethodsNames.ConfigureAwait}(false)'";
+        public override string Text => $"Add '{nameof(Task.ConfigureAwait)}(false)'";
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
         {
@@ -59,7 +60,7 @@ namespace ReCommendedExtension.ContextActions
 
                     ModificationUtil.ReplaceChild(
                         awaitedExpression,
-                        factory.CreateExpression($"$0.{ClrMethodsNames.ConfigureAwait}(false)", awaitedExpression));
+                        factory.CreateExpression($"$0.{nameof(Task.ConfigureAwait)}(false)", awaitedExpression));
                 }
 
                 return _ => { };

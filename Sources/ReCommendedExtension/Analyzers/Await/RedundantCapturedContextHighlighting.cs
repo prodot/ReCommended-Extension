@@ -1,10 +1,10 @@
-﻿using JetBrains.Annotations;
+﻿using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension;
 using ReCommendedExtension.Analyzers.Await;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
@@ -13,7 +13,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
         RedundantCapturedContextHighlighting.SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
-        "Redundant captured context (add '." + ClrMethodsNames.ConfigureAwait + "(false)')" + ZoneMarker.Suffix,
+        "Redundant captured context (add '." + nameof(Task.ConfigureAwait) + "(false)')" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
 

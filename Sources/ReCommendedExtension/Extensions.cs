@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
@@ -620,7 +621,7 @@ namespace ReCommendedExtension
                     {
                         Debug.Assert(method != null);
 
-                        if (method.ShortName == ClrMethodsNames.ConfigureAwait && method.Parameters.Count == 1)
+                        if (method.ShortName == nameof(Task.ConfigureAwait) && method.Parameters.Count == 1)
                         {
                             Debug.Assert(method.Parameters[0] != null);
 
