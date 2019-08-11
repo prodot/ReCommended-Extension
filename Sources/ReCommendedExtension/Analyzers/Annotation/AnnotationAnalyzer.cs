@@ -121,7 +121,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
         {
             var markFound = false;
 
-            foreach (var attribute in declaration.AttributesEnumerable)
+            foreach (var attribute in declaration.Attributes)
             {
                 Debug.Assert(attribute != null);
 
@@ -301,7 +301,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
             [NotNull] IHighlightingConsumer consumer,
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
-            var itemNotNullAttribute = attributesOwnerDeclaration.AttributesEnumerable.FirstOrDefault(
+            var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(
                 attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
                     ContainerElementNullnessProvider.ItemNotNullAttributeShortName);
             if (itemNotNullAttribute != null)
@@ -388,7 +388,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
             }
 
             var suppressMessageAttributes =
-                from attribute in attributesOwnerDeclaration.AttributesEnumerable
+                from attribute in attributesOwnerDeclaration.Attributes
                 let attributeInstance = attribute.GetAttributeInstance()
                 where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute) && attributeInstance.PositionParameterCount == 2
                 let categoryConstantValue = attributeInstance.PositionParameter(0).ConstantValue
@@ -423,7 +423,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             var groupings = (
-                from attribute in attributesOwnerDeclaration.AttributesEnumerable
+                from attribute in attributesOwnerDeclaration.Attributes
                 let shortName = attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
                 where shortName == PureAnnotationProvider.PureAttributeShortName ||
                     shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
@@ -461,7 +461,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
         static void AnalyzeConditional([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             var conditionalAttributes =
-                from attribute in attributesOwnerDeclaration.AttributesEnumerable
+                from attribute in attributesOwnerDeclaration.Attributes
                 let typeElement = attribute.GetAttributeInstance().GetAttributeType().GetTypeElement()
                 where typeElement != null
                 let conditions =

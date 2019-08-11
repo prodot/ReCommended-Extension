@@ -65,7 +65,7 @@ namespace ReCommendedExtension.Analyzers.Await
 
                         highlighting.AttributesOwnerDeclaration.AddAttributeAfter(
                             attribute,
-                            highlighting.AttributesOwnerDeclaration.AttributesEnumerable.LastOrDefault());
+                            highlighting.AttributesOwnerDeclaration.Attributes.LastOrDefault());
                     }
                 }
 

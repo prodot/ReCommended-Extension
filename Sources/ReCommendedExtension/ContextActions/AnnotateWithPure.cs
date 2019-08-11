@@ -38,7 +38,7 @@ namespace ReCommendedExtension.ContextActions
                 method.Parameters.All(parameter => parameter.AssertNotNull().Kind != ParameterKind.REFERENCE);
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
-            => ownerDeclaration.AttributesEnumerable.FirstOrDefault(
+            => ownerDeclaration.Attributes.FirstOrDefault(
                 attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
                     MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName);
     }

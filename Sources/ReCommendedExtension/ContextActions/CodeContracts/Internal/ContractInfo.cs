@@ -25,7 +25,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             {
                 var list = new List<ContractStatementInfo>();
 
-                foreach (var statement in body.StatementsEnumerable)
+                foreach (var statement in body.Statements)
                 {
                     if (statement is IExpressionStatement expressionStatement)
                     {
@@ -148,7 +148,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                         }
                         else
                         {
-                            firstNonContractStatement = body.StatementsEnumerable.FirstOrDefault();
+                            firstNonContractStatement = body.Statements.FirstOrDefault();
                             statement = body.AddStatementBefore(statement, firstNonContractStatement);
                         }
                     }
@@ -176,7 +176,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                         }
                         else
                         {
-                            firstNonContractStatement = body.StatementsEnumerable.FirstOrDefault();
+                            firstNonContractStatement = body.Statements.FirstOrDefault();
                             body.AddStatementBefore(statement, firstNonContractStatement);
                         }
                     }

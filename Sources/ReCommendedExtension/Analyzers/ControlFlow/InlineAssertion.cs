@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -29,10 +28,10 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     {
                         var methodDeclaration = method.GetSingleDeclaration<IMethodDeclaration>();
                         if (methodDeclaration != null &&
-                            methodDeclaration.AttributesEnumerable.Any(
+                            methodDeclaration.Attributes.Any(
                                 attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().FullName ==
                                     PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName) &&
-                            methodDeclaration.AttributesEnumerable.Any(
+                            methodDeclaration.Attributes.Any(
                                 attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
                                     NullnessProvider.NotNullAttributeShortName))
                         {

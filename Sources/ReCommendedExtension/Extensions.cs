@@ -161,11 +161,11 @@ namespace ReCommendedExtension
 
             if (contractClassDeclaration == null)
             {
-                var typeParameters = typeDeclaration.TypeParametersEnumerable.Any()
-                    ? $"<{string.Join(", ", from typeParameter in typeDeclaration.TypeParametersEnumerable select typeParameter.DeclaredName)}>"
+                var typeParameters = typeDeclaration.TypeParameters.Any()
+                    ? $"<{string.Join(", ", from typeParameter in typeDeclaration.TypeParameters select typeParameter.DeclaredName)}>"
                     : "";
-                var typeParametersForAttribute = typeDeclaration.TypeParametersEnumerable.Any()
-                    ? $"<{new string(',', typeDeclaration.TypeParametersEnumerable.Count() - 1)}>"
+                var typeParametersForAttribute = typeDeclaration.TypeParameters.Any()
+                    ? $"<{new string(',', typeDeclaration.TypeParameters.Count - 1)}>"
                     : "";
 
                 contractClassDeclaration = (IClassDeclaration)factory.CreateTypeMemberDeclaration(
@@ -183,8 +183,8 @@ namespace ReCommendedExtension
                     contractClassDeclaration.TypeParameters,
                     clause => contractClassDeclaration.AddTypeParameterConstraintsClauseBefore(clause.AssertNotNull(), null));
 
-                var attributeTypeParameters = contractClassDeclaration.TypeParametersEnumerable.Any()
-                    ? $"<{new string(',', contractClassDeclaration.TypeParametersEnumerable.Count() - 1)}>"
+                var attributeTypeParameters = contractClassDeclaration.TypeParameters.Any()
+                    ? $"<{new string(',', contractClassDeclaration.TypeParameters.Count - 1)}>"
                     : "";
                 var typeofExpression = (ITypeofExpression)factory.CreateExpression(
                     string.Format(@"typeof($0{0})", attributeTypeParameters),
@@ -238,7 +238,7 @@ namespace ReCommendedExtension
 
             var overriddenMethodDeclaration =
             (
-                from d in contractClassDeclaration.MethodDeclarationsEnumerable
+                from d in contractClassDeclaration.MethodDeclarations
                 where d.DeclaredElement != null &&
                     d.DeclaredElement.GetImmediateSuperMembers()
                         .Any(overridableMemberInstance => overridableMemberInstance.GetHashCode() == declaredElement.GetHashCode())
@@ -246,12 +246,12 @@ namespace ReCommendedExtension
 
             if (overriddenMethodDeclaration == null)
             {
-                var typeParameters = methodDeclaration.TypeParameterDeclarationsEnumerable.Any()
+                var typeParameters = methodDeclaration.TypeParameterDeclarations.Any()
                     ? string.Format(
                         "<{0}>",
                         string.Join(
                             ", ",
-                            from typeParameter in methodDeclaration.TypeParameterDeclarationsEnumerable select typeParameter.DeclaredName))
+                            from typeParameter in methodDeclaration.TypeParameterDeclarations select typeParameter.DeclaredName))
                     : "";
 
                 overriddenMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(
@@ -264,7 +264,7 @@ namespace ReCommendedExtension
                 overriddenMethodDeclaration.SetAccessRights(methodDeclaration.GetAccessRights());
                 overriddenMethodDeclaration.SetOverride(methodDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
 
-                foreach (var parameterDeclaration in methodDeclaration.ParameterDeclarationsEnumerable)
+                foreach (var parameterDeclaration in methodDeclaration.ParameterDeclarations)
                 {
                     Debug.Assert(parameterDeclaration != null);
 
@@ -306,7 +306,7 @@ namespace ReCommendedExtension
 
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenIndexerDeclaration = (
-                from d in contractClassDeclaration.IndexerDeclarationsEnumerable
+                from d in contractClassDeclaration.IndexerDeclarations
                 where d.DeclaredElement != null &&
                     d.DeclaredElement.GetImmediateSuperMembers()
                         .Any(
@@ -327,7 +327,7 @@ namespace ReCommendedExtension
                 overriddenIndexerDeclaration.SetAccessRights(indexerDeclaration.GetAccessRights());
                 overriddenIndexerDeclaration.SetOverride(indexerDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
 
-                foreach (var parameterDeclaration in indexerDeclaration.ParameterDeclarationsEnumerable)
+                foreach (var parameterDeclaration in indexerDeclaration.ParameterDeclarations)
                 {
                     Debug.Assert(parameterDeclaration != null);
 
@@ -363,7 +363,7 @@ namespace ReCommendedExtension
 
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenPropertyDeclaration = (
-                from d in contractClassDeclaration.PropertyDeclarationsEnumerable
+                from d in contractClassDeclaration.PropertyDeclarations
                 where d.DeclaredElement != null &&
                     d.DeclaredElement.GetImmediateSuperMembers()
                         .Any(
@@ -400,7 +400,7 @@ namespace ReCommendedExtension
         {
             var factory = CSharpElementFactory.GetInstance(classLikeDeclaration);
 
-            var contractInvariantMethodDeclaration = classLikeDeclaration.MethodDeclarationsEnumerable.FirstOrDefault(
+            var contractInvariantMethodDeclaration = classLikeDeclaration.MethodDeclarations.FirstOrDefault(
                 methodDeclaration =>
                 {
                     Debug.Assert(methodDeclaration != null);
@@ -524,7 +524,7 @@ namespace ReCommendedExtension
         {
             var argumentList = argument.Parent as IArgumentList;
 
-            if (argumentList?.ArgumentsEnumerable.Count() != 1)
+            if (argumentList?.Arguments.Count != 1)
             {
                 return null;
             }

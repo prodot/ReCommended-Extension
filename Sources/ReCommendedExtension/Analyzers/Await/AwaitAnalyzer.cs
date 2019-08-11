@@ -45,7 +45,7 @@ namespace ReCommendedExtension.Analyzers.Await
             {
                 case IMethodDeclaration methodDeclaration:
                     type = methodDeclaration.Type;
-                    asyncKeyword = methodDeclaration.ModifiersList?.ModifiersEnumerable.FirstOrDefault(
+                    asyncKeyword = methodDeclaration.ModifiersList?.Modifiers.FirstOrDefault(
                         node => node?.GetTokenType() == CSharpTokenType.ASYNC_KEYWORD);
                     removeAsync = () => methodDeclaration.SetAsync(false);
                     attributesOwnerDeclaration = methodDeclaration;
@@ -67,7 +67,7 @@ namespace ReCommendedExtension.Analyzers.Await
 
                 case ILocalFunctionDeclaration localFunctionDeclaration:
                     type = localFunctionDeclaration.Type;
-                    asyncKeyword = localFunctionDeclaration.ModifiersList?.ModifiersEnumerable.FirstOrDefault(
+                    asyncKeyword = localFunctionDeclaration.ModifiersList?.Modifiers.FirstOrDefault(
                         node => node?.GetTokenType() == CSharpTokenType.ASYNC_KEYWORD);
                     removeAsync = () => localFunctionDeclaration.SetAsync(false);
                     attributesOwnerDeclaration = null;
@@ -171,7 +171,7 @@ namespace ReCommendedExtension.Analyzers.Await
 
             var testMethodAttributeTypes = null as IDeclaredType[];
 
-            return methodDeclaration.AttributesEnumerable.Any(
+            return methodDeclaration.Attributes.Any(
                 attribute =>
                 {
                     if (attribute == null)

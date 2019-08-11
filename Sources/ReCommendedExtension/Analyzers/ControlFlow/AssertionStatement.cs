@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -30,7 +29,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
                     if (parameterAssertionCondition != null)
                     {
-                        var argument = invocationExpression.ArgumentList?.ArgumentsEnumerable.FirstOrDefault(
+                        var argument = invocationExpression.ArgumentList?.Arguments.FirstOrDefault(
                             a =>
                             {
                                 Debug.Assert(a != null);

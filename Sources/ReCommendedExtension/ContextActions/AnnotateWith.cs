@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
@@ -63,7 +62,7 @@ namespace ReCommendedExtension.ContextActions
             if (attributesOwnerDeclaration != null &&
                 attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange) &&
                 !attributesOwnerDeclaration.OverridesInheritedMember() &&
-                !attributesOwnerDeclaration.AttributesEnumerable.Any(IsAttribute))
+                !attributesOwnerDeclaration.Attributes.Any(IsAttribute))
             {
                 createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, provider.PsiModule, out attributeToRemove);
 
