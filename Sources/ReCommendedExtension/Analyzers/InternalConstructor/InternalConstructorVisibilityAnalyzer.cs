@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -40,7 +39,7 @@ namespace ReCommendedExtension.Analyzers.InternalConstructor
             if (containingTypeDeclaration != null && containingTypeDeclaration.IsAbstract && element.GetAccessRights() == AccessRights.INTERNAL)
             {
                 Debug.Assert(element.ModifiersList != null);
-                var tokenNode = element.ModifiersList.ModifiersEnumerable.First(node => node?.GetTokenType() == CSharpTokenType.INTERNAL_KEYWORD);
+                var tokenNode = element.ModifiersList.Modifiers.First(node => node?.GetTokenType() == CSharpTokenType.INTERNAL_KEYWORD);
 
                 Debug.Assert(tokenNode != null);
 

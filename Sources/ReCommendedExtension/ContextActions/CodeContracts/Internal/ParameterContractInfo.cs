@@ -190,7 +190,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             if (property?.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, property)) is
                 IIndexerDeclaration indexerDeclaration)
             {
-                IEnumerable<IAccessorDeclaration> accessorDeclarations;
+                TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
 
                 if (indexerDeclaration.IsAbstract)
                 {

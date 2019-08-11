@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Application.Settings;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -21,7 +22,7 @@ namespace ReCommendedExtension.Tests.Analyzers
             => highlighting is MissingSuppressionJustificationHighlighting;
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        protected override void DoTest(IProject project)
+        protected override void DoTest(Lifetime lifetime, IProject project)
         {
             // patch the project type guids (applying [TestFlavours("3AC096D0-A1C2-E12C-1390-A8335801FDAB")] doesn't work)
 
@@ -35,7 +36,7 @@ namespace ReCommendedExtension.Tests.Analyzers
 
             Assert.True(project.HasFlavour<MsTestProjectFlavor>());
 
-            base.DoTest(project);
+            base.DoTest(lifetime, project);
         }
 
         [Test]

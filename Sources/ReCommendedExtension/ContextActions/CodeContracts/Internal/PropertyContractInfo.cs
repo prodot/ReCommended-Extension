@@ -124,7 +124,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 return;
             }
 
-            IEnumerable<IAccessorDeclaration> accessorDeclarations;
+            TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
 
             if (declaration.IsAbstract)
             {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
@@ -35,7 +34,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 var attributeType = codeAnnotationsConfiguration?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
 
                 if (attributeType != null &&
-                    attributesOwnerDeclaration.AttributesEnumerable.All(
+                    attributesOwnerDeclaration.Attributes.All(
                         attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName !=
                             annotationAttributeTypeName))
                 {
@@ -43,7 +42,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                     var attribute = factory.CreateAttribute(attributeType);
 
-                    attributesOwnerDeclaration.AddAttributeAfter(attribute, attributesOwnerDeclaration.AttributesEnumerable.LastOrDefault());
+                    attributesOwnerDeclaration.AddAttributeAfter(attribute, attributesOwnerDeclaration.Attributes.LastOrDefault());
                 }
             }
         }

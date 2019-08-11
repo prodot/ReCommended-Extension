@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
@@ -36,7 +35,7 @@ namespace ReCommendedExtension.ContextActions
             => declaredElement is IMethod method && !method.ReturnType.IsVoid() && !method.IsAsync;
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
-            => ownerDeclaration.AttributesEnumerable.FirstOrDefault(
+            => ownerDeclaration.Attributes.FirstOrDefault(
                 attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
                     PureAnnotationProvider.PureAttributeShortName);
     }
