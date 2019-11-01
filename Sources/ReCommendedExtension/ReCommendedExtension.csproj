@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.2.2">
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.2.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
