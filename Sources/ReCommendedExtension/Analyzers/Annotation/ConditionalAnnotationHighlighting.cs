@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Analyzers.Annotation;
@@ -19,7 +20,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
-        AttributeId = HighlightingAttributeIds.DEADCODE_ATTRIBUTE,
+        AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class ConditionalAnnotationHighlighting : AttributeHighlighting
     {

@@ -3,6 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -24,7 +25,7 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
-        AttributeId = HighlightingAttributeIds.DEADCODE_ATTRIBUTE,
+        AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class ConditionalInvocationHighlighting : Highlighting
     {
