@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.ControlFlow;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
@@ -211,17 +212,20 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 }
                 else
                 {
-                    var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
-                        attributesOwnerDeclaration,
-                        NullnessProvider.NotNullAttributeShortName);
-                    if (nonNullAnnotationAttributeType != null)
+                    if (!attributesOwnerDeclaration.IsNullableWarningsContextEnabled())
                     {
-                        consumer.AddHighlighting(
-                            new MissingAnnotationHighlighting(
-                                string.Format(
-                                    "Declared element can never be null by default, but is not annotated with '{0}'.",
-                                    NullnessProvider.NotNullAttributeShortName),
-                                attributesOwnerDeclaration));
+                        var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
+                            attributesOwnerDeclaration,
+                            NullnessProvider.NotNullAttributeShortName);
+                        if (nonNullAnnotationAttributeType != null)
+                        {
+                            consumer.AddHighlighting(
+                                new MissingAnnotationHighlighting(
+                                    string.Format(
+                                        "Declared element can never be null by default, but is not annotated with '{0}'.",
+                                        NullnessProvider.NotNullAttributeShortName),
+                                    attributesOwnerDeclaration));
+                        }
                     }
                     break;
                 }
@@ -238,27 +242,30 @@ namespace ReCommendedExtension.Analyzers.Annotation
             switch (valueAnalysisMode)
             {
                 case ValueAnalysisMode.OPTIMISTIC:
-                    foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
+                    if (!attributesOwnerDeclaration.IsNullableWarningsContextEnabled())
                     {
-                        if (attributeMark == null)
+                        foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
                         {
-                            var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
-                                attributesOwnerDeclaration,
-                                NullnessProvider.NotNullAttributeShortName);
-                            var canBeNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
-                                attributesOwnerDeclaration,
-                                NullnessProvider.CanBeNullAttributeShortName);
-                            if (nonNullAnnotationAttributeType != null || canBeNullAnnotationAttributeType != null)
+                            if (attributeMark == null)
                             {
-                                consumer.AddHighlighting(
-                                    new MissingAnnotationHighlighting(
-                                        string.Format(
-                                            @"Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
-                                            NullnessProvider.NotNullAttributeShortName,
-                                            NullnessProvider.CanBeNullAttributeShortName),
-                                        attributesOwnerDeclaration));
+                                var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
+                                    attributesOwnerDeclaration,
+                                    NullnessProvider.NotNullAttributeShortName);
+                                var canBeNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
+                                    attributesOwnerDeclaration,
+                                    NullnessProvider.CanBeNullAttributeShortName);
+                                if (nonNullAnnotationAttributeType != null || canBeNullAnnotationAttributeType != null)
+                                {
+                                    consumer.AddHighlighting(
+                                        new MissingAnnotationHighlighting(
+                                            string.Format(
+                                                @"Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
+                                                NullnessProvider.NotNullAttributeShortName,
+                                                NullnessProvider.CanBeNullAttributeShortName),
+                                            attributesOwnerDeclaration));
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                     break;

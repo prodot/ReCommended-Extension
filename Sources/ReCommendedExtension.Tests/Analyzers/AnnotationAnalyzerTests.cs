@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -30,6 +31,10 @@ namespace ReCommendedExtension.Tests.Analyzers
         public void TestIteratorMethod() => DoNamedTest2();
 
         [Test]
+        [NullableContext(NullableContextKind.Enable)]
+        public void TestIteratorMethod_NullableContext() => DoNamedTest2();
+
+        [Test]
         public void TestSuppressMessage() => DoNamedTest2();
 
         [Test]
@@ -41,6 +46,18 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestCase("ItemNotNull.cs", ValueAnalysisMode.PESSIMISTIC)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
+            => ExecuteWithinSettingsTransaction(
+                store =>
+                {
+                    RunGuarded(() => store.SetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode, valueAnalysisMode));
+
+                    DoTestSolution(file);
+                });
+
+        [TestCase("Other_Optimistic_NullableContext.cs", ValueAnalysisMode.OPTIMISTIC)]
+        [NullableContext(NullableContextKind.Enable)]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        public void TestFileWithValueAnalysisMode_NullableContext(string file, ValueAnalysisMode valueAnalysisMode)
             => ExecuteWithinSettingsTransaction(
                 store =>
                 {
