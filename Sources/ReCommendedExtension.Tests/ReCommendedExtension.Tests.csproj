@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);Packages\**</DefaultItemExcludes>
-    <LangVersion>latest</LangVersion>
     <Platforms>x86</Platforms>
   </PropertyGroup>
 

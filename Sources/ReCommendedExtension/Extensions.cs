@@ -149,7 +149,7 @@ namespace ReCommendedExtension
             IClassDeclaration contractClassDeclaration = null;
 
             var attributeInstance = typeDeclaration.DeclaredElement?.GetAttributeInstances(ClrTypeNames.ContractClassAttribute, false)
-                ?.FirstOrDefault();
+                .FirstOrDefault();
             if (attributeInstance != null && attributeInstance.PositionParameterCount > 0)
             {
                 var typeElement = attributeInstance.PositionParameter(0).TypeValue.GetTypeElement<IClass>();

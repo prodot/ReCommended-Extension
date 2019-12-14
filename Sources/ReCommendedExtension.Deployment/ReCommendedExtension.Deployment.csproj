@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <Platforms>x86</Platforms>
-    <LangVersion>latest</LangVersion>
     <UserSecretsId>960c5dc0-8d5f-4cf4-a50a-79fd8a439eaa</UserSecretsId>
   </PropertyGroup>
 
