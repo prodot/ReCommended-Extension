@@ -108,6 +108,20 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         }
 
         async Task Method_AwaitNonTask_AsExpressionBodied() => await Task.Yield();
+
+        async Task Method_UsingVar()
+        {
+            using var p = new Process();
+
+            return await Task.FromResult(35);
+        }
+
+        async Task Method_UsingVar2()
+        {
+            using var p = new Process();
+
+            await Task.Delay(100);
+        }
     }
 
     public class AwaitForLambdaVariables
@@ -207,6 +221,20 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             Func<Task> Method_AwaitNonTask = async () => { await Task.Yield(); };
 
             Func<Task> Method_AwaitNonTask_AsExpressionBodied = async () => await Task.Yield();
+
+            Func<Task> Method_UsingVar = async () =>
+            {
+                using var p = new Process();
+
+                return await Task.FromResult(35);
+            };
+
+            Func<Task> Method_UsingVar2 = async () =>
+            {
+                using var p = new Process();
+
+                await Task.Delay(100);
+            };
         }
     }
 
@@ -305,6 +333,20 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         Func<Task> Method_AwaitNonTask = async () => { await Task.Yield(); };
 
         Func<Task> Method_AwaitNonTask_AsExpressionBodied = async () => await Task.Yield();
+
+        Func<Task> Method_UsingVar = async () =>
+        {
+            using var p = new Process();
+
+            return await Task.FromResult(35);
+        };
+
+        Func<Task> Method_UsingVar2 = async () =>
+        {
+            using var p = new Process();
+
+            await Task.Delay(100);
+        };
     }
 
     public class AwaitForAnonymousMethodVariables
@@ -383,6 +425,20 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             };
 
             Func<Task> Method_AwaitNonTask = async delegate { await Task.Yield(); };
+
+            Func<Task> Method_UsingVar = async delegate
+            {
+                using var p = new Process();
+
+                return await Task.FromResult(35);
+            };
+
+            Func<Task> Method_UsingVar2 = async delegate
+            {
+                using var p = new Process();
+
+                await Task.Delay(100);
+            };
         }
     }
 
@@ -460,6 +516,20 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         };
 
         Func<Task> Method_AwaitNonTask = async delegate { await Task.Yield(); };
+
+        Func<Task> Method_UsingVar = async delegate
+        {
+            using var p = new Process();
+
+            return await Task.FromResult(35);
+        };
+
+        Func<Task> Method_UsingVar2 = async delegate
+        {
+            using var p = new Process();
+
+            await Task.Delay(100);
+        };
     }
 
     public class AwaitForLocalFunctions
@@ -568,6 +638,20 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
 
             async Task Method_AwaitNonTask_AsExpressionBodied() => await Task.Yield();
+
+            async Task Method_UsingVar()
+            {
+                using var p = new Process();
+
+                return await Task.FromResult(35);
+            }
+
+            async Task Method_UsingVar2()
+            {
+                using var p = new Process();
+
+                await Task.Delay(100);
+            }
         }
     }
 }

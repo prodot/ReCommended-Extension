@@ -98,6 +98,15 @@ namespace ReCommendedExtension.Analyzers.Await
         }
 
         [Pure]
+        static bool HasPreviousUsingDeclaration([NotNull] ITreeNode node, [NotNull] IParametersOwnerDeclaration container)
+            => node.SelfAndPathToRoot()
+                .TakeWhile(n => n != container)
+                .Any(
+                    n => n.AssertNotNull()
+                        .LeftSiblings()
+                        .Any(s => ((s as IDeclarationStatement)?.Declaration as IMultipleLocalVariableDeclaration)?.UsingKeyword != null));
+
+        [Pure]
         static bool IsLastExpression(
             [NotNull] IParametersOwnerDeclaration container,
             [NotNull] ICSharpExpression expression,
@@ -147,11 +156,13 @@ namespace ReCommendedExtension.Analyzers.Await
 
             switch (lastStatement)
             {
-                case IExpressionStatement expressionStatement when expressionStatement.Expression == expression:
+                case IExpressionStatement expressionStatement when expressionStatement.Expression == expression &&
+                    !HasPreviousUsingDeclaration(expressionStatement, container):
                     statementToBeReplacedWithReturnStatement = expressionStatement;
                     return true;
 
-                case IReturnStatement returnStatement when returnStatement.Value == expression:
+                case IReturnStatement returnStatement when returnStatement.Value == expression &&
+                    !HasPreviousUsingDeclaration(returnStatement, container):
                     statementToBeReplacedWithReturnStatement = null;
                     return true;
 
@@ -362,12 +373,7 @@ namespace ReCommendedExtension.Analyzers.Await
                     .Skip(1)
                     .TakeWhile(node => node != container)
                     .Any(node => node is IUsingStatement || node is ITryStatement) &&
-                !returnStatement.PathToRoot()
-                    .TakeWhile(node => node != container)
-                    .Any(
-                        node => node.AssertNotNull()
-                            .LeftSiblings()
-                            .Any(s => ((s as IDeclarationStatement)?.Declaration as IMultipleLocalVariableDeclaration)?.UsingKeyword != null));
+                !HasPreviousUsingDeclaration(returnStatement, container);
 
             if (hasRedundantCapturedContext && awaitExpression.Task.IsConfigureAwaitAvailable())
             {
