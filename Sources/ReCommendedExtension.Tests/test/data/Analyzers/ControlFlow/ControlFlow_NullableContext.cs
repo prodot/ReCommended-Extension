@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
@@ -7,27 +8,20 @@ namespace Test
 {
     internal static class Class
     {
-        [NotNull]
         static string NotNullMethod() => "one";
 
-        [NotNull]
         static string field = NotNullMethod().AssertNotNull();
 
-        [NotNull]
         static string Property => NotNullMethod().AssertNotNull();
 
-        [NotNull]
-        static Lazy<string> PropertyLazy => new Lazy<string>(() => NotNullMethod().AssertNotNull());
+        static Lazy<string?> PropertyLazy => new Lazy<string?>(() => NotNullMethod().AssertNotNull());
 
-        static string PropertyNullable => null;
+        static string? PropertyNullable => null;
 
-        [NotNull]
         static string Property2 { get; } = NotNullMethod().AssertNotNull();
 
-        [NotNull]
         static string Property3 { get; set; } = NotNullMethod().AssertNotNull();
 
-        [NotNull]
         static string Method() => NotNullMethod().AssertNotNull();
 
         [DebuggerStepThrough]
@@ -41,23 +35,74 @@ namespace Test
 
         class Nested
         {
-            string field = NotNullMethod().AssertNotNull();
+            string? field = NotNullMethod().AssertNotNull();
 
-            string Property => NotNullMethod().AssertNotNull();
+            string? Property => NotNullMethod().AssertNotNull();
 
-            string AutoProperty { get; } = NotNullMethod().AssertNotNull();
+            string? AutoProperty { get; } = NotNullMethod().AssertNotNull();
         }
 
-        [NotNull]
-        [ItemNotNull]
+        static void ClassConstraint<T>(T one, T? two) where T : class
+        {
+            var x = one.AssertNotNull();
+            var y = two.AssertNotNull().AssertNotNull();
+        }
+
+        static void ClassNullableClassConstraint<T>(T one) where T : class?
+        {
+            var x = one.AssertNotNull().AssertNotNull();
+        }
+
         static readonly string[] Words = { "one", "two", "three" };
 
-        static void Foo(bool b, object s, string x)
+        static readonly Dictionary<int, string> WordMap = new Dictionary<int, string>{ { 1, "one" }, { 2, "two" } };
+
+        static readonly Dictionary<int, string[]> WordMap2 =
+            new Dictionary<int, string[]> { { 1, new[] { "one", "two", "three" } }, { 2, new[] { "one", "two", "three" } } };
+
+        static void Iterations()
         {
             var query0 = from word in Words where word.AssertNotNull().Length > 2 select word; // "AssertNotNull" must be redundant
             var query1 = from word in Words where word != null select word; // "word != null" is always true
             var query2 = from word in Words select word.AssertNotNull(); // "AssertNotNull" must be redundant
 
+            AssertThatNotNull(Words);
+            foreach (var word in Words)
+            {
+                AssertThatNotNull(word);
+            }
+
+            AssertThatNotNull(WordMap);
+            foreach (var (key, value) in WordMap)
+            {
+                AssertThatNotNull(value);
+            }
+            foreach (var value in WordMap.Values)
+            {
+                AssertThatNotNull(value);
+            }
+
+            AssertThatNotNull(WordMap2);
+            foreach (var (key, values) in WordMap2)
+            {
+                AssertThatNotNull(values);
+                foreach (var value in values)
+                {
+                    AssertThatNotNull(value);
+                }
+            }
+            foreach (var values in WordMap2.Values)
+            {
+                AssertThatNotNull(values);
+                foreach (var value in values)
+                {
+                    AssertThatNotNull(value);
+                }
+            }
+        }
+
+        static void Foo(bool b, object? s, string? x)
+        {
             Action action = () =>
             {
                 var text = "";
@@ -137,7 +182,7 @@ namespace Test
             }
         }
 
-        static void Foo([NotNull] string x)
+        static void Foo(string x)
         {
             AssertThatNotNull(x);
             x.AssertNotNull();
@@ -145,29 +190,28 @@ namespace Test
 
         class A
         {
-            [NotNull]
             public string NotNull { get; set; }
 
-            public string CanBeNull { get; set; }
+            public string? CanBeNull { get; set; }
         }
 
-        static void NullPropagation1(A canBeNull) => AssertThatTrue(canBeNull?.NotNull != null);
+        static void NullPropagation1(A? canBeNull) => AssertThatTrue(canBeNull?.NotNull != null);
 
-        static void NullPropagation2(A canBeNull) => AssertThatNotNull(canBeNull?.NotNull);
+        static void NullPropagation2(A? canBeNull) => AssertThatNotNull(canBeNull?.NotNull);
 
-        static void NullPropagation3(A canBeNull) => canBeNull?.NotNull.AssertNotNull();
+        static void NullPropagation3(A? canBeNull) => canBeNull?.NotNull.AssertNotNull();
 
-        static void NullPropagation4([NotNull] A notNull) => AssertThatTrue(notNull?.NotNull != null);
+        static void NullPropagation4(A notNull) => AssertThatTrue(notNull?.NotNull != null);
 
-        static void NullPropagation5([NotNull] A notNull) => AssertThatNotNull(notNull?.NotNull);
+        static void NullPropagation5(A notNull) => AssertThatNotNull(notNull?.NotNull);
 
-        static void NullPropagation6([NotNull] A notNull) => notNull?.NotNull.AssertNotNull();
+        static void NullPropagation6(A notNull) => notNull?.NotNull.AssertNotNull();
 
-        static void NullPropagation7([NotNull] A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
+        static void NullPropagation7(A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
 
-        static void NullPropagation8([NotNull] A notNull) => AssertThatNotNull(notNull?.CanBeNull);
+        static void NullPropagation8(A notNull) => AssertThatNotNull(notNull?.CanBeNull);
 
-        static void NullPropagation9([NotNull] A notNull) => notNull?.CanBeNull.AssertNotNull();
+        static void NullPropagation9(A notNull) => notNull?.CanBeNull.AssertNotNull();
 
         [AssertionMethod]
         [ContractAnnotation("false => void")]
