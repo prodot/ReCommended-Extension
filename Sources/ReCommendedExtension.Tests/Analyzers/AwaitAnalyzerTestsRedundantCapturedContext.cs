@@ -31,5 +31,9 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestNetCore21]
         [Test]
         public void TestRedundantCapturedContext_ValueTask_ReturnTask() => DoNamedTest2();
+
+        [TestNetCore30]
+        [Test]
+        public void TestRedundantCapturedContext_IAsyncTypes() => DoNamedTest2();
     }
 }
