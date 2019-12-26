@@ -1,0 +1,65 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data
+{
+    public class Simple
+    {
+        string NonNullableReference() => "one";
+        string? NullableReference() => null;
+        int NonNullableValue() => 1;
+        int? NullableValue() => null;
+
+        async Task AsyncTask()
+        {
+            await Task.Yield();
+        }
+
+        IEnumerable<int> Iterator()
+        {
+            yield break;
+        }
+
+        async IAsyncEnumerable<int> AsyncIterator()
+        {
+            yield break;
+        }
+
+        string NonNullableReference_ReturningNull() => |null|(0);
+        string? NullableReference_ReturningNull() => null;
+        int NonNullableValue_ReturningNull() => default;
+        int? NullableValue_ReturningNull() => default;
+
+        void NullCheck()
+        {
+            if (|NonNullableReference() != null|(1)) { }
+            if (NullableReference() != null) { }
+            if (||NonNullableValue() != null|(2)|(3)) { }
+            if (NullableValue() != null) { }
+            if (|AsyncTask() != null|(4)) { }
+            if (|Iterator() != null|(5)) { }
+            if (|AsyncIterator() != null|(6)) { }
+        }
+
+        void Dereferencing()
+        {
+            Console.WriteLine(NonNullableReference().Length);
+            Console.WriteLine(|NullableReference()|(7).Length);
+            Console.WriteLine(NonNullableValue().ToString());
+            Console.WriteLine(NullableValue().ToString());
+            Console.WriteLine(AsyncTask().IsCompleted);
+            Console.WriteLine(Iterator().ToString());
+            Console.WriteLine(AsyncIterator().ToString());
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
+(1): ReSharper Warning: Expression is always true
+(2):<overlapped> ReSharper Warning: Expression is always true
+(3): ReSharper Warning: Expression is always true
+(4): ReSharper Warning: Expression is always true
+(5): ReSharper Warning: Expression is always true
+(6): ReSharper Warning: Expression is always true
+(7): ReSharper Warning: Possible 'System.NullReferenceException'

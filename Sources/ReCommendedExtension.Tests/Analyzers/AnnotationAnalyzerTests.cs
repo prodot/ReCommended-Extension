@@ -11,7 +11,6 @@ using ReCommendedExtension.Analyzers.Annotation;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
-    [TestNetFramework45]
     [TestFixture]
     public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     {
@@ -25,25 +24,26 @@ namespace ReCommendedExtension.Tests.Analyzers
                 highlighting is ConflictingAnnotationHighlighting;
 
         [Test]
+        [TestNetFramework45]
         public void TestAsyncMethod() => DoNamedTest2();
 
         [Test]
+        [TestNetFramework45]
         public void TestIteratorMethod() => DoNamedTest2();
 
         [Test]
-        [NullableContext(NullableContextKind.Enable)]
-        public void TestIteratorMethod_NullableContext() => DoNamedTest2();
-
-        [Test]
+        [TestNetFramework45]
         public void TestSuppressMessage() => DoNamedTest2();
 
         [Test]
+        [TestNetFramework45]
         public void TestPureWithMustUseReturnValue() => DoNamedTest2();
 
         [TestCase("Other_Pessimistic.cs", ValueAnalysisMode.PESSIMISTIC)]
         [TestCase("Other_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
         [TestCase("Override.cs", ValueAnalysisMode.PESSIMISTIC)]
         [TestCase("ItemNotNull.cs", ValueAnalysisMode.PESSIMISTIC)]
+        [TestNetFramework45]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
             => ExecuteWithinSettingsTransaction(
@@ -54,16 +54,9 @@ namespace ReCommendedExtension.Tests.Analyzers
                     DoTestSolution(file);
                 });
 
-        [TestCase("Other_Optimistic_NullableContext.cs", ValueAnalysisMode.OPTIMISTIC)]
+        [Test]
+        [TestNetCore30("JetBrains.Annotations")]
         [NullableContext(NullableContextKind.Enable)]
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void TestFileWithValueAnalysisMode_NullableContext(string file, ValueAnalysisMode valueAnalysisMode)
-            => ExecuteWithinSettingsTransaction(
-                store =>
-                {
-                    RunGuarded(() => store.SetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode, valueAnalysisMode));
-
-                    DoTestSolution(file);
-                });
+        public void TestNullableAnnotationContext() => DoNamedTest2();
     }
 }
