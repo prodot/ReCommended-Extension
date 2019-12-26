@@ -32,6 +32,11 @@ namespace ReCommendedExtension.Tests.Analyzers
         public void TestIteratorMethod() => DoNamedTest2();
 
         [Test]
+        [TestNetCore30("JetBrains.Annotations")]
+        [NullableContext(NullableContextKind.Disable)]
+        public void TestAsyncIteratorMethod() => DoNamedTest2();
+
+        [Test]
         [TestNetFramework45]
         public void TestSuppressMessage() => DoNamedTest2();
 

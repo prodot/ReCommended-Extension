@@ -105,14 +105,14 @@ namespace ReCommendedExtension.Analyzers.Annotation
             {
                 if (declaration is IMethodDeclaration methodDeclaration)
                 {
-                    if (methodDeclaration.IsAsync)
-                    {
-                        return AnnotationCase.AsyncMethod;
-                    }
-
                     if (methodDeclaration.IsIterator)
                     {
                         return AnnotationCase.IteratorMethod;
+                    }
+
+                    if (methodDeclaration.IsAsync)
+                    {
+                        return AnnotationCase.AsyncMethod;
                     }
                 }
 
