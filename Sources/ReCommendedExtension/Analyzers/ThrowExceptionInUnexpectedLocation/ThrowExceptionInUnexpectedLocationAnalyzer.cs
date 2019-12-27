@@ -31,6 +31,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
             StaticConstructor,
             Finalizer,
             DisposeMethod,
+            DisposeAsyncMethod,
             DisposeMethodWithParameterFalseCodePath,
             EqualityOperator,
             ImplicitCastOperator,
@@ -124,6 +125,15 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                             nameof(IDisposable.Dispose))))
                     {
                         return Location.DisposeMethod;
+                    }
+
+                    if (methodDeclaration.DeclaredElement.OverridesOrImplements(
+                        GetMethod(
+                            TypeElementUtil.GetTypeElementByClrName(PredefinedType.IASYNCDISPOSABLE_FQN, psiModule).AssertNotNull(),
+                            "DisposeAsync")))
+                    {
+                        // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
+                        return Location.DisposeAsyncMethod;
                     }
 
                     if (methodDeclaration.DeclaredElement.ShortName == disposeMethodName && methodDeclaration.DeclaredElement.Parameters.Count == 1)
@@ -233,6 +243,8 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                 case Location.Finalizer: return "finalizers";
 
                 case Location.DisposeMethod: return $"'{nameof(IDisposable.Dispose)}' methods";
+
+                case Location.DisposeAsyncMethod: return "'DisposeAsync' methods"; // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
 
                 case Location.DisposeMethodWithParameterFalseCodePath: return $"'{disposeMethodName}(false)' code paths";
 

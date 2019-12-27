@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AnyException = System.InvalidTimeZoneException;
 
 namespace Test
@@ -8,7 +9,7 @@ namespace Test
     public class ThrowExceptionInUnexpectedLocation : IEquatable<ThrowExceptionInUnexpectedLocation>,
         IEqualityComparer<int>,
         IEqualityComparer,
-        IDisposable
+        IDisposable, IAsyncDisposable
     {
         int Property
         {
@@ -133,6 +134,8 @@ namespace Test
 
         public void Dispose() => |throw new AnyException()|(22); // not allowed
 
+        public ValueTask DisposeAsync() => |throw new AnyException()|(23); // not allowed
+
         void Dispose(bool disposing)
         {
             if (disposing)
@@ -148,30 +151,30 @@ namespace Test
                 if (Property == 2)
                 {
                     // not allowed
-                    |throw new AnyException();|(23)
+                    |throw new AnyException();|(24)
                 }
             }
 
             // not allowed
-            |throw new AnyException();|(24)
+            |throw new AnyException();|(25)
         }
 
         public static bool operator ==(ThrowExceptionInUnexpectedLocation x, ThrowExceptionInUnexpectedLocation y)
-            => |throw new AnyException()|(25); // not allowed
+            => |throw new AnyException()|(26); // not allowed
 
         public static bool operator !=(ThrowExceptionInUnexpectedLocation x, ThrowExceptionInUnexpectedLocation y)
-        {
-            // not allowed
-            |throw new AnyException();|(26)
-        }
-
-        public static implicit operator DateTime(ThrowExceptionInUnexpectedLocation x)
         {
             // not allowed
             |throw new AnyException();|(27)
         }
 
-        public static implicit operator Guid(ThrowExceptionInUnexpectedLocation x) => |throw new AnyException()|(28); // not allowed
+        public static implicit operator DateTime(ThrowExceptionInUnexpectedLocation x)
+        {
+            // not allowed
+            |throw new AnyException();|(28)
+        }
+
+        public static implicit operator Guid(ThrowExceptionInUnexpectedLocation x) => |throw new AnyException()|(29); // not allowed
     }
 }
 ---------------------------------------------------------
@@ -198,9 +201,10 @@ namespace Test
 (20): ReSharper Warning: Exceptions should never be thrown in static constructors.
 (21): ReSharper Warning: Exceptions should never be thrown in finalizers.
 (22): ReSharper Warning: Exceptions should never be thrown in 'Dispose' methods.
-(23): ReSharper Warning: Exceptions should never be thrown in 'Dispose(false)' code paths.
+(23): ReSharper Warning: Exceptions should never be thrown in 'DisposeAsync' methods.
 (24): ReSharper Warning: Exceptions should never be thrown in 'Dispose(false)' code paths.
-(25): ReSharper Warning: Exceptions should never be thrown in equality operators.
+(25): ReSharper Warning: Exceptions should never be thrown in 'Dispose(false)' code paths.
 (26): ReSharper Warning: Exceptions should never be thrown in equality operators.
-(27): ReSharper Warning: Exceptions should never be thrown in implicit cast operators.
+(27): ReSharper Warning: Exceptions should never be thrown in equality operators.
 (28): ReSharper Warning: Exceptions should never be thrown in implicit cast operators.
+(29): ReSharper Warning: Exceptions should never be thrown in implicit cast operators.
