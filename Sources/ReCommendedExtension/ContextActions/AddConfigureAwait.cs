@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
@@ -21,9 +23,11 @@ namespace ReCommendedExtension.ContextActions
     public sealed class AddConfigureAwait : ContextActionBase
     {
         [NotNull]
-        readonly ICSharpContextActionDataProvider provider;
+        [ItemNotNull]
+        readonly List<ICSharpExpression> expressions = new List<ICSharpExpression>();
 
-        IUnaryExpression awaitedExpression;
+        [NotNull]
+        readonly ICSharpContextActionDataProvider provider;
 
         public AddConfigureAwait([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
 
@@ -31,43 +35,78 @@ namespace ReCommendedExtension.ContextActions
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
         {
-            var awaitExpression = provider.GetSelectedElement<IAwaitExpression>(true, false);
-
-            if (awaitExpression != null && awaitExpression.AwaitKeyword == provider.SelectedElement)
+            if (expressions.Count > 0)
             {
-                awaitedExpression = awaitExpression.Task;
-
-                if (awaitedExpression.IsConfigureAwaitAvailable())
-                {
-                    return true;
-                }
+                expressions.Clear();
             }
 
-            awaitedExpression = null;
+            switch (provider.GetSelectedElement<IAwaitReferencesOwner>())
+            {
+                case IAwaitExpression awaitExpression when awaitExpression.AwaitKeyword == provider.SelectedElement:
+                    var awaitedExpression = awaitExpression.Task;
+                    if (awaitedExpression.IsConfigureAwaitAvailable())
+                    {
+                        expressions.Add(awaitedExpression);
+                    }
+                    break;
 
-            return false;
+                case IUsingStatement usingStatement when usingStatement.AwaitKeyword == provider.SelectedElement:
+                    if (usingStatement.Expressions.Count > 0)
+                    {
+                        expressions.AddRange(usingStatement.Expressions);
+                    }
+                    if (usingStatement.VariableDeclarations.Count > 0)
+                    {
+                        expressions.AddRange(
+                            from declaration in usingStatement.VariableDeclarations
+                            let expressionInitializer = declaration.Initial as IExpressionInitializer
+                            where expressionInitializer != null
+                            select expressionInitializer.Value);
+                    }
+                    break;
+
+                case IMultipleLocalVariableDeclaration variableDeclaration when variableDeclaration.AwaitKeyword == provider.SelectedElement:
+                    if (variableDeclaration.UsingKeyword != null && variableDeclaration.Declarators.Count > 0)
+                    {
+                        expressions.AddRange(
+                            from declarationMember in variableDeclaration.Declarators
+                            let declaration = declarationMember as ILocalVariableDeclaration
+                            where declaration != null
+                            let expressionInitializer = declaration.Initial as IExpressionInitializer
+                            where expressionInitializer != null
+                            select expressionInitializer.Value);
+                    }
+                    break;
+
+                case IForeachStatement foreachStatement when foreachStatement.AwaitKeyword == provider.SelectedElement:
+                    expressions.Add(foreachStatement.Collection);
+                    break;
+            }
+
+            return expressions.Count > 0;
         }
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            Debug.Assert(awaitedExpression != null);
+            Debug.Assert(expressions.Count > 0);
 
             try
             {
                 using (WriteLockCookie.Create())
                 {
-                    var factory = CSharpElementFactory.GetInstance(awaitedExpression);
+                    foreach (var expression in expressions)
+                    {
+                        var factory = CSharpElementFactory.GetInstance(expression);
 
-                    ModificationUtil.ReplaceChild(
-                        awaitedExpression,
-                        factory.CreateExpression($"$0.{nameof(Task.ConfigureAwait)}(false)", awaitedExpression));
+                        ModificationUtil.ReplaceChild(expression, factory.CreateExpression($"$0.{nameof(Task.ConfigureAwait)}(false)", expression));
+                    }
                 }
 
                 return _ => { };
             }
             finally
             {
-                awaitedExpression = null;
+                expressions.Clear();
             }
         }
     }

@@ -5,7 +5,7 @@ using ReCommendedExtension.ContextActions;
 
 namespace ReCommendedExtension.Tests.ContextActions
 {
-    [TestNetFramework45]
+    [TestNetCore30]
     [TestFixture]
     public sealed class AddConfigureAwaitExecuteTests : CSharpContextActionExecuteTestBase<AddConfigureAwait>
     {
@@ -15,5 +15,17 @@ namespace ReCommendedExtension.Tests.ContextActions
 
         [Test]
         public void TestExecute() => DoNamedTest2();
+
+        [Test]
+        public void TestExecuteAsyncDisposable() => DoNamedTest2();
+
+        [Test]
+        public void TestExecuteAsyncDisposableMultiple() => DoNamedTest2();
+
+        [Test]
+        public void TestExecuteAsyncDisposableUsingVar() => DoNamedTest2();
+
+        [Test]
+        public void TestExecuteAsyncIterator() => DoNamedTest2();
     }
 }
