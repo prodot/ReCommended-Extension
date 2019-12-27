@@ -5,9 +5,9 @@ namespace Test
 {
     internal class Execute
     {
-        async Task AsyncDisposable()
+        async Task AsyncDisposable_Variable()
         {
-            aw{caret}ait using (new MemoryStream()) { }
+            aw{caret}ait using (Stream m = new MemoryStream()) { }
         }
     }
 }

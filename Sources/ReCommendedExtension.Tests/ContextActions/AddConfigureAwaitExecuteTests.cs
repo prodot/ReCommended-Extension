@@ -20,10 +20,10 @@ namespace ReCommendedExtension.Tests.ContextActions
         public void TestExecuteAsyncDisposable() => DoNamedTest2();
 
         [Test]
-        public void TestExecuteAsyncDisposableMultiple() => DoNamedTest2();
+        public void TestExecuteAsyncDisposableVariable() => DoNamedTest2();
 
         [Test]
-        public void TestExecuteAsyncDisposableUsingVar() => DoNamedTest2();
+        public void TestExecuteAsyncDisposableVariableType() => DoNamedTest2();
 
         [Test]
         public void TestExecuteAsyncIterator() => DoNamedTest2();

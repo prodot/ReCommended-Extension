@@ -32,14 +32,24 @@ namespace Test
             aw{on}ait using (new MemoryStream()) { }
         }
 
-        async Task AsyncDisposable_Multiple()
+        async Task AsyncDisposable_Variable_Type()
         {
-            aw{on}ait using (Stream m1 = new MemoryStream(), m2 = new MemoryStream()) { }
+            aw{on}ait using (Stream m = new MemoryStream()) { }
+        }
+
+        async Task AsyncDisposable_Variable()
+        {
+            aw{on}ait using (var m = new MemoryStream()) { }
+        }
+
+        async Task AsyncDisposable_Variable_Multiple()
+        {
+            aw{off}ait using (Stream m1 = new MemoryStream(), m2 = new MemoryStream()) { }
         }
 
         async Task AsyncDisposable_UsingVar()
         {
-            aw{on}ait using var m1 = new MemoryStream();
+            aw{off}ait using var m1 = new MemoryStream();
         }
 
         async Task AsyncIterator(IAsyncEnumerable<int> sequence)

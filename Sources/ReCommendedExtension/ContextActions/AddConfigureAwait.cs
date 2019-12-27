@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
@@ -23,11 +21,10 @@ namespace ReCommendedExtension.ContextActions
     public sealed class AddConfigureAwait : ContextActionBase
     {
         [NotNull]
-        [ItemNotNull]
-        readonly List<ICSharpExpression> expressions = new List<ICSharpExpression>();
-
-        [NotNull]
         readonly ICSharpContextActionDataProvider provider;
+
+        ICSharpExpression expression;
+        IUsingStatement usingStatementWithVariableDeclaration;
 
         public AddConfigureAwait([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
 
@@ -35,70 +32,95 @@ namespace ReCommendedExtension.ContextActions
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
         {
-            if (expressions.Count > 0)
-            {
-                expressions.Clear();
-            }
+            expression = null;
+            usingStatementWithVariableDeclaration = null;
 
             switch (provider.GetSelectedElement<IAwaitReferencesOwner>())
             {
                 case IAwaitExpression awaitExpression when awaitExpression.AwaitKeyword == provider.SelectedElement:
+                    // await task
                     var awaitedExpression = awaitExpression.Task;
                     if (awaitedExpression.IsConfigureAwaitAvailable())
                     {
-                        expressions.Add(awaitedExpression);
+                        expression = awaitedExpression;
                     }
                     break;
 
                 case IUsingStatement usingStatement when usingStatement.AwaitKeyword == provider.SelectedElement:
-                    if (usingStatement.Expressions.Count > 0)
+                    if (usingStatement.Expressions.Count == 1)
                     {
-                        expressions.AddRange(usingStatement.Expressions);
+                        // await using (expression())
+                        expression = usingStatement.Expressions[0];
                     }
-                    if (usingStatement.VariableDeclarations.Count > 0)
+                    if (usingStatement.VariableDeclarations.Count == 1 &&
+                        usingStatement.VariableDeclarations[0] != null &&
+                        (usingStatement.VariableDeclarations[0].IsVar || usingStatement.VariableDeclarations[0].TypeUsage != null) &&
+                        usingStatement.Parent is IBlock)
                     {
-                        expressions.AddRange(
-                            from declaration in usingStatement.VariableDeclarations
-                            let expressionInitializer = declaration.Initial as IExpressionInitializer
-                            where expressionInitializer != null
-                            select expressionInitializer.Value);
+                        // await using (var x = expression())
+                        // await using (Type x = expression())
+                        usingStatementWithVariableDeclaration = usingStatement;
                     }
                     break;
 
                 case IMultipleLocalVariableDeclaration variableDeclaration when variableDeclaration.AwaitKeyword == provider.SelectedElement:
-                    if (variableDeclaration.UsingKeyword != null && variableDeclaration.Declarators.Count > 0)
-                    {
-                        expressions.AddRange(
-                            from declarationMember in variableDeclaration.Declarators
-                            let declaration = declarationMember as ILocalVariableDeclaration
-                            where declaration != null
-                            let expressionInitializer = declaration.Initial as IExpressionInitializer
-                            where expressionInitializer != null
-                            select expressionInitializer.Value);
-                    }
+                    // await using var x = expression()
+                    // => not supported
                     break;
 
                 case IForeachStatement foreachStatement when foreachStatement.AwaitKeyword == provider.SelectedElement:
-                    expressions.Add(foreachStatement.Collection);
+                    // await foreach (var item in collection)
+                    expression = foreachStatement.Collection;
                     break;
             }
 
-            return expressions.Count > 0;
+            return expression != null || usingStatementWithVariableDeclaration != null;
         }
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            Debug.Assert(expressions.Count > 0);
+            Debug.Assert(expression != null || usingStatementWithVariableDeclaration != null);
 
             try
             {
                 using (WriteLockCookie.Create())
                 {
-                    foreach (var expression in expressions)
+                    if (expression != null)
                     {
                         var factory = CSharpElementFactory.GetInstance(expression);
 
                         ModificationUtil.ReplaceChild(expression, factory.CreateExpression($"$0.{nameof(Task.ConfigureAwait)}(false)", expression));
+                    }
+
+                    if (usingStatementWithVariableDeclaration != null)
+                    {
+                        var factory = CSharpElementFactory.GetInstance(usingStatementWithVariableDeclaration);
+
+                        var variableDeclaration = usingStatementWithVariableDeclaration.VariableDeclarations[0];
+                        Debug.Assert(variableDeclaration != null);
+
+                        usingStatementWithVariableDeclaration.RemoveVariableDeclaration(variableDeclaration);
+
+                        string variableTypeDeclaration;
+                        if (variableDeclaration.IsVar)
+                        {
+                            variableTypeDeclaration = "var";
+                        }
+                        else
+                        {
+                            Debug.Assert(variableDeclaration.TypeUsage != null);
+
+                            variableTypeDeclaration = variableDeclaration.TypeUsage.GetText();
+                        }
+
+                        Debug.Assert(usingStatementWithVariableDeclaration.Parent is IBlock);
+
+                        ((IBlock)usingStatementWithVariableDeclaration.Parent).AddStatementBefore(
+                            factory.CreateStatement($"{variableTypeDeclaration} {variableDeclaration.GetText()};"),
+                            usingStatementWithVariableDeclaration);
+
+                        usingStatementWithVariableDeclaration.SetExpression(
+                            factory.CreateExpression($"{variableDeclaration.DeclaredName}.{nameof(Task.ConfigureAwait)}(false)"));
                     }
                 }
 
@@ -106,7 +128,8 @@ namespace ReCommendedExtension.ContextActions
             }
             finally
             {
-                expressions.Clear();
+                expression = null;
+                usingStatementWithVariableDeclaration = null;
             }
         }
     }
