@@ -7,7 +7,7 @@ namespace Test
     {
         void Method(IEnumerable<int> o{on}ne, Action tw{on}o, string th{off}ree, ICollection<int> fo{off}ur)
         {
-            void LocalFunction(IEnumerable<int> fir{off}st, Action se{off}cond)
+            void LocalFunction(IEnumerable<int> fir{off}st, Action se{off}cond) { }
         }
     }
 }
