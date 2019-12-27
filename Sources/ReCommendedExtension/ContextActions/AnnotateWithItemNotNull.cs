@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
@@ -61,6 +62,11 @@ namespace ReCommendedExtension.ContextActions
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
         {
+            if (context.IsNullableAnnotationsContextEnabled())
+            {
+                return false;
+            }
+
             switch (declaredElement)
             {
                 case IMethod method when IsAvailableForType(method.ReturnType, context): return true;
