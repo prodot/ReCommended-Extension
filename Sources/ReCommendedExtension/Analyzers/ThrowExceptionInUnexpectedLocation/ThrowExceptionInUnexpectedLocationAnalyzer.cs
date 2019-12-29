@@ -127,10 +127,9 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                         return Location.DisposeMethod;
                     }
 
-                    if (methodDeclaration.DeclaredElement.OverridesOrImplements(
-                        GetMethod(
-                            TypeElementUtil.GetTypeElementByClrName(PredefinedType.IASYNCDISPOSABLE_FQN, psiModule).AssertNotNull(),
-                            "DisposeAsync")))
+                    var iAsyncDisposableTypeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.IASYNCDISPOSABLE_FQN, psiModule);
+                    if (iAsyncDisposableTypeElement != null &&
+                        methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(iAsyncDisposableTypeElement, "DisposeAsync")))
                     {
                         // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
                         return Location.DisposeAsyncMethod;
