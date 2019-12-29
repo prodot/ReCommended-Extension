@@ -48,5 +48,8 @@ namespace ReCommendedExtension.Tests.Providers
 
         [Test]
         public void TestUnconstrainedGenericTypes() => DoNamedTest2();
+
+        [Test]
+        public void TestAttributes() => DoNamedTest2();
     }
 }

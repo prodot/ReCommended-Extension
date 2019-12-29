@@ -64,5 +64,17 @@ namespace ReCommendedExtension
 
         [NotNull]
         public static readonly IClrTypeName MultiBinding = new ClrTypeName(typeof(MultiBinding).FullName.AssertNotNull());
+
+        [NotNull]
+        public static readonly IClrTypeName AllowNullAttribute = new ClrTypeName("System.Diagnostics.CodeAnalysis.AllowNullAttribute");
+
+        [NotNull]
+        public static readonly IClrTypeName DisallowNullAttribute = new ClrTypeName("System.Diagnostics.CodeAnalysis.DisallowNullAttribute");
+
+        [NotNull]
+        public static readonly IClrTypeName MaybeNullAttribute = new ClrTypeName("System.Diagnostics.CodeAnalysis.MaybeNullAttribute");
+
+        [NotNull]
+        public static readonly IClrTypeName NotNullAttribute = new ClrTypeName("System.Diagnostics.CodeAnalysis.NotNullAttribute");
     }
 }

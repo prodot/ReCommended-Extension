@@ -11,7 +11,104 @@ namespace ReCommendedExtension.Providers
     internal static class NullableAnnotationContextExtensions
     {
         [Pure]
-        static CodeAnnotationNullableValue? TryGetAnnotationNullableValue([NotNull] this IType type)
+        static bool IsNullableReferenceType([NotNull] this IType type)
+        {
+            switch (type.Classify)
+            {
+                case TypeClassification.REFERENCE_TYPE:
+                    switch (type.NullableAnnotation)
+                    {
+                        case NullableAnnotation.NotAnnotated:
+                            if (type.IsOpenType)
+                            {
+                                var typeParameterType = type.GetTypeParameterType();
+                                switch (typeParameterType?.Nullability)
+                                {
+                                    case TypeParameterNullability.NotNullableValueType: return false;
+
+                                    case TypeParameterNullability.NotNullableValueOrReferenceType:
+                                    case TypeParameterNullability.NotNullableReferenceType:
+                                    case TypeParameterNullability.NotNullableSuperType:
+                                        return false;
+
+                                    case TypeParameterNullability.NullableValueOrReferenceType:
+                                    case TypeParameterNullability.NullableReferenceType:
+                                    case TypeParameterNullability.NullableSuperType:
+                                        return true;
+
+                                    default: return false;
+                                }
+                            }
+
+                            return false;
+
+                        case NullableAnnotation.NotNullable: return false;
+
+                        case NullableAnnotation.Annotated:
+                        case NullableAnnotation.Nullable:
+                            return true;
+
+                        default: return false;
+                    }
+
+                case TypeClassification.VALUE_TYPE: return false;
+
+                default: goto case TypeClassification.REFERENCE_TYPE;
+            }
+        }
+
+        [Pure]
+        static bool IsNonNullableReferenceType([NotNull] this IType type)
+        {
+            switch (type.Classify)
+            {
+                case TypeClassification.REFERENCE_TYPE:
+                    switch (type.NullableAnnotation)
+                    {
+                        case NullableAnnotation.NotAnnotated:
+                            if (type.IsOpenType)
+                            {
+                                var typeParameterType = type.GetTypeParameterType();
+                                switch (typeParameterType?.Nullability)
+                                {
+                                    case TypeParameterNullability.NotNullableValueType: return false;
+
+                                    case TypeParameterNullability.NotNullableValueOrReferenceType:
+                                    case TypeParameterNullability.NotNullableReferenceType:
+                                    case TypeParameterNullability.NotNullableSuperType:
+                                        return true;
+
+                                    case TypeParameterNullability.NullableValueOrReferenceType:
+                                    case TypeParameterNullability.NullableReferenceType:
+                                    case TypeParameterNullability.NullableSuperType:
+                                        return false;
+
+                                    default: return false;
+                                }
+                            }
+
+                            return true;
+
+                        case NullableAnnotation.NotNullable: return true;
+
+                        case NullableAnnotation.Annotated:
+                        case NullableAnnotation.Nullable:
+                            return false;
+
+                        default: return false;
+                    }
+
+                case TypeClassification.VALUE_TYPE: return false;
+
+                default: goto case TypeClassification.REFERENCE_TYPE;
+            }
+        }
+
+        [Pure]
+        static CodeAnnotationNullableValue? TryGetAnnotationNullableValue(
+            [NotNull] this IType type,
+            bool canStillBeNull = false,
+            bool shouldNeverBeNull = false)
         {
             switch (type.Classify)
             {
@@ -29,23 +126,45 @@ namespace ReCommendedExtension.Providers
                                     case TypeParameterNullability.NotNullableValueOrReferenceType:
                                     case TypeParameterNullability.NotNullableReferenceType:
                                     case TypeParameterNullability.NotNullableSuperType:
+                                        if (canStillBeNull)
+                                        {
+                                            return CodeAnnotationNullableValue.CAN_BE_NULL;
+                                        }
                                         return CodeAnnotationNullableValue.NOT_NULL;
 
                                     case TypeParameterNullability.NullableValueOrReferenceType:
                                     case TypeParameterNullability.NullableReferenceType:
                                     case TypeParameterNullability.NullableSuperType:
+                                        if (shouldNeverBeNull)
+                                        {
+                                            return CodeAnnotationNullableValue.NOT_NULL;
+                                        }
                                         return CodeAnnotationNullableValue.CAN_BE_NULL;
 
                                     default: return null;
                                 }
                             }
 
+                            if (canStillBeNull)
+                            {
+                                return CodeAnnotationNullableValue.CAN_BE_NULL;
+                            }
+
                             return CodeAnnotationNullableValue.NOT_NULL;
 
-                        case NullableAnnotation.NotNullable: return CodeAnnotationNullableValue.NOT_NULL;
+                        case NullableAnnotation.NotNullable:
+                            if (canStillBeNull)
+                            {
+                                return CodeAnnotationNullableValue.CAN_BE_NULL;
+                            }
+                            return CodeAnnotationNullableValue.NOT_NULL;
 
                         case NullableAnnotation.Annotated:
                         case NullableAnnotation.Nullable:
+                            if (shouldNeverBeNull)
+                            {
+                                return CodeAnnotationNullableValue.NOT_NULL;
+                            }
                             return CodeAnnotationNullableValue.CAN_BE_NULL;
 
                         default: return null;
@@ -91,13 +210,55 @@ namespace ReCommendedExtension.Providers
         {
             switch (element)
             {
+                case IParameter parameter:
+                {
+                    var isInputParameter = parameter.Kind == ParameterKind.VALUE || parameter.Kind == ParameterKind.INPUT;
+                    var isOutputParameter = parameter.Kind == ParameterKind.OUTPUT;
+
+                    var canStillBeNull =
+                        (isInputParameter && parameter.HasAttributeInstance(ClrTypeNames.AllowNullAttribute, false) ||
+                            isOutputParameter && parameter.HasAttributeInstance(ClrTypeNames.MaybeNullAttribute, false)) &&
+                        parameter.Type.IsNonNullableReferenceType();
+                    var shouldNeverBeNull =
+                        (isInputParameter && parameter.HasAttributeInstance(ClrTypeNames.DisallowNullAttribute, false) ||
+                            isOutputParameter && parameter.HasAttributeInstance(ClrTypeNames.NotNullAttribute, false)) &&
+                        parameter.Type.IsNullableReferenceType();
+
+                    return parameter.Type.TryGetAnnotationNullableValue(canStillBeNull, shouldNeverBeNull);
+                }
+
+                case IProperty property:
+                {
+                    var isReadOnlyNonAuto = property.IsReadable && !property.IsWritable && !property.IsAuto;
+                    var isWriteOnly = !property.IsReadable && property.IsWritable;
+
+                    var canStillBeNull =
+                        (isWriteOnly && property.HasAttributeInstance(ClrTypeNames.AllowNullAttribute, false) ||
+                            isReadOnlyNonAuto && property.HasAttributeInstance(ClrTypeNames.MaybeNullAttribute, false)) &&
+                        property.Type.IsNonNullableReferenceType();
+                    var shouldNeverBeNull =
+                        (isWriteOnly && property.HasAttributeInstance(ClrTypeNames.DisallowNullAttribute, false) ||
+                            isReadOnlyNonAuto && property.HasAttributeInstance(ClrTypeNames.NotNullAttribute, false)) &&
+                        property.Type.IsNullableReferenceType();
+
+                    return property.Type.TryGetAnnotationNullableValue(canStillBeNull, shouldNeverBeNull);
+                }
+
                 case ITypeOwner typeOwner: return typeOwner.Type.TryGetAnnotationNullableValue();
 
-                case IFunction function: return function.ReturnType.TryGetAnnotationNullableValue();
+                case IFunction function:
+                {
+                    var canStillBeNull = function.ReturnTypeAttributes.HasAttributeInstance(ClrTypeNames.MaybeNullAttribute, false) &&
+                        function.ReturnType.IsNonNullableReferenceType();
+                    var shouldNeverBeNull = function.ReturnTypeAttributes.HasAttributeInstance(ClrTypeNames.NotNullAttribute, false) &&
+                        function.ReturnType.IsNullableReferenceType();
+
+                    return function.ReturnType.TryGetAnnotationNullableValue(canStillBeNull, shouldNeverBeNull);
+                }
 
                 case ILocalFunction localFunction: return localFunction.ReturnType.TryGetAnnotationNullableValue();
 
-                case IDelegate @delegate: return @delegate.InvokeMethod.ReturnType.TryGetAnnotationNullableValue();
+                case IDelegate @delegate: return @delegate.InvokeMethod.TryGetReSharperNullableAnnotation();
 
                 default: return null;
             }
