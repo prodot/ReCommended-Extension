@@ -42,6 +42,11 @@ namespace Test
             aw{on}ait using (var m = new MemoryStream()) { }
         }
 
+        async Task AsyncDisposable_Variable(int x)
+        {
+            if (x == 1) aw{off}ait using (var m = new MemoryStream()) { }
+        }
+
         async Task AsyncDisposable_Variable_Multiple()
         {
             aw{off}ait using (Stream m1 = new MemoryStream(), m2 = new MemoryStream()) { }
