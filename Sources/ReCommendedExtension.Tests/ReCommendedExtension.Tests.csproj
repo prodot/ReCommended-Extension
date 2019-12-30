@@ -21,7 +21,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="JetBrains.Lifetimes" Version="2019.3.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
   </ItemGroup>
 
