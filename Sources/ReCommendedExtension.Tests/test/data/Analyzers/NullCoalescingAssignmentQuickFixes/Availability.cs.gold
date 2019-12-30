@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Tests
+{
+    public class Sample
+    {
+        void EqualityComparison(string value, string x)
+        {
+            |if|(0) (value == null)
+            {
+                value = "one";
+            }
+
+            |if|(1) (x == null) x = new Version(1, 2).ToString();
+        }
+
+        void EqualityComparison_Reverse(string value, string x)
+        {
+            |if|(2) (null == value)
+            {
+                value = string.Join(", ", new[] { "one", "two", "three" });
+            }
+
+            |if|(3) (null == x) x = "four".Remove(0, 1);
+        }
+
+        class Data
+        {
+            string Property { get; set; }
+        }
+
+        Data data;
+
+        string Property { get; set; }
+
+        void IsComparison(string fallbackValue)
+        {
+            |if|(4) (data.Property is null)
+            {
+                data.Property = fallbackValue;
+            }
+
+            |if|(5) (Property is null) Property = fallbackValue.Trim();
+        }
+    }
+}
+------------------------------------------------
+0: Replace 'if' statement with compound assignment.
+QUICKFIXES:
+Replace with compound assignment
+1: Replace 'if' statement with compound assignment.
+QUICKFIXES:
+Replace with compound assignment
+2: Replace 'if' statement with compound assignment.
+QUICKFIXES:
+Replace with compound assignment
+3: Replace 'if' statement with compound assignment.
+QUICKFIXES:
+Replace with compound assignment
+4: Replace 'if' statement with compound assignment.
+QUICKFIXES:
+Replace with compound assignment
+5: Replace 'if' statement with compound assignment.
+QUICKFIXES:
+Replace with compound assignment
