@@ -22,18 +22,54 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         HighlightingTypes = new[] { typeof(RedundantAssertionStatementHighlighting), typeof(RedundantInlineAssertionHighlighting) })]
     public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
-        static void AnalyzeAssertions(
+        [Pure]
+        static ICSharpExpression TryGetOtherOperand(
+            [NotNull] IEqualityExpression equalityExpression,
+            EqualityExpressionType equalityType,
+            [NotNull] TokenNodeType operandNodeType)
+        {
+            if (equalityExpression.EqualityType == equalityType)
+            {
+                if (IsLiteral(equalityExpression.RightOperand, operandNodeType))
+                {
+                    return equalityExpression.LeftOperand;
+                }
+
+                if (IsLiteral(equalityExpression.LeftOperand, operandNodeType))
+                {
+                    return equalityExpression.RightOperand;
+                }
+            }
+
+            return null;
+        }
+
+        [Pure]
+        static bool IsLiteral(IExpression expression, [NotNull] TokenNodeType tokenType)
+            => (expression as ICSharpLiteralExpression)?.Literal?.GetTokenType() == tokenType;
+
+        [NotNull]
+        readonly NullnessProvider nullnessProvider;
+
+        [NotNull]
+        readonly AssertionMethodAnnotationProvider assertionMethodAnnotationProvider;
+
+        [NotNull]
+        readonly AssertionConditionAnnotationProvider assertionConditionAnnotationProvider;
+
+        public ControlFlowAnalyzer([NotNull] CodeAnnotationsCache codeAnnotationsCache)
+        {
+            nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
+            assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
+            assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
+        }
+
+        void AnalyzeAssertions(
             [NotNull] ElementProblemAnalyzerData data,
             [NotNull] IHighlightingConsumer consumer,
             [NotNull] ICSharpTreeNode rootNode,
             [NotNull] ICSharpControlFlowGraph controlFlowGraph)
         {
-            var codeAnnotationsCache = rootNode.GetPsiServices().GetCodeAnnotationsCache();
-
-            var nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
-            var assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
-            var assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
-
             var assertions = Assertion.CollectAssertions(assertionMethodAnnotationProvider, assertionConditionAnnotationProvider, rootNode);
 
             assertions.ExceptWith(
@@ -58,51 +94,26 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 switch (assertion.AssertionConditionType)
                 {
                     case AssertionConditionType.IS_TRUE:
-                        AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
-                            consumer,
-                            nullnessProvider,
-                            inspector,
-                            alwaysSuccessTryCastExpressions,
-                            assertion,
-                            true);
+                        AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(consumer, inspector, alwaysSuccessTryCastExpressions, assertion, true);
                         break;
 
                     case AssertionConditionType.IS_FALSE:
-                        AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
-                            consumer,
-                            nullnessProvider,
-                            inspector,
-                            alwaysSuccessTryCastExpressions,
-                            assertion,
-                            false);
+                        AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(consumer, inspector, alwaysSuccessTryCastExpressions, assertion, false);
                         break;
 
                     case AssertionConditionType.IS_NOT_NULL:
-                        AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
-                            consumer,
-                            nullnessProvider,
-                            inspector,
-                            alwaysSuccessTryCastExpressions,
-                            assertion,
-                            false);
+                        AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(consumer, inspector, alwaysSuccessTryCastExpressions, assertion, false);
                         break;
 
                     case AssertionConditionType.IS_NULL:
-                        AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
-                            consumer,
-                            nullnessProvider,
-                            inspector,
-                            alwaysSuccessTryCastExpressions,
-                            assertion,
-                            true);
+                        AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(consumer, inspector, alwaysSuccessTryCastExpressions, assertion, true);
                         break;
                 }
             }
         }
 
-        static void AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
+        void AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
             [NotNull] IHighlightingConsumer context,
-            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] CSharpControlFlowGraphInspector inspector,
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] Assertion assertion,
@@ -128,7 +139,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     var expression = TryGetOtherOperand(equalityExpression, EqualityExpressionType.NE, CSharpTokenType.NULL_KEYWORD);
                     if (expression != null)
                     {
-                        switch (GetExpressionNullReferenceState(nullnessProvider, inspector, alwaysSuccessTryCastExpressions, expression))
+                        switch (GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, expression))
                         {
                             case CSharpControlFlowNullReferenceState.NOT_NULL:
                                 if (isKnownToBeTrue)
@@ -156,7 +167,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     expression = TryGetOtherOperand(equalityExpression, EqualityExpressionType.EQEQ, CSharpTokenType.NULL_KEYWORD);
                     if (expression != null)
                     {
-                        switch (GetExpressionNullReferenceState(nullnessProvider, inspector, alwaysSuccessTryCastExpressions, expression))
+                        switch (GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, expression))
                         {
                             case CSharpControlFlowNullReferenceState.NOT_NULL:
                                 if (!isKnownToBeTrue)
@@ -183,9 +194,8 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
             }
         }
 
-        static void AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
+        void AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
             [NotNull] IHighlightingConsumer context,
-            [NotNull] NullnessProvider nullnessProvider,
             [NotNull] CSharpControlFlowGraphInspector inspector,
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] Assertion assertion,
@@ -204,7 +214,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 }
 
                 // pattern: Assert(x); when x is known to be null or not null
-                switch (GetExpressionNullReferenceState(nullnessProvider, inspector, alwaysSuccessTryCastExpressions, assertionStatement.Expression))
+                switch (GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, assertionStatement.Expression))
                 {
                     case CSharpControlFlowNullReferenceState.NOT_NULL:
                         if (!isKnownToBeNull)
@@ -230,7 +240,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
             if (!isKnownToBeNull &&
                 assertion is InlineAssertion inlineAssertion &&
-                GetExpressionNullReferenceState(nullnessProvider, inspector, alwaysSuccessTryCastExpressions, inlineAssertion.QualifierExpression) ==
+                GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, inlineAssertion.QualifierExpression) ==
                 CSharpControlFlowNullReferenceState.NOT_NULL)
             {
                 context.AddHighlighting(
@@ -239,8 +249,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         }
 
         [Pure]
-        static CSharpControlFlowNullReferenceState GetExpressionNullReferenceState(
-            [NotNull] NullnessProvider nullnessProvider,
+        CSharpControlFlowNullReferenceState GetExpressionNullReferenceState(
             [NotNull] CSharpControlFlowGraphInspector inspector,
             [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             ICSharpExpression expression)
@@ -253,7 +262,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         if (referenceExpression is IConditionalAccessExpression conditionalAccessExpression &&
                             conditionalAccessExpression.HasConditionalAccessSign)
                         {
-                            var referenceState = GetExpressionNullReferenceStateByAnnotations(nullnessProvider, referenceExpression);
+                            var referenceState = GetExpressionNullReferenceStateByAnnotations(referenceExpression);
                             if (referenceState == CSharpControlFlowNullReferenceState.NOT_NULL)
                             {
                                 expression = conditionalAccessExpression.ConditionalQualifier;
@@ -265,7 +274,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
                         if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN)
                         {
-                            return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, referenceExpression);
+                            return GetExpressionNullReferenceStateByAnnotations(referenceExpression);
                         }
 
                         return nullReferenceState;
@@ -278,7 +287,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     case IInvocationExpression invocationExpression:
                         if (invocationExpression.InvokedExpression is IReferenceExpression invokedExpression)
                         {
-                            return GetExpressionNullReferenceStateByAnnotations(nullnessProvider, invokedExpression);
+                            return GetExpressionNullReferenceStateByAnnotations(invokedExpression);
                         }
 
                         goto default;
@@ -289,9 +298,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         }
 
         [Pure]
-        static CSharpControlFlowNullReferenceState GetExpressionNullReferenceStateByAnnotations(
-            [NotNull] NullnessProvider nullnessProvider,
-            [NotNull] IReferenceExpression referenceExpression)
+        CSharpControlFlowNullReferenceState GetExpressionNullReferenceStateByAnnotations([NotNull] IReferenceExpression referenceExpression)
         {
             switch (referenceExpression.Reference.Resolve().DeclaredElement)
             {
@@ -310,32 +317,6 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 default: return CSharpControlFlowNullReferenceState.UNKNOWN;
             }
         }
-
-        [Pure]
-        static ICSharpExpression TryGetOtherOperand(
-            [NotNull] IEqualityExpression equalityExpression,
-            EqualityExpressionType equalityType,
-            [NotNull] TokenNodeType operandNodeType)
-        {
-            if (equalityExpression.EqualityType == equalityType)
-            {
-                if (IsLiteral(equalityExpression.RightOperand, operandNodeType))
-                {
-                    return equalityExpression.LeftOperand;
-                }
-
-                if (IsLiteral(equalityExpression.LeftOperand, operandNodeType))
-                {
-                    return equalityExpression.RightOperand;
-                }
-            }
-
-            return null;
-        }
-
-        [Pure]
-        static bool IsLiteral(IExpression expression, [NotNull] TokenNodeType tokenType)
-            => (expression as ICSharpLiteralExpression)?.Literal?.GetTokenType() == tokenType;
 
         protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
