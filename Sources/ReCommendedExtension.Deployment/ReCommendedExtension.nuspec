@@ -2,17 +2,19 @@
 <package>
     <metadata>
         <id>Prodot.{{AssemblyProduct}}</id>
-        <version>{{AssemblyFileVersion}}</version>
+        <version>{{AssemblyFileVersion}}-RC1</version>
         <title>{{AssemblyTitle}}</title>
         <authors>{{AssemblyCompany}}</authors>
         <owners>{{AssemblyCompany}}</owners>
         <projectUrl>https://github.com/prodot/ReCommended-Extension</projectUrl>
         <licenseUrl>https://github.com/prodot/ReCommended-Extension/blob/master/LICENSE</licenseUrl>
         <iconUrl>https://raw.githubusercontent.com/prodot/ReCommended-Extension/master/Images/Icon.png</iconUrl>
+        <icon>Icon.png</icon>
         <summary>{{AssemblyDescription}}</summary>
         <description>
             The {{AssemblyTitle}} augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
+            - automatic injection of ReSharper annotations for nullable reference types, thus enabling ReSharper to take advantage of the language annotations,
             - detection of redundant assertions,
             - inappropriate use of "async void",
             - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
@@ -31,10 +33,11 @@
         <copyright>{{AssemblyCopyright}}</copyright>
         <tags>recommended extension resharper plugin addin prodot</tags>
         <dependencies>
-            <dependency id="Wave" version="[192.0,192.1)" />
+            <dependency id="Wave" version="[193.0,193.1)" />
         </dependencies>
     </metadata>
     <files>
+        <file src="..\..\..\..\..\..\Images\Icon.png" />
         <file src="" target="DotFiles" />
     </files>
 </package>
