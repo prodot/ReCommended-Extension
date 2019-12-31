@@ -10,7 +10,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        RedundantInlineAssertionHighlighting.SeverityId,
+        RedundantInlineAssertionSuggestion.SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant inline assertion expression" + ZoneMarker.Suffix,
@@ -20,14 +20,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.ControlFlow
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class RedundantInlineAssertionHighlighting : RedundantAssertionHighlighting
+    public sealed class RedundantInlineAssertionSuggestion : RedundantAssertionSuggestion
     {
         internal const string SeverityId = "RedundantInlineAssertion";
 
         [NotNull]
         readonly InlineAssertion assertion;
 
-        internal RedundantInlineAssertionHighlighting([NotNull] string message, [NotNull] InlineAssertion assertion) : base(message)
+        internal RedundantInlineAssertionSuggestion([NotNull] string message, [NotNull] InlineAssertion assertion) : base(message)
             => this.assertion = assertion;
 
         internal override Assertion Assertion => assertion;

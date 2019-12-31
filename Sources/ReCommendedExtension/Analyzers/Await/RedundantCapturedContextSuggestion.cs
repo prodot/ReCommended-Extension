@@ -10,7 +10,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        RedundantCapturedContextHighlighting.SeverityId,
+        RedundantCapturedContextSuggestion.SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Redundant captured context (add '." + nameof(Task.ConfigureAwait) + "(false)')" + ZoneMarker.Suffix,
@@ -20,14 +20,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.Await
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class RedundantCapturedContextHighlighting : Highlighting
+    public sealed class RedundantCapturedContextSuggestion : Highlighting
     {
         internal const string SeverityId = "RedundantCapturedContext";
 
         [NotNull]
         readonly IAwaitExpression awaitExpression;
 
-        internal RedundantCapturedContextHighlighting([NotNull] string message, [NotNull] IAwaitExpression awaitExpression) : base(message)
+        internal RedundantCapturedContextSuggestion([NotNull] string message, [NotNull] IAwaitExpression awaitExpression) : base(message)
             => this.awaitExpression = awaitExpression;
 
         public override DocumentRange CalculateRange() => awaitExpression.AwaitKeyword.GetDocumentRange();

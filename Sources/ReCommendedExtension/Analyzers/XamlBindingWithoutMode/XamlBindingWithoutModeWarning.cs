@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        XamlBindingWithoutModeHighlighting.SeverityId,
+        XamlBindingWithoutModeWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Binding expression without explicitly set 'Mode'" + ZoneMarker.Suffix,
@@ -19,14 +19,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.XamlBindingWithoutMode
 {
     [ConfigurableSeverityHighlighting(SeverityId, XamlLanguage.Name)]
-    public sealed class XamlBindingWithoutModeHighlighting : Highlighting
+    public sealed class XamlBindingWithoutModeWarning : Highlighting
     {
         internal const string SeverityId = "XamlBindingWithoutMode";
 
         [NotNull]
         readonly IXmlIdentifier nameNode;
 
-        internal XamlBindingWithoutModeHighlighting([NotNull] string message, [NotNull] IXmlIdentifier nameNode) : base(message)
+        internal XamlBindingWithoutModeWarning([NotNull] string message, [NotNull] IXmlIdentifier nameNode) : base(message)
             => this.nameNode = nameNode;
 
         public override DocumentRange CalculateRange() => nameNode.GetDocumentRange();

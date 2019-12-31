@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\EmptyArrayInitializationQuickFixes";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is EmptyArrayInitializationHighlighting;
+            => highlighting is EmptyArrayInitializationWarning;
 
         [Test]
         public void TestEmptyArrayInitializationAvailability() => DoNamedTest2();

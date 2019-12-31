@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
 {
     [ElementProblemAnalyzer(
         typeof(IInvocationExpression),
-        HighlightingTypes = new[] { typeof(NotifyPropertyChangedInvocatorFromConstructorHighlighting) })]
+        HighlightingTypes = new[] { typeof(NotifyPropertyChangedInvocatorFromConstructorWarning) })]
     public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     {
         static bool IsNotifyPropertyChangedInvocatorFromConstructor([NotNull] IInvocationExpression invocationExpression)
@@ -48,7 +48,7 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
                 Debug.Assert(typeName != null);
 
                 consumer.AddHighlighting(
-                    new NotifyPropertyChangedInvocatorFromConstructorHighlighting(
+                    new NotifyPropertyChangedInvocatorFromConstructorWarning(
                         element,
                         string.Format(
                             "Invocation of a method annotated with [{0}] from a constructor is redundant.",

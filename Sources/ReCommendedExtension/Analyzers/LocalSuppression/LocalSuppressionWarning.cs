@@ -10,7 +10,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        LocalSuppressionHighlighting.SeverityId,
+        LocalSuppressionWarning.SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Avoid local suppression" + ZoneMarker.Suffix,
@@ -20,7 +20,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.LocalSuppression
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class LocalSuppressionHighlighting : Highlighting
+    public sealed class LocalSuppressionWarning : Highlighting
     {
         internal const string SeverityId = "LocalSuppression";
 
@@ -30,7 +30,7 @@ namespace ReCommendedExtension.Analyzers.LocalSuppression
         readonly int leadingWhitespaceCharacterCount;
         readonly bool justOnce;
 
-        internal LocalSuppressionHighlighting(
+        internal LocalSuppressionWarning(
             [NotNull] string message,
             [NotNull] ICommentNode comment,
             int leadingWhitespaceCharacterCount,

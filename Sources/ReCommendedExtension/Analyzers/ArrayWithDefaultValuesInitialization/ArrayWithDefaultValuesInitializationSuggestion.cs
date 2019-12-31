@@ -10,7 +10,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        ArrayWithDefaultValuesInitializationHighlighting.SeverityId,
+        ArrayWithDefaultValuesInitializationSuggestion.SeverityId,
         null,
         HighlightingGroupIds.LanguageUsage,
         "Use 'new T[n]' for arrays with default values" + ZoneMarker.Suffix,
@@ -20,11 +20,11 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class ArrayWithDefaultValuesInitializationHighlighting : Highlighting
+    public sealed class ArrayWithDefaultValuesInitializationSuggestion : Highlighting
     {
         internal const string SeverityId = "ArrayWithDefaultValuesInitialization";
 
-        internal ArrayWithDefaultValuesInitializationHighlighting(
+        internal ArrayWithDefaultValuesInitializationSuggestion(
             [NotNull] string message,
             [NotNull] IArrayInitializer arrayInitializer,
             [NotNull] IType arrayElementType,

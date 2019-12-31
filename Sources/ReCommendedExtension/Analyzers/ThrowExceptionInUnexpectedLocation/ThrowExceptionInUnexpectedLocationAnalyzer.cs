@@ -15,7 +15,7 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
 {
-    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(ThrowExceptionInUnexpectedLocationHighlighting) })]
+    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(ThrowExceptionInUnexpectedLocationWarning) })]
     public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         enum Location
@@ -285,9 +285,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                 }
 
                 consumer.AddHighlighting(
-                    new ThrowExceptionInUnexpectedLocationHighlighting(
-                        $"Exceptions should never be thrown in {GetText((Location)location)}.",
-                        element));
+                    new ThrowExceptionInUnexpectedLocationWarning($"Exceptions should never be thrown in {GetText((Location)location)}.", element));
             }
         }
     }

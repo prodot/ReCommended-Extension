@@ -16,9 +16,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
     public sealed class RemoveAssertionStatementFix : QuickFixBase
     {
         [NotNull]
-        readonly RedundantAssertionStatementHighlighting highlighting;
+        readonly RedundantAssertionStatementSuggestion highlighting;
 
-        public RemoveAssertionStatementFix([NotNull] RedundantAssertionStatementHighlighting highlighting) => this.highlighting = highlighting;
+        public RemoveAssertionStatementFix([NotNull] RedundantAssertionStatementSuggestion highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

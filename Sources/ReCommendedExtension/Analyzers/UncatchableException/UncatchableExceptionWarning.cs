@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        UncatchableExceptionHighlighting.SeverityId,
+        UncatchableExceptionWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Exception should never be caught" + ZoneMarker.Suffix,
@@ -19,14 +19,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.UncatchableException
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class UncatchableExceptionHighlighting : Highlighting
+    public sealed class UncatchableExceptionWarning : Highlighting
     {
         internal const string SeverityId = "UncatchableException";
 
         [NotNull]
         readonly ISpecificCatchClause catchClause;
 
-        internal UncatchableExceptionHighlighting([NotNull] string message, [NotNull] ISpecificCatchClause catchClause) : base(message)
+        internal UncatchableExceptionWarning([NotNull] string message, [NotNull] ISpecificCatchClause catchClause) : base(message)
             => this.catchClause = catchClause;
 
         public override DocumentRange CalculateRange() => catchClause.ExceptionTypeUsage.GetDocumentRange();

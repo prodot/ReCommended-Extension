@@ -12,7 +12,7 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
 {
-    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(EmptyArrayInitializationHighlighting) })]
+    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(EmptyArrayInitializationWarning) })]
     public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         [Pure]
@@ -60,10 +60,7 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
                             // T[] Property { get; set; } = { };
 
                             consumer.AddHighlighting(
-                                new EmptyArrayInitializationHighlighting(
-                                    CreateHighlightingMessage(arrayElementType),
-                                    arrayInitializer,
-                                    arrayElementType));
+                                new EmptyArrayInitializationWarning(CreateHighlightingMessage(arrayElementType), arrayInitializer, arrayElementType));
                         }
                     }
                     break;
@@ -81,7 +78,7 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
                                 // new T[] { }
 
                                 consumer.AddHighlighting(
-                                    new EmptyArrayInitializationHighlighting(
+                                    new EmptyArrayInitializationWarning(
                                         CreateHighlightingMessage(arrayElementType),
                                         creationExpression,
                                         arrayElementType));
@@ -97,7 +94,7 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
                                 // new T[0] { }
 
                                 consumer.AddHighlighting(
-                                    new EmptyArrayInitializationHighlighting(
+                                    new EmptyArrayInitializationWarning(
                                         CreateHighlightingMessage(arrayElementType),
                                         creationExpression,
                                         arrayElementType));

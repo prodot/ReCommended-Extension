@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        AsyncVoidFunctionExpressionHighlighting.SeverityId,
+        AsyncVoidFunctionExpressionWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Async void function expression" + ZoneMarker.Suffix,
@@ -19,7 +19,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.AsyncVoid
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class AsyncVoidFunctionExpressionHighlighting : Highlighting
+    public sealed class AsyncVoidFunctionExpressionWarning : Highlighting
     {
         internal const string SeverityId = "AsyncVoidFunctionExpression";
 
@@ -29,7 +29,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
         [NotNull]
         readonly Action removeAsyncModifier;
 
-        internal AsyncVoidFunctionExpressionHighlighting(
+        internal AsyncVoidFunctionExpressionWarning(
             [NotNull] string message,
             [NotNull] ITokenNode asyncKeyword,
             [NotNull] Action removeAsyncModifier) : base(message)

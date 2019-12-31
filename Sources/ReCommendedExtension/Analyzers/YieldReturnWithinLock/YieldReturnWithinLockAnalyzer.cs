@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.YieldReturnWithinLock
 {
-    [ElementProblemAnalyzer(typeof(IYieldStatement), HighlightingTypes = new[] { typeof(YieldReturnWithinLockHighlighting) })]
+    [ElementProblemAnalyzer(typeof(IYieldStatement), HighlightingTypes = new[] { typeof(YieldReturnWithinLockWarning) })]
     public sealed class YieldReturnWithinLockAnalyzer : ElementProblemAnalyzer<IYieldStatement>
     {
         protected override void Run(IYieldStatement element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Analyzers.YieldReturnWithinLock
                 switch (treeNode)
                 {
                     case ILockStatement _:
-                        consumer.AddHighlighting(new YieldReturnWithinLockHighlighting("'yield return' used inside the 'lock' block.", element));
+                        consumer.AddHighlighting(new YieldReturnWithinLockWarning("'yield return' used inside the 'lock' block.", element));
                         return;
 
                     case ILocalFunctionDeclaration _: return;

@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.UnthrowableException
 {
-    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(UnthrowableExceptionHighlighting) })]
+    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(UnthrowableExceptionWarning) })]
     public sealed class UnthrowableExceptionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         [NotNull]
@@ -151,7 +151,7 @@ namespace ReCommendedExtension.Analyzers.UnthrowableException
 
             if (unthrowableExceptions.TryGetValue(exception.GetExpressionType().ToString(), out var reason))
             {
-                consumer.AddHighlighting(new UnthrowableExceptionHighlighting(reason, exception));
+                consumer.AddHighlighting(new UnthrowableExceptionWarning(reason, exception));
             }
         }
     }

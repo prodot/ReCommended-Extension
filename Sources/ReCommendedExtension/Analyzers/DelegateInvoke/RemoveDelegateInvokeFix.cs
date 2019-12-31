@@ -16,9 +16,9 @@ namespace ReCommendedExtension.Analyzers.DelegateInvoke
     public sealed class RemoveDelegateInvokeFix : QuickFixBase
     {
         [NotNull]
-        readonly RedundantDelegateInvokeHighlighting highlighting;
+        readonly RedundantDelegateInvokeSuggestion highlighting;
 
-        public RemoveDelegateInvokeFix([NotNull] RedundantDelegateInvokeHighlighting highlighting) => this.highlighting = highlighting;
+        public RemoveDelegateInvokeFix([NotNull] RedundantDelegateInvokeSuggestion highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(IUserDataHolder cache) => true;
 

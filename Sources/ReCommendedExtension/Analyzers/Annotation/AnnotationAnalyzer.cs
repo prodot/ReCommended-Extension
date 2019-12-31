@@ -21,8 +21,8 @@ namespace ReCommendedExtension.Analyzers.Annotation
         typeof(IAttributesOwnerDeclaration),
         HighlightingTypes = new[]
         {
-            typeof(RedundantAnnotationHighlighting), typeof(NotAllowedAnnotationHighlighting), typeof(MissingAnnotationHighlighting),
-            typeof(MissingSuppressionJustificationHighlighting), typeof(ConflictingAnnotationHighlighting), typeof(ConditionalAnnotationHighlighting)
+            typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
+            typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint)
         })]
     public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
     {
@@ -155,7 +155,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 if (nullnessAttributeNames.Contains(attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName))
                 {
                     consumer.AddHighlighting(
-                        new RedundantAnnotationHighlighting(
+                        new RedundantAnnotationSuggestion(
                             element,
                             attribute,
                             "Annotation is redundant because the nullable annotation context is enabled."));
@@ -177,7 +177,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 if (attributesOwnerDeclaration.OverridesInheritedMember())
                 {
                     consumer.AddHighlighting(
-                        new NotAllowedAnnotationHighlighting(
+                        new NotAllowedAnnotationWarning(
                             attributesOwnerDeclaration,
                             itemNotNullAttribute,
                             "Annotation is not allowed because the declared element overrides or implements the inherited member."));
@@ -193,7 +193,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                         if (elementType != null && elementType.Classify != TypeClassification.REFERENCE_TYPE)
                         {
                             consumer.AddHighlighting(
-                                new NotAllowedAnnotationHighlighting(
+                                new NotAllowedAnnotationWarning(
                                     attributesOwnerDeclaration,
                                     itemNotNullAttribute,
                                     "Annotation is not allowed because the declared element type is not a reference type."));
@@ -207,7 +207,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                         if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
                         {
                             consumer.AddHighlighting(
-                                new NotAllowedAnnotationHighlighting(
+                                new NotAllowedAnnotationWarning(
                                     attributesOwnerDeclaration,
                                     itemNotNullAttribute,
                                     "Annotation is not allowed because the declared task result type is not a reference type."));
@@ -224,7 +224,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                             if (valueType.Classify != TypeClassification.REFERENCE_TYPE)
                             {
                                 consumer.AddHighlighting(
-                                    new NotAllowedAnnotationHighlighting(
+                                    new NotAllowedAnnotationWarning(
                                         attributesOwnerDeclaration,
                                         itemNotNullAttribute,
                                         "Annotation is not allowed because the declared lazy value type is not a reference type."));
@@ -234,7 +234,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                     }
 
                     consumer.AddHighlighting(
-                        new NotAllowedAnnotationHighlighting(
+                        new NotAllowedAnnotationWarning(
                             attributesOwnerDeclaration,
                             itemNotNullAttribute,
                             string.Format(
@@ -276,7 +276,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 Debug.Assert(suppressMessageAttribute != null);
 
                 consumer.AddHighlighting(
-                    new MissingSuppressionJustificationHighlighting(
+                    new MissingSuppressionJustificationWarning(
                         attributesOwnerDeclaration,
                         suppressMessageAttribute.Attribute,
                         string.Format(
@@ -317,7 +317,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                         Debug.Assert(attribute != null);
 
                         consumer.AddHighlighting(
-                            new ConflictingAnnotationHighlighting(
+                            new ConflictingAnnotationWarning(
                                 attributesOwnerDeclaration,
                                 attribute,
                                 string.Format("Annotation conflicts with '{0}' annotation.", conflictingAnnotation)));
@@ -349,7 +349,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 Debug.Assert(conditionalAttribute != null);
 
                 consumer.AddHighlighting(
-                    new ConditionalAnnotationHighlighting(
+                    new ConditionalAnnotationHint(
                         attributesOwnerDeclaration,
                         conditionalAttribute.Attribute,
                         conditionalAttribute.Conditions.Count == 1
@@ -412,7 +412,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                     {
                         case CodeAnnotationNullableValue.NOT_NULL:
                             consumer.AddHighlighting(
-                                new RedundantAnnotationHighlighting(
+                                new RedundantAnnotationSuggestion(
                                     attributesOwnerDeclaration,
                                     attributeMark.Attribute,
                                     "Annotation is redundant because the declared element can never be null by default."));
@@ -420,7 +420,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
 
                         case CodeAnnotationNullableValue.CAN_BE_NULL:
                             consumer.AddHighlighting(
-                                new NotAllowedAnnotationHighlighting(
+                                new NotAllowedAnnotationWarning(
                                     attributesOwnerDeclaration,
                                     attributeMark.Attribute,
                                     "Annotation is not valid because the declared element can never be null by default."));
@@ -441,7 +441,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                     if (attributeMark.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
                     {
                         consumer.AddHighlighting(
-                            new NotAllowedAnnotationHighlighting(
+                            new NotAllowedAnnotationWarning(
                                 attributesOwnerDeclaration,
                                 attributeMark.Attribute,
                                 "Annotation is not valid because the declared element can never be null by default."));
@@ -455,7 +455,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                     if (nonNullAnnotationAttributeType != null)
                     {
                         consumer.AddHighlighting(
-                            new MissingAnnotationHighlighting(
+                            new MissingAnnotationWarning(
                                 string.Format(
                                     "Declared element can never be null by default, but is not annotated with '{0}'.",
                                     NullnessProvider.NotNullAttributeShortName),
@@ -489,7 +489,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                             if (nonNullAnnotationAttributeType != null || canBeNullAnnotationAttributeType != null)
                             {
                                 consumer.AddHighlighting(
-                                    new MissingAnnotationHighlighting(
+                                    new MissingAnnotationWarning(
                                         string.Format(
                                             @"Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
                                             NullnessProvider.NotNullAttributeShortName,
@@ -507,7 +507,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                         if (attributeMark != null && attributeMark.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
                         {
                             consumer.AddHighlighting(
-                                new RedundantAnnotationHighlighting(
+                                new RedundantAnnotationSuggestion(
                                     attributesOwnerDeclaration,
                                     attributeMark.Attribute,
                                     "Annotation is redundant because the declared element can be null by default."));
@@ -526,7 +526,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 if (attributeMark != null)
                 {
                     consumer.AddHighlighting(
-                        new NotAllowedAnnotationHighlighting(
+                        new NotAllowedAnnotationWarning(
                             attributesOwnerDeclaration,
                             attributeMark.Attribute,
                             "Annotation is not allowed because the declared element overrides or implements the inherited member."));

@@ -17,7 +17,7 @@ namespace ReCommendedExtension.Analyzers.Await
 {
     [ElementProblemAnalyzer(
         typeof(IAwaitExpression),
-        HighlightingTypes = new[] { typeof(RedundantAwaitHighlighting), typeof(RedundantCapturedContextHighlighting) })]
+        HighlightingTypes = new[] { typeof(RedundantAwaitSuggestion), typeof(RedundantCapturedContextSuggestion) })]
     public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
     {
         [NotNull]
@@ -223,7 +223,7 @@ namespace ReCommendedExtension.Analyzers.Await
 
             var highlightConfigureAwait = configureAwaitNode != null && configureAwaitInvocationExpression.ArgumentList != null;
 
-            var highlighting = new RedundantAwaitHighlighting(
+            var highlighting = new RedundantAwaitSuggestion(
                 $"Redundant 'await' (remove 'async'/'await'{(highlightConfigureAwait ? "/'" + nameof(Task.ConfigureAwait) + "(...)'" : "")})",
                 removeAsync,
                 awaitExpression,
@@ -378,7 +378,7 @@ namespace ReCommendedExtension.Analyzers.Await
             if (hasRedundantCapturedContext && awaitExpression.Task.IsConfigureAwaitAvailable())
             {
                 consumer.AddHighlighting(
-                    new RedundantCapturedContextHighlighting(
+                    new RedundantCapturedContextSuggestion(
                         $"Redundant captured context (add '.{nameof(Task.ConfigureAwait)}(false)')",
                         awaitExpression));
             }

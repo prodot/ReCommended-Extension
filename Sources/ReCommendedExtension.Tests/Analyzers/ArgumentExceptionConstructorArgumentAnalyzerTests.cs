@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\ArgumentExceptionConstructorArgument";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is ArgumentExceptionConstructorArgumentHighlighting;
+            => highlighting is ArgumentExceptionConstructorArgumentWarning;
 
         [Test]
         public void TestArgumentExceptionConstructorArgument() => DoNamedTest2();

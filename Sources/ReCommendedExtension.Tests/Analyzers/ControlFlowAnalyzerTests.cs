@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\ControlFlow";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAssertionHighlighting;
+            => highlighting is RedundantAssertionSuggestion;
 
         [Test]
         public void TestControlFlow() => DoNamedTest2();

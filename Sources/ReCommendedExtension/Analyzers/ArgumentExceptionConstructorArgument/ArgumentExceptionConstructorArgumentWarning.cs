@@ -8,7 +8,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        ArgumentExceptionConstructorArgumentHighlighting.SeverityId,
+        ArgumentExceptionConstructorArgumentWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Parameter name used for the exception message" + ZoneMarker.Suffix,
@@ -18,14 +18,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class ArgumentExceptionConstructorArgumentHighlighting : Highlighting
+    public sealed class ArgumentExceptionConstructorArgumentWarning : Highlighting
     {
         internal const string SeverityId = "ArgumentExceptionConstructorArgument";
 
         [NotNull]
         readonly ICSharpArgument argument;
 
-        public ArgumentExceptionConstructorArgumentHighlighting([NotNull] string message, [NotNull] ICSharpArgument argument) : base(message)
+        public ArgumentExceptionConstructorArgumentWarning([NotNull] string message, [NotNull] ICSharpArgument argument) : base(message)
             => this.argument = argument;
 
         public override DocumentRange CalculateRange() => argument.GetDocumentRange();

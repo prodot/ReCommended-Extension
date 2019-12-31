@@ -7,20 +7,20 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        RegionWithSingleElementHighlighting.SeverityId,
+        EmptyRegionSuggestion.SeverityId,
         null,
         HighlightingGroupIds.DeclarationRedundancy,
-        "Region contains a single element" + ZoneMarker.Suffix,
+        "Region is empty" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
 
 namespace ReCommendedExtension.Analyzers.Region
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class RegionWithSingleElementHighlighting : RegionHighlighting
+    public sealed class EmptyRegionSuggestion : RegionHighlighting
     {
-        internal const string SeverityId = "RegionWithSingleElement";
+        internal const string SeverityId = "EmptyRegion";
 
-        internal RegionWithSingleElementHighlighting([NotNull] string message, [NotNull] IStartRegion startRegion) : base(message, startRegion) { }
+        internal EmptyRegionSuggestion([NotNull] string message, [NotNull] IStartRegion startRegion) : base(message, startRegion) { }
     }
 }

@@ -19,9 +19,9 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
     public sealed class ReplaceWithNewArrayWithLengthFix : QuickFixBase
     {
         [NotNull]
-        readonly ArrayWithDefaultValuesInitializationHighlighting highlighting;
+        readonly ArrayWithDefaultValuesInitializationSuggestion highlighting;
 
-        public ReplaceWithNewArrayWithLengthFix([NotNull] ArrayWithDefaultValuesInitializationHighlighting highlighting)
+        public ReplaceWithNewArrayWithLengthFix([NotNull] ArrayWithDefaultValuesInitializationSuggestion highlighting)
             => this.highlighting = highlighting;
 
         public override bool IsAvailable(IUserDataHolder cache) => true;

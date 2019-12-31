@@ -14,11 +14,11 @@ namespace ReCommendedExtension.Analyzers.Annotation
         [NotNull]
         readonly AttributeHighlighting highlighting;
 
-        public RemoveAttributeFix([NotNull] NotAllowedAnnotationHighlighting highlighting) => this.highlighting = highlighting;
+        public RemoveAttributeFix([NotNull] NotAllowedAnnotationWarning highlighting) => this.highlighting = highlighting;
 
-        public RemoveAttributeFix([NotNull] ConflictingAnnotationHighlighting highlighting) => this.highlighting = highlighting;
+        public RemoveAttributeFix([NotNull] ConflictingAnnotationWarning highlighting) => this.highlighting = highlighting;
 
-        public RemoveAttributeFix([NotNull] RedundantAnnotationHighlighting highlighting) => this.highlighting = highlighting;
+        public RemoveAttributeFix([NotNull] RedundantAnnotationSuggestion highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

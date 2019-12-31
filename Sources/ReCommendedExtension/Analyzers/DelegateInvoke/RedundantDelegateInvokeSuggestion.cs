@@ -12,7 +12,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        RedundantDelegateInvokeHighlighting.SeverityId,
+        RedundantDelegateInvokeSuggestion.SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant '" + nameof(Action.Invoke) + "' expression" + ZoneMarker.Suffix,
@@ -26,11 +26,11 @@ namespace ReCommendedExtension.Analyzers.DelegateInvoke
         CSharpLanguage.Name,
         AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
         OverlapResolve = OverlapResolveKind.DEADCODE)]
-    public sealed class RedundantDelegateInvokeHighlighting : Highlighting
+    public sealed class RedundantDelegateInvokeSuggestion : Highlighting
     {
         internal const string SeverityId = "RedundantDelegateInvoke";
 
-        internal RedundantDelegateInvokeHighlighting([NotNull] string message, [NotNull] IReferenceExpression referenceExpression) : base(message)
+        internal RedundantDelegateInvokeSuggestion([NotNull] string message, [NotNull] IReferenceExpression referenceExpression) : base(message)
             => ReferenceExpression = referenceExpression;
 
         [NotNull]

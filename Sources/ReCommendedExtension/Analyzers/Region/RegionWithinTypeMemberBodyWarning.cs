@@ -7,7 +7,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        RegionWithinTypeMemberBodyHighlighting.SeverityId,
+        RegionWithinTypeMemberBodyWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeStyleIssues,
         "Region is contained within a type member body" + ZoneMarker.Suffix,
@@ -17,10 +17,10 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.Region
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class RegionWithinTypeMemberBodyHighlighting : RegionHighlighting
+    public sealed class RegionWithinTypeMemberBodyWarning : RegionHighlighting
     {
         internal const string SeverityId = "RegionWithinTypeMemberBody";
 
-        internal RegionWithinTypeMemberBodyHighlighting([NotNull] string message, [NotNull] IStartRegion startRegion) : base(message, startRegion) { }
+        internal RegionWithinTypeMemberBodyWarning([NotNull] string message, [NotNull] IStartRegion startRegion) : base(message, startRegion) { }
     }
 }

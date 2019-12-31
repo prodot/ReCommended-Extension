@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        MissingAnnotationHighlighting.SeverityId,
+        MissingAnnotationWarning.SeverityId,
         null,
         HighlightingGroupIds.ConstraintViolation,
         "Missing nullability annotation" + ZoneMarker.Suffix,
@@ -19,14 +19,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.Annotation
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class MissingAnnotationHighlighting : Highlighting
+    public sealed class MissingAnnotationWarning : Highlighting
     {
         internal const string SeverityId = "MissingAnnotation";
 
         [NotNull]
         readonly IAttributesOwnerDeclaration declaration;
 
-        internal MissingAnnotationHighlighting([NotNull] string message, [NotNull] IAttributesOwnerDeclaration declaration) : base(message)
+        internal MissingAnnotationWarning([NotNull] string message, [NotNull] IAttributesOwnerDeclaration declaration) : base(message)
             => this.declaration = declaration;
 
         public override DocumentRange CalculateRange() => declaration.GetNameDocumentRange();

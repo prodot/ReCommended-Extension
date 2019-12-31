@@ -6,9 +6,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
 {
-    [ElementProblemAnalyzer(
-        typeof(IObjectCreationExpression),
-        HighlightingTypes = new[] { typeof(ArgumentExceptionConstructorArgumentHighlighting) })]
+    [ElementProblemAnalyzer(typeof(IObjectCreationExpression), HighlightingTypes = new[] { typeof(ArgumentExceptionConstructorArgumentWarning) })]
     public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProblemAnalyzer<IObjectCreationExpression>
     {
         protected override void Run(IObjectCreationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
@@ -41,7 +39,7 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
                                         parameters.Any(p => p.AssertNotNull().ShortName == literalText.Substring(1, literalText.Length - 2)))
                                     {
                                         consumer.AddHighlighting(
-                                            new ArgumentExceptionConstructorArgumentHighlighting(
+                                            new ArgumentExceptionConstructorArgumentWarning(
                                                 "Parameter name used for the exception message.",
                                                 messageArgument));
                                     }
@@ -55,7 +53,7 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
                                         parameters.Contains(parameter))
                                     {
                                         consumer.AddHighlighting(
-                                            new ArgumentExceptionConstructorArgumentHighlighting(
+                                            new ArgumentExceptionConstructorArgumentWarning(
                                                 "Parameter name used for the exception message.",
                                                 messageArgument));
                                     }

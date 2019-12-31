@@ -10,7 +10,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        EmptyArrayInitializationHighlighting.SeverityId,
+        EmptyArrayInitializationWarning.SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Use 'Array.Empty<T>()' for empty arrays" + ZoneMarker.Suffix,
@@ -20,11 +20,11 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class EmptyArrayInitializationHighlighting : Highlighting
+    public sealed class EmptyArrayInitializationWarning : Highlighting
     {
         internal const string SeverityId = "EmptyArrayInitialization";
 
-        internal EmptyArrayInitializationHighlighting(
+        internal EmptyArrayInitializationWarning(
             [NotNull] string message,
             [NotNull] ICSharpTreeNode treeNode,
             [NotNull] IType arrayElementType) : base(message)

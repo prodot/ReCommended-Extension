@@ -10,7 +10,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        InternalConstructorVisibilityHighlighting.SeverityId,
+        InternalConstructorVisibilitySuggestion.SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Make internal constructor in abstract class protected or private protected" + ZoneMarker.Suffix,
@@ -20,14 +20,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.InternalConstructor
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class InternalConstructorVisibilityHighlighting : Highlighting
+    public sealed class InternalConstructorVisibilitySuggestion : Highlighting
     {
         internal const string SeverityId = "InternalConstructorVisibility";
 
         [NotNull]
         readonly ITokenNode modifierTokenNode;
 
-        internal InternalConstructorVisibilityHighlighting(
+        internal InternalConstructorVisibilitySuggestion(
             [NotNull] string message,
             [NotNull] ITokenNode modifierTokenNode,
             [NotNull] IConstructorDeclaration constructorDeclaration,

@@ -8,7 +8,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        ConditionalAnnotationHighlighting.SeverityId,
+        ConditionalAnnotationHint.SeverityId,
         null,
         HighlightingGroupIds.CodeInfo,
         "Attribute will be ignored if the specific condition is not defined" + ZoneMarker.Suffix,
@@ -22,11 +22,11 @@ namespace ReCommendedExtension.Analyzers.Annotation
         CSharpLanguage.Name,
         AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
         OverlapResolve = OverlapResolveKind.DEADCODE)]
-    public sealed class ConditionalAnnotationHighlighting : AttributeHighlighting
+    public sealed class ConditionalAnnotationHint : AttributeHighlighting
     {
         internal const string SeverityId = "ConditionalAnnotation";
 
-        internal ConditionalAnnotationHighlighting(
+        internal ConditionalAnnotationHint(
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
             [NotNull] IAttribute attribute,
             [NotNull] string message) : base(attributesOwnerDeclaration, attribute, true, message) { }

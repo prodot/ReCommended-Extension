@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\ThrowExceptionInUnexpectedLocation";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is ThrowExceptionInUnexpectedLocationHighlighting;
+            => highlighting is ThrowExceptionInUnexpectedLocationWarning;
 
         [Test]
         [TestNetCore30]

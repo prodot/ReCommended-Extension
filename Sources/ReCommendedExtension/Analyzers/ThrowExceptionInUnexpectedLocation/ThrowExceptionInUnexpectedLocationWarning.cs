@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        ThrowExceptionInUnexpectedLocationHighlighting.SeverityId,
+        ThrowExceptionInUnexpectedLocationWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Exception should never be thrown in unexpected locations" + ZoneMarker.Suffix,
@@ -19,14 +19,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class ThrowExceptionInUnexpectedLocationHighlighting : Highlighting
+    public sealed class ThrowExceptionInUnexpectedLocationWarning : Highlighting
     {
         internal const string SeverityId = "ThrowExceptionInUnexpectedLocation";
 
         [NotNull]
         readonly ICSharpTreeNode thrownStatementOrExpression;
 
-        internal ThrowExceptionInUnexpectedLocationHighlighting([NotNull] string message, [NotNull] ICSharpTreeNode thrownStatementOrExpression) :
+        internal ThrowExceptionInUnexpectedLocationWarning([NotNull] string message, [NotNull] ICSharpTreeNode thrownStatementOrExpression) :
             base(message)
             => this.thrownStatementOrExpression = thrownStatementOrExpression;
 

@@ -18,9 +18,9 @@ namespace ReCommendedExtension.Analyzers.Await
     public sealed class RemoveAsyncAwaitFix : QuickFixBase
     {
         [NotNull]
-        readonly RedundantAwaitHighlighting highlighting;
+        readonly RedundantAwaitSuggestion highlighting;
 
-        public RemoveAsyncAwaitFix([NotNull] RedundantAwaitHighlighting highlighting) => this.highlighting = highlighting;
+        public RemoveAsyncAwaitFix([NotNull] RedundantAwaitSuggestion highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(IUserDataHolder cache) => true;
 

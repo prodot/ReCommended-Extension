@@ -16,7 +16,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\Await";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAwaitHighlighting;
+            => highlighting is RedundantAwaitSuggestion;
 
         [Test]
         public void TestRedundantAwait_TestProject() => DoNamedTest2();

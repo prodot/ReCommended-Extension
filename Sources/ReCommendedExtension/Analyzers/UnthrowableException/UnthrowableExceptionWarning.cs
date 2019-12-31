@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        UnthrowableExceptionHighlighting.SeverityId,
+        UnthrowableExceptionWarning.SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Exception should never be thrown" + ZoneMarker.Suffix,
@@ -19,14 +19,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.UnthrowableException
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class UnthrowableExceptionHighlighting : Highlighting
+    public sealed class UnthrowableExceptionWarning : Highlighting
     {
         internal const string SeverityId = "UnthrowableException";
 
         [NotNull]
         readonly ICSharpExpression thrownStatementExpression;
 
-        internal UnthrowableExceptionHighlighting([NotNull] string message, [NotNull] ICSharpExpression thrownStatementExpression) : base(message)
+        internal UnthrowableExceptionWarning([NotNull] string message, [NotNull] ICSharpExpression thrownStatementExpression) : base(message)
             => this.thrownStatementExpression = thrownStatementExpression;
 
         public override DocumentRange CalculateRange() => thrownStatementExpression.GetDocumentRange();

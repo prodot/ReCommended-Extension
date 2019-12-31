@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\ArrayWithDefaultValuesInitialization";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is ArrayWithDefaultValuesInitializationHighlighting;
+            => highlighting is ArrayWithDefaultValuesInitializationSuggestion;
 
         [Test]
         public void TestArrayWithDefaultValuesInitialization() => DoNamedTest2();

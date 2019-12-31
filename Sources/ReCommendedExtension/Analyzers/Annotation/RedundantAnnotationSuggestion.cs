@@ -7,21 +7,21 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        MissingSuppressionJustificationHighlighting.SeverityId,
+        RedundantAnnotationSuggestion.SeverityId,
         null,
-        HighlightingGroupIds.BestPractice,
-        "Missing suppression justification" + ZoneMarker.Suffix,
+        HighlightingGroupIds.DeclarationRedundancy,
+        "Redundant nullability annotation" + ZoneMarker.Suffix,
         "",
-        Severity.WARNING)]
+        Severity.SUGGESTION)]
 
 namespace ReCommendedExtension.Analyzers.Annotation
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class MissingSuppressionJustificationHighlighting : AttributeHighlighting
+    public sealed class RedundantAnnotationSuggestion : AttributeHighlighting
     {
-        internal const string SeverityId = "MissingSuppressionJustification";
+        internal const string SeverityId = "RedundantAnnotation";
 
-        internal MissingSuppressionJustificationHighlighting(
+        internal RedundantAnnotationSuggestion(
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
             [NotNull] IAttribute attribute,
             [NotNull] string message) : base(attributesOwnerDeclaration, attribute, false, message) { }

@@ -10,7 +10,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        RedundantAwaitHighlighting.SeverityId,
+        RedundantAwaitSuggestion.SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant 'await'" + ZoneMarker.Suffix,
@@ -24,11 +24,11 @@ namespace ReCommendedExtension.Analyzers.Await
         CSharpLanguage.Name,
         AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
         OverlapResolve = OverlapResolveKind.DEADCODE)]
-    public sealed class RedundantAwaitHighlighting : Highlighting
+    public sealed class RedundantAwaitSuggestion : Highlighting
     {
         internal const string SeverityId = "RedundantAwait";
 
-        internal RedundantAwaitHighlighting(
+        internal RedundantAwaitSuggestion(
             [NotNull] string message,
             [NotNull] Action removeAsync,
             [NotNull] IAwaitExpression awaitExpression,

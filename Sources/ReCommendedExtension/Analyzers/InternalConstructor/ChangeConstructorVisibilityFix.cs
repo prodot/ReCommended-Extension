@@ -14,9 +14,9 @@ namespace ReCommendedExtension.Analyzers.InternalConstructor
     public sealed class ChangeConstructorVisibilityFix : QuickFixBase
     {
         [NotNull]
-        readonly InternalConstructorVisibilityHighlighting highlighting;
+        readonly InternalConstructorVisibilitySuggestion highlighting;
 
-        public ChangeConstructorVisibilityFix([NotNull] InternalConstructorVisibilityHighlighting highlighting) => this.highlighting = highlighting;
+        public ChangeConstructorVisibilityFix([NotNull] InternalConstructorVisibilitySuggestion highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(IUserDataHolder cache) => true;
 

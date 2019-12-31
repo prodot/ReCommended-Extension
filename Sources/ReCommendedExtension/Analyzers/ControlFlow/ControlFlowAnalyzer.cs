@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 {
     [ElementProblemAnalyzer(
         typeof(ICSharpTreeNode),
-        HighlightingTypes = new[] { typeof(RedundantAssertionStatementHighlighting), typeof(RedundantInlineAssertionHighlighting) })]
+        HighlightingTypes = new[] { typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion) })]
     public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         [Pure]
@@ -75,7 +75,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
             assertions.ExceptWith(
                 from highlightingInfo in consumer.Highlightings
                 where highlightingInfo != null
-                let redundantAssertionHighlighting = highlightingInfo.Highlighting as RedundantAssertionHighlighting
+                let redundantAssertionHighlighting = highlightingInfo.Highlighting as RedundantAssertionSuggestion
                 where redundantAssertionHighlighting != null
                 select redundantAssertionHighlighting.Assertion);
 
@@ -127,7 +127,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 if (IsLiteral(assertionStatement.Expression, isKnownToBeTrue ? CSharpTokenType.TRUE_KEYWORD : CSharpTokenType.FALSE_KEYWORD))
                 {
                     context.AddHighlighting(
-                        new RedundantAssertionStatementHighlighting(
+                        new RedundantAssertionStatementSuggestion(
                             $"Assertion is redundant because the expression is always {(isKnownToBeTrue ? "true" : "false")}.",
                             assertionStatement));
                 }
@@ -145,7 +145,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 if (isKnownToBeTrue)
                                 {
                                     context.AddHighlighting(
-                                        new RedundantAssertionStatementHighlighting(
+                                        new RedundantAssertionStatementSuggestion(
                                             "Assertion is redundant because the expression is always true.",
                                             assertionStatement));
                                 }
@@ -155,7 +155,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 if (!isKnownToBeTrue)
                                 {
                                     context.AddHighlighting(
-                                        new RedundantAssertionStatementHighlighting(
+                                        new RedundantAssertionStatementSuggestion(
                                             "Assertion is redundant because the expression is always false.",
                                             assertionStatement));
                                 }
@@ -173,7 +173,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 if (!isKnownToBeTrue)
                                 {
                                     context.AddHighlighting(
-                                        new RedundantAssertionStatementHighlighting(
+                                        new RedundantAssertionStatementSuggestion(
                                             "Assertion is redundant because the expression is always false.",
                                             assertionStatement));
                                 }
@@ -183,7 +183,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 if (isKnownToBeTrue)
                                 {
                                     context.AddHighlighting(
-                                        new RedundantAssertionStatementHighlighting(
+                                        new RedundantAssertionStatementSuggestion(
                                             "Assertion is redundant because the expression is always true.",
                                             assertionStatement));
                                 }
@@ -208,7 +208,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 if (isKnownToBeNull && IsLiteral(assertionStatement.Expression, CSharpTokenType.NULL_KEYWORD))
                 {
                     context.AddHighlighting(
-                        new RedundantAssertionStatementHighlighting(
+                        new RedundantAssertionStatementSuggestion(
                             "Assertion is redundant because the expression is always null.",
                             assertionStatement));
                 }
@@ -220,7 +220,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         if (!isKnownToBeNull)
                         {
                             context.AddHighlighting(
-                                new RedundantAssertionStatementHighlighting(
+                                new RedundantAssertionStatementSuggestion(
                                     "Assertion is redundant because the expression is never null.",
                                     assertionStatement));
                         }
@@ -230,7 +230,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         if (isKnownToBeNull)
                         {
                             context.AddHighlighting(
-                                new RedundantAssertionStatementHighlighting(
+                                new RedundantAssertionStatementSuggestion(
                                     "Assertion is redundant because the expression is always null.",
                                     assertionStatement));
                         }
@@ -244,7 +244,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 CSharpControlFlowNullReferenceState.NOT_NULL)
             {
                 context.AddHighlighting(
-                    new RedundantInlineAssertionHighlighting("Assertion is redundant because the expression is never null.", inlineAssertion));
+                    new RedundantInlineAssertionSuggestion("Assertion is redundant because the expression is never null.", inlineAssertion));
             }
         }
 

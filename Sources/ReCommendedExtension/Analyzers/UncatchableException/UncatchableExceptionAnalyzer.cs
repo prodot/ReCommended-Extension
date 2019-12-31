@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.UncatchableException
 {
-    [ElementProblemAnalyzer(typeof(ISpecificCatchClause), HighlightingTypes = new[] { typeof(UncatchableExceptionHighlighting) })]
+    [ElementProblemAnalyzer(typeof(ISpecificCatchClause), HighlightingTypes = new[] { typeof(UncatchableExceptionWarning) })]
     public sealed class UncatchableExceptionAnalyzer : ElementProblemAnalyzer<ISpecificCatchClause>
     {
         [NotNull]
@@ -84,7 +84,7 @@ namespace ReCommendedExtension.Analyzers.UncatchableException
             {
                 Debug.Assert(reason != null);
 
-                consumer.AddHighlighting(new UncatchableExceptionHighlighting(reason, element));
+                consumer.AddHighlighting(new UncatchableExceptionWarning(reason, element));
             }
         }
     }

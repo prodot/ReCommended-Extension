@@ -12,7 +12,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        CatchClauseWithoutVariableHighlighting.SeverityId,
+        CatchClauseWithoutVariableSuggestion.SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant declaration without exception variable" + ZoneMarker.Suffix,
@@ -26,11 +26,11 @@ namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable
         CSharpLanguage.Name,
         AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
         OverlapResolve = OverlapResolveKind.DEADCODE)]
-    public sealed class CatchClauseWithoutVariableHighlighting : Highlighting
+    public sealed class CatchClauseWithoutVariableSuggestion : Highlighting
     {
         internal const string SeverityId = "CatchClauseWithoutVariable";
 
-        internal CatchClauseWithoutVariableHighlighting([NotNull] string message, [NotNull] ISpecificCatchClause catchClause) : base(message)
+        internal CatchClauseWithoutVariableSuggestion([NotNull] string message, [NotNull] ISpecificCatchClause catchClause) : base(message)
             => CatchClause = catchClause;
 
         [NotNull]

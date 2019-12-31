@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        YieldReturnWithinLockHighlighting.SeverityId,
+        YieldReturnWithinLockWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "'yield return' used inside the 'lock' block" + ZoneMarker.Suffix,
@@ -19,14 +19,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.YieldReturnWithinLock
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class YieldReturnWithinLockHighlighting : Highlighting
+    public sealed class YieldReturnWithinLockWarning : Highlighting
     {
         internal const string SeverityId = "YieldReturnWithinLock";
 
         [NotNull]
         readonly IYieldStatement yieldReturnStatement;
 
-        internal YieldReturnWithinLockHighlighting([NotNull] string message, [NotNull] IYieldStatement yieldReturnStatement) : base(message)
+        internal YieldReturnWithinLockWarning([NotNull] string message, [NotNull] IYieldStatement yieldReturnStatement) : base(message)
             => this.yieldReturnStatement = yieldReturnStatement;
 
         public override DocumentRange CalculateRange()

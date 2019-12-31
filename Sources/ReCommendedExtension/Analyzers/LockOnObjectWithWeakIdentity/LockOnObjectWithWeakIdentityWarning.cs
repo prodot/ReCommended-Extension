@@ -9,7 +9,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        LockOnObjectWithWeakIdentityHighlighting.SeverityId,
+        LockOnObjectWithWeakIdentityWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Lock on object with weak identity" + ZoneMarker.Suffix,
@@ -19,14 +19,14 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class LockOnObjectWithWeakIdentityHighlighting : Highlighting
+    public sealed class LockOnObjectWithWeakIdentityWarning : Highlighting
     {
         internal const string SeverityId = "LockOnObjectWithWeakIdentity";
 
         [NotNull]
         readonly ICSharpExpression monitor;
 
-        internal LockOnObjectWithWeakIdentityHighlighting([NotNull] string message, [NotNull] ICSharpExpression monitor) : base(message)
+        internal LockOnObjectWithWeakIdentityWarning([NotNull] string message, [NotNull] ICSharpExpression monitor) : base(message)
             => this.monitor = monitor;
 
         public override DocumentRange CalculateRange() => monitor.GetDocumentRange();

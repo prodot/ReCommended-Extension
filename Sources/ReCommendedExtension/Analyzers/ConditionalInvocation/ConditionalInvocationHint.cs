@@ -13,7 +13,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        ConditionalInvocationHighlighting.SeverityId,
+        ConditionalInvocationHint.SeverityId,
         null,
         HighlightingGroupIds.CodeInfo,
         "Method invocation will be skipped if the specific condition is not defined" + ZoneMarker.Suffix,
@@ -27,14 +27,14 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
         CSharpLanguage.Name,
         AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
         OverlapResolve = OverlapResolveKind.DEADCODE)]
-    public sealed class ConditionalInvocationHighlighting : Highlighting
+    public sealed class ConditionalInvocationHint : Highlighting
     {
         internal const string SeverityId = "ConditionalInvocation";
 
         [NotNull]
         readonly IInvocationExpression invocationExpression;
 
-        internal ConditionalInvocationHighlighting([NotNull] string message, [NotNull] IInvocationExpression invocationExpression) : base(message)
+        internal ConditionalInvocationHint([NotNull] string message, [NotNull] IInvocationExpression invocationExpression) : base(message)
             => this.invocationExpression = invocationExpression;
 
         public override DocumentRange CalculateRange()

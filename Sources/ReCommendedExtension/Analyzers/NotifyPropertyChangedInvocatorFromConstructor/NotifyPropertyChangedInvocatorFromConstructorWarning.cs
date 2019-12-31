@@ -8,7 +8,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        NotifyPropertyChangedInvocatorFromConstructorHighlighting.SeverityId,
+        NotifyPropertyChangedInvocatorFromConstructorWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant invocation of the property change notifiers from the constructor" + ZoneMarker.Suffix,
@@ -18,11 +18,11 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class NotifyPropertyChangedInvocatorFromConstructorHighlighting : Highlighting
+    public sealed class NotifyPropertyChangedInvocatorFromConstructorWarning : Highlighting
     {
         internal const string SeverityId = "NotifyPropertyChangedInvocatorFromConstructor";
 
-        internal NotifyPropertyChangedInvocatorFromConstructorHighlighting(
+        internal NotifyPropertyChangedInvocatorFromConstructorWarning(
             [NotNull] IInvocationExpression invocationExpression,
             [NotNull] string message) : base(message)
             => InvocationExpression = invocationExpression;

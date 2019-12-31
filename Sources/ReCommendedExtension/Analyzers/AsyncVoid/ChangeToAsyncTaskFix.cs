@@ -13,12 +13,12 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
     public sealed class ChangeToAsyncTaskFix : QuickFixBase
     {
         [NotNull]
-        readonly AvoidAsyncVoidHighlighting highlighting;
+        readonly AvoidAsyncVoidWarning highlighting;
 
         [NotNull]
         readonly IDeclaredType taskType;
 
-        public ChangeToAsyncTaskFix([NotNull] AvoidAsyncVoidHighlighting highlighting)
+        public ChangeToAsyncTaskFix([NotNull] AvoidAsyncVoidWarning highlighting)
         {
             this.highlighting = highlighting;
 

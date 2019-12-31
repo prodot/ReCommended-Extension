@@ -14,9 +14,9 @@ namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable
     public sealed class RemoveExceptionTypeDeclarationFromCatchClauseFix : QuickFixBase
     {
         [NotNull]
-        readonly CatchClauseWithoutVariableHighlighting highlighting;
+        readonly CatchClauseWithoutVariableSuggestion highlighting;
 
-        public RemoveExceptionTypeDeclarationFromCatchClauseFix([NotNull] CatchClauseWithoutVariableHighlighting highlighting)
+        public RemoveExceptionTypeDeclarationFromCatchClauseFix([NotNull] CatchClauseWithoutVariableSuggestion highlighting)
             => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;

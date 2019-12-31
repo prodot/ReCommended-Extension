@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.ConditionalInvocation
 {
-    [ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = new[] { typeof(ConditionalInvocationHighlighting) })]
+    [ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = new[] { typeof(ConditionalInvocationHint) })]
     public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     {
         [NotNull]
@@ -90,7 +90,7 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
             if (conditions.Count > 0)
             {
                 consumer.AddHighlighting(
-                    new ConditionalInvocationHighlighting(
+                    new ConditionalInvocationHint(
                         conditions.Count == 1
                             ? string.Format("Method invocation will be skipped if the '{0}' condition is not defined.", conditions[0])
                             : string.Format(

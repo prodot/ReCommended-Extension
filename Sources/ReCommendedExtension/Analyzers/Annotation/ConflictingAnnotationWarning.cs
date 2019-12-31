@@ -7,7 +7,7 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 [assembly:
     RegisterConfigurableSeverity(
-        ConflictingAnnotationHighlighting.SeverityId,
+        ConflictingAnnotationWarning.SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Annotation conflicts with another annotation" + ZoneMarker.Suffix,
@@ -17,11 +17,11 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 namespace ReCommendedExtension.Analyzers.Annotation
 {
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class ConflictingAnnotationHighlighting : AttributeHighlighting
+    public sealed class ConflictingAnnotationWarning : AttributeHighlighting
     {
         internal const string SeverityId = "ConflictingAnnotation";
 
-        internal ConflictingAnnotationHighlighting(
+        internal ConflictingAnnotationWarning(
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
             [NotNull] IAttribute attribute,
             [NotNull] string message) : base(attributesOwnerDeclaration, attribute, false, message) { }

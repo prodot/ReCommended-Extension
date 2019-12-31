@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.LocalSuppression
 {
-    [ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionHighlighting) })]
+    [ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionWarning) })]
     public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCommentNode>
     {
         static int GetLeadingWhitespaceCharacterCount([NotNull] string commentText)
@@ -41,15 +41,14 @@ namespace ReCommendedExtension.Analyzers.LocalSuppression
 
             if (commentText.StartsWith("ReSharper disable once", StringComparison.Ordinal))
             {
-                consumer.AddHighlighting(
-                    new LocalSuppressionHighlighting("Avoid local suppression.", element, leadingWhitespaceCharacterCount, true));
+                consumer.AddHighlighting(new LocalSuppressionWarning("Avoid local suppression.", element, leadingWhitespaceCharacterCount, true));
             }
             else
             {
                 if (commentText.StartsWith("ReSharper disable", StringComparison.Ordinal))
                 {
                     consumer.AddHighlighting(
-                        new LocalSuppressionHighlighting("Avoid local suppression.", element, leadingWhitespaceCharacterCount, false));
+                        new LocalSuppressionWarning("Avoid local suppression.", element, leadingWhitespaceCharacterCount, false));
                 }
             }
         }

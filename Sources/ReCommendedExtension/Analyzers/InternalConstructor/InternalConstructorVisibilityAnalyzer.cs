@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.InternalConstructor
 {
-    [ElementProblemAnalyzer(typeof(IConstructorDeclaration), HighlightingTypes = new[] { typeof(InternalConstructorVisibilityHighlighting) })]
+    [ElementProblemAnalyzer(typeof(IConstructorDeclaration), HighlightingTypes = new[] { typeof(InternalConstructorVisibilitySuggestion) })]
     public sealed class InternalConstructorVisibilityAnalyzer : ElementProblemAnalyzer<IConstructorDeclaration>
     {
         /// <remarks>
@@ -46,7 +46,7 @@ namespace ReCommendedExtension.Analyzers.InternalConstructor
                 if (IsPublicSurfaceArea(containingTypeDeclaration))
                 {
                     consumer.AddHighlighting(
-                        new InternalConstructorVisibilityHighlighting(
+                        new InternalConstructorVisibilitySuggestion(
                             "Make internal constructor in public abstract class 'private protected'.",
                             tokenNode,
                             element,
@@ -55,7 +55,7 @@ namespace ReCommendedExtension.Analyzers.InternalConstructor
                 else
                 {
                     consumer.AddHighlighting(
-                        new InternalConstructorVisibilityHighlighting(
+                        new InternalConstructorVisibilitySuggestion(
                             "Make internal constructor in non-public abstract class 'protected'.",
                             tokenNode,
                             element,
