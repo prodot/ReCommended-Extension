@@ -13,6 +13,9 @@ namespace Test
         [|CanBeNull|(2)]
         [|ItemCanBeNull|(3)]
         List<string> nullables;
+
+        [return: System.Diagnostics.CodeAnalysis.NotNull]
+        string SystemAnnotation() => null;
     }
 }
 ---------------------------------------------------------

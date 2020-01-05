@@ -53,50 +53,50 @@ namespace ReCommendedExtension.Tests.test.data
 
     class PostConditions
     {
-        void Method([MaybeNull] out string one, [|NotNull|(7)] out string? two)
+        void Method([MaybeNull] out string one, [NotNull] out string? two)
         {
             one = null;
-            two = |null|(8);
+            two = |null|(7);
         }
 
         [return: MaybeNull]
         string Method2() => null;
 
-        [return: |NotNull|(9)]
-        string? Method3() => |null|(10);
+        [return: NotNull]
+        string? Method3() => |null|(8);
 
         [MaybeNull]
         string One => null;
 
-        [|NotNull|(11)]
-        string? Two => |null|(12);
+        [NotNull]
+        string? Two => |null|(9);
 
         [MaybeNull]
         string this[int x] => null;
 
-        [|NotNull|(13)]
-        string? this[bool x] => |null|(14);
+        [NotNull]
+        string? this[bool x] => |null|(10);
 
         void Test()
         {
             Method(out var one, out var two);
-            Console.WriteLine(|one|(15).Length);
+            Console.WriteLine(|one|(11).Length);
             Console.WriteLine(two.Length);
 
-            Console.WriteLine(|Method2()|(16).Length);
+            Console.WriteLine(|Method2()|(12).Length);
             Console.WriteLine(Method3().Length);
 
-            Console.WriteLine(|One|(17).Length);
+            Console.WriteLine(|One|(13).Length);
             Console.WriteLine(Two.Length);
 
-            Console.WriteLine(|this[1]|(18).Length);
+            Console.WriteLine(|this[1]|(14).Length);
             Console.WriteLine(this[true].Length);
         }
 
         void Test(IEnumerable<string> sequence)
         {
             var item = sequence.FirstOrDefault();
-            Console.WriteLine(|item|(19).Length);
+            Console.WriteLine(|item|(15).Length);
         }
     }
 }
@@ -108,16 +108,12 @@ namespace ReCommendedExtension.Tests.test.data
 (4): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
 (5): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
 (6): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
-(7): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
+(7): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
 (8): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
-(9): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
+(9): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
 (10): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
-(11): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
-(12): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
-(13): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
-(14): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
+(11): ReSharper Warning: Possible 'System.NullReferenceException'
+(12): ReSharper Warning: Possible 'System.NullReferenceException'
+(13): ReSharper Warning: Possible 'System.NullReferenceException'
+(14): ReSharper Warning: Possible 'System.NullReferenceException'
 (15): ReSharper Warning: Possible 'System.NullReferenceException'
-(16): ReSharper Warning: Possible 'System.NullReferenceException'
-(17): ReSharper Warning: Possible 'System.NullReferenceException'
-(18): ReSharper Warning: Possible 'System.NullReferenceException'
-(19): ReSharper Warning: Possible 'System.NullReferenceException'

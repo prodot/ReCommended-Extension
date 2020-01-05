@@ -140,8 +140,6 @@ namespace ReCommendedExtension.Providers
                                             return CodeAnnotationNullableValue.NOT_NULL;
                                         }
                                         return CodeAnnotationNullableValue.CAN_BE_NULL;
-
-                                    default: return null;
                                 }
                             }
 

@@ -48,16 +48,6 @@ namespace ReCommendedExtension.Analyzers.Annotation
             public IAttribute Attribute { get; }
         }
 
-        [NotNull]
-        [ItemNotNull]
-        static readonly HashSet<string> nullnessAttributeNames = new HashSet<string>(StringComparer.Ordinal)
-        {
-            NullnessProvider.NotNullAttributeShortName,
-            NullnessProvider.CanBeNullAttributeShortName,
-            ContainerElementNullnessProvider.ItemNotNullAttributeShortName,
-            ContainerElementNullnessProvider.ItemCanBeNullAttributeShortName,
-        };
-
         [Pure]
         static bool CanContainNullnessAttributes([NotNull] IAttributesOwnerDeclaration declaration)
         {
@@ -143,106 +133,6 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 case IField field: return field.Type;
 
                 default: return null;
-            }
-        }
-
-        static void AnalyzeReSharperAnnotations([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration element)
-        {
-            Debug.Assert(element.IsNullableAnnotationsContextEnabled());
-
-            foreach (var attribute in element.AttributesEnumerable)
-            {
-                if (nullnessAttributeNames.Contains(attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName))
-                {
-                    consumer.AddHighlighting(
-                        new RedundantAnnotationSuggestion(
-                            element,
-                            attribute,
-                            "Annotation is redundant because the nullable annotation context is enabled."));
-                }
-            }
-        }
-
-        static void AnalyzeNotAllowedItemNotNull(
-            [NotNull] IHighlightingConsumer consumer,
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
-        {
-            Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
-
-            var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(
-                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                    ContainerElementNullnessProvider.ItemNotNullAttributeShortName);
-            if (itemNotNullAttribute != null)
-            {
-                if (attributesOwnerDeclaration.OverridesInheritedMember())
-                {
-                    consumer.AddHighlighting(
-                        new NotAllowedAnnotationWarning(
-                            attributesOwnerDeclaration,
-                            itemNotNullAttribute,
-                            "Annotation is not allowed because the declared element overrides or implements the inherited member."));
-                    return;
-                }
-
-                var type = TryGetTypeForIfCanBeAnnotatedWithItemNotNull(attributesOwnerDeclaration);
-                if (type != null)
-                {
-                    if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(attributesOwnerDeclaration))
-                    {
-                        var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, attributesOwnerDeclaration, false);
-                        if (elementType != null && elementType.Classify != TypeClassification.REFERENCE_TYPE)
-                        {
-                            consumer.AddHighlighting(
-                                new NotAllowedAnnotationWarning(
-                                    attributesOwnerDeclaration,
-                                    itemNotNullAttribute,
-                                    "Annotation is not allowed because the declared element type is not a reference type."));
-                        }
-                        return;
-                    }
-
-                    var resultType = type.GetTasklikeUnderlyingType(attributesOwnerDeclaration);
-                    if (resultType != null)
-                    {
-                        if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
-                        {
-                            consumer.AddHighlighting(
-                                new NotAllowedAnnotationWarning(
-                                    attributesOwnerDeclaration,
-                                    itemNotNullAttribute,
-                                    "Annotation is not allowed because the declared task result type is not a reference type."));
-                        }
-                        return;
-                    }
-
-                    if (type.IsLazy())
-                    {
-                        var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule());
-                        var valueType = type.GetGenericUnderlyingType(typeElement);
-                        if (valueType != null)
-                        {
-                            if (valueType.Classify != TypeClassification.REFERENCE_TYPE)
-                            {
-                                consumer.AddHighlighting(
-                                    new NotAllowedAnnotationWarning(
-                                        attributesOwnerDeclaration,
-                                        itemNotNullAttribute,
-                                        "Annotation is not allowed because the declared lazy value type is not a reference type."));
-                            }
-                        }
-                        return;
-                    }
-
-                    consumer.AddHighlighting(
-                        new NotAllowedAnnotationWarning(
-                            attributesOwnerDeclaration,
-                            itemNotNullAttribute,
-                            string.Format(
-                                "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), " +
-                                "or a generic task-like type, or a {1}<T>.",
-                                nameof(IEnumerable<int>),
-                                nameof(Lazy<int>))));
-                }
             }
         }
 
@@ -364,6 +254,9 @@ namespace ReCommendedExtension.Analyzers.Annotation
         readonly NullnessProvider nullnessProvider;
 
         [NotNull]
+        readonly ContainerElementNullnessProvider containerElementNullnessProvider;
+
+        [NotNull]
         readonly CodeAnnotationsConfiguration codeAnnotationsConfiguration;
 
         public AnnotationAnalyzer(
@@ -371,8 +264,28 @@ namespace ReCommendedExtension.Analyzers.Annotation
             [NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration)
         {
             nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
+            containerElementNullnessProvider = codeAnnotationsCache.GetProvider<ContainerElementNullnessProvider>();
 
             this.codeAnnotationsConfiguration = codeAnnotationsConfiguration;
+        }
+
+        void AnalyzeReSharperAnnotations([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration element)
+        {
+            Debug.Assert(element.IsNullableAnnotationsContextEnabled());
+
+            foreach (var attribute in element.AttributesEnumerable)
+            {
+                var attributeInstance = attribute.GetAttributeInstance();
+                if (nullnessProvider.IsNullableAttribute(attributeInstance) ||
+                    containerElementNullnessProvider.IsContainerElementNullableAttribute(attributeInstance))
+                {
+                    consumer.AddHighlighting(
+                        new RedundantAnnotationSuggestion(
+                            element,
+                            attribute,
+                            "Annotation is redundant because the nullable annotation context is enabled."));
+                }
+            }
         }
 
         [Pure]
@@ -530,6 +443,90 @@ namespace ReCommendedExtension.Analyzers.Annotation
                             attributesOwnerDeclaration,
                             attributeMark.Attribute,
                             "Annotation is not allowed because the declared element overrides or implements the inherited member."));
+                }
+            }
+        }
+
+        void AnalyzeNotAllowedItemNotNull(
+            [NotNull] IHighlightingConsumer consumer,
+            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
+
+            var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(
+                attribute
+                    => containerElementNullnessProvider.GetContainerElementNullableAttributeMark(attribute.AssertNotNull().GetAttributeInstance()) ==
+                    CodeAnnotationNullableValue.NOT_NULL);
+            if (itemNotNullAttribute != null)
+            {
+                if (attributesOwnerDeclaration.OverridesInheritedMember())
+                {
+                    consumer.AddHighlighting(
+                        new NotAllowedAnnotationWarning(
+                            attributesOwnerDeclaration,
+                            itemNotNullAttribute,
+                            "Annotation is not allowed because the declared element overrides or implements the inherited member."));
+                    return;
+                }
+
+                var type = TryGetTypeForIfCanBeAnnotatedWithItemNotNull(attributesOwnerDeclaration);
+                if (type != null)
+                {
+                    if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(attributesOwnerDeclaration))
+                    {
+                        var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, attributesOwnerDeclaration, false);
+                        if (elementType != null && elementType.Classify != TypeClassification.REFERENCE_TYPE)
+                        {
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationWarning(
+                                    attributesOwnerDeclaration,
+                                    itemNotNullAttribute,
+                                    "Annotation is not allowed because the declared element type is not a reference type."));
+                        }
+                        return;
+                    }
+
+                    var resultType = type.GetTasklikeUnderlyingType(attributesOwnerDeclaration);
+                    if (resultType != null)
+                    {
+                        if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
+                        {
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationWarning(
+                                    attributesOwnerDeclaration,
+                                    itemNotNullAttribute,
+                                    "Annotation is not allowed because the declared task result type is not a reference type."));
+                        }
+                        return;
+                    }
+
+                    if (type.IsLazy())
+                    {
+                        var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule());
+                        var valueType = type.GetGenericUnderlyingType(typeElement);
+                        if (valueType != null)
+                        {
+                            if (valueType.Classify != TypeClassification.REFERENCE_TYPE)
+                            {
+                                consumer.AddHighlighting(
+                                    new NotAllowedAnnotationWarning(
+                                        attributesOwnerDeclaration,
+                                        itemNotNullAttribute,
+                                        "Annotation is not allowed because the declared lazy value type is not a reference type."));
+                            }
+                        }
+                        return;
+                    }
+
+                    consumer.AddHighlighting(
+                        new NotAllowedAnnotationWarning(
+                            attributesOwnerDeclaration,
+                            itemNotNullAttribute,
+                            string.Format(
+                                "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), " +
+                                "or a generic task-like type, or a {1}<T>.",
+                                nameof(IEnumerable<int>),
+                                nameof(Lazy<int>))));
                 }
             }
         }
