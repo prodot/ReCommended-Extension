@@ -1,0 +1,149 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class NonGenericClass
+    {
+        int[] field_int = |{ 0, 00, -0, 0x0, 0b0, default, default(int), new int() }|(0);
+        int[] field_int_ = { 0, 1, 2 };
+
+        int?[] field_int_nullable = |{ null, null as int?, default, default(int?), new int?() }|(1);
+        int?[] field_int_nullable_ = { null, 0 };
+
+        uint[] field_uint = |{ 0u, 00u, 0x0u, 0b0u, default, default(uint), new uint() }|(2);
+        uint[] field_uint2 = |{ 0, 00, 0x0, 0b0, default(int) }|(3);
+        uint[] field_uint_ = { 0, 1, 2 };
+
+        long[] field_long = |{ 0L, 00L, -0L, 0x0L, 0b0L, default, default(long), new long() }|(4);
+        long[] field_long2 = |{ 0, 00, -0, 0x0, 0b0, default(int), 0u }|(5);
+        long[] field_long_ = { 0, 1, 2 };
+
+        ulong[] field_ulong = |{ 0ul, 00ul, 0x0ul, 0b0ul, default, default(ulong), new ulong() }|(6);
+        ulong[] field_ulong2 = |{ 0, 00, -0, 0x0, 0b0, default(int), 0L, 0u }|(7);
+        ulong[] field_ulong_ = { 0, 1, 2 };
+
+        byte[] field_byte = |{ 0, 00, 0x0, 0b0, default, default(byte), new byte() }|(8);
+        byte[] field_byte_ = { 0, 1, 2 };
+
+        sbyte[] field_sbyte = |{ 0, 00, 0x0, 0b0, default, default(sbyte), new sbyte() }|(9);
+        sbyte[] field_sbyte_ = { 0, 1, 2 };
+
+        short[] field_short = |{ 0, 00, 0x0, 0b0, default, default(short), new short(), default(byte), default(sbyte) }|(10);
+        short[] field_short_ = { 0, 1, 2 };
+
+        ushort[] field_ushort = |{ 0, 00, 0x0, 0b0, default, default(ushort), new ushort(), default(byte) }|(11);
+        ushort[] field_ushort_ = { 0, 1, 2 };
+
+        decimal[] field_decimal = |{ 0m, 00m, -0m, default, default(decimal), new decimal() }|(12);
+        decimal[] field_decimal2 = |{ 0, 00, 0x0, 0b0, 0u, 0L, 0ul, default(int), default(uint), default(long), default(ulong) }|(13);
+        decimal[] field_decimal_ = { 0, 1, 2 };
+
+        float[] field_float = |{ 0f, 00f, -0f, default, default(float), new float() }|(14);
+        float[] field_float2 = |{ 0, 00, 0x0, 0b0, 0u, 0L, 0ul, default(int), default(uint), default(long), default(ulong) }|(15);
+        float[] field_float_ = { 0, 1, 2 };
+
+        double[] field_double = |{ 0d, 0.0, 00d, -0d, default, default(double), new double() }|(16);
+        double[] field_double2 = |{ 0, 00, 0x0, 0b0, 0u, 0L, 0ul, 0f, default(int), default(uint), default(long), default(ulong), default(float) }|(17);
+        double[] field_double_ = { 0, 1, 2 };
+
+        bool[] field_bool = |{ false, default, default(bool), new bool() }|(18);
+        bool[] field_bool_ = { false, true };
+
+        char[] field_char = |{ '\0', default, default(char), new char() }|(19);
+        char[] field_char_ = { '\0', 'a', 'b', 'c' };
+
+        string?[] field_string = |{ null, null as string, default, default(string) }|(20);
+        string?[] field_string_ = { null, "", "one", new string('a', 0) };
+
+        object?[] field_object = |{ null, null as object, default, default(object) }|(21);
+        object?[] field_object_ = { null, new object() };
+
+        int[] Property { get; } = |{ 0, default }|(22);
+
+        int[] Property2 { get; set; } = |{ 0, default }|(23);
+
+        void Method()
+        {
+            var variable = new[] |{ 0, default, default(int) }|(24);
+            var variable = new int[] |{ 0, default, default(int) }|(25);
+        }
+    }
+
+    public class GenericClass<T> where T : new()
+    {
+        T[] field = |{ default, default(T) }|(26);
+        T[] field_ = { default, new T() };
+
+        void Method(T arg)
+        {
+            var variable = new[] |{ default, default(T) }|(27);
+            var variable_ = new[] { default, arg };
+
+            var variable2 = new[] |{ null, default, default(List<T>) }|(28);
+        }
+    }
+
+    public class GenericClass_ValueType<T> where T : struct
+    {
+        T[] field_nonNullable = |{ default, default(T), new T() }|(29);
+
+        T?[] field_nullable = |{ null, null as T?, default, default(T?), new T?() }|(30);
+        T?[] field_nullable2_ = { null, default(T) };
+
+        void Method(T nonNullable, T? nullable)
+        {
+            var variable_nonNullable = new[] |{ default, default(T), new T() }|(31);
+            var variable_nonNullable_ = new[] { default, nonNullable };
+
+            var variable_nullable = new[] |{ null, null as T?, default, default(T?), new T?() }|(32);
+            var variable_nullable_ = new[] { null, nullable };
+        }
+    }
+
+    public class GenericClass_ReferenceType<T> where T : class
+    {
+        T?[] field = |{ null, null as T, default, default(T) }|(33);
+
+        void Method(T arg)
+        {
+            var variable = new[] |{ null, null as T, default, default(T) }|(34);
+            var variable_ = new[] { default, arg };
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use 'new int[8]'.
+(1): ReSharper Suggestion: Use 'new int?[5]'.
+(2): ReSharper Suggestion: Use 'new uint[7]'.
+(3): ReSharper Suggestion: Use 'new uint[5]'.
+(4): ReSharper Suggestion: Use 'new long[8]'.
+(5): ReSharper Suggestion: Use 'new long[7]'.
+(6): ReSharper Suggestion: Use 'new ulong[7]'.
+(7): ReSharper Suggestion: Use 'new ulong[8]'.
+(8): ReSharper Suggestion: Use 'new byte[7]'.
+(9): ReSharper Suggestion: Use 'new sbyte[7]'.
+(10): ReSharper Suggestion: Use 'new short[9]'.
+(11): ReSharper Suggestion: Use 'new ushort[8]'.
+(12): ReSharper Suggestion: Use 'new decimal[6]'.
+(13): ReSharper Suggestion: Use 'new decimal[11]'.
+(14): ReSharper Suggestion: Use 'new float[6]'.
+(15): ReSharper Suggestion: Use 'new float[11]'.
+(16): ReSharper Suggestion: Use 'new double[7]'.
+(17): ReSharper Suggestion: Use 'new double[13]'.
+(18): ReSharper Suggestion: Use 'new bool[4]'.
+(19): ReSharper Suggestion: Use 'new char[4]'.
+(20): ReSharper Suggestion: Use 'new string?[4]'.
+(21): ReSharper Suggestion: Use 'new object?[4]'.
+(22): ReSharper Suggestion: Use 'new int[2]'.
+(23): ReSharper Suggestion: Use 'new int[2]'.
+(24): ReSharper Suggestion: Use 'new int[3]'.
+(25): ReSharper Suggestion: Use 'new int[3]'.
+(26): ReSharper Suggestion: Use 'new T[2]'.
+(27): ReSharper Suggestion: Use 'new T[2]'.
+(28): ReSharper Suggestion: Use 'new List<T>?[3]'.
+(29): ReSharper Suggestion: Use 'new T[3]'.
+(30): ReSharper Suggestion: Use 'new T?[5]'.
+(31): ReSharper Suggestion: Use 'new T[3]'.
+(32): ReSharper Suggestion: Use 'new T?[5]'.
+(33): ReSharper Suggestion: Use 'new T?[4]'.
+(34): ReSharper Suggestion: Use 'new T?[4]'.

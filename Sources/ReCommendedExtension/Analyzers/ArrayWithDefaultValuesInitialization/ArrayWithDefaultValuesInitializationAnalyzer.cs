@@ -12,11 +12,15 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
     public sealed class ArrayWithDefaultValuesInitializationAnalyzer : ElementProblemAnalyzer<IArrayInitializer>
     {
         [NotNull]
-        static string CreateHighlightingMessage([NotNull] IType arrayElementType, int elementCount)
+        static string CreateHighlightingMessage([NotNull] IType arrayElementType, bool isNullableReferenceType, int elementCount)
         {
             Debug.Assert(CSharpLanguage.Instance != null);
 
-            return string.Format("Use 'new {0}[{1}]'.", arrayElementType.GetPresentableName(CSharpLanguage.Instance), elementCount.ToString());
+            return string.Format(
+                "Use 'new {0}{1}[{2}]'.",
+                arrayElementType.GetPresentableName(CSharpLanguage.Instance),
+                isNullableReferenceType ? "?" : "",
+                elementCount.ToString());
         }
 
         protected override void Run(IArrayInitializer element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
@@ -47,10 +51,15 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
                 {
                     // { d, default, default(T) } // where d is the default value for the T
 
+                    var isNullableReferenceType = element.IsNullableAnnotationsContextEnabled() &&
+                        arrayElementType.Classify == TypeClassification.REFERENCE_TYPE &&
+                        arrayElementType.NullableAnnotation == NullableAnnotation.NotAnnotated;
+
                     consumer.AddHighlighting(
                         new ArrayWithDefaultValuesInitializationSuggestion(
-                            CreateHighlightingMessage(arrayElementType, element.InitializerElements.Count),
+                            CreateHighlightingMessage(arrayElementType, isNullableReferenceType, element.InitializerElements.Count),
                             element,
+                            isNullableReferenceType,
                             arrayElementType,
                             element.InitializerElements.Count));
                 }

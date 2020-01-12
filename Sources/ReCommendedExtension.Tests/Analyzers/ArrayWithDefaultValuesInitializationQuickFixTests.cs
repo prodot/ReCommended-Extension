@@ -1,4 +1,7 @@
-﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization;
 
@@ -23,5 +26,10 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [Test]
         public void TestArrayWithDefaultValuesInitialization5() => DoNamedTest2();
+
+        [Test]
+        [NullableContext(NullableContextKind.Enable)]
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+        public void TestArrayWithDefaultValuesInitialization6() => DoNamedTest2();
     }
 }

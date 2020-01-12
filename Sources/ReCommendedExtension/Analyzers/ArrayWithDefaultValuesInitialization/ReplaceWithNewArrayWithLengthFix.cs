@@ -33,8 +33,9 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
                 Debug.Assert(CSharpLanguage.Instance != null);
 
                 return string.Format(
-                    "Replace array initialization with 'new {0}[{1}]'",
+                    "Replace array initialization with 'new {0}{1}[{2}]'",
                     highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance),
+                    highlighting.IsNullableReferenceType ? "?" : "",
                     highlighting.ElementCount.ToString());
             }
         }
@@ -65,8 +66,9 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
                     node,
                     factory.CreateExpression(
                         string.Format(
-                            "new {0}[{1}]",
+                            "new {0}{1}[{2}]",
                             highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance),
+                            highlighting.IsNullableReferenceType ? "?" : "",
                             highlighting.ElementCount.ToString())));
             }
 

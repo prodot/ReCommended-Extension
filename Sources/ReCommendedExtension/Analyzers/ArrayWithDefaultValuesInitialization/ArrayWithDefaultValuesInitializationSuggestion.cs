@@ -27,16 +27,20 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
         internal ArrayWithDefaultValuesInitializationSuggestion(
             [NotNull] string message,
             [NotNull] IArrayInitializer arrayInitializer,
+            bool isNullableReferenceType,
             [NotNull] IType arrayElementType,
             int elementCount) : base(message)
         {
             ArrayInitializer = arrayInitializer;
+            IsNullableReferenceType = isNullableReferenceType;
             ArrayElementType = arrayElementType;
             ElementCount = elementCount;
         }
 
         [NotNull]
         internal IArrayInitializer ArrayInitializer { get; }
+
+        internal bool IsNullableReferenceType { get; }
 
         [NotNull]
         internal IType ArrayElementType { get; }
