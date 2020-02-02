@@ -21,7 +21,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         public void TestControlFlow() => DoNamedTest2();
 
         [NullableContext(NullableContextKind.Enable)]
-        [TestNetCore30("JetBrains.Annotations")]
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestControlFlow_NullableContext() => DoNamedTest2();
     }

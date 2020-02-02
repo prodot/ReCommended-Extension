@@ -16,7 +16,7 @@ namespace ReCommendedExtension.Tests.ContextActions
         public void TestExecute() => DoNamedTest2();
 
         [Test]
-        [TestNetCore30("JetBrains.Annotations")]
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
         public void TestExecuteAsyncEnumerable() => DoNamedTest2();
     }
 }

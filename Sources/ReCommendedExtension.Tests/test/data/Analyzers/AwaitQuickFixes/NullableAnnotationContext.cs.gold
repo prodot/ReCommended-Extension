@@ -1,0 +1,18 @@
+﻿using System;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
+{
+    public class AwaitForMethods
+    {
+      Task Method()
+      {
+        if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+        return{caret} Task.Delay(10);
+      }
+    }
+}

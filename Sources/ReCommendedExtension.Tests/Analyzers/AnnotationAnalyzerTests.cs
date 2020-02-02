@@ -32,7 +32,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         public void TestIteratorMethod() => DoNamedTest2();
 
         [Test]
-        [TestNetCore30("JetBrains.Annotations")]
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [NullableContext(NullableContextKind.Disable)]
         public void TestAsyncIteratorMethod() => DoNamedTest2();
 
@@ -60,7 +60,7 @@ namespace ReCommendedExtension.Tests.Analyzers
                 });
 
         [Test]
-        [TestNetCore30("JetBrains.Annotations")]
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [NullableContext(NullableContextKind.Enable)]
         public void TestNullableAnnotationContext() => DoNamedTest2();
     }

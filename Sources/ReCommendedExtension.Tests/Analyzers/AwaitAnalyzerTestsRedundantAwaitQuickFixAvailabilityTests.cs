@@ -8,7 +8,7 @@ using ReCommendedExtension.Analyzers.Await;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
-    [TestNetFramework45]
+    [TestNetCore30]
     [TestFixture]
     public sealed class AwaitAnalyzerTestsRedundantAwaitQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     {
