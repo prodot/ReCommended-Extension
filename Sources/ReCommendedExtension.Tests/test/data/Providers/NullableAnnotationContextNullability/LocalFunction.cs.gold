@@ -26,7 +26,7 @@ namespace ReCommendedExtension.Tests.test.data
 
             if (NonNullableReference("one") != null) { }
             if (NullableReference("one") != null) { }
-            if (|NonNullableValue(1) != null|(1)) { }
+            if (||NonNullableValue(1) != null|(1)|(2)) { }
             if (NullableValue(1) != null) { }
         }
 
@@ -46,4 +46,5 @@ namespace ReCommendedExtension.Tests.test.data
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
-(1): ReSharper Warning: Expression is always true
+(1):<overlapped> ReSharper Warning: Expression is always true
+(2): ReSharper Warning: Expression is always true

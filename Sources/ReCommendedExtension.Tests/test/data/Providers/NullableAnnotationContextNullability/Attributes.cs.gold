@@ -83,20 +83,20 @@ namespace ReCommendedExtension.Tests.test.data
             Console.WriteLine(|one|(11).Length);
             Console.WriteLine(two.Length);
 
-            Console.WriteLine(|Method2()|(12).Length);
+            Console.WriteLine(Method2().Length);
             Console.WriteLine(Method3().Length);
 
-            Console.WriteLine(|One|(13).Length);
+            Console.WriteLine(One.Length);
             Console.WriteLine(Two.Length);
 
-            Console.WriteLine(|this[1]|(14).Length);
+            Console.WriteLine(this[1].Length);
             Console.WriteLine(this[true].Length);
         }
 
         void Test(IEnumerable<string> sequence)
         {
             var item = sequence.FirstOrDefault();
-            Console.WriteLine(|item|(15).Length);
+            Console.WriteLine(|item|(12).Length);
         }
     }
 }
@@ -114,6 +114,3 @@ namespace ReCommendedExtension.Tests.test.data
 (10): ReSharper Warning: Possible 'null' assignment to entity marked with 'NotNull' attribute
 (11): ReSharper Warning: Possible 'System.NullReferenceException'
 (12): ReSharper Warning: Possible 'System.NullReferenceException'
-(13): ReSharper Warning: Possible 'System.NullReferenceException'
-(14): ReSharper Warning: Possible 'System.NullReferenceException'
-(15): ReSharper Warning: Possible 'System.NullReferenceException'
