@@ -62,12 +62,12 @@ namespace ReCommendedExtension.Tests.test.data
 
     class Generic<T>
     {
-        IEnumerable<T> nonNullables;
-        IEnumerable<T?> nullables;
+        IEnumerable<T> any;
+        IEnumerable<T?> invalid;
 
         void NullCheck_Iteration()
         {
-            foreach (var item in nonNullables)
+            foreach (var item in any)
             {
                 if (item != null) { }
             }
@@ -75,12 +75,12 @@ namespace ReCommendedExtension.Tests.test.data
 
         void NullCheck_Linq()
         {
-            var query0 = from item in nonNullables where item != null select item;
+            var query0 = from item in any where item != null select item;
         }
 
         void Dereferencing_Iteration()
         {
-            foreach (var item in nonNullables)
+            foreach (var item in any)
             {
                 Console.WriteLine(item.ToString());
             }
@@ -125,12 +125,12 @@ namespace ReCommendedExtension.Tests.test.data
 
     class GenericForReferenceNullable<T> where T : class?
     {
-        IEnumerable<T> nonNullableReferences;
-        IEnumerable<T?> nullableReferences;
+        IEnumerable<T> nullableReferences;
+        IEnumerable<T?> invalidReferences;
 
         void NullCheck_Iteration()
         {
-            foreach (var item in nonNullableReferences)
+            foreach (var item in nullableReferences)
             {
                 if (item != null) { }
             }
@@ -138,12 +138,12 @@ namespace ReCommendedExtension.Tests.test.data
 
         void NullCheck_Linq()
         {
-            var query0 = from item in nonNullableReferences where item != null select item;
+            var query0 = from item in nullableReferences where item != null select item;
         }
 
         void Dereferencing_Iteration()
         {
-            foreach (var item in nonNullableReferences)
+            foreach (var item in nullableReferences)
             {
                 Console.WriteLine(item.ToString());
             }
@@ -184,7 +184,7 @@ namespace ReCommendedExtension.Tests.test.data
     class GenericNotNull<T> where T : notnull
     {
         IEnumerable<T> nonNullables;
-        IEnumerable<T?> nullables;
+        IEnumerable<T?> invalid;
 
         void NullCheck_Iteration()
         {

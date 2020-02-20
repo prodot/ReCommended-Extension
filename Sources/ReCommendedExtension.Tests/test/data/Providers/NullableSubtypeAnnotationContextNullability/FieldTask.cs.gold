@@ -61,37 +61,37 @@ namespace ReCommendedExtension.Tests.test.data
 
     class Generic<T>
     {
-        Task<T> nonNullable;
-        Task<|T?|(11)> nullable;
+        Task<T> any;
+        Task<|T?|(11)> invalid;
 
         async Task NullCheck_Awaiting()
         {
-            if (await nonNullable != null) { }
+            if (await any != null) { }
         }
 
         void NullCheck_GetAwaiter_GetResult()
         {
-            if (nonNullable.GetAwaiter().GetResult() != null) { }
+            if (any.GetAwaiter().GetResult() != null) { }
         }
 
         void NullCheck_Result()
         {
-            if (nonNullable.Result != null) { }
+            if (any.Result != null) { }
         }
 
         async Task Dereferencing_Awaiting()
         {
-            Console.WriteLine((|await nonNullable|(12)).ToString());
+            Console.WriteLine((|await any|(12)).ToString());
         }
 
         void Dereferencing_GetAwaiter_GetResult()
         {
-            Console.WriteLine(|nonNullable.GetAwaiter().GetResult()|(13).ToString());
+            Console.WriteLine(|any.GetAwaiter().GetResult()|(13).ToString());
         }
 
         void Dereferencing_Result()
         {
-            Console.WriteLine(|nonNullable.Result|(14).ToString());
+            Console.WriteLine(|any.Result|(14).ToString());
         }
     }
 
@@ -139,37 +139,37 @@ namespace ReCommendedExtension.Tests.test.data
 
     class GenericForReferenceNullable<T> where T : class?
     {
-        Task<T> nonNullableReference;
-        Task<|T?|(21)> nullableReference;
+        Task<T> nullableReference;
+        Task<|T?|(21)> invalidReference;
 
         async Task NullCheck_Awaiting()
         {
-            if (await nonNullableReference != null) { }
+            if (await nullableReference != null) { }
         }
 
         void NullCheck_GetAwaiter_GetResult()
         {
-            if (nonNullableReference.GetAwaiter().GetResult() != null) { }
+            if (nullableReference.GetAwaiter().GetResult() != null) { }
         }
 
         void NullCheck_Result()
         {
-            if (nonNullableReference.Result != null) { }
+            if (nullableReference.Result != null) { }
         }
 
         async Task Dereferencing_Awaiting()
         {
-            Console.WriteLine((|await nonNullableReference|(22)).ToString());
+            Console.WriteLine((|await nullableReference|(22)).ToString());
         }
 
         void Dereferencing_GetAwaiter_GetResult()
         {
-            Console.WriteLine(|nonNullableReference.GetAwaiter().GetResult()|(23).ToString());
+            Console.WriteLine(|nullableReference.GetAwaiter().GetResult()|(23).ToString());
         }
 
         void Dereferencing_Result()
         {
-            Console.WriteLine(|nonNullableReference.Result|(24).ToString());
+            Console.WriteLine(|nullableReference.Result|(24).ToString());
         }
     }
 
@@ -215,7 +215,7 @@ namespace ReCommendedExtension.Tests.test.data
     class GenericNotNull<T> where T : notnull
     {
         Task<T> nonNullable;
-        Task<|T?|(25)> nullable;
+        Task<|T?|(25)> invalid;
 
         async Task NullCheck_Awaiting()
         {

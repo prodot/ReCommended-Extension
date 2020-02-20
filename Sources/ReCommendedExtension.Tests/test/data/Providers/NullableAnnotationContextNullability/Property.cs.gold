@@ -48,22 +48,22 @@ namespace ReCommendedExtension.Tests.test.data
 
     class Generic<T>
     {
-        T NonNullable { get; set; }
-        |T?|(6) Nullable { get; set; }
+        T Any { get; set; }
+        |T?|(6) Invalid { get; set; }
 
         void NullCheck()
         {
-            if (NonNullable != null) { }
+            if (Any != null) { }
         }
 
         void AssigningNull()
         {
-            NonNullable = default;
+            Any = default;
         }
 
         void Dereferencing()
         {
-            Console.WriteLine(|NonNullable|(7).ToString());
+            Console.WriteLine(|Any|(7).ToString());
         }
     }
 
@@ -103,22 +103,22 @@ namespace ReCommendedExtension.Tests.test.data
 
     class GenericForReferenceNullable<T> where T : class?
     {
-        T NonNullableReference { get; set; }
-        |T?|(12) NullableReference { get; set; }
+        T NullableReference { get; set; }
+        |T?|(12) InvalidReference { get; set; }
 
         void NullCheck()
         {
-            if (NonNullableReference != null) { }
+            if (NullableReference != null) { }
         }
 
         void AssigningNull()
         {
-            NonNullableReference = null;
+            NullableReference = null;
         }
 
         void Dereferencing()
         {
-            Console.WriteLine(|NonNullableReference|(13).ToString());
+            Console.WriteLine(|NullableReference|(13).ToString());
         }
     }
 
@@ -153,7 +153,7 @@ namespace ReCommendedExtension.Tests.test.data
     class GenericNotNull<T> where T : notnull
     {
         T NonNullable { get; set; }
-        |T?|(14) Nullable { get; set; }
+        |T?|(14) Invalid { get; set; }
 
         void NullCheck()
         {

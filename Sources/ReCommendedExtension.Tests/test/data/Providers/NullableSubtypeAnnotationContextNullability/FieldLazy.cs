@@ -28,17 +28,17 @@ namespace ReCommendedExtension.Tests.test.data
 
     class Generic<T>
     {
-        Lazy<T> nonNullable;
-        Lazy<T?> nullable;
+        Lazy<T> any;
+        Lazy<T?> invalid;
 
         void NullCheck_Value()
         {
-            if (nonNullable.Value != null) { }
+            if (any.Value != null) { }
         }
 
         void Dereferencing_Value()
         {
-            Console.WriteLine(nonNullable.Value.ToString());
+            Console.WriteLine(any.Value.ToString());
         }
     }
 
@@ -62,17 +62,17 @@ namespace ReCommendedExtension.Tests.test.data
 
     class GenericForReferenceNullable<T> where T : class?
     {
-        Lazy<T> nonNullableReference;
-        Lazy<T?> nullableReference;
+        Lazy<T> nullableReference;
+        Lazy<T?> invalidReference;
 
         void NullCheck_Value()
         {
-            if (nonNullableReference.Value != null) { }
+            if (nullableReference.Value != null) { }
         }
 
         void Dereferencing_Value()
         {
-            Console.WriteLine(nonNullableReference.Value.ToString());
+            Console.WriteLine(nullableReference.Value.ToString());
         }
     }
 
@@ -96,7 +96,7 @@ namespace ReCommendedExtension.Tests.test.data
     class GenericNotNull<T> where T : notnull
     {
         Lazy<T> nonNullable;
-        Lazy<T?> nullable;
+        Lazy<T?> invalid;
 
         void NullCheck_Value()
         {

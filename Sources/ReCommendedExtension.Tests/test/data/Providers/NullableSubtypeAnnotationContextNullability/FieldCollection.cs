@@ -161,12 +161,12 @@ namespace ReCommendedExtension.Tests.test.data
 
     class Generic<T>
     {
-        List<T> nonNullables;
-        List<T?> nullables;
+        List<T> any;
+        List<T?> invalid;
 
         void NullCheck_Iteration()
         {
-            foreach (var item in nonNullables)
+            foreach (var item in any)
             {
                 if (item != null) { }
             }
@@ -174,33 +174,33 @@ namespace ReCommendedExtension.Tests.test.data
 
         void NullCheck_Iteration_Indexed()
         {
-            for (var i = 0; i < nonNullables.Count; i++)
+            for (var i = 0; i < any.Count; i++)
             {
-                if (nonNullables[i] != null) { }
+                if (any[i] != null) { }
             }
         }
 
         void NullCheck_Linq()
         {
-            var query0 = from item in nonNullables where item != null select item;
+            var query0 = from item in any where item != null select item;
         }
 
         void AssigningNull()
         {
-            for (var i = 0; i < nonNullables.Count; i++)
+            for (var i = 0; i < any.Count; i++)
             {
-                nonNullables[i] = default;
+                any[i] = default;
             }
         }
 
         void AddingNull()
         {
-            nonNullables.Add(default);
+            any.Add(default);
         }
 
         void Dereferencing_Iteration()
         {
-            foreach (var item in nonNullables)
+            foreach (var item in any)
             {
                 Console.WriteLine(item.ToString());
             }
@@ -208,9 +208,9 @@ namespace ReCommendedExtension.Tests.test.data
 
         void Dereferencing_Iteration_Indexed()
         {
-            for (var i = 0; i < nonNullables.Count; i++)
+            for (var i = 0; i < any.Count; i++)
             {
-                Console.WriteLine(nonNullables[i].ToString());
+                Console.WriteLine(any[i].ToString());
             }
         }
     }
@@ -321,12 +321,12 @@ namespace ReCommendedExtension.Tests.test.data
 
     class GenericForReferenceNullable<T> where T : class?
     {
-        List<T> nonNullableReferences;
-        List<T?> nullableReferences;
+        List<T> nullableReferences;
+        List<T?> invalidReferences;
 
         void NullCheck_Iteration()
         {
-            foreach (var item in nonNullableReferences)
+            foreach (var item in nullableReferences)
             {
                 if (item != null) { }
             }
@@ -334,33 +334,33 @@ namespace ReCommendedExtension.Tests.test.data
 
         void NullCheck_Iteration_Indexed()
         {
-            for (var i = 0; i < nonNullableReferences.Count; i++)
+            for (var i = 0; i < nullableReferences.Count; i++)
             {
-                if (nonNullableReferences[i] != null) { }
+                if (nullableReferences[i] != null) { }
             }
         }
 
         void NullCheck_Linq()
         {
-            var query0 = from item in nonNullableReferences where item != null select item;
+            var query0 = from item in nullableReferences where item != null select item;
         }
 
         void AssigningNull()
         {
-            for (var i = 0; i < nonNullableReferences.Count; i++)
+            for (var i = 0; i < nullableReferences.Count; i++)
             {
-                nonNullableReferences[i] = null;
+                nullableReferences[i] = null;
             }
         }
 
         void AddingNull()
         {
-            nonNullableReferences.Add(null);
+            nullableReferences.Add(null);
         }
 
         void Dereferencing_Iteration()
         {
-            foreach (var item in nonNullableReferences)
+            foreach (var item in nullableReferences)
             {
                 Console.WriteLine(item.ToString());
             }
@@ -368,9 +368,9 @@ namespace ReCommendedExtension.Tests.test.data
 
         void Dereferencing_Iteration_Indexed()
         {
-            for (var i = 0; i < nonNullableReferences.Count; i++)
+            for (var i = 0; i < nullableReferences.Count; i++)
             {
-                Console.WriteLine(nonNullableReferences[i].ToString());
+                Console.WriteLine(nullableReferences[i].ToString());
             }
         }
     }
@@ -460,7 +460,7 @@ namespace ReCommendedExtension.Tests.test.data
     class GenericNotNull<T> where T : notnull
     {
         List<T> nonNullables;
-        List<T?> nullables;
+        List<T?> invalid;
 
         void NullCheck_Iteration()
         {

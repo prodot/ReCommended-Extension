@@ -48,22 +48,22 @@ namespace ReCommendedExtension.Tests.test.data
 
     class Generic<T>
     {
-        T nonNullable;
-        T? nullable;
+        T any;
+        T? invalid;
 
         void NullCheck()
         {
-            if (nonNullable != null) { }
+            if (any != null) { }
         }
 
         void AssigningNull()
         {
-            nonNullable = default;
+            any = default;
         }
 
         void Dereferencing()
         {
-            Console.WriteLine(nonNullable.ToString());
+            Console.WriteLine(any.ToString());
         }
     }
 
@@ -103,22 +103,22 @@ namespace ReCommendedExtension.Tests.test.data
 
     class GenericForReferenceNullable<T> where T : class?
     {
-        T nonNullableReference;
-        T? nullableReference;
+        T nullableReference;
+        T? invalidReference;
 
         void NullCheck()
         {
-            if (nonNullableReference != null) { }
+            if (nullableReference != null) { }
         }
 
         void AssigningNull()
         {
-            nonNullableReference = null;
+            nullableReference = null;
         }
 
         void Dereferencing()
         {
-            Console.WriteLine(nonNullableReference.ToString());
+            Console.WriteLine(nullableReference.ToString());
         }
     }
 
@@ -153,7 +153,7 @@ namespace ReCommendedExtension.Tests.test.data
     class GenericNotNull<T> where T : notnull
     {
         T nonNullable;
-        T? nullable;
+        T? invalid;
 
         void NullCheck()
         {
