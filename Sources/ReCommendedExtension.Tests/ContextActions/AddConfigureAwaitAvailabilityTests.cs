@@ -5,7 +5,7 @@ using ReCommendedExtension.ContextActions;
 
 namespace ReCommendedExtension.Tests.ContextActions
 {
-    [TestNetFramework45]
+    [TestNetCore30]
     [TestFixture]
     public sealed class AddConfigureAwaitAvailabilityTests : CSharpContextActionAvailabilityTestBase<AddConfigureAwait>
     {

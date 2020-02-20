@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is AsyncVoidFunctionExpressionHighlighting || highlighting is AvoidAsyncVoidHighlighting;
+            => highlighting is AsyncVoidFunctionExpressionWarning || highlighting is AvoidAsyncVoidWarning;
 
         [Test]
         public void TestAnonymousMethod() => DoNamedTest2();

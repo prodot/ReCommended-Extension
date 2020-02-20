@@ -14,7 +14,7 @@ namespace ReCommendedExtension.ContextActions
     [ContextAction(
         Group = "C#",
         Name = "Annotate parameter with [InstantHandle] attribute" + ZoneMarker.Suffix,
-        Description = "Annotates a parameter (or property) with the [InstantHandle] attribute.")]
+        Description = "Annotates a parameter with the [InstantHandle] attribute.")]
     public sealed class AnnotateWithInstantHandle : AnnotateWithCodeAnnotation
     {
         public AnnotateWithInstantHandle([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
@@ -32,6 +32,7 @@ namespace ReCommendedExtension.ContextActions
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
             => declaredElement is IParameter parameter &&
                 (parameter.Type.IsGenericIEnumerable() ||
+                    parameter.Type.IsIAsyncEnumerable() ||
                     parameter.Type.IsImplicitlyConvertibleTo(
                         new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, NullableAnnotation.Unknown, psiModule),
                         context.GetTypeConversionRule()));

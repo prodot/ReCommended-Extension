@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is NotifyPropertyChangedInvocatorFromConstructorHighlighting;
+            => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning;
 
         [Test]
         public void TestNotifyPropertyChangedInvocatorFromConstructorAvailability() => DoNamedTest2();

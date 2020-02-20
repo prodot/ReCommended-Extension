@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.ControlFlow;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
@@ -20,8 +21,8 @@ namespace ReCommendedExtension.Analyzers.Annotation
         typeof(IAttributesOwnerDeclaration),
         HighlightingTypes = new[]
         {
-            typeof(RedundantAnnotationHighlighting), typeof(NotAllowedAnnotationHighlighting), typeof(MissingAnnotationHighlighting),
-            typeof(MissingSuppressionJustificationHighlighting), typeof(ConflictingAnnotationHighlighting), typeof(ConditionalAnnotationHighlighting)
+            typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
+            typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint)
         })]
     public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
     {
@@ -47,6 +48,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
             public IAttribute Attribute { get; }
         }
 
+        [Pure]
         static bool CanContainNullnessAttributes([NotNull] IAttributesOwnerDeclaration declaration)
         {
             // excluding type, constant, enum member, property/indexer/event accessor, event, type parameter declarations
@@ -86,20 +88,21 @@ namespace ReCommendedExtension.Analyzers.Annotation
             return true;
         }
 
+        [Pure]
         static AnnotationCase? TryGetAnnotationCase([NotNull] IAttributesOwnerDeclaration declaration)
         {
             if (CanContainNullnessAttributes(declaration))
             {
                 if (declaration is IMethodDeclaration methodDeclaration)
                 {
-                    if (methodDeclaration.IsAsync)
-                    {
-                        return AnnotationCase.AsyncMethod;
-                    }
-
                     if (methodDeclaration.IsIterator)
                     {
                         return AnnotationCase.IteratorMethod;
+                    }
+
+                    if (methodDeclaration.IsAsync)
+                    {
+                        return AnnotationCase.AsyncMethod;
                     }
                 }
 
@@ -114,33 +117,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
             return null;
         }
 
-        [NotNull]
-        static IEnumerable<AttributeMark> GetAttributeMarks(
-            [NotNull] NullnessProvider nullnessProvider,
-            [NotNull] IAttributesOwnerDeclaration declaration)
-        {
-            var markFound = false;
-
-            foreach (var attribute in declaration.Attributes)
-            {
-                Debug.Assert(attribute != null);
-
-                var mark = nullnessProvider.GetNullableAttributeMark(attribute.GetAttributeInstance());
-                if (mark != null)
-                {
-                    yield return new AttributeMark((CodeAnnotationNullableValue)mark, attribute);
-
-                    markFound = true;
-                }
-            }
-
-            if (!markFound)
-            {
-                yield return null;
-            }
-        }
-
-        [SuppressMessage("ReSharper", "UseNullPropagation", Justification = "Preserve code symmetry.")]
+        [Pure]
         static IType TryGetTypeForIfCanBeAnnotatedWithItemNotNull([NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             switch (attributesOwnerDeclaration.DeclaredElement)
@@ -156,225 +133,6 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 case IField field: return field.Type;
 
                 default: return null;
-            }
-        }
-
-        static void AnalyzeAsyncMethod(
-            [NotNull] IHighlightingConsumer consumer,
-            [NotNull] NullnessProvider nullnessProvider,
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
-        {
-            foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
-            {
-                if (attributeMark != null)
-                {
-                    switch (attributeMark.AnnotationNullableValue)
-                    {
-                        case CodeAnnotationNullableValue.NOT_NULL:
-                            consumer.AddHighlighting(
-                                new RedundantAnnotationHighlighting(
-                                    attributesOwnerDeclaration,
-                                    attributeMark.Attribute,
-                                    "Annotation is redundant because the declared element can never be null by default."));
-                            break;
-
-                        case CodeAnnotationNullableValue.CAN_BE_NULL:
-                            consumer.AddHighlighting(
-                                new NotAllowedAnnotationHighlighting(
-                                    attributesOwnerDeclaration,
-                                    attributeMark.Attribute,
-                                    "Annotation is not valid because the declared element can never be null by default."));
-                            break;
-                    }
-                }
-            }
-        }
-
-        static void AnalyzeIteratorMethod(
-            [NotNull] IHighlightingConsumer consumer,
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
-            [NotNull] NullnessProvider nullnessProvider,
-            [NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration)
-        {
-            foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
-            {
-                if (attributeMark != null)
-                {
-                    if (attributeMark.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
-                    {
-                        consumer.AddHighlighting(
-                            new NotAllowedAnnotationHighlighting(
-                                attributesOwnerDeclaration,
-                                attributeMark.Attribute,
-                                "Annotation is not valid because the declared element can never be null by default."));
-                    }
-                }
-                else
-                {
-                    var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
-                        attributesOwnerDeclaration,
-                        NullnessProvider.NotNullAttributeShortName);
-                    if (nonNullAnnotationAttributeType != null)
-                    {
-                        consumer.AddHighlighting(
-                            new MissingAnnotationHighlighting(
-                                string.Format(
-                                    "Declared element can never be null by default, but is not annotated with '{0}'.",
-                                    NullnessProvider.NotNullAttributeShortName),
-                                attributesOwnerDeclaration));
-                    }
-                    break;
-                }
-            }
-        }
-
-        static void AnalyzeOther(
-            ValueAnalysisMode valueAnalysisMode,
-            [NotNull] IHighlightingConsumer consumer,
-            [NotNull] NullnessProvider nullnessProvider,
-            [NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
-        {
-            switch (valueAnalysisMode)
-            {
-                case ValueAnalysisMode.OPTIMISTIC:
-                    foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
-                    {
-                        if (attributeMark == null)
-                        {
-                            var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
-                                attributesOwnerDeclaration,
-                                NullnessProvider.NotNullAttributeShortName);
-                            var canBeNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
-                                attributesOwnerDeclaration,
-                                NullnessProvider.CanBeNullAttributeShortName);
-                            if (nonNullAnnotationAttributeType != null || canBeNullAnnotationAttributeType != null)
-                            {
-                                consumer.AddHighlighting(
-                                    new MissingAnnotationHighlighting(
-                                        string.Format(
-                                            @"Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
-                                            NullnessProvider.NotNullAttributeShortName,
-                                            NullnessProvider.CanBeNullAttributeShortName),
-                                        attributesOwnerDeclaration));
-                            }
-                            break;
-                        }
-                    }
-                    break;
-
-                case ValueAnalysisMode.PESSIMISTIC:
-                    foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
-                    {
-                        if (attributeMark != null && attributeMark.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
-                        {
-                            consumer.AddHighlighting(
-                                new RedundantAnnotationHighlighting(
-                                    attributesOwnerDeclaration,
-                                    attributeMark.Attribute,
-                                    "Annotation is redundant because the declared element can be null by default."));
-                        }
-                    }
-                    break;
-            }
-        }
-
-        static void AnalyzeOverride(
-            [NotNull] IHighlightingConsumer consumer,
-            [NotNull] NullnessProvider nullnessProvider,
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
-        {
-            foreach (var attributeMark in GetAttributeMarks(nullnessProvider, attributesOwnerDeclaration))
-            {
-                if (attributeMark != null)
-                {
-                    consumer.AddHighlighting(
-                        new NotAllowedAnnotationHighlighting(
-                            attributesOwnerDeclaration,
-                            attributeMark.Attribute,
-                            "Annotation is not allowed because the declared element overrides or implements the inherited member."));
-                }
-            }
-        }
-
-        static void AnalyzeNotAllowedItemNotNull(
-            [NotNull] IHighlightingConsumer consumer,
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
-        {
-            var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(
-                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                    ContainerElementNullnessProvider.ItemNotNullAttributeShortName);
-            if (itemNotNullAttribute != null)
-            {
-                if (attributesOwnerDeclaration.OverridesInheritedMember())
-                {
-                    consumer.AddHighlighting(
-                        new NotAllowedAnnotationHighlighting(
-                            attributesOwnerDeclaration,
-                            itemNotNullAttribute,
-                            "Annotation is not allowed because the declared element overrides or implements the inherited member."));
-                    return;
-                }
-
-                var type = TryGetTypeForIfCanBeAnnotatedWithItemNotNull(attributesOwnerDeclaration);
-                if (type != null)
-                {
-                    if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(attributesOwnerDeclaration))
-                    {
-                        var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, attributesOwnerDeclaration, false);
-                        if (elementType != null && elementType.Classify != TypeClassification.REFERENCE_TYPE)
-                        {
-                            consumer.AddHighlighting(
-                                new NotAllowedAnnotationHighlighting(
-                                    attributesOwnerDeclaration,
-                                    itemNotNullAttribute,
-                                    "Annotation is not allowed because the declared element type is not a reference type."));
-                        }
-                        return;
-                    }
-
-                    var resultType = type.GetTasklikeUnderlyingType(attributesOwnerDeclaration);
-                    if (resultType != null)
-                    {
-                        if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
-                        {
-                            consumer.AddHighlighting(
-                                new NotAllowedAnnotationHighlighting(
-                                    attributesOwnerDeclaration,
-                                    itemNotNullAttribute,
-                                    "Annotation is not allowed because the declared task result type is not a reference type."));
-                        }
-                        return;
-                    }
-
-                    if (type.IsLazy())
-                    {
-                        var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule());
-                        var valueType = type.GetGenericUnderlyingType(typeElement);
-                        if (valueType != null)
-                        {
-                            if (valueType.Classify != TypeClassification.REFERENCE_TYPE)
-                            {
-                                consumer.AddHighlighting(
-                                    new NotAllowedAnnotationHighlighting(
-                                        attributesOwnerDeclaration,
-                                        itemNotNullAttribute,
-                                        "Annotation is not allowed because the declared lazy value type is not a reference type."));
-                            }
-                        }
-                        return;
-                    }
-
-                    consumer.AddHighlighting(
-                        new NotAllowedAnnotationHighlighting(
-                            attributesOwnerDeclaration,
-                            itemNotNullAttribute,
-                            string.Format(
-                                "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), " +
-                                "or a generic task-like type, or a {1}<T>.",
-                                nameof(IEnumerable<int>),
-                                nameof(Lazy<int>))));
-                }
             }
         }
 
@@ -408,7 +166,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 Debug.Assert(suppressMessageAttribute != null);
 
                 consumer.AddHighlighting(
-                    new MissingSuppressionJustificationHighlighting(
+                    new MissingSuppressionJustificationWarning(
                         attributesOwnerDeclaration,
                         suppressMessageAttribute.Attribute,
                         string.Format(
@@ -449,7 +207,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                         Debug.Assert(attribute != null);
 
                         consumer.AddHighlighting(
-                            new ConflictingAnnotationHighlighting(
+                            new ConflictingAnnotationWarning(
                                 attributesOwnerDeclaration,
                                 attribute,
                                 string.Format("Annotation conflicts with '{0}' annotation.", conflictingAnnotation)));
@@ -481,7 +239,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 Debug.Assert(conditionalAttribute != null);
 
                 consumer.AddHighlighting(
-                    new ConditionalAnnotationHighlighting(
+                    new ConditionalAnnotationHint(
                         attributesOwnerDeclaration,
                         conditionalAttribute.Attribute,
                         conditionalAttribute.Conditions.Count == 1
@@ -492,34 +250,318 @@ namespace ReCommendedExtension.Analyzers.Annotation
             }
         }
 
-        protected override void Run(IAttributesOwnerDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+        [NotNull]
+        readonly NullnessProvider nullnessProvider;
+
+        [NotNull]
+        readonly ContainerElementNullnessProvider containerElementNullnessProvider;
+
+        [NotNull]
+        readonly CodeAnnotationsConfiguration codeAnnotationsConfiguration;
+
+        public AnnotationAnalyzer(
+            [NotNull] CodeAnnotationsCache codeAnnotationsCache,
+            [NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration)
         {
-            var psiServices = element.GetPsiServices();
-            var nullnessProvider = psiServices.GetCodeAnnotationsCache().GetProvider<NullnessProvider>();
-            var codeAnnotationsConfiguration = psiServices.GetComponent<CodeAnnotationsConfiguration>();
+            nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
+            containerElementNullnessProvider = codeAnnotationsCache.GetProvider<ContainerElementNullnessProvider>();
 
-            // [NotNull], [CanBeNull] annotations
-            switch (TryGetAnnotationCase(element))
+            this.codeAnnotationsConfiguration = codeAnnotationsConfiguration;
+        }
+
+        void AnalyzeReSharperAnnotations([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration element)
+        {
+            Debug.Assert(element.IsNullableAnnotationsContextEnabled());
+
+            foreach (var attribute in element.AttributesEnumerable)
             {
-                case AnnotationCase.AsyncMethod:
-                    AnalyzeAsyncMethod(consumer, nullnessProvider, element);
-                    break;
+                var attributeInstance = attribute.GetAttributeInstance();
+                if (nullnessProvider.IsNullableAttribute(attributeInstance) ||
+                    containerElementNullnessProvider.IsContainerElementNullableAttribute(attributeInstance))
+                {
+                    consumer.AddHighlighting(
+                        new RedundantAnnotationSuggestion(
+                            element,
+                            attribute,
+                            "Annotation is redundant because the nullable annotation context is enabled."));
+                }
+            }
+        }
 
-                case AnnotationCase.IteratorMethod:
-                    AnalyzeIteratorMethod(consumer, element, nullnessProvider, codeAnnotationsConfiguration);
-                    break;
+        [Pure]
+        [NotNull]
+        IEnumerable<AttributeMark> GetAttributeMarks([NotNull] IAttributesOwnerDeclaration declaration)
+        {
+            var markFound = false;
 
-                case AnnotationCase.Other:
-                    AnalyzeOther(data.GetValueAnalysisMode(), consumer, nullnessProvider, codeAnnotationsConfiguration, element);
-                    break;
+            foreach (var attribute in declaration.Attributes)
+            {
+                Debug.Assert(attribute != null);
 
-                case AnnotationCase.Override:
-                    AnalyzeOverride(consumer, nullnessProvider, element);
-                    break;
+                var mark = nullnessProvider.GetNullableAttributeMark(attribute.GetAttributeInstance());
+                if (mark != null)
+                {
+                    yield return new AttributeMark((CodeAnnotationNullableValue)mark, attribute);
+
+                    markFound = true;
+                }
             }
 
-            // [ItemNotNull] annotations
-            AnalyzeNotAllowedItemNotNull(consumer, element);
+            if (!markFound)
+            {
+                yield return null;
+            }
+        }
+
+        void AnalyzeAsyncMethod([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
+
+            foreach (var attributeMark in GetAttributeMarks(attributesOwnerDeclaration))
+            {
+                if (attributeMark != null)
+                {
+                    switch (attributeMark.AnnotationNullableValue)
+                    {
+                        case CodeAnnotationNullableValue.NOT_NULL:
+                            consumer.AddHighlighting(
+                                new RedundantAnnotationSuggestion(
+                                    attributesOwnerDeclaration,
+                                    attributeMark.Attribute,
+                                    "Annotation is redundant because the declared element can never be null by default."));
+                            break;
+
+                        case CodeAnnotationNullableValue.CAN_BE_NULL:
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationWarning(
+                                    attributesOwnerDeclaration,
+                                    attributeMark.Attribute,
+                                    "Annotation is not valid because the declared element can never be null by default."));
+                            break;
+                    }
+                }
+            }
+        }
+
+        void AnalyzeIteratorMethod([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
+
+            foreach (var attributeMark in GetAttributeMarks(attributesOwnerDeclaration))
+            {
+                if (attributeMark != null)
+                {
+                    if (attributeMark.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
+                    {
+                        consumer.AddHighlighting(
+                            new NotAllowedAnnotationWarning(
+                                attributesOwnerDeclaration,
+                                attributeMark.Attribute,
+                                "Annotation is not valid because the declared element can never be null by default."));
+                    }
+                }
+                else
+                {
+                    var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
+                        attributesOwnerDeclaration,
+                        NullnessProvider.NotNullAttributeShortName);
+                    if (nonNullAnnotationAttributeType != null)
+                    {
+                        consumer.AddHighlighting(
+                            new MissingAnnotationWarning(
+                                string.Format(
+                                    "Declared element can never be null by default, but is not annotated with '{0}'.",
+                                    NullnessProvider.NotNullAttributeShortName),
+                                attributesOwnerDeclaration));
+                    }
+                    break;
+                }
+            }
+        }
+
+        void AnalyzeOther(
+            ValueAnalysisMode valueAnalysisMode,
+            [NotNull] IHighlightingConsumer consumer,
+            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
+
+            switch (valueAnalysisMode)
+            {
+                case ValueAnalysisMode.OPTIMISTIC:
+                    foreach (var attributeMark in GetAttributeMarks(attributesOwnerDeclaration))
+                    {
+                        if (attributeMark == null)
+                        {
+                            var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
+                                attributesOwnerDeclaration,
+                                NullnessProvider.NotNullAttributeShortName);
+                            var canBeNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
+                                attributesOwnerDeclaration,
+                                NullnessProvider.CanBeNullAttributeShortName);
+                            if (nonNullAnnotationAttributeType != null || canBeNullAnnotationAttributeType != null)
+                            {
+                                consumer.AddHighlighting(
+                                    new MissingAnnotationWarning(
+                                        string.Format(
+                                            @"Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
+                                            NullnessProvider.NotNullAttributeShortName,
+                                            NullnessProvider.CanBeNullAttributeShortName),
+                                        attributesOwnerDeclaration));
+                            }
+                            break;
+                        }
+                    }
+                    break;
+
+                case ValueAnalysisMode.PESSIMISTIC:
+                    foreach (var attributeMark in GetAttributeMarks(attributesOwnerDeclaration))
+                    {
+                        if (attributeMark != null && attributeMark.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
+                        {
+                            consumer.AddHighlighting(
+                                new RedundantAnnotationSuggestion(
+                                    attributesOwnerDeclaration,
+                                    attributeMark.Attribute,
+                                    "Annotation is redundant because the declared element can be null by default."));
+                        }
+                    }
+                    break;
+            }
+        }
+
+        void AnalyzeOverride([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
+
+            foreach (var attributeMark in GetAttributeMarks(attributesOwnerDeclaration))
+            {
+                if (attributeMark != null)
+                {
+                    consumer.AddHighlighting(
+                        new NotAllowedAnnotationWarning(
+                            attributesOwnerDeclaration,
+                            attributeMark.Attribute,
+                            "Annotation is not allowed because the declared element overrides or implements the inherited member."));
+                }
+            }
+        }
+
+        void AnalyzeNotAllowedItemNotNull(
+            [NotNull] IHighlightingConsumer consumer,
+            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
+
+            var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(
+                attribute
+                    => containerElementNullnessProvider.GetContainerElementNullableAttributeMark(attribute.AssertNotNull().GetAttributeInstance()) ==
+                    CodeAnnotationNullableValue.NOT_NULL);
+            if (itemNotNullAttribute != null)
+            {
+                if (attributesOwnerDeclaration.OverridesInheritedMember())
+                {
+                    consumer.AddHighlighting(
+                        new NotAllowedAnnotationWarning(
+                            attributesOwnerDeclaration,
+                            itemNotNullAttribute,
+                            "Annotation is not allowed because the declared element overrides or implements the inherited member."));
+                    return;
+                }
+
+                var type = TryGetTypeForIfCanBeAnnotatedWithItemNotNull(attributesOwnerDeclaration);
+                if (type != null)
+                {
+                    if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(attributesOwnerDeclaration))
+                    {
+                        var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, attributesOwnerDeclaration, false);
+                        if (elementType != null && elementType.Classify != TypeClassification.REFERENCE_TYPE)
+                        {
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationWarning(
+                                    attributesOwnerDeclaration,
+                                    itemNotNullAttribute,
+                                    "Annotation is not allowed because the declared element type is not a reference type."));
+                        }
+                        return;
+                    }
+
+                    var resultType = type.GetTasklikeUnderlyingType(attributesOwnerDeclaration);
+                    if (resultType != null)
+                    {
+                        if (resultType.Classify != TypeClassification.REFERENCE_TYPE)
+                        {
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationWarning(
+                                    attributesOwnerDeclaration,
+                                    itemNotNullAttribute,
+                                    "Annotation is not allowed because the declared task result type is not a reference type."));
+                        }
+                        return;
+                    }
+
+                    if (type.IsLazy())
+                    {
+                        var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule());
+                        var valueType = type.GetGenericUnderlyingType(typeElement);
+                        if (valueType != null)
+                        {
+                            if (valueType.Classify != TypeClassification.REFERENCE_TYPE)
+                            {
+                                consumer.AddHighlighting(
+                                    new NotAllowedAnnotationWarning(
+                                        attributesOwnerDeclaration,
+                                        itemNotNullAttribute,
+                                        "Annotation is not allowed because the declared lazy value type is not a reference type."));
+                            }
+                        }
+                        return;
+                    }
+
+                    consumer.AddHighlighting(
+                        new NotAllowedAnnotationWarning(
+                            attributesOwnerDeclaration,
+                            itemNotNullAttribute,
+                            string.Format(
+                                "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), " +
+                                "or a generic task-like type, or a {1}<T>.",
+                                nameof(IEnumerable<int>),
+                                nameof(Lazy<int>))));
+                }
+            }
+        }
+
+        protected override void Run(IAttributesOwnerDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+        {
+            if (element.IsNullableAnnotationsContextEnabled())
+            {
+                AnalyzeReSharperAnnotations(consumer, element);
+            }
+            else
+            {
+                // [NotNull], [CanBeNull] annotations
+                switch (TryGetAnnotationCase(element))
+                {
+                    case AnnotationCase.AsyncMethod:
+                        AnalyzeAsyncMethod(consumer, element);
+                        break;
+
+                    case AnnotationCase.IteratorMethod:
+                        AnalyzeIteratorMethod(consumer, element);
+                        break;
+
+                    case AnnotationCase.Other:
+                        AnalyzeOther(data.GetValueAnalysisMode(), consumer, element);
+                        break;
+
+                    case AnnotationCase.Override:
+                        AnalyzeOverride(consumer, element);
+                        break;
+                }
+
+                // [ItemNotNull] annotations
+                AnalyzeNotAllowedItemNotNull(consumer, element);
+            }
 
             // [SuppressMessage] annotations
             AnalyzeMissingSuppressionJustification(consumer, element);

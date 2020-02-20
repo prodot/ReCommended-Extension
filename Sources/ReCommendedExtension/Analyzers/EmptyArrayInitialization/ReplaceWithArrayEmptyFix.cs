@@ -17,9 +17,9 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
     public sealed class ReplaceWithArrayEmptyFix : QuickFixBase
     {
         [NotNull]
-        readonly EmptyArrayInitializationHighlighting highlighting;
+        readonly EmptyArrayInitializationWarning highlighting;
 
-        public ReplaceWithArrayEmptyFix([NotNull] EmptyArrayInitializationHighlighting highlighting) => this.highlighting = highlighting;
+        public ReplaceWithArrayEmptyFix([NotNull] EmptyArrayInitializationWarning highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(IUserDataHolder cache) => true;
 

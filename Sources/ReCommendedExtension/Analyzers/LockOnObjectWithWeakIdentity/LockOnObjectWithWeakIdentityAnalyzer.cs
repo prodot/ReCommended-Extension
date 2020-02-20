@@ -10,7 +10,7 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
 {
-    [ElementProblemAnalyzer(typeof(ILockStatement), HighlightingTypes = new[] { typeof(LockOnObjectWithWeakIdentityHighlighting) })]
+    [ElementProblemAnalyzer(typeof(ILockStatement), HighlightingTypes = new[] { typeof(LockOnObjectWithWeakIdentityWarning) })]
     public sealed class LockOnObjectWithWeakIdentityAnalyzer : ElementProblemAnalyzer<ILockStatement>
     {
         [NotNull]
@@ -86,7 +86,7 @@ namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
             var message = TryGetHighlightingMessage(element.Monitor);
             if (message != null)
             {
-                consumer.AddHighlighting(new LockOnObjectWithWeakIdentityHighlighting(message, element.Monitor));
+                consumer.AddHighlighting(new LockOnObjectWithWeakIdentityWarning(message, element.Monitor));
             }
         }
     }

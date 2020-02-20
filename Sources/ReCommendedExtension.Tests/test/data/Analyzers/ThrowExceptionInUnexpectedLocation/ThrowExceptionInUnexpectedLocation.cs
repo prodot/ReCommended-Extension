@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AnyException = System.InvalidTimeZoneException;
 
 namespace Test
@@ -8,7 +9,7 @@ namespace Test
     public class ThrowExceptionInUnexpectedLocation : IEquatable<ThrowExceptionInUnexpectedLocation>,
         IEqualityComparer<int>,
         IEqualityComparer,
-        IDisposable
+        IDisposable, IAsyncDisposable
     {
         int Property
         {
@@ -132,6 +133,8 @@ namespace Test
         ~ThrowExceptionInUnexpectedLocation() => throw new AnyException(); // not allowed
 
         public void Dispose() => throw new AnyException(); // not allowed
+
+        public ValueTask DisposeAsync() => throw new AnyException(); // not allowed
 
         void Dispose(bool disposing)
         {

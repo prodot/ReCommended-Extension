@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is MissingSuppressionJustificationHighlighting;
+            => highlighting is MissingSuppressionJustificationWarning;
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         protected override void DoTest(Lifetime lifetime, IProject project)

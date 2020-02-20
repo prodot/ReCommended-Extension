@@ -17,7 +17,7 @@ namespace ReCommendedExtension.Analyzers.Await
 {
     [ElementProblemAnalyzer(
         typeof(IAwaitExpression),
-        HighlightingTypes = new[] { typeof(RedundantAwaitHighlighting), typeof(RedundantCapturedContextHighlighting) })]
+        HighlightingTypes = new[] { typeof(RedundantAwaitSuggestion), typeof(RedundantCapturedContextSuggestion) })]
     public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
     {
         [NotNull]
@@ -98,6 +98,15 @@ namespace ReCommendedExtension.Analyzers.Await
         }
 
         [Pure]
+        static bool HasPreviousUsingDeclaration([NotNull] ITreeNode node, [NotNull] IParametersOwnerDeclaration container)
+            => node.SelfAndPathToRoot()
+                .TakeWhile(n => n != container)
+                .Any(
+                    n => n.AssertNotNull()
+                        .LeftSiblings()
+                        .Any(s => ((s as IDeclarationStatement)?.Declaration as IMultipleLocalVariableDeclaration)?.UsingKeyword != null));
+
+        [Pure]
         static bool IsLastExpression(
             [NotNull] IParametersOwnerDeclaration container,
             [NotNull] ICSharpExpression expression,
@@ -147,11 +156,13 @@ namespace ReCommendedExtension.Analyzers.Await
 
             switch (lastStatement)
             {
-                case IExpressionStatement expressionStatement when expressionStatement.Expression == expression:
+                case IExpressionStatement expressionStatement when expressionStatement.Expression == expression &&
+                    !HasPreviousUsingDeclaration(expressionStatement, container):
                     statementToBeReplacedWithReturnStatement = expressionStatement;
                     return true;
 
-                case IReturnStatement returnStatement when returnStatement.Value == expression:
+                case IReturnStatement returnStatement when returnStatement.Value == expression &&
+                    !HasPreviousUsingDeclaration(returnStatement, container):
                     statementToBeReplacedWithReturnStatement = null;
                     return true;
 
@@ -212,7 +223,7 @@ namespace ReCommendedExtension.Analyzers.Await
 
             var highlightConfigureAwait = configureAwaitNode != null && configureAwaitInvocationExpression.ArgumentList != null;
 
-            var highlighting = new RedundantAwaitHighlighting(
+            var highlighting = new RedundantAwaitSuggestion(
                 $"Redundant 'await' (remove 'async'/'await'{(highlightConfigureAwait ? "/'" + nameof(Task.ConfigureAwait) + "(...)'" : "")})",
                 removeAsync,
                 awaitExpression,
@@ -362,17 +373,12 @@ namespace ReCommendedExtension.Analyzers.Await
                     .Skip(1)
                     .TakeWhile(node => node != container)
                     .Any(node => node is IUsingStatement || node is ITryStatement) &&
-                !returnStatement.PathToRoot()
-                    .TakeWhile(node => node != container)
-                    .Any(
-                        node => node.AssertNotNull()
-                            .LeftSiblings()
-                            .Any(s => ((s as IDeclarationStatement)?.Declaration as IMultipleLocalVariableDeclaration)?.UsingKeyword != null));
+                !HasPreviousUsingDeclaration(returnStatement, container);
 
             if (hasRedundantCapturedContext && awaitExpression.Task.IsConfigureAwaitAvailable())
             {
                 consumer.AddHighlighting(
-                    new RedundantCapturedContextHighlighting(
+                    new RedundantCapturedContextSuggestion(
                         $"Redundant captured context (add '.{nameof(Task.ConfigureAwait)}(false)')",
                         awaitExpression));
             }

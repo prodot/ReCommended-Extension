@@ -1,0 +1,28 @@
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class AsyncIteratorMethod
+    {
+        [NotNull]
+        async IAsyncEnumerable<int> Method1()
+        {
+            yield break;
+        }
+
+        [|CanBeNull|(0)]
+        async IAsyncEnumerable<int> Method2()
+        {
+            yield break;
+        }
+
+        async IAsyncEnumerable<int> |Method3|(1)()
+        {
+            yield break;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotation is not valid because the declared element can never be null by default.
+(1): ReSharper Warning: Declared element can never be null by default, but is not annotated with 'NotNullAttribute'.

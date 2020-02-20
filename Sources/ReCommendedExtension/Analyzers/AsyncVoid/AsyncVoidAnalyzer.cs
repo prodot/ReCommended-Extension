@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
 {
     [ElementProblemAnalyzer(
         typeof(ICSharpDeclaration),
-        HighlightingTypes = new[] { typeof(AsyncVoidFunctionExpressionHighlighting), typeof(AvoidAsyncVoidHighlighting) })]
+        HighlightingTypes = new[] { typeof(AsyncVoidFunctionExpressionWarning), typeof(AvoidAsyncVoidWarning) })]
     public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaration>
     {
         [Pure]
@@ -44,8 +44,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
 
             if (method.GetImmediateSuperMembers().Any())
             {
-                consumer.AddHighlighting(
-                    new AvoidAsyncVoidHighlighting("'void' method overridden or implemented as 'async void'.", methodDeclaration));
+                consumer.AddHighlighting(new AvoidAsyncVoidWarning("'void' method overridden or implemented as 'async void'.", methodDeclaration));
                 return;
             }
 
@@ -62,7 +61,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
                 if (references.Length > 0)
                 {
                     consumer.AddHighlighting(
-                        new AvoidAsyncVoidHighlighting("'async void' public surface area method with detected usages.", methodDeclaration));
+                        new AvoidAsyncVoidWarning("'async void' public surface area method with detected usages.", methodDeclaration));
                 }
                 else
                 {
@@ -73,7 +72,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
                     {
                         // [UsedImplicitly] annotation not applied
                         consumer.AddHighlighting(
-                            new AvoidAsyncVoidHighlighting("'async void' public surface area method without detected usages.", methodDeclaration));
+                            new AvoidAsyncVoidWarning("'async void' public surface area method without detected usages.", methodDeclaration));
                     }
                 }
             }
@@ -83,7 +82,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
                 if (count > 0)
                 {
                     consumer.AddHighlighting(
-                        new AvoidAsyncVoidHighlighting(
+                        new AvoidAsyncVoidWarning(
                             string.Format(
                                 "'async void' method used {0} time{1} not as a direct event handler.",
                                 count.ToString(),
@@ -113,7 +112,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
             if (count > 0)
             {
                 consumer.AddHighlighting(
-                    new AvoidAsyncVoidHighlighting(
+                    new AvoidAsyncVoidWarning(
                         string.Format(
                             "'async void' local function used {0} time{1} not as a direct event handler.",
                             count.ToString(),
@@ -137,7 +136,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
             Debug.Assert(lambdaExpression.AsyncKeyword != null);
 
             consumer.AddHighlighting(
-                new AsyncVoidFunctionExpressionHighlighting(
+                new AsyncVoidFunctionExpressionWarning(
                     "'async void' lambda expression not used as a direct event handler.",
                     lambdaExpression.AsyncKeyword,
                     () => lambdaExpression.SetAsync(false)));
@@ -159,7 +158,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
             Debug.Assert(anonymousMethodExpression.AsyncKeyword != null);
 
             consumer.AddHighlighting(
-                new AsyncVoidFunctionExpressionHighlighting(
+                new AsyncVoidFunctionExpressionWarning(
                     "'async void' anonymous method expression not used as a direct event handler.",
                     anonymousMethodExpression.AsyncKeyword,
                     () => anonymousMethodExpression.SetAsync(false)));

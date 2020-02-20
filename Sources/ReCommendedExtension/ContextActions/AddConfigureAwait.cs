@@ -23,7 +23,8 @@ namespace ReCommendedExtension.ContextActions
         [NotNull]
         readonly ICSharpContextActionDataProvider provider;
 
-        IUnaryExpression awaitedExpression;
+        ICSharpExpression expression;
+        IUsingStatement usingStatementWithVariableDeclaration;
 
         public AddConfigureAwait([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
 
@@ -31,43 +32,104 @@ namespace ReCommendedExtension.ContextActions
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
         {
-            var awaitExpression = provider.GetSelectedElement<IAwaitExpression>(true, false);
+            expression = null;
+            usingStatementWithVariableDeclaration = null;
 
-            if (awaitExpression != null && awaitExpression.AwaitKeyword == provider.SelectedElement)
+            switch (provider.GetSelectedElement<IAwaitReferencesOwner>())
             {
-                awaitedExpression = awaitExpression.Task;
+                case IAwaitExpression awaitExpression when awaitExpression.AwaitKeyword == provider.SelectedElement:
+                    // await task
+                    var awaitedExpression = awaitExpression.Task;
+                    if (awaitedExpression.IsConfigureAwaitAvailable())
+                    {
+                        expression = awaitedExpression;
+                    }
+                    break;
 
-                if (awaitedExpression.IsConfigureAwaitAvailable())
-                {
-                    return true;
-                }
+                case IUsingStatement usingStatement when usingStatement.AwaitKeyword == provider.SelectedElement:
+                    if (usingStatement.Expressions.Count == 1)
+                    {
+                        // await using (expression())
+                        expression = usingStatement.Expressions[0];
+                    }
+                    if (usingStatement.VariableDeclarations.Count == 1 &&
+                        usingStatement.VariableDeclarations[0] != null &&
+                        (usingStatement.VariableDeclarations[0].IsVar || usingStatement.VariableDeclarations[0].TypeUsage != null) &&
+                        usingStatement.Parent is IBlock)
+                    {
+                        // await using (var x = expression())
+                        // await using (Type x = expression())
+                        usingStatementWithVariableDeclaration = usingStatement;
+                    }
+                    break;
+
+                case IMultipleLocalVariableDeclaration variableDeclaration when variableDeclaration.AwaitKeyword == provider.SelectedElement:
+                    // await using var x = expression()
+                    // => not supported
+                    break;
+
+                case IForeachStatement foreachStatement when foreachStatement.AwaitKeyword == provider.SelectedElement:
+                    // await foreach (var item in collection)
+                    expression = foreachStatement.Collection;
+                    break;
             }
 
-            awaitedExpression = null;
-
-            return false;
+            return expression != null || usingStatementWithVariableDeclaration != null;
         }
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            Debug.Assert(awaitedExpression != null);
+            Debug.Assert(expression != null || usingStatementWithVariableDeclaration != null);
 
             try
             {
                 using (WriteLockCookie.Create())
                 {
-                    var factory = CSharpElementFactory.GetInstance(awaitedExpression);
+                    if (expression != null)
+                    {
+                        var factory = CSharpElementFactory.GetInstance(expression);
 
-                    ModificationUtil.ReplaceChild(
-                        awaitedExpression,
-                        factory.CreateExpression($"$0.{nameof(Task.ConfigureAwait)}(false)", awaitedExpression));
+                        ModificationUtil.ReplaceChild(expression, factory.CreateExpression($"$0.{nameof(Task.ConfigureAwait)}(false)", expression));
+                    }
+
+                    if (usingStatementWithVariableDeclaration != null)
+                    {
+                        var factory = CSharpElementFactory.GetInstance(usingStatementWithVariableDeclaration);
+
+                        var variableDeclaration = usingStatementWithVariableDeclaration.VariableDeclarations[0];
+                        Debug.Assert(variableDeclaration != null);
+
+                        usingStatementWithVariableDeclaration.RemoveVariableDeclaration(variableDeclaration);
+
+                        string variableTypeDeclaration;
+                        if (variableDeclaration.IsVar)
+                        {
+                            variableTypeDeclaration = "var";
+                        }
+                        else
+                        {
+                            Debug.Assert(variableDeclaration.TypeUsage != null);
+
+                            variableTypeDeclaration = variableDeclaration.TypeUsage.GetText();
+                        }
+
+                        Debug.Assert(usingStatementWithVariableDeclaration.Parent is IBlock);
+
+                        ((IBlock)usingStatementWithVariableDeclaration.Parent).AddStatementBefore(
+                            factory.CreateStatement($"{variableTypeDeclaration} {variableDeclaration.GetText()};"),
+                            usingStatementWithVariableDeclaration);
+
+                        usingStatementWithVariableDeclaration.SetExpression(
+                            factory.CreateExpression($"{variableDeclaration.DeclaredName}.{nameof(Task.ConfigureAwait)}(false)"));
+                    }
                 }
 
                 return _ => { };
             }
             finally
             {
-                awaitedExpression = null;
+                expression = null;
+                usingStatementWithVariableDeclaration = null;
             }
         }
     }

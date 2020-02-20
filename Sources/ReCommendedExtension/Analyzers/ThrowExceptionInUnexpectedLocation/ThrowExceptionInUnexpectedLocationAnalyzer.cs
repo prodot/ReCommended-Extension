@@ -15,7 +15,7 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
 {
-    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(ThrowExceptionInUnexpectedLocationHighlighting) })]
+    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(ThrowExceptionInUnexpectedLocationWarning) })]
     public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         enum Location
@@ -31,6 +31,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
             StaticConstructor,
             Finalizer,
             DisposeMethod,
+            DisposeAsyncMethod,
             DisposeMethodWithParameterFalseCodePath,
             EqualityOperator,
             ImplicitCastOperator,
@@ -124,6 +125,14 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                             nameof(IDisposable.Dispose))))
                     {
                         return Location.DisposeMethod;
+                    }
+
+                    var iAsyncDisposableTypeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.IASYNCDISPOSABLE_FQN, psiModule);
+                    if (iAsyncDisposableTypeElement != null &&
+                        methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(iAsyncDisposableTypeElement, "DisposeAsync")))
+                    {
+                        // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
+                        return Location.DisposeAsyncMethod;
                     }
 
                     if (methodDeclaration.DeclaredElement.ShortName == disposeMethodName && methodDeclaration.DeclaredElement.Parameters.Count == 1)
@@ -234,6 +243,8 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
 
                 case Location.DisposeMethod: return $"'{nameof(IDisposable.Dispose)}' methods";
 
+                case Location.DisposeAsyncMethod: return "'DisposeAsync' methods"; // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
+
                 case Location.DisposeMethodWithParameterFalseCodePath: return $"'{disposeMethodName}(false)' code paths";
 
                 case Location.EqualityOperator: return "equality operators";
@@ -274,9 +285,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                 }
 
                 consumer.AddHighlighting(
-                    new ThrowExceptionInUnexpectedLocationHighlighting(
-                        $"Exceptions should never be thrown in {GetText((Location)location)}.",
-                        element));
+                    new ThrowExceptionInUnexpectedLocationWarning($"Exceptions should never be thrown in {GetText((Location)location)}.", element));
             }
         }
     }

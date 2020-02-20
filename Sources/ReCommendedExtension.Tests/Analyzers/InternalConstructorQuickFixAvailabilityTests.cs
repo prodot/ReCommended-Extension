@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\InternalConstructorQuickFixes";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is InternalConstructorVisibilityHighlighting;
+            => highlighting is InternalConstructorVisibilitySuggestion;
 
         [Test]
         public void TestInternalConstructorAvailability() => DoNamedTest2();

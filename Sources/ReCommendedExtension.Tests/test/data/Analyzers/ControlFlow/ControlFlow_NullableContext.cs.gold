@@ -1,0 +1,287 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal static class Class
+    {
+        static string NotNullMethod() => "one";
+
+        static string field = NotNullMethod().|AssertNotNull|(0)();
+
+        static string Property => NotNullMethod().|AssertNotNull|(1)();
+
+        static Lazy<string?> PropertyLazy => new Lazy<string?>(() => NotNullMethod().|AssertNotNull|(2)());
+
+        static string? PropertyNullable => null;
+
+        static string Property2 { get; } = NotNullMethod().|AssertNotNull|(3)();
+
+        static string Property3 { get; set; } = NotNullMethod().|AssertNotNull|(4)();
+
+        static string Method() => NotNullMethod().|AssertNotNull|(5)();
+
+        [DebuggerStepThrough]
+        [NotNull]
+        static T AssertNotNull<T>(this T value) where T : class
+        {
+            |AssertThatTrue(value != null)|(6);
+
+            return value;
+        }
+
+        class Nested
+        {
+            string? field = NotNullMethod().|AssertNotNull|(7)();
+
+            string? Property => NotNullMethod().|AssertNotNull|(8)();
+
+            string? AutoProperty { get; } = NotNullMethod().|AssertNotNull|(9)();
+        }
+
+        static void ClassConstraint<T>(T one, T? two) where T : class
+        {
+            var x = one.|AssertNotNull|(10)();
+            var y = two.AssertNotNull().|AssertNotNull|(11)();
+        }
+
+        static void ClassNullableClassConstraint<T>(T one) where T : class?
+        {
+            var x = one.AssertNotNull().|AssertNotNull|(12)();
+        }
+
+        static readonly string[] Words = { "one", "two", "three" };
+
+        static readonly Dictionary<int, string> WordMap = new Dictionary<int, string>{ { 1, "one" }, { 2, "two" } };
+
+        static readonly Dictionary<int, string[]> WordMap2 =
+            new Dictionary<int, string[]> { { 1, new[] { "one", "two", "three" } }, { 2, new[] { "one", "two", "three" } } };
+
+        static void Iterations()
+        {
+            var query0 = from word in Words where word.|AssertNotNull|(13)().Length > 2 select word; // "AssertNotNull" must be redundant
+            var query1 = from word in Words where word != null select word; // "word != null" is always true
+            var query2 = from word in Words select word.|AssertNotNull|(14)(); // "AssertNotNull" must be redundant
+
+            |AssertThatNotNull(Words)|(15);
+            foreach (var word in Words)
+            {
+                |AssertThatNotNull(word)|(16);
+            }
+
+            |AssertThatNotNull(WordMap)|(17);
+            foreach (var (key, value) in WordMap)
+            {
+                AssertThatNotNull(value);
+            }
+            foreach (var value in WordMap.Values)
+            {
+                AssertThatNotNull(value);
+            }
+
+            |AssertThatNotNull(WordMap2)|(18);
+            foreach (var (key, values) in WordMap2)
+            {
+                AssertThatNotNull(values);
+                foreach (var value in values)
+                {
+                    AssertThatNotNull(value);
+                }
+            }
+            foreach (var values in WordMap2.Values)
+            {
+                AssertThatNotNull(values);
+                foreach (var value in values)
+                {
+                    AssertThatNotNull(value);
+                }
+            }
+        }
+
+        static void Foo(bool b, object? s, string? x)
+        {
+            Action action = () =>
+            {
+                var text = "";
+                |AssertThatTrue(text != null)|(19);
+                var text2 = text.|AssertNotNull|(20)().Replace("a", "b");
+                |AssertThatTrue(text2 != null)|(21);
+            };
+
+            var length = Property.     |AssertNotNull|(22)()         .     |AssertNotNull|(23)()      .Length;
+            var qqq = Property.|AssertNotNull|(24)().ToList().All(char.IsDigit);
+
+            if (b)
+            {
+                if (b) { }
+
+                AssertThatTrue(b); // must be redundant
+
+                Console.WriteLine(b.ToString());
+            }
+            else
+            {
+                AssertThatFalse(b); // must be redundant
+            }
+
+            if (s is string)
+            {
+                if (s as string != null) { }
+                |AssertThatTrue(s as string != null)|(25);
+                |AssertThatFalse(s as string == null)|(26);
+                |AssertThatNotNull(s as string)|(27);
+            }
+            else
+            {
+                AssertThatNull(s as string);
+            }
+
+            if (PropertyNullable != null)
+            {
+                |AssertThatTrue(PropertyNullable != null)|(28);
+            }
+            AssertThatFalse(PropertyNullable == null);
+            |AssertThatNotNull(PropertyNullable)|(29);
+
+            |AssertThatTrue(true)|(30);
+            |AssertThatFalse(false)|(31);
+            |AssertThatNull<string>(null)|(32);
+
+            |AssertThatNotNull(new object())|(33);
+            new object().|AssertNotNull|(34)();
+
+            if (x != null)
+            {
+                if (x != null)
+                {
+                    Foo(true, "", null);
+                }
+
+                |AssertThatTrue(condition: x != null)|(35);
+                |AssertThatTrue(x != null)|(36);
+                |AssertThatTrue(null != x)|(37);
+
+                |AssertThatFalse(null == x)|(38);
+                |AssertThatFalse(x == null)|(39);
+
+                Console.WriteLine(x.ToString());
+            }
+            else
+            {
+                |AssertThatTrue(condition: x == null)|(40);
+                |AssertThatTrue(x == null)|(41);
+                |AssertThatTrue(null == x)|(42);
+
+                |AssertThatFalse(null != x)|(43);
+                |AssertThatFalse(x != null)|(44);
+
+                |AssertThatNull(x)|(45);
+            }
+        }
+
+        static void Foo(string x)
+        {
+            |AssertThatNotNull(x)|(46);
+            x.|AssertNotNull|(47)();
+        }
+
+        class A
+        {
+            public string NotNull { get; set; }
+
+            public string? CanBeNull { get; set; }
+        }
+
+        static void NullPropagation1(A? canBeNull) => AssertThatTrue(canBeNull?.NotNull != null);
+
+        static void NullPropagation2(A? canBeNull) => AssertThatNotNull(canBeNull?.NotNull);
+
+        static void NullPropagation3(A? canBeNull) => canBeNull?.NotNull.AssertNotNull();
+
+        static void NullPropagation4(A notNull) => |AssertThatTrue(notNull?.NotNull != null)|(48);
+
+        static void NullPropagation5(A notNull) => |AssertThatNotNull(notNull?.NotNull)|(49);
+
+        static void NullPropagation6(A notNull) => notNull?.NotNull.|AssertNotNull|(50)();
+
+        static void NullPropagation7(A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
+
+        static void NullPropagation8(A notNull) => AssertThatNotNull(notNull?.CanBeNull);
+
+        static void NullPropagation9(A notNull) => notNull?.CanBeNull.AssertNotNull();
+
+        [AssertionMethod]
+        [ContractAnnotation("false => void")]
+        static void AssertThatTrue([AssertionCondition(AssertionConditionType.IS_TRUE)] bool condition) => Debug.Assert(condition);
+
+        [AssertionMethod]
+        [ContractAnnotation("true => void")]
+        static void AssertThatFalse([AssertionCondition(AssertionConditionType.IS_FALSE)] bool condition) => Debug.Assert(!condition);
+
+        [AssertionMethod]
+        [ContractAnnotation("notnull => void")]
+        static void AssertThatNull<T>([AssertionCondition(AssertionConditionType.IS_NULL)] T reference) where T : class
+            => Debug.Assert(reference == null);
+
+        [AssertionMethod]
+        [ContractAnnotation("null => void")]
+        static void AssertThatNotNull<T>([AssertionCondition(AssertionConditionType.IS_NOT_NULL)] T reference) where T : class
+            => |Debug.Assert(reference != null)|(51);
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(1): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(2): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(3): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(4): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(5): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(6): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(7): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(8): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(9): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(10): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(11): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(12): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(13): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(14): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(15): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(16): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(17): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(18): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(19): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(20): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(21): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(22): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(23): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(24): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(25): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(26): ReSharper Suggestion: Assertion is redundant because the expression is always false.
+(27): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(28): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(29): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(30): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(31): ReSharper Suggestion: Assertion is redundant because the expression is always false.
+(32): ReSharper Suggestion: Assertion is redundant because the expression is always null.
+(33): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(34): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(35): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(36): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(37): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(38): ReSharper Suggestion: Assertion is redundant because the expression is always false.
+(39): ReSharper Suggestion: Assertion is redundant because the expression is always false.
+(40): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(41): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(42): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(43): ReSharper Suggestion: Assertion is redundant because the expression is always false.
+(44): ReSharper Suggestion: Assertion is redundant because the expression is always false.
+(45): ReSharper Suggestion: Assertion is redundant because the expression is always null.
+(46): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(47): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(48): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(49): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(50): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(51): ReSharper Suggestion: Assertion is redundant because the expression is always true.

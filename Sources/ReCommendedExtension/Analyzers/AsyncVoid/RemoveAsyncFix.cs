@@ -12,9 +12,9 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
     public sealed class RemoveAsyncFix : QuickFixBase
     {
         [NotNull]
-        readonly AsyncVoidFunctionExpressionHighlighting highlighting;
+        readonly AsyncVoidFunctionExpressionWarning highlighting;
 
-        public RemoveAsyncFix([NotNull] AsyncVoidFunctionExpressionHighlighting highlighting) => this.highlighting = highlighting;
+        public RemoveAsyncFix([NotNull] AsyncVoidFunctionExpressionWarning highlighting) => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

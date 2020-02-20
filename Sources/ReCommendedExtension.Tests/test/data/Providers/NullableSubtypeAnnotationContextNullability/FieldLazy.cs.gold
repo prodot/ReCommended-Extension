@@ -1,0 +1,124 @@
+﻿using System;
+
+namespace ReCommendedExtension.Tests.test.data
+{
+    public class Simple
+    {
+        Lazy<string> nonNullableReference;
+        Lazy<string?> nullableReference;
+        Lazy<int> nonNullableValue;
+        Lazy<int?> nullableValue;
+
+        void NullCheck_Value()
+        {
+            if (|nonNullableReference.Value != null|(0)) { }
+            if (nullableReference.Value != null) { }
+            if (||nonNullableValue.Value != null|(1)|(2)) { }
+            if (nullableValue.Value != null) { }
+        }
+
+        void Dereferencing_Value()
+        {
+            Console.WriteLine(nonNullableReference.Value.Length);
+            Console.WriteLine(|nullableReference.Value|(3).Length);
+            Console.WriteLine(nonNullableValue.Value.ToString());
+            Console.WriteLine(nullableValue.Value.ToString());
+        }
+    }
+
+    class Generic<T>
+    {
+        Lazy<T> any;
+        Lazy<|T?|(4)> invalid;
+
+        void NullCheck_Value()
+        {
+            if (any.Value != null) { }
+        }
+
+        void Dereferencing_Value()
+        {
+            Console.WriteLine(|any.Value|(5).ToString());
+        }
+    }
+
+    class GenericForReference<T> where T : class
+    {
+        Lazy<T> nonNullableReference;
+        Lazy<T?> nullableReference;
+
+        void NullCheck_Value()
+        {
+            if (|nonNullableReference.Value != null|(6)) { }
+            if (nullableReference.Value != null) { }
+        }
+
+        void Dereferencing_Value()
+        {
+            Console.WriteLine(nonNullableReference.Value.ToString());
+            Console.WriteLine(|nullableReference.Value|(7).ToString());
+        }
+    }
+
+    class GenericForReferenceNullable<T> where T : class?
+    {
+        Lazy<T> nullableReference;
+        Lazy<|T?|(8)> invalidReference;
+
+        void NullCheck_Value()
+        {
+            if (nullableReference.Value != null) { }
+        }
+
+        void Dereferencing_Value()
+        {
+            Console.WriteLine(|nullableReference.Value|(9).ToString());
+        }
+    }
+
+    class GenericForValue<T> where T : struct
+    {
+        Lazy<T> nonNullableValue;
+        Lazy<T?> nullableValue;
+
+        void NullCheck_Value()
+        {
+            if (nullableValue.Value != null) { }
+        }
+
+        void Dereferencing_Value()
+        {
+            Console.WriteLine(nonNullableValue.Value.ToString());
+            Console.WriteLine(nullableValue.Value.ToString());
+        }
+    }
+
+    class GenericNotNull<T> where T : notnull
+    {
+        Lazy<T> nonNullable;
+        Lazy<|T?|(10)> invalid;
+
+        void NullCheck_Value()
+        {
+            if (|nonNullable.Value != null|(11)) { }
+        }
+
+        void Dereferencing_Value()
+        {
+            Console.WriteLine(nonNullable.Value.ToString());
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Expression is always true
+(1):<overlapped> ReSharper Warning: Expression is always true
+(2): ReSharper Warning: Expression is always true
+(3): ReSharper Warning: Possible 'System.NullReferenceException'
+(4): ReSharper Underlined Error Highlighting: Only non-nullable value type could be underlying of 'System.Nullable'
+(5): ReSharper Warning: Possible 'System.NullReferenceException'
+(6): ReSharper Warning: Expression is always true
+(7): ReSharper Warning: Possible 'System.NullReferenceException'
+(8): ReSharper Underlined Error Highlighting: Only non-nullable value type could be underlying of 'System.Nullable'
+(9): ReSharper Warning: Possible 'System.NullReferenceException'
+(10): ReSharper Underlined Error Highlighting: Only non-nullable value type could be underlying of 'System.Nullable'
+(11): ReSharper Warning: Expression is always true

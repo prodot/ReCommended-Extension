@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\UncatchableException";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is UncatchableExceptionHighlighting;
+            => highlighting is UncatchableExceptionWarning;
 
         [Test]
         public void TestUncatchableException() => DoNamedTest2();

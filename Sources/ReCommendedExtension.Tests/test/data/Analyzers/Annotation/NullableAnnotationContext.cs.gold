@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    class Sample
+    {
+        [|NotNull|(0)]
+        [|ItemNotNull|(1)]
+        List<string> notNullables;
+
+        [|CanBeNull|(2)]
+        [|ItemCanBeNull|(3)]
+        List<string> nullables;
+
+        [return: System.Diagnostics.CodeAnalysis.NotNull]
+        string SystemAnnotation() => null;
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
+(1): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
+(2): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
+(3): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.

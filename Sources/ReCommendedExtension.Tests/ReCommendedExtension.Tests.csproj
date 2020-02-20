@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);Packages\**</DefaultItemExcludes>
-    <LangVersion>latest</LangVersion>
     <Platforms>x86</Platforms>
   </PropertyGroup>
 
@@ -18,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2019.2.3">
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2019.3.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly name="Microsoft.Extensions.Configuration.UserSecrets, Version=3.1.0.0">
+
+    <!-- Microsoft.Extensions.Configuration.UserSecrets.PathHelper -->
+    <member name="M:Microsoft.Extensions.Configuration.UserSecrets.PathHelper.GetSecretsPathFromSecretsId(System.String)">
+        <parameter name="userSecretsId">
+            <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+        </parameter>
+        <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </member>
+        
+</assembly>

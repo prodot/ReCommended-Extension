@@ -208,7 +208,10 @@ namespace ReCommendedExtension.Deployment
 
             Debug.Assert(nuspec.Root != null);
 
-            nuspec.Root.Element("files")?.Element("file")?.SetAttributeValue("src", Path.GetFileName(assemblyPath));
+            nuspec.Root.Element("files")
+                ?.Elements("file")
+                .First(e => (string)e.Attribute("src") == "")
+                ?.SetAttributeValue("src", Path.GetFileName(assemblyPath));
 
             var metadataElement = nuspec.Root.Element("metadata");
             Debug.Assert(metadataElement != null);

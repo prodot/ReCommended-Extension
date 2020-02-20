@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\LockOnObjectWithWeakIdentity";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is LockOnObjectWithWeakIdentityHighlighting;
+            => highlighting is LockOnObjectWithWeakIdentityWarning;
 
         [Test]
         public void TestLockOnObjectWithWeakIdentity() => DoNamedTest2();

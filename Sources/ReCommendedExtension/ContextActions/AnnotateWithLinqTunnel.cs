@@ -30,7 +30,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
             => declaredElement is IMethod method &&
-                method.ReturnType.IsGenericIEnumerable() &&
-                method.Parameters.Any(p => p.AssertNotNull().Type.IsGenericIEnumerable());
+                (method.ReturnType.IsGenericIEnumerable() && method.Parameters.Any(p => p.AssertNotNull().Type.IsGenericIEnumerable()) ||
+                    method.ReturnType.IsIAsyncEnumerable() && method.Parameters.Any(p => p.AssertNotNull().Type.IsIAsyncEnumerable()));
     }
 }

@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\ConditionalInvocation";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is ConditionalInvocationHighlighting;
+            => highlighting is ConditionalInvocationHint;
 
         [Test]
         public void TestConditional() => DoNamedTest2();

@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\DelegateInvokeQuickFixes";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantDelegateInvokeHighlighting;
+            => highlighting is RedundantDelegateInvokeSuggestion;
 
         [Test]
         public void TestDelegateInvokeAvailability() => DoNamedTest2();

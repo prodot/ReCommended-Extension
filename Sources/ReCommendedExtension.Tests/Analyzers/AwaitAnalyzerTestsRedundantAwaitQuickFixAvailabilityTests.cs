@@ -8,14 +8,14 @@ using ReCommendedExtension.Analyzers.Await;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
-    [TestNetFramework45]
+    [TestNetCore30]
     [TestFixture]
     public sealed class AwaitAnalyzerTestsRedundantAwaitQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\AwaitQuickFixes";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAwaitHighlighting;
+            => highlighting is RedundantAwaitSuggestion;
 
         [Test]
         public void TestRedundantAwaitAvailability() => DoNamedTest2();

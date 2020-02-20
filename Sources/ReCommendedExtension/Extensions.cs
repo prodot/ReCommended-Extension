@@ -149,7 +149,7 @@ namespace ReCommendedExtension
             IClassDeclaration contractClassDeclaration = null;
 
             var attributeInstance = typeDeclaration.DeclaredElement?.GetAttributeInstances(ClrTypeNames.ContractClassAttribute, false)
-                ?.FirstOrDefault();
+                .FirstOrDefault();
             if (attributeInstance != null && attributeInstance.PositionParameterCount > 0)
             {
                 var typeElement = attributeInstance.PositionParameter(0).TypeValue.GetTypeElement<IClass>();
@@ -489,7 +489,8 @@ namespace ReCommendedExtension
 
                     case IAsExpression asExpression when asExpression.Operand != null &&
                         asExpression.Operand.ConstantValue.IsNull() &&
-                        Equals(asExpression.Operand.Type(), type) &&
+                        asExpression.TypeOperand != null &&
+                        Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type) &&
                         type.IsNullable():
                         return true;
                 }
@@ -505,7 +506,8 @@ namespace ReCommendedExtension
 
                     case IAsExpression asExpression when asExpression.Operand != null &&
                         asExpression.Operand.ConstantValue.IsNull() &&
-                        Equals(asExpression.Operand.Type(), type):
+                        asExpression.TypeOperand != null &&
+                        Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type):
                         return true;
                 }
             }

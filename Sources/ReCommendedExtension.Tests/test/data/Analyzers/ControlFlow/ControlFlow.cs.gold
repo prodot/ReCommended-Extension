@@ -55,7 +55,7 @@ namespace Test
         static void Foo(bool b, object s, string x)
         {
             var query0 = from word in Words where word.AssertNotNull().Length > 2 select word; // "AssertNotNull" must be redundant
-            var query1 = from word in Words where word != null select word;
+            var query1 = from word in Words where word != null select word; // "word != null" is always true
             var query2 = from word in Words select word.AssertNotNull(); // "AssertNotNull" must be redundant
 
             Action action = () =>

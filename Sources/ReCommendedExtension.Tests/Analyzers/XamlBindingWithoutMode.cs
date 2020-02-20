@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\XamlBindingWithoutMode";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is XamlBindingWithoutModeHighlighting;
+            => highlighting is XamlBindingWithoutModeWarning;
 
         [Test]
         public void TestXamlBindingWithoutMode() => DoNamedTest2();

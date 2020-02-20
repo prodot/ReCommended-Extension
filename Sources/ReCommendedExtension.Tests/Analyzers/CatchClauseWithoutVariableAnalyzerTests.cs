@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariable";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is CatchClauseWithoutVariableHighlighting;
+            => highlighting is CatchClauseWithoutVariableSuggestion;
 
         [Test]
         public void TestCatchClauseWithoutVariable() => DoNamedTest2();

@@ -16,9 +16,9 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
     public sealed class RemoveNotifyPropertyChangedInvocatorFix : QuickFixBase
     {
         [NotNull]
-        readonly NotifyPropertyChangedInvocatorFromConstructorHighlighting highlighting;
+        readonly NotifyPropertyChangedInvocatorFromConstructorWarning highlighting;
 
-        public RemoveNotifyPropertyChangedInvocatorFix([NotNull] NotifyPropertyChangedInvocatorFromConstructorHighlighting highlighting)
+        public RemoveNotifyPropertyChangedInvocatorFix([NotNull] NotifyPropertyChangedInvocatorFromConstructorWarning highlighting)
             => this.highlighting = highlighting;
 
         public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;

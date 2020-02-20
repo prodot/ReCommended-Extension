@@ -64,6 +64,11 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         {
             var declaration = Provider.GetSelectedElement<IDeclaration>(true, false);
 
+            if (declaration.IsNullableAnnotationsContextEnabled())
+            {
+                return false;
+            }
+
             contractInfo = ContractInfo.TryCreate(declaration, Provider.SelectedTreeRange, IsAvailableForType);
 
             return contractInfo != null;

@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\YieldReturnWithinLock";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is YieldReturnWithinLockHighlighting;
+            => highlighting is YieldReturnWithinLockWarning;
 
         [Test]
         public void TestYieldReturnWithinLock() => DoNamedTest2();

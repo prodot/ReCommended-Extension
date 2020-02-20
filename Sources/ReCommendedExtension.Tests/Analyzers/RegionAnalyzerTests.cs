@@ -13,9 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\Region";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is EmptyRegionHighlighting ||
-                highlighting is RegionWithSingleElementHighlighting ||
-                highlighting is RegionWithinTypeMemberBodyHighlighting;
+            => highlighting is RegionHighlighting;
 
         [Test]
         public void TestEmptyRegion() => DoNamedTest2();

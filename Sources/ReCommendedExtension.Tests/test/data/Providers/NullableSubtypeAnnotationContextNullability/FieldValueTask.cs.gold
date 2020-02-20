@@ -1,0 +1,273 @@
+﻿using System;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data
+{
+    public class Simple
+    {
+        ValueTask<string> nonNullableReference;
+        ValueTask<string?> nullableReference;
+        ValueTask<int> nonNullableValue;
+        ValueTask<int?> nullableValue;
+
+        async Task NullCheck_Awaiting()
+        {
+            if (await nonNullableReference != null) { }
+            if (await nullableReference != null) { }
+            if (|await nonNullableValue != null|(0)) { }
+            if (await nullableValue != null) { }
+        }
+
+        void NullCheck_GetAwaiter_GetResult()
+        {
+            if (nonNullableReference.GetAwaiter().GetResult() != null) { }
+            if (nullableReference.GetAwaiter().GetResult() != null) { }
+            if (||nonNullableValue.GetAwaiter().GetResult() != null|(1)|(2)) { }
+            if (nullableValue.GetAwaiter().GetResult() != null) { }
+        }
+
+        void NullCheck_Result()
+        {
+            if (nonNullableReference.Result != null) { }
+            if (nullableReference.Result != null) { }
+            if (||nonNullableValue.Result != null|(3)|(4)) { }
+            if (nullableValue.Result != null) { }
+        }
+
+        async Task Dereferencing_Awaiting()
+        {
+            Console.WriteLine((await nonNullableReference).Length);
+            Console.WriteLine((await nullableReference).Length);
+            Console.WriteLine((await nonNullableValue).ToString());
+            Console.WriteLine((await nullableValue).ToString());
+        }
+
+        void Dereferencing_GetAwaiter_GetResult()
+        {
+            Console.WriteLine(|nonNullableReference.GetAwaiter().GetResult()|(5).Length);
+            Console.WriteLine(|nullableReference.GetAwaiter().GetResult()|(6).Length);
+            Console.WriteLine(nonNullableValue.GetAwaiter().GetResult().ToString());
+            Console.WriteLine(nullableValue.GetAwaiter().GetResult().ToString());
+        }
+
+        void Dereferencing_Result()
+        {
+            Console.WriteLine(|nonNullableReference.Result|(7).Length);
+            Console.WriteLine(|nullableReference.Result|(8).Length);
+            Console.WriteLine(nonNullableValue.Result.ToString());
+            Console.WriteLine(nullableValue.Result.ToString());
+        }
+    }
+
+    class Generic<T>
+    {
+        ValueTask<T> any;
+        ValueTask<|T?|(9)> invalid;
+
+        async Task NullCheck_Awaiting()
+        {
+            if (await any != null) { }
+        }
+
+        void NullCheck_GetAwaiter_GetResult()
+        {
+            if (any.GetAwaiter().GetResult() != null) { }
+        }
+
+        void NullCheck_Result()
+        {
+            if (any.Result != null) { }
+        }
+
+        async Task Dereferencing_Awaiting()
+        {
+            Console.WriteLine((await any).ToString());
+        }
+
+        void Dereferencing_GetAwaiter_GetResult()
+        {
+            Console.WriteLine(|any.GetAwaiter().GetResult()|(10).ToString());
+        }
+
+        void Dereferencing_Result()
+        {
+            Console.WriteLine(|any.Result|(11).ToString());
+        }
+    }
+
+    class GenericForReference<T> where T : class
+    {
+        ValueTask<T> nonNullableReference;
+        ValueTask<T?> nullableReference;
+
+        async Task NullCheck_Awaiting()
+        {
+            if (await nonNullableReference != null) { }
+            if (await nullableReference != null) { }
+        }
+
+        void NullCheck_GetAwaiter_GetResult()
+        {
+            if (nonNullableReference.GetAwaiter().GetResult() != null) { }
+            if (nullableReference.GetAwaiter().GetResult() != null) { }
+        }
+
+        void NullCheck_Result()
+        {
+            if (nonNullableReference.Result != null) { }
+            if (nullableReference.Result != null) { }
+        }
+
+        async Task Dereferencing_Awaiting()
+        {
+            Console.WriteLine((await nonNullableReference).ToString());
+            Console.WriteLine((await nullableReference).ToString());
+        }
+
+        void Dereferencing_GetAwaiter_GetResult()
+        {
+            Console.WriteLine(|nonNullableReference.GetAwaiter().GetResult()|(12).ToString());
+            Console.WriteLine(|nullableReference.GetAwaiter().GetResult()|(13).ToString());
+        }
+
+        void Dereferencing_Result()
+        {
+            Console.WriteLine(|nonNullableReference.Result|(14).ToString());
+            Console.WriteLine(|nullableReference.Result|(15).ToString());
+        }
+    }
+
+    class GenericForReferenceNullable<T> where T : class?
+    {
+        ValueTask<T> nullableReference;
+        ValueTask<|T?|(16)> invalidReference;
+
+        async Task NullCheck_Awaiting()
+        {
+            if (await nullableReference != null) { }
+        }
+
+        void NullCheck_GetAwaiter_GetResult()
+        {
+            if (nullableReference.GetAwaiter().GetResult() != null) { }
+        }
+
+        void NullCheck_Result()
+        {
+            if (nullableReference.Result != null) { }
+        }
+
+        async Task Dereferencing_Awaiting()
+        {
+            Console.WriteLine((await nullableReference).ToString());
+        }
+
+        void Dereferencing_GetAwaiter_GetResult()
+        {
+            Console.WriteLine(|nullableReference.GetAwaiter().GetResult()|(17).ToString());
+        }
+
+        void Dereferencing_Result()
+        {
+            Console.WriteLine(|nullableReference.Result|(18).ToString());
+        }
+    }
+
+    class GenericForValue<T> where T : struct
+    {
+        ValueTask<T> nonNullableValue;
+        ValueTask<T?> nullableValue;
+
+        async Task NullCheck_Awaiting()
+        {
+            if (await nullableValue != null) { }
+        }
+
+        void NullCheck_GetAwaiter_GetResult()
+        {
+            if (nullableValue.GetAwaiter().GetResult() != null) { }
+        }
+
+        void NullCheck_Result()
+        {
+            if (nullableValue.Result != null) { }
+        }
+
+        async Task Dereferencing_Awaiting()
+        {
+            Console.WriteLine((await nonNullableValue).ToString());
+            Console.WriteLine((await nullableValue).ToString());
+        }
+
+        void Dereferencing_GetAwaiter_GetResult()
+        {
+            Console.WriteLine(nonNullableValue.GetAwaiter().GetResult().ToString());
+            Console.WriteLine(nullableValue.GetAwaiter().GetResult().ToString());
+        }
+
+        void Dereferencing_Result()
+        {
+            Console.WriteLine(nonNullableValue.Result.ToString());
+            Console.WriteLine(nullableValue.Result.ToString());
+        }
+    }
+
+    class GenericNotNull<T> where T : notnull
+    {
+        ValueTask<T> nonNullable;
+        ValueTask<|T?|(19)> invalid;
+
+        async Task NullCheck_Awaiting()
+        {
+            if (await nonNullable != null) { }
+        }
+
+        void NullCheck_GetAwaiter_GetResult()
+        {
+            if (nonNullable.GetAwaiter().GetResult() != null) { }
+        }
+
+        void NullCheck_Result()
+        {
+            if (nonNullable.Result != null) { }
+        }
+
+        async Task Dereferencing_Awaiting()
+        {
+            Console.WriteLine((await nonNullable).ToString());
+        }
+
+        void Dereferencing_GetAwaiter_GetResult()
+        {
+            Console.WriteLine(|nonNullable.GetAwaiter().GetResult()|(20).ToString());
+        }
+
+        void Dereferencing_Result()
+        {
+            Console.WriteLine(|nonNullable.Result|(21).ToString());
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Expression is always true
+(1):<overlapped> ReSharper Warning: Expression is always true
+(2): ReSharper Warning: Expression is always true
+(3):<overlapped> ReSharper Warning: Expression is always true
+(4): ReSharper Warning: Expression is always true
+(5): ReSharper Warning: Possible 'System.NullReferenceException'
+(6): ReSharper Warning: Possible 'System.NullReferenceException'
+(7): ReSharper Warning: Possible 'System.NullReferenceException'
+(8): ReSharper Warning: Possible 'System.NullReferenceException'
+(9): ReSharper Underlined Error Highlighting: Only non-nullable value type could be underlying of 'System.Nullable'
+(10): ReSharper Warning: Possible 'System.NullReferenceException'
+(11): ReSharper Warning: Possible 'System.NullReferenceException'
+(12): ReSharper Warning: Possible 'System.NullReferenceException'
+(13): ReSharper Warning: Possible 'System.NullReferenceException'
+(14): ReSharper Warning: Possible 'System.NullReferenceException'
+(15): ReSharper Warning: Possible 'System.NullReferenceException'
+(16): ReSharper Underlined Error Highlighting: Only non-nullable value type could be underlying of 'System.Nullable'
+(17): ReSharper Warning: Possible 'System.NullReferenceException'
+(18): ReSharper Warning: Possible 'System.NullReferenceException'
+(19): ReSharper Underlined Error Highlighting: Only non-nullable value type could be underlying of 'System.Nullable'
+(20): ReSharper Warning: Possible 'System.NullReferenceException'
+(21): ReSharper Warning: Possible 'System.NullReferenceException'
