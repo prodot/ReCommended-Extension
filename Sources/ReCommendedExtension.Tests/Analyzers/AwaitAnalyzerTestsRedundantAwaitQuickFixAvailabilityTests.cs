@@ -19,5 +19,8 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [Test]
         public void TestRedundantAwaitAvailability() => DoNamedTest2();
+
+        [Test]
+        public void TestRedundantAwaitValueTaskAvailability() => DoNamedTest2();
     }
 }

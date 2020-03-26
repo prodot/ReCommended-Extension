@@ -8,7 +8,7 @@ using ReCommendedExtension.Analyzers.Await;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
-    [TestNetFramework45]
+    [TestNetCore30]
     [TestFixture]
     public sealed class AwaitAnalyzerTestsRedundantAwait : CSharpHighlightingTestBase
     {
@@ -19,5 +19,8 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [Test]
         public void TestRedundantAwait() => DoNamedTest2();
+
+        [Test]
+        public void TestRedundantAwait_ValueTask() => DoNamedTest2();
     }
 }

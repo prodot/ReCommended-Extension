@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
@@ -102,6 +103,9 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         async Task<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex_AsExpressionBodied()
             => await Task.FromResult(new Dictionary<int, IList<string>>());
 
+        async Task<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex_AsExpressionBodied_WithConfigureAwait()
+            => await Task.FromResult(new Dictionary<int, IList<string>>()).ConfigureAwait(false);
+
         async Task Method_AwaitNonTask()
         {
             await Task.Yield();
@@ -113,7 +117,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         {
             using var p = new Process();
 
-            return await Task.FromResult(35);
+            await Task.FromResult(35);
         }
 
         async Task Method_UsingVar2()
@@ -226,7 +230,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 using var p = new Process();
 
-                return await Task.FromResult(35);
+                await Task.FromResult(35);
             };
 
             Func<Task> Method_UsingVar2 = async () =>
@@ -338,7 +342,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         {
             using var p = new Process();
 
-            return await Task.FromResult(35);
+            await Task.FromResult(35);
         };
 
         Func<Task> Method_UsingVar2 = async () =>
@@ -430,7 +434,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 using var p = new Process();
 
-                return await Task.FromResult(35);
+                await Task.FromResult(35);
             };
 
             Func<Task> Method_UsingVar2 = async delegate
@@ -521,7 +525,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         {
             using var p = new Process();
 
-            return await Task.FromResult(35);
+            await Task.FromResult(35);
         };
 
         Func<Task> Method_UsingVar2 = async delegate
@@ -643,7 +647,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 using var p = new Process();
 
-                return await Task.FromResult(35);
+                await Task.FromResult(35);
             }
 
             async Task Method_UsingVar2()
