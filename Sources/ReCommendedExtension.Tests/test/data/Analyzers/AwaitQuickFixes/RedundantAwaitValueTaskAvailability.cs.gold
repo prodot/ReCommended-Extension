@@ -1,0 +1,928 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
+{
+    public static class Test
+    {
+        public static async ValueTask Delay() => await Task.Delay(10);
+
+        public static async ValueTask<T> Calc<T>(T x)
+        {
+            await Task.Delay(10);
+            return x;
+        }
+    }
+
+    public class AwaitForMethods
+    {
+        |async|(0) ValueTask Method()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(1) Test.Delay();
+        }
+
+        |async|(2) ValueTask Method_WithConfigureAwait()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(3) Test.Delay()|.ConfigureAwait(false)|(4);
+        }
+
+        |async|(5) ValueTask Method_AsExpressionBodied() => |await|(6) Test.Delay();
+
+        |async|(7) ValueTask Method_AsExpressionBodied_WithConfigureAwait() => |await|(8) Test.Delay()|.ConfigureAwait(false)|(9);
+
+        |async|(10) ValueTask<int> Method2()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(11) Test.Calc(LocalFunction());
+
+            int LocalFunction() => 3;
+        }
+
+        |async|(12) ValueTask<int> Method2_WithConfigureAwait()
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(13) Test.Calc(LocalFunction())|.ConfigureAwait(false)|(14);
+
+            int LocalFunction() => 3;
+        }
+
+        |async|(15) ValueTask<int> Method2_AsExpressionBodied() => |await|(16) Test.Calc(3);
+
+        |async|(17) ValueTask<int> Method2_AsExpressionBodied_WithConfigureAwait() => |await|(18) Test.Calc(3)|.ConfigureAwait(false)|(19);
+
+        async ValueTask Method4()
+        {
+            Console.WriteLine();
+            await Test.Calc("one");
+        }
+
+        async ValueTask Method4_WithConfigureAwait()
+        {
+            Console.WriteLine();
+            await Test.Calc("one").ConfigureAwait(false);
+        }
+
+        async ValueTask Method4_AsExpressionBodied() => await Test.Calc("one");
+
+        async ValueTask Method4_AsExpressionBodied_WithConfigureAwait() => await Test.Calc("one").ConfigureAwait(false);
+
+        async ValueTask<bool> Method_MultipleAwaits()
+        {
+            return await Test.Calc(await Test.Calc(false));
+        }
+
+        async ValueTask<bool> MethodA_MultipleAwaits_AsExpressionBodied() => await Test.Calc(await Test.Calc(false));
+
+        async ValueTask Method_AwaitNonLast()
+        {
+            await Test.Delay();
+            Console.WriteLine();
+        }
+
+        async ValueTask<object> Method_Covariant()
+        {
+            return await Test.Calc("one");
+        }
+
+        async ValueTask<object> Method_Covariant_AsExpressionBodied() => await Test.Calc("one");
+
+        async ValueTask<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex()
+        {
+            return await Test.Calc(new Dictionary<int, IList<string>>());
+        }
+
+        async ValueTask<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex_AsExpressionBodied()
+            => await Test.Calc(new Dictionary<int, IList<string>>());
+
+        async ValueTask Method_AwaitNonValueTask()
+        {
+            await Task.Delay(10);
+        }
+
+        async ValueTask Method_AwaitNonValueTask_AsExpressionBodied() => await Task.Delay(10).ConfigureAwait(false);
+
+        async ValueTask Method_UsingVar()
+        {
+            using var p = new Process();
+
+            await Test.Calc(35);
+        }
+    }
+
+    public class AwaitForLambdaVariables
+    {
+        void Method()
+        {
+            Func<ValueTask> Method = |async|(20) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(21) Test.Delay();
+            };
+
+            Func<ValueTask> Method_WithConfigureAwait = |async|(22) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(23) Test.Delay()|.ConfigureAwait(false)|(24);
+            };
+
+            Func<ValueTask> Method_AsExpressionBodied = |async|(25) () => |await|(26) Test.Delay();
+
+            Func<ValueTask> Method_AsExpressionBodied_WithConfigureAwait = |async|(27) () => |await|(28) Test.Delay()|.ConfigureAwait(false)|(29);
+
+            Func<ValueTask<int>> Method2 = |async|(30) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(31) Test.Calc(LocalFunction());
+
+                int LocalFunction() => 3;
+            };
+
+            Func<ValueTask<int>> Method2_WithConfigureAwait = |async|(32) () =>
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(33) Test.Calc(LocalFunction())|.ConfigureAwait(false)|(34);
+
+                int LocalFunction() => 3;
+            };
+
+            Func<ValueTask<int>> Method2_AsExpressionBodied = |async|(35) () => |await|(36) Test.Calc(3);
+
+            Func<ValueTask<int>> Method2_AsExpressionBodied_WithConfigureAwait = |async|(37) () => |await|(38) Test.Calc(3)|.ConfigureAwait(false)|(39);
+
+            Func<ValueTask> Method4 = async () =>
+            {
+                Console.WriteLine();
+                await Test.Calc("one");
+            };
+
+            Func<ValueTask> Method4_WithConfigureAwait = async () =>
+            {
+                Console.WriteLine();
+                await Test.Calc("one").ConfigureAwait(false);
+            };
+
+            Func<ValueTask> Method4_AsExpressionBodied = async () => await Test.Calc("one");
+
+            Func<ValueTask> Method4_AsExpressionBodied_WithConfigureAwait = async () => await Test.Calc("one").ConfigureAwait(false);
+
+            Func<ValueTask<bool>> Method_MultipleAwaits = async () => { return await Test.Calc(await Test.Calc(false)); };
+
+            Func<ValueTask<bool>> MethodA_MultipleAwaits_AsExpressionBodied = async () => await Test.Calc(await Test.Calc(false));
+
+            Func<ValueTask> Method_AwaitNonLast = async () =>
+            {
+                await Test.Delay();
+                Console.WriteLine();
+            };
+
+            Func<ValueTask<object>> Method_Covariant = async () => { return await Test.Calc("one"); };
+
+            Func<ValueTask<object>> Method_Covariant_AsExpressionBodied = async () => await Test.Calc("one");
+
+            Func<ValueTask<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex = async () =>
+            {
+                return await Test.Calc(new Dictionary<int, IList<string>>());
+            };
+
+            Func<ValueTask<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex_AsExpressionBodied = async ()
+                => await Test.Calc(new Dictionary<int, IList<string>>());
+
+            Func<ValueTask> Method_AwaitNonValueTask = async () => { await Task.Delay(10); };
+
+            Func<ValueTask> Method_AwaitNonValueTask_AsExpressionBodied = async () => await Task.Delay(10);
+
+            Func<ValueTask> Method_UsingVar = async () =>
+            {
+                using var p = new Process();
+
+                await Test.Calc(35);
+            };
+        }
+    }
+
+    public class AwaitForLambdaFields
+    {
+        Func<ValueTask> Method = |async|(40) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(41) Test.Delay();
+        };
+
+        Func<ValueTask> Method_WithConfigureAwait = |async|(42) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(43) Test.Delay()|.ConfigureAwait(false)|(44);
+        };
+
+        Func<ValueTask> Method_AsExpressionBodied = |async|(45) () => |await|(46) Test.Delay();
+
+        Func<ValueTask> Method_AsExpressionBodied_WithConfigureAwait = |async|(47) () => |await|(48) Test.Delay()|.ConfigureAwait(false)|(49);
+
+        Func<ValueTask<int>> Method2 = |async|(50) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(51) Test.Calc(LocalFunction());
+
+            int LocalFunction() => 3;
+        };
+
+        Func<ValueTask<int>> Method2_WithConfigureAwait = |async|(52) () =>
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(53) Test.Calc(LocalFunction())|.ConfigureAwait(false)|(54);
+
+            int LocalFunction() => 3;
+        };
+
+        Func<ValueTask<int>> Method2_AsExpressionBodied = |async|(55) () => |await|(56) Test.Calc(3);
+
+        Func<ValueTask<int>> Method2_AsExpressionBodied_WithConfigureAwait = |async|(57) () => |await|(58) Test.Calc(3)|.ConfigureAwait(false)|(59);
+
+        Func<ValueTask> Method4 = async () =>
+        {
+            Console.WriteLine();
+            await Test.Calc("one");
+        };
+
+        Func<ValueTask> Method4_WithConfigureAwait = async () =>
+        {
+            Console.WriteLine();
+            await Test.Calc("one").ConfigureAwait(false);
+        };
+
+        Func<ValueTask> Method4_AsExpressionBodied = async () => await Test.Calc("one");
+
+        Func<ValueTask> Method4_AsExpressionBodied_WithConfigureAwait = async () => await Test.Calc("one").ConfigureAwait(false);
+
+        Func<ValueTask<bool>> Method_MultipleAwaits = async () => { return await Test.Calc(await Test.Calc(false)); };
+
+        Func<ValueTask<bool>> MethodA_MultipleAwaits_AsExpressionBodied = async () => await Test.Calc(await Test.Calc(false));
+
+        Func<ValueTask> Method_AwaitNonLast = async () =>
+        {
+            await Test.Delay();
+            Console.WriteLine();
+        };
+
+        Func<ValueTask<object>> Method_Covariant = async () => { return await Test.Calc("one"); };
+
+        Func<ValueTask<object>> Method_Covariant_AsExpressionBodied = async () => await Test.Calc("one");
+
+        Func<ValueTask<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex = async () =>
+        {
+            return await Test.Calc(new Dictionary<int, IList<string>>());
+        };
+
+        Func<ValueTask<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex_AsExpressionBodied = async ()
+            => await Test.Calc(new Dictionary<int, IList<string>>());
+
+        Func<ValueTask> Method_AwaitNonValueTask = async () => { await Task.Delay(10); };
+
+        Func<ValueTask> Method_AwaitNonValueTask_AsExpressionBodied = async () => await Task.Delay(10);
+
+        Func<ValueTask> Method_UsingVar = async () =>
+        {
+            using var p = new Process();
+
+            await Test.Calc(35);
+        };
+    }
+
+    public class AwaitForAnonymousMethodVariables
+    {
+        void Method()
+        {
+            Func<ValueTask> Method = |async|(60) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(61) Test.Delay();
+            };
+
+            Func<ValueTask> Method_WithConfigureAwait = |async|(62) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(63) Test.Delay()|.ConfigureAwait(false)|(64);
+            };
+
+            Func<ValueTask<int>> Method2 = |async|(65) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(66) Test.Calc(LocalFunction());
+
+                int LocalFunction() => 3;
+            };
+
+            Func<ValueTask<int>> Method2_WithConfigureAwait = |async|(67) delegate
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(68) Test.Calc(LocalFunction())|.ConfigureAwait(false)|(69);
+
+                int LocalFunction() => 3;
+            };
+
+            Func<ValueTask> Method4 = async delegate
+            {
+                Console.WriteLine();
+                await Test.Calc("one");
+            };
+
+            Func<ValueTask> Method4_WithConfigureAwait = async delegate
+            {
+                Console.WriteLine();
+                await Test.Calc("one").ConfigureAwait(false);
+            };
+
+            Func<ValueTask<bool>> Method_MultipleAwaits = async delegate { return await Test.Calc(await Test.Calc(false)); };
+
+            Func<ValueTask> Method_AwaitNonLast = async delegate
+            {
+                await Test.Delay();
+                Console.WriteLine();
+            };
+
+            Func<ValueTask<object>> Method_Covariant = async delegate { return await Test.Calc("one"); };
+
+            Func<ValueTask<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex = async delegate
+            {
+                return await Test.Calc(new Dictionary<int, IList<string>>());
+            };
+
+            Func<ValueTask> Method_AwaitNonValueTask = async delegate { await Task.Delay(10); };
+
+            Func<ValueTask> Method_UsingVar = async delegate
+            {
+                using var p = new Process();
+
+                await Test.Calc(35);
+            };
+        }
+    }
+
+    public class AwaitForAnonymousMethodFields
+    {
+        Func<ValueTask> Method = |async|(70) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(71) Test.Delay();
+        };
+
+        Func<ValueTask> Method_WithConfigureAwait = |async|(72) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            |await|(73) Test.Delay()|.ConfigureAwait(false)|(74);
+        };
+
+        Func<ValueTask<int>> Method2 = |async|(75) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(76) Test.Calc(LocalFunction());
+
+            int LocalFunction() => 3;
+        };
+
+        Func<ValueTask<int>> Method2_WithConfigureAwait = |async|(77) delegate
+        {
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine();
+            }
+
+            return |await|(78) Test.Calc(LocalFunction())|.ConfigureAwait(false)|(79);
+
+            int LocalFunction() => 3;
+        };
+
+        Func<ValueTask> Method4 = async delegate
+        {
+            Console.WriteLine();
+            await Test.Calc("one");
+        };
+
+        Func<ValueTask> Method4_WithConfigureAwait = async delegate
+        {
+            Console.WriteLine();
+            await Test.Calc("one").ConfigureAwait(false);
+        };
+
+        Func<ValueTask<bool>> Method_MultipleAwaits = async delegate { return await Test.Calc(await Test.Calc(false)); };
+
+        Func<ValueTask> Method_AwaitNonLast = async delegate
+        {
+            await Test.Delay();
+            Console.WriteLine();
+        };
+
+        Func<ValueTask<object>> Method_Covariant = async delegate { return await Test.Calc("one"); };
+
+        Func<ValueTask<IDictionary<int, IList<string>>>> Method_Covariant_MoreComplex = async delegate
+        {
+            return await Test.Calc(new Dictionary<int, IList<string>>());
+        };
+
+        Func<ValueTask> Method_AwaitNonValueTask = async delegate { await Task.Delay(10); };
+
+        Func<ValueTask> Method_UsingVar = async delegate
+        {
+            using var p = new Process();
+
+            await Test.Calc(35);
+        };
+    }
+
+    public class AwaitForLocalFunctions
+    {
+        void Method()
+        {
+            |async|(80) ValueTask Method()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(81) Test.Delay();
+            }
+
+            |async|(82) ValueTask Method_WithConfigureAwait()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                |await|(83) Test.Delay()|.ConfigureAwait(false)|(84);
+            }
+
+            |async|(85) ValueTask Method_AsExpressionBodied() => |await|(86) Test.Delay();
+
+            |async|(87) ValueTask Method_AsExpressionBodied_WithConfigureAwait() => |await|(88) Test.Delay()|.ConfigureAwait(false)|(89);
+
+            |async|(90) ValueTask<int> Method2()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(91) Test.Calc(LocalFunction());
+
+                int LocalFunction() => 3;
+            }
+
+            |async|(92) ValueTask<int> Method2_WithConfigureAwait()
+            {
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+                return |await|(93) Test.Calc(LocalFunction())|.ConfigureAwait(false)|(94);
+
+                int LocalFunction() => 3;
+            }
+
+            |async|(95) ValueTask<int> Method2_AsExpressionBodied() => |await|(96) Test.Calc(3);
+
+            |async|(97) ValueTask<int> Method2_AsExpressionBodied_WithConfigureAwait() => |await|(98) Test.Calc(3)|.ConfigureAwait(false)|(99);
+
+            async ValueTask Method4()
+            {
+                Console.WriteLine();
+                await Test.Calc("one");
+            }
+
+            async ValueTask Method4_WithConfigureAwait()
+            {
+                Console.WriteLine();
+                await Test.Calc("one").ConfigureAwait(false);
+            }
+
+            async ValueTask Method4_AsExpressionBodied() => await Test.Calc("one");
+
+            async ValueTask Method4_AsExpressionBodied_WithConfigureAwait() => await Test.Calc("one").ConfigureAwait(false);
+
+            async ValueTask<bool> Method_MultipleAwaits()
+            {
+                return await Test.Calc(await Test.Calc(false));
+            }
+
+            async ValueTask<bool> MethodA_MultipleAwaits_AsExpressionBodied() => await Test.Calc(await Test.Calc(false));
+
+            async ValueTask Method_AwaitNonLast()
+            {
+                await Test.Delay();
+                Console.WriteLine();
+            }
+
+            async ValueTask<object> Method_Covariant()
+            {
+                return await Test.Calc("one");
+            }
+
+            async ValueTask<object> Method_Covariant_AsExpressionBodied() => await Test.Calc("one");
+
+            async ValueTask<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex()
+            {
+                return await Test.Calc(new Dictionary<int, IList<string>>());
+            }
+
+            async ValueTask<IDictionary<int, IList<string>>> Method_Covariant_MoreComplex_AsExpressionBodied()
+                => await Test.Calc(new Dictionary<int, IList<string>>());
+
+            async ValueTask Method_AwaitNonValueTask()
+            {
+                await Task.Delay(10);
+            }
+
+            async ValueTask Method_AwaitNonValueTask_AsExpressionBodied() => await Task.Delay(10);
+
+            async ValueTask Method_UsingVar()
+            {
+                using var p = new Process();
+
+                await Test.Calc(35);
+            }
+        }
+    }
+}
+------------------------------------------------
+0: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+1: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+2: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+3: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+4: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+5: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+6: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+7: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+8: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+9: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+10: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+11: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+12: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+13: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+14: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+15: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+16: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+17: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+18: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+19: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+20: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+21: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+22: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+23: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+24: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+25: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+26: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+27: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+28: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+29: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+30: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+31: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+32: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+33: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+34: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+35: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+36: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+37: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+38: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+39: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+40: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+41: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+42: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+43: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+44: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+45: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+46: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+47: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+48: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+49: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+50: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+51: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+52: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+53: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+54: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+55: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+56: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+57: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+58: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+59: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+60: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+61: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+62: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+63: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+64: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+65: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+66: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+67: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+68: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+69: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+70: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+71: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+72: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+73: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+74: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+75: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+76: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+77: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+78: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+79: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+80: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+81: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+82: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+83: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+84: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+85: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+86: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+87: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+88: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+89: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+90: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+91: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+92: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+93: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+94: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+95: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+96: Redundant 'await' (remove 'async'/'await')
+QUICKFIXES:
+Remove 'async'/'await'
+97: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+98: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'
+99: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+QUICKFIXES:
+Remove 'async'/'await'/'ConfigureAwait(...)'

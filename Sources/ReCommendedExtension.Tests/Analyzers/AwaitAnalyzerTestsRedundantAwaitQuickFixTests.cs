@@ -255,5 +255,39 @@ namespace ReCommendedExtension.Tests.Analyzers
         [NullableContext(NullableContextKind.Enable)]
         [Test]
         public void TestNullableAnnotationContext() => DoNamedTest2();
+
+        [TestNetCore30]
+        [Test]
+        public void TestValueTask_Method() => DoNamedTest2();
+
+        [TestNetCore30]
+        [NullableContext(NullableContextKind.Enable)]
+        [Test]
+        public void TestValueTask_Method_WithConfigureAwait() => DoNamedTest2();
+
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
+        [Test]
+        public void TestValueTask_Method_AsExpressionBodied() => DoNamedTest2();
+
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
+        [NullableContext(NullableContextKind.Enable)]
+        [Test]
+        public void TestValueTask_Method_AsExpressionBodied_WithConfigureAwait() => DoNamedTest2();
+
+        [TestNetCore30]
+        [Test]
+        public void TestValueTask_Method2() => DoNamedTest2();
+
+        [TestNetCore30]
+        [Test]
+        public void TestValueTask_Method2_WithConfigureAwait() => DoNamedTest2();
+
+        [TestNetCore30]
+        [Test]
+        public void TestValueTask_Method2_AsExpressionBodied() => DoNamedTest2();
+
+        [TestNetCore30]
+        [Test]
+        public void TestValueTask_Method2_AsExpressionBodied_WithConfigureAwait() => DoNamedTest2();
     }
 }

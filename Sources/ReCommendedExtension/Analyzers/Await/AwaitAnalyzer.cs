@@ -7,6 +7,7 @@ using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -34,6 +35,7 @@ namespace ReCommendedExtension.Analyzers.Await
         };
 
         [Pure]
+        [ContractAnnotation("=> type: notnull, removeAsync: notnull", true)]
         static void TryGetContainerTypeAndAsyncKeyword(
             [NotNull] IParametersOwnerDeclaration container,
             out IType type,
@@ -48,7 +50,10 @@ namespace ReCommendedExtension.Analyzers.Await
                     asyncKeyword = methodDeclaration.ModifiersList?.Modifiers.FirstOrDefault(
                         node => node?.GetTokenType() == CSharpTokenType.ASYNC_KEYWORD);
                     removeAsync = () => methodDeclaration.SetAsync(false);
-                    attributesOwnerDeclaration = methodDeclaration;
+                    attributesOwnerDeclaration =
+                        type.IsValueTask() || type.IsGenericValueTask() || methodDeclaration.IsNullableAnnotationsContextEnabled()
+                            ? null
+                            : methodDeclaration;
                     return;
 
                 case ILambdaExpression lambdaExpression:
@@ -275,9 +280,13 @@ namespace ReCommendedExtension.Analyzers.Await
                 {
                     var awaitExpressionType = awaitExpression.Task?.Type();
 
-                    if (containerType.IsTask() && (awaitExpressionType.IsTask() || awaitExpressionType.IsGenericTask()))
+                    if (containerType.IsValueTask() && awaitExpressionType.IsValueTask() ||
+                        containerType.IsTask() && (awaitExpressionType.IsTask() || awaitExpressionType.IsGenericTask()))
                     {
+                        // container is ValueTask, awaitExpression is ValueTask
+                        // or
                         // container is Task, awaitExpression is Task or Task<T>
+
                         AddRedundantAwaitHighlightings(
                             consumer,
                             asyncKeyword,
@@ -289,11 +298,14 @@ namespace ReCommendedExtension.Analyzers.Await
                         return true;
                     }
 
-                    if (containerType.IsGenericTask() &&
-                        awaitExpressionType.IsGenericTask() &&
+                    if ((containerType.IsGenericValueTask() && awaitExpressionType.IsGenericValueTask() ||
+                            containerType.IsGenericTask() && awaitExpressionType.IsGenericTask()) &&
                         containerType.Equals(awaitExpressionType, TypeEqualityComparer.Default))
                     {
-                        // container is Task<T>, awaitExpression is Task<T>, container type = awaitExpression type
+                        // container is ValueTask<T>, awaitExpression is ValueTask<T>, container type == awaitExpression type
+                        // or
+                        // container is Task<T>, awaitExpression is Task<T>, container type == awaitExpression type
+
                         AddRedundantAwaitHighlightings(
                             consumer,
                             asyncKeyword,
@@ -319,11 +331,17 @@ namespace ReCommendedExtension.Analyzers.Await
                                     (configureAwaitInvocationExpression.InvokedExpression as IReferenceExpression)?.QualifierExpression;
                                 var awaitExpressionTypeWithoutConfigureAwait = awaitExpressionWithoutConfigureAwait?.Type();
 
-                                if (containerType.IsTask() &&
+                                if (containerType.IsValueTask() &&
+                                    methodContainingType.IsValueTask() &&
+                                    awaitExpressionTypeWithoutConfigureAwait.IsValueTask() ||
+                                    containerType.IsTask() &&
                                     (methodContainingType.IsTask() && awaitExpressionTypeWithoutConfigureAwait.IsTask() ||
                                         methodContainingType.IsGenericTask() && awaitExpressionTypeWithoutConfigureAwait.IsGenericTask()))
                                 {
+                                    // container is ValueTask, awaitExpression (without "ConfigureAwait") is ValueTask
+                                    // or
                                     // container is Task, awaitExpression (without "ConfigureAwait") is Task or Task<T>
+
                                     AddRedundantAwaitHighlightings(
                                         consumer,
                                         asyncKeyword,
@@ -336,12 +354,18 @@ namespace ReCommendedExtension.Analyzers.Await
                                     return true;
                                 }
 
-                                if (containerType.IsGenericTask() &&
-                                    methodContainingType.IsGenericTask() &&
-                                    awaitExpressionTypeWithoutConfigureAwait.IsGenericTask() &&
+                                if ((containerType.IsGenericValueTask() &&
+                                        methodContainingType.IsGenericValueTask() &&
+                                        awaitExpressionTypeWithoutConfigureAwait.IsGenericValueTask() ||
+                                        containerType.IsGenericTask() &&
+                                        methodContainingType.IsGenericTask() &&
+                                        awaitExpressionTypeWithoutConfigureAwait.IsGenericTask()) &&
                                     containerType.Equals(awaitExpressionTypeWithoutConfigureAwait, TypeEqualityComparer.Default))
                                 {
-                                    // container is Task<T>, awaitExpression (without "ConfigureAwait") is Task<T>, container type = awaitExpression type (without "ConfigureAwait")
+                                    // container is ValueTask<T>, awaitExpression (without "ConfigureAwait") is ValueTask<T>, container type == awaitExpression type (without "ConfigureAwait")
+                                    // or
+                                    // container is Task<T>, awaitExpression (without "ConfigureAwait") is Task<T>, container type == awaitExpression type (without "ConfigureAwait")
+
                                     AddRedundantAwaitHighlightings(
                                         consumer,
                                         asyncKeyword,
