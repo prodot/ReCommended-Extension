@@ -36,11 +36,18 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             if (Environment.UserInteractive)
             {
                 Console.WriteLine();
+
+                Action a = () => { return; };
+
+                Action b = delegate { return; };
             }
 
             return await Task.FromResult(LocalFunction());
 
-            int LocalFunction() => 3;
+            int LocalFunction()
+            {
+                return 3;
+            }
         }
 
         async Task<int> Method2_WithConfigureAwait()
@@ -58,6 +65,26 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         async Task<int> Method2_AsExpressionBodied() => await Task.FromResult(3);
 
         async Task<int> Method2_AsExpressionBodied_WithConfigureAwait() => await Task.FromResult(3).ConfigureAwait(false);
+
+        async Task<int> Method3()
+        {
+            if (Environment.UserInteractive)
+            {
+                return 3;
+            }
+
+            return await Task.FromResult(5);
+        }
+
+        async Task Method3_NoReturnValue()
+        {
+            if (Environment.UserInteractive)
+            {
+                return;
+            }
+
+            await Task.Delay(10);
+        }
 
         async Task Method4()
         {

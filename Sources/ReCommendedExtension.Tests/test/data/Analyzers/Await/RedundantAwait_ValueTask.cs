@@ -47,11 +47,18 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             if (Environment.UserInteractive)
             {
                 Console.WriteLine();
+
+                Action a = () => { return; };
+
+                Action b = delegate { return; };
             }
 
             return await Test.Calc(LocalFunction());
 
-            int LocalFunction() => 3;
+            int LocalFunction()
+            {
+                return 3;
+            }
         }
 
         async ValueTask<int> Method2_WithConfigureAwait()
@@ -69,6 +76,26 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         async ValueTask<int> Method2_AsExpressionBodied() => await Test.Calc(3);
 
         async ValueTask<int> Method2_AsExpressionBodied_WithConfigureAwait() => await Test.Calc(3).ConfigureAwait(false);
+
+        async ValueTask<int> Method3()
+        {
+            if (Environment.UserInteractive)
+            {
+                return 3;
+            }
+
+            return await Test.Calc(5);
+        }
+
+        async ValueTask Method3_NoReturnValue()
+        {
+            if (Environment.UserInteractive)
+            {
+                return;
+            }
+
+            await Test.Delay();
+        }
 
         async ValueTask Method4()
         {

@@ -93,6 +93,11 @@ namespace ReCommendedExtension.Analyzers.Await
         {
             foreach (var childNode in node.Children<ICSharpTreeNode>())
             {
+                if (childNode is ILocalFunctionDeclaration || childNode is IAnonymousFunctionExpression)
+                {
+                    continue; // skip the element (do not drill down)
+                }
+
                 yield return childNode;
 
                 foreach (var n in GetAllChildrenRecursive(childNode))
@@ -267,7 +272,8 @@ namespace ReCommendedExtension.Analyzers.Await
         {
             if (isLastExpression &&
                 !IsTestMethodOfOldMsTest(container as IMethodDeclaration) &&
-                !GetAllChildrenRecursive(container).OfType<IAwaitExpression>().HasMoreThan(1))
+                !GetAllChildrenRecursive(container).OfType<IAwaitExpression>().HasMoreThan(1) &&
+                !GetAllChildrenRecursive(container).OfType<IReturnStatement>().HasMoreThan(awaitExpression.Parent is IReturnStatement ? 1 : 0))
             {
                 TryGetContainerTypeAndAsyncKeyword(
                     container,
