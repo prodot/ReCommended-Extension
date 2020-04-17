@@ -14,7 +14,6 @@
         <description>
             The {{AssemblyTitle}} augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
-            - automatic injection of ReSharper annotations for nullable reference types, thus enabling ReSharper to take advantage of the language annotations,
             - detection of redundant assertions,
             - inappropriate use of "async void",
             - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
@@ -33,7 +32,7 @@
         <copyright>{{AssemblyCopyright}}</copyright>
         <tags>recommended extension resharper plugin addin prodot</tags>
         <dependencies>
-            <dependency id="Wave" version="[193.0,193.1)" />
+            <dependency id="Wave" version="[201.0,201.1)" />
         </dependencies>
     </metadata>
     <files>
