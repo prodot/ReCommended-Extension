@@ -13,7 +13,8 @@ namespace Test
         }
 
         [ContractClassFor(typeof(IInterface))]
-        private abstract class InterfaceContract : IInterface {
+        private abstract class InterfaceContract : IInterface
+        {
           public string InterfaceMethod()
           {
             Contract.Ensures(Contract.Result<string>() != null);
