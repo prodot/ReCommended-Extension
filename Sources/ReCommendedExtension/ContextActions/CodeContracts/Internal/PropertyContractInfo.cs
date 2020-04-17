@@ -29,9 +29,17 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 if (CanAcceptContracts(property) && isAvailableForType(property.Type))
                 {
-                    var contractKind = declaration.IsAuto ? (declaration.IsStatic ? (ContractKind?)null : ContractKind.Invariant) :
-                        property.IsReadable ? (property.IsWritable ? ContractKind.RequiresAndEnsures : ContractKind.Ensures) :
-                        (property.IsWritable ? (ContractKind?)ContractKind.Requires : null);
+                    var contractKind = declaration.IsAuto
+                        ? declaration.IsStatic
+                            ? (ContractKind?)null
+                            : ContractKind.Invariant
+                        : property.IsReadable
+                            ? property.IsWritable
+                                ? ContractKind.RequiresAndEnsures
+                                : ContractKind.Ensures
+                            : property.IsWritable
+                                ? (ContractKind?)ContractKind.Requires
+                                : null;
                     if (contractKind != null)
                     {
                         return new PropertyContractInfo((ContractKind)contractKind, declaration, property.Type);
@@ -58,8 +66,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 if (CanAcceptContracts(property) && isAvailableForType(property.Type))
                 {
                     var contractKind = property.IsReadable
-                        ? (property.IsWritable ? ContractKind.RequiresAndEnsures : ContractKind.Ensures)
-                        : (property.IsWritable ? (ContractKind?)ContractKind.Requires : null);
+                        ? property.IsWritable
+                            ? ContractKind.RequiresAndEnsures
+                            : ContractKind.Ensures
+                        : property.IsWritable
+                            ? (ContractKind?)ContractKind.Requires
+                            : null;
                     if (contractKind != null)
                     {
                         return new PropertyContractInfo((ContractKind)contractKind, declaration, property.Type);

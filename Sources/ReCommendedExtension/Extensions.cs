@@ -36,7 +36,7 @@ namespace ReCommendedExtension
         [ItemNotNull]
         static readonly HashSet<string> wellKnownUnitTestingAssemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "Microsoft.VisualStudio.TestPlatform.TestFramework", @"nunit.framework", "xunit.core"
+            "Microsoft.VisualStudio.TestPlatform.TestFramework", @"nunit.framework", "xunit.core",
         };
 
         [NotNull]
@@ -52,15 +52,13 @@ namespace ReCommendedExtension
 
         static void CopyTypeParameterConstraints<P>(
             [NotNull] CSharpElementFactory factory,
-            TreeNodeCollection<P> source,
+            [ItemNotNull] TreeNodeCollection<P> source,
             TreeNodeCollection<P> destination,
             [InstantHandle][NotNull] Action<ITypeParameterConstraintsClause> addClause) where P : class, ITypeParameterDeclaration
         {
             var typeParameterMap = new Dictionary<ITypeParameter, IType>();
             for (var i = 0; i < source.Count; i++)
             {
-                Debug.Assert(source[i] != null);
-
                 var typeParameterDeclaration = destination[i];
                 var originalTypeParameter = source[i].DeclaredElement;
 
@@ -74,11 +72,10 @@ namespace ReCommendedExtension
             var newSubstitution = EmptySubstitution.INSTANCE.Extend(typeParameterMap);
             for (var i = 0; i < source.Count; i++)
             {
-                Debug.Assert(source[i] != null);
-
                 var typeParameter = source[i].DeclaredElement;
                 var typeParameterDeclaration = destination[i];
 
+                Debug.Assert(typeParameter != null);
                 Debug.Assert(typeParameterDeclaration != null);
 
                 var clause = factory.CreateTypeParameterConstraintsClause(typeParameter, newSubstitution, typeParameterDeclaration.DeclaredName);
@@ -193,6 +190,7 @@ namespace ReCommendedExtension
 
                 // todo: the generated "typeof" expression doesn't contain generics: "<,>"
                 var contractClassAttributeTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassAttribute, psiModule);
+                Debug.Assert(contractClassAttributeTypeElement != null);
                 var attribute = factory.CreateAttribute(
                     contractClassAttributeTypeElement,
                     new[] { new AttributeValue(typeofExpression.ArgumentType) },

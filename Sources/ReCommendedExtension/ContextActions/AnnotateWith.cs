@@ -64,6 +64,8 @@ namespace ReCommendedExtension.ContextActions
                 !attributesOwnerDeclaration.OverridesInheritedMember() &&
                 !attributesOwnerDeclaration.Attributes.Any(IsAttribute))
             {
+                Debug.Assert(attributesOwnerDeclaration != null);
+
                 createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, provider.PsiModule, out attributeToRemove);
 
                 if (createAttributeFactory != null)

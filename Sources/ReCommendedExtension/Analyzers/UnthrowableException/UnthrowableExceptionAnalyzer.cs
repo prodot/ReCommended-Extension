@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -39,7 +40,7 @@ namespace ReCommendedExtension.Analyzers.UnthrowableException
             { "System.ComponentModel.Composition.CompositionContractMismatchException", "The exception should only be thrown by the MEF API." },
             { "System.ComponentModel.Composition.CompositionException", "The exception should only be thrown by the MEF API." },
             { "System.ComponentModel.Composition.ImportCardinalityMismatchException", "The exception should only be thrown by the MEF API." },
-            { "System.ComponentModel.Composition.Primitives.ComposablePartException", "The exception should only be thrown by the MEF API." },
+            { @"System.ComponentModel.Composition.Primitives.ComposablePartException", "The exception should only be thrown by the MEF API." },
             { "System.ComponentModel.Design.ExceptionCollection", "The exception uses non-generic collections." },
             { "System.ComponentModel.WarningException", "A more specific exception should be used." },
             { "System.Configuration.ConfigurationErrorsException", "The exception should only be thrown by the .NET Configuration API." },
@@ -87,7 +88,7 @@ namespace ReCommendedExtension.Analyzers.UnthrowableException
             { "System.MissingFieldException", "The exception should only be thrown by the CLR." },
             { "System.MissingMemberException", "The exception should only be thrown by the CLR." },
             { "System.MissingMethodException", "The exception should only be thrown by the CLR." },
-            { "System.MulticastNotSupportedException", "The exception should only be thrown by the CLR." },
+            { @"System.MulticastNotSupportedException", "The exception should only be thrown by the CLR." },
             { "System.Net.Http.HttpRequestException", "A more specific exception should be used." },
             { "System.Net.Mail.SmtpFailedRecipientsException", "The exception should not be used in any way." },
             { "System.NullReferenceException", "The exception should only be thrown by the CLR." },
@@ -151,6 +152,8 @@ namespace ReCommendedExtension.Analyzers.UnthrowableException
 
             if (unthrowableExceptions.TryGetValue(exception.GetExpressionType().ToString(), out var reason))
             {
+                Debug.Assert(reason != null);
+
                 consumer.AddHighlighting(new UnthrowableExceptionWarning(reason, exception));
             }
         }

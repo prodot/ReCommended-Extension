@@ -26,7 +26,7 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
                 return false; // called from an anonymous method or a lambda expression => do not highlight
             }
 
-            var method = invocationExpression.Reference?.Resolve().DeclaredElement as IMethod;
+            var method = invocationExpression.Reference.Resolve().DeclaredElement as IMethod;
             if (method == null)
             {
                 return false; // cannot analyze
