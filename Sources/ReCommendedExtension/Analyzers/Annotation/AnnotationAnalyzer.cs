@@ -22,7 +22,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
         HighlightingTypes = new[]
         {
             typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
-            typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint)
+            typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint),
         })]
     public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
     {
@@ -275,6 +275,8 @@ namespace ReCommendedExtension.Analyzers.Annotation
 
             foreach (var attribute in element.AttributesEnumerable)
             {
+                Debug.Assert(attribute != null);
+
                 var attributeInstance = attribute.GetAttributeInstance();
                 if (nullnessProvider.IsNullableAttribute(attributeInstance) ||
                     containerElementNullnessProvider.IsContainerElementNullableAttribute(attributeInstance))

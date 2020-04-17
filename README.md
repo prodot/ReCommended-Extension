@@ -2,7 +2,6 @@
 
 The ReCommended Extension for ReSharper augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
-- automatic injection of ReSharper annotations for nullable reference types, thus enabling ReSharper to take advantage of the language annotations,
 - detection of redundant assertions,
 - inappropriate use of `async void`,
 - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),

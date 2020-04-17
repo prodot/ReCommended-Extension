@@ -56,7 +56,7 @@ namespace ReCommendedExtension.Analyzers.UncatchableException
             { "System.MissingFieldException", "The exception indicates a bug that can be avoided." },
             { "System.MissingMemberException", "The exception indicates a bug that can be avoided." },
             { "System.MissingMethodException", "The exception indicates a bug that can be avoided." },
-            { "System.MulticastNotSupportedException", "The exception indicates a bug that can be avoided." },
+            { @"System.MulticastNotSupportedException", "The exception indicates a bug that can be avoided." },
             { "System.Net.Mail.SmtpFailedRecipientsException", "The exception should not be used in any way." },
             { "System.NotImplementedException", "The exception indicates a bug that can be avoided." },
             { "System.NotSupportedException", "The exception indicates a bug that can be avoided." },

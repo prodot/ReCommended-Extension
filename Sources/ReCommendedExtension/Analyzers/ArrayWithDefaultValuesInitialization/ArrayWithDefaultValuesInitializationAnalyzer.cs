@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using JetBrains.Annotations;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;

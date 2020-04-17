@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.ControlFlow;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
@@ -22,6 +24,76 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         HighlightingTypes = new[] { typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion) })]
     public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
+        [Pure]
+        static CSharpControlFlowNullReferenceState GetAnnotationNullableValue(
+            [NotNull] IType type,
+            bool canStillBeNull = false,
+            bool shouldNeverBeNull = false)
+        {
+            switch (type.Classify)
+            {
+                case TypeClassification.REFERENCE_TYPE:
+                    switch (type.NullableAnnotation)
+                    {
+                        case NullableAnnotation.NotAnnotated:
+                            if (type.IsOpenType)
+                            {
+                                var typeParameterType = type.GetTypeParameterType();
+                                switch (typeParameterType?.Nullability)
+                                {
+                                    case TypeParameterNullability.NotNullableValueType: return CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                                    case TypeParameterNullability.NotNullableValueOrReferenceType:
+                                    case TypeParameterNullability.NotNullableReferenceType:
+                                    case TypeParameterNullability.NotNullableSuperType:
+                                        if (canStillBeNull)
+                                        {
+                                            return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
+                                        }
+                                        return CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                                    case TypeParameterNullability.NullableValueOrReferenceType:
+                                    case TypeParameterNullability.NullableReferenceType:
+                                    case TypeParameterNullability.NullableSuperType:
+                                        if (shouldNeverBeNull)
+                                        {
+                                            return CSharpControlFlowNullReferenceState.NOT_NULL;
+                                        }
+                                        return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
+                                }
+                            }
+
+                            if (canStillBeNull)
+                            {
+                                return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
+                            }
+
+                            return CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                        case NullableAnnotation.NotNullable:
+                            if (canStillBeNull)
+                            {
+                                return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
+                            }
+                            return CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                        case NullableAnnotation.Annotated:
+                        case NullableAnnotation.Nullable:
+                            if (shouldNeverBeNull)
+                            {
+                                return CSharpControlFlowNullReferenceState.NOT_NULL;
+                            }
+                            return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
+
+                        default: return CSharpControlFlowNullReferenceState.UNKNOWN;
+                    }
+
+                case TypeClassification.VALUE_TYPE: return CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                default: goto case TypeClassification.REFERENCE_TYPE;
+            }
+        }
+
         [Pure]
         static ICSharpExpression TryGetOtherOperand(
             [NotNull] IEqualityExpression equalityExpression,
@@ -272,9 +344,15 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
                         var nullReferenceState = inspector.GetExpressionNullReferenceState(referenceExpression, true);
 
+                        if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN &&
+                            referenceExpression.IsNullableWarningsContextEnabled())
+                        {
+                            nullReferenceState = GetAnnotationNullableValue(referenceExpression.Type());
+                        }
+
                         if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN)
                         {
-                            return GetExpressionNullReferenceStateByAnnotations(referenceExpression);
+                            nullReferenceState = GetExpressionNullReferenceStateByAnnotations(referenceExpression);
                         }
 
                         return nullReferenceState;

@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
             [NotNull] AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
             [NotNull] AssertionConditionAnnotationProvider assertionConditionAnnotationProvider)
         {
-            if (invocationExpression.Reference?.Resolve().DeclaredElement is IMethod method && assertionMethodAnnotationProvider.GetInfo(method))
+            if (invocationExpression.Reference.Resolve().DeclaredElement is IMethod method && assertionMethodAnnotationProvider.GetInfo(method))
             {
                 foreach (var parameter in method.Parameters)
                 {
