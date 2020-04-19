@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Modules;
@@ -50,15 +48,7 @@ namespace ReCommendedExtension.ContextActions
 
         public AnnotateWithItemNotNull([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
-        protected override string AnnotationAttributeTypeName
-        {
-            get
-            {
-                Debug.Assert(ContainerElementNullnessProvider.ItemNotNullAttributeShortName != null);
-
-                return ContainerElementNullnessProvider.ItemNotNullAttributeShortName;
-            }
-        }
+        protected override string AnnotationAttributeTypeName => nameof(ItemNotNullAttribute);
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
         {
@@ -69,18 +59,18 @@ namespace ReCommendedExtension.ContextActions
 
             switch (declaredElement)
             {
-                case IMethod method when IsAvailableForType(method.ReturnType, context): return true;
+                case IMethod method: return IsAvailableForType(method.ReturnType, context);
 
-                case IParameter parameter when IsAvailableForType(parameter.Type, context): return true;
+                case IParameter parameter: return IsAvailableForType(parameter.Type, context);
 
-                case IProperty property when IsAvailableForType(property.Type, context): return true;
+                case IProperty property: return IsAvailableForType(property.Type, context);
 
-                case IDelegate delegateType when IsAvailableForType(delegateType.InvokeMethod.ReturnType, context): return true;
+                case IDelegate delegateType: return IsAvailableForType(delegateType.InvokeMethod.ReturnType, context);
 
-                case IField field when IsAvailableForType(field.Type, context): return true;
-
-                default: return false;
+                case IField field: return IsAvailableForType(field.Type, context);
             }
+
+            return false;
         }
     }
 }

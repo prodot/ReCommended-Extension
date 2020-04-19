@@ -1,10 +1,8 @@
-using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -18,15 +16,7 @@ namespace ReCommendedExtension.ContextActions
     {
         public AnnotateWithLinqTunnel([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
-        protected override string AnnotationAttributeTypeName
-        {
-            get
-            {
-                Debug.Assert(LinqTunnelAnnotationProvider.LinqTunnelAttributeShortName != null);
-
-                return LinqTunnelAnnotationProvider.LinqTunnelAttributeShortName;
-            }
-        }
+        protected override string AnnotationAttributeTypeName => nameof(LinqTunnelAttribute);
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
             => declaredElement is IMethod method &&

@@ -1,10 +1,8 @@
-﻿using System.Diagnostics;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Conversions;
 using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Modules;
@@ -20,15 +18,7 @@ namespace ReCommendedExtension.ContextActions
     {
         public AnnotateWithInstantHandle([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
-        protected override string AnnotationAttributeTypeName
-        {
-            get
-            {
-                Debug.Assert(InstantHandleAnnotationProvider.InstantHandleAttributeShortName != null);
-
-                return InstantHandleAnnotationProvider.InstantHandleAttributeShortName;
-            }
-        }
+        protected override string AnnotationAttributeTypeName => nameof(InstantHandleAttribute);
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
             => declaredElement is IParameter parameter &&

@@ -9,6 +9,7 @@ using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions
 {
@@ -16,30 +17,33 @@ namespace ReCommendedExtension.ContextActions
     {
         protected AnnotateWithCodeAnnotation([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
+        [NotNull]
+        protected virtual AttributeValue[] AnnotationArguments => Array.Empty<AttributeValue>();
+
         protected sealed override bool IsAttribute(IAttribute attribute)
             => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName == AnnotationAttributeTypeName;
 
         protected sealed override Func<CSharpElementFactory, IAttribute> CreateAttributeFactoryIfAvailable(
             IAttributesOwnerDeclaration attributesOwnerDeclaration,
             IPsiModule psiModule,
-            out IAttribute attributeToRemove)
+            out IAttribute attributeToReplace)
         {
             var attributeType = attributesOwnerDeclaration.GetPsiServices()
                 .GetComponent<CodeAnnotationsConfiguration>()
                 .GetAttributeTypeForElement(attributesOwnerDeclaration, AnnotationAttributeTypeName);
             if (attributeType != null && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration, psiModule))
             {
-                attributeToRemove = TryGetAttributeToReplace(attributesOwnerDeclaration);
+                attributeToReplace = TryGetAttributeToReplace(attributesOwnerDeclaration);
 
                 return factory =>
                 {
                     Debug.Assert(factory != null);
 
-                    return factory.CreateAttribute(attributeType);
+                    return factory.CreateAttribute(attributeType, AnnotationArguments, Array.Empty<Pair<string, AttributeValue>>());
                 };
             }
 
-            attributeToRemove = null;
+            attributeToReplace = null;
             return null;
         }
 

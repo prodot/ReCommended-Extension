@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
@@ -19,15 +18,7 @@ namespace ReCommendedExtension.ContextActions
     {
         public AnnotateWithMustUseReturnValue([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
-        protected override string AnnotationAttributeTypeName
-        {
-            get
-            {
-                Debug.Assert(MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName != null);
-
-                return MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName;
-            }
-        }
+        protected override string AnnotationAttributeTypeName => nameof(MustUseReturnValueAttribute);
 
         protected override string TextSuffix => "with observable state changes";
 

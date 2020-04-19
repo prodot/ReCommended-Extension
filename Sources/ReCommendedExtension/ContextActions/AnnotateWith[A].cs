@@ -24,9 +24,9 @@ namespace ReCommendedExtension.ContextActions
         protected sealed override Func<CSharpElementFactory, IAttribute> CreateAttributeFactoryIfAvailable(
             IAttributesOwnerDeclaration attributesOwnerDeclaration,
             IPsiModule psiModule,
-            out IAttribute attributeToRemove)
+            out IAttribute attributeToReplace)
         {
-            attributeToRemove = null;
+            attributeToReplace = null;
 
             if (CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement))
             {

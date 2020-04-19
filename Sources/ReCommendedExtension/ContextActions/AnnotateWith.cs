@@ -22,7 +22,7 @@ namespace ReCommendedExtension.ContextActions
         IAttributesOwnerDeclaration attributesOwnerDeclaration;
 
         Func<CSharpElementFactory, IAttribute> createAttributeFactory;
-        IAttribute attributeToRemove;
+        IAttribute attributeToReplace;
 
         protected AnnotateWith([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
 
@@ -34,10 +34,12 @@ namespace ReCommendedExtension.ContextActions
         protected abstract Func<CSharpElementFactory, IAttribute> CreateAttributeFactoryIfAvailable(
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
             [NotNull] IPsiModule psiModule,
-            out IAttribute attributeToRemove);
+            out IAttribute attributeToReplace);
 
         [NotNull]
         protected virtual string TextSuffix => "";
+
+        protected virtual bool AllowsMultiple => false;
 
         public sealed override string Text
         {
@@ -62,11 +64,11 @@ namespace ReCommendedExtension.ContextActions
             if (attributesOwnerDeclaration != null &&
                 attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange) &&
                 !attributesOwnerDeclaration.OverridesInheritedMember() &&
-                !attributesOwnerDeclaration.Attributes.Any(IsAttribute))
+                (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
             {
                 Debug.Assert(attributesOwnerDeclaration != null);
 
-                createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, provider.PsiModule, out attributeToRemove);
+                createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, provider.PsiModule, out attributeToReplace);
 
                 if (createAttributeFactory != null)
                 {
@@ -74,7 +76,7 @@ namespace ReCommendedExtension.ContextActions
                 }
             }
 
-            attributeToRemove = null;
+            attributeToReplace = null;
             createAttributeFactory = null;
             attributesOwnerDeclaration = null;
 
@@ -88,31 +90,37 @@ namespace ReCommendedExtension.ContextActions
 
             try
             {
+                IAttribute attribute;
+
                 using (WriteLockCookie.Create())
                 {
                     var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 
-                    var attribute = createAttributeFactory(factory);
+                    attribute = createAttributeFactory(factory);
 
                     Debug.Assert(attribute != null);
 
-                    attributesOwnerDeclaration.AddAttributeAfter(attribute, attributeToRemove);
-                    if (attributeToRemove != null)
-                    {
-                        attributesOwnerDeclaration.RemoveAttribute(attributeToRemove);
-                    }
+                    attribute = attributeToReplace != null
+                        ? attributesOwnerDeclaration.ReplaceAttribute(attributeToReplace, attribute)
+                        : attributesOwnerDeclaration.AddAttributeBefore(attribute, null); // add as last attribute
 
                     ContextActionUtils.FormatWithDefaultProfile(attribute);
                 }
 
-                return _ => { };
+                return textControl =>
+                {
+                    Debug.Assert(textControl != null);
+                    ExecutePsiTransactionPostProcess(textControl, attribute);
+                };
             }
             finally
             {
-                attributeToRemove = null;
+                attributeToReplace = null;
                 createAttributeFactory = null;
                 attributesOwnerDeclaration = null;
             }
         }
+
+        protected virtual void ExecutePsiTransactionPostProcess([NotNull] ITextControl textControl, [NotNull] IAttribute attribute) { }
     }
 }
