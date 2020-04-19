@@ -1,0 +1,116 @@
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Tests
+{
+    public static class Test
+    {
+        public static async ValueTask Delay() => await Task.Delay(10);
+
+        public static async ValueTask<T> Calc<T>(T x)
+        {
+            await Task.Delay(10);
+            return x;
+        }
+    }
+
+    public class MultipleConsumption
+    {
+        async ValueTask Awaiting()
+        {
+            var vt = Test.Delay();
+
+            await |vt|(0);
+            await |vt|(1);
+        }
+
+        async ValueTask CallingAsTask(ValueTask vt)
+        {
+            await |vt|(2).AsTask();
+            await |vt|(3).AsTask();
+        }
+
+        async ValueTask AwaitingAndCallingAsTask(ValueTask vt)
+        {
+            await |vt|(4);
+            await |vt|(5).AsTask();
+        }
+
+        async ValueTask PassingAsArgument()
+        {
+            var vt = Test.Delay();
+
+            await CallingAsTask(|vt|(6));
+            await AwaitingAndCallingAsTask(|vt|(7));
+        }
+
+        async ValueTask IfElse(int x, ValueTask vt)
+        {
+            if (x > 3)
+            {
+                await |vt|(8);
+            }
+            else
+            {
+                await vt.ConfigureAwait(false);
+                return;
+            }
+
+            await |vt|(9);
+        }
+
+        async ValueTask Switch(int x, ValueTask vt)
+        {
+            switch (x)
+            {
+                case 0:
+                    await |vt|(10);
+                    break;
+
+                case 1:
+                case 2:
+                    await vt;
+                    break;
+
+                case 3:
+                    await |vt|(11);
+                    goto case 0;
+
+                case 4:
+                    await vt;
+                    throw new InvalidOperationException();
+            }
+        }
+
+        async ValueTask Loop(ValueTask vt, int[] a)
+        {
+            foreach (var i in a)
+            {
+                await |vt|(12).AsTask();
+            }
+        }
+
+        async ValueTask Loop_Condition(ValueTask<int> vt)
+        {
+            while (await |vt|(13) > 4)
+            {
+                Console.WriteLine();
+            }
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Possible multiple consumption of ValueTask.
+(1): ReSharper Warning: Possible multiple consumption of ValueTask.
+(2): ReSharper Warning: Possible multiple consumption of ValueTask.
+(3): ReSharper Warning: Possible multiple consumption of ValueTask.
+(4): ReSharper Warning: Possible multiple consumption of ValueTask.
+(5): ReSharper Warning: Possible multiple consumption of ValueTask.
+(6): ReSharper Warning: Possible multiple consumption of ValueTask.
+(7): ReSharper Warning: Possible multiple consumption of ValueTask.
+(8): ReSharper Warning: Possible multiple consumption of ValueTask.
+(9): ReSharper Warning: Possible multiple consumption of ValueTask.
+(10): ReSharper Warning: Possible multiple consumption of ValueTask.
+(11): ReSharper Warning: Possible multiple consumption of ValueTask.
+(12): ReSharper Warning: Possible multiple consumption of ValueTask.
+(13): ReSharper Warning: Possible multiple consumption of ValueTask<int>.

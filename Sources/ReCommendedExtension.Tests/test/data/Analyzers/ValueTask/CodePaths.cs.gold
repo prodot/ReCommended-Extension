@@ -1,0 +1,214 @@
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Tests
+{
+    public static class Test
+    {
+        public static async ValueTask Delay() => await Task.Delay(10);
+
+        public static async ValueTask<T> Calc<T>(T x)
+        {
+            await Task.Delay(10);
+            return x;
+        }
+    }
+
+    public class CodePaths
+    {
+        async ValueTask OnePath(ValueTask vt)
+        {
+            await |vt|(0);
+            await |vt|(1);
+        }
+
+        async ValueTask TwoPaths(ValueTask vt, int x)
+        {
+            if (x > 3)
+            {
+                await vt;
+            }
+            else
+            {
+                await |vt|(2);
+                await |vt|(3);
+            }
+
+            await |vt|(4);
+        }
+
+        async ValueTask TwoPaths_TwoExits(ValueTask vt, int x)
+        {
+            if (x > 3)
+            {
+                await |vt|(5);
+            }
+            else
+            {
+                await vt;
+                await |vt|(6);
+                return;
+            }
+
+            await |vt|(7);
+        }
+
+        async ValueTask TwoPaths_TwoExits_Throws(ValueTask vt, int x)
+        {
+            if (x > 3)
+            {
+                await |vt|(8);
+            }
+            else
+            {
+                await vt;
+                await |vt|(9);
+                throw new NotSupportedException();
+            }
+
+            await |vt|(10);
+        }
+
+        async ValueTask ThreePaths(ValueTask vt, int x)
+        {
+            switch (x)
+            {
+                case 0:
+                    await vt;
+                    break;
+
+                case 1:
+                case 2:
+                    await |vt|(11);
+                    await |vt|(12);
+                    break;
+
+                default:
+                    await vt;
+                    await |vt|(13);
+                    await |vt|(14);
+                    break;
+            }
+        }
+
+        async ValueTask ThreePaths_Complex(ValueTask vt, ValueTask<int> x, ValueTask<int> y)
+        {
+            switch (await x)
+            {
+                case 0 when (await y) > 2:
+                    await vt;
+                    return;
+
+                case 1 when (await y) > 5:
+                    await |vt|(15);
+                    break;
+
+                default:
+                    await vt;
+                    throw new NotSupportedException();
+            }
+
+            await |vt|(16);
+        }
+
+        async ValueTask Loop(ValueTask vt)
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                await |vt|(17);
+            }
+        }
+
+        async ValueTask Loop2(ValueTask vt)
+        {
+            for (var i = 0, j = 1; i < 10 && j < 11; i++, j++)
+            {
+                await |vt|(18);
+            }
+        }
+
+        async ValueTask Loop_Forever(ValueTask vt)
+        {
+            for (;;)
+            {
+                await |vt|(19);
+            }
+        }
+
+        async ValueTask Loop_WithBreak(ValueTask vt, int[] a)
+        {
+            foreach (var i in a)
+            {
+                if (i = 3)
+                {
+                    await vt;
+                    break;
+                }
+            }
+        }
+
+        async ValueTask Loop_WithContinue(ValueTask vt, int[] a)
+        {
+            foreach (var i in a)
+            {
+                if (i != 3)
+                {
+                    continue;
+                }
+
+                await vt;
+                return;
+            }
+        }
+
+        async ValueTask Loop_InCondition(ValueTask<int> vt)
+        {
+            while (await |vt|(20) > 3)
+            {
+                Console.WriteLine();
+            }
+        }
+
+        async ValueTask Loop_InCondition_OneIteration(ValueTask<int> vt)
+        {
+            while (await vt > 3)
+            {
+                break;
+            }
+        }
+
+        async ValueTask Captures(ValueTask vt)
+        {
+            await LocalFunction();
+            await LocalFunction();
+
+            async ValueTask LocalFunction()
+            {
+                await |vt|(21);
+            }
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Possible multiple consumption of ValueTask.
+(1): ReSharper Warning: Possible multiple consumption of ValueTask.
+(2): ReSharper Warning: Possible multiple consumption of ValueTask.
+(3): ReSharper Warning: Possible multiple consumption of ValueTask.
+(4): ReSharper Warning: Possible multiple consumption of ValueTask.
+(5): ReSharper Warning: Possible multiple consumption of ValueTask.
+(6): ReSharper Warning: Possible multiple consumption of ValueTask.
+(7): ReSharper Warning: Possible multiple consumption of ValueTask.
+(8): ReSharper Warning: Possible multiple consumption of ValueTask.
+(9): ReSharper Warning: Possible multiple consumption of ValueTask.
+(10): ReSharper Warning: Possible multiple consumption of ValueTask.
+(11): ReSharper Warning: Possible multiple consumption of ValueTask.
+(12): ReSharper Warning: Possible multiple consumption of ValueTask.
+(13): ReSharper Warning: Possible multiple consumption of ValueTask.
+(14): ReSharper Warning: Possible multiple consumption of ValueTask.
+(15): ReSharper Warning: Possible multiple consumption of ValueTask.
+(16): ReSharper Warning: Possible multiple consumption of ValueTask.
+(17): ReSharper Warning: Possible multiple consumption of ValueTask.
+(18): ReSharper Warning: Possible multiple consumption of ValueTask.
+(19): ReSharper Warning: Possible multiple consumption of ValueTask.
+(20): ReSharper Warning: Possible multiple consumption of ValueTask<int>.
+(21): ReSharper Warning: Possible multiple consumption of ValueTask.
