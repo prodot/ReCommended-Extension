@@ -11,18 +11,24 @@ namespace Test
         static string NotNullMethod() => "one";
 
         static string field = NotNullMethod().AssertNotNull();
+        static string field_NFO = NotNullMethod()!;
 
         static string Property => NotNullMethod().AssertNotNull();
+        static string Property_NFO => NotNullMethod()!;
 
         static Lazy<string?> PropertyLazy => new Lazy<string?>(() => NotNullMethod().AssertNotNull());
+        static Lazy<string?> PropertyLazy_NFO => new Lazy<string?>(() => NotNullMethod()!);
 
         static string? PropertyNullable => null;
 
         static string Property2 { get; } = NotNullMethod().AssertNotNull();
+        static string Property2_NFO { get; } = NotNullMethod()!;
 
         static string Property3 { get; set; } = NotNullMethod().AssertNotNull();
+        static string Property3_NFO { get; set; } = NotNullMethod()!;
 
         static string Method() => NotNullMethod().AssertNotNull();
+        static string Method_NFO() => NotNullMethod()!;
 
         [DebuggerStepThrough]
         [NotNull]
@@ -36,21 +42,28 @@ namespace Test
         class Nested
         {
             string? field = NotNullMethod().AssertNotNull();
+            string? field_NFO = NotNullMethod()!;
 
             string? Property => NotNullMethod().AssertNotNull();
+            string? Property_NFO => NotNullMethod()!;
 
             string? AutoProperty { get; } = NotNullMethod().AssertNotNull();
+            string? AutoProperty_NFO { get; } = NotNullMethod()!;
         }
 
         static void ClassConstraint<T>(T one, T? two) where T : class
         {
             var x = one.AssertNotNull();
+            var x_NFO = one!;
+
             var y = two.AssertNotNull().AssertNotNull();
+            var y_NFO = two.AssertNotNull()!;
         }
 
         static void ClassNullableClassConstraint<T>(T one) where T : class?
         {
             var x = one.AssertNotNull().AssertNotNull();
+            var x_NFO = one.AssertNotNull()!;
         }
 
         static readonly string[] Words = { "one", "two", "three" };
@@ -63,8 +76,10 @@ namespace Test
         static void Iterations()
         {
             var query0 = from word in Words where word.AssertNotNull().Length > 2 select word; // "AssertNotNull" must be redundant
+            var query0_NFO = from word in Words where word!.Length > 2 select word; // "!" must be redundant
             var query1 = from word in Words where word != null select word; // "word != null" is always true
             var query2 = from word in Words select word.AssertNotNull(); // "AssertNotNull" must be redundant
+            var query2_NFO = from word in Words select word!; // "!" must be redundant
 
             AssertThatNotNull(Words);
             foreach (var word in Words)
@@ -113,6 +128,7 @@ namespace Test
 
             var length = Property.     AssertNotNull()         .     AssertNotNull()      .Length;
             var qqq = Property.AssertNotNull().ToList().All(char.IsDigit);
+            var qqq_NFO = Property!.ToList().All(char.IsDigit);
 
             if (b)
             {
@@ -152,6 +168,7 @@ namespace Test
 
             AssertThatNotNull(new object());
             new object().AssertNotNull();
+            var nfo = new object()!;
 
             if (x != null)
             {
@@ -186,6 +203,8 @@ namespace Test
         {
             AssertThatNotNull(x);
             x.AssertNotNull();
+
+            var y = x!;
         }
 
         class A
@@ -206,6 +225,7 @@ namespace Test
         static void NullPropagation5(A notNull) => AssertThatNotNull(notNull?.NotNull);
 
         static void NullPropagation6(A notNull) => notNull?.NotNull.AssertNotNull();
+        static void NullPropagation6_NFO(A notNull) => notNull?.NotNull!;
 
         static void NullPropagation7(A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
 

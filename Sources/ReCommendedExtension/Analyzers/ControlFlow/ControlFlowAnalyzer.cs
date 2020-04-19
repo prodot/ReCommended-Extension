@@ -21,7 +21,11 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 {
     [ElementProblemAnalyzer(
         typeof(ICSharpTreeNode),
-        HighlightingTypes = new[] { typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion) })]
+        HighlightingTypes = new[]
+        {
+            typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion),
+            typeof(RedundantNullForgivingOperatorSuggestion),
+        })]
     public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         [Pure]
@@ -310,13 +314,30 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 }
             }
 
-            if (!isKnownToBeNull &&
-                assertion is InlineAssertion inlineAssertion &&
-                GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, inlineAssertion.QualifierExpression) ==
-                CSharpControlFlowNullReferenceState.NOT_NULL)
+            if (!isKnownToBeNull)
             {
-                context.AddHighlighting(
-                    new RedundantInlineAssertionSuggestion("Assertion is redundant because the expression is never null.", inlineAssertion));
+                switch (assertion)
+                {
+                    case InlineAssertion inlineAssertion
+                        when GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, inlineAssertion.QualifierExpression) ==
+                        CSharpControlFlowNullReferenceState.NOT_NULL:
+
+                        context.AddHighlighting(
+                            new RedundantInlineAssertionSuggestion("Assertion is redundant because the expression is never null.", inlineAssertion));
+                        break;
+
+                    case NullForgivingOperation nullForgivingOperation when GetExpressionNullReferenceState(
+                            inspector,
+                            alwaysSuccessTryCastExpressions,
+                            nullForgivingOperation.SuppressNullableWarningExpression.Operand) ==
+                        CSharpControlFlowNullReferenceState.NOT_NULL:
+
+                        context.AddHighlighting(
+                            new RedundantNullForgivingOperatorSuggestion(
+                                "Null-forgiving operator is redundant because the expression is never null.",
+                                nullForgivingOperation));
+                        break;
+                }
             }
         }
 

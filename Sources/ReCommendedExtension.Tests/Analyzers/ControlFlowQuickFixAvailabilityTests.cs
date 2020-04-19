@@ -1,4 +1,5 @@
 using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -9,15 +10,20 @@ using ReCommendedExtension.Analyzers.ControlFlow;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
-    [TestPackagesWithAnnotations]
     public sealed class ControlFlowQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\ControlFlowQuickFixes";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAssertionStatementSuggestion;
+            => highlighting is RedundantAssertionStatementSuggestion || highlighting is RedundantNullForgivingOperatorSuggestion;
 
         [Test]
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
         public void TestControlFlowAvailability() => DoNamedTest2();
+
+        [Test]
+        [NullableContext(NullableContextKind.Enable)]
+        [TestNetCore30]
+        public void TestControlFlowAvailability_NullForgivingOperator() => DoNamedTest2();
     }
 }

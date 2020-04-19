@@ -2,7 +2,7 @@
 
 The ReCommended Extension for ReSharper augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
-- detection of redundant assertions,
+- detection of redundant null-forgiving operators or assertions,
 - inappropriate use of `async void`,
 - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
 - array initializers (empty arrays or arrays initialized with default values),

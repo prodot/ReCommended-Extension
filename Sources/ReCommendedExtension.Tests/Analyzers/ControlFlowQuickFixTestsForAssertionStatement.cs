@@ -5,11 +5,11 @@ using ReCommendedExtension.Analyzers.ControlFlow;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
-    public sealed class ControlFlowQuickFixTests : QuickFixTestBase<RemoveAssertionStatementFix>
+    public sealed class ControlFlowQuickFixTestsForAssertionStatement : QuickFixTestBase<RemoveAssertionStatementFix>
     {
         protected override string RelativeTestDataPath => @"Analyzers\ControlFlowQuickFixes";
 
         [Test]
-        public void TestControlFlow() => DoNamedTest2();
+        public void TestRemoveAssertionStatement() => DoNamedTest2();
     }
 }

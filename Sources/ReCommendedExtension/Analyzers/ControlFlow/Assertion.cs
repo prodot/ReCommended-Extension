@@ -22,11 +22,11 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
             var assertions = new HashSet<Assertion>();
 
-            foreach (var invocationExpression in rootNode.Descendants<IInvocationExpression>())
+            foreach (var expression in rootNode.Descendants<ICSharpExpression>())
             {
-                Debug.Assert(invocationExpression != null);
+                Debug.Assert(expression != null);
 
-                var isInTypeLevelInitializer = invocationExpression.PathToRoot()
+                var isInTypeLevelInitializer = expression.PathToRoot()
                     .Any(node => node is IExpressionInitializer && (node.Parent is IFieldDeclaration || node.Parent is IPropertyDeclaration));
 
                 if (forTypeLevelInitializersOnly != isInTypeLevelInitializer)
@@ -34,19 +34,28 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     continue;
                 }
 
-                var assertionStatement = AssertionStatement.TryFromInvocationExpression(
-                    invocationExpression,
-                    assertionMethodAnnotationProvider,
-                    assertionConditionAnnotationProvider);
-                if (assertionStatement != null)
+                switch (expression)
                 {
-                    assertions.Add(assertionStatement);
-                }
+                    case IInvocationExpression invocationExpression:
+                        var assertionStatement = AssertionStatement.TryFromInvocationExpression(
+                            invocationExpression,
+                            assertionMethodAnnotationProvider,
+                            assertionConditionAnnotationProvider);
+                        if (assertionStatement != null)
+                        {
+                            assertions.Add(assertionStatement);
+                        }
 
-                var inlineAssertion = InlineAssertion.TryFromInvocationExpression(invocationExpression);
-                if (inlineAssertion != null)
-                {
-                    assertions.Add(inlineAssertion);
+                        var inlineAssertion = InlineAssertion.TryFromInvocationExpression(invocationExpression);
+                        if (inlineAssertion != null)
+                        {
+                            assertions.Add(inlineAssertion);
+                        }
+                        break;
+
+                    case ISuppressNullableWarningExpression suppressNullableWarningExpression:
+                        assertions.Add(new NullForgivingOperation(suppressNullableWarningExpression));
+                        break;
                 }
             }
 
