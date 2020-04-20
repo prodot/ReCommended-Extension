@@ -28,7 +28,7 @@ namespace ReCommendedExtension.ContextActions
 
                 case IProperty property: return IsAvailableForType(property.Type);
 
-                case IField field: return IsAvailableForType(field.Type);
+                case IField field when !field.IsConstant: return IsAvailableForType(field.Type);
 
                 case IParameter parameter: return IsAvailableForType(parameter.Type);
 

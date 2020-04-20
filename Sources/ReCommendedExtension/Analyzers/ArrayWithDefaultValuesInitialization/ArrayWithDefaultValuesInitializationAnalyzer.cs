@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
     public sealed class ArrayWithDefaultValuesInitializationAnalyzer : ElementProblemAnalyzer<IArrayInitializer>
     {
         [NotNull]
-        static string CreateHighlightingMessage([NotNull] IType arrayElementType, bool isNullableReferenceType, int elementCount)
+        static string CreateHighlightingMessage([NotNull] IType arrayElementType, bool isNullableReferenceType, [NonNegativeValue] int elementCount)
         {
             Debug.Assert(CSharpLanguage.Instance != null);
 

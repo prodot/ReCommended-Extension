@@ -29,7 +29,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
             [NotNull] IArrayInitializer arrayInitializer,
             bool isNullableReferenceType,
             [NotNull] IType arrayElementType,
-            int elementCount) : base(message)
+            [NonNegativeValue] int elementCount) : base(message)
         {
             ArrayInitializer = arrayInitializer;
             IsNullableReferenceType = isNullableReferenceType;
@@ -45,6 +45,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
         [NotNull]
         internal IType ArrayElementType { get; }
 
+        [NonNegativeValue]
         internal int ElementCount { get; }
 
         public override DocumentRange CalculateRange() => ArrayInitializer.GetDocumentRange();

@@ -27,13 +27,15 @@ namespace ReCommendedExtension.Analyzers.LocalSuppression
         [NotNull]
         readonly ICommentNode comment;
 
+        [NonNegativeValue]
         readonly int leadingWhitespaceCharacterCount;
+
         readonly bool justOnce;
 
         internal LocalSuppressionWarning(
             [NotNull] string message,
             [NotNull] ICommentNode comment,
-            int leadingWhitespaceCharacterCount,
+            [NonNegativeValue] int leadingWhitespaceCharacterCount,
             bool justOnce) : base(message)
         {
             this.comment = comment;

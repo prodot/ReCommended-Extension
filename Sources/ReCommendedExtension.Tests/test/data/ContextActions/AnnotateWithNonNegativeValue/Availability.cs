@@ -13,6 +13,8 @@ namespace Test
         void Method(int x{on}) { }
 
         delegate int Cal{on}lback();
+
+        const int cons{off}tant = 3;
     }
 
     internal class Types
