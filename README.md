@@ -22,9 +22,11 @@ Another feature of the extension are new context actions that simply save time f
 
 # Some Screenshots
 
+![](Images/MulitpleConsumption.png)
+
 ![](Images/RedundantAssertion.png)
 
-![](Images/InvalidAnnotation.png)
+![](Images/RedundantNullForgivingOperator.png)
 
 # Installation
 

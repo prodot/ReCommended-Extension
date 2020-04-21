@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
 using ReCommendedExtension.Analyzers.ControlFlow;
 using ZoneMarker = ReCommendedExtension.ZoneMarker;
@@ -16,7 +17,11 @@ using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
 namespace ReCommendedExtension.Analyzers.ControlFlow
 {
-    [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
+    [ConfigurableSeverityHighlighting(
+        SeverityId,
+        CSharpLanguage.Name,
+        AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
+        OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class RedundantNullForgivingOperatorSuggestion : RedundantAssertionSuggestion
     {
         internal const string SeverityId = "RedundantNullForgivingOperator";
