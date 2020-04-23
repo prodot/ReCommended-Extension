@@ -21,7 +21,8 @@ namespace ReCommendedExtension.Tests.Analyzers
                 highlighting is NotAllowedAnnotationWarning ||
                 highlighting is MissingAnnotationWarning ||
                 highlighting is MissingSuppressionJustificationWarning ||
-                highlighting is ConflictingAnnotationWarning;
+                highlighting is ConflictingAnnotationWarning ||
+                highlighting is InvalidValueRangeBoundaryWarning;
 
         [Test]
         [TestNetFramework45]
@@ -63,5 +64,15 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [NullableContext(NullableContextKind.Enable)]
         public void TestNullableAnnotationContext() => DoNamedTest2();
+
+        [Test]
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
+        [NullableContext(NullableContextKind.Enable)]
+        public void TestNonNegativeValue() => DoNamedTest2();
+
+        [Test]
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
+        [NullableContext(NullableContextKind.Enable)]
+        public void TestValueRange() => DoNamedTest2();
     }
 }

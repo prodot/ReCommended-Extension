@@ -1,0 +1,10 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Types
+    {
+        void Method([ValueRange({caret}0, 1)] uint a) { }
+    }
+}

@@ -8,9 +8,8 @@ using ReCommendedExtension.Analyzers.Annotation;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
-    [TestNetFramework45]
-    [TestPackagesWithAnnotations]
     [TestFixture]
+    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
@@ -18,9 +17,13 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
             => highlighting is NotAllowedAnnotationWarning ||
                 highlighting is ConflictingAnnotationWarning ||
-                highlighting is RedundantAnnotationSuggestion;
+                highlighting is RedundantAnnotationSuggestion ||
+                highlighting is InvalidValueRangeBoundaryWarning;
 
         [Test]
         public void TestAnnotationAvailability() => DoNamedTest2();
+
+        [Test]
+        public void TestCoerceValueRangeBoundaryAvailability() => DoNamedTest2();
     }
 }

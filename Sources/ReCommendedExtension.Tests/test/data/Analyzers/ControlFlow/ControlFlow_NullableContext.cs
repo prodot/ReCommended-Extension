@@ -225,7 +225,7 @@ namespace Test
         static void NullPropagation5(A notNull) => AssertThatNotNull(notNull?.NotNull);
 
         static void NullPropagation6(A notNull) => notNull?.NotNull.AssertNotNull();
-        static void NullPropagation6_NFO(A notNull) => notNull?.NotNull!;
+        static void NullPropagation6_NFO(A notNull) => Console.WriteLine(notNull?.NotNull!.Length);
 
         static void NullPropagation7(A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
 
