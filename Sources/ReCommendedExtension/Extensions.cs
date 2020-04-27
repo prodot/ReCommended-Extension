@@ -467,6 +467,9 @@ namespace ReCommendedExtension
                 case ICSharpLiteralExpression literalExpression when literalExpression.Literal?.GetTokenType() == CSharpTokenType.DEFAULT_KEYWORD:
                 case IDefaultExpression defaultExpression when Equals(defaultExpression.Type(), type):
                     return true;
+
+                case IParenthesizedExpression parenthesizedExpression when parenthesizedExpression.Expression != null:
+                    return parenthesizedExpression.Expression.IsDefaultValueOf(type);
             }
 
             if (type.IsUnconstrainedGenericType())
