@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow;
+using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
@@ -21,79 +22,13 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 {
     [ElementProblemAnalyzer(
         typeof(ICSharpTreeNode),
-        HighlightingTypes = new[] { typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion) })]
+        HighlightingTypes = new[]
+        {
+            typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion),
+            typeof(RedundantNullForgivingOperatorSuggestion),
+        })]
     public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
-        [Pure]
-        static CSharpControlFlowNullReferenceState GetAnnotationNullableValue(
-            [NotNull] IType type,
-            bool canStillBeNull = false,
-            bool shouldNeverBeNull = false)
-        {
-            switch (type.Classify)
-            {
-                case TypeClassification.REFERENCE_TYPE:
-                    switch (type.NullableAnnotation)
-                    {
-                        case NullableAnnotation.NotAnnotated:
-                            if (type.IsOpenType)
-                            {
-                                var typeParameterType = type.GetTypeParameterType();
-                                switch (typeParameterType?.Nullability)
-                                {
-                                    case TypeParameterNullability.NotNullableValueType: return CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                                    case TypeParameterNullability.NotNullableValueOrReferenceType:
-                                    case TypeParameterNullability.NotNullableReferenceType:
-                                    case TypeParameterNullability.NotNullableSuperType:
-                                        if (canStillBeNull)
-                                        {
-                                            return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
-                                        }
-                                        return CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                                    case TypeParameterNullability.NullableValueOrReferenceType:
-                                    case TypeParameterNullability.NullableReferenceType:
-                                    case TypeParameterNullability.NullableSuperType:
-                                        if (shouldNeverBeNull)
-                                        {
-                                            return CSharpControlFlowNullReferenceState.NOT_NULL;
-                                        }
-                                        return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
-                                }
-                            }
-
-                            if (canStillBeNull)
-                            {
-                                return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
-                            }
-
-                            return CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                        case NullableAnnotation.NotNullable:
-                            if (canStillBeNull)
-                            {
-                                return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
-                            }
-                            return CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                        case NullableAnnotation.Annotated:
-                        case NullableAnnotation.Nullable:
-                            if (shouldNeverBeNull)
-                            {
-                                return CSharpControlFlowNullReferenceState.NOT_NULL;
-                            }
-                            return CSharpControlFlowNullReferenceState.MAY_BE_NULL;
-
-                        default: return CSharpControlFlowNullReferenceState.UNKNOWN;
-                    }
-
-                case TypeClassification.VALUE_TYPE: return CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                default: goto case TypeClassification.REFERENCE_TYPE;
-            }
-        }
-
         [Pure]
         static ICSharpExpression TryGetOtherOperand(
             [NotNull] IEqualityExpression equalityExpression,
@@ -119,6 +54,69 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         [Pure]
         static bool IsLiteral(IExpression expression, [NotNull] TokenNodeType tokenType)
             => (expression as ICSharpLiteralExpression)?.Literal?.GetTokenType() == tokenType;
+
+        [Pure]
+        static CSharpControlFlowNullReferenceState GetExpressionNullReferenceStateByNullableContext(
+            [NotNull] CSharpCompilerNullableInspector nullabilityInspector,
+            [NotNull] ICSharpExpression expression)
+        {
+            var type = expression.Type();
+            if (expression.IsDefaultValueOf(type))
+            {
+                switch (type.Classify)
+                {
+                    case TypeClassification.VALUE_TYPE:
+                        return type.IsNullable() ? CSharpControlFlowNullReferenceState.NULL : CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                    case TypeClassification.REFERENCE_TYPE: return CSharpControlFlowNullReferenceState.NULL;
+
+                    case TypeClassification.UNKNOWN: return CSharpControlFlowNullReferenceState.UNKNOWN; // unconstrained generic type
+
+                    default: goto case TypeClassification.UNKNOWN;
+                }
+            }
+
+            var controlFlowGraph = nullabilityInspector.ControlFlowGraph;
+            Debug.Assert(controlFlowGraph != null);
+
+            var rootElement = controlFlowGraph.BodyElement.SourceElement;
+            var inClosure = null as bool?;
+            for (var e = (ITreeNode)expression; e != null && e != rootElement; e = e.Parent)
+            {
+                if (e != expression)
+                {
+                    if (inClosure == null)
+                    {
+                        inClosure = expression.IsInsideClosure();
+                    }
+                    if (inClosure != e.IsInsideClosure())
+                    {
+                        break;
+                    }
+                }
+
+                var edge = controlFlowGraph.GetLeafElementsFor(e).LastOrDefault()?.Exits.FirstOrDefault();
+                if (edge != null)
+                {
+                    var nullableContext = nullabilityInspector.GetContext(edge);
+
+                    switch (nullableContext?.ExpressionAnnotation)
+                    {
+                        case NullableAnnotation.NotAnnotated:
+                        case NullableAnnotation.NotNullable:
+                            return CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                        case NullableAnnotation.Annotated:
+                        case NullableAnnotation.Nullable:
+                            return CSharpControlFlowNullReferenceState.MAY_BE_NULL; // todo: distinguish if the expression is "null" or just "may be null" here
+
+                        default: return CSharpControlFlowNullReferenceState.UNKNOWN;
+                    }
+                }
+            }
+
+            return CSharpControlFlowNullReferenceState.UNKNOWN;
+        }
 
         [NotNull]
         readonly NullnessProvider nullnessProvider;
@@ -156,29 +154,66 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 return; // no (new) assertions found
             }
 
-            var inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
+            CSharpCompilerNullableInspector nullabilityInspector;
+            CSharpControlFlowGraphInspector inspector;
+            HashSet<IAsExpression> alwaysSuccessTryCastExpressions;
 
-            var alwaysSuccessTryCastExpressions =
-                new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions ?? Array.Empty<IAsExpression>());
+            if (rootNode.IsNullableWarningsContextEnabled())
+            {
+                nullabilityInspector = (CSharpCompilerNullableInspector)CSharpCompilerNullableInspector.Inspect(controlFlowGraph, null); // wrong [NotNull] annotation in R# code
+                inspector = null;
+                alwaysSuccessTryCastExpressions = null;
+            }
+            else
+            {
+                nullabilityInspector = null;
+                inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
+                alwaysSuccessTryCastExpressions =
+                    new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions ?? Array.Empty<IAsExpression>());
+            }
 
             foreach (var assertion in assertions)
             {
                 switch (assertion.AssertionConditionType)
                 {
                     case AssertionConditionType.IS_TRUE:
-                        AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(consumer, inspector, alwaysSuccessTryCastExpressions, assertion, true);
+                        AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
+                            consumer,
+                            nullabilityInspector,
+                            inspector,
+                            alwaysSuccessTryCastExpressions,
+                            assertion,
+                            true);
                         break;
 
                     case AssertionConditionType.IS_FALSE:
-                        AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(consumer, inspector, alwaysSuccessTryCastExpressions, assertion, false);
+                        AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
+                            consumer,
+                            nullabilityInspector,
+                            inspector,
+                            alwaysSuccessTryCastExpressions,
+                            assertion,
+                            false);
                         break;
 
                     case AssertionConditionType.IS_NOT_NULL:
-                        AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(consumer, inspector, alwaysSuccessTryCastExpressions, assertion, false);
+                        AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
+                            consumer,
+                            nullabilityInspector,
+                            inspector,
+                            alwaysSuccessTryCastExpressions,
+                            assertion,
+                            false);
                         break;
 
                     case AssertionConditionType.IS_NULL:
-                        AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(consumer, inspector, alwaysSuccessTryCastExpressions, assertion, true);
+                        AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
+                            consumer,
+                            nullabilityInspector,
+                            inspector,
+                            alwaysSuccessTryCastExpressions,
+                            assertion,
+                            true);
                         break;
                 }
             }
@@ -186,8 +221,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
         void AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
             [NotNull] IHighlightingConsumer context,
-            [NotNull] CSharpControlFlowGraphInspector inspector,
-            [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
+            CSharpCompilerNullableInspector nullabilityInspector,
+            CSharpControlFlowGraphInspector inspector,
+            HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] Assertion assertion,
             bool isKnownToBeTrue)
         {
@@ -200,7 +236,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 {
                     context.AddHighlighting(
                         new RedundantAssertionStatementSuggestion(
-                            $"Assertion is redundant because the expression is always {(isKnownToBeTrue ? "true" : "false")}.",
+                            $"Assertion is redundant because the expression is {(isKnownToBeTrue ? "true" : "false")} here.",
                             assertionStatement));
                 }
 
@@ -211,14 +247,18 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     var expression = TryGetOtherOperand(equalityExpression, EqualityExpressionType.NE, CSharpTokenType.NULL_KEYWORD);
                     if (expression != null)
                     {
-                        switch (GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, expression))
+                        switch (GetExpressionNullReferenceState(
+                            nullabilityInspector,
+                            inspector,
+                            alwaysSuccessTryCastExpressions,
+                            expression))
                         {
                             case CSharpControlFlowNullReferenceState.NOT_NULL:
                                 if (isKnownToBeTrue)
                                 {
                                     context.AddHighlighting(
                                         new RedundantAssertionStatementSuggestion(
-                                            "Assertion is redundant because the expression is always true.",
+                                            "Assertion is redundant because the expression is true here.",
                                             assertionStatement));
                                 }
                                 break;
@@ -228,7 +268,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 {
                                     context.AddHighlighting(
                                         new RedundantAssertionStatementSuggestion(
-                                            "Assertion is redundant because the expression is always false.",
+                                            "Assertion is redundant because the expression is false here.",
                                             assertionStatement));
                                 }
                                 break;
@@ -239,14 +279,14 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     expression = TryGetOtherOperand(equalityExpression, EqualityExpressionType.EQEQ, CSharpTokenType.NULL_KEYWORD);
                     if (expression != null)
                     {
-                        switch (GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, expression))
+                        switch (GetExpressionNullReferenceState(nullabilityInspector, inspector, alwaysSuccessTryCastExpressions, expression))
                         {
                             case CSharpControlFlowNullReferenceState.NOT_NULL:
                                 if (!isKnownToBeTrue)
                                 {
                                     context.AddHighlighting(
                                         new RedundantAssertionStatementSuggestion(
-                                            "Assertion is redundant because the expression is always false.",
+                                            "Assertion is redundant because the expression is false here.",
                                             assertionStatement));
                                 }
                                 break;
@@ -256,7 +296,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 {
                                     context.AddHighlighting(
                                         new RedundantAssertionStatementSuggestion(
-                                            "Assertion is redundant because the expression is always true.",
+                                            "Assertion is redundant because the expression is true here.",
                                             assertionStatement));
                                 }
                                 break;
@@ -268,8 +308,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
         void AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
             [NotNull] IHighlightingConsumer context,
-            [NotNull] CSharpControlFlowGraphInspector inspector,
-            [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
+            CSharpCompilerNullableInspector nullabilityInspector,
+            CSharpControlFlowGraphInspector inspector,
+            HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] Assertion assertion,
             bool isKnownToBeNull)
         {
@@ -280,20 +321,22 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 if (isKnownToBeNull && IsLiteral(assertionStatement.Expression, CSharpTokenType.NULL_KEYWORD))
                 {
                     context.AddHighlighting(
-                        new RedundantAssertionStatementSuggestion(
-                            "Assertion is redundant because the expression is always null.",
-                            assertionStatement));
+                        new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is null here.", assertionStatement));
                 }
 
                 // pattern: Assert(x); when x is known to be null or not null
-                switch (GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, assertionStatement.Expression))
+                switch (GetExpressionNullReferenceState(
+                    nullabilityInspector,
+                    inspector,
+                    alwaysSuccessTryCastExpressions,
+                    assertionStatement.Expression))
                 {
                     case CSharpControlFlowNullReferenceState.NOT_NULL:
                         if (!isKnownToBeNull)
                         {
                             context.AddHighlighting(
                                 new RedundantAssertionStatementSuggestion(
-                                    "Assertion is redundant because the expression is never null.",
+                                    "Assertion is redundant because the expression is not null here.",
                                     assertionStatement));
                         }
                         break;
@@ -303,29 +346,67 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         {
                             context.AddHighlighting(
                                 new RedundantAssertionStatementSuggestion(
-                                    "Assertion is redundant because the expression is always null.",
+                                    "Assertion is redundant because the expression is null here.",
                                     assertionStatement));
                         }
                         break;
                 }
             }
 
-            if (!isKnownToBeNull &&
-                assertion is InlineAssertion inlineAssertion &&
-                GetExpressionNullReferenceState(inspector, alwaysSuccessTryCastExpressions, inlineAssertion.QualifierExpression) ==
-                CSharpControlFlowNullReferenceState.NOT_NULL)
+            if (!isKnownToBeNull)
             {
-                context.AddHighlighting(
-                    new RedundantInlineAssertionSuggestion("Assertion is redundant because the expression is never null.", inlineAssertion));
+                switch (assertion)
+                {
+                    case InlineAssertion inlineAssertion:
+                        if (GetExpressionNullReferenceState(
+                                nullabilityInspector,
+                                inspector,
+                                alwaysSuccessTryCastExpressions,
+                                inlineAssertion.QualifierExpression) ==
+                            CSharpControlFlowNullReferenceState.NOT_NULL)
+                        {
+                            context.AddHighlighting(
+                                new RedundantInlineAssertionSuggestion(
+                                    "Assertion is redundant because the expression is not null here.",
+                                    inlineAssertion));
+                        }
+                        break;
+
+                    case NullForgivingOperation nullForgivingOperation:
+                        Debug.Assert(nullForgivingOperation.SuppressNullableWarningExpression.Operand != null);
+
+                        if (GetExpressionNullReferenceState(
+                                nullabilityInspector,
+                                inspector,
+                                alwaysSuccessTryCastExpressions,
+                                nullForgivingOperation.SuppressNullableWarningExpression.Operand) ==
+                            CSharpControlFlowNullReferenceState.NOT_NULL)
+                        {
+                            context.AddHighlighting(
+                                new RedundantNullForgivingOperatorSuggestion(
+                                    "Null-forgiving operator is redundant because the expression is not null here.",
+                                    nullForgivingOperation));
+                        }
+                        break;
+                }
             }
         }
 
         [Pure]
         CSharpControlFlowNullReferenceState GetExpressionNullReferenceState(
-            [NotNull] CSharpControlFlowGraphInspector inspector,
-            [NotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
-            ICSharpExpression expression)
+            CSharpCompilerNullableInspector nullabilityInspector,
+            CSharpControlFlowGraphInspector inspector,
+            HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
+            [NotNull] ICSharpExpression expression)
         {
+            if (nullabilityInspector != null)
+            {
+                return GetExpressionNullReferenceStateByNullableContext(nullabilityInspector, expression);
+            }
+
+            Debug.Assert(inspector != null);
+            Debug.Assert(alwaysSuccessTryCastExpressions != null);
+
             while (true)
             {
                 switch (expression)
@@ -343,12 +424,6 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         }
 
                         var nullReferenceState = inspector.GetExpressionNullReferenceState(referenceExpression, true);
-
-                        if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN &&
-                            referenceExpression.IsNullableWarningsContextEnabled())
-                        {
-                            nullReferenceState = GetAnnotationNullableValue(referenceExpression.Type());
-                        }
 
                         if (nullReferenceState == CSharpControlFlowNullReferenceState.UNKNOWN)
                         {

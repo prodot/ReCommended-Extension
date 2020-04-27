@@ -1,0 +1,48 @@
+﻿using JetBrains.Annotations;
+
+namespace Test
+{
+    public class Types
+    {
+        void NonNumeric([|NonNegativeValue|(0)] string arg) { }
+
+        void NumericUnsigned([|NonNegativeValue|(1)] uint a, [|NonNegativeValue|(2)] ulong b, [|NonNegativeValue|(3)] ushort c, [|NonNegativeValue|(4)] byte d) { }
+
+        void NumericSigned([NonNegativeValue] int a, [NonNegativeValue] long b, [NonNegativeValue] short c, [NonNegativeValue] sbyte d) { }
+
+        [|NonNegativeValue|(5)] const int constInt32 = 1;
+        [|NonNegativeValue|(6)] const long constInt64 = 1;
+        [|NonNegativeValue|(7)] const short constInt16 = 1;
+        [|NonNegativeValue|(8)] const sbyte constSByte = 1;
+    }
+
+    public class Elements
+    {
+        [|NonNegativeValue|(9)]
+        uint Method() { }
+
+        [|NonNegativeValue|(10)] uint Property => 3;
+        [|NonNegativeValue|(11)] uint Property2 { get; set; }
+
+        [|NonNegativeValue|(12)]
+        uint field;
+
+        [|NonNegativeValue|(13)]
+        delegate uint Callback();
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotation is not valid because the type of the declared element is not an integral numeric type.
+(1): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.
+(2): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.
+(3): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.
+(4): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.
+(5): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(6): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(7): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(8): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(9): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.
+(10): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.
+(11): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.
+(12): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.
+(13): ReSharper Suggestion: Annotation is redundant because the declared element can never be negative by default.

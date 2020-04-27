@@ -8,6 +8,7 @@ namespace ReCommendedExtension.Analyzers.LocalSuppression
     [ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionWarning) })]
     public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCommentNode>
     {
+        [NonNegativeValue]
         static int GetLeadingWhitespaceCharacterCount([NotNull] string commentText)
         {
             var leadingWhitespaceCharacters = 0;

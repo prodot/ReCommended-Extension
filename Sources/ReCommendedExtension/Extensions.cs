@@ -467,6 +467,9 @@ namespace ReCommendedExtension
                 case ICSharpLiteralExpression literalExpression when literalExpression.Literal?.GetTokenType() == CSharpTokenType.DEFAULT_KEYWORD:
                 case IDefaultExpression defaultExpression when Equals(defaultExpression.Type(), type):
                     return true;
+
+                case IParenthesizedExpression parenthesizedExpression when parenthesizedExpression.Expression != null:
+                    return parenthesizedExpression.Expression.IsDefaultValueOf(type);
             }
 
             if (type.IsUnconstrainedGenericType())
@@ -750,6 +753,13 @@ namespace ReCommendedExtension
             }
 
             return localList.ResultingList();
+        }
+
+        [JetBrains.Annotations.Pure]
+        public static void Deconstruct<K, V>(this KeyValuePair<K, V> pair, out K key, out V value)
+        {
+            key = pair.Key;
+            value = pair.Value;
         }
     }
 }

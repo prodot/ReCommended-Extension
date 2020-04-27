@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
@@ -20,15 +19,7 @@ namespace ReCommendedExtension.ContextActions
     {
         public AnnotateWithPure([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
-        protected override string AnnotationAttributeTypeName
-        {
-            get
-            {
-                Debug.Assert(PureAnnotationProvider.PureAttributeShortName != null);
-
-                return PureAnnotationProvider.PureAttributeShortName;
-            }
-        }
+        protected override string AnnotationAttributeTypeName => nameof(PureAttribute);
 
         protected override string TextSuffix => "no observable state changes";
 

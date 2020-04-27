@@ -1,0 +1,215 @@
+﻿using JetBrains.Annotations;
+
+namespace Test
+{
+    public class Types
+    {
+        void NonNumeric([|ValueRange(1)|(0)][|ValueRange(1, 2)|(1)] string arg) { }
+
+        void FromGreaterThanTo(
+            [|ValueRange(5, 1)|(2)] int a, 
+            [|ValueRange(5, 1)|(3)] uint b, 
+            [|ValueRange(5, 1)|(4)] long c,
+            [|ValueRange(5, 1)|(5)] ulong d, 
+            [|ValueRange(5, 1)|(6)] short e, 
+            [|ValueRange(5, 1)|(7)] ushort f, 
+            [|ValueRange(5, 1)|(8)] byte g,
+            [|ValueRange(5, 1)|(9)] sbyte h) { }
+
+        void FromGreaterThanTo_2(
+            [|ValueRange(int.MaxValue, int.MinValue)|(10)] int a, 
+            [|ValueRange(uint.MaxValue, uint.MinValue)|(11)] uint b, 
+            [|ValueRange(long.MaxValue, long.MinValue)|(12)] long c,
+            [|ValueRange(ulong.MaxValue, ulong.MinValue)|(13)] ulong d, 
+            [|ValueRange(short.MaxValue, short.MinValue)|(14)] short e, 
+            [|ValueRange(ushort.MaxValue, ushort.MinValue)|(15)] ushort f, 
+            [|ValueRange(byte.MaxValue, byte.MinValue)|(16)] byte g,
+            [|ValueRange(sbyte.MaxValue, sbyte.MinValue)|(17)] sbyte h) { }
+
+        void ToLessThanMinValue(
+            [|ValueRange(-2_147_483_648L - 10, -2_147_483_648L - 1)|(18)] int a, 
+            [|ValueRange(-1 * 3, -1)|(19)] uint b, 
+            [|ValueRange(-10, -1)|(20)] ulong d, 
+            [|ValueRange(-1_000_000, -100_000)|(21)] short e, 
+            [|ValueRange(-10, -1)|(22)] ushort f, 
+            [|ValueRange(-10, -1)|(23)] byte g,
+            [|ValueRange(-200, -150)|(24)] sbyte h) { }
+
+        void ToLessThanMinValue_2(
+            [|ValueRange(-2_147_483_648L - 1)|(25)] int a, 
+            [|ValueRange(-1)|(26)] uint b, 
+            [|ValueRange(-1)|(27)] ulong d, 
+            [|ValueRange(-100_000)|(28)] short e, 
+            [|ValueRange(-1)|(29)] ushort f, 
+            [|ValueRange(-1)|(30)] byte g,
+            [|ValueRange(-150)|(31)] sbyte h) { }
+
+        void FromGreaterThanMaxValue(
+            [|ValueRange(2_147_483_647L + 1, 2_147_483_647L + 10)|(32)] int a, 
+            [|ValueRange(uint.MaxValue + 1L, uint.MaxValue + 10L)|(33)] uint b, 
+            [|ValueRange(long.MaxValue + 1ul, long.MaxValue + 10ul)|(34)] long c,
+            [|ValueRange(100_000, 1_000_000)|(35)] short e, 
+            [|ValueRange(100_000, 1_000_000)|(36)] ushort f, 
+            [|ValueRange(257, 300)|(37)] byte g,
+            [|ValueRange(150, 200)|(38)] sbyte h) { }
+
+        void FromGreaterThanMaxValue_2(
+            [|ValueRange(2_147_483_647L + 1)|(39)] int a, 
+            [|ValueRange(uint.MaxValue + 1L)|(40)] uint b, 
+            [|ValueRange(long.MaxValue + 1ul)|(41)] long c,
+            [|ValueRange(100_000)|(42)] short e, 
+            [|ValueRange(100_000)|(43)] ushort f, 
+            [|ValueRange(257)|(44)] byte g,
+            [|ValueRange(150)|(45)] sbyte h) { }
+
+        void FromLessThanMinValue_To(
+            [ValueRange(|-2_147_483_648L - 1|(46), 1)] int a, 
+            [ValueRange(|-1|(47), 1)] uint b, 
+            [ValueRange(|-1|(48), 1)] ulong d, 
+            [ValueRange(|-100_000|(49), 1)] short e, 
+            [ValueRange(|-1|(50), 1)] ushort f, 
+            [ValueRange(|-1|(51), 1)] byte g,
+            [ValueRange(|-150|(52), 1)] sbyte h) { }
+
+        void From_ToGreaterThanMaxValue(
+            [ValueRange(1, |2_147_483_647L + 10|(53))] int a, 
+            [ValueRange(1, |uint.MaxValue + 10L|(54))] uint b, 
+            [ValueRange(1, |long.MaxValue + 10ul|(55))] long c,
+            [ValueRange(1, |1_000_000|(56))] short e, 
+            [ValueRange(1, |1_000_000|(57))] ushort f, 
+            [ValueRange(1, |300|(58))] byte g,
+            [ValueRange(1, |200|(59))] sbyte h) { }
+
+        void FromLessThanMinValue_ToGreaterThenMaxValue(
+            [|ValueRange(-2_147_483_648L - 1, 2_147_483_647L + 1)|(60)] int a, 
+            [|ValueRange(-1, uint.MaxValue + 1L)|(61)] uint b, 
+            [|ValueRange(-100_000, 100_000)|(62)] short e, 
+            [|ValueRange(-1, 100_000)|(63)] ushort f, 
+            [|ValueRange(-1, 0xFFFF)|(64)] byte g,
+            [|ValueRange(-200, 150)|(65)] sbyte h) { }
+
+        void From_To(
+            [ValueRange(1, 5)] int a, 
+            [ValueRange(1, 5)] uint b, 
+            [ValueRange(1, 5)] long c,
+            [ValueRange(1, 5)] ulong d, 
+            [ValueRange(1, 5)] short e, 
+            [ValueRange(1, 5)] ushort f, 
+            [ValueRange(1, 5)] byte g,
+            [ValueRange(1, 5)] sbyte h) { }
+
+        void From_To_2(
+            [ValueRange(1)] int a, 
+            [ValueRange(1)] uint b, 
+            [ValueRange(1)] long c,
+            [ValueRange(1)] ulong d, 
+            [ValueRange(1)] short e, 
+            [ValueRange(1)] ushort f, 
+            [ValueRange(1)] byte g,
+            [ValueRange(1)] sbyte h) { }
+
+        [|ValueRange(1, 3)|(66)] const int constInt32 = 1;
+        [|ValueRange(1, 3)|(67)] const int constUInt32 = 1;
+        [|ValueRange(1, 3)|(68)] const long constInt64 = 1;
+        [|ValueRange(1, 3)|(69)] const long constUInt64 = 1;
+        [|ValueRange(1, 3)|(70)] const short constInt16 = 1;
+        [|ValueRange(1, 3)|(71)] const short constUInt16 = 1;
+        [|ValueRange(1, 3)|(72)] const sbyte constSByte = 1;
+        [|ValueRange(1, 3)|(73)] const sbyte constByte = 1;
+    }
+
+    public class Elements
+    {
+        [ValueRange(|-1|(74), 3)]
+        uint Method() { }
+
+        [ValueRange(|-1|(75), 3)] uint Property => 3;
+        [ValueRange(|-1|(76), 3)] uint Property2 { get; set; }
+
+        [ValueRange(|-1|(77), 3)]
+        uint field;
+
+        [ValueRange(|-1|(78), 3)]
+        delegate uint Callback();
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotation is not valid because the type of the declared element is not an integral numeric type.
+(1): ReSharper Warning: Annotation is not valid because the type of the declared element is not an integral numeric type.
+(2): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(3): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(4): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(5): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(6): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(7): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(8): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(9): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(10): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(11): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(12): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(13): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(14): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(15): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(16): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(17): ReSharper Warning: Annotation is not valid because the 'from' value is greater than the 'to' value.
+(18): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(19): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(20): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(21): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(22): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(23): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(24): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(25): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(26): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(27): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(28): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(29): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(30): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(31): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(32): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(33): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(34): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(35): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(36): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(37): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(38): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(39): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(40): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(41): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(42): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(43): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(44): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(45): ReSharper Warning: Annotation is not valid because the declared element can never be in the range.
+(46): ReSharper Warning: The 'from' value is less than the 'int.MinValue'.
+(47): ReSharper Warning: The 'from' value is negative.
+(48): ReSharper Warning: The 'from' value is negative.
+(49): ReSharper Warning: The 'from' value is less than the 'short.MinValue'.
+(50): ReSharper Warning: The 'from' value is negative.
+(51): ReSharper Warning: The 'from' value is negative.
+(52): ReSharper Warning: The 'from' value is less than the 'sbyte.MinValue'.
+(53): ReSharper Warning: The 'to' value is greater than the 'int.MaxValue'.
+(54): ReSharper Warning: The 'to' value is greater than the 'uint.MaxValue'.
+(55): ReSharper Warning: The 'to' value is greater than the 'long.MaxValue'.
+(56): ReSharper Warning: The 'to' value is greater than the 'short.MaxValue'.
+(57): ReSharper Warning: The 'to' value is greater than the 'ushort.MaxValue'.
+(58): ReSharper Warning: The 'to' value is greater than the 'byte.MaxValue'.
+(59): ReSharper Warning: The 'to' value is greater than the 'sbyte.MaxValue'.
+(60): ReSharper Suggestion: Annotation is redundant because the declared element is always in the range by default.
+(61): ReSharper Suggestion: Annotation is redundant because the declared element is always in the range by default.
+(62): ReSharper Suggestion: Annotation is redundant because the declared element is always in the range by default.
+(63): ReSharper Suggestion: Annotation is redundant because the declared element is always in the range by default.
+(64): ReSharper Suggestion: Annotation is redundant because the declared element is always in the range by default.
+(65): ReSharper Suggestion: Annotation is redundant because the declared element is always in the range by default.
+(66): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(67): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(68): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(69): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(70): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(71): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(72): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(73): ReSharper Suggestion: Annotation is redundant because the declared element is a constant.
+(74): ReSharper Warning: The 'from' value is negative.
+(75): ReSharper Warning: The 'from' value is negative.
+(76): ReSharper Warning: The 'from' value is negative.
+(77): ReSharper Warning: The 'from' value is negative.
+(78): ReSharper Warning: The 'from' value is negative.
