@@ -333,64 +333,64 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(1): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(2): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(3): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(4): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(5): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(6): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(7): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(8): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(9): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(10): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(11): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(12): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(13): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(14): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(15): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(16): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(17): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(18): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(19): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(20): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(21): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(22): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(23): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(24): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(25): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(26): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(27): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(28): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(29): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(30): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(31): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(32): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(33): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(34): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(35): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(36): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(37): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(38): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(39): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(40): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(41): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(42): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(43): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(44): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(45): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(46): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(47): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(48): ReSharper Suggestion: Assertion is redundant because the expression is always false.
-(49): ReSharper Suggestion: Assertion is redundant because the expression is always null.
-(50): ReSharper Suggestion: Assertion is redundant because the expression is always null.
-(51): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(52): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(53): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(54): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(55): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(56): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(57): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is never null.
-(58): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(59): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(60): ReSharper Suggestion: Assertion is redundant because the expression is always true.
+(0): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(1): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(2): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(3): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(4): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(5): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(6): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(7): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(8): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(9): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(10): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(11): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(12): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(13): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(14): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(15): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(16): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(17): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(18): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(19): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(20): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(21): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(22): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(23): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(24): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(25): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(26): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(27): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(28): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(29): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(30): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(31): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(32): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(33): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(34): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(35): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(36): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(37): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(38): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(39): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(40): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(41): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(42): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(43): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(44): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(45): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(46): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(47): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(48): ReSharper Suggestion: Assertion is redundant because the expression is false here.
+(49): ReSharper Suggestion: Assertion is redundant because the expression is null here.
+(50): ReSharper Suggestion: Assertion is redundant because the expression is null here.
+(51): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(52): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(53): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(54): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(55): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(56): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(57): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(58): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(59): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(60): ReSharper Suggestion: Assertion is redundant because the expression is true here.

@@ -236,7 +236,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 {
                     context.AddHighlighting(
                         new RedundantAssertionStatementSuggestion(
-                            $"Assertion is redundant because the expression is always {(isKnownToBeTrue ? "true" : "false")}.",
+                            $"Assertion is redundant because the expression is {(isKnownToBeTrue ? "true" : "false")} here.",
                             assertionStatement));
                 }
 
@@ -258,7 +258,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 {
                                     context.AddHighlighting(
                                         new RedundantAssertionStatementSuggestion(
-                                            "Assertion is redundant because the expression is always true.",
+                                            "Assertion is redundant because the expression is true here.",
                                             assertionStatement));
                                 }
                                 break;
@@ -268,7 +268,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 {
                                     context.AddHighlighting(
                                         new RedundantAssertionStatementSuggestion(
-                                            "Assertion is redundant because the expression is always false.",
+                                            "Assertion is redundant because the expression is false here.",
                                             assertionStatement));
                                 }
                                 break;
@@ -286,7 +286,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 {
                                     context.AddHighlighting(
                                         new RedundantAssertionStatementSuggestion(
-                                            "Assertion is redundant because the expression is always false.",
+                                            "Assertion is redundant because the expression is false here.",
                                             assertionStatement));
                                 }
                                 break;
@@ -296,7 +296,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                                 {
                                     context.AddHighlighting(
                                         new RedundantAssertionStatementSuggestion(
-                                            "Assertion is redundant because the expression is always true.",
+                                            "Assertion is redundant because the expression is true here.",
                                             assertionStatement));
                                 }
                                 break;
@@ -321,9 +321,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 if (isKnownToBeNull && IsLiteral(assertionStatement.Expression, CSharpTokenType.NULL_KEYWORD))
                 {
                     context.AddHighlighting(
-                        new RedundantAssertionStatementSuggestion(
-                            "Assertion is redundant because the expression is always null.",
-                            assertionStatement));
+                        new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is null here.", assertionStatement));
                 }
 
                 // pattern: Assert(x); when x is known to be null or not null
@@ -338,7 +336,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         {
                             context.AddHighlighting(
                                 new RedundantAssertionStatementSuggestion(
-                                    "Assertion is redundant because the expression is never null.",
+                                    "Assertion is redundant because the expression is not null here.",
                                     assertionStatement));
                         }
                         break;
@@ -348,7 +346,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         {
                             context.AddHighlighting(
                                 new RedundantAssertionStatementSuggestion(
-                                    "Assertion is redundant because the expression is always null.",
+                                    "Assertion is redundant because the expression is null here.",
                                     assertionStatement));
                         }
                         break;
@@ -369,7 +367,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         {
                             context.AddHighlighting(
                                 new RedundantInlineAssertionSuggestion(
-                                    "Assertion is redundant because the expression is never null.",
+                                    "Assertion is redundant because the expression is not null here.",
                                     inlineAssertion));
                         }
                         break;
@@ -386,7 +384,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         {
                             context.AddHighlighting(
                                 new RedundantNullForgivingOperatorSuggestion(
-                                    "Null-forgiving operator is redundant because the expression is never null.",
+                                    "Null-forgiving operator is redundant because the expression is not null here.",
                                     nullForgivingOperation));
                         }
                         break;

@@ -14,6 +14,6 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Null-forgiving operator is redundant because the expression is never null.
+0: Null-forgiving operator is redundant because the expression is not null here.
 QUICKFIXES:
 Remove null-forgiving operator

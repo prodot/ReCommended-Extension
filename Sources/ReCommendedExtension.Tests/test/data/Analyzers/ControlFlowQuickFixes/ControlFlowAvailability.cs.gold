@@ -33,6 +33,6 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Assertion is redundant because the expression is always true.
+0: Assertion is redundant because the expression is true here.
 QUICKFIXES:
 Remove assertion

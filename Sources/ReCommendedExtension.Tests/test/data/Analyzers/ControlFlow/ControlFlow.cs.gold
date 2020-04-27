@@ -189,44 +189,44 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(1): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(2): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(3): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(4): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(5): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(6): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(7): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(8): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(9): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(10): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(11): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(12): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(13): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(14): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(15): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(16): ReSharper Suggestion: Assertion is redundant because the expression is always false.
-(17): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(18): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(19): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(20): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(21): ReSharper Suggestion: Assertion is redundant because the expression is always false.
-(22): ReSharper Suggestion: Assertion is redundant because the expression is always null.
-(23): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(24): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(25): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(26): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(27): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(28): ReSharper Suggestion: Assertion is redundant because the expression is always false.
-(29): ReSharper Suggestion: Assertion is redundant because the expression is always false.
-(30): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(31): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(32): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(33): ReSharper Suggestion: Assertion is redundant because the expression is always false.
-(34): ReSharper Suggestion: Assertion is redundant because the expression is always false.
-(35): ReSharper Suggestion: Assertion is redundant because the expression is always null.
-(36): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(37): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(38): ReSharper Suggestion: Assertion is redundant because the expression is always true.
-(39): ReSharper Suggestion: Assertion is redundant because the expression is never null.
-(40): ReSharper Suggestion: Assertion is redundant because the expression is never null.
+(0): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(1): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(2): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(3): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(4): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(5): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(6): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(7): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(8): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(9): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(10): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(11): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(12): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(13): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(14): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(15): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(16): ReSharper Suggestion: Assertion is redundant because the expression is false here.
+(17): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(18): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(19): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(20): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(21): ReSharper Suggestion: Assertion is redundant because the expression is false here.
+(22): ReSharper Suggestion: Assertion is redundant because the expression is null here.
+(23): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(24): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(25): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(26): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(27): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(28): ReSharper Suggestion: Assertion is redundant because the expression is false here.
+(29): ReSharper Suggestion: Assertion is redundant because the expression is false here.
+(30): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(31): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(32): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(33): ReSharper Suggestion: Assertion is redundant because the expression is false here.
+(34): ReSharper Suggestion: Assertion is redundant because the expression is false here.
+(35): ReSharper Suggestion: Assertion is redundant because the expression is null here.
+(36): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(37): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(38): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(39): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(40): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
