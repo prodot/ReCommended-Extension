@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\ValueTask";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is PossibleMultipleConsumptionWarning;
+            => highlighting is PossibleMultipleConsumptionWarning || highlighting is IntentionalBlockingAttemptWarning;
 
         [Test]
         public void TestCodePaths() => DoNamedTest2();
@@ -25,5 +25,8 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [Test]
         public void TestMultipleConsumption() => DoNamedTest2();
+
+        [Test]
+        public void TestIntentionalBlockingAttempts() => DoNamedTest2();
     }
 }

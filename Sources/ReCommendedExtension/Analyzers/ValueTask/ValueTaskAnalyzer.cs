@@ -20,8 +20,10 @@ using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.ValueTask
 {
-    [ElementProblemAnalyzer(typeof(ICSharpDeclaration), HighlightingTypes = new[] { typeof(PossibleMultipleConsumptionWarning) })]
-    public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpDeclaration>
+    [ElementProblemAnalyzer(
+        typeof(ICSharpTreeNode),
+        HighlightingTypes = new[] { typeof(PossibleMultipleConsumptionWarning), typeof(IntentionalBlockingAttemptWarning) })]
+    public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         sealed class Inspector : CSharpControlFlowGraphInspector
         {
@@ -234,9 +236,12 @@ namespace ReCommendedExtension.Analyzers.ValueTask
             }
         }
 
-        protected override void Run(ICSharpDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+        static void AnalyzeMultipleConsumptions(
+            [NotNull] ICSharpDeclaration declaration,
+            [NotNull] IHighlightingConsumer consumer,
+            ValueAnalysisMode valueAnalysisMode)
         {
-            switch (element)
+            switch (declaration)
             {
                 case IAnonymousFunctionExpression _:
                 case ICSharpFunctionDeclaration _:
@@ -248,14 +253,14 @@ namespace ReCommendedExtension.Analyzers.ValueTask
             }
 
             // build control flow graph of the method
-            var controlFlowGraph = (ICSharpControlFlowGraph)ControlFlowBuilder.GetGraph(element);
+            var controlFlowGraph = (ICSharpControlFlowGraph)ControlFlowBuilder.GetGraph(declaration);
             if (controlFlowGraph == null)
             {
                 return;
             }
 
             // inspect the control flow graph
-            var inspector = Inspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
+            var inspector = Inspector.Inspect(controlFlowGraph, valueAnalysisMode);
 
             // show warnings
             foreach (var (_, usages) in inspector.PossibleMultipleConsumption)
@@ -272,6 +277,47 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                             "Possible multiple consumption of " + usage.Type().GetPresentableName(CSharpLanguage.Instance) + ".",
                             usage));
                 }
+            }
+        }
+
+        static void AnalyzeBlockingAttempt([NotNull] IInvocationExpression invocationExpression, [NotNull] IHighlightingConsumer consumer)
+        {
+            if (invocationExpression.InvokedExpression is IReferenceExpression invocationExpressionInvokedExpression &&
+                (invocationExpression.Reference.Resolve().DeclaredElement as IMethod)?.ShortName == "GetResult" &&
+                invocationExpression.GetInvokedReferenceExpressionQualifier() is IInvocationExpression qualifier &&
+                qualifier.InvokedExpression is IReferenceExpression qualifierInvokedExpression)
+            {
+                var qualifierType = qualifier.Type();
+                if ((qualifierType.IsClrType(ClrTypeNames.ValueTaskAwaiter) || qualifierType.IsClrType(ClrTypeNames.GenericValueTaskAwaiter)) &&
+                    (qualifier.Reference.Resolve().DeclaredElement as IMethod)?.ShortName == "GetAwaiter")
+                {
+                    var valueTaskType = qualifier.GetInvokedReferenceExpressionQualifier()?.Type();
+                    if (valueTaskType.IsValueTask() || valueTaskType.IsGenericValueTask())
+                    {
+                        Debug.Assert(CSharpLanguage.Instance != null);
+
+                        consumer.AddHighlighting(
+                            new IntentionalBlockingAttemptWarning(
+                                "Blocking on " +
+                                valueTaskType.GetPresentableName(CSharpLanguage.Instance) +
+                                " with 'GetAwaiter().GetResult()' might not block.",
+                                qualifierInvokedExpression,
+                                invocationExpressionInvokedExpression));
+                    }
+                }
+            }
+        }
+
+        protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+        {
+            if (element is ICSharpDeclaration declaration)
+            {
+                AnalyzeMultipleConsumptions(declaration, consumer, data.GetValueAnalysisMode());
+            }
+
+            if (element is IInvocationExpression invocationExpression)
+            {
+                AnalyzeBlockingAttempt(invocationExpression, consumer);
             }
         }
     }

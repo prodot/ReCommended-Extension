@@ -1,0 +1,19 @@
+﻿using System.Threading.Tasks;
+
+namespace Tests
+{
+    public class IntentionalBlockingAttempts
+    {
+        ValueTask Method(ValueTask<int> valueTask)
+        {
+            var result = valueTask.|GetAwaiter().GetResult()|(0);
+
+            return new ValueTask();
+        }
+
+        void Method2(ValueTask<int> valueTask) => Method(valueTask).|GetAwaiter().GetResult()|(1);
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Blocking on ValueTask<int> with 'GetAwaiter().GetResult()' might not block.
+(1): ReSharper Warning: Blocking on ValueTask with 'GetAwaiter().GetResult()' might not block.
