@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
+using JetBrains.ReSharper.Psi;
 
 namespace ReCommendedExtension
 {
@@ -64,5 +66,23 @@ namespace ReCommendedExtension
 
         [NotNull]
         public static readonly IClrTypeName MultiBinding = new ClrTypeName(typeof(MultiBinding).FullName.AssertNotNull());
+
+        [NotNull]
+        public static readonly IClrTypeName ValueTaskAwaiter = new ClrTypeName("System.Runtime.CompilerServices.ValueTaskAwaiter");
+
+        [NotNull]
+        public static readonly IClrTypeName GenericValueTaskAwaiter = new ClrTypeName("System.Runtime.CompilerServices.ValueTaskAwaiter`1");
+
+        [JetBrains.Annotations.Pure]
+        [ContractAnnotation("typeElement:null => false", true)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool IsPredefinedTypeElement(ITypeElement typeElement, [NotNull] IClrTypeName clrName)
+            => typeElement != null && typeElement.GetClrName().Equals(clrName);
+
+        [JetBrains.Annotations.Pure]
+        [ContractAnnotation("type:null => false", true)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsClrType(this IType type, [NotNull] IClrTypeName clrName)
+            => type is IDeclaredType declaredType && IsPredefinedTypeElement(declaredType.GetTypeElement(), clrName);
     }
 }
