@@ -31,12 +31,23 @@ namespace ReCommendedExtension.Analyzers.ValueTask
 
         internal IntentionalBlockingAttemptWarning(
             [NotNull] string message,
+            [NotNull] ICSharpExpression expression,
+            [NotNull] ICSharpExpression valueTaskExpression,
             [NotNull] IReferenceExpression getAwaiterReferenceExpression,
             [NotNull] IReferenceExpression getResultReferenceExpression) : base(message)
         {
             this.getAwaiterReferenceExpression = getAwaiterReferenceExpression;
             this.getResultReferenceExpression = getResultReferenceExpression;
+
+            ValueTaskExpression = valueTaskExpression;
+            Expression = expression;
         }
+
+        [NotNull]
+        internal ICSharpExpression Expression { get; }
+
+        [NotNull]
+        internal ICSharpExpression ValueTaskExpression { get; }
 
         public override DocumentRange CalculateRange()
         {

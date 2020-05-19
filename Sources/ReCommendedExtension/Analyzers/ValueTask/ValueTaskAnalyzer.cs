@@ -283,15 +283,22 @@ namespace ReCommendedExtension.Analyzers.ValueTask
         static void AnalyzeBlockingAttempt([NotNull] IInvocationExpression invocationExpression, [NotNull] IHighlightingConsumer consumer)
         {
             if (invocationExpression.InvokedExpression is IReferenceExpression invocationExpressionInvokedExpression &&
-                (invocationExpression.Reference.Resolve().DeclaredElement as IMethod)?.ShortName == "GetResult" &&
+                invocationExpression.Reference.Resolve().DeclaredElement is IMethod getResultMethod &&
+                getResultMethod.ShortName == "GetResult" &&
+                getResultMethod.TypeParameters.Count == 0 &&
+                getResultMethod.Parameters.Count == 0 &&
                 invocationExpression.GetInvokedReferenceExpressionQualifier() is IInvocationExpression qualifier &&
                 qualifier.InvokedExpression is IReferenceExpression qualifierInvokedExpression)
             {
                 var qualifierType = qualifier.Type();
                 if ((qualifierType.IsClrType(ClrTypeNames.ValueTaskAwaiter) || qualifierType.IsClrType(ClrTypeNames.GenericValueTaskAwaiter)) &&
-                    (qualifier.Reference.Resolve().DeclaredElement as IMethod)?.ShortName == "GetAwaiter")
+                    qualifier.Reference.Resolve().DeclaredElement is IMethod getAwaiterMethod &&
+                    getAwaiterMethod.ShortName == "GetAwaiter" &&
+                    getAwaiterMethod.TypeParameters.Count == 0 &&
+                    getAwaiterMethod.Parameters.Count == 0)
                 {
-                    var valueTaskType = qualifier.GetInvokedReferenceExpressionQualifier()?.Type();
+                    var valueTaskExpression = qualifier.GetInvokedReferenceExpressionQualifier();
+                    var valueTaskType = valueTaskExpression?.Type();
                     if (valueTaskType.IsValueTask() || valueTaskType.IsGenericValueTask())
                     {
                         Debug.Assert(CSharpLanguage.Instance != null);
@@ -301,6 +308,8 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                                 "Blocking on " +
                                 valueTaskType.GetPresentableName(CSharpLanguage.Instance) +
                                 " with 'GetAwaiter().GetResult()' might not block.",
+                                invocationExpression.InvokedExpression,
+                                valueTaskExpression,
                                 qualifierInvokedExpression,
                                 invocationExpressionInvokedExpression));
                     }
