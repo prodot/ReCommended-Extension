@@ -4,24 +4,20 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.UncatchableException;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        UncatchableExceptionWarning.SeverityId,
+namespace ReCommendedExtension.Analyzers.UncatchableException
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Exception should never be caught" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
-
-namespace ReCommendedExtension.Analyzers.UncatchableException
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class UncatchableExceptionWarning : Highlighting
     {
-        internal const string SeverityId = "UncatchableException";
+        const string SeverityId = "UncatchableException";
 
         [NotNull]
         readonly ISpecificCatchClause catchClause;

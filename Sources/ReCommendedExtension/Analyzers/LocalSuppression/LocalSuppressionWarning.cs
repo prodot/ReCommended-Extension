@@ -5,24 +5,20 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
-using ReCommendedExtension.Analyzers.LocalSuppression;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        LocalSuppressionWarning.SeverityId,
+namespace ReCommendedExtension.Analyzers.LocalSuppression
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Avoid local suppression" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
-
-namespace ReCommendedExtension.Analyzers.LocalSuppression
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class LocalSuppressionWarning : Highlighting
     {
-        internal const string SeverityId = "LocalSuppression";
+        const string SeverityId = "LocalSuppression";
 
         [NotNull]
         readonly ICommentNode comment;

@@ -7,7 +7,9 @@ namespace Test
     {
         void Method(IAsyncEnumerable<int> fi{on}ve)
         {
-            void LocalFunction(IAsyncEnumerable<int> th{off}ird) { }
+            void LocalFunction(IAsyncEnumerable<int> th{on}ird) { }
+
+            static void LocalFunction2(IAsyncEnumerable<int> th{on}ird) { }
         }
     }
 }

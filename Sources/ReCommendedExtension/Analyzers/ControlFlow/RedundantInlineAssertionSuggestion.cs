@@ -5,24 +5,20 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.ControlFlow;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        RedundantInlineAssertionSuggestion.SeverityId,
+namespace ReCommendedExtension.Analyzers.ControlFlow
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant inline assertion expression" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
-
-namespace ReCommendedExtension.Analyzers.ControlFlow
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class RedundantInlineAssertionSuggestion : RedundantAssertionSuggestion
     {
-        internal const string SeverityId = "RedundantInlineAssertion";
+        const string SeverityId = "RedundantInlineAssertion";
 
         [NotNull]
         readonly InlineAssertion assertion;

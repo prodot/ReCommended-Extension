@@ -5,24 +5,20 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.InternalConstructor;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        InternalConstructorVisibilitySuggestion.SeverityId,
+namespace ReCommendedExtension.Analyzers.InternalConstructor
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Make internal constructor in abstract class protected or private protected" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
-
-namespace ReCommendedExtension.Analyzers.InternalConstructor
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class InternalConstructorVisibilitySuggestion : Highlighting
     {
-        internal const string SeverityId = "InternalConstructorVisibility";
+        const string SeverityId = "InternalConstructorVisibility";
 
         [NotNull]
         readonly ITokenNode modifierTokenNode;

@@ -19,7 +19,7 @@ namespace Test
 
         void Method()
         {
-            string[] Local{off}Function(ICollection<string> t{off}wo) => null;
+            string[] Local{off}Function(ICollection<string> t{off}hree) => null;
         }
 
         IList<string> Prope{on}rty { get; set; }

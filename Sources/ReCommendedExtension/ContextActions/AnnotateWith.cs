@@ -6,8 +6,10 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Intentions.Util;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -16,6 +18,16 @@ namespace ReCommendedExtension.ContextActions
 {
     public abstract class AnnotateWith : ContextActionBase
     {
+        static bool IsOnLocalFunctionWithUnsupportedAttributes([NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            if (attributesOwnerDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90)
+            {
+                return false;
+            }
+
+            return attributesOwnerDeclaration.DeclaredElement is IParameter parameter && parameter.ContainingParametersOwner.IsLocalFunction();
+        }
+
         [NotNull]
         readonly ICSharpContextActionDataProvider provider;
 
@@ -64,6 +76,7 @@ namespace ReCommendedExtension.ContextActions
             if (attributesOwnerDeclaration != null &&
                 attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange) &&
                 !attributesOwnerDeclaration.OverridesInheritedMember() &&
+                !IsOnLocalFunctionWithUnsupportedAttributes(attributesOwnerDeclaration) &&
                 (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
             {
                 Debug.Assert(attributesOwnerDeclaration != null);

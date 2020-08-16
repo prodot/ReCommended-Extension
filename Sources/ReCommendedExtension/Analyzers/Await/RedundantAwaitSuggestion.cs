@@ -5,20 +5,16 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.Await;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        RedundantAwaitSuggestion.SeverityId,
+namespace ReCommendedExtension.Analyzers.Await
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant 'await'" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
-
-namespace ReCommendedExtension.Analyzers.Await
-{
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
@@ -26,7 +22,7 @@ namespace ReCommendedExtension.Analyzers.Await
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class RedundantAwaitSuggestion : Highlighting
     {
-        internal const string SeverityId = "RedundantAwait";
+        const string SeverityId = "RedundantAwait";
 
         internal RedundantAwaitSuggestion(
             [NotNull] string message,

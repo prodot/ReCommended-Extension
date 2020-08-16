@@ -4,24 +4,20 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.ValueTask;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        IntentionalBlockingAttemptWarning.SeverityId,
+namespace ReCommendedExtension.Analyzers.ValueTask
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Blocking on value task with 'GetAwaiter().GetResult()' might not block" + ZoneMarker.Suffix,
         "Blocking on value task with 'GetAwaiter().GetResult()' might not block",
         Severity.WARNING)]
-
-namespace ReCommendedExtension.Analyzers.ValueTask
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class IntentionalBlockingAttemptWarning : Highlighting
     {
-        internal const string SeverityId = "IntentionalBlockingAttempt";
+        const string SeverityId = "IntentionalBlockingAttempt";
 
         [NotNull]
         readonly IReferenceExpression getAwaiterReferenceExpression;

@@ -5,24 +5,20 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.Await;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        RedundantCapturedContextSuggestion.SeverityId,
+namespace ReCommendedExtension.Analyzers.Await
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Redundant captured context (add '." + nameof(Task.ConfigureAwait) + "(false)')" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
-
-namespace ReCommendedExtension.Analyzers.Await
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class RedundantCapturedContextSuggestion : Highlighting
     {
-        internal const string SeverityId = "RedundantCapturedContext";
+        const string SeverityId = "RedundantCapturedContext";
 
         [NotNull]
         readonly IAwaitExpression awaitExpression;

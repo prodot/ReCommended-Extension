@@ -5,24 +5,20 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.EmptyArrayInitialization;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        EmptyArrayInitializationWarning.SeverityId,
+namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.BestPractice,
         "Use 'Array.Empty<T>()' for empty arrays" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
-
-namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class EmptyArrayInitializationWarning : Highlighting
     {
-        internal const string SeverityId = "EmptyArrayInitialization";
+        const string SeverityId = "EmptyArrayInitialization";
 
         internal EmptyArrayInitializationWarning(
             [NotNull] string message,

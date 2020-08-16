@@ -7,20 +7,16 @@ using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.DelegateInvoke;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        RedundantDelegateInvokeSuggestion.SeverityId,
+namespace ReCommendedExtension.Analyzers.DelegateInvoke
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant '" + nameof(Action.Invoke) + "' expression" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
-
-namespace ReCommendedExtension.Analyzers.DelegateInvoke
-{
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
@@ -28,7 +24,7 @@ namespace ReCommendedExtension.Analyzers.DelegateInvoke
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class RedundantDelegateInvokeSuggestion : Highlighting
     {
-        internal const string SeverityId = "RedundantDelegateInvoke";
+        const string SeverityId = "RedundantDelegateInvoke";
 
         internal RedundantDelegateInvokeSuggestion([NotNull] string message, [NotNull] IReferenceExpression referenceExpression) : base(message)
             => ReferenceExpression = referenceExpression;

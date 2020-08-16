@@ -79,12 +79,12 @@ namespace Tests
 
                 case 1:
                 case 2:
+                    await vt;
                     await |vt|(11);
-                    await |vt|(12);
                     break;
 
                 default:
-                    await vt;
+                    await |vt|(12);
                     await |vt|(13);
                     await |vt|(14);
                     break;

@@ -3,24 +3,20 @@ using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        NotifyPropertyChangedInvocatorFromConstructorWarning.SeverityId,
+namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant invocation of the property change notifiers from the constructor" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
-
-namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class NotifyPropertyChangedInvocatorFromConstructorWarning : Highlighting
     {
-        internal const string SeverityId = "NotifyPropertyChangedInvocatorFromConstructor";
+        const string SeverityId = "NotifyPropertyChangedInvocatorFromConstructor";
 
         internal NotifyPropertyChangedInvocatorFromConstructorWarning(
             [NotNull] IInvocationExpression invocationExpression,

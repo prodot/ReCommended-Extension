@@ -147,43 +147,43 @@ namespace Test
 
         static void Iterations()
         {
-            var query0 = from word in Words where word.|AssertNotNull|(26)().Length > 2 select word; // "AssertNotNull" must be redundant
-            var query0_NFO = from word in Words where word|!|(27).Length > 2 select word; // "!" must be redundant
+            var query0 = from word in Words where word.AssertNotNull().Length > 2 select word; // "AssertNotNull" must be redundant
+            var query0_NFO = from word in Words where word!.Length > 2 select word; // "!" must be redundant
             var query1 = from word in Words where word != null select word; // "word != null" is always true
-            var query2 = from word in Words select word.|AssertNotNull|(28)(); // "AssertNotNull" must be redundant
-            var query2_NFO = from word in Words select word|!|(29); // "!" must be redundant
+            var query2 = from word in Words select word.AssertNotNull(); // "AssertNotNull" must be redundant
+            var query2_NFO = from word in Words select word!; // "!" must be redundant
 
-            |AssertThatNotNull(Words)|(30);
+            |AssertThatNotNull(Words)|(26);
             foreach (var word in Words)
             {
-                |AssertThatNotNull(word)|(31);
+                |AssertThatNotNull(word)|(27);
             }
 
-            |AssertThatNotNull(WordMap)|(32);
+            |AssertThatNotNull(WordMap)|(28);
             foreach (var (key, value) in WordMap)
             {
-                |AssertThatNotNull(value)|(33);
+                AssertThatNotNull(value);
             }
             foreach (var value in WordMap.Values)
             {
-                |AssertThatNotNull(value)|(34);
+                AssertThatNotNull(value);
             }
 
-            |AssertThatNotNull(WordMap2)|(35);
+            |AssertThatNotNull(WordMap2)|(29);
             foreach (var (key, values) in WordMap2)
             {
-                |AssertThatNotNull(values)|(36);
+                AssertThatNotNull(values);
                 foreach (var value in values)
                 {
-                    |AssertThatNotNull(value)|(37);
+                    |AssertThatNotNull(value)|(30);
                 }
             }
             foreach (var values in WordMap2.Values)
             {
-                |AssertThatNotNull(values)|(38);
+                AssertThatNotNull(values);
                 foreach (var value in values)
                 {
-                    |AssertThatNotNull(value)|(39);
+                    |AssertThatNotNull(value)|(31);
                 }
             }
         }
@@ -193,15 +193,15 @@ namespace Test
             Action action = () =>
             {
                 var text = "";
-                |AssertThatTrue(text != null)|(40);
+                |AssertThatTrue(text != null)|(32);
                 var text2 = text.AssertNotNull().Replace("a", "b");
                 var text2_NFO = text!.Replace("a", "b");
-                |AssertThatTrue(text2 != null)|(41);
+                |AssertThatTrue(text2 != null)|(33);
             };
 
-            var length = Property.     |AssertNotNull|(42)()         .     |AssertNotNull|(43)()      .Length;
-            var qqq = Property.|AssertNotNull|(44)().ToList().All(char.IsDigit);
-            var qqq_NFO = Property|!|(45).ToList().All(char.IsDigit);
+            var length = Property.     |AssertNotNull|(34)()         .     |AssertNotNull|(35)()      .Length;
+            var qqq = Property.|AssertNotNull|(36)().ToList().All(char.IsDigit);
+            var qqq_NFO = Property|!|(37).ToList().All(char.IsDigit);
 
             if (b)
             {
@@ -230,22 +230,22 @@ namespace Test
 
             if (PropertyNullable != null)
             {
-                |AssertThatTrue(PropertyNullable != null)|(46);
+                |AssertThatTrue(PropertyNullable != null)|(38);
             }
             AssertThatFalse(PropertyNullable == null);
             AssertThatNotNull(PropertyNullable);
 
-            |AssertThatTrue(true)|(47);
-            |AssertThatFalse(false)|(48);
-            ||AssertThatNull<string>(null)|(49)|(50);
+            |AssertThatTrue(true)|(39);
+            |AssertThatFalse(false)|(40);
+            ||AssertThatNull<string>(null)|(41)|(42);
 
-            |AssertThatNotNull(new object())|(51);
-            new object().|AssertNotNull|(52)();
-            var nfo = new object()|!|(53);
+            |AssertThatNotNull(new object())|(43);
+            new object().|AssertNotNull|(44)();
+            var nfo = new object()|!|(45);
 
             if (x != null)
             {
-                |AssertThatTrue(condition: x != null)|(54);
+                |AssertThatTrue(condition: x != null)|(46);
                 AssertThatTrue(x != null);
                 AssertThatTrue(null != x);
 
@@ -269,10 +269,10 @@ namespace Test
 
         static void Foo(string x)
         {
-            |AssertThatNotNull(x)|(55);
-            x.|AssertNotNull|(56)();
+            |AssertThatNotNull(x)|(47);
+            x.|AssertNotNull|(48)();
 
-            var y = x|!|(57);
+            var y = x|!|(49);
         }
 
         class A
@@ -286,14 +286,14 @@ namespace Test
 
         static void NullPropagation2(A? canBeNull) => AssertThatNotNull(canBeNull?.NotNull);
 
-        static void NullPropagation3(A? canBeNull) => Console.WriteLine(canBeNull?.NotNull.|AssertNotNull|(58)());
+        static void NullPropagation3(A? canBeNull) => Console.WriteLine(canBeNull?.NotNull.|AssertNotNull|(50)());
         static void NullPropagation3_NFO(A? canBeNull) => Console.WriteLine(canBeNull?.NotNull!);
 
         static void NullPropagation4(A notNull) => AssertThatTrue(notNull?.NotNull != null); // redundant
 
         static void NullPropagation5(A notNull) => AssertThatNotNull(notNull?.NotNull); // redundant
 
-        static void NullPropagation6(A notNull) => Console.WriteLine(notNull?.NotNull.|AssertNotNull|(59)()); // redundant
+        static void NullPropagation6(A notNull) => Console.WriteLine(notNull?.NotNull.|AssertNotNull|(51)()); // redundant
         static void NullPropagation6_NFO(A notNull) => Console.WriteLine(notNull?.NotNull!.Length); // redundant
 
         static void NullPropagation7(A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
@@ -328,7 +328,7 @@ namespace Test
         {
             var result = PassThrough(value);
 
-            |Debug.Assert(result != null)|(60); // redundant
+            |Debug.Assert(result != null)|(52); // redundant
         }
     }
 }
@@ -360,37 +360,29 @@ namespace Test
 (24): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (25): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
 (26): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(27): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(27): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (28): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(29): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(29): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (30): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (31): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(32): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(33): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(32): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(33): ReSharper Suggestion: Assertion is redundant because the expression is true here.
 (34): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (35): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (36): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(37): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(38): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(39): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(40): ReSharper Suggestion: Assertion is redundant because the expression is true here.
-(41): ReSharper Suggestion: Assertion is redundant because the expression is true here.
-(42): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(37): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(38): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(39): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(40): ReSharper Suggestion: Assertion is redundant because the expression is false here.
+(41): ReSharper Suggestion: Assertion is redundant because the expression is null here.
+(42): ReSharper Suggestion: Assertion is redundant because the expression is null here.
 (43): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (44): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (45): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
 (46): ReSharper Suggestion: Assertion is redundant because the expression is true here.
-(47): ReSharper Suggestion: Assertion is redundant because the expression is true here.
-(48): ReSharper Suggestion: Assertion is redundant because the expression is false here.
-(49): ReSharper Suggestion: Assertion is redundant because the expression is null here.
-(50): ReSharper Suggestion: Assertion is redundant because the expression is null here.
+(47): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(48): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(49): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
+(50): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (51): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(52): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(53): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
-(54): ReSharper Suggestion: Assertion is redundant because the expression is true here.
-(55): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(56): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(57): ReSharper Dead Code: Null-forgiving operator is redundant because the expression is not null here.
-(58): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(59): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(60): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(52): ReSharper Suggestion: Assertion is redundant because the expression is true here.

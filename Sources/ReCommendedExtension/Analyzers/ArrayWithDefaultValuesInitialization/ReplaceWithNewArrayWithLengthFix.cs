@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
@@ -32,11 +31,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
             {
                 Debug.Assert(CSharpLanguage.Instance != null);
 
-                return string.Format(
-                    "Replace array initialization with 'new {0}{1}[{2}]'",
-                    highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance),
-                    highlighting.IsNullableReferenceType ? "?" : "",
-                    highlighting.ElementCount.ToString());
+                return string.Format("Replace array initialization with '{0}'", highlighting.SuggestedCode);
             }
         }
 
@@ -62,14 +57,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
 
                 Debug.Assert(CSharpLanguage.Instance != null);
 
-                ModificationUtil.ReplaceChild(
-                    node,
-                    factory.CreateExpression(
-                        string.Format(
-                            "new {0}{1}[{2}]",
-                            highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance),
-                            highlighting.IsNullableReferenceType ? "?" : "",
-                            highlighting.ElementCount.ToString())));
+                ModificationUtil.ReplaceChild(node, factory.CreateExpression(highlighting.SuggestedCode));
             }
 
             return _ => { };
