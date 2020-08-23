@@ -14,6 +14,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 {
     internal sealed class PropertyContractInfo : ContractInfo
     {
+        [CanBeNull]
         public static PropertyContractInfo TryCreate(
             [NotNull] IPropertyDeclaration declaration,
             TreeTextRange selectedTreeRange,
@@ -50,6 +51,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             return null;
         }
 
+        [CanBeNull]
         public static PropertyContractInfo TryCreate(
             [NotNull] IIndexerDeclaration declaration,
             TreeTextRange selectedTreeRange,

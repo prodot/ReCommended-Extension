@@ -7,6 +7,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 {
     internal abstract class CSharpNumericTypeInfo
     {
+        [CanBeNull]
         public static CSharpNumericTypeInfo TryCreate([NotNull] IType type)
         {
             if (type.IsInt())
@@ -166,7 +167,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             return null;
         }
 
-        protected CSharpNumericTypeInfo(bool isSigned, string epsilonLiteral, [NotNull] string literalSuffix)
+        protected CSharpNumericTypeInfo(bool isSigned, [CanBeNull] string epsilonLiteral, [NotNull] string literalSuffix)
         {
             LiteralSuffix = literalSuffix;
             IsSigned = isSigned;
@@ -175,13 +176,16 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
         public bool IsSigned { get; }
 
+        [CanBeNull]
         public string EpsilonLiteral { get; }
 
         [NotNull]
         public string LiteralSuffix { get; }
 
+        [CanBeNull]
         public abstract EnumBetweenFirstAndLast.EnumContractInfo TryCreateEnumContractInfoForEnumBetweenFirstAndLast([NotNull] IList<IField> members);
 
+        [CanBeNull]
         public abstract EnumFlags.EnumContractInfo TryCreateEnumFlags([NotNull] IList<IField> members);
     }
 }

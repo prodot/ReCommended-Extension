@@ -21,13 +21,14 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
 
         internal ArrayWithDefaultValuesInitializationSuggestion(
             [NotNull] string message,
-            string suggestedCode,
+            [CanBeNull] string suggestedCode,
             [NotNull] IArrayInitializer arrayInitializer) : base(message)
         {
             SuggestedCode = suggestedCode;
             ArrayInitializer = arrayInitializer;
         }
 
+        [CanBeNull]
         internal string SuggestedCode { get; }
 
         [NotNull]

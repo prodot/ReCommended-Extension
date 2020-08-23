@@ -14,6 +14,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 {
     internal sealed class OperatorContractInfo : ContractInfo
     {
+        [CanBeNull]
         public static OperatorContractInfo TryCreate(
             [NotNull] IOperatorDeclaration declaration,
             TreeTextRange selectedTreeRange,

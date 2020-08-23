@@ -11,6 +11,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 {
     internal sealed class FieldContractInfo : ContractInfo
     {
+        [CanBeNull]
         public static FieldContractInfo TryCreate([NotNull] IFieldDeclaration declaration, [NotNull] Func<IType, bool> isAvailableForType)
         {
             if (!declaration.IsStatic &&

@@ -9,6 +9,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
     {
         private protected SignedNumeric([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 
+        [CanBeNull]
         private protected CSharpNumericTypeInfo NumericTypeInfo { get; private set; }
 
         protected sealed override bool IsAvailableForType(IType type)

@@ -29,6 +29,7 @@ namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
             yield return PredefinedType.THREAD_FQN;
         }
 
+        [CanBeNull]
         static string TryGetHighlightingMessage([NotNull] ICSharpExpression monitor)
         {
             Debug.Assert(CSharpLanguage.Instance != null);

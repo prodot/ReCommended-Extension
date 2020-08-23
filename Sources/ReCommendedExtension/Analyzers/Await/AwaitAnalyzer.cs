@@ -38,10 +38,10 @@ namespace ReCommendedExtension.Analyzers.Await
         [ContractAnnotation("=> type: notnull, removeAsync: notnull", true)]
         static void TryGetContainerTypeAndAsyncKeyword(
             [NotNull] IParametersOwnerDeclaration container,
-            out IType type,
-            out ITokenNode asyncKeyword,
-            out Action removeAsync,
-            out IAttributesOwnerDeclaration attributesOwnerDeclaration)
+            [CanBeNull] out IType type,
+            [CanBeNull] out ITokenNode asyncKeyword,
+            [CanBeNull] out Action removeAsync,
+            [CanBeNull] out IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             switch (container)
             {
@@ -120,7 +120,7 @@ namespace ReCommendedExtension.Analyzers.Await
         static bool IsLastExpression(
             [NotNull] IParametersOwnerDeclaration container,
             [NotNull] ICSharpExpression expression,
-            out IExpressionStatement statementToBeReplacedWithReturnStatement)
+            [CanBeNull] out IExpressionStatement statementToBeReplacedWithReturnStatement)
         {
             var block = null as IBlock;
 
@@ -183,7 +183,7 @@ namespace ReCommendedExtension.Analyzers.Await
         }
 
         [Pure]
-        static bool IsTestMethodOfOldMsTest(IMethodDeclaration methodDeclaration)
+        static bool IsTestMethodOfOldMsTest([CanBeNull] IMethodDeclaration methodDeclaration)
         {
             if (methodDeclaration == null || !methodDeclaration.IsDeclaredInOldMsTestProject())
             {
@@ -224,10 +224,10 @@ namespace ReCommendedExtension.Analyzers.Await
             [NotNull] ITokenNode asyncKeyword,
             [NotNull] Action removeAsync,
             [NotNull] IAwaitExpression awaitExpression,
-            IExpressionStatement statementToBeReplacedWithReturnStatement,
+            [CanBeNull] IExpressionStatement statementToBeReplacedWithReturnStatement,
             [NotNull] ICSharpExpression expressionToReturn,
-            IAttributesOwnerDeclaration attributesOwnerDeclaration,
-            IInvocationExpression configureAwaitInvocationExpression = null)
+            [CanBeNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
+            [CanBeNull] IInvocationExpression configureAwaitInvocationExpression = null)
         {
             var configureAwaitNode = configureAwaitInvocationExpression?.InvokedExpression?.LastChild;
 
@@ -267,7 +267,7 @@ namespace ReCommendedExtension.Analyzers.Await
             [NotNull] IAwaitExpression awaitExpression,
             bool isLastExpression,
             [NotNull] IParametersOwnerDeclaration container,
-            IExpressionStatement statementToBeReplacedWithReturnStatement,
+            [CanBeNull] IExpressionStatement statementToBeReplacedWithReturnStatement,
             [NotNull] IHighlightingConsumer consumer)
         {
             if (isLastExpression &&

@@ -20,7 +20,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] Func<IExpression, IExpression> getContractExpression,
             [NotNull] IParameter parameter,
             [NotNull] IBlock body,
-            out ICSharpStatement firstNonContractStatement)
+            [CanBeNull] out ICSharpStatement firstNonContractStatement)
         {
             var factory = CSharpElementFactory.GetInstance(body);
 
@@ -39,7 +39,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] Func<IExpression, IExpression> getContractExpression,
             [NotNull] IParameter parameter,
             [NotNull] IBlock body,
-            out ICSharpStatement firstNonContractStatement)
+            [CanBeNull] out ICSharpStatement firstNonContractStatement)
         {
             var factory = CSharpElementFactory.GetInstance(body);
 
@@ -55,6 +55,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             AddContract(ContractKind.Ensures, body, provider.PsiModule, () => getContractExpression(expression), out firstNonContractStatement);
         }
 
+        [CanBeNull]
         public static ParameterContractInfo TryCreate([NotNull] IParameterDeclaration declaration, [NotNull] Func<IType, bool> isAvailableForType)
         {
             var expressionBodyOwnerDeclaration = declaration.PathToRoot().OfType<IExpressionBodyOwnerDeclaration>().FirstOrDefault();
@@ -117,7 +118,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] Func<IExpression, IExpression> getContractExpression,
             [NotNull] IParameter parameter,
             [NotNull] IBlock body,
-            out ICSharpStatement firstNonContractStatement)
+            [CanBeNull] out ICSharpStatement firstNonContractStatement)
         {
             switch (ContractKind)
             {

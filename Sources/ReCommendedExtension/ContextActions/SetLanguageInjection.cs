@@ -60,6 +60,7 @@ namespace ReCommendedExtension.ContextActions
             [NotNull]
             public IInjectorProviderInLiterals InjectorProvider { get; }
 
+            [CanBeNull]
             [ItemNotNull]
             public HashSet<string> LanguageEqualsCommentTexts { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
@@ -23,7 +24,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestCase("WithoutAnnotations_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
         [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.OFF)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
+        public void TestFileWithValueAnalysisMode([NotNull] string file, ValueAnalysisMode valueAnalysisMode)
             => ExecuteWithinSettingsTransaction(
                 store =>
                 {

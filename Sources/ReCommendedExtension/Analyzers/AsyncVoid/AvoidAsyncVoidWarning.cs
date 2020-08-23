@@ -13,6 +13,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
     {
         const string SeverityId = "AvoidAsyncVoid";
 
+        [CanBeNull]
         readonly ITypeUsage typeUsage;
 
         internal AvoidAsyncVoidWarning([NotNull] string message, [NotNull] IMethodDeclaration methodDeclaration) : base(message)

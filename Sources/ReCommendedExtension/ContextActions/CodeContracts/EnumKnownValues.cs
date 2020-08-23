@@ -18,6 +18,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         Description = "Adds a contract that the enum value has the valid values.")]
     public sealed class EnumKnownValues : AddContractContextAction
     {
+        [CanBeNull]
         IList<IField> members;
 
         public EnumKnownValues([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }

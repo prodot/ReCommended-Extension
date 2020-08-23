@@ -16,6 +16,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         [NotNull]
         readonly Func<N, bool> isZero;
 
+        [CanBeNull]
         readonly Func<N, N> getNext;
 
         [NotNull]
@@ -28,10 +29,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             bool isSigned,
             N one,
             [NotNull] string literalSuffix,
-            string epsilonLiteral,
+            [CanBeNull] string epsilonLiteral,
             [NotNull] Func<N, N, bool> isLessOrEquals,
             [NotNull] Func<N, bool> isZero,
-            Func<N, N> getNext,
+            [CanBeNull] Func<N, N> getNext,
             [NotNull] Func<N, N> getMultipliedWithTwo,
             [NotNull] Func<N, double> convertToDouble) : base(isSigned, epsilonLiteral, literalSuffix)
         {

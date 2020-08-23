@@ -266,7 +266,7 @@ namespace ReCommendedExtension.Deployment
             }
         }
 
-        static void Process_DataReceived(object sender, [NotNull] DataReceivedEventArgs e) => Console.WriteLine("    " + e.Data);
+        static void Process_DataReceived([CanBeNull] object sender, [NotNull] DataReceivedEventArgs e) => Console.WriteLine("    " + e.Data);
 
         static void OpenInWindowsExplorer([NotNull] string nuspecPath, [NotNull] string packageFileName)
         {

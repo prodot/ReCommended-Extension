@@ -77,6 +77,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
             static readonly NumericRange @sbyte = new NumericRange(sbyte.MinValue, sbyte.MaxValue);
 
             [Pure]
+            [CanBeNull]
             public static NumericRange TryGetFor([NotNull] IType type)
             {
                 switch (type)
@@ -109,6 +110,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
         }
 
         [Pure]
+        [CanBeNull]
         static IType TryGetTypeForNumericRange([NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             switch (attributesOwnerDeclaration.DeclaredElement)
@@ -165,6 +167,12 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 return false;
             }
 
+            // excluding local function (C# 8 or less)
+            if (declaration.IsOnLocalFunctionWithUnsupportedAttributes())
+            {
+                return false;
+            }
+
             // excluding members of non-reference types (value, nullable value, unspecified generic types)
             if (declaration is ITypeOwnerDeclaration typeOwner)
             {
@@ -214,6 +222,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
         }
 
         [Pure]
+        [CanBeNull]
         static IType TryGetTypeForIfCanBeAnnotatedWithItemNotNull([NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             switch (attributesOwnerDeclaration.DeclaredElement)

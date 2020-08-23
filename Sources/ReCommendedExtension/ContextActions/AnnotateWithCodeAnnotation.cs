@@ -47,8 +47,12 @@ namespace ReCommendedExtension.ContextActions
             return null;
         }
 
+        [CanBeNull]
         protected virtual IAttribute TryGetAttributeToReplace([NotNull] IAttributesOwnerDeclaration ownerDeclaration) => null;
 
-        protected abstract bool CanBeAnnotated(IDeclaredElement declaredElement, [NotNull] ITreeNode context, [NotNull] IPsiModule psiModule);
+        protected abstract bool CanBeAnnotated(
+            [CanBeNull] IDeclaredElement declaredElement,
+            [NotNull] ITreeNode context,
+            [NotNull] IPsiModule psiModule);
     }
 }

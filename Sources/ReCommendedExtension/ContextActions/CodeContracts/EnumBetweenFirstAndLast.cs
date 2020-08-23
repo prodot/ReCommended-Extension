@@ -21,7 +21,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
     {
         internal abstract class EnumContractInfo
         {
-            public static EnumContractInfo TryCreate(IEnum enumType)
+            [CanBeNull]
+            public static EnumContractInfo TryCreate([CanBeNull] IEnum enumType)
             {
                 if (enumType != null && !enumType.HasAttributeInstance(PredefinedType.FLAGS_ATTRIBUTE_CLASS, false))
                 {
@@ -55,6 +56,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 }
             }
 
+            [CanBeNull]
             public static EnumContractInfo<E> TryCreate(
                 [NotNull][ItemNotNull] IList<IField> members,
                 [NotNull] Func<E, E, bool> isLessOrEquals,
@@ -111,6 +113,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 => factory.CreateExpression("$0 >= $1 && $0 <= $2", contractExpression, valueMembers[min], valueMembers[max]);
         }
 
+        [CanBeNull]
         EnumContractInfo contractInfo;
 
         public EnumBetweenFirstAndLast([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }

@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Annotation;
@@ -50,8 +52,9 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestCase("Override.cs", ValueAnalysisMode.PESSIMISTIC)]
         [TestCase("ItemNotNull.cs", ValueAnalysisMode.PESSIMISTIC)]
         [TestNetFramework45]
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
+        public void TestFileWithValueAnalysisMode([NotNull] string file, ValueAnalysisMode valueAnalysisMode)
             => ExecuteWithinSettingsTransaction(
                 store =>
                 {

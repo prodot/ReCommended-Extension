@@ -23,7 +23,9 @@ namespace ReCommendedExtension.ContextActions
         [NotNull]
         readonly ICSharpContextActionDataProvider provider;
 
+        [CanBeNull]
         ICSharpExpression expression;
+        [CanBeNull]
         IUsingStatement usingStatementWithVariableDeclaration;
 
         public AddConfigureAwait([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;

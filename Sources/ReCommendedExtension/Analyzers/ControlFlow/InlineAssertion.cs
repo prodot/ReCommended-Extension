@@ -11,6 +11,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 {
     internal sealed class InlineAssertion : Assertion
     {
+        [CanBeNull]
         public static InlineAssertion TryFromInvocationExpression([NotNull] IInvocationExpression invocationExpression)
         {
             var referenceExpression = invocationExpression.InvokedExpression as IReferenceExpression;

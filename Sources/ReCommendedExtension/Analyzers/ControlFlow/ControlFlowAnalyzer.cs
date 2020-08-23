@@ -30,6 +30,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
     public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         [Pure]
+        [CanBeNull]
         static ICSharpExpression TryGetOtherOperand(
             [NotNull] IEqualityExpression equalityExpression,
             EqualityExpressionType equalityType,
@@ -52,7 +53,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         }
 
         [Pure]
-        static bool IsLiteral(IExpression expression, [NotNull] TokenNodeType tokenType)
+        static bool IsLiteral([CanBeNull] IExpression expression, [NotNull] TokenNodeType tokenType)
             => (expression as ICSharpLiteralExpression)?.Literal?.GetTokenType() == tokenType;
 
         [Pure]
@@ -224,9 +225,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
         void AnalyzeWhenExpressionIsKnownToBeTrueOrFalse(
             [NotNull] IHighlightingConsumer context,
-            CSharpCompilerNullableInspector nullabilityInspector,
-            CSharpControlFlowGraphInspector inspector,
-            HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
+            [CanBeNull] CSharpCompilerNullableInspector nullabilityInspector,
+            [CanBeNull] CSharpControlFlowGraphInspector inspector,
+            [CanBeNull][ItemNotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] Assertion assertion,
             bool isKnownToBeTrue)
         {
@@ -311,9 +312,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
         void AnalyzeWhenExpressionIsKnownToBeNullOrNotNull(
             [NotNull] IHighlightingConsumer context,
-            CSharpCompilerNullableInspector nullabilityInspector,
-            CSharpControlFlowGraphInspector inspector,
-            HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
+            [CanBeNull] CSharpCompilerNullableInspector nullabilityInspector,
+            [CanBeNull] CSharpControlFlowGraphInspector inspector,
+            [CanBeNull][ItemNotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] Assertion assertion,
             bool isKnownToBeNull)
         {
@@ -397,9 +398,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
         [Pure]
         CSharpControlFlowNullReferenceState GetExpressionNullReferenceState(
-            CSharpCompilerNullableInspector nullabilityInspector,
-            CSharpControlFlowGraphInspector inspector,
-            HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
+            [CanBeNull] CSharpCompilerNullableInspector nullabilityInspector,
+            [CanBeNull] CSharpControlFlowGraphInspector inspector,
+            [CanBeNull][ItemNotNull] HashSet<IAsExpression> alwaysSuccessTryCastExpressions,
             [NotNull] ICSharpExpression expression)
         {
             if (nullabilityInspector != null)
