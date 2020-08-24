@@ -19,6 +19,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Conversions;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
@@ -42,6 +43,7 @@ namespace ReCommendedExtension
         [NotNull]
         static readonly Version msTest14MinFileVersion = new Version(14, 0, 3021, 1);
 
+        [CanBeNull]
         static string TryGetMemberName([NotNull] this IExpressionStatement expressionStatement, [NotNull] string classFullName)
             => (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression is IReferenceExpression referenceExpression &&
                 ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
@@ -103,7 +105,7 @@ namespace ReCommendedExtension
 
         [DebuggerStepThrough]
         [NotNull]
-        public static T AssertNotNull<T>(this T value) where T : class
+        public static T AssertNotNull<T>([CanBeNull] this T value) where T : class
         {
             Debug.Assert(value != null);
 
@@ -136,6 +138,7 @@ namespace ReCommendedExtension
         public static IEnumerable<T> WithoutObsolete<T>([NotNull][ItemNotNull] this IEnumerable<T> fields) where T : class, IAttributesOwner
             => from field in fields where !field.HasAttributeInstance(PredefinedType.OBSOLETE_ATTRIBUTE_CLASS, false) select field;
 
+        [CanBeNull]
         public static string TryGetContractName([NotNull] this IExpressionStatement expressionStatement)
             => expressionStatement.TryGetMemberName(contractClassFullName);
 
@@ -524,6 +527,7 @@ namespace ReCommendedExtension
         /// Returns the object creation expression <c>new EventHandler(</c><paramref name="argument"/><c>)</c> if used in the pattern
         /// <c>new EventHandler(</c><paramref name="argument"/><c>)</c> or <c>null</c>.
         /// </summary>
+        [CanBeNull]
         static IObjectCreationExpression TryGetDelegateCreation([NotNull] ICSharpArgument argument)
         {
             var argumentList = argument.Parent as IArgumentList;
@@ -615,7 +619,7 @@ namespace ReCommendedExtension
             return predefinedTypeName.TypeKeyword.GetTokenType() == CSharpTokenType.VOID_KEYWORD;
         }
 
-        public static bool IsConfigureAwaitAvailable(this IUnaryExpression awaitedExpression)
+        public static bool IsConfigureAwaitAvailable([CanBeNull] this IUnaryExpression awaitedExpression)
         {
             var typeElement = (awaitedExpression?.Type() as IDeclaredType)?.GetTypeElement();
             if (typeElement != null)
@@ -705,7 +709,7 @@ namespace ReCommendedExtension
         /// <remarks>
         /// This method (<c>CSharpDaemonUtil.IsUnderAnonymousMethod</c>) has been removed from ReSharper 10 SDK.
         /// </remarks>
-        public static bool IsUnderAnonymousMethod(this ITreeNode element)
+        public static bool IsUnderAnonymousMethod([CanBeNull] this ITreeNode element)
         {
             foreach (var treeNode in element.ContainingNodes())
             {
@@ -721,7 +725,7 @@ namespace ReCommendedExtension
         /// <remarks>
         /// This method (<c>CollectionTypeUtil.GetKeyValueTypesForGenericDictionary</c>) has been removed from ReSharper 10 SDK.
         /// </remarks>
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute", Justification = "The method was imported.")]
+        [CanBeNull]
         public static IList<Pair<IType, IType>> GetKeyValueTypesForGenericDictionary([NotNull] this IDeclaredType declaredType)
         {
             var typeElement1 = declaredType.GetTypeElement();
@@ -760,6 +764,24 @@ namespace ReCommendedExtension
         {
             key = pair.Key;
             value = pair.Value;
+        }
+
+        [JetBrains.Annotations.Pure]
+        public static bool IsOnLocalFunctionWithUnsupportedAttributes([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            if (attributesOwnerDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90)
+            {
+                return false;
+            }
+
+            switch (attributesOwnerDeclaration.DeclaredElement)
+            {
+                case IParameter parameter when parameter.ContainingParametersOwner.IsLocalFunction():
+                case ILocalFunctionDeclaration _:
+                    return true;
+            }
+
+            return false;
         }
     }
 }

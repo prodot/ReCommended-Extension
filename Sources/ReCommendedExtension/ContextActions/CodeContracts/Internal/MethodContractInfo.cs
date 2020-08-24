@@ -14,6 +14,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 {
     internal sealed class MethodContractInfo : ContractInfo
     {
+        [CanBeNull]
         public static MethodContractInfo TryCreate(
             [NotNull] IMethodDeclaration declaration,
             TreeTextRange selectedTreeRange,

@@ -7,20 +7,16 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
-using ReCommendedExtension.Analyzers.CatchClauseWithoutVariable;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        CatchClauseWithoutVariableSuggestion.SeverityId,
+namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant declaration without exception variable" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
-
-namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable
-{
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
@@ -28,7 +24,7 @@ namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class CatchClauseWithoutVariableSuggestion : Highlighting
     {
-        internal const string SeverityId = "CatchClauseWithoutVariable";
+        const string SeverityId = "CatchClauseWithoutVariable";
 
         internal CatchClauseWithoutVariableSuggestion([NotNull] string message, [NotNull] ISpecificCatchClause catchClause) : base(message)
             => CatchClause = catchClause;

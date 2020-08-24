@@ -217,6 +217,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
             }
         }
 
+        [NotNull]
         static string GetText(Location location)
         {
             switch (location)

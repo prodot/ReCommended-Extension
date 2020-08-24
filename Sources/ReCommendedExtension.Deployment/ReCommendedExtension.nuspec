@@ -33,7 +33,7 @@
         <copyright>{{AssemblyCopyright}}</copyright>
         <tags>recommended extension resharper plugin addin prodot</tags>
         <dependencies>
-            <dependency id="Wave" version="[201.0,201.1)" />
+            <dependency id="Wave" version="[202.0,202.1)" />
         </dependencies>
     </metadata>
     <files>

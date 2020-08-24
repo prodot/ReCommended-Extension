@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -16,6 +17,6 @@ namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Elements
         [TestCase("ExecuteConversion.cs")]
         [TestCase("ExecuteOverload.cs")]
         [TestCase("ExecuteOverloadNonEmpty.cs")]
-        public void TestFile(string file) => DoTestSolution(file);
+        public void TestFile([NotNull] string file) => DoTestSolution(file);
     }
 }

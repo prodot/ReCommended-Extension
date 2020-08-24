@@ -4,25 +4,16 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.AsyncVoid;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
-
-[assembly:
-    RegisterConfigurableSeverity(
-        AvoidAsyncVoidWarning.SeverityId,
-        null,
-        HighlightingGroupIds.CodeSmell,
-        "Avoid 'async void'" + ZoneMarker.Suffix,
-        "",
-        Severity.WARNING)]
 
 namespace ReCommendedExtension.Analyzers.AsyncVoid
 {
+    [RegisterConfigurableSeverity(SeverityId, null, HighlightingGroupIds.CodeSmell, "Avoid 'async void'" + ZoneMarker.Suffix, "", Severity.WARNING)]
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class AvoidAsyncVoidWarning : Highlighting
     {
-        internal const string SeverityId = "AvoidAsyncVoid";
+        const string SeverityId = "AvoidAsyncVoid";
 
+        [CanBeNull]
         readonly ITypeUsage typeUsage;
 
         internal AvoidAsyncVoidWarning([NotNull] string message, [NotNull] IMethodDeclaration methodDeclaration) : base(message)

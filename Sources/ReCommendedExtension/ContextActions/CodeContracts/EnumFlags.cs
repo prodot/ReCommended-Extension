@@ -22,7 +22,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
     {
         internal abstract class EnumContractInfo
         {
-            public static EnumContractInfo TryCreate(IEnum enumType)
+            [CanBeNull]
+            public static EnumContractInfo TryCreate([CanBeNull] IEnum enumType)
             {
                 if (enumType != null && enumType.HasAttributeInstance(PredefinedType.FLAGS_ATTRIBUTE_CLASS, false))
                 {
@@ -56,6 +57,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 }
             }
 
+            [CanBeNull]
             public static EnumContractInfo<E> TryCreate(
                 [NotNull][ItemNotNull] IList<IField> members,
                 E one,
@@ -114,6 +116,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 return null;
             }
 
+            [CanBeNull]
             readonly IField zeroMember;
 
             [NotNull]
@@ -122,7 +125,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             [NotNull]
             readonly string cSharpLiteralSuffix;
 
-            EnumContractInfo(IField zeroMember, [NotNull] Dictionary<E, IField> valueMembers, [NotNull] string cSharpLiteralSuffix)
+            EnumContractInfo([CanBeNull] IField zeroMember, [NotNull] Dictionary<E, IField> valueMembers, [NotNull] string cSharpLiteralSuffix)
             {
                 Debug.Assert(!valueMembers.ContainsKey(default));
                 Debug.Assert(zeroMember != null || valueMembers.Count > 0);
@@ -199,6 +202,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             }
         }
 
+        [CanBeNull]
         EnumContractInfo contractInfo;
 
         public EnumFlags([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }

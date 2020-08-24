@@ -9,6 +9,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 {
     internal sealed class AssertionStatement : Assertion
     {
+        [CanBeNull]
         public static AssertionStatement TryFromInvocationExpression(
             [NotNull] IInvocationExpression invocationExpression,
             [NotNull] AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,

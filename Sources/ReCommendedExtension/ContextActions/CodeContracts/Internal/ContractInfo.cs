@@ -112,7 +112,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] IBlock body,
             [NotNull] IPsiModule psiModule,
             [NotNull] Func<IExpression> getContractExpression,
-            out ICSharpStatement firstNonContractStatement)
+            [CanBeNull] out ICSharpStatement firstNonContractStatement)
         {
             var contractExpression = getContractExpression();
 
@@ -197,8 +197,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             ContextActionUtils.FormatWithDefaultProfile(statement);
         }
 
+        [CanBeNull]
         public static ContractInfo TryCreate(
-            IDeclaration declaration,
+            [CanBeNull] IDeclaration declaration,
             TreeTextRange selectedTreeRange,
             [NotNull] Func<IType, bool> isAvailableForType)
         {
@@ -264,6 +265,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         public abstract void AddContracts(
             [NotNull] ICSharpContextActionDataProvider provider,
             [NotNull] Func<IExpression, IExpression> getContractExpression,
-            [ItemNotNull] out ICollection<ICSharpStatement> firstNonContractStatements);
+            [CanBeNull][ItemNotNull] out ICollection<ICSharpStatement> firstNonContractStatements);
     }
 }

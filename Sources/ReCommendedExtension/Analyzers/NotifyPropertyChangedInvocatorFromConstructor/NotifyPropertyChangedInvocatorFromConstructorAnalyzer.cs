@@ -36,7 +36,7 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
                 method.GetPsiServices().GetCodeAnnotationsCache().GetProvider<NotifyPropertyChangedAnnotationProvider>();
 
             return notifyPropertyChangedAnnotationProvider
-                .ContainsNotifyPropetyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
+                .ContainsNotifyPropertyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
         }
 
         protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

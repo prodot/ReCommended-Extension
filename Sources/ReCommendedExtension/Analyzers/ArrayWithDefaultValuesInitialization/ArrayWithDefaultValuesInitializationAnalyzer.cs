@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -13,16 +14,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
     public sealed class ArrayWithDefaultValuesInitializationAnalyzer : ElementProblemAnalyzer<IArrayInitializer>
     {
         [NotNull]
-        static string CreateHighlightingMessage([NotNull] IType arrayElementType, bool isNullableReferenceType, [NonNegativeValue] int elementCount)
-        {
-            Debug.Assert(CSharpLanguage.Instance != null);
-
-            return string.Format(
-                "Use 'new {0}{1}[{2}]'.",
-                arrayElementType.GetPresentableName(CSharpLanguage.Instance),
-                isNullableReferenceType ? "?" : "",
-                elementCount.ToString());
-        }
+        static string CreateHighlightingMessage([NotNull] string suggestedCode) => string.Format("Use '{0}'.", suggestedCode);
 
         protected override void Run(IArrayInitializer element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
@@ -52,17 +44,48 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
                 {
                     // { d, default, default(T) } // where d is the default value for the T
 
-                    var isNullableReferenceType = element.IsNullableAnnotationsContextEnabled() &&
-                        arrayElementType.Classify == TypeClassification.REFERENCE_TYPE &&
-                        arrayElementType.NullableAnnotation == NullableAnnotation.NotAnnotated;
+                    var builder = new StringBuilder();
+                    builder.Append("new ");
+
+                    Debug.Assert(CSharpLanguage.Instance != null);
+
+                    builder.Append(arrayElementType.GetPresentableName(CSharpLanguage.Instance));
+
+                    if (builder[builder.Length - 1] != '?')
+                    {
+                        var isNullableReferenceType = element.IsNullableAnnotationsContextEnabled() &&
+                            arrayElementType.Classify == TypeClassification.REFERENCE_TYPE &&
+                            arrayElementType.NullableAnnotation == NullableAnnotation.NotAnnotated;
+
+                        if (isNullableReferenceType)
+                        {
+                            builder.Append('?');
+                        }
+                    }
+                    else
+                    {
+                        // workaround for R# 2020.2
+
+                        if (element.IsNullableAnnotationsContextEnabled())
+                        {
+                            switch (arrayElementType.Classify)
+                            {
+                                case TypeClassification.UNKNOWN:
+                                case TypeClassification.VALUE_TYPE when !arrayElementType.IsNullable():
+                                    builder.Remove(builder.Length - 1, 1);
+                                    break;
+                            }
+                        }
+                    }
+
+                    builder.Append('[');
+                    builder.Append(element.InitializerElements.Count);
+                    builder.Append(']');
+
+                    var suggestedCode = builder.ToString();
 
                     consumer.AddHighlighting(
-                        new ArrayWithDefaultValuesInitializationSuggestion(
-                            CreateHighlightingMessage(arrayElementType, isNullableReferenceType, element.InitializerElements.Count),
-                            element,
-                            isNullableReferenceType,
-                            arrayElementType,
-                            element.InitializerElements.Count));
+                        new ArrayWithDefaultValuesInitializationSuggestion(CreateHighlightingMessage(suggestedCode), suggestedCode, element));
                 }
             }
         }

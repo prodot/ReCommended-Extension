@@ -45,6 +45,6 @@ namespace ReCommendedExtension.ContextActions
             return null;
         }
 
-        protected abstract bool CanBeAnnotated(IDeclaredElement declaredElement);
+        protected abstract bool CanBeAnnotated([CanBeNull] IDeclaredElement declaredElement);
     }
 }

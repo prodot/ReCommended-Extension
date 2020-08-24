@@ -3,20 +3,16 @@ using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
-using ReCommendedExtension.Analyzers.ControlFlow;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        RedundantNullForgivingOperatorSuggestion.SeverityId,
+namespace ReCommendedExtension.Analyzers.ControlFlow
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant null-forgiving operator" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
-
-namespace ReCommendedExtension.Analyzers.ControlFlow
-{
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
@@ -24,7 +20,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class RedundantNullForgivingOperatorSuggestion : RedundantAssertionSuggestion
     {
-        internal const string SeverityId = "RedundantNullForgivingOperator";
+        const string SeverityId = "RedundantNullForgivingOperator";
 
         [NotNull]
         readonly NullForgivingOperation nullForgivingOperation;

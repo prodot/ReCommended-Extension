@@ -18,6 +18,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     public abstract class AddContractContextAction : ContextActionBase
     {
+        [CanBeNull]
         ContractInfo contractInfo;
 
         private protected AddContractContextAction([NotNull] ICSharpContextActionDataProvider provider) => Provider = provider;
@@ -50,6 +51,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         [NotNull]
         protected ICSharpContextActionDataProvider Provider { get; }
 
+        [CanBeNull]
         protected virtual string TryGetAnnotationAttributeTypeName() => null;
 
         protected abstract bool IsAvailableForType([NotNull] IType type);

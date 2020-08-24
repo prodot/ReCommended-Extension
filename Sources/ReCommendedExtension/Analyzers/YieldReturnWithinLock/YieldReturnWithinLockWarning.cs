@@ -4,24 +4,20 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.YieldReturnWithinLock;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        YieldReturnWithinLockWarning.SeverityId,
+namespace ReCommendedExtension.Analyzers.YieldReturnWithinLock
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "'yield return' used inside the 'lock' block" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
-
-namespace ReCommendedExtension.Analyzers.YieldReturnWithinLock
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class YieldReturnWithinLockWarning : Highlighting
     {
-        internal const string SeverityId = "YieldReturnWithinLock";
+        const string SeverityId = "YieldReturnWithinLock";
 
         [NotNull]
         readonly IYieldStatement yieldReturnStatement;

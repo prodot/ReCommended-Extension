@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Analyzers.Region
         typeof(IStartRegion),
         HighlightingTypes = new[]
         {
-            typeof(EmptyRegionSuggestion), typeof(RegionWithinTypeMemberBodyWarning), typeof(RegionWithSingleElementSuggestion)
+            typeof(EmptyRegionSuggestion), typeof(RegionWithinTypeMemberBodyWarning), typeof(RegionWithSingleElementSuggestion),
         })]
     public sealed class RegionAnalyzer : ElementProblemAnalyzer<IStartRegion>
     {

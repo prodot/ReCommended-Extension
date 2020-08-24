@@ -76,13 +76,13 @@ namespace ReCommendedExtension
         [JetBrains.Annotations.Pure]
         [ContractAnnotation("typeElement:null => false", true)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool IsPredefinedTypeElement(ITypeElement typeElement, [NotNull] IClrTypeName clrName)
+        static bool IsPredefinedTypeElement([CanBeNull] ITypeElement typeElement, [NotNull] IClrTypeName clrName)
             => typeElement != null && typeElement.GetClrName().Equals(clrName);
 
         [JetBrains.Annotations.Pure]
         [ContractAnnotation("type:null => false", true)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsClrType(this IType type, [NotNull] IClrTypeName clrName)
+        public static bool IsClrType([CanBeNull] this IType type, [NotNull] IClrTypeName clrName)
             => type is IDeclaredType declaredType && IsPredefinedTypeElement(declaredType.GetTypeElement(), clrName);
     }
 }

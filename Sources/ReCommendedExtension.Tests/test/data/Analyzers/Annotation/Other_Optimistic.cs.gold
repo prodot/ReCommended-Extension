@@ -154,6 +154,8 @@ namespace Test
 
         string |Method1|(0)(string |p1|(1))
         {
+            string LocalFunction(string p2) => null;
+
             return null;
         }
 

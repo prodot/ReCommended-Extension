@@ -21,6 +21,7 @@ namespace ReCommendedExtension.ContextActions
         [NotNull]
         readonly ICSharpContextActionDataProvider provider;
 
+        [CanBeNull]
         InlineAssertion assertion;
 
         public RemoveAssertNotNull([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;

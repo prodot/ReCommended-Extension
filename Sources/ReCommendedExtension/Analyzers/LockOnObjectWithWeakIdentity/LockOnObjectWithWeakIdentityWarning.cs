@@ -4,24 +4,20 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        LockOnObjectWithWeakIdentityWarning.SeverityId,
+namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Lock on object with weak identity" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
-
-namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
-{
     [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
     public sealed class LockOnObjectWithWeakIdentityWarning : Highlighting
     {
-        internal const string SeverityId = "LockOnObjectWithWeakIdentity";
+        const string SeverityId = "LockOnObjectWithWeakIdentity";
 
         [NotNull]
         readonly ICSharpExpression monitor;

@@ -24,6 +24,7 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
         }
 
         [Pure]
+        [CanBeNull]
         internal static ITypeElement TryGetArrayType([NotNull] IPsiModule psiModule)
             => TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARRAY_FQN, psiModule);
 

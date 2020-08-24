@@ -32,7 +32,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                 [NotNull] ICSharpControlFlowGraph controlFlowGraph,
                 ValueAnalysisMode analysisMode,
                 bool shouldDisableValueAnalysisIfNullableWarningsEnabled = true,
-                Func<ITreeNode, ICSharpControlFlowGraph> graphBuilder = null)
+                [CanBeNull] Func<ITreeNode, ICSharpControlFlowGraph> graphBuilder = null)
             {
                 var declaration = controlFlowGraph.Declaration;
                 var containingFile = (ICSharpFile) declaration.GetContainingFile();
@@ -70,7 +70,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
             Inspector(
                 [NotNull] ICSharpControlFlowGraph controlFlowGraph,
                 [NotNull] CSharpControlFlowContextFactory factory,
-                Func<ITreeNode, ICSharpControlFlowGraph> graphBuilder) : base(controlFlowGraph, factory, graphBuilder) { }
+                [CanBeNull] Func<ITreeNode, ICSharpControlFlowGraph> graphBuilder) : base(controlFlowGraph, factory, graphBuilder) { }
 
             [NotNull]
             IResolveContext ResolveContext => ContextFactory.ResolveContext;
@@ -89,7 +89,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                 return accessExpressionsThroughLocalFunctionCalls;
             }
 
-            bool IsPossibleConsumptionUsage([NotNull] ICSharpExpression ex, IDeclaredElement element)
+            bool IsPossibleConsumptionUsage([NotNull] ICSharpExpression ex, [CanBeNull] IDeclaredElement element)
             {
                 var type = element.Type();
                 if (!type.IsValueTask() && !type.IsGenericValueTask())
@@ -178,7 +178,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                 [NotNull] CSharpControlFlowContext context,
                 [NotNull] VariableInfo info,
                 ControlFlowAccessType access,
-                ITreeNode accessExpression)
+                [CanBeNull] ITreeNode accessExpression)
             {
                 // the ControlFlowVariableAccessState.ACCESSED_AS_ENUMERABLE is intentionally "misused" here
 

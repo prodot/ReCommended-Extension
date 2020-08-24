@@ -8,20 +8,16 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.ConditionalInvocation;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        ConditionalInvocationHint.SeverityId,
+namespace ReCommendedExtension.Analyzers.ConditionalInvocation
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeInfo,
         "Method invocation will be skipped if the specific condition is not defined" + ZoneMarker.Suffix,
         "",
         Severity.HINT)]
-
-namespace ReCommendedExtension.Analyzers.ConditionalInvocation
-{
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
@@ -29,7 +25,7 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class ConditionalInvocationHint : Highlighting
     {
-        internal const string SeverityId = "ConditionalInvocation";
+        const string SeverityId = "ConditionalInvocation";
 
         [NotNull]
         readonly IInvocationExpression invocationExpression;

@@ -4,24 +4,20 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Xaml;
 using JetBrains.ReSharper.Psi.Xml.Tree;
-using ReCommendedExtension.Analyzers.XamlBindingWithoutMode;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        XamlBindingWithoutModeWarning.SeverityId,
+namespace ReCommendedExtension.Analyzers.XamlBindingWithoutMode
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeSmell,
         "Binding expression without explicitly set 'Mode'" + ZoneMarker.Suffix,
         "",
         Severity.WARNING)]
-
-namespace ReCommendedExtension.Analyzers.XamlBindingWithoutMode
-{
     [ConfigurableSeverityHighlighting(SeverityId, XamlLanguage.Name)]
     public sealed class XamlBindingWithoutModeWarning : Highlighting
     {
-        internal const string SeverityId = "XamlBindingWithoutMode";
+        const string SeverityId = "XamlBindingWithoutMode";
 
         [NotNull]
         readonly IXmlIdentifier nameNode;

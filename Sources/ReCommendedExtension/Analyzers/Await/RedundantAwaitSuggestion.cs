@@ -5,20 +5,16 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.Await;
-using ZoneMarker = ReCommendedExtension.ZoneMarker;
 
-[assembly:
-    RegisterConfigurableSeverity(
-        RedundantAwaitSuggestion.SeverityId,
+namespace ReCommendedExtension.Analyzers.Await
+{
+    [RegisterConfigurableSeverity(
+        SeverityId,
         null,
         HighlightingGroupIds.CodeRedundancy,
         "Redundant 'await'" + ZoneMarker.Suffix,
         "",
         Severity.SUGGESTION)]
-
-namespace ReCommendedExtension.Analyzers.Await
-{
     [ConfigurableSeverityHighlighting(
         SeverityId,
         CSharpLanguage.Name,
@@ -26,15 +22,15 @@ namespace ReCommendedExtension.Analyzers.Await
         OverlapResolve = OverlapResolveKind.DEADCODE)]
     public sealed class RedundantAwaitSuggestion : Highlighting
     {
-        internal const string SeverityId = "RedundantAwait";
+        const string SeverityId = "RedundantAwait";
 
         internal RedundantAwaitSuggestion(
             [NotNull] string message,
             [NotNull] Action removeAsync,
             [NotNull] IAwaitExpression awaitExpression,
-            IExpressionStatement statementToBeReplacedWithReturnStatement,
+            [CanBeNull] IExpressionStatement statementToBeReplacedWithReturnStatement,
             [NotNull] ICSharpExpression expressionToReturn,
-            IAttributesOwnerDeclaration attributesOwnerDeclaration) : base(message)
+            [CanBeNull] IAttributesOwnerDeclaration attributesOwnerDeclaration) : base(message)
         {
             RemoveAsync = removeAsync;
             AwaitExpression = awaitExpression;
@@ -49,10 +45,13 @@ namespace ReCommendedExtension.Analyzers.Await
         [NotNull]
         internal IAwaitExpression AwaitExpression { get; }
 
+        [CanBeNull]
         internal IExpressionStatement StatementToBeReplacedWithReturnStatement { get; }
 
+        [CanBeNull]
         internal ICSharpExpression ExpressionToReturn { get; }
 
+        [CanBeNull]
         internal IAttributesOwnerDeclaration AttributesOwnerDeclaration { get; }
 
         internal bool QuickFixRemovesConfigureAwait => AwaitExpression.Task != ExpressionToReturn;

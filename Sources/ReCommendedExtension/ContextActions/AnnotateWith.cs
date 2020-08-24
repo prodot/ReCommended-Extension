@@ -19,9 +19,12 @@ namespace ReCommendedExtension.ContextActions
         [NotNull]
         readonly ICSharpContextActionDataProvider provider;
 
+        [CanBeNull]
         IAttributesOwnerDeclaration attributesOwnerDeclaration;
 
+        [CanBeNull]
         Func<CSharpElementFactory, IAttribute> createAttributeFactory;
+        [CanBeNull]
         IAttribute attributeToReplace;
 
         protected AnnotateWith([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
@@ -31,10 +34,11 @@ namespace ReCommendedExtension.ContextActions
 
         protected abstract bool IsAttribute([NotNull] IAttribute attribute);
 
+        [CanBeNull]
         protected abstract Func<CSharpElementFactory, IAttribute> CreateAttributeFactoryIfAvailable(
             [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
             [NotNull] IPsiModule psiModule,
-            out IAttribute attributeToReplace);
+            [CanBeNull] out IAttribute attributeToReplace);
 
         [NotNull]
         protected virtual string TextSuffix => "";
@@ -64,6 +68,7 @@ namespace ReCommendedExtension.ContextActions
             if (attributesOwnerDeclaration != null &&
                 attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange) &&
                 !attributesOwnerDeclaration.OverridesInheritedMember() &&
+                !attributesOwnerDeclaration.IsOnLocalFunctionWithUnsupportedAttributes() &&
                 (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
             {
                 Debug.Assert(attributesOwnerDeclaration != null);
