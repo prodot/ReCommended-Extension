@@ -1,0 +1,210 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AnyException = System.InvalidTimeZoneException;
+
+namespace Test
+{
+    public class ThrowExceptionInUnexpectedLocation : IEquatable<ThrowExceptionInUnexpectedLocation>,
+        IEqualityComparer<int>,
+        IEqualityComparer,
+        IDisposable, IAsyncDisposable
+    {
+        int Property
+        {
+            get
+            {
+                // not allowed
+                |throw new AnyException();|(0)
+                |throw new ArgumentException();|(1)
+                |throw new KeyNotFoundException();|(2)
+
+                // allowed
+                throw new InvalidOperationException();
+                throw new ObjectDisposedException(""); // inherits InvalidOperationException
+                throw new NotSupportedException();
+
+                void LocalFunction() => throw new AnyException(); // allowed
+                Action action => () => throw new AnyException(); // allowed
+            }
+        }
+
+        int Property2 => |throw new AnyException()|(3); // not allowed
+
+        int Property3
+        {
+            get => |throw new AnyException()|(4); // not allowed
+        }
+
+        string this[int index]
+        {
+            get
+            {
+                // not allowed
+                |throw new AnyException();|(5)
+
+                // allowed
+                throw new ArgumentException();
+                throw new ArgumentNullException(); // inherits ArgumentException
+                throw new KeyNotFoundException();
+                throw new InvalidOperationException();
+                throw new NotSupportedException();
+            }
+        }
+
+        string this[long index] => |throw new AnyException()|(6); // not allowed
+
+        string this[short index]
+        {
+            get => |throw new AnyException()|(7); // not allowed
+        }
+
+        event EventHandler Event
+        {
+            add
+            {
+                // not allowed
+                |throw new AnyException();|(8)
+
+                // allowed
+                throw new ArgumentException();
+                throw new InvalidOperationException();
+                throw new NotSupportedException();
+            }
+            remove
+            {
+                // not allowed
+                |throw new AnyException();|(9)
+
+                // allowed
+                throw new ArgumentException();
+                throw new InvalidOperationException();
+                throw new NotSupportedException();
+            }
+        }
+
+        event EventHandler Event2
+        {
+            add => |throw new AnyException()|(10); // not allowed
+            remove => |throw new AnyException()|(11); // not allowed
+        }
+
+        public override bool Equals(object obj)
+        {
+            // not allowed
+            |throw new AnyException();|(12)
+        }
+
+        public bool Equals(ThrowExceptionInUnexpectedLocation other) => |throw new AnyException()|(13); // not allowed
+
+        public override int GetHashCode()
+        {
+            // not allowed
+            |throw new AnyException();|(14)
+        }
+
+        public bool Equals(int x, int y) => |throw new AnyException()|(15); // not allowed
+
+        public int GetHashCode(int obj)
+        {
+            // not allowed
+            |throw new AnyException();|(16)
+
+            // allowed
+            throw new ArgumentException();
+        }
+
+        public bool Equals(object x, object y) => |throw new AnyException()|(17); // not allowed
+
+        public int GetHashCode(object obj)
+        {
+            // not allowed
+            |throw new AnyException();|(18)
+
+            // allowed
+            throw new ArgumentException();
+        }
+
+        public override string ToString() => |throw new AnyException()|(19); // not allowed
+
+        static ThrowExceptionInUnexpectedLocation() => |throw new AnyException()|(20); // not allowed
+
+        ~ThrowExceptionInUnexpectedLocation() => |throw new AnyException()|(21); // not allowed
+
+        public void Dispose() => |throw new AnyException()|(22); // not allowed
+
+        public ValueTask DisposeAsync() => |throw new AnyException()|(23); // not allowed
+
+        void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (Property == 1)
+                {
+                    // allowed
+                    throw new AnyException();
+                }
+            }
+            else
+            {
+                if (Property == 2)
+                {
+                    // not allowed
+                    |throw new AnyException();|(24)
+                }
+            }
+
+            // not allowed
+            |throw new AnyException();|(25)
+        }
+
+        public static bool operator ==(ThrowExceptionInUnexpectedLocation x, ThrowExceptionInUnexpectedLocation y)
+            => |throw new AnyException()|(26); // not allowed
+
+        public static bool operator !=(ThrowExceptionInUnexpectedLocation x, ThrowExceptionInUnexpectedLocation y)
+        {
+            // not allowed
+            |throw new AnyException();|(27)
+        }
+
+        public static implicit operator DateTime(ThrowExceptionInUnexpectedLocation x)
+        {
+            // not allowed
+            |throw new AnyException();|(28)
+        }
+
+        public static implicit operator Guid(ThrowExceptionInUnexpectedLocation x) => |throw new AnyException()|(29); // not allowed
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Exceptions should never be thrown in property getters.
+(1): ReSharper Warning: Exceptions should never be thrown in property getters.
+(2): ReSharper Warning: Exceptions should never be thrown in property getters.
+(3): ReSharper Warning: Exceptions should never be thrown in property getters.
+(4): ReSharper Warning: Exceptions should never be thrown in property getters.
+(5): ReSharper Warning: Exceptions should never be thrown in property getters.
+(6): ReSharper Warning: Exceptions should never be thrown in property getters.
+(7): ReSharper Warning: Exceptions should never be thrown in property getters.
+(8): ReSharper Warning: Exceptions should never be thrown in event accessors.
+(9): ReSharper Warning: Exceptions should never be thrown in event accessors.
+(10): ReSharper Warning: Exceptions should never be thrown in event accessors.
+(11): ReSharper Warning: Exceptions should never be thrown in event accessors.
+(12): ReSharper Warning: Exceptions should never be thrown in 'Equals' methods.
+(13): ReSharper Warning: Exceptions should never be thrown in 'Equals' methods.
+(14): ReSharper Warning: Exceptions should never be thrown in 'GetHashCode' methods.
+(15): ReSharper Warning: Exceptions should never be thrown in 'Equals' methods.
+(16): ReSharper Warning: Exceptions should never be thrown in 'GetHashCode' methods.
+(17): ReSharper Warning: Exceptions should never be thrown in 'Equals' methods.
+(18): ReSharper Warning: Exceptions should never be thrown in 'GetHashCode' methods.
+(19): ReSharper Warning: Exceptions should never be thrown in 'ToString' methods.
+(20): ReSharper Warning: Exceptions should never be thrown in static constructors.
+(21): ReSharper Warning: Exceptions should never be thrown in finalizers.
+(22): ReSharper Warning: Exceptions should never be thrown in 'Dispose' methods.
+(23): ReSharper Warning: Exceptions should never be thrown in 'DisposeAsync' methods.
+(24): ReSharper Warning: Exceptions should never be thrown in 'Dispose(false)' code paths.
+(25): ReSharper Warning: Exceptions should never be thrown in 'Dispose(false)' code paths.
+(26): ReSharper Warning: Exceptions should never be thrown in equality operators.
+(27): ReSharper Warning: Exceptions should never be thrown in equality operators.
+(28): ReSharper Warning: Exceptions should never be thrown in implicit cast operators.
+(29): ReSharper Warning: Exceptions should never be thrown in implicit cast operators.
