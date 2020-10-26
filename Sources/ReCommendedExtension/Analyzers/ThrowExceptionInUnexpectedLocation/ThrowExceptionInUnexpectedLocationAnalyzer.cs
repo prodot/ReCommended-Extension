@@ -42,7 +42,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
         [NotNull]
         static IMethod GetMethod([NotNull] ITypeElement type, [NotNull] string name) => type.Methods.First(m => m.ShortName == name).AssertNotNull();
 
-        static Location? TryGetLocation([NotNull] ICSharpTreeNode element, [NotNull] ElementProblemAnalyzerData data)
+        static Location? TryGetLocation([NotNull] ICSharpTreeNode element)
         {
             switch (element.GetContainingFunctionLikeDeclarationOrClosure())
             {
@@ -142,12 +142,12 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                         {
                             var controlFlowGraph = (ICSharpControlFlowGraph)ControlFlowBuilder.GetGraph(methodDeclaration);
 
-                            var controlFlowEdge = controlFlowGraph?.ReachableExits.FirstOrDefault(
-                                e => e?.Type == ControlFlowEdgeType.THROW && e.Source.SourceElement == element);
+                            var controlFlowEdge = controlFlowGraph?.GetLeafElementsFor(element).FirstOrDefault()?.Entries.FirstOrDefault();
 
                             if (controlFlowEdge != null)
                             {
-                                var inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
+                                var inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, ValueAnalysisMode.OPTIMISTIC, false);
+
                                 var controlFlowContext = inspector.GetContext(controlFlowEdge);
                                 var variableInfo = inspector.FindVariableInfo(parameter);
                                 if (variableInfo != null)
@@ -277,7 +277,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                 return;
             }
 
-            var location = TryGetLocation(element, data);
+            var location = TryGetLocation(element);
             if (location != null)
             {
                 if (GetAllowedExceptions((Location)location, element.GetPsiModule()).Any(e => IsOrDerivesFrom(exceptionType, e)))

@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -9,6 +10,7 @@ using ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
+    [TestNetCore30]
     public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpHighlightingTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\ThrowExceptionInUnexpectedLocation";
@@ -17,7 +19,10 @@ namespace ReCommendedExtension.Tests.Analyzers
             => highlighting is ThrowExceptionInUnexpectedLocationWarning;
 
         [Test]
-        [TestNetCore30]
         public void TestThrowExceptionInUnexpectedLocation() => DoNamedTest2();
+
+        [Test]
+        [NullableContext(NullableContextKind.Enable)]
+        public void TestThrowExceptionInUnexpectedLocation_NullableAnnotationContext() => DoNamedTest2();
     }
 }
