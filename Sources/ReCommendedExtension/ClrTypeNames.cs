@@ -33,6 +33,10 @@ namespace ReCommendedExtension
         public static readonly IClrTypeName SuppressMessageAttribute = new ClrTypeName(typeof(SuppressMessageAttribute).FullName.AssertNotNull());
 
         [NotNull]
+        public static readonly IClrTypeName ExcludeFromCodeCoverageAttribute =
+            new ClrTypeName(typeof(ExcludeFromCodeCoverageAttribute).FullName.AssertNotNull());
+
+        [NotNull]
         public static readonly IClrTypeName NotSupportedException = new ClrTypeName(typeof(NotSupportedException).FullName.AssertNotNull());
 
         [NotNull]

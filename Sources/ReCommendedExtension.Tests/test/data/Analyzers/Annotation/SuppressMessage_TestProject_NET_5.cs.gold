@@ -2,13 +2,13 @@
 
 namespace Test
 {
-    [|SuppressMessage("C", "Id")|(0)]
+    [SuppressMessage("C", "Id")]
     internal class SuppressMessage
     {
-        [|SuppressMessage("C", "Id")|(1)]
+        [SuppressMessage("C", "Id")]
         void Foo() { }
 
-        [|SuppressMessage("C", "Id", Justification = "")|(2)]
+        [SuppressMessage("C", "Id", Justification = "")]
         void Foo2() { }
 
         [SuppressMessage("C", "Id", Justification = "Justification")]
@@ -18,10 +18,13 @@ namespace Test
     internal class ExcludeFromCodeCoverage
     {
         [ExcludeFromCodeCoverage]
+        void Foo() { }
+
+        [ExcludeFromCodeCoverage(Justification = "")]
+        void Foo2() { }
+
+        [ExcludeFromCodeCoverage(Justification = "Justification")]
         void Foo3() { }
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Warning: Suppression justification is missing for C:Id.
-(1): ReSharper Warning: Suppression justification is missing for C:Id.
-(2): ReSharper Warning: Suppression justification is missing for C:Id.

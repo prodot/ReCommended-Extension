@@ -18,7 +18,12 @@ namespace Test
     internal class ExcludeFromCodeCoverage
     {
         [ExcludeFromCodeCoverage]
+        void Foo() { }
+
+        [ExcludeFromCodeCoverage(Justification = "")]
+        void Foo2() { }
+
+        [ExcludeFromCodeCoverage(Justification = "Justification")]
         void Foo3() { }
     }
 }
----------------------------------------------------------

@@ -17,7 +17,13 @@ namespace Test
 
     internal class ExcludeFromCodeCoverage
     {
-        [ExcludeFromCodeCoverage]
+        [|ExcludeFromCodeCoverage|(3)]
+        void Foo() { }
+
+        [|ExcludeFromCodeCoverage(Justification = "")|(4)]
+        void Foo2() { }
+
+        [ExcludeFromCodeCoverage(Justification = "Justification")]
         void Foo3() { }
     }
 }
@@ -25,3 +31,5 @@ namespace Test
 (0): ReSharper Warning: Suppression justification is missing for C:Id.
 (1): ReSharper Warning: Suppression justification is missing for C:Id.
 (2): ReSharper Warning: Suppression justification is missing for C:Id.
+(3): ReSharper Warning: Justification is missing for the exclusion from code coverage.
+(4): ReSharper Warning: Justification is missing for the exclusion from code coverage.
