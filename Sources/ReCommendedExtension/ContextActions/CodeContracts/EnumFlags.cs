@@ -32,7 +32,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                     {
                         Debug.Assert(enumType.EnumMembers != null);
 
-                        return numericTypeInfo.TryCreateEnumFlags(enumType.EnumMembers);
+                        return numericTypeInfo.TryCreateEnumFlags(enumType.EnumMembers.ToList());
                     }
                 }
 

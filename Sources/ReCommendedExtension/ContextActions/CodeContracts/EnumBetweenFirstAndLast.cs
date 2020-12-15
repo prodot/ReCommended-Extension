@@ -31,7 +31,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                     {
                         Debug.Assert(enumType.EnumMembers != null);
 
-                        return numericTypeInfo.TryCreateEnumContractInfoForEnumBetweenFirstAndLast(enumType.EnumMembers);
+                        return numericTypeInfo.TryCreateEnumContractInfoForEnumBetweenFirstAndLast(enumType.EnumMembers.ToList());
                     }
                 }
 
