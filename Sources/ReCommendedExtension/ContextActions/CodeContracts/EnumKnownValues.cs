@@ -29,8 +29,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             if (enumType != null && !enumType.HasAttributeInstance(PredefinedType.FLAGS_ATTRIBUTE_CLASS, false))
             {
-                Debug.Assert(enumType.EnumMembers != null);
-
                 members = enumType.EnumMembers.WithoutObsolete().ToList();
 
                 if (members.Count > 0)

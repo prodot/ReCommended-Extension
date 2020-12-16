@@ -35,7 +35,9 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                 [CanBeNull] Func<ITreeNode, ICSharpControlFlowGraph> graphBuilder = null)
             {
                 var declaration = controlFlowGraph.Declaration;
-                var containingFile = (ICSharpFile) declaration.GetContainingFile();
+                Debug.Assert(declaration != null);
+                
+                var containingFile = (ICSharpFile)declaration.GetContainingFile();
 
                 var forceClosuresCollection = false;
                 if ((uint)analysisMode > 0U && shouldDisableValueAnalysisIfNullableWarningsEnabled)
