@@ -163,8 +163,8 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
             {
                 nullabilityInspector = (CSharpCompilerNullableInspector)CSharpCompilerNullableInspector.Inspect(
                     controlFlowGraph,
-                    null,
-                    ValueAnalysisMode.OFF); // wrong [NotNull] annotation in R# code
+                    null, // wrong [NotNull] annotation in R# code
+                    ValueAnalysisMode.OFF);
                 inspector = null;
                 alwaysSuccessTryCastExpressions = null;
             }

@@ -26,13 +26,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             {
                 if (enumType != null && !enumType.HasAttributeInstance(PredefinedType.FLAGS_ATTRIBUTE_CLASS, false))
                 {
-                    var numericTypeInfo = CSharpNumericTypeInfo.TryCreate(enumType.GetUnderlyingType());
-                    if (numericTypeInfo != null)
-                    {
-                        Debug.Assert(enumType.EnumMembers != null);
-
-                        return numericTypeInfo.TryCreateEnumContractInfoForEnumBetweenFirstAndLast(enumType.EnumMembers);
-                    }
+                    return CSharpNumericTypeInfo.TryCreate(enumType.GetUnderlyingType())
+                        ?.TryCreateEnumContractInfoForEnumBetweenFirstAndLast(enumType.EnumMembers.ToList());
                 }
 
                 return null;

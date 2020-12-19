@@ -14,12 +14,12 @@ namespace ReCommendedExtension.Analyzers.XamlBindingWithoutMode
         {
             switch (element)
             {
-                case IBindingMarkup bindingMarkup when bindingMarkup.Mode == BindingMode.UNKNOWN && bindingMarkup.NameNode != null:
+                case IBindingMarkup bindingMarkup when bindingMarkup.ModeAttribute == null && bindingMarkup.NameNode != null:
                     consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", bindingMarkup.NameNode));
                     break;
 
                 case IBindingElement bindingElement when ClrTypeNames.Binding.Equals((bindingElement.Type as IDeclaredType)?.GetClrName()) &&
-                    bindingElement.Mode == BindingMode.UNKNOWN:
+                    bindingElement.GetAttribute("Mode") == null:
                     consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", bindingElement.Header.Name));
                     break;
 

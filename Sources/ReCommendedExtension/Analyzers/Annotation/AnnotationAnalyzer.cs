@@ -12,6 +12,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
@@ -268,8 +269,6 @@ namespace ReCommendedExtension.Analyzers.Annotation
 
             foreach (var suppressMessageAttribute in suppressMessageAttributes)
             {
-                Debug.Assert(suppressMessageAttribute != null);
-
                 consumer.AddHighlighting(
                     new MissingSuppressionJustificationWarning(
                         attributesOwnerDeclaration,
@@ -279,6 +278,37 @@ namespace ReCommendedExtension.Analyzers.Annotation
                             suppressMessageAttribute.Category,
                             suppressMessageAttribute.CheckId)));
             }
+
+            if (!ExcludeFromCodeCoverageJustificationPropertyExists(attributesOwnerDeclaration.GetPsiModule()))
+            {
+                return;
+            }
+
+            var excludeFromCodeCoverageAttributes =
+                from attribute in attributesOwnerDeclaration.Attributes
+                let attributeInstance = attribute.GetAttributeInstance()
+                where Equals(attributeInstance.GetClrName(), ClrTypeNames.ExcludeFromCodeCoverageAttribute)
+                let justificationConstantValue = attributeInstance.NamedParameter("Justification").ConstantValue // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
+                where justificationConstantValue == null ||
+                    !justificationConstantValue.IsString() ||
+                    string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
+                select attribute;
+
+            foreach (var excludeFromCodeCoverageAttribute in excludeFromCodeCoverageAttributes)
+            {
+                consumer.AddHighlighting(
+                    new MissingSuppressionJustificationWarning(
+                        attributesOwnerDeclaration,
+                        excludeFromCodeCoverageAttribute,
+                        "Justification is missing for the exclusion from code coverage."));
+            }
+        }
+
+        [Pure]
+        static bool ExcludeFromCodeCoverageJustificationPropertyExists([NotNull] IPsiModule psiModule)
+        {
+            var attributeType = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ExcludeFromCodeCoverageAttribute.GetPersistent(), psiModule);
+            return attributeType != null && attributeType.Properties.Any(property => !property.IsStatic && property.ShortName == "Justification"); // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
         }
 
         static void AnalyzeConflictingPurityAnnotations(

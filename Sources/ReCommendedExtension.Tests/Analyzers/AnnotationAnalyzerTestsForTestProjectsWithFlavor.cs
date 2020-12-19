@@ -41,5 +41,9 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [Test]
         public void TestSuppressMessage_TestProject() => DoNamedTest2();
+
+        [Test]
+        [TestNet50]
+        public void TestSuppressMessage_TestProject_NET_5() => DoNamedTest2();
     }
 }

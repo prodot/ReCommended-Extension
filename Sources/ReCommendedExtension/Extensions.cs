@@ -263,7 +263,10 @@ namespace ReCommendedExtension
                         typeParameters,
                         declaredElement.ReturnType.IsVoid() ? "" : " return default($0); "),
                     declaredElement.ReturnType);
-                overriddenMethodDeclaration.SetAccessRights(methodDeclaration.GetAccessRights());
+                overriddenMethodDeclaration.SetAccessRights(
+                    methodDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
+                        ? AccessRights.PUBLIC
+                        : methodDeclaration.GetAccessRights());
                 overriddenMethodDeclaration.SetOverride(methodDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
 
                 foreach (var parameterDeclaration in methodDeclaration.ParameterDeclarations)
@@ -326,7 +329,10 @@ namespace ReCommendedExtension
                         indexerDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "",
                         indexerDeclaration.DeclaredElement.IsWritable ? " set { } " : ""),
                     indexerDeclaration.DeclaredElement.Type);
-                overriddenIndexerDeclaration.SetAccessRights(indexerDeclaration.GetAccessRights());
+                overriddenIndexerDeclaration.SetAccessRights(
+                    indexerDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
+                        ? AccessRights.PUBLIC
+                        : indexerDeclaration.GetAccessRights());
                 overriddenIndexerDeclaration.SetOverride(indexerDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
 
                 foreach (var parameterDeclaration in indexerDeclaration.ParameterDeclarations)
@@ -384,7 +390,10 @@ namespace ReCommendedExtension
                         propertyDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "",
                         propertyDeclaration.DeclaredElement.IsWritable ? " set { } " : ""),
                     propertyDeclaration.DeclaredElement.Type);
-                overriddenPropertyDeclaration.SetAccessRights(propertyDeclaration.GetAccessRights());
+                overriddenPropertyDeclaration.SetAccessRights(
+                    propertyDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
+                        ? AccessRights.PUBLIC
+                        : propertyDeclaration.GetAccessRights());
                 overriddenPropertyDeclaration.SetOverride(propertyDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
 
                 overriddenPropertyDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenPropertyDeclaration);

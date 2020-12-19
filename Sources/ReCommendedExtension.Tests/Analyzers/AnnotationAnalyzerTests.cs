@@ -44,6 +44,10 @@ namespace ReCommendedExtension.Tests.Analyzers
         public void TestSuppressMessage() => DoNamedTest2();
 
         [Test]
+        [TestNet50]
+        public void TestSuppressMessage_NET_5() => DoNamedTest2();
+
+        [Test]
         [TestNetFramework45]
         public void TestPureWithMustUseReturnValue() => DoNamedTest2();
 
