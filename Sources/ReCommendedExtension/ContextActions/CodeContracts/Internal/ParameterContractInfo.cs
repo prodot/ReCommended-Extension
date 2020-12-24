@@ -47,10 +47,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
             var parameterExpression = factory.CreateExpression("$0", parameter);
 
-            var expression = factory.CreateExpression(
-                string.Format("$0.{0}(out $1)", nameof(Contract.ValueAtReturn)),
-                contractType,
-                parameterExpression);
+            var expression = factory.CreateExpression($"$0.{nameof(Contract.ValueAtReturn)}(out $1)", contractType, parameterExpression);
 
             AddContract(ContractKind.Ensures, body, provider.PsiModule, () => getContractExpression(expression), out firstNonContractStatement);
         }
@@ -151,89 +148,94 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
             Debug.Assert(parameter != null);
 
-            var function = parameter.ContainingParametersOwner as IFunction;
-            if (function?.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, function)) is
-                ICSharpFunctionDeclaration functionDeclaration)
+            switch (parameter.ContainingParametersOwner)
             {
-                IBlock body;
-
-                if (functionDeclaration is IMethodDeclaration methodDeclaration && methodDeclaration.IsAbstract)
+                case IFunction function
+                    when function.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, function)) is
+                        ICSharpFunctionDeclaration functionDeclaration:
                 {
-                    var containingTypeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
+                    IBlock body;
 
-                    Debug.Assert(containingTypeDeclaration != null);
-
-                    var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
-
-                    var overriddenMethodDeclaration = methodDeclaration.EnsureOverriddenMethodInContractClass(contractClassDeclaration);
-
-                    body = overriddenMethodDeclaration.Body;
-                }
-                else
-                {
-                    body = functionDeclaration.Body;
-                }
-
-                if (body != null)
-                {
-                    AddContract(provider, getContractExpression, parameter, body, out var firstNonContractStatement);
-                    firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
-                }
-                else
-                {
-                    firstNonContractStatements = null;
-                }
-
-                return;
-            }
-
-            var property = parameter.ContainingParametersOwner as IProperty;
-            if (property?.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, property)) is
-                IIndexerDeclaration indexerDeclaration)
-            {
-                TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
-
-                if (indexerDeclaration.IsAbstract)
-                {
-                    var containingTypeDeclaration = indexerDeclaration.GetContainingTypeDeclaration();
-
-                    Debug.Assert(containingTypeDeclaration != null);
-
-                    var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
-
-                    var overriddenIndexerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);
-
-                    accessorDeclarations = overriddenIndexerDeclaration.AccessorDeclarations;
-                }
-                else
-                {
-                    accessorDeclarations = indexerDeclaration.AccessorDeclarations;
-                }
-
-                firstNonContractStatements = new List<ICSharpStatement>(2);
-                foreach (var accessorDeclaration in accessorDeclarations)
-                {
-                    Debug.Assert(accessorDeclaration != null);
-
-                    if (accessorDeclaration.Body != null)
+                    if (functionDeclaration is IMethodDeclaration methodDeclaration && methodDeclaration.IsAbstract)
                     {
-                        AddContract(provider, getContractExpression, parameter, accessorDeclaration.Body, out var firstNonContractStatement);
-                        if (firstNonContractStatement != null)
+                        var containingTypeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
+
+                        Debug.Assert(containingTypeDeclaration != null);
+
+                        var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
+
+                        var overriddenMethodDeclaration = methodDeclaration.EnsureOverriddenMethodInContractClass(contractClassDeclaration);
+
+                        body = overriddenMethodDeclaration.Body;
+                    }
+                    else
+                    {
+                        body = functionDeclaration.Body;
+                    }
+
+                    if (body != null)
+                    {
+                        AddContract(provider, getContractExpression, parameter, body, out var firstNonContractStatement);
+                        firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
+                    }
+                    else
+                    {
+                        firstNonContractStatements = null;
+                    }
+
+                    return;
+                }
+
+                case IProperty property
+                    when property.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, property)) is
+                        IIndexerDeclaration indexerDeclaration:
+                {
+                    TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
+
+                    if (indexerDeclaration.IsAbstract)
+                    {
+                        var containingTypeDeclaration = indexerDeclaration.GetContainingTypeDeclaration();
+
+                        Debug.Assert(containingTypeDeclaration != null);
+
+                        var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
+
+                        var overriddenIndexerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);
+
+                        accessorDeclarations = overriddenIndexerDeclaration.AccessorDeclarations;
+                    }
+                    else
+                    {
+                        accessorDeclarations = indexerDeclaration.AccessorDeclarations;
+                    }
+
+                    firstNonContractStatements = new List<ICSharpStatement>(2);
+                    foreach (var accessorDeclaration in accessorDeclarations)
+                    {
+                        Debug.Assert(accessorDeclaration != null);
+
+                        if (accessorDeclaration.Body != null)
                         {
-                            firstNonContractStatements.Add(firstNonContractStatement);
+                            AddContract(provider, getContractExpression, parameter, accessorDeclaration.Body, out var firstNonContractStatement);
+                            if (firstNonContractStatement != null)
+                            {
+                                firstNonContractStatements.Add(firstNonContractStatement);
+                            }
                         }
                     }
+
+                    if (firstNonContractStatements.Count == 0)
+                    {
+                        firstNonContractStatements = null;
+                    }
+
+                    return;
                 }
 
-                if (firstNonContractStatements.Count == 0)
-                {
+                default:
                     firstNonContractStatements = null;
-                }
-
-                return;
+                    break;
             }
-
-            firstNonContractStatements = null;
         }
     }
 }

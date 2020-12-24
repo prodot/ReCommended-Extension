@@ -36,7 +36,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
             {
                 var declaration = controlFlowGraph.Declaration;
                 Debug.Assert(declaration != null);
-                
+
                 var containingFile = (ICSharpFile)declaration.GetContainingFile();
 
                 var forceClosuresCollection = false;
@@ -44,7 +44,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                 {
                     var file = containingFile;
                     var treeTextRange = declaration.GetTreeTextRange();
-                    ref TreeTextRange local = ref treeTextRange;
+                    ref var local = ref treeTextRange;
                     if (file.IsNullableWarningsEnabledEverywhereIn(in local))
                     {
                         analysisMode = ValueAnalysisMode.OFF;
@@ -321,14 +321,15 @@ namespace ReCommendedExtension.Analyzers.ValueTask
 
         protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
-            if (element is ICSharpDeclaration declaration)
+            switch (element)
             {
-                AnalyzeMultipleConsumptions(declaration, consumer, data.GetValueAnalysisMode());
-            }
+                case ICSharpDeclaration declaration:
+                    AnalyzeMultipleConsumptions(declaration, consumer, data.GetValueAnalysisMode());
+                    break;
 
-            if (element is IInvocationExpression invocationExpression)
-            {
-                AnalyzeBlockingAttempt(invocationExpression, consumer);
+                case IInvocationExpression invocationExpression:
+                    AnalyzeBlockingAttempt(invocationExpression, consumer);
+                    break;
             }
         }
     }

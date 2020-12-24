@@ -50,22 +50,21 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
             {
                 foreach (var treeNode in file.Descendants())
                 {
-                    if (treeNode is IDefineDirective defineDirective)
+                    switch (treeNode)
                     {
-                        if (!string.IsNullOrEmpty(defineDirective.SymbolName))
-                        {
-                            currentConditions.Add(defineDirective.SymbolName);
-                        }
-                        continue;
-                    }
+                        case IDefineDirective defineDirective:
+                            if (!string.IsNullOrEmpty(defineDirective.SymbolName))
+                            {
+                                currentConditions.Add(defineDirective.SymbolName);
+                            }
+                            continue;
 
-                    if (treeNode is IUndefDirective undefDirective)
-                    {
-                        if (!string.IsNullOrEmpty(undefDirective.SymbolName))
-                        {
-                            currentConditions.Remove(undefDirective.SymbolName);
-                        }
-                        continue;
+                        case IUndefDirective undefDirective:
+                            if (!string.IsNullOrEmpty(undefDirective.SymbolName))
+                            {
+                                currentConditions.Remove(undefDirective.SymbolName);
+                            }
+                            continue;
                     }
 
                     if (treeNode == invocationExpression ||
@@ -92,7 +91,7 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
                 consumer.AddHighlighting(
                     new ConditionalInvocationHint(
                         conditions.Count == 1
-                            ? string.Format("Method invocation will be skipped if the '{0}' condition is not defined.", conditions[0])
+                            ? $"Method invocation will be skipped if the '{conditions[0]}' condition is not defined."
                             : string.Format(
                                 "Method invocation will be skipped if none of the following conditions is defined: {0}.",
                                 string.Join(", ", from condition in conditions orderby condition select $"'{condition}'")),

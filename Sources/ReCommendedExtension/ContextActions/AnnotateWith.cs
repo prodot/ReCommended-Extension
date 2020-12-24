@@ -24,6 +24,7 @@ namespace ReCommendedExtension.ContextActions
 
         [CanBeNull]
         Func<CSharpElementFactory, IAttribute> createAttributeFactory;
+
         [CanBeNull]
         IAttribute attributeToReplace;
 
@@ -57,7 +58,7 @@ namespace ReCommendedExtension.ContextActions
                     typeName.EndsWith(nameof(Attribute), StringComparison.Ordinal)
                         ? typeName.Substring(0, typeName.Length - nameof(Attribute).Length)
                         : typeName,
-                    textSuffix != "" ? string.Format(" ({0})", textSuffix) : "");
+                    textSuffix != "" ? $" ({textSuffix})" : "");
             }
         }
 

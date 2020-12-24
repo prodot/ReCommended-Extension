@@ -83,10 +83,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
                 {
                     consumer.AddHighlighting(
                         new AvoidAsyncVoidWarning(
-                            string.Format(
-                                "'async void' method used {0} time{1} not as a direct event handler.",
-                                count.ToString(),
-                                count == 1 ? "" : "s"),
+                            $"'async void' method used {count.ToString()} time{(count == 1 ? "" : "s")} not as a direct event handler.",
                             methodDeclaration));
                 }
             }
@@ -113,10 +110,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
             {
                 consumer.AddHighlighting(
                     new AvoidAsyncVoidWarning(
-                        string.Format(
-                            "'async void' local function used {0} time{1} not as a direct event handler.",
-                            count.ToString(),
-                            count == 1 ? "" : "s"),
+                        $"'async void' local function used {count.ToString()} time{(count == 1 ? "" : "s")} not as a direct event handler.",
                         localFunctionDeclaration));
             }
         }

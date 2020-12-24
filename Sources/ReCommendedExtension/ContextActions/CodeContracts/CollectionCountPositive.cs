@@ -45,13 +45,11 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         }
 
         protected override string GetContractTextForUI(string contractIdentifier)
-            => isArray
-                ? string.Format("{0}.{1} > 0", contractIdentifier, nameof(Array.Length))
-                : string.Format("{0}.{1} > 0", contractIdentifier, nameof(ICollection<int>.Count));
+            => isArray ? $"{contractIdentifier}.{nameof(Array.Length)} > 0" : $"{contractIdentifier}.{nameof(ICollection<int>.Count)} > 0";
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
             => isArray
-                ? factory.CreateExpression(string.Format("$0.{0} > 0", nameof(Array.Length)), contractExpression)
-                : factory.CreateExpression(string.Format("$0.{0} > 0", nameof(ICollection<int>.Count)), contractExpression);
+                ? factory.CreateExpression($"$0.{nameof(Array.Length)} > 0", contractExpression)
+                : factory.CreateExpression($"$0.{nameof(ICollection<int>.Count)} > 0", contractExpression);
     }
 }

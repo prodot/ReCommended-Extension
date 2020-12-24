@@ -33,11 +33,7 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
         {
             Debug.Assert(CSharpLanguage.Instance != null);
 
-            return string.Format(
-                "Use '{0}.{1}<{2}>()'.",
-                nameof(Array),
-                nameof(Array.Empty),
-                arrayElementType.GetPresentableName(CSharpLanguage.Instance));
+            return $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayElementType.GetPresentableName(CSharpLanguage.Instance)}>()'.";
         }
 
         protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

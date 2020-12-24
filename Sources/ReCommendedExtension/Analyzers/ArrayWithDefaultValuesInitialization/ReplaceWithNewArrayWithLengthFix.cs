@@ -31,7 +31,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
             {
                 Debug.Assert(CSharpLanguage.Instance != null);
 
-                return string.Format("Replace array initialization with '{0}'", highlighting.SuggestedCode);
+                return $"Replace array initialization with '{highlighting.SuggestedCode}'";
             }
         }
 

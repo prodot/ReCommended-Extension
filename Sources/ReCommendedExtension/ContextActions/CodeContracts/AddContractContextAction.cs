@@ -82,10 +82,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             {
                 Debug.Assert(contractInfo != null);
 
-                return string.Format(
-                    "Add contract ({0}): {1}",
-                    contractInfo.GetContractKindForUI(),
-                    GetContractTextForUI(contractInfo.GetContractIdentifierForUI()));
+                return $"Add contract ({contractInfo.GetContractKindForUI()}): {GetContractTextForUI(contractInfo.GetContractIdentifierForUI())}";
             }
         }
 

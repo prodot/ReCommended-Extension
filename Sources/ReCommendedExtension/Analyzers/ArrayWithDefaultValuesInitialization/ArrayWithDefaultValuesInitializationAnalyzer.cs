@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
     public sealed class ArrayWithDefaultValuesInitializationAnalyzer : ElementProblemAnalyzer<IArrayInitializer>
     {
         [NotNull]
-        static string CreateHighlightingMessage([NotNull] string suggestedCode) => string.Format("Use '{0}'.", suggestedCode);
+        static string CreateHighlightingMessage([NotNull] string suggestedCode) => $"Use '{suggestedCode}'.";
 
         protected override void Run(IArrayInitializer element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {

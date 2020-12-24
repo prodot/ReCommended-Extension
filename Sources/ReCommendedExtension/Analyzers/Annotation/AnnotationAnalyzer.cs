@@ -273,10 +273,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                     new MissingSuppressionJustificationWarning(
                         attributesOwnerDeclaration,
                         suppressMessageAttribute.Attribute,
-                        string.Format(
-                            "Suppression justification is missing for {0}:{1}.",
-                            suppressMessageAttribute.Category,
-                            suppressMessageAttribute.CheckId)));
+                        $"Suppression justification is missing for {suppressMessageAttribute.Category}:{suppressMessageAttribute.CheckId}."));
             }
 
             if (!ExcludeFromCodeCoverageJustificationPropertyExists(attributesOwnerDeclaration.GetPsiModule()))
@@ -337,7 +334,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                             new ConflictingAnnotationWarning(
                                 attributesOwnerDeclaration,
                                 attribute,
-                                string.Format("Annotation conflicts with '{0}' annotation.", conflictingAnnotation)));
+                                $"Annotation conflicts with '{conflictingAnnotation}' annotation."));
                     }
                 }
             }
@@ -580,7 +577,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                         attributesOwnerDeclaration,
                         conditionalAttribute.Attribute,
                         conditionalAttribute.Conditions.Count == 1
-                            ? string.Format("Attribute will be ignored if the '{0}' condition is not defined.", conditionalAttribute.Conditions[0])
+                            ? $"Attribute will be ignored if the '{conditionalAttribute.Conditions[0]}' condition is not defined."
                             : string.Format(
                                 "Attribute will be ignored if none of the following conditions is defined: {0}.",
                                 string.Join(", ", from condition in conditionalAttribute.Conditions orderby condition select $"'{condition}'"))));
@@ -756,7 +753,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 case ValueAnalysisMode.PESSIMISTIC:
                     foreach (var attributeMark in GetAttributeMarks(attributesOwnerDeclaration))
                     {
-                        if (attributeMark != null && attributeMark.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
+                        if (attributeMark?.AnnotationNullableValue == CodeAnnotationNullableValue.CAN_BE_NULL)
                         {
                             consumer.AddHighlighting(
                                 new RedundantAnnotationSuggestion(

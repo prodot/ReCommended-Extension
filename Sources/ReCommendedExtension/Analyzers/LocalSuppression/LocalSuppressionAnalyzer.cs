@@ -13,9 +13,9 @@ namespace ReCommendedExtension.Analyzers.LocalSuppression
         {
             var leadingWhitespaceCharacters = 0;
 
-            for (var i = 0; i < commentText.Length; i++)
+            foreach (var c in commentText)
             {
-                switch (commentText[i])
+                switch (c)
                 {
                     case ' ':
                     case '\t':

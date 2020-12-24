@@ -21,7 +21,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         {
             Debug.Assert(NumericTypeInfo != null);
 
-            return factory.CreateExpression(string.Format("$0 > 0{0}", NumericTypeInfo.LiteralSuffix), contractExpression);
+            return factory.CreateExpression($"$0 > 0{NumericTypeInfo.LiteralSuffix}", contractExpression);
         }
     }
 }
