@@ -151,7 +151,7 @@ namespace ReCommendedExtension
 
             var attributeInstance = typeDeclaration.DeclaredElement?.GetAttributeInstances(ClrTypeNames.ContractClassAttribute, false)
                 .FirstOrDefault();
-            if (attributeInstance != null && attributeInstance.PositionParameterCount > 0)
+            if (attributeInstance?.PositionParameterCount > 0)
             {
                 var typeElement = attributeInstance.PositionParameter(0).TypeValue.GetTypeElement<IClass>();
                 if (typeElement != null)
@@ -188,7 +188,7 @@ namespace ReCommendedExtension
                     ? $"<{new string(',', contractClassDeclaration.TypeParameters.Count - 1)}>"
                     : "";
                 var typeofExpression = (ITypeofExpression)factory.CreateExpression(
-                    string.Format(@"typeof($0{0})", attributeTypeParameters),
+                    $@"typeof($0{attributeTypeParameters})",
                     contractClassDeclaration.DeclaredElement);
 
                 // todo: the generated "typeof" expression doesn't contain generics: "<,>"
@@ -249,11 +249,7 @@ namespace ReCommendedExtension
             if (overriddenMethodDeclaration == null)
             {
                 var typeParameters = methodDeclaration.TypeParameterDeclarations.Any()
-                    ? string.Format(
-                        "<{0}>",
-                        string.Join(
-                            ", ",
-                            from typeParameter in methodDeclaration.TypeParameterDeclarations select typeParameter.DeclaredName))
+                    ? $"<{string.Join(", ", from typeParameter in methodDeclaration.TypeParameterDeclarations select typeParameter.DeclaredName)}>"
                     : "";
 
                 overriddenMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(

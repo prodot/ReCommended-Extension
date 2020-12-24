@@ -25,7 +25,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             Debug.Assert(nameof(IntPtr.Zero) == nameof(UIntPtr.Zero));
 
             return factory.CreateExpression(
-                string.Format("$0 != $1.{0}", nameof(IntPtr.Zero)),
+                $"$0 != $1.{nameof(IntPtr.Zero)}",
                 contractExpression,
                 TypeElementUtil.GetTypeElementByClrName(IsSigned ? PredefinedType.INTPTR_FQN : PredefinedType.UINTPTR_FQN, Provider.PsiModule));
         }

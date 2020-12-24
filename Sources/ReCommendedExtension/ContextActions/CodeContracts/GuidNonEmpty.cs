@@ -23,7 +23,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
             => factory.CreateExpression(
-                string.Format("$0 != $1.{0}", nameof(Guid.Empty)),
+                $"$0 != $1.{nameof(Guid.Empty)}",
                 contractExpression,
                 TypeElementUtil.GetTypeElementByClrName(PredefinedType.GUID_FQN, Provider.PsiModule));
     }

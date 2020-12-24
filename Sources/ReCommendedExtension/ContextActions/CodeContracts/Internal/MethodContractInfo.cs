@@ -75,10 +75,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 Debug.Assert(declaredElement != null);
 
-                var expression = factory.CreateExpression(
-                    string.Format("$0.{0}<$1>()", nameof(Contract.Result)),
-                    contractType,
-                    declaredElement.ReturnType);
+                var expression = factory.CreateExpression($"$0.{nameof(Contract.Result)}<$1>()", contractType, declaredElement.ReturnType);
 
                 AddContract(
                     ContractKind.Ensures,

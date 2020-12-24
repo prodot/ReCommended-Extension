@@ -18,11 +18,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         protected override bool IsAvailableForType(IType type) => type.IsString();
 
-        protected override string GetContractTextForUI(string contractIdentifier)
-            => string.Format("!string.{0}({1})", nameof(string.IsNullOrEmpty), contractIdentifier);
+        protected override string GetContractTextForUI(string contractIdentifier) => $"!string.{nameof(string.IsNullOrEmpty)}({contractIdentifier})";
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
-            => factory.CreateExpression(string.Format("!string.{0}($0)", nameof(string.IsNullOrEmpty)), contractExpression);
+            => factory.CreateExpression($"!string.{nameof(string.IsNullOrEmpty)}($0)", contractExpression);
 
         protected override string TryGetAnnotationAttributeTypeName() => NullnessProvider.NotNullAttributeShortName;
     }

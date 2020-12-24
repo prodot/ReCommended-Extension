@@ -32,7 +32,7 @@ namespace ReCommendedExtension.ContextActions
             {
                 Debug.Assert(assertion != null);
 
-                return string.Format("Remove '{0}()'", assertion.MethodName);
+                return $"Remove '{assertion.MethodName}()'";
             }
         }
 

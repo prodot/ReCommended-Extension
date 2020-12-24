@@ -155,7 +155,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             {
                 var zeroExpression = zeroMember != null
                     ? factory.CreateExpression("$0", zeroMember)
-                    : factory.CreateExpression(string.Format("0{0}", cSharpLiteralSuffix));
+                    : factory.CreateExpression($"0{cSharpLiteralSuffix}");
 
                 if (valueMembers.Count == 0)
                 {

@@ -94,14 +94,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
             switch (contractKind)
             {
-                case ContractKind.Requires:
-                    return factory.CreateStatement(string.Format("$0.{0}($1);", nameof(Contract.Requires)), contractType, contractExpression);
+                case ContractKind.Requires: return factory.CreateStatement($"$0.{nameof(Contract.Requires)}($1);", contractType, contractExpression);
 
-                case ContractKind.Ensures:
-                    return factory.CreateStatement(string.Format("$0.{0}($1);", nameof(Contract.Ensures)), contractType, contractExpression);
+                case ContractKind.Ensures: return factory.CreateStatement($"$0.{nameof(Contract.Ensures)}($1);", contractType, contractExpression);
 
                 case ContractKind.Invariant:
-                    return factory.CreateStatement(string.Format("$0.{0}($1);", nameof(Contract.Invariant)), contractType, contractExpression);
+                    return factory.CreateStatement($"$0.{nameof(Contract.Invariant)}($1);", contractType, contractExpression);
 
                 default: throw new ArgumentOutOfRangeException(nameof(contractKind));
             }

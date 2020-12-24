@@ -56,16 +56,16 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         protected override string GetContractTextForUI(string contractIdentifier)
             => isDictionary
-                ? string.Format("{0}.{1}(pair => pair.{2} != null)", contractIdentifier, nameof(Enumerable.All), nameof(KeyValuePair<int, int>.Value))
-                : string.Format("{0}.{1}(item => item != null)", contractIdentifier, nameof(Enumerable.All));
+                ? $"{contractIdentifier}.{nameof(Enumerable.All)}(pair => pair.{nameof(KeyValuePair<int, int>.Value)} != null)"
+                : $"{contractIdentifier}.{nameof(Enumerable.All)}(item => item != null)";
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
         {
             var expression = isDictionary
                 ? factory.CreateExpression(
-                    string.Format("$0.{0}(pair => pair.{1} != null)", nameof(Enumerable.All), nameof(KeyValuePair<int, int>.Value)),
+                    $"$0.{nameof(Enumerable.All)}(pair => pair.{nameof(KeyValuePair<int, int>.Value)} != null)",
                     contractExpression)
-                : factory.CreateExpression(string.Format("$0.{0}(item => item != null)", nameof(Enumerable.All)), contractExpression);
+                : factory.CreateExpression($"$0.{nameof(Enumerable.All)}(item => item != null)", contractExpression);
 
             var invokedExpression = (IReferenceExpression)((IInvocationExpression)expression).InvokedExpression;
 

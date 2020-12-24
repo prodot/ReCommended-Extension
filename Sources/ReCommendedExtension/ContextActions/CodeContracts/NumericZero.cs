@@ -22,10 +22,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             return NumericTypeInfo.EpsilonLiteral != null
                 ? factory.CreateExpression(
-                    string.Format("$1.{0}($0 - 0{1}) < {2}", nameof(Math.Abs), NumericTypeInfo.LiteralSuffix, NumericTypeInfo.EpsilonLiteral),
+                    $"$1.{nameof(Math.Abs)}($0 - 0{NumericTypeInfo.LiteralSuffix}) < {NumericTypeInfo.EpsilonLiteral}",
                     contractExpression,
                     TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.Math, Provider.PsiModule))
-                : factory.CreateExpression(string.Format("$0 == 0{0}", NumericTypeInfo.LiteralSuffix), contractExpression);
+                : factory.CreateExpression($"$0 == 0{NumericTypeInfo.LiteralSuffix}", contractExpression);
         }
     }
 }

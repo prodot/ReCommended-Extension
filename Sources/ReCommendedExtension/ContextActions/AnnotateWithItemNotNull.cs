@@ -20,15 +20,13 @@ namespace ReCommendedExtension.ContextActions
         {
             if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(context))
             {
-                var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, context, false);
-                if (elementType != null && elementType.Classify == TypeClassification.REFERENCE_TYPE)
+                if (CollectionTypeUtil.ElementTypeByCollectionType(type, context, false)?.Classify == TypeClassification.REFERENCE_TYPE)
                 {
                     return true;
                 }
             }
 
-            var resultType = type.GetTasklikeUnderlyingType(context);
-            if (resultType != null && resultType.Classify == TypeClassification.REFERENCE_TYPE)
+            if (type.GetTasklikeUnderlyingType(context)?.Classify == TypeClassification.REFERENCE_TYPE)
             {
                 return true;
             }
@@ -36,8 +34,7 @@ namespace ReCommendedExtension.ContextActions
             if (type.IsLazy())
             {
                 var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, context.GetPsiModule());
-                var valueType = type.GetGenericUnderlyingType(typeElement);
-                if (valueType != null && valueType.Classify == TypeClassification.REFERENCE_TYPE)
+                if (type.GetGenericUnderlyingType(typeElement)?.Classify == TypeClassification.REFERENCE_TYPE)
                 {
                     return true;
                 }

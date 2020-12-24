@@ -183,10 +183,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                         {
                             var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, provider.PsiModule);
 
-                            var resultExpression = factory.CreateExpression(
-                                string.Format("$0.{0}<$1>()", nameof(Contract.Result)),
-                                contractType,
-                                Type);
+                            var resultExpression = factory.CreateExpression($"$0.{nameof(Contract.Result)}<$1>()", contractType, Type);
 
                             AddContract(
                                 ContractKind.Ensures,

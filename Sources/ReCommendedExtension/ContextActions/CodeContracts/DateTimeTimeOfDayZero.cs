@@ -20,11 +20,11 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
         protected override bool IsAvailableForType(IType type) => type.IsDateTime();
 
         protected override string GetContractTextForUI(string contractIdentifier)
-            => string.Format("{0}.{1} == {2}", contractIdentifier, nameof(DateTime.TimeOfDay), nameof(System.TimeSpan.Zero));
+            => $"{contractIdentifier}.{nameof(DateTime.TimeOfDay)} == {nameof(System.TimeSpan.Zero)}";
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
             => factory.CreateExpression(
-                string.Format("$0.{0} == $1.{1}", nameof(DateTime.TimeOfDay), nameof(System.TimeSpan.Zero)),
+                $"$0.{nameof(DateTime.TimeOfDay)} == $1.{nameof(System.TimeSpan.Zero)}",
                 contractExpression,
                 TypeElementUtil.GetTypeElementByClrName(PredefinedType.TIMESPAN_FQN, Provider.PsiModule));
     }

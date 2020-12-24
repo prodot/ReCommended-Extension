@@ -32,8 +32,7 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
                             {
                                 case ILiteralExpression literalExpression:
                                     var literalText = literalExpression.Literal?.GetText();
-                                    if (literalText != null &&
-                                        literalText.Length > 2 &&
+                                    if (literalText?.Length > 2 &&
                                         literalText[0] == '\"' &&
                                         literalText[literalText.Length - 1] == '\"' &&
                                         parameters.Any(p => p.AssertNotNull().ShortName == literalText.Substring(1, literalText.Length - 2)))

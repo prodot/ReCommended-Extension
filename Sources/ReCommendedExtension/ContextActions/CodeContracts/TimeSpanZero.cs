@@ -20,7 +20,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
             => factory.CreateExpression(
-                string.Format("$0 == $1.{0}", nameof(System.TimeSpan.Zero)),
+                $"$0 == $1.{nameof(System.TimeSpan.Zero)}",
                 contractExpression,
                 TypeElementUtil.GetTypeElementByClrName(PredefinedType.TIMESPAN_FQN, Provider.PsiModule));
     }

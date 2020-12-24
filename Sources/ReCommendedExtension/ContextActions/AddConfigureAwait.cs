@@ -25,6 +25,7 @@ namespace ReCommendedExtension.ContextActions
 
         [CanBeNull]
         ICSharpExpression expression;
+
         [CanBeNull]
         IUsingStatement usingStatementWithVariableDeclaration;
 
