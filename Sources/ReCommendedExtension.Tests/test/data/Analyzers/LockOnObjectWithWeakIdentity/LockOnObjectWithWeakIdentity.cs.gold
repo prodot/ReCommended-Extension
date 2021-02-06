@@ -46,6 +46,8 @@ namespace Test
             lock (|new ExecutionEngineException()|(20)) { }
 
             lock (|Thread.CurrentThread|(21)) { }
+
+            lock (|this|(22)) { }
         }
     }
 }
@@ -72,3 +74,4 @@ namespace Test
 (19): ReSharper Warning: Do not lock on 'StackOverflowException' objects.
 (20): ReSharper Warning: Do not lock on 'ExecutionEngineException' objects.
 (21): ReSharper Warning: Do not lock on 'Thread' objects.
+(22): ReSharper Warning: Do not lock on 'this'.
