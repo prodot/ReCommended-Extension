@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2020.3.2">
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2020.3.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

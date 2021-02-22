@@ -46,6 +46,8 @@ namespace Test
             lock (new ExecutionEngineException()) { }
 
             lock (Thread.CurrentThread) { }
+
+            lock (this) { }
         }
     }
 }

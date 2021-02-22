@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
@@ -32,7 +33,10 @@ namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
         [CanBeNull]
         static string TryGetHighlightingMessage([NotNull] ICSharpExpression monitor)
         {
-            Debug.Assert(CSharpLanguage.Instance != null);
+            if (monitor.GetOperandThroughParenthesis() is IThisExpression)
+            {
+                return "Do not lock on 'this'.";
+            }
 
             var monitorType = monitor.GetExpressionType().ToIType();
 
@@ -50,6 +54,8 @@ namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity
 
             if (monitorTypeElement != null)
             {
+                Debug.Assert(CSharpLanguage.Instance != null);
+
                 var psiModule = monitor.GetPsiModule();
 
                 foreach (var type in GetClassTypes())
