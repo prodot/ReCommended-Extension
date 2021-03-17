@@ -21,10 +21,11 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2020.3.3">
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2020.3.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
