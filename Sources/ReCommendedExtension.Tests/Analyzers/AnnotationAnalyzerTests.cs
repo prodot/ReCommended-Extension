@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -57,7 +56,6 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestCase("ItemNotNull.cs", ValueAnalysisMode.PESSIMISTIC)]
         [TestNetFramework45]
         [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void TestFileWithValueAnalysisMode([NotNull] string file, ValueAnalysisMode valueAnalysisMode)
             => ExecuteWithinSettingsTransaction(
                 store =>
