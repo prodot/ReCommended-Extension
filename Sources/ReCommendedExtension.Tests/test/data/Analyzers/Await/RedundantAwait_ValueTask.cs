@@ -157,6 +157,16 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
 
             await Test.Calc(35);
         }
+
+        async ValueTask Method_AwaitForEach(IAsyncEnumerable<int> items)
+        {
+            await foreach (var item in items)
+            {
+                Console.WriteLine(item);
+            }
+
+            await Test.Delay();
+        }
     }
 
     public class AwaitForLambdaVariables
@@ -651,6 +661,16 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 using var p = new Process();
 
                 await Test.Calc(35);
+            }
+
+            async ValueTask Method_ForEach(IEnumerable<int> items)
+            {
+                foreach (var item in items)
+                {
+                    Console.WriteLine(item);
+                }
+
+                await Test.Delay();
             }
         }
     }
