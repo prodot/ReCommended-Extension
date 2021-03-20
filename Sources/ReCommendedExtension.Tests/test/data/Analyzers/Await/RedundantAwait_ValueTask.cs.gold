@@ -157,6 +157,16 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
 
             await Test.Calc(35);
         }
+
+        async ValueTask Method_AwaitForEach(IAsyncEnumerable<int> items)
+        {
+            await foreach (var item in items)
+            {
+                Console.WriteLine(item);
+            }
+
+            await Test.Delay();
+        }
     }
 
     public class AwaitForLambdaVariables
@@ -652,6 +662,16 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
 
                 await Test.Calc(35);
             }
+
+            |async|(100) ValueTask Method_ForEach(IEnumerable<int> items)
+            {
+                foreach (var item in items)
+                {
+                    Console.WriteLine(item);
+                }
+
+                |await|(101) Test.Delay();
+            }
         }
     }
 }
@@ -756,3 +776,5 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
 (97):<secondary> ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
 (98): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
 (99):<secondary> ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+(100):<secondary> ReSharper Dead Code: Redundant 'await' (remove 'async'/'await')
+(101): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await')

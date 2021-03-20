@@ -273,6 +273,7 @@ namespace ReCommendedExtension.Analyzers.Await
             if (isLastExpression &&
                 !IsTestMethodOfOldMsTest(container as IMethodDeclaration) &&
                 !GetAllChildrenRecursive(container).OfType<IAwaitExpression>().HasMoreThan(1) &&
+                GetAllChildrenRecursive(container).OfType<IForeachStatement>().All(s => s.AwaitKeyword == null) &&
                 !GetAllChildrenRecursive(container).OfType<IReturnStatement>().HasMoreThan(awaitExpression.Parent is IReturnStatement ? 1 : 0))
             {
                 TryGetContainerTypeAndAsyncKeyword(
