@@ -243,7 +243,7 @@ namespace ReCommendedExtension.Analyzers.Await
 
             consumer.AddHighlighting(highlighting, awaitExpression.AwaitKeyword.GetDocumentRange());
 
-            consumer.AddHighlighting(highlighting, asyncKeyword.GetDocumentRange(), isSecondaryHighlighting: true);
+            consumer.AddHighlighting(highlighting, asyncKeyword.GetDocumentRange());
 
             if (highlightConfigureAwait)
             {
@@ -258,8 +258,7 @@ namespace ReCommendedExtension.Analyzers.Await
                         .JoinRight(
                             configureAwaitInvocationExpression.ArgumentList.GetDocumentRange()
                                 .JoinLeft(leftParenthesisToken.GetDocumentRange())
-                                .JoinRight(rightParenthesisToken.GetDocumentRange())),
-                    isSecondaryHighlighting: true);
+                                .JoinRight(rightParenthesisToken.GetDocumentRange())));
             }
         }
 

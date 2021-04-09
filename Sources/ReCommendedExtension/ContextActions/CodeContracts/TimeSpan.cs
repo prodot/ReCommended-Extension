@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
+using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
