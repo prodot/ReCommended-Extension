@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using JetBrains.Annotations;
-using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
+using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Intentions.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
