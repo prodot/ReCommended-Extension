@@ -190,7 +190,6 @@ namespace ReCommendedExtension.Deployment
 
                 var customAttribute = customAttributes.First(a => a.AttributeType == attributeType);
 
-                Debug.Assert(customAttribute != null);
                 Debug.Assert(customAttribute.ConstructorArguments[0].Value is string);
 
                 var replacementText = (string)customAttribute.ConstructorArguments[0].Value;
@@ -211,7 +210,7 @@ namespace ReCommendedExtension.Deployment
             nuspec.Root.Element("files")
                 ?.Elements("file")
                 .First(e => (string)e.Attribute("src") == "")
-                ?.SetAttributeValue("src", Path.GetFileName(assemblyPath));
+                .SetAttributeValue("src", Path.GetFileName(assemblyPath));
 
             var metadataElement = nuspec.Root.Element("metadata");
             Debug.Assert(metadataElement != null);
