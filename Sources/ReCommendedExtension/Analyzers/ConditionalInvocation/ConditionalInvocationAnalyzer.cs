@@ -14,9 +14,7 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
         [NotNull]
         static IList<string> GetConditionsIfConditionalMethodInvoked([NotNull] IInvocationExpression invocationExpression)
         {
-            var method = invocationExpression.Reference.Resolve().DeclaredElement as IMethod;
-
-            if (method == null)
+            if (!(invocationExpression.Reference.Resolve().DeclaredElement is IMethod method))
             {
                 return System.Array.Empty<string>(); // cannot analyze => do not highlight
             }
