@@ -559,7 +559,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 let conditions =
                 (
                     from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
-                    where attributeInstance.AssertNotNull().PositionParameterCount == 1
+                    where attributeInstance.PositionParameterCount == 1
                     let constantValue = attributeInstance.PositionParameter(0).ConstantValue
                     where constantValue != null && constantValue.IsString()
                     let condition = (string)constantValue.Value
@@ -790,8 +790,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
             Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
 
             var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(
-                attribute
-                    => containerElementNullnessProvider.GetContainerElementNullableAttributeMark(attribute.AssertNotNull().GetAttributeInstance()) ==
+                attribute => containerElementNullnessProvider.GetContainerElementNullableAttributeMark(attribute.GetAttributeInstance()) ==
                     CodeAnnotationNullableValue.NOT_NULL);
             if (itemNotNullAttribute != null)
             {

@@ -25,12 +25,12 @@ namespace ReCommendedExtension.ContextActions
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
             => declaredElement is IMethod method &&
-                (!method.ReturnType.IsVoid() || method.Parameters.Any(parameter => parameter.AssertNotNull().Kind == ParameterKind.OUTPUT)) &&
-                method.Parameters.All(parameter => parameter.AssertNotNull().Kind != ParameterKind.REFERENCE);
+                (!method.ReturnType.IsVoid() || method.Parameters.Any(parameter => parameter.Kind == ParameterKind.OUTPUT)) &&
+                method.Parameters.All(parameter => parameter.Kind != ParameterKind.REFERENCE);
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
             => ownerDeclaration.Attributes.FirstOrDefault(
-                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
+                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
                     MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName);
     }
 }

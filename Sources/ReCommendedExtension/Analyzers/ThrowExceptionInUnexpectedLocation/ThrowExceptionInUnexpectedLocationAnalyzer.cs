@@ -40,7 +40,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
         const string disposeMethodName = "Dispose";
 
         [NotNull]
-        static IMethod GetMethod([NotNull] ITypeElement type, [NotNull] string name) => type.Methods.First(m => m.ShortName == name).AssertNotNull();
+        static IMethod GetMethod([NotNull] ITypeElement type, [NotNull] string name) => type.Methods.First(m => m.ShortName == name);
 
         static Location? TryGetLocation([NotNull] ICSharpTreeNode element)
         {

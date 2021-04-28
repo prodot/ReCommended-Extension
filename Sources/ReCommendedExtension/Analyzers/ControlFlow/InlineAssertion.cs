@@ -30,10 +30,10 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                         var methodDeclaration = method.GetSingleDeclaration<IMethodDeclaration>();
                         if (methodDeclaration != null &&
                             methodDeclaration.Attributes.Any(
-                                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().FullName ==
+                                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().FullName ==
                                     PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName) &&
                             methodDeclaration.Attributes.Any(
-                                attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
+                                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
                                     NullnessProvider.NotNullAttributeShortName))
                         {
                             return new InlineAssertion(invocationExpression, qualifierExpression, method.ShortName);

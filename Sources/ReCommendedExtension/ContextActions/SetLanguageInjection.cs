@@ -64,7 +64,7 @@ namespace ReCommendedExtension.ContextActions
             [ItemNotNull]
             public HashSet<string> LanguageEqualsCommentTexts { get; set; }
 
-            public override string Text => InjectorProvider.InjectDescription.AssertNotNull();
+            public override string Text => InjectorProvider.InjectDescription;
 
             protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
             {
@@ -179,7 +179,7 @@ namespace ReCommendedExtension.ContextActions
                 select new InjectLanguageActionItem(injectorProvider, node)).ToList();
 
             var languageEqualsCommentTexts = new HashSet<string>(
-                from actionItem in actionItems select actionItem.AssertNotNull().InjectorProvider.LanguageEqualsCommentTexts.AssertNotNull()[0],
+                from actionItem in actionItems select actionItem.InjectorProvider.LanguageEqualsCommentTexts[0],
                 StringComparer.OrdinalIgnoreCase);
 
             foreach (var actionItem in actionItems)
