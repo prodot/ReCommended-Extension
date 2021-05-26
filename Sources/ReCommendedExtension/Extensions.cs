@@ -182,7 +182,7 @@ namespace ReCommendedExtension
                     factory,
                     typeDeclaration.TypeParameters,
                     contractClassDeclaration.TypeParameters,
-                    clause => contractClassDeclaration.AddTypeParameterConstraintsClauseBefore(clause.AssertNotNull(), null));
+                    clause => contractClassDeclaration.AddTypeParameterConstraintsClauseBefore(clause, null));
 
                 var attributeTypeParameters = contractClassDeclaration.TypeParameters.Any()
                     ? $"<{new string(',', contractClassDeclaration.TypeParameters.Count - 1)}>"
@@ -288,7 +288,7 @@ namespace ReCommendedExtension
                     factory,
                     methodDeclaration.TypeParameterDeclarations,
                     overriddenMethodDeclaration.TypeParameterDeclarations,
-                    clause => overriddenMethodDeclaration.AddTypeParameterConstraintsClauseBefore(clause.AssertNotNull(), null));
+                    clause => overriddenMethodDeclaration.AddTypeParameterConstraintsClauseBefore(clause, null));
 
                 overriddenMethodDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenMethodDeclaration);
 

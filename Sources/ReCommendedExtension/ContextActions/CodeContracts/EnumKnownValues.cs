@@ -48,9 +48,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             const int maxItemsToShow = 3;
 
-            return string.Join(
-                    " || ",
-                    from field in members.Take(maxItemsToShow) select $"{contractIdentifier} == {field.AssertNotNull().ShortName}") +
+            return string.Join(" || ", from field in members.Take(maxItemsToShow) select $"{contractIdentifier} == {field.ShortName}") +
                 (members.Count > maxItemsToShow ? "..." : "");
         }
 

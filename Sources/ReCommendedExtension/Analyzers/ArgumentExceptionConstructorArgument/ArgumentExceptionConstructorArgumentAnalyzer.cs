@@ -21,7 +21,7 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
                     typeName.Equals(PredefinedType.ARGUMENTNULLEXCEPTION_FQN) ||
                     typeName.Equals(PredefinedType.ARGUMENTOUTOFRANGEEXCEPTION_FQN))
                 {
-                    var messageArgument = element.Arguments.FirstOrDefault(a => a.AssertNotNull().MatchingParameter?.Element.ShortName == "message");
+                    var messageArgument = element.Arguments.FirstOrDefault(a => a.MatchingParameter?.Element.ShortName == "message");
                     if (messageArgument != null)
                     {
                         var parameters = ((IParametersOwner)element.GetContainingTypeMemberDeclarationIgnoringClosures()?.DeclaredElement)
@@ -35,7 +35,7 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
                                     if (literalText?.Length > 2 &&
                                         literalText[0] == '\"' &&
                                         literalText[literalText.Length - 1] == '\"' &&
-                                        parameters.Any(p => p.AssertNotNull().ShortName == literalText.Substring(1, literalText.Length - 2)))
+                                        parameters.Any(p => p.ShortName == literalText.Substring(1, literalText.Length - 2)))
                                     {
                                         consumer.AddHighlighting(
                                             new ArgumentExceptionConstructorArgumentWarning(
@@ -47,7 +47,7 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
                                 case IInvocationExpression invocationExpression:
                                     if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == @"nameof" &&
                                         invocationExpression.Arguments.Count == 1 &&
-                                        (invocationExpression.Arguments[0].AssertNotNull().Value as IReferenceExpression)?.Reference.Resolve()
+                                        (invocationExpression.Arguments[0].Value as IReferenceExpression)?.Reference.Resolve()
                                         .DeclaredElement is IParameter parameter &&
                                         parameters.Contains(parameter))
                                     {

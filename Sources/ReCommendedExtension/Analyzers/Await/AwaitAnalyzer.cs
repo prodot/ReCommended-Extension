@@ -112,8 +112,7 @@ namespace ReCommendedExtension.Analyzers.Await
             => node.SelfAndPathToRoot()
                 .TakeWhile(n => n != container)
                 .Any(
-                    n => n.AssertNotNull()
-                        .LeftSiblings()
+                    n => n.LeftSiblings()
                         .Any(s => ((s as IDeclarationStatement)?.Declaration as IMultipleLocalVariableDeclaration)?.UsingKeyword != null));
 
         [Pure]

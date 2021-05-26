@@ -78,7 +78,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
             }
             else
             {
-                var count = references.Count(reference => !reference.AssertNotNull().IsEventTarget());
+                var count = references.Count(reference => !reference.IsEventTarget());
                 if (count > 0)
                 {
                     consumer.AddHighlighting(
@@ -105,7 +105,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
                 localFunctionDeclaration.DeclaredElement,
                 solutionSearchDomain,
                 NullProgressIndicator.Create());
-            var count = references.Count(reference => !reference.AssertNotNull().IsEventTarget());
+            var count = references.Count(reference => !reference.IsEventTarget());
             if (count > 0)
             {
                 consumer.AddHighlighting(

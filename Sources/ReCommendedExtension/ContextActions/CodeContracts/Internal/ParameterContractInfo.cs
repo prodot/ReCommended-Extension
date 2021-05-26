@@ -64,9 +64,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             switch (expressionBodyOwnerDeclaration)
             {
                 case IPropertyDeclaration propertyDeclaration
-                    when propertyDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause != null):
+                    when propertyDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.ArrowClause != null):
                 case IIndexerDeclaration indexerDeclaration
-                    when indexerDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause != null):
+                    when indexerDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.ArrowClause != null):
                     return null;
             }
 
@@ -151,7 +151,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             switch (parameter.ContainingParametersOwner)
             {
                 case IFunction function
-                    when function.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, function)) is
+                    when function.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.DeclaredElement, function)) is
                         ICSharpFunctionDeclaration functionDeclaration:
                 {
                     IBlock body;
@@ -187,8 +187,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 }
 
                 case IProperty property
-                    when property.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.AssertNotNull().DeclaredElement, property)) is
-                        IIndexerDeclaration indexerDeclaration:
+                    when property.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.DeclaredElement, property)) is
+                        IIndexerDeclaration
+                        indexerDeclaration:
                 {
                     TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
 

@@ -22,7 +22,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         {
             if (declaration.GetNameRange().Contains(selectedTreeRange) &&
                 declaration.ArrowClause == null &&
-                declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause == null))
+                declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
             {
                 var property = declaration.DeclaredElement;
 
@@ -59,7 +59,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         {
             if (declaration.GetNameRange().Contains(selectedTreeRange) &&
                 declaration.ArrowClause == null &&
-                declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.AssertNotNull().ArrowClause == null))
+                declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
             {
                 var property = declaration.DeclaredElement;
 
