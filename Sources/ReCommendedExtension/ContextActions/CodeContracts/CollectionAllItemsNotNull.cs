@@ -77,9 +77,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             Debug.Assert(enumerableType != null);
 
-            var allMethod = enumerableType.Methods.First(method => method.AssertNotNull().ShortName == nameof(Enumerable.All));
-
-            Debug.Assert(allMethod != null);
+            var allMethod = enumerableType.Methods.First(method => method.ShortName == nameof(Enumerable.All));
 
             allMethodReference.BindTo(allMethod);
 

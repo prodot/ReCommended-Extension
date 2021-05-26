@@ -36,8 +36,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                 if (attributeType != null &&
                     attributesOwnerDeclaration.Attributes.All(
-                        attribute => attribute.AssertNotNull().GetAttributeInstance().GetAttributeType().GetClrName().ShortName !=
-                            annotationAttributeTypeName))
+                        attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
                 {
                     var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 
@@ -94,7 +93,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             contractInfo.AddContracts(
                 Provider,
-                expression => GetExpression(CSharpElementFactory.GetInstance(expression.AssertNotNull()), expression.AssertNotNull()),
+                expression => GetExpression(CSharpElementFactory.GetInstance(expression), expression),
                 out var firstNonContractStatements);
 
             return textControl =>

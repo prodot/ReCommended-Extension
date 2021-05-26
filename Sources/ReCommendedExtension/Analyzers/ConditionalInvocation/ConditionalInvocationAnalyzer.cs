@@ -21,7 +21,7 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
 
             var declaredConditions = (
                 from attributeInstance in method.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
-                where attributeInstance.AssertNotNull().PositionParameterCount == 1
+                where attributeInstance.PositionParameterCount == 1
                 let constantValue = attributeInstance.PositionParameter(0).ConstantValue
                 where constantValue != null && constantValue.IsString()
                 let condition = (string)constantValue.Value
