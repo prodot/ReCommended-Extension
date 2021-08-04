@@ -22,6 +22,7 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [NullableContext(NullableContextKind.Enable)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
+        [TestCompilationSymbols("DEBUG")]
         [Test]
         public void TestControlFlow_NullableContext() => DoNamedTest2();
     }

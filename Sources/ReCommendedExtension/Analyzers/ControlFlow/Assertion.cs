@@ -34,28 +34,22 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     continue;
                 }
 
-                switch (expression)
+                if (expression is IInvocationExpression invocationExpression)
                 {
-                    case IInvocationExpression invocationExpression:
-                        var assertionStatement = AssertionStatement.TryFromInvocationExpression(
-                            invocationExpression,
-                            assertionMethodAnnotationProvider,
-                            assertionConditionAnnotationProvider);
-                        if (assertionStatement != null)
-                        {
-                            assertions.Add(assertionStatement);
-                        }
+                    var assertionStatement = AssertionStatement.TryFromInvocationExpression(
+                        invocationExpression,
+                        assertionMethodAnnotationProvider,
+                        assertionConditionAnnotationProvider);
+                    if (assertionStatement != null)
+                    {
+                        assertions.Add(assertionStatement);
+                    }
 
-                        var inlineAssertion = InlineAssertion.TryFromInvocationExpression(invocationExpression);
-                        if (inlineAssertion != null)
-                        {
-                            assertions.Add(inlineAssertion);
-                        }
-                        break;
-
-                    case ISuppressNullableWarningExpression suppressNullableWarningExpression:
-                        assertions.Add(new NullForgivingOperation(suppressNullableWarningExpression));
-                        break;
+                    var inlineAssertion = InlineAssertion.TryFromInvocationExpression(invocationExpression);
+                    if (inlineAssertion != null)
+                    {
+                        assertions.Add(inlineAssertion);
+                    }
                 }
             }
 

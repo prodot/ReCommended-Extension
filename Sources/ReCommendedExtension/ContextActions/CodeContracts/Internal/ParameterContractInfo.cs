@@ -156,10 +156,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 {
                     IBlock body;
 
-                    if (functionDeclaration is IMethodDeclaration methodDeclaration && methodDeclaration.IsAbstract)
+                    if (functionDeclaration is IMethodDeclaration methodDeclaration &&
+                        (methodDeclaration.IsAbstract || methodDeclaration.GetContainingTypeDeclaration()?.IsAbstract == true))
                     {
                         var containingTypeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
-
                         Debug.Assert(containingTypeDeclaration != null);
 
                         var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
@@ -193,12 +193,11 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 {
                     TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
 
-                    if (indexerDeclaration.IsAbstract)
+                    var containingTypeDeclaration = indexerDeclaration.GetContainingTypeDeclaration();
+                    Debug.Assert(containingTypeDeclaration != null);
+
+                    if (indexerDeclaration.IsAbstract || containingTypeDeclaration.IsAbstract)
                     {
-                        var containingTypeDeclaration = indexerDeclaration.GetContainingTypeDeclaration();
-
-                        Debug.Assert(containingTypeDeclaration != null);
-
                         var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
 
                         var overriddenIndexerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);

@@ -85,7 +85,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                 [NotNull] VariableInfo info)
             {
                 var accessExpressionsThroughLocalFunctionCalls =
-                    GetAccessExpressionsThroughLocalFunctionCalls(context, expression, info, new JetHashSet<ITreeNode>());
+                    GetAccessExpressionsThroughLocalFunctionCalls(context, expression, info, new HashSet<ITreeNode>());
                 Debug.Assert(accessExpressionsThroughLocalFunctionCalls != null);
 
                 return accessExpressionsThroughLocalFunctionCalls;
