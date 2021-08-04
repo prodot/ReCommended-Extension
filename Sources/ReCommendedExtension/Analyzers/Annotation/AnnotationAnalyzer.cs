@@ -603,27 +603,6 @@ namespace ReCommendedExtension.Analyzers.Annotation
             this.codeAnnotationsConfiguration = codeAnnotationsConfiguration;
         }
 
-        void AnalyzeReSharperAnnotations([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration element)
-        {
-            Debug.Assert(element.IsNullableAnnotationsContextEnabled());
-
-            foreach (var attribute in element.AttributesEnumerable)
-            {
-                Debug.Assert(attribute != null);
-
-                var attributeInstance = attribute.GetAttributeInstance();
-                if (nullnessProvider.IsNullableAttribute(attributeInstance) ||
-                    containerElementNullnessProvider.IsContainerElementNullableAttribute(attributeInstance))
-                {
-                    consumer.AddHighlighting(
-                        new RedundantAnnotationSuggestion(
-                            element,
-                            attribute,
-                            "Annotation is redundant because the nullable annotation context is enabled."));
-                }
-            }
-        }
-
         [Pure]
         [NotNull]
         IEnumerable<AttributeMark> GetAttributeMarks([NotNull] IAttributesOwnerDeclaration declaration)
@@ -868,11 +847,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
 
         protected override void Run(IAttributesOwnerDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
-            if (element.IsNullableAnnotationsContextEnabled())
-            {
-                AnalyzeReSharperAnnotations(consumer, element);
-            }
-            else
+            if (!element.IsNullableAnnotationsContextEnabled())
             {
                 // [NotNull], [CanBeNull] annotations
                 switch (TryGetAnnotationCase(element))
