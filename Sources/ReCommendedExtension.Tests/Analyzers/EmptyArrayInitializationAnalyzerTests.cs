@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -17,7 +18,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\EmptyArrayInitialization";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is EmptyArrayInitializationWarning;
+            => highlighting is EmptyArrayInitializationWarning || highlighting is UseArrayEmptyMethodWarning; // to figure out if R# also supports all cases
 
         [Test]
         [SuppressMessage("ReSharper", "EmptyArrayInitialization")]
