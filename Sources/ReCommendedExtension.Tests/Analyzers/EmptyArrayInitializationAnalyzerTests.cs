@@ -18,7 +18,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\EmptyArrayInitialization";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is EmptyArrayInitializationWarning || highlighting is UseArrayEmptyMethodWarning; // to figure out if R# also supports all cases
+            => highlighting is EmptyArrayInitializationWarning || highlighting is UseArrayEmptyMethodWarning; // to figure out which cases are supported by R#
 
         [Test]
         [SuppressMessage("ReSharper", "EmptyArrayInitialization")]
