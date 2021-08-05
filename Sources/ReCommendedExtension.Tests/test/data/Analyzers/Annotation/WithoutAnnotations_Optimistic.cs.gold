@@ -82,6 +82,13 @@ namespace Test
         string |this|(30)[string |index1|(31), string |index2|(32), string |index3|(33)] => null;
 
         string |field1|(34);
+
+        void Functions()
+        {
+            string LocalFunction(string x) => null;
+
+            Func<string, string> lambda = x => null;
+        }
     }
 }
 ---------------------------------------------------------

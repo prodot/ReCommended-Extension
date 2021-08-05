@@ -174,6 +174,12 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 return false;
             }
 
+            // excluding local function (C# 9 or less)
+            if (declaration.IsOnLambdaExpressionWithUnsupportedAttributes())
+            {
+                return false;
+            }
+
             // excluding members of non-reference types (value, nullable value, unspecified generic types)
             if (declaration is ITypeOwnerDeclaration typeOwner)
             {
