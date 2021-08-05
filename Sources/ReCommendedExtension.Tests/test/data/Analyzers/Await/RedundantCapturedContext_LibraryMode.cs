@@ -1,0 +1,19 @@
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
+{
+    public class LibraryMode
+    {
+        async Task TaskMethod()
+        {           
+            await ValueTaskMethod();
+        }
+
+        async ValueTask ValueTaskMethod()
+        {
+            await TaskMethod();
+        }
+    }
+}
