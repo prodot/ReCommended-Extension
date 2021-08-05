@@ -39,15 +39,16 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [TestNetCore30]
         [Test]
-        public void TestRedundantCapturedContext_LibraryMode() => ExecuteWithinSettingsTransaction(
-            store =>
-            {
-                RunGuarded(
-                    () => store.SetValue<DaemonProjectSettings, ConfigureAwaitAnalysisMode>(
-                        s => s.ConfigureAwaitAnalysisMode,
-                        ConfigureAwaitAnalysisMode.Library));
+        public void TestRedundantCapturedContext_LibraryMode()
+            => ExecuteWithinSettingsTransaction(
+                store =>
+                {
+                    RunGuarded(
+                        () => store.SetValue<DaemonProjectSettings, ConfigureAwaitAnalysisMode>(
+                            s => s.ConfigureAwaitAnalysisMode,
+                            ConfigureAwaitAnalysisMode.Library));
 
-                DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
-            });
+                    DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
+                });
     }
 }

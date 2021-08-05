@@ -22,6 +22,7 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [Test]
         [SuppressMessage("ReSharper", "EmptyArrayInitialization")]
+        [SuppressMessage("ReSharper", "UseArrayEmptyMethod")]
         public void Compiler()
         {
             int[] ParamsArray(params int[] items) => items;
