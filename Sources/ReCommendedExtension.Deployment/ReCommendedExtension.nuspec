@@ -28,7 +28,7 @@
 
             The most highlightings also have quick fixes for obvious solutions.
 
-            Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReSharper annotations, putting ".ConfigureAwait(false)", etc.
+            Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReSharper annotations, setting language injections, etc.
         </description>
         <copyright>{{AssemblyCopyright}}</copyright>
         <tags>recommended extension resharper plugin addin prodot</tags>
