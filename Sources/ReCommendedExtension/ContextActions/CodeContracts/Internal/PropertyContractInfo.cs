@@ -140,13 +140,12 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
             TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
 
-            if (declaration.IsAbstract)
+            var containingTypeDeclaration = declaration.GetContainingTypeDeclaration();
+            Debug.Assert(containingTypeDeclaration != null);
+
+            if (declaration.IsAbstract || containingTypeDeclaration.IsAbstract)
             {
                 IAccessorOwnerDeclaration overriddenAccessorOwnerDeclaration = null;
-
-                var containingTypeDeclaration = declaration.GetContainingTypeDeclaration();
-
-                Debug.Assert(containingTypeDeclaration != null);
 
                 var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
 

@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.PropertiesExtender;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -35,5 +36,19 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestNetCore30]
         [Test]
         public void TestRedundantCapturedContext_IAsyncTypes() => DoNamedTest2();
+
+        [TestNetCore30]
+        [Test]
+        public void TestRedundantCapturedContext_LibraryMode()
+            => ExecuteWithinSettingsTransaction(
+                store =>
+                {
+                    RunGuarded(
+                        () => store.SetValue<DaemonProjectSettings, ConfigureAwaitAnalysisMode>(
+                            s => s.ConfigureAwaitAnalysisMode,
+                            ConfigureAwaitAnalysisMode.Library));
+
+                    DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
+                });
     }
 }

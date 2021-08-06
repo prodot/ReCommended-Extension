@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Annotation;
@@ -23,6 +24,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.PESSIMISTIC)]
         [TestCase("WithoutAnnotations_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
         [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.OFF)]
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void TestFileWithValueAnalysisMode([NotNull] string file, ValueAnalysisMode valueAnalysisMode)
             => ExecuteWithinSettingsTransaction(

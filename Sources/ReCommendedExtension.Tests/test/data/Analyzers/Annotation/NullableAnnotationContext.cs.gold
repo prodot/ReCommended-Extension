@@ -6,12 +6,12 @@ namespace Test
 {
     class Sample
     {
-        [|NotNull|(0)]
-        [|ItemNotNull|(1)]
+        [NotNull]
+        [ItemNotNull]
         List<string> notNullables;
 
-        [|CanBeNull|(2)]
-        [|ItemCanBeNull|(3)]
+        [CanBeNull]
+        [ItemCanBeNull]
         List<string> nullables;
 
         [return: System.Diagnostics.CodeAnalysis.NotNull]
@@ -19,7 +19,3 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
-(1): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
-(2): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.
-(3): ReSharper Suggestion: Annotation is redundant because the nullable annotation context is enabled.

@@ -788,5 +788,23 @@ namespace ReCommendedExtension
 
             return false;
         }
+
+        [JetBrains.Annotations.Pure]
+        public static bool IsOnLambdaExpressionWithUnsupportedAttributes([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            if (attributesOwnerDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp100)
+            {
+                return false;
+            }
+
+            switch (attributesOwnerDeclaration.DeclaredElement)
+            {
+                case IParameter parameter when parameter.ContainingParametersOwner is ILambdaExpression:
+                case ILambdaExpression _:
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

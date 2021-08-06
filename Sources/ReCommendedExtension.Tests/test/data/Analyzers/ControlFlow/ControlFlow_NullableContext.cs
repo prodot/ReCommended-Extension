@@ -10,67 +10,9 @@ namespace Test
 {
     internal static class Class
     {
-        static void HashSetContains<T>(HashSet<T> items, [AllowNull] T value)
-        {
-            if (!items.Comparer.Equals(value, default))
-            {
-                var contained = items.Contains(value!); // not redundant (otherwise: compiler warning)
-            }
-        }
-
         class Foo
         {
             public void Method() { }
-        }
-
-        static void Reflection()
-        {
-            var method = typeof(Foo).GetMethod(nameof(Foo.Method), BindingFlags.Public | BindingFlags.Instance)!; // not redundant (nullable result)
-            method.Invoke(new Foo(), null);
-        }
-
-        static void Reflection_Closure()
-        {
-            Action action = () =>
-            {
-                var method = typeof(Foo).GetMethod(
-                    nameof(Foo.Method),
-                    BindingFlags.Public | BindingFlags.Instance)!; // not redundant (nullable result)
-                method.Invoke(new Foo(), null);
-            };
-            action();
-        }
-
-        static void CastingNullableReturnValue()
-        {
-            var foo = (Foo)Activator.CreateInstance(typeof(Foo))!; // not redundant (otherwise: compiler warning)
-        }
-
-        static void UnboxingNullableValueFromDictionary(Dictionary<int, DayOfWeek?> dict)
-        {
-            var dayOfWeek = (DayOfWeek)dict[3]!; // not redundant (otherwise: compiler warning)
-        }
-
-        static void UnboxingNullableValue(int? x)
-        {
-            var a = new char[(int)x!]; // not redundant (otherwise: compiler warning)
-            Console.WriteLine(a.Length);
-        }
-
-        static void UnboxingNullableValue_Closure(int? x)
-        {
-            Action action = () =>
-            {
-                var b = new char[(int)x!]; // not redundant (otherwise: compiler warning)
-                Console.WriteLine(b.Length);
-            };
-            action();
-        }
-
-        static void Defaults<T>(List<T> list, List<string> texts)
-        {
-            var contains = list.Contains(default!); // not redundant (otherwise: compiler warning)
-            var contains2 = texts.Contains((null as string)!); // not redundant (otherwise: compiler warning)
         }
 
         static async Task Promises(TaskCompletionSource<DayOfWeek?> promise)
@@ -82,25 +24,19 @@ namespace Test
 
         static string NotNullMethod() => "one";
 
-        static string field = NotNullMethod().AssertNotNull();
-        static string field_NFO = NotNullMethod()!;
+        static string field = NotNullMethod().AssertNotNull(); // redundant
 
-        static string Property => NotNullMethod().AssertNotNull();
-        static string Property_NFO => NotNullMethod()!;
+        static string Property => NotNullMethod().AssertNotNull(); // redundant
 
-        static Lazy<string?> PropertyLazy => new Lazy<string?>(() => NotNullMethod().AssertNotNull());
-        static Lazy<string?> PropertyLazy_NFO => new Lazy<string?>(() => NotNullMethod()!);
+        static Lazy<string?> PropertyLazy => new Lazy<string?>(() => NotNullMethod().AssertNotNull()); // redundant
 
         static string? PropertyNullable => null;
 
-        static string Property2 { get; } = NotNullMethod().AssertNotNull();
-        static string Property2_NFO { get; } = NotNullMethod()!;
+        static string Property2 { get; } = NotNullMethod().AssertNotNull(); // redundant
 
-        static string Property3 { get; set; } = NotNullMethod().AssertNotNull();
-        static string Property3_NFO { get; set; } = NotNullMethod()!;
+        static string Property3 { get; set; } = NotNullMethod().AssertNotNull(); // redundant
 
-        static string Method() => NotNullMethod().AssertNotNull();
-        static string Method_NFO() => NotNullMethod()!;
+        static string Method() => NotNullMethod().AssertNotNull(); // redundant
 
         [DebuggerStepThrough]
         [JetBrains.Annotations.NotNull]
@@ -113,29 +49,23 @@ namespace Test
 
         class Nested
         {
-            string? field = NotNullMethod().AssertNotNull();
-            string? field_NFO = NotNullMethod()!;
+            string? field = NotNullMethod().AssertNotNull(); // redundant
 
-            string? Property => NotNullMethod().AssertNotNull();
-            string? Property_NFO => NotNullMethod()!;
+            string? Property => NotNullMethod().AssertNotNull(); // redundant
 
-            string? AutoProperty { get; } = NotNullMethod().AssertNotNull();
-            string? AutoProperty_NFO { get; } = NotNullMethod()!;
+            string? AutoProperty { get; } = NotNullMethod().AssertNotNull(); // redundant
         }
 
         static void ClassConstraint<T>(T one, T? two) where T : class
         {
-            var x = one.AssertNotNull();
-            var x_NFO = one!;
+            var x = one.AssertNotNull(); // redundant
 
-            var y = two.AssertNotNull().AssertNotNull();
-            var y_NFO = two.AssertNotNull()!;
+            var y = two.AssertNotNull().AssertNotNull(); // redundant (2nd)
         }
 
         static void ClassNullableClassConstraint<T>(T one) where T : class?
         {
-            var x = one.AssertNotNull().AssertNotNull();
-            var x_NFO = one.AssertNotNull()!;
+            var x = one.AssertNotNull().AssertNotNull(); // redundant (2nd)
         }
 
         static readonly string[] Words = { "one", "two", "three" };
@@ -148,42 +78,40 @@ namespace Test
         static void Iterations()
         {
             var query0 = from word in Words where word.AssertNotNull().Length > 2 select word; // "AssertNotNull" must be redundant
-            var query0_NFO = from word in Words where word!.Length > 2 select word; // "!" must be redundant
             var query1 = from word in Words where word != null select word; // "word != null" is always true
             var query2 = from word in Words select word.AssertNotNull(); // "AssertNotNull" must be redundant
-            var query2_NFO = from word in Words select word!; // "!" must be redundant
 
-            AssertThatNotNull(Words);
+            AssertThatNotNull(Words); // redundant
             foreach (var word in Words)
             {
-                AssertThatNotNull(word);
+                AssertThatNotNull(word); // redundant
             }
 
-            AssertThatNotNull(WordMap);
+            AssertThatNotNull(WordMap); // redundant
             foreach (var (key, value) in WordMap)
             {
-                AssertThatNotNull(value);
+                AssertThatNotNull(value); // redundant
             }
             foreach (var value in WordMap.Values)
             {
-                AssertThatNotNull(value);
+                AssertThatNotNull(value); // redundant
             }
 
-            AssertThatNotNull(WordMap2);
+            AssertThatNotNull(WordMap2); // redundant
             foreach (var (key, values) in WordMap2)
             {
-                AssertThatNotNull(values);
+                AssertThatNotNull(values); // redundant
                 foreach (var value in values)
                 {
-                    AssertThatNotNull(value);
+                    AssertThatNotNull(value); // redundant
                 }
             }
             foreach (var values in WordMap2.Values)
             {
-                AssertThatNotNull(values);
+                AssertThatNotNull(values); // redundant
                 foreach (var value in values)
                 {
-                    AssertThatNotNull(value);
+                    AssertThatNotNull(value); // redundant
                 }
             }
         }
@@ -193,27 +121,25 @@ namespace Test
             Action action = () =>
             {
                 var text = "";
-                AssertThatTrue(text != null);
-                var text2 = text.AssertNotNull().Replace("a", "b");
-                var text2_NFO = text!.Replace("a", "b");
-                AssertThatTrue(text2 != null);
+                AssertThatTrue(text != null); // redundant
+                var text2 = text.AssertNotNull().Replace("a", "b"); // redundant
+                AssertThatTrue(text2 != null); // redundant
             };
 
-            var length = Property.     AssertNotNull()         .     AssertNotNull()      .Length;
-            var qqq = Property.AssertNotNull().ToList().All(char.IsDigit);
-            var qqq_NFO = Property!.ToList().All(char.IsDigit);
+            var length = Property.     AssertNotNull()         .     AssertNotNull()      .Length; // redundant (both)
+            var qqq = Property.AssertNotNull().ToList().All(char.IsDigit); // redundant
 
             if (b)
             {
                 if (b) { }
 
-                AssertThatTrue(b); // must be redundant
+                AssertThatTrue(b); // redundant
 
                 Console.WriteLine(b.ToString());
             }
             else
             {
-                AssertThatFalse(b); // must be redundant
+                AssertThatFalse(b); // redundant
             }
 
             if (s is string)
@@ -230,9 +156,9 @@ namespace Test
 
             if (PropertyNullable != null)
             {
-                AssertThatTrue(PropertyNullable != null);
+                AssertThatTrue(PropertyNullable != null); // redundant
             }
-            AssertThatFalse(PropertyNullable == null);
+            AssertThatFalse(PropertyNullable == null); // redundant
             AssertThatNotNull(PropertyNullable);
 
             AssertThatTrue(true);
@@ -241,11 +167,10 @@ namespace Test
 
             AssertThatNotNull(new object());
             new object().AssertNotNull();
-            var nfo = new object()!;
 
             if (x != null)
             {
-                AssertThatTrue(condition: x != null);
+                AssertThatTrue(condition: x != null); // redundant
                 AssertThatTrue(x != null);
                 AssertThatTrue(null != x);
 
@@ -269,10 +194,8 @@ namespace Test
 
         static void Foo(string x)
         {
-            AssertThatNotNull(x);
-            x.AssertNotNull();
-
-            var y = x!;
+            AssertThatNotNull(x); // redundant
+            x.AssertNotNull(); // redundant
         }
 
         class A
@@ -286,22 +209,19 @@ namespace Test
 
         static void NullPropagation2(A? canBeNull) => AssertThatNotNull(canBeNull?.NotNull);
 
-        static void NullPropagation3(A? canBeNull) => Console.WriteLine(canBeNull?.NotNull.AssertNotNull());
-        static void NullPropagation3_NFO(A? canBeNull) => Console.WriteLine(canBeNull?.NotNull!);
+        static void NullPropagation3(A? canBeNull) => Console.WriteLine(canBeNull?.NotNull.AssertNotNull()); // redundant
 
         static void NullPropagation4(A notNull) => AssertThatTrue(notNull?.NotNull != null); // redundant
 
         static void NullPropagation5(A notNull) => AssertThatNotNull(notNull?.NotNull); // redundant
 
         static void NullPropagation6(A notNull) => Console.WriteLine(notNull?.NotNull.AssertNotNull()); // redundant
-        static void NullPropagation6_NFO(A notNull) => Console.WriteLine(notNull?.NotNull!.Length); // redundant
 
         static void NullPropagation7(A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
 
         static void NullPropagation8(A notNull) => AssertThatNotNull(notNull?.CanBeNull);
 
         static void NullPropagation9(A notNull) => Console.WriteLine(notNull?.CanBeNull.AssertNotNull());
-        static void NullPropagation9_NFO(A notNull) => Console.WriteLine(notNull?.CanBeNull!);
 
         [AssertionMethod]
         [ContractAnnotation("false => void")]

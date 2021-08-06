@@ -70,6 +70,7 @@ namespace ReCommendedExtension.ContextActions
                 attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange) &&
                 !attributesOwnerDeclaration.OverridesInheritedMember() &&
                 !attributesOwnerDeclaration.IsOnLocalFunctionWithUnsupportedAttributes() &&
+                !attributesOwnerDeclaration.IsOnLambdaExpressionWithUnsupportedAttributes() &&
                 (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
             {
                 Debug.Assert(attributesOwnerDeclaration != null);

@@ -82,5 +82,12 @@ namespace Test
         string this[string index1, string index2, string index3] => null;
 
         string field1;
+
+        void Functions()
+        {
+            string LocalFunction(string x) => null;
+
+            Func<string, string> lambda = x => null;
+        }
     }
 }

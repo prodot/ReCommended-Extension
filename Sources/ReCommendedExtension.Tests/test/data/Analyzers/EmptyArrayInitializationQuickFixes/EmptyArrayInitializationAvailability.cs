@@ -7,8 +7,6 @@
         void Method()
         {
             var array1 = new int[] { };
-
-            var array2 = new int[0];
         }
     }
 
@@ -19,8 +17,6 @@
         void Method()
         {
             var array1 = new T[] { };
-
-            var array2 = new T[0];
         }
     }
 }

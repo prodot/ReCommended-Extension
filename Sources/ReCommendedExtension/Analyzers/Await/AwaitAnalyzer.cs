@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
+using JetBrains.ReSharper.Daemon.CSharp.PropertiesExtender;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -13,6 +14,7 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using JetBrains.Util.dataStructures;
 
 namespace ReCommendedExtension.Analyzers.Await
 {
@@ -380,6 +382,7 @@ namespace ReCommendedExtension.Analyzers.Await
                                         awaitExpressionWithoutConfigureAwait,
                                         attributesOwnerDeclaration,
                                         configureAwaitInvocationExpression);
+                                    return true;
                                 }
                             }
                         }
@@ -413,6 +416,24 @@ namespace ReCommendedExtension.Analyzers.Await
             }
         }
 
+        [Pure]
+        static ConfigureAwaitAnalysisMode GetConfigureAwaitAnalysisMode([NotNull] ElementProblemAnalyzerData data)
+        {
+            var key = new Key<Boxed<ConfigureAwaitAnalysisMode>>("ConfigureAwaitAnalysis");
+
+            var keyData = data.GetData(key);
+            if (keyData != null)
+            {
+                return keyData.Value;
+            }
+
+            var mode = ConfigureAwaitAnalysisProperty.Get(data.SettingsStore);
+
+            data.PutData(key, new Boxed<ConfigureAwaitAnalysisMode>(mode));
+
+            return mode;
+        }
+
         protected override void Run(IAwaitExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
             if (element.Task == null)
@@ -431,7 +452,7 @@ namespace ReCommendedExtension.Analyzers.Await
 
             var highlightingsAdded = AnalyzeRedundantAwait(element, isLastExpression, container, statementToBeReplacedWithReturnStatement, consumer);
 
-            if (!highlightingsAdded)
+            if (!highlightingsAdded && GetConfigureAwaitAnalysisMode(data) != ConfigureAwaitAnalysisMode.Library)
             {
                 AnalyzeRedundantCapturedContext(container, element, isLastExpression, consumer);
             }

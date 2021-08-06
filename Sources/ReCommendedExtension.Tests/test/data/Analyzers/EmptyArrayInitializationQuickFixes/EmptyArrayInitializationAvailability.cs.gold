@@ -7,20 +7,16 @@
         void Method()
         {
             var array1 = |new int[] { }|(1);
-
-            var array2 = |new int[0]|(2);
         }
     }
 
     public class GenericClass<T>
     {
-        T[] field = |{ }|(3);
+        T[] field = |{ }|(2);
 
         void Method()
         {
-            var array1 = |new T[] { }|(4);
-
-            var array2 = |new T[0]|(5);
+            var array1 = |new T[] { }|(3);
         }
     }
 }
@@ -31,15 +27,9 @@ Replace with 'Array.Empty<int>()'
 1: Use 'Array.Empty<int>()'.
 QUICKFIXES:
 Replace with 'Array.Empty<int>()'
-2: Use 'Array.Empty<int>()'.
+2: Use 'Array.Empty<T>()'.
 QUICKFIXES:
-Replace with 'Array.Empty<int>()'
+Replace with 'Array.Empty<T>()'
 3: Use 'Array.Empty<T>()'.
-QUICKFIXES:
-Replace with 'Array.Empty<T>()'
-4: Use 'Array.Empty<T>()'.
-QUICKFIXES:
-Replace with 'Array.Empty<T>()'
-5: Use 'Array.Empty<T>()'.
 QUICKFIXES:
 Replace with 'Array.Empty<T>()'

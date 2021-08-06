@@ -83,15 +83,15 @@ namespace Test
 ---------------------------------------------------------
 (0): ReSharper Warning: Use 'Array.Empty<int>()'.
 (1): ReSharper Warning: Use 'Array.Empty<int>()'.
-(2): ReSharper Warning: Use 'Array.Empty<int>()'.
-(3): ReSharper Warning: Use 'Array.Empty<int>()'.
+(2): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(3): ReSharper Suggestion: Use 'Array<int>.Empty()'
 (4): ReSharper Warning: Use 'Array.Empty<int>()'.
 (5): ReSharper Warning: Use 'Array.Empty<int>()'.
 (6): ReSharper Warning: Use 'Array.Empty<int>()'.
 (7): ReSharper Warning: Use 'Array.Empty<T>()'.
 (8): ReSharper Warning: Use 'Array.Empty<T>()'.
-(9): ReSharper Warning: Use 'Array.Empty<T>()'.
-(10): ReSharper Warning: Use 'Array.Empty<T>()'.
+(9): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(10): ReSharper Suggestion: Use 'Array<T>.Empty()'
 (11): ReSharper Warning: Use 'Array.Empty<T>()'.
 (12): ReSharper Warning: Use 'Array.Empty<T>()'.
 (13): ReSharper Warning: Use 'Array.Empty<T>()'.

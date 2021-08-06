@@ -50,12 +50,11 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
             IBlock body;
 
-            if (declaration.IsAbstract)
+            var containingTypeDeclaration = declaration.GetContainingTypeDeclaration();
+            Debug.Assert(containingTypeDeclaration != null);
+
+            if (declaration.IsAbstract || containingTypeDeclaration.IsAbstract)
             {
-                var containingTypeDeclaration = declaration.GetContainingTypeDeclaration();
-
-                Debug.Assert(containingTypeDeclaration != null);
-
                 var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
 
                 var overriddenMethodDeclaration = declaration.EnsureOverriddenMethodInContractClass(contractClassDeclaration);

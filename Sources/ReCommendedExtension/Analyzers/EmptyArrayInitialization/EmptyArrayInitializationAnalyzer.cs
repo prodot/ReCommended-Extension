@@ -81,21 +81,8 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
                                         arrayElementType));
                             }
 
-                            if (creationExpression.DimInits.Count == 1 &&
-                                creationExpression.DimInits[0] != null &&
-                                creationExpression.DimInits[0].Type().IsInt() &&
-                                creationExpression.DimInits[0].IsDefaultValueOf(creationExpression.DimInits[0].Type()) &&
-                                (creationExpression.ArrayInitializer == null || creationExpression.ArrayInitializer.InitializerElements.Count == 0))
-                            {
-                                // new T[0]
-                                // new T[0] { }
-
-                                consumer.AddHighlighting(
-                                    new EmptyArrayInitializationWarning(
-                                        CreateHighlightingMessage(arrayElementType),
-                                        creationExpression,
-                                        arrayElementType));
-                            }
+                            // handled by R#: new T[0]
+                            // handled by R#: new T[0] { }
                         }
                     }
                     break;
