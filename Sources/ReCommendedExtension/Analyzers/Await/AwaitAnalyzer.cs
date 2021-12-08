@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Daemon.CSharp.PropertiesExtender;
+using JetBrains.ReSharper.Feature.Services.CSharp.PropertiesExtender;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -59,14 +60,14 @@ namespace ReCommendedExtension.Analyzers.Await
                     return;
 
                 case ILambdaExpression lambdaExpression:
-                    type = lambdaExpression.ReturnType;
+                    type = lambdaExpression.InferredReturnType;
                     asyncKeyword = lambdaExpression.AsyncKeyword;
                     removeAsync = () => lambdaExpression.SetAsync(false);
-                    attributesOwnerDeclaration = null;
+                    attributesOwnerDeclaration = lambdaExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp100 ? lambdaExpression : null;
                     return;
 
                 case IAnonymousMethodExpression anonymousMethodExpression:
-                    type = anonymousMethodExpression.ReturnType;
+                    type = anonymousMethodExpression.InferredReturnType;
                     asyncKeyword = anonymousMethodExpression.AsyncKeyword;
                     removeAsync = () => anonymousMethodExpression.SetAsync(false);
                     attributesOwnerDeclaration = null;
@@ -77,7 +78,7 @@ namespace ReCommendedExtension.Analyzers.Await
                     asyncKeyword = localFunctionDeclaration.ModifiersList?.Modifiers.FirstOrDefault(
                         node => node?.GetTokenType() == CSharpTokenType.ASYNC_KEYWORD);
                     removeAsync = () => localFunctionDeclaration.SetAsync(false);
-                    attributesOwnerDeclaration = null;
+                    attributesOwnerDeclaration = localFunctionDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? localFunctionDeclaration : null;
                     return;
 
                 default:

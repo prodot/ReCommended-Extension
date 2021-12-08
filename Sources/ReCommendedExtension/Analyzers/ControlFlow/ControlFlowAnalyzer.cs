@@ -74,42 +74,30 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 }
             }
 
-            var controlFlowGraph = nullabilityInspector.ControlFlowGraph;
-            Debug.Assert(controlFlowGraph != null);
-
-            var rootElement = controlFlowGraph.BodyElement.SourceElement;
-            var inClosure = null as bool?;
-            for (var e = (ITreeNode)expression; e != null && e != rootElement; e = e.Parent)
+            var closure = expression.GetContainingNode<ICSharpClosure>();
+            if (closure != null)
             {
-                if (e != expression)
+                nullabilityInspector = nullabilityInspector.GetClosureAnalysisResult(closure) as CSharpCompilerNullableInspector;
+            }
+
+            var controlFlowGraph = nullabilityInspector?.ControlFlowGraph;
+
+            var edge = controlFlowGraph?.GetLeafElementsFor(expression).LastOrDefault()?.Exits.FirstOrDefault();
+            if (edge != null)
+            {
+                var nullableContext = nullabilityInspector.GetContext(edge);
+
+                switch (nullableContext?.ExpressionAnnotation)
                 {
-                    if (inClosure == null)
-                    {
-                        inClosure = expression.IsInsideClosure();
-                    }
-                    if (inClosure != e.IsInsideClosure())
-                    {
-                        break;
-                    }
-                }
+                    case NullableAnnotation.NotAnnotated:
+                    case NullableAnnotation.NotNullable:
+                        return CSharpControlFlowNullReferenceState.NOT_NULL;
 
-                var edge = controlFlowGraph.GetLeafElementsFor(e).LastOrDefault()?.Exits.FirstOrDefault();
-                if (edge != null)
-                {
-                    var nullableContext = nullabilityInspector.GetContext(edge);
+                    case NullableAnnotation.Annotated:
+                    case NullableAnnotation.Nullable:
+                        return CSharpControlFlowNullReferenceState.MAY_BE_NULL; // todo: distinguish if the expression is "null" or just "may be null" here
 
-                    switch (nullableContext?.ExpressionAnnotation)
-                    {
-                        case NullableAnnotation.NotAnnotated:
-                        case NullableAnnotation.NotNullable:
-                            return CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                        case NullableAnnotation.Annotated:
-                        case NullableAnnotation.Nullable:
-                            return CSharpControlFlowNullReferenceState.MAY_BE_NULL; // todo: distinguish if the expression is "null" or just "may be null" here
-
-                        default: return CSharpControlFlowNullReferenceState.UNKNOWN;
-                    }
+                    default: return CSharpControlFlowNullReferenceState.UNKNOWN;
                 }
             }
 

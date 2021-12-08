@@ -174,7 +174,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 return false;
             }
 
-            // excluding local function (C# 9 or less)
+            // excluding lambda expressions (C# 9 or less)
             if (declaration.IsOnLambdaExpressionWithUnsupportedAttributes())
             {
                 return false;

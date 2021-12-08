@@ -30,7 +30,17 @@ namespace ReCommendedExtension.Tests.ContextActions
 
         [Test]
         [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-        [TestNetCore30(ANNOTATIONS_PACKAGE)]
+        [TestNet50(ANNOTATIONS_PACKAGE)]
         public void TestAvailabilityAsyncEnumerableCS90() => DoNamedTest2();
+
+        [Test]
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+        [TestNet50(ANNOTATIONS_PACKAGE)]
+        public void TestAvailabilityLambdaCS90() => DoNamedTest2();
+
+        [Test]
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+        [TestNet60(ANNOTATIONS_PACKAGE)]
+        public void TestAvailabilityLambdaCS100() => DoNamedTest2();
     }
 }

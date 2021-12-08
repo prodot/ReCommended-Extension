@@ -1,5 +1,6 @@
 ﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Await;
@@ -203,50 +204,73 @@ namespace ReCommendedExtension.Tests.Analyzers
         [Test]
         public void TestAnonymousMethodField4_WithConfigureAwait() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+        [TestNet50(ANNOTATIONS_PACKAGE)]
+        [Test]
+        public void TestLocalFunction_CS90() => DoNamedTest2();
+
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+        [TestNet50(ANNOTATIONS_PACKAGE)]
+        [NullableContext(NullableContextKind.Enable)]
+        [Test]
+        public void TestLocalFunction_CS90_NRT() => DoNamedTest2();
+
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction_WithConfigureAwait() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction_AsExpressionBodied() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction_AsExpressionBodied_WithConfigureAwait() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction2() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction2_WithConfigureAwait() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction2_AsExpressionBodied() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction2_AsExpressionBodied_WithConfigureAwait() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction4() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction4_WithConfigureAwait() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction4_AsExpressionBodied() => DoNamedTest2();
 
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
         public void TestLocalFunction4_AsExpressionBodied_WithConfigureAwait() => DoNamedTest2();

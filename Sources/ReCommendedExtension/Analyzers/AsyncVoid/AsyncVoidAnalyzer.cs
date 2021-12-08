@@ -117,7 +117,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
 
         static void Analyze([NotNull] ILambdaExpression lambdaExpression, [NotNull] IHighlightingConsumer consumer)
         {
-            if (!lambdaExpression.IsAsync || !lambdaExpression.ReturnType.IsVoid())
+            if (!lambdaExpression.IsAsync || !lambdaExpression.InferredReturnType.IsVoid())
             {
                 return; // not an "async (...) => ..." expression that returns void
             }
@@ -138,7 +138,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
 
         static void Analyze([NotNull] IAnonymousMethodExpression anonymousMethodExpression, [NotNull] IHighlightingConsumer consumer)
         {
-            if (!anonymousMethodExpression.IsAsync || !anonymousMethodExpression.ReturnType.IsVoid())
+            if (!anonymousMethodExpression.IsAsync || !anonymousMethodExpression.InferredReturnType.IsVoid())
             {
                 return; // not an "async delegate (...) { ... }" that returns void
             }
