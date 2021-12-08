@@ -176,6 +176,15 @@ namespace Test
 
         public static implicit operator Guid(ThrowExceptionInUnexpectedLocation x) => |throw new AnyException()|(29); // not allowed
     }
+
+    public record Record(string S, EventHandler H)
+    {
+        string Property4 { get; } = S ?? throw new ArgumentNullException(); // allowed
+
+        string Property5 { get; set; } = S ?? throw new ArgumentNullException(); // allowed
+
+        event EventHandler E = H ?? throw new ArgumentNullException(); // allowed
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: Exceptions should never be thrown in property getters.

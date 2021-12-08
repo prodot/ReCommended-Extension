@@ -64,7 +64,14 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                     }
                     break;
 
-                case IPropertyDeclaration _: return Location.PropertyGetter;
+                case IPropertyDeclaration propertyDeclaration:
+                    var initializer = element.GetContainingNode<IExpressionInitializer>();
+                    if (initializer != null && initializer.GetContainingFunctionLikeDeclarationOrClosure() == propertyDeclaration)
+                    {
+                        break; // property initializer (not a getter)
+                    }
+
+                    return Location.PropertyGetter;
 
                 case IIndexerDeclaration _: return Location.IndexerGetter;
 

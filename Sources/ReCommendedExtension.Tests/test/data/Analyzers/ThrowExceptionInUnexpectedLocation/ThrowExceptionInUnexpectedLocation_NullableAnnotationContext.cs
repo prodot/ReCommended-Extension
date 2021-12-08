@@ -176,4 +176,13 @@ namespace Test
 
         public static implicit operator Guid(ThrowExceptionInUnexpectedLocation x) => throw new AnyException(); // not allowed
     }
+
+    public record Record(string S, EventHandler H)
+    {
+        string Property4 { get; } = S ?? throw new ArgumentNullException(); // allowed
+
+        string Property5 { get; set; } = S ?? throw new ArgumentNullException(); // allowed
+
+        event EventHandler E = H ?? throw new ArgumentNullException(); // allowed
+    }
 }
