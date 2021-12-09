@@ -151,13 +151,13 @@ namespace ReCommendedExtension.Analyzers.Annotation
         static bool CanContainNullnessAttributes([NotNull] IAttributesOwnerDeclaration declaration)
         {
             // excluding type, constant, enum member, property/indexer/event accessor, event, type parameter declarations
-            if (declaration is ICSharpTypeDeclaration ||
-                declaration is IConstantDeclaration ||
-                declaration is IEnumMemberDeclaration ||
-                declaration is IAccessorDeclaration ||
-                declaration is IEventDeclaration ||
-                declaration is ITypeParameterDeclaration ||
-                declaration is IConstructorDeclaration)
+            if (declaration is ICSharpTypeDeclaration
+                || declaration is IConstantDeclaration
+                || declaration is IEnumMemberDeclaration
+                || declaration is IAccessorDeclaration
+                || declaration is IEventDeclaration
+                || declaration is ITypeParameterDeclaration
+                || declaration is IConstructorDeclaration)
             {
                 return false;
             }
@@ -263,14 +263,14 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute) && attributeInstance.PositionParameterCount == 2
                 let categoryConstantValue = attributeInstance.PositionParameter(0).ConstantValue
                 let checkIdConstantValue = attributeInstance.PositionParameter(1).ConstantValue
-                where categoryConstantValue != null &&
-                    checkIdConstantValue != null &&
-                    categoryConstantValue.IsString() &&
-                    checkIdConstantValue.IsString()
+                where categoryConstantValue != null
+                    && checkIdConstantValue != null
+                    && categoryConstantValue.IsString()
+                    && checkIdConstantValue.IsString()
                 let justificationConstantValue = attributeInstance.NamedParameter(nameof(SuppressMessageAttribute.Justification)).ConstantValue
-                where justificationConstantValue == null ||
-                    !justificationConstantValue.IsString() ||
-                    string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
+                where justificationConstantValue == null
+                    || !justificationConstantValue.IsString()
+                    || string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
                 select new { Attribute = attribute, Category = (string)categoryConstantValue.Value, CheckId = (string)checkIdConstantValue.Value };
 
             foreach (var suppressMessageAttribute in suppressMessageAttributes)
@@ -291,10 +291,12 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 from attribute in attributesOwnerDeclaration.Attributes
                 let attributeInstance = attribute.GetAttributeInstance()
                 where Equals(attributeInstance.GetClrName(), ClrTypeNames.ExcludeFromCodeCoverageAttribute)
-                let justificationConstantValue = attributeInstance.NamedParameter("Justification").ConstantValue // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
-                where justificationConstantValue == null ||
-                    !justificationConstantValue.IsString() ||
-                    string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
+                let justificationConstantValue =
+                    attributeInstance.NamedParameter("Justification")
+                        .ConstantValue // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
+                where justificationConstantValue == null
+                    || !justificationConstantValue.IsString()
+                    || string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
                 select attribute;
 
             foreach (var excludeFromCodeCoverageAttribute in excludeFromCodeCoverageAttributes)
@@ -311,7 +313,10 @@ namespace ReCommendedExtension.Analyzers.Annotation
         static bool ExcludeFromCodeCoverageJustificationPropertyExists([NotNull] IPsiModule psiModule)
         {
             var attributeType = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ExcludeFromCodeCoverageAttribute.GetPersistent(), psiModule);
-            return attributeType != null && attributeType.Properties.Any(property => !property.IsStatic && property.ShortName == "Justification"); // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
+            return attributeType != null
+                && attributeType.Properties.Any(
+                    property => !property.IsStatic
+                        && property.ShortName == "Justification"); // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
         }
 
         static void AnalyzeConflictingPurityAnnotations(
@@ -768,15 +773,13 @@ namespace ReCommendedExtension.Analyzers.Annotation
             }
         }
 
-        void AnalyzeNotAllowedItemNotNull(
-            [NotNull] IHighlightingConsumer consumer,
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        void AnalyzeNotAllowedItemNotNull([NotNull] IHighlightingConsumer consumer, [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration)
         {
             Debug.Assert(!attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
 
             var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(
-                attribute => containerElementNullnessProvider.GetContainerElementNullableAttributeMark(attribute.GetAttributeInstance()) ==
-                    CodeAnnotationNullableValue.NOT_NULL);
+                attribute => containerElementNullnessProvider.GetContainerElementNullableAttributeMark(attribute.GetAttributeInstance())
+                    == CodeAnnotationNullableValue.NOT_NULL);
             if (itemNotNullAttribute != null)
             {
                 if (attributesOwnerDeclaration.OverridesInheritedMember())
@@ -843,8 +846,8 @@ namespace ReCommendedExtension.Analyzers.Annotation
                             attributesOwnerDeclaration,
                             itemNotNullAttribute,
                             string.Format(
-                                "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), " +
-                                "or a generic task-like type, or a {1}<T>.",
+                                "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), "
+                                + "or a generic task-like type, or a {1}<T>.",
                                 nameof(IEnumerable<int>),
                                 nameof(Lazy<int>))));
                 }

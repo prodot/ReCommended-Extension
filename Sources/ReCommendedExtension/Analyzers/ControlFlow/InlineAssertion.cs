@@ -18,23 +18,23 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
             var qualifierExpression = referenceExpression?.QualifierExpression;
             if (qualifierExpression != null)
             {
-                if (referenceExpression.Reference.Resolve().DeclaredElement is IMethod method &&
-                    method.ShortName.StartsWith("AssertNotNull", StringComparison.Ordinal) &&
-                    method.IsExtensionMethod &&
-                    method.Parameters.Count == 1)
+                if (referenceExpression.Reference.Resolve().DeclaredElement is IMethod method
+                    && method.ShortName.StartsWith("AssertNotNull", StringComparison.Ordinal)
+                    && method.IsExtensionMethod
+                    && method.Parameters.Count == 1)
                 {
                     Debug.Assert(method.Parameters[0] != null);
 
                     if (method.Parameters[0].Type.Equals(method.ReturnType))
                     {
                         var methodDeclaration = method.GetSingleDeclaration<IMethodDeclaration>();
-                        if (methodDeclaration != null &&
-                            methodDeclaration.Attributes.Any(
-                                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().FullName ==
-                                    PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName) &&
-                            methodDeclaration.Attributes.Any(
-                                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                                    NullnessProvider.NotNullAttributeShortName))
+                        if (methodDeclaration != null
+                            && methodDeclaration.Attributes.Any(
+                                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().FullName
+                                    == PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName)
+                            && methodDeclaration.Attributes.Any(
+                                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
+                                    == NullnessProvider.NotNullAttributeShortName))
                         {
                             return new InlineAssertion(invocationExpression, qualifierExpression, method.ShortName);
                         }

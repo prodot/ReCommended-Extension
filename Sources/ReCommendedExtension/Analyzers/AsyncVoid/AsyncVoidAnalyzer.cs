@@ -143,8 +143,8 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid
                 return; // not an "async delegate (...) { ... }" that returns void
             }
 
-            if (anonymousMethodExpression.Parent is IAssignmentExpression assignmentExpression &&
-                assignmentExpression.IsEventSubscriptionOrUnSubscription())
+            if (anonymousMethodExpression.Parent is IAssignmentExpression assignmentExpression
+                && assignmentExpression.IsEventSubscriptionOrUnSubscription())
             {
                 return; // direct event target
             }

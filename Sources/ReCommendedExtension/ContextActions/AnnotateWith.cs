@@ -66,12 +66,12 @@ namespace ReCommendedExtension.ContextActions
         {
             attributesOwnerDeclaration = provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
 
-            if (attributesOwnerDeclaration != null &&
-                attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange) &&
-                !attributesOwnerDeclaration.OverridesInheritedMember() &&
-                !attributesOwnerDeclaration.IsOnLocalFunctionWithUnsupportedAttributes() &&
-                !attributesOwnerDeclaration.IsOnLambdaExpressionWithUnsupportedAttributes() &&
-                (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
+            if (attributesOwnerDeclaration != null
+                && attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange)
+                && !attributesOwnerDeclaration.OverridesInheritedMember()
+                && !attributesOwnerDeclaration.IsOnLocalFunctionWithUnsupportedAttributes()
+                && !attributesOwnerDeclaration.IsOnLambdaExpressionWithUnsupportedAttributes()
+                && (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
             {
                 Debug.Assert(attributesOwnerDeclaration != null);
 

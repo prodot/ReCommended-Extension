@@ -34,8 +34,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
                 var attributeType = codeAnnotationsConfiguration?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
 
-                if (attributeType != null &&
-                    attributesOwnerDeclaration.Attributes.All(
+                if (attributeType != null
+                    && attributesOwnerDeclaration.Attributes.All(
                         attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
                 {
                     var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);

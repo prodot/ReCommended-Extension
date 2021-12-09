@@ -14,10 +14,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         [CanBeNull]
         public static FieldContractInfo TryCreate([NotNull] IFieldDeclaration declaration, [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (!declaration.IsStatic &&
-                declaration.GetContainingTypeDeclaration() is IClassLikeDeclaration classLikeDeclaration &&
-                declaration.DeclaredElement != null &&
-                isAvailableForType(declaration.DeclaredElement.Type))
+            if (!declaration.IsStatic
+                && declaration.GetContainingTypeDeclaration() is IClassLikeDeclaration classLikeDeclaration
+                && declaration.DeclaredElement != null
+                && isAvailableForType(declaration.DeclaredElement.Type))
             {
                 return new FieldContractInfo(declaration, classLikeDeclaration, declaration.DeclaredElement.Type);
             }

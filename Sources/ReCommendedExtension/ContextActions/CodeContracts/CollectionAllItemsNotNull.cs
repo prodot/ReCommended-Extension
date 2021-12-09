@@ -41,8 +41,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                         return true;
                     }
 
-                    if (type is IDeclaredType declaredType &&
-                        (declaredType.GetKeyValueTypesForGenericDictionary() ?? Enumerable.Empty<JetBrains.Util.Pair<IType, IType>>()).Any(
+                    if (type is IDeclaredType declaredType
+                        && (declaredType.GetKeyValueTypesForGenericDictionary() ?? Enumerable.Empty<JetBrains.Util.Pair<IType, IType>>()).Any(
                             pair => pair.Second.Classify == TypeClassification.REFERENCE_TYPE))
                     {
                         isDictionary = true;

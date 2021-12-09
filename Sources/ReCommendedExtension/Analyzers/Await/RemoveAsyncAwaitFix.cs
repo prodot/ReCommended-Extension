@@ -50,9 +50,9 @@ namespace ReCommendedExtension.Analyzers.Await
                 var factory = CSharpElementFactory.GetInstance(highlighting.AwaitExpression);
 
                 // add [NotNull] annotation
-                if (highlighting.AttributesOwnerDeclaration != null &&
-                    !highlighting.AttributesOwnerDeclaration.IsNullableAnnotationsContextEnabled() &&
-                    !highlighting.AttributesOwnerDeclaration.OverridesInheritedMember())
+                if (highlighting.AttributesOwnerDeclaration != null
+                    && !highlighting.AttributesOwnerDeclaration.IsNullableAnnotationsContextEnabled()
+                    && !highlighting.AttributesOwnerDeclaration.OverridesInheritedMember())
                 {
                     var codeAnnotationsConfiguration =
                         highlighting.AttributesOwnerDeclaration.GetPsiServices().GetComponent<CodeAnnotationsConfiguration>();

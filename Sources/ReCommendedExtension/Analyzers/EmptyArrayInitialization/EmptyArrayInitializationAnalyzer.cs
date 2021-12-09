@@ -19,8 +19,8 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
         static bool ArrayEmptyMethodExists([NotNull] IPsiModule psiModule)
         {
             var arrayType = TryGetArrayType(psiModule);
-            return arrayType != null &&
-                arrayType.Methods.Any(method => method.IsStatic && method.ShortName == nameof(Array.Empty) && method.Parameters.Count == 0);
+            return arrayType != null
+                && arrayType.Methods.Any(method => method.IsStatic && method.ShortName == nameof(Array.Empty) && method.Parameters.Count == 0);
         }
 
         [Pure]

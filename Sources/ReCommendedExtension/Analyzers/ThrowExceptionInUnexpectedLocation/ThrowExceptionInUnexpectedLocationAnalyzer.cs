@@ -29,6 +29,9 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
             GetHashCodeMethodWithParameter,
             ToStringMethod,
             StaticConstructor,
+            StaticFieldInitializationExpression,
+            StaticPropertyInitializationExpression,
+            StaticEventInitializationExpression,
             Finalizer,
             DisposeMethod,
             DisposeAsyncMethod,
@@ -65,10 +68,15 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                     break;
 
                 case IPropertyDeclaration propertyDeclaration:
-                    var initializer = element.GetContainingNode<IExpressionInitializer>();
-                    if (initializer != null && initializer.GetContainingFunctionLikeDeclarationOrClosure() == propertyDeclaration)
+                    var propertyInitializer = element.GetContainingNode<IExpressionInitializer>();
+                    if (propertyInitializer != null && propertyInitializer.GetContainingFunctionLikeDeclarationOrClosure() == propertyDeclaration)
                     {
-                        break; // property initializer (not a getter)
+                        if (propertyDeclaration.IsStatic)
+                        {
+                            return Location.StaticPropertyInitializationExpression;
+                        }
+
+                        break; // non-static property initializer (not a getter)
                     }
 
                     return Location.PropertyGetter;
@@ -135,8 +143,8 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                     }
 
                     var iAsyncDisposableTypeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.IASYNCDISPOSABLE_FQN, psiModule);
-                    if (iAsyncDisposableTypeElement != null &&
-                        methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(iAsyncDisposableTypeElement, "DisposeAsync")))
+                    if (iAsyncDisposableTypeElement != null
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(iAsyncDisposableTypeElement, "DisposeAsync")))
                     {
                         // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
                         return Location.DisposeAsyncMethod;
@@ -185,6 +193,26 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                 case IConversionOperatorDeclaration conversionOperatorDeclaration
                     when conversionOperatorDeclaration.Modifier?.GetTokenType() == CSharpTokenType.IMPLICIT_KEYWORD:
                     return Location.ImplicitCastOperator;
+            }
+
+            var fieldDeclaration = element.GetContainingNode<IFieldDeclaration>();
+            if (fieldDeclaration != null && fieldDeclaration.IsStatic)
+            {
+                var initializer = element.GetContainingNode<IExpressionInitializer>();
+                if (initializer != null && initializer.GetContainingNode<IFieldDeclaration>() == fieldDeclaration)
+                {
+                    return Location.StaticFieldInitializationExpression;
+                }
+            }
+
+            var eventDeclaration = element.GetContainingNode<IEventDeclaration>();
+            if (eventDeclaration != null && eventDeclaration.IsStatic)
+            {
+                var initializer = element.GetContainingNode<IExpressionInitializer>();
+                if (initializer != null && initializer.GetContainingNode<IEventDeclaration>() == eventDeclaration)
+                {
+                    return Location.StaticEventInitializationExpression;
+                }
             }
 
             return null;
@@ -246,6 +274,12 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                 case Location.ToStringMethod: return $"'{nameof(ToString)}' methods";
 
                 case Location.StaticConstructor: return "static constructors";
+
+                case Location.StaticFieldInitializationExpression: return "static field initialization expressions";
+
+                case Location.StaticPropertyInitializationExpression: return "static property initialization expressions";
+
+                case Location.StaticEventInitializationExpression: return "static event initialization expressions";
 
                 case Location.Finalizer: return "finalizers";
 

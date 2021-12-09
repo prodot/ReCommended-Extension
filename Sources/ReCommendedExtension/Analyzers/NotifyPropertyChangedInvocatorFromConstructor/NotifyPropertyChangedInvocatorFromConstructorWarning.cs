@@ -18,9 +18,8 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
     {
         const string SeverityId = "NotifyPropertyChangedInvocatorFromConstructor";
 
-        internal NotifyPropertyChangedInvocatorFromConstructorWarning(
-            [NotNull] IInvocationExpression invocationExpression,
-            [NotNull] string message) : base(message)
+        internal NotifyPropertyChangedInvocatorFromConstructorWarning([NotNull] IInvocationExpression invocationExpression, [NotNull] string message)
+            : base(message)
             => InvocationExpression = invocationExpression;
 
         [NotNull]

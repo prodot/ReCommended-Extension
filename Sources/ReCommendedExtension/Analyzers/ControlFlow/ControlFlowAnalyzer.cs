@@ -95,7 +95,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
 
                     case NullableAnnotation.Annotated:
                     case NullableAnnotation.Nullable:
-                        return CSharpControlFlowNullReferenceState.MAY_BE_NULL; // todo: distinguish if the expression is "null" or just "may be null" here
+                        return
+                            CSharpControlFlowNullReferenceState
+                                .MAY_BE_NULL; // todo: distinguish if the expression is "null" or just "may be null" here
 
                     default: return CSharpControlFlowNullReferenceState.UNKNOWN;
                 }
@@ -226,8 +228,8 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         {
             if (assertion is AssertionStatement assertionStatement)
             {
-                if (nullabilityInspector != null &&
-                    nullabilityInspector.ConditionIsAlwaysTrueOrFalseExpressions.TryGetValue(assertionStatement.Expression, out var value))
+                if (nullabilityInspector != null
+                    && nullabilityInspector.ConditionIsAlwaysTrueOrFalseExpressions.TryGetValue(assertionStatement.Expression, out var value))
                 {
                     switch (value)
                     {
@@ -265,11 +267,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     var expression = TryGetOtherOperand(equalityExpression, EqualityExpressionType.NE, CSharpTokenType.NULL_KEYWORD);
                     if (expression != null)
                     {
-                        switch (GetExpressionNullReferenceState(
-                            nullabilityInspector,
-                            inspector,
-                            alwaysSuccessTryCastExpressions,
-                            expression))
+                        switch (GetExpressionNullReferenceState(nullabilityInspector, inspector, alwaysSuccessTryCastExpressions, expression))
                         {
                             case CSharpControlFlowNullReferenceState.NOT_NULL:
                                 if (isKnownToBeTrue)
@@ -371,14 +369,14 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 }
             }
 
-            if (!isKnownToBeNull &&
-                assertion is InlineAssertion inlineAssertion &&
-                GetExpressionNullReferenceState(
+            if (!isKnownToBeNull
+                && assertion is InlineAssertion inlineAssertion
+                && GetExpressionNullReferenceState(
                     nullabilityInspector,
                     inspector,
                     alwaysSuccessTryCastExpressions,
-                    inlineAssertion.QualifierExpression) ==
-                CSharpControlFlowNullReferenceState.NOT_NULL)
+                    inlineAssertion.QualifierExpression)
+                == CSharpControlFlowNullReferenceState.NOT_NULL)
             {
                 context.AddHighlighting(
                     new RedundantInlineAssertionSuggestion("Assertion is redundant because the expression is not null here.", inlineAssertion));
@@ -405,8 +403,8 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 switch (expression)
                 {
                     case IReferenceExpression referenceExpression:
-                        if (referenceExpression is IConditionalAccessExpression conditionalAccessExpression &&
-                            conditionalAccessExpression.HasConditionalAccessSign)
+                        if (referenceExpression is IConditionalAccessExpression conditionalAccessExpression
+                            && conditionalAccessExpression.HasConditionalAccessSign)
                         {
                             var referenceState = GetExpressionNullReferenceStateByAnnotations(referenceExpression);
                             if (referenceState == CSharpControlFlowNullReferenceState.NOT_NULL)
@@ -452,8 +450,8 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
 
                 case ITypeOwner typeOwner when !typeOwner.Type.IsDelegateType():
-                    if (typeOwner is IAttributesOwner attributesOwner &&
-                        nullnessProvider.GetInfo(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
+                    if (typeOwner is IAttributesOwner attributesOwner
+                        && nullnessProvider.GetInfo(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
                     {
                         return CSharpControlFlowNullReferenceState.NOT_NULL;
                     }

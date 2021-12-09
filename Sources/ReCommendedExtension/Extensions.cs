@@ -45,10 +45,10 @@ namespace ReCommendedExtension
 
         [CanBeNull]
         static string TryGetMemberName([NotNull] this IExpressionStatement expressionStatement, [NotNull] string classFullName)
-            => (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression is IReferenceExpression referenceExpression &&
-                ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
-                .FullName ==
-                classFullName
+            => (expressionStatement.Expression as IInvocationExpression)?.InvokedExpression is IReferenceExpression referenceExpression
+                && ((referenceExpression.QualifierExpression as IReferenceExpression)?.Reference.Resolve().DeclaredElement as IClass)?.GetClrName()
+                .FullName
+                == classFullName
                     ? referenceExpression.Reference.GetName()
                     : null;
 
@@ -93,9 +93,9 @@ namespace ReCommendedExtension
         {
             var suggestedContractClassName = typeDeclaration.DeclaredName + "Contract";
 
-            if (typeDeclaration is IInterfaceDeclaration &&
-                typeDeclaration.DeclaredName.StartsWith("I", StringComparison.Ordinal) &&
-                typeDeclaration.DeclaredName.Length > 1)
+            if (typeDeclaration is IInterfaceDeclaration
+                && typeDeclaration.DeclaredName.StartsWith("I", StringComparison.Ordinal)
+                && typeDeclaration.DeclaredName.Length > 1)
             {
                 suggestedContractClassName = suggestedContractClassName.Remove(0, 1);
             }
@@ -124,8 +124,8 @@ namespace ReCommendedExtension
                 return true;
             }
 
-            if ((declaration.DeclaredElement as IParameter)?.ContainingParametersOwner is IOverridableMember parameterOverridableMember &&
-                parameterOverridableMember.GetImmediateSuperMembers().Any())
+            if ((declaration.DeclaredElement as IParameter)?.ContainingParametersOwner is IOverridableMember parameterOverridableMember
+                && parameterOverridableMember.GetImmediateSuperMembers().Any())
             {
                 return true;
             }
@@ -241,8 +241,8 @@ namespace ReCommendedExtension
             var overriddenMethodDeclaration =
             (
                 from d in contractClassDeclaration.MethodDeclarations
-                where d.DeclaredElement != null &&
-                    d.DeclaredElement.GetImmediateSuperMembers()
+                where d.DeclaredElement != null
+                    && d.DeclaredElement.GetImmediateSuperMembers()
                         .Any(overridableMemberInstance => overridableMemberInstance.GetHashCode() == declaredElement.GetHashCode())
                 select d).FirstOrDefault();
 
@@ -308,11 +308,11 @@ namespace ReCommendedExtension
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenIndexerDeclaration = (
                 from d in contractClassDeclaration.IndexerDeclarations
-                where d.DeclaredElement != null &&
-                    d.DeclaredElement.GetImmediateSuperMembers()
+                where d.DeclaredElement != null
+                    && d.DeclaredElement.GetImmediateSuperMembers()
                         .Any(
-                            overridableMemberInstance => overridableMemberInstance.GetHashCode() ==
-                                indexerDeclaration.DeclaredElement.AssertNotNull().GetHashCode())
+                            overridableMemberInstance => overridableMemberInstance.GetHashCode()
+                                == indexerDeclaration.DeclaredElement.AssertNotNull().GetHashCode())
                 select d).FirstOrDefault();
 
             if (overriddenIndexerDeclaration == null)
@@ -368,11 +368,11 @@ namespace ReCommendedExtension
             // todo: find a better way to compare instances (than using hash codes)
             var overriddenPropertyDeclaration = (
                 from d in contractClassDeclaration.PropertyDeclarations
-                where d.DeclaredElement != null &&
-                    d.DeclaredElement.GetImmediateSuperMembers()
+                where d.DeclaredElement != null
+                    && d.DeclaredElement.GetImmediateSuperMembers()
                         .Any(
-                            overridableMemberInstance => overridableMemberInstance.GetHashCode() ==
-                                propertyDeclaration.DeclaredElement.AssertNotNull().GetHashCode())
+                            overridableMemberInstance => overridableMemberInstance.GetHashCode()
+                                == propertyDeclaration.DeclaredElement.AssertNotNull().GetHashCode())
                 select d).FirstOrDefault();
 
             if (overriddenPropertyDeclaration == null)
@@ -497,11 +497,12 @@ namespace ReCommendedExtension
                     case IObjectCreationExpression objectCreationExpression
                         when Equals(objectCreationExpression.Type(), type) && objectCreationExpression.Arguments.Count == 0:
 
-                    case IAsExpression asExpression when asExpression.Operand != null &&
-                        asExpression.Operand.ConstantValue.IsNull() &&
-                        asExpression.TypeOperand != null &&
-                        Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type) &&
-                        type.IsNullable():
+                    case IAsExpression asExpression
+                        when asExpression.Operand != null
+                        && asExpression.Operand.ConstantValue.IsNull()
+                        && asExpression.TypeOperand != null
+                        && Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type)
+                        && type.IsNullable():
                         return true;
                 }
             }
@@ -511,13 +512,14 @@ namespace ReCommendedExtension
 
                 switch (element)
                 {
-                    case IConstantValueOwner constantValueOwner when constantValueOwner.ConstantValue.IsNull() ||
-                        constantValueOwner.ConstantValue.IsDefaultValue(type, element):
+                    case IConstantValueOwner constantValueOwner when constantValueOwner.ConstantValue.IsNull()
+                        || constantValueOwner.ConstantValue.IsDefaultValue(type, element):
 
-                    case IAsExpression asExpression when asExpression.Operand != null &&
-                        asExpression.Operand.ConstantValue.IsNull() &&
-                        asExpression.TypeOperand != null &&
-                        Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type):
+                    case IAsExpression asExpression
+                        when asExpression.Operand != null
+                        && asExpression.Operand.ConstantValue.IsNull()
+                        && asExpression.TypeOperand != null
+                        && Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type):
                         return true;
                 }
             }
@@ -683,8 +685,8 @@ namespace ReCommendedExtension
             {
                 bool IsReferenceToOldMsTestAssembly(IProjectToAssemblyReference assemblyReference)
                 {
-                    if (assemblyReference?.Name == "Microsoft.VisualStudio.TestPlatform.TestFramework" &&
-                        assemblyReference.ReferenceTarget.HintLocation?.FileAccessPath != null)
+                    if (assemblyReference?.Name == "Microsoft.VisualStudio.TestPlatform.TestFramework"
+                        && assemblyReference.ReferenceTarget.HintLocation?.FileAccessPath != null)
                     {
                         try
                         {
@@ -693,8 +695,8 @@ namespace ReCommendedExtension
                                     fileVersion.FileMajorPart,
                                     fileVersion.FileMinorPart,
                                     fileVersion.FileBuildPart,
-                                    fileVersion.FilePrivatePart) <
-                                msTest14MinFileVersion;
+                                    fileVersion.FilePrivatePart)
+                                < msTest14MinFileVersion;
                         }
                         catch { }
                     }

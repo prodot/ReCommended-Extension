@@ -27,7 +27,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
             => ownerDeclaration.Attributes.FirstOrDefault(
-                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName ==
-                    PureAnnotationProvider.PureAttributeShortName);
+                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
+                    == PureAnnotationProvider.PureAttributeShortName);
     }
 }

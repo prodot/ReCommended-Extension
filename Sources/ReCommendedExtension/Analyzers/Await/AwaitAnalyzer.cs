@@ -78,7 +78,9 @@ namespace ReCommendedExtension.Analyzers.Await
                     asyncKeyword = localFunctionDeclaration.ModifiersList?.Modifiers.FirstOrDefault(
                         node => node?.GetTokenType() == CSharpTokenType.ASYNC_KEYWORD);
                     removeAsync = () => localFunctionDeclaration.SetAsync(false);
-                    attributesOwnerDeclaration = localFunctionDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? localFunctionDeclaration : null;
+                    attributesOwnerDeclaration = localFunctionDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90
+                        ? localFunctionDeclaration
+                        : null;
                     return;
 
                 default:
@@ -168,13 +170,13 @@ namespace ReCommendedExtension.Analyzers.Await
 
             switch (lastStatement)
             {
-                case IExpressionStatement expressionStatement when expressionStatement.Expression == expression &&
-                    !HasPreviousUsingDeclaration(expressionStatement, container):
+                case IExpressionStatement expressionStatement when expressionStatement.Expression == expression
+                    && !HasPreviousUsingDeclaration(expressionStatement, container):
                     statementToBeReplacedWithReturnStatement = expressionStatement;
                     return true;
 
-                case IReturnStatement returnStatement when returnStatement.Value == expression &&
-                    !HasPreviousUsingDeclaration(returnStatement, container):
+                case IReturnStatement returnStatement
+                    when returnStatement.Value == expression && !HasPreviousUsingDeclaration(returnStatement, container):
                     statementToBeReplacedWithReturnStatement = null;
                     return true;
 
@@ -271,11 +273,11 @@ namespace ReCommendedExtension.Analyzers.Await
             [CanBeNull] IExpressionStatement statementToBeReplacedWithReturnStatement,
             [NotNull] IHighlightingConsumer consumer)
         {
-            if (isLastExpression &&
-                !IsTestMethodOfOldMsTest(container as IMethodDeclaration) &&
-                !GetAllChildrenRecursive(container).OfType<IAwaitExpression>().HasMoreThan(1) &&
-                GetAllChildrenRecursive(container).OfType<IForeachStatement>().All(s => s.AwaitKeyword == null) &&
-                !GetAllChildrenRecursive(container).OfType<IReturnStatement>().HasMoreThan(awaitExpression.Parent is IReturnStatement ? 1 : 0))
+            if (isLastExpression
+                && !IsTestMethodOfOldMsTest(container as IMethodDeclaration)
+                && !GetAllChildrenRecursive(container).OfType<IAwaitExpression>().HasMoreThan(1)
+                && GetAllChildrenRecursive(container).OfType<IForeachStatement>().All(s => s.AwaitKeyword == null)
+                && !GetAllChildrenRecursive(container).OfType<IReturnStatement>().HasMoreThan(awaitExpression.Parent is IReturnStatement ? 1 : 0))
             {
                 TryGetContainerTypeAndAsyncKeyword(
                     container,
@@ -288,8 +290,8 @@ namespace ReCommendedExtension.Analyzers.Await
                 {
                     var awaitExpressionType = awaitExpression.Task?.Type();
 
-                    if (containerType.IsValueTask() && awaitExpressionType.IsValueTask() ||
-                        containerType.IsTask() && (awaitExpressionType.IsTask() || awaitExpressionType.IsGenericTask()))
+                    if (containerType.IsValueTask() && awaitExpressionType.IsValueTask()
+                        || containerType.IsTask() && (awaitExpressionType.IsTask() || awaitExpressionType.IsGenericTask()))
                     {
                         // container is ValueTask, awaitExpression is ValueTask
                         // or
@@ -306,9 +308,9 @@ namespace ReCommendedExtension.Analyzers.Await
                         return true;
                     }
 
-                    if ((containerType.IsGenericValueTask() && awaitExpressionType.IsGenericValueTask() ||
-                            containerType.IsGenericTask() && awaitExpressionType.IsGenericTask()) &&
-                        containerType.Equals(awaitExpressionType, TypeEqualityComparer.Default))
+                    if ((containerType.IsGenericValueTask() && awaitExpressionType.IsGenericValueTask()
+                            || containerType.IsGenericTask() && awaitExpressionType.IsGenericTask())
+                        && containerType.Equals(awaitExpressionType, TypeEqualityComparer.Default))
                     {
                         // container is ValueTask<T>, awaitExpression is ValueTask<T>, container type == awaitExpression type
                         // or
@@ -339,12 +341,12 @@ namespace ReCommendedExtension.Analyzers.Await
                                     (configureAwaitInvocationExpression.InvokedExpression as IReferenceExpression)?.QualifierExpression;
                                 var awaitExpressionTypeWithoutConfigureAwait = awaitExpressionWithoutConfigureAwait?.Type();
 
-                                if (containerType.IsValueTask() &&
-                                    methodContainingType.IsValueTask() &&
-                                    awaitExpressionTypeWithoutConfigureAwait.IsValueTask() ||
-                                    containerType.IsTask() &&
-                                    (methodContainingType.IsTask() && awaitExpressionTypeWithoutConfigureAwait.IsTask() ||
-                                        methodContainingType.IsGenericTask() && awaitExpressionTypeWithoutConfigureAwait.IsGenericTask()))
+                                if (containerType.IsValueTask()
+                                    && methodContainingType.IsValueTask()
+                                    && awaitExpressionTypeWithoutConfigureAwait.IsValueTask()
+                                    || containerType.IsTask()
+                                    && (methodContainingType.IsTask() && awaitExpressionTypeWithoutConfigureAwait.IsTask()
+                                        || methodContainingType.IsGenericTask() && awaitExpressionTypeWithoutConfigureAwait.IsGenericTask()))
                                 {
                                     // container is ValueTask, awaitExpression (without "ConfigureAwait") is ValueTask
                                     // or
@@ -362,13 +364,13 @@ namespace ReCommendedExtension.Analyzers.Await
                                     return true;
                                 }
 
-                                if ((containerType.IsGenericValueTask() &&
-                                        methodContainingType.IsGenericValueTask() &&
-                                        awaitExpressionTypeWithoutConfigureAwait.IsGenericValueTask() ||
-                                        containerType.IsGenericTask() &&
-                                        methodContainingType.IsGenericTask() &&
-                                        awaitExpressionTypeWithoutConfigureAwait.IsGenericTask()) &&
-                                    containerType.Equals(awaitExpressionTypeWithoutConfigureAwait, TypeEqualityComparer.Default))
+                                if ((containerType.IsGenericValueTask()
+                                        && methodContainingType.IsGenericValueTask()
+                                        && awaitExpressionTypeWithoutConfigureAwait.IsGenericValueTask()
+                                        || containerType.IsGenericTask()
+                                        && methodContainingType.IsGenericTask()
+                                        && awaitExpressionTypeWithoutConfigureAwait.IsGenericTask())
+                                    && containerType.Equals(awaitExpressionTypeWithoutConfigureAwait, TypeEqualityComparer.Default))
                                 {
                                     // container is ValueTask<T>, awaitExpression (without "ConfigureAwait") is ValueTask<T>, container type == awaitExpression type (without "ConfigureAwait")
                                     // or
@@ -400,13 +402,13 @@ namespace ReCommendedExtension.Analyzers.Await
             bool isLastExpression,
             [NotNull] IHighlightingConsumer consumer)
         {
-            var hasRedundantCapturedContext = isLastExpression ||
-                awaitExpression.Parent is IReturnStatement returnStatement &&
-                !returnStatement.PathToRoot()
+            var hasRedundantCapturedContext = isLastExpression
+                || awaitExpression.Parent is IReturnStatement returnStatement
+                && !returnStatement.PathToRoot()
                     .Skip(1)
                     .TakeWhile(node => node != container)
-                    .Any(node => node is IUsingStatement || node is ITryStatement) &&
-                !HasPreviousUsingDeclaration(returnStatement, container);
+                    .Any(node => node is IUsingStatement || node is ITryStatement)
+                && !HasPreviousUsingDeclaration(returnStatement, container);
 
             if (hasRedundantCapturedContext && awaitExpression.Task.IsConfigureAwaitAvailable())
             {

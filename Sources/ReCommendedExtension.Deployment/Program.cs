@@ -236,18 +236,18 @@ namespace ReCommendedExtension.Deployment
         static void RunConsoleApplication([NotNull] string executablePath, [NotNull] string arguments)
         {
             using (var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
                 {
-                    FileName = executablePath,
-                    Arguments = arguments,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                },
-                EnableRaisingEvents = true,
-            })
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = executablePath,
+                        Arguments = arguments,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                    },
+                    EnableRaisingEvents = true,
+                })
             {
                 process.OutputDataReceived += Process_DataReceived;
                 process.ErrorDataReceived += Process_DataReceived;

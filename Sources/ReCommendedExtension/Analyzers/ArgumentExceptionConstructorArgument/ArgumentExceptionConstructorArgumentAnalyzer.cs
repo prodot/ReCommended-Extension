@@ -17,9 +17,9 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
             {
                 var typeName = constructor.GetContainingType().AssertNotNull().GetClrName();
 
-                if (typeName.Equals(PredefinedType.ARGUMENTEXCEPTION_FQN) ||
-                    typeName.Equals(PredefinedType.ARGUMENTNULLEXCEPTION_FQN) ||
-                    typeName.Equals(PredefinedType.ARGUMENTOUTOFRANGEEXCEPTION_FQN))
+                if (typeName.Equals(PredefinedType.ARGUMENTEXCEPTION_FQN)
+                    || typeName.Equals(PredefinedType.ARGUMENTNULLEXCEPTION_FQN)
+                    || typeName.Equals(PredefinedType.ARGUMENTOUTOFRANGEEXCEPTION_FQN))
                 {
                     var messageArgument = element.Arguments.FirstOrDefault(a => a.MatchingParameter?.Element.ShortName == "message");
                     if (messageArgument != null)
@@ -32,10 +32,10 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
                             {
                                 case ILiteralExpression literalExpression:
                                     var literalText = literalExpression.Literal?.GetText();
-                                    if (literalText?.Length > 2 &&
-                                        literalText[0] == '\"' &&
-                                        literalText[literalText.Length - 1] == '\"' &&
-                                        parameters.Any(p => p.ShortName == literalText.Substring(1, literalText.Length - 2)))
+                                    if (literalText?.Length > 2
+                                        && literalText[0] == '\"'
+                                        && literalText[literalText.Length - 1] == '\"'
+                                        && parameters.Any(p => p.ShortName == literalText.Substring(1, literalText.Length - 2)))
                                     {
                                         consumer.AddHighlighting(
                                             new ArgumentExceptionConstructorArgumentWarning(
@@ -45,11 +45,11 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
                                     break;
 
                                 case IInvocationExpression invocationExpression:
-                                    if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == @"nameof" &&
-                                        invocationExpression.Arguments.Count == 1 &&
-                                        (invocationExpression.Arguments[0].Value as IReferenceExpression)?.Reference.Resolve()
-                                        .DeclaredElement is IParameter parameter &&
-                                        parameters.Contains(parameter))
+                                    if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == @"nameof"
+                                        && invocationExpression.Arguments.Count == 1
+                                        && (invocationExpression.Arguments[0].Value as IReferenceExpression)?.Reference.Resolve().DeclaredElement is
+                                        IParameter parameter
+                                        && parameters.Contains(parameter))
                                     {
                                         consumer.AddHighlighting(
                                             new ArgumentExceptionConstructorArgumentWarning(

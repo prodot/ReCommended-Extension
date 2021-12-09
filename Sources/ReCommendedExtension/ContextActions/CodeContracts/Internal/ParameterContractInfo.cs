@@ -71,9 +71,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             }
 
             var parameter = declaration.DeclaredElement;
-            if (parameter?.ContainingParametersOwner is ITypeMember typeMember &&
-                CanAcceptContracts(typeMember) &&
-                isAvailableForType(parameter.Type))
+            if (parameter?.ContainingParametersOwner is ITypeMember typeMember
+                && CanAcceptContracts(typeMember)
+                && isAvailableForType(parameter.Type))
             {
                 ContractKind contractKind;
                 switch (parameter.Kind)
@@ -156,8 +156,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                 {
                     IBlock body;
 
-                    if (functionDeclaration is IMethodDeclaration methodDeclaration &&
-                        (methodDeclaration.IsAbstract || methodDeclaration.GetContainingTypeDeclaration()?.IsAbstract == true))
+                    if (functionDeclaration is IMethodDeclaration methodDeclaration
+                        && (methodDeclaration.IsAbstract || methodDeclaration.GetContainingTypeDeclaration()?.IsAbstract == true))
                     {
                         var containingTypeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
                         Debug.Assert(containingTypeDeclaration != null);
@@ -188,8 +188,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 case IProperty property
                     when property.GetDeclarationsIn(provider.SourceFile).FirstOrDefault(d => Equals(d.DeclaredElement, property)) is
-                        IIndexerDeclaration
-                        indexerDeclaration:
+                        IIndexerDeclaration indexerDeclaration:
                 {
                     TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
 
