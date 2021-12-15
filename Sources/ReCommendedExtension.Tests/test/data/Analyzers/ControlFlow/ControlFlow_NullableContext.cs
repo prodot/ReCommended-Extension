@@ -192,10 +192,16 @@ namespace Test
             }
         }
 
-        static void Foo(string x)
+        static void Foo(string xf)
         {
-            AssertThatNotNull(x); // redundant
+            AssertThatNotNull(xf); // redundant
             x.AssertNotNull(); // redundant
+            AssertThatTrue(xf != null); // redundant
+        }
+
+        static void Foo2(string x2)
+        {
+            AssertThatFalse(x2 == null); // redundant
         }
 
         class A

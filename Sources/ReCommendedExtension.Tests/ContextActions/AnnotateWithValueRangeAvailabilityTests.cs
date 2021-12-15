@@ -1,4 +1,5 @@
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
@@ -6,7 +7,6 @@ using ReCommendedExtension.ContextActions;
 namespace ReCommendedExtension.Tests.ContextActions
 {
     [TestFixture]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public sealed class AnnotateWithValueRangeAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithValueRange>
     {
         protected override string ExtraPath => "";
@@ -14,6 +14,12 @@ namespace ReCommendedExtension.Tests.ContextActions
         protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithValueRange";
 
         [Test]
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
         public void TestAvailability() => DoNamedTest2();
+
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+        [TestNet60(ANNOTATIONS_PACKAGE)]
+        [Test]
+        public void TestAvailabilityLambda() => DoNamedTest2();
     }
 }

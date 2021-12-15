@@ -18,14 +18,14 @@ namespace ReCommendedExtension.ContextActions
     {
         [Pure]
         static bool IsAvailableForType([NotNull] IType type)
-            => type.IsInt() ||
-                type.IsLong() ||
-                type.IsShort() ||
-                type.IsSbyte() ||
-                type.IsUint() ||
-                type.IsUlong() ||
-                type.IsUshort() ||
-                type.IsByte();
+            => type.IsInt()
+                || type.IsLong()
+                || type.IsShort()
+                || type.IsSbyte()
+                || type.IsUint()
+                || type.IsUlong()
+                || type.IsUshort()
+                || type.IsByte();
 
         public AnnotateWithValueRange([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
 

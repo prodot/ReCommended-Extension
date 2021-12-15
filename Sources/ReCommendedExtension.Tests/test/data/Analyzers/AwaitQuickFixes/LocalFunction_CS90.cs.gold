@@ -1,0 +1,23 @@
+﻿using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace ReCommendedExtension.Tests.test.data.Analyzers.AwaitQuickFixes
+{
+    public class AwaitForLocalFunctions
+    {
+        void Method()
+        {
+            [NotNull]
+            Task LocalFunction()
+            {
+              if (Environment.UserInteractive)
+                {
+                    Console.WriteLine();
+                }
+
+              return{caret} Task.Delay(10);
+            }
+        }
+    }
+}

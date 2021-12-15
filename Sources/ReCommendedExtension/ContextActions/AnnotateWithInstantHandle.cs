@@ -21,10 +21,10 @@ namespace ReCommendedExtension.ContextActions
         protected override string AnnotationAttributeTypeName => nameof(InstantHandleAttribute);
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
-            => declaredElement is IParameter parameter &&
-                (parameter.Type.IsGenericIEnumerable() ||
-                    parameter.Type.IsIAsyncEnumerable() ||
-                    parameter.Type.IsImplicitlyConvertibleTo(
+            => declaredElement is IParameter parameter
+                && (parameter.Type.IsGenericIEnumerable()
+                    || parameter.Type.IsIAsyncEnumerable()
+                    || parameter.Type.IsImplicitlyConvertibleTo(
                         new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, NullableAnnotation.Unknown, psiModule),
                         context.GetTypeConversionRule()));
     }

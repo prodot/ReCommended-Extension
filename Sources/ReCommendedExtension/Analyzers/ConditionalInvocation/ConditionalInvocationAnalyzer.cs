@@ -65,10 +65,10 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
                             continue;
                     }
 
-                    if (treeNode == invocationExpression ||
-                        treeNode is IUsingList ||
-                        treeNode is ICSharpNamespaceDeclaration ||
-                        treeNode is ICSharpTypeDeclaration)
+                    if (treeNode == invocationExpression
+                        || treeNode is IUsingList
+                        || treeNode is ICSharpNamespaceDeclaration
+                        || treeNode is ICSharpTypeDeclaration)
                     {
                         break;
                     }

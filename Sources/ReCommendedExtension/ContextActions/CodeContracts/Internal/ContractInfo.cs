@@ -154,8 +154,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
 
                 case ContractKind.Ensures:
                     var lastEnsuresOrLastRequiresStatement =
-                        (from s in contractStatements where s.ContractKind == ContractKind.Ensures select s.Statement).LastOrDefault() ??
-                        (from s in contractStatements where s.ContractKind == ContractKind.Requires select s.Statement).LastOrDefault();
+                        (from s in contractStatements where s.ContractKind == ContractKind.Ensures select s.Statement).LastOrDefault()
+                        ?? (from s in contractStatements where s.ContractKind == ContractKind.Requires select s.Statement).LastOrDefault();
                     if (lastEnsuresOrLastRequiresStatement != null)
                     {
                         statement = body.AddStatementAfter(statement, lastEnsuresOrLastRequiresStatement);
@@ -226,10 +226,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         protected ContractInfo(ContractKind contractKind, [NotNull] IType type)
         {
             Debug.Assert(
-                contractKind == ContractKind.Requires ||
-                contractKind == ContractKind.Ensures ||
-                contractKind == ContractKind.RequiresAndEnsures ||
-                contractKind == ContractKind.Invariant);
+                contractKind == ContractKind.Requires
+                || contractKind == ContractKind.Ensures
+                || contractKind == ContractKind.RequiresAndEnsures
+                || contractKind == ContractKind.Invariant);
 
             ContractKind = contractKind;
             Type = type;

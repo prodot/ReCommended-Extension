@@ -18,15 +18,13 @@ namespace ReCommendedExtension
     {
         internal const string ExtensionId = "ReCommendedExtension"
 #if DEBUG
-                +
-                "_DEBUG"
+                + "_DEBUG"
 #endif
             ;
 
         internal const string ExtensionName = "ReCommended Extension for ReSharper"
 #if DEBUG
-                +
-                " (DEBUG)"
+                + " (DEBUG)"
 #endif
             ;
 

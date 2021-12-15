@@ -76,8 +76,8 @@ namespace ReCommendedExtension.ContextActions
                     switch (node.Parent)
                     {
                         case IExpressionInitializer expressionInitializer
-                            when expressionInitializer.Parent is IMultipleDeclarationMember declarationMember &&
-                            declarationMember.MultipleDeclaration?.Declarators.Count == 1:
+                            when expressionInitializer.Parent is IMultipleDeclarationMember declarationMember
+                            && declarationMember.MultipleDeclaration?.Declarators.Count == 1:
                             node = declarationMember.MultipleDeclaration;
                             commentType = CommentType.END_OF_LINE_COMMENT;
                             break;
@@ -99,10 +99,10 @@ namespace ReCommendedExtension.ContextActions
 
                     var previousNonWhitespaceToken = node.PrevTokens().FirstOrDefault(t => !(t is IWhitespaceNode));
 
-                    if (previousNonWhitespaceToken is ICSharpCommentNode currentCommentNode &&
-                        (currentCommentNode.CommentType == CommentType.END_OF_LINE_COMMENT ||
-                            currentCommentNode.CommentType == CommentType.MULTILINE_COMMENT) &&
-                        LanguageEqualsCommentTexts.Contains(currentCommentNode.CommentText.Trim()))
+                    if (previousNonWhitespaceToken is ICSharpCommentNode currentCommentNode
+                        && (currentCommentNode.CommentType == CommentType.END_OF_LINE_COMMENT
+                            || currentCommentNode.CommentType == CommentType.MULTILINE_COMMENT)
+                        && LanguageEqualsCommentTexts.Contains(currentCommentNode.CommentText.Trim()))
                     {
                         currentCommentNode.ReplaceBy(CreateCommentNode(factory, currentCommentNode.CommentType));
                     }
@@ -146,10 +146,10 @@ namespace ReCommendedExtension.ContextActions
                         provider.Document,
                         provider.DocumentSelection.StartOffset.Offset);
 
-                    if (node == null ||
-                        !injectorProvider.IsSupportedLiteralForInjection(node) ||
-                        injectorProvider is ILanguageInjectorProviderInLiterals languageInjectorProviderInLiterals &&
-                        languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
+                    if (node == null
+                        || !injectorProvider.IsSupportedLiteralForInjection(node)
+                        || injectorProvider is ILanguageInjectorProviderInLiterals languageInjectorProviderInLiterals
+                        && languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
                     {
                         return false;
                     }
@@ -173,8 +173,8 @@ namespace ReCommendedExtension.ContextActions
                     injectorProvider.LocateInjectNodeByTreeOffset(provider.PsiFile, provider.Document, provider.DocumentSelection.StartOffset.Offset)
                 where node != null && injectorProvider.IsSupportedLiteralForInjection(node)
                 let languageInjectorProviderInLiterals = injectorProvider as ILanguageInjectorProviderInLiterals
-                where (languageInjectorProviderInLiterals == null || !languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage)) &&
-                    languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage)
+                where (languageInjectorProviderInLiterals == null || !languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
+                    && languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage)
                 orderby injectorProvider.Priority
                 select new InjectLanguageActionItem(injectorProvider, node)).ToList();
 

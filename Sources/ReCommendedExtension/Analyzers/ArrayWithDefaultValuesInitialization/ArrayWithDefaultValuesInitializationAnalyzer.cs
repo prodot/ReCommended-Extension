@@ -53,9 +53,9 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization
 
                     if (builder[builder.Length - 1] != '?')
                     {
-                        var isNullableReferenceType = element.IsNullableAnnotationsContextEnabled() &&
-                            arrayElementType.Classify == TypeClassification.REFERENCE_TYPE &&
-                            arrayElementType.NullableAnnotation == NullableAnnotation.NotAnnotated;
+                        var isNullableReferenceType = element.IsNullableAnnotationsContextEnabled()
+                            && arrayElementType.Classify == TypeClassification.REFERENCE_TYPE
+                            && arrayElementType.NullableAnnotation == NullableAnnotation.NotAnnotated;
 
                         if (isNullableReferenceType)
                         {

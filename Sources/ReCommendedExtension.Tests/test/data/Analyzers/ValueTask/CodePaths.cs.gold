@@ -41,11 +41,11 @@ namespace Tests
         {
             if (x > 3)
             {
-                await |vt|(5);
+                await vt;
             }
             else
             {
-                await vt;
+                await |vt|(5);
                 await |vt|(6);
                 return;
             }
@@ -57,11 +57,11 @@ namespace Tests
         {
             if (x > 3)
             {
-                await |vt|(8);
+                await vt;
             }
             else
             {
-                await vt;
+                await |vt|(8);
                 await |vt|(9);
                 throw new NotSupportedException();
             }

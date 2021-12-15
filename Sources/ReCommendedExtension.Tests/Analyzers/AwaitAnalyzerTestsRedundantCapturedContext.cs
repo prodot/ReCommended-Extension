@@ -1,5 +1,5 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.PropertiesExtender;
+using JetBrains.ReSharper.Feature.Services.CSharp.PropertiesExtender;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;

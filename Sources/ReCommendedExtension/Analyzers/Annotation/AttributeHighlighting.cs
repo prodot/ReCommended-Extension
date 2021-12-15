@@ -39,10 +39,10 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 var previousToken = Attribute.PrevTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
                 var nextToken = Attribute.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
 
-                if (previousToken != null &&
-                    nextToken != null &&
-                    previousToken.GetTokenType() == CSharpTokenType.LBRACKET &&
-                    nextToken.GetTokenType() == CSharpTokenType.RBRACKET)
+                if (previousToken != null
+                    && nextToken != null
+                    && previousToken.GetTokenType() == CSharpTokenType.LBRACKET
+                    && nextToken.GetTokenType() == CSharpTokenType.RBRACKET)
                 {
                     Debug.Assert(range.Document != null);
 

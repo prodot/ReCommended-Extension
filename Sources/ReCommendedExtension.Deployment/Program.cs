@@ -75,16 +75,15 @@ namespace ReCommendedExtension.Deployment
 
             isReleaseBuild = string.Equals(executionDirectory, "release", StringComparison.OrdinalIgnoreCase);
 
-            var projectDirectory = Path.Combine(executionDirectoryPath, @"..\..\..\..\..\ReCommendedExtension");
+            var projectDirectory = Path.Combine(executionDirectoryPath, @"..\..\..\..\ReCommendedExtension");
 
             var projectFilePath = Path.Combine(projectDirectory, "ReCommendedExtension.csproj");
             var projectFile = XDocument.Load(projectFilePath);
             Debug.Assert(projectFile.Root != null);
 
-            var platform = (string)projectFile.Root.Elements("PropertyGroup").Elements("Platforms").First();
             var targetFramework = (string)projectFile.Root.Elements("PropertyGroup").Elements("TargetFramework").First();
 
-            var sourceAssemblyPath = Path.Combine(projectDirectory, "bin", platform, executionDirectory, targetFramework, fileName);
+            var sourceAssemblyPath = Path.Combine(projectDirectory, "bin", executionDirectory, targetFramework, fileName);
             assemblyPath = Path.Combine(executionDirectoryPath, fileName);
             File.Copy(sourceAssemblyPath, assemblyPath, true);
 
@@ -103,7 +102,7 @@ namespace ReCommendedExtension.Deployment
             // set a secret: > dotnet user-secrets set "SNKey" "..."
             // list secrets: > dotnet user-secrets list
 
-            var projectFilePath = Path.Combine(executionDirectoryPath, @"..\..\..\..", "ReCommendedExtension.Deployment.csproj");
+            var projectFilePath = Path.Combine(executionDirectoryPath, @"..\..\..", "ReCommendedExtension.Deployment.csproj");
             var projectFile = XDocument.Load(projectFilePath);
             Debug.Assert(projectFile.Root != null);
 
@@ -230,25 +229,25 @@ namespace ReCommendedExtension.Deployment
             Debug.Assert(nuspecDirectoryPath != null);
 
             RunConsoleApplication(
-                $"\"{Path.Combine(nuspecDirectoryPath, @"..\..\..\..\..\.nuget\NuGet.exe")}\"",
+                $"\"{Path.Combine(nuspecDirectoryPath, @"..\..\..\..\.nuget\NuGet.exe")}\"",
                 $"pack \"{nuspecPath}\" -OutputDirectory \"{nuspecDirectoryPath}\" -NoPackageAnalysis -Verbosity detailed");
         }
 
         static void RunConsoleApplication([NotNull] string executablePath, [NotNull] string arguments)
         {
             using (var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
                 {
-                    FileName = executablePath,
-                    Arguments = arguments,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                },
-                EnableRaisingEvents = true,
-            })
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = executablePath,
+                        Arguments = arguments,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                    },
+                    EnableRaisingEvents = true,
+                })
             {
                 process.OutputDataReceived += Process_DataReceived;
                 process.ErrorDataReceived += Process_DataReceived;

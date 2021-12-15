@@ -20,9 +20,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             TreeTextRange selectedTreeRange,
             [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) &&
-                declaration.ArrowClause == null &&
-                declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
+            if (declaration.GetNameRange().Contains(selectedTreeRange)
+                && declaration.ArrowClause == null
+                && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
             {
                 var property = declaration.DeclaredElement;
 
@@ -57,9 +57,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             TreeTextRange selectedTreeRange,
             [NotNull] Func<IType, bool> isAvailableForType)
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) &&
-                declaration.ArrowClause == null &&
-                declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
+            if (declaration.GetNameRange().Contains(selectedTreeRange)
+                && declaration.ArrowClause == null
+                && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
             {
                 var property = declaration.DeclaredElement;
 
@@ -92,10 +92,10 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             type)
         {
             Debug.Assert(
-                contractKind == ContractKind.Requires ||
-                contractKind == ContractKind.Ensures ||
-                contractKind == ContractKind.RequiresAndEnsures ||
-                contractKind == ContractKind.Invariant);
+                contractKind == ContractKind.Requires
+                || contractKind == ContractKind.Ensures
+                || contractKind == ContractKind.RequiresAndEnsures
+                || contractKind == ContractKind.Invariant);
 
             this.declaration = declaration;
         }

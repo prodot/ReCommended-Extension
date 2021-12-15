@@ -18,12 +18,12 @@ namespace ReCommendedExtension.Tests.Analyzers
         protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
         protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAnnotationSuggestion ||
-                highlighting is NotAllowedAnnotationWarning ||
-                highlighting is MissingAnnotationWarning ||
-                highlighting is MissingSuppressionJustificationWarning ||
-                highlighting is ConflictingAnnotationWarning ||
-                highlighting is InvalidValueRangeBoundaryWarning;
+            => highlighting is RedundantAnnotationSuggestion
+                || highlighting is NotAllowedAnnotationWarning
+                || highlighting is MissingAnnotationWarning
+                || highlighting is MissingSuppressionJustificationWarning
+                || highlighting is ConflictingAnnotationWarning
+                || highlighting is InvalidValueRangeBoundaryWarning;
 
         [Test]
         [TestNetFramework45]

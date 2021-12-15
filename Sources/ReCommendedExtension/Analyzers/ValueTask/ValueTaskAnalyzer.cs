@@ -100,29 +100,29 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                 }
 
                 var parenthesizedExpression = ex.GetContainingParenthesizedExpression();
-                if (BinaryExpressionNavigator.GetByLeftOperand(parenthesizedExpression) != null ||
-                    BinaryExpressionNavigator.GetByRightOperand(parenthesizedExpression) != null ||
-                    IsExpressionNavigator.GetByOperand(parenthesizedExpression) != null ||
-                    AsExpressionNavigator.GetByOperand(parenthesizedExpression) != null ||
-                    SwitchStatementNavigator.GetByGoverningExpression(parenthesizedExpression) != null ||
-                    AssignmentExpressionNavigator.GetByDest(parenthesizedExpression) != null)
+                if (BinaryExpressionNavigator.GetByLeftOperand(parenthesizedExpression) != null
+                    || BinaryExpressionNavigator.GetByRightOperand(parenthesizedExpression) != null
+                    || IsExpressionNavigator.GetByOperand(parenthesizedExpression) != null
+                    || AsExpressionNavigator.GetByOperand(parenthesizedExpression) != null
+                    || SwitchStatementNavigator.GetByGoverningExpression(parenthesizedExpression) != null
+                    || AssignmentExpressionNavigator.GetByDest(parenthesizedExpression) != null)
                 {
                     return false;
                 }
 
-                var qualifierExpression = ReferenceExpressionNavigator.GetByQualifierExpression(parenthesizedExpression) ??
-                    ex as IReferenceExpression;
+                var qualifierExpression =
+                    ReferenceExpressionNavigator.GetByQualifierExpression(parenthesizedExpression) ?? ex as IReferenceExpression;
                 if (qualifierExpression != null)
                 {
                     switch (qualifierExpression.Reference.Resolve(ResolveContext).DeclaredElement)
                     {
                         case IProperty _:
-                        case IMethod method when method.IsOverridesObjectGetHashCode() ||
-                            method.IsOverridesObjectEquals() ||
-                            method.IsOverridesObjectToString() ||
-                            method.IsIEquatableEqualsMethod() ||
-                            method.ShortName == nameof(GetType) && method.GetContainingType().IsObjectClass():
-
+                        case IMethod method
+                            when method.IsOverridesObjectGetHashCode()
+                            || method.IsOverridesObjectEquals()
+                            || method.IsOverridesObjectToString()
+                            || method.IsIEquatableEqualsMethod()
+                            || method.ShortName == nameof(GetType) && method.GetContainingType().IsObjectClass():
                             return false; // is well-known pure method or property
                     }
                 }
@@ -184,10 +184,10 @@ namespace ReCommendedExtension.Analyzers.ValueTask
             {
                 // the ControlFlowVariableAccessState.ACCESSED_AS_ENUMERABLE is intentionally "misused" here
 
-                if ((access & ControlFlowAccessType.Read) != 0 &&
-                    (access & ControlFlowAccessType.Partial) == 0 &&
-                    accessExpression is ICSharpExpression expression &&
-                    IsPossibleConsumption(context, expression, info))
+                if ((access & ControlFlowAccessType.Read) != 0
+                    && (access & ControlFlowAccessType.Partial) == 0
+                    && accessExpression is ICSharpExpression expression
+                    && IsPossibleConsumption(context, expression, info))
                 {
                     if ((context[info] & ControlFlowVariableAccessState.ACCESSED_AS_ENUMERABLE) != 0)
                     {
@@ -284,20 +284,20 @@ namespace ReCommendedExtension.Analyzers.ValueTask
 
         static void AnalyzeBlockingAttempt([NotNull] IInvocationExpression invocationExpression, [NotNull] IHighlightingConsumer consumer)
         {
-            if (invocationExpression.InvokedExpression is IReferenceExpression invocationExpressionInvokedExpression &&
-                invocationExpression.Reference.Resolve().DeclaredElement is IMethod getResultMethod &&
-                getResultMethod.ShortName == "GetResult" &&
-                getResultMethod.TypeParameters.Count == 0 &&
-                getResultMethod.Parameters.Count == 0 &&
-                invocationExpression.GetInvokedReferenceExpressionQualifier() is IInvocationExpression qualifier &&
-                qualifier.InvokedExpression is IReferenceExpression qualifierInvokedExpression)
+            if (invocationExpression.InvokedExpression is IReferenceExpression invocationExpressionInvokedExpression
+                && invocationExpression.Reference.Resolve().DeclaredElement is IMethod getResultMethod
+                && getResultMethod.ShortName == "GetResult"
+                && getResultMethod.TypeParameters.Count == 0
+                && getResultMethod.Parameters.Count == 0
+                && invocationExpression.GetInvokedReferenceExpressionQualifier() is IInvocationExpression qualifier
+                && qualifier.InvokedExpression is IReferenceExpression qualifierInvokedExpression)
             {
                 var qualifierType = qualifier.Type();
-                if ((qualifierType.IsClrType(ClrTypeNames.ValueTaskAwaiter) || qualifierType.IsClrType(ClrTypeNames.GenericValueTaskAwaiter)) &&
-                    qualifier.Reference.Resolve().DeclaredElement is IMethod getAwaiterMethod &&
-                    getAwaiterMethod.ShortName == "GetAwaiter" &&
-                    getAwaiterMethod.TypeParameters.Count == 0 &&
-                    getAwaiterMethod.Parameters.Count == 0)
+                if ((qualifierType.IsClrType(ClrTypeNames.ValueTaskAwaiter) || qualifierType.IsClrType(ClrTypeNames.GenericValueTaskAwaiter))
+                    && qualifier.Reference.Resolve().DeclaredElement is IMethod getAwaiterMethod
+                    && getAwaiterMethod.ShortName == "GetAwaiter"
+                    && getAwaiterMethod.TypeParameters.Count == 0
+                    && getAwaiterMethod.Parameters.Count == 0)
                 {
                     var valueTaskExpression = qualifier.GetInvokedReferenceExpressionQualifier();
                     var valueTaskType = valueTaskExpression?.Type();
@@ -307,9 +307,9 @@ namespace ReCommendedExtension.Analyzers.ValueTask
 
                         consumer.AddHighlighting(
                             new IntentionalBlockingAttemptWarning(
-                                "Blocking on " +
-                                valueTaskType.GetPresentableName(CSharpLanguage.Instance) +
-                                " with 'GetAwaiter().GetResult()' might not block.",
+                                "Blocking on "
+                                + valueTaskType.GetPresentableName(CSharpLanguage.Instance)
+                                + " with 'GetAwaiter().GetResult()' might not block.",
                                 invocationExpression.InvokedExpression,
                                 valueTaskExpression,
                                 qualifierInvokedExpression,

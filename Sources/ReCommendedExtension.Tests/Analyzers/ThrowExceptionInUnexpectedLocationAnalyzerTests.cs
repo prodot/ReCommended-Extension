@@ -10,7 +10,7 @@ using ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
-    [TestNetCore30]
+    [TestNet50]
     public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpHighlightingTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\ThrowExceptionInUnexpectedLocation";

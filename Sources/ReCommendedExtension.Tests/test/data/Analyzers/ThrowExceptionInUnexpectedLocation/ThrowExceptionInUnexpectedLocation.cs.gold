@@ -176,6 +176,33 @@ namespace Test
 
         public static implicit operator Guid(ThrowExceptionInUnexpectedLocation x) => |throw new AnyException()|(29); // not allowed
     }
+
+    public record Record(string S, EventHandler H)
+    {
+        string Property4 { get; } = S ?? throw new ArgumentNullException(); // allowed
+
+        string Property5 { get; set; } = S ?? throw new ArgumentNullException(); // allowed
+
+        event EventHandler E = H ?? throw new ArgumentNullException(); // allowed
+
+        static string F() => null;
+
+        string Property6 { get; } = F() ?? throw new ArgumentNullException(); // allowed
+
+        string Property7 { get; set; } = F() ?? throw new ArgumentNullException(); // allowed
+
+        static string Property8 { get; } = F() ?? |throw new ArgumentNullException()|(30); // not allowed
+
+        static string Property9 { get; set; } = F() ?? |throw new ArgumentNullException()|(31); // not allowed
+
+        string field1 = S ?? throw new ArgumentNullException(); // allowed
+
+        static string field2 = F() ?? |throw new ArgumentNullException()|(32); // not allowed
+
+        static EventHandler E2() => null;
+
+        static event EventHandler Event = E2() ?? |throw new ArgumentNullException()|(33); // not allowed
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: Exceptions should never be thrown in property getters.
@@ -208,3 +235,7 @@ namespace Test
 (27): ReSharper Warning: Exceptions should never be thrown in equality operators.
 (28): ReSharper Warning: Exceptions should never be thrown in implicit cast operators.
 (29): ReSharper Warning: Exceptions should never be thrown in implicit cast operators.
+(30): ReSharper Warning: Exceptions should never be thrown in static property initialization expressions.
+(31): ReSharper Warning: Exceptions should never be thrown in static property initialization expressions.
+(32): ReSharper Warning: Exceptions should never be thrown in static field initialization expressions.
+(33): ReSharper Warning: Exceptions should never be thrown in static event initialization expressions.

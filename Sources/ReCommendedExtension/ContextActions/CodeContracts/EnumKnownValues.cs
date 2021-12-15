@@ -48,8 +48,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
 
             const int maxItemsToShow = 3;
 
-            return string.Join(" || ", from field in members.Take(maxItemsToShow) select $"{contractIdentifier} == {field.ShortName}") +
-                (members.Count > maxItemsToShow ? "..." : "");
+            return string.Join(" || ", from field in members.Take(maxItemsToShow) select $"{contractIdentifier} == {field.ShortName}")
+                + (members.Count > maxItemsToShow ? "..." : "");
         }
 
         protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
