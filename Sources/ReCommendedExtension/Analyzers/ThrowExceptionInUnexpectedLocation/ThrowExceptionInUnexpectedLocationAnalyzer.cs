@@ -195,23 +195,26 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                     return Location.ImplicitCastOperator;
             }
 
-            var fieldDeclaration = element.GetContainingNode<IFieldDeclaration>();
-            if (fieldDeclaration != null && fieldDeclaration.IsStatic)
+            if (!element.IsInsideClosure())
             {
-                var initializer = element.GetContainingNode<IExpressionInitializer>();
-                if (initializer != null && initializer.GetContainingNode<IFieldDeclaration>() == fieldDeclaration)
+                var fieldDeclaration = element.GetContainingNode<IFieldDeclaration>();
+                if (fieldDeclaration != null && fieldDeclaration.IsStatic)
                 {
-                    return Location.StaticFieldInitializationExpression;
+                    var initializer = element.GetContainingNode<IExpressionInitializer>();
+                    if (initializer != null && initializer.GetContainingNode<IFieldDeclaration>() == fieldDeclaration)
+                    {
+                        return Location.StaticFieldInitializationExpression;
+                    }
                 }
-            }
 
-            var eventDeclaration = element.GetContainingNode<IEventDeclaration>();
-            if (eventDeclaration != null && eventDeclaration.IsStatic)
-            {
-                var initializer = element.GetContainingNode<IExpressionInitializer>();
-                if (initializer != null && initializer.GetContainingNode<IEventDeclaration>() == eventDeclaration)
+                var eventDeclaration = element.GetContainingNode<IEventDeclaration>();
+                if (eventDeclaration != null && eventDeclaration.IsStatic)
                 {
-                    return Location.StaticEventInitializationExpression;
+                    var initializer = element.GetContainingNode<IExpressionInitializer>();
+                    if (initializer != null && initializer.GetContainingNode<IEventDeclaration>() == eventDeclaration)
+                    {
+                        return Location.StaticEventInitializationExpression;
+                    }
                 }
             }
 
