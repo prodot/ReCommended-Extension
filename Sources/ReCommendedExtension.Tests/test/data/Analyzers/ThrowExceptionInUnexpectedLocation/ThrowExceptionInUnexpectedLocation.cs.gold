@@ -203,6 +203,33 @@ namespace Test
 
         static event EventHandler Event = E2() ?? |throw new ArgumentNullException()|(33); // not allowed
     }
+
+    public record Record2(string S, EventHandler H)
+    {
+        Lazy<string> Property4 { get; } = new(() => S ?? throw new ArgumentNullException()); // not allowed
+
+        Lazy<string> Property5 { get; set; } = new(() => S ?? throw new ArgumentNullException()); // not allowed
+
+        event EventHandler E = new Lazy<EventHandler>(() => H ?? throw new ArgumentNullException()).Value; // not allowed
+
+        static string F() => null;
+
+        Lazy<string> Property6 { get; } = new(() => F() ?? throw new ArgumentNullException()); // not allowed
+
+        Lazy<string> Property7 { get; set; } = new(() => F() ?? throw new ArgumentNullException()); // not allowed
+
+        static Lazy<string> Property8 { get; } = new(() => F() ?? throw new ArgumentNullException()); // not allowed
+
+        static Lazy<string> Property9 { get; set; } = new(() => F() ?? throw new ArgumentNullException()); // not allowed
+
+        Lazy<string> field1 = new(() => S ?? throw new ArgumentNullException()); // not allowed
+
+        static Lazy<string> field2 = new(() => F() ?? throw new ArgumentNullException()); // not allowed
+
+        static EventHandler E2() => null;
+
+        static event EventHandler Event = new Lazy<EventHandler>(() => E2() ?? throw new ArgumentNullException()).Value; // not allowed
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: Exceptions should never be thrown in property getters.
