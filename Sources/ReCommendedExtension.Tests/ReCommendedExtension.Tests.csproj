@@ -17,11 +17,11 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Lifetimes" Version="2021.3.4" />
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2021.3.3">
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2021.3.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
   </ItemGroup>
 
