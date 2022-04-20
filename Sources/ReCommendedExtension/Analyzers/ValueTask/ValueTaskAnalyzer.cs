@@ -28,7 +28,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
         sealed class Inspector : CSharpControlFlowGraphInspector
         {
             [NotNull]
-            public static new Inspector Inspect(
+            public static Inspector Inspect(
                 [NotNull] ICSharpControlFlowGraph controlFlowGraph,
                 ValueAnalysisMode analysisMode,
                 bool shouldDisableValueAnalysisIfNullableWarningsEnabled = true,
@@ -177,6 +177,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
             }
 
             void OnPatchAccessInfo(
+                [NotNull] IControlFlowElement controlFlowElement,
                 [NotNull] CSharpControlFlowContext context,
                 [NotNull] VariableInfo info,
                 ControlFlowAccessType access,
