@@ -122,7 +122,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                             || method.IsOverridesObjectEquals()
                             || method.IsOverridesObjectToString()
                             || method.IsIEquatableEqualsMethod()
-                            || method.ShortName == nameof(GetType) && method.GetContainingType().IsObjectClass():
+                            || method.ShortName == nameof(GetType) && method.ContainingType.IsObjectClass():
                             return false; // is well-known pure method or property
                     }
                 }

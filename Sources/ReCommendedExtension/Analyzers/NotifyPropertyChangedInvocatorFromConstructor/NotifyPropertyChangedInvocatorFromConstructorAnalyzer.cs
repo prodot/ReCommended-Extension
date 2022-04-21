@@ -46,14 +46,14 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
 
                 Debug.Assert(typeName != null);
 
+                var attributeName = typeName.EndsWith("Attribute", StringComparison.Ordinal)
+                    ? typeName.Substring(0, typeName.Length - "Attribute".Length)
+                    : typeName;
+
                 consumer.AddHighlighting(
                     new NotifyPropertyChangedInvocatorFromConstructorWarning(
                         element,
-                        string.Format(
-                            "Invocation of a method annotated with [{0}] from a constructor is redundant.",
-                            typeName.EndsWith("Attribute", StringComparison.Ordinal)
-                                ? typeName.Substring(0, typeName.Length - "Attribute".Length)
-                                : typeName)));
+                        $"Invocation of a method annotated with [{attributeName}] from a constructor is redundant."));
             }
         }
     }

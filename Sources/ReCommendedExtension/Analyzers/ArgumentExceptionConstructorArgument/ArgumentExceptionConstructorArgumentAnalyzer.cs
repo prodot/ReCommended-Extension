@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument
 
             if (declaredElement is IConstructor constructor)
             {
-                var typeName = constructor.GetContainingType().AssertNotNull().GetClrName();
+                var typeName = constructor.ContainingType.AssertNotNull().GetClrName();
 
                 if (typeName.Equals(PredefinedType.ARGUMENTEXCEPTION_FQN)
                     || typeName.Equals(PredefinedType.ARGUMENTNULLEXCEPTION_FQN)

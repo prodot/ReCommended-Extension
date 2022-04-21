@@ -53,12 +53,11 @@ namespace ReCommendedExtension.ContextActions
                 var typeName = AnnotationAttributeTypeName;
                 var textSuffix = TextSuffix;
 
-                return string.Format(
-                    "Annotate with [{0}]{1}",
-                    typeName.EndsWith(nameof(Attribute), StringComparison.Ordinal)
-                        ? typeName.Substring(0, typeName.Length - nameof(Attribute).Length)
-                        : typeName,
-                    textSuffix != "" ? $" ({textSuffix})" : "");
+                var attributeName = typeName.EndsWith(nameof(Attribute), StringComparison.Ordinal)
+                    ? typeName.Substring(0, typeName.Length - nameof(Attribute).Length)
+                    : typeName;
+
+                return $"Annotate with [{attributeName}]{(textSuffix != "" ? $" ({textSuffix})" : "")}";
             }
         }
 
