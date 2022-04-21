@@ -332,7 +332,7 @@ namespace ReCommendedExtension.Analyzers.Await
                         var method = configureAwaitInvocationExpression.InvocationExpressionReference.Resolve().DeclaredElement as IMethod;
                         if (method?.ShortName == nameof(Task.ConfigureAwait))
                         {
-                            var methodContainingTypeElement = method.GetContainingType();
+                            var methodContainingTypeElement = method.ContainingType;
                             if (methodContainingTypeElement != null)
                             {
                                 var methodContainingType = TypeFactory.CreateType(methodContainingTypeElement);

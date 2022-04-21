@@ -84,16 +84,25 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
         protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
             var conditions = GetConditionsIfConditionalMethodInvoked(element);
-            if (conditions.Count > 0)
+            switch (conditions.Count)
             {
-                consumer.AddHighlighting(
-                    new ConditionalInvocationHint(
-                        conditions.Count == 1
-                            ? $"Method invocation will be skipped if the '{conditions[0]}' condition is not defined."
-                            : string.Format(
-                                "Method invocation will be skipped if none of the following conditions is defined: {0}.",
-                                string.Join(", ", from condition in conditions orderby condition select $"'{condition}'")),
-                        element));
+                case 0: break;
+
+                case 1:
+                    consumer.AddHighlighting(
+                        new ConditionalInvocationHint(
+                            $"Method invocation will be skipped if the '{conditions[0]}' condition is not defined.",
+                            element));
+                    break;
+
+                default:
+                    var conditionList = string.Join(", ", from condition in conditions orderby condition select $"'{condition}'");
+
+                    consumer.AddHighlighting(
+                        new ConditionalInvocationHint(
+                            $"Method invocation will be skipped if none of the following conditions is defined: {conditionList}.",
+                            element));
+                    break;
             }
         }
     }

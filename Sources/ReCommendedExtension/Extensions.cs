@@ -252,12 +252,9 @@ namespace ReCommendedExtension
                     ? $"<{string.Join(", ", from typeParameter in methodDeclaration.TypeParameterDeclarations select typeParameter.DeclaredName)}>"
                     : "";
 
+                var returnStatement = declaredElement.ReturnType.IsVoid() ? "" : " return default($0); ";
                 overriddenMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(
-                    string.Format(
-                        "$0 {0}{1}() {{{2}}}",
-                        methodDeclaration.DeclaredName,
-                        typeParameters,
-                        declaredElement.ReturnType.IsVoid() ? "" : " return default($0); "),
+                    $"$0 {methodDeclaration.DeclaredName}{typeParameters}() {{{returnStatement}}}",
                     declaredElement.ReturnType);
                 overriddenMethodDeclaration.SetAccessRights(
                     methodDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
@@ -319,12 +316,12 @@ namespace ReCommendedExtension
             {
                 Debug.Assert(indexerDeclaration.DeclaredElement != null);
 
+                var getter = indexerDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "";
+                var setter = indexerDeclaration.DeclaredElement.IsWritable ? " set { } " : "";
                 overriddenIndexerDeclaration = (IIndexerDeclaration)factory.CreateTypeMemberDeclaration(
-                    string.Format(
-                        "$0 this[] {{{0}{1}}}",
-                        indexerDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "",
-                        indexerDeclaration.DeclaredElement.IsWritable ? " set { } " : ""),
+                    $"$0 this[] {{{getter}{setter}}}",
                     indexerDeclaration.DeclaredElement.Type);
+
                 overriddenIndexerDeclaration.SetAccessRights(
                     indexerDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
                         ? AccessRights.PUBLIC
@@ -379,13 +376,12 @@ namespace ReCommendedExtension
             {
                 Debug.Assert(propertyDeclaration.DeclaredElement != null);
 
+                var getter = propertyDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "";
+                var setter = propertyDeclaration.DeclaredElement.IsWritable ? " set { } " : "";
                 overriddenPropertyDeclaration = (IPropertyDeclaration)factory.CreateTypeMemberDeclaration(
-                    string.Format(
-                        "$0 {0} {{{1}{2}}}",
-                        propertyDeclaration.DeclaredName,
-                        propertyDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "",
-                        propertyDeclaration.DeclaredElement.IsWritable ? " set { } " : ""),
+                    $"$0 {propertyDeclaration.DeclaredName} {{{getter}{setter}}}",
                     propertyDeclaration.DeclaredElement.Type);
+
                 overriddenPropertyDeclaration.SetAccessRights(
                     propertyDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
                         ? AccessRights.PUBLIC

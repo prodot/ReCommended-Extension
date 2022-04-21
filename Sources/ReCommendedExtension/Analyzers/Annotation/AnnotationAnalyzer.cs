@@ -332,7 +332,6 @@ namespace ReCommendedExtension.Analyzers.Annotation
             {
                 foreach (var (shortName, attributes) in groupings)
                 {
-                    Debug.Assert(attributes != null);
                     Debug.Assert(shortName == nameof(PureAttribute) || shortName == nameof(MustUseReturnValueAttribute));
 
                     var conflictingAnnotation = shortName == nameof(PureAttribute) ? nameof(MustUseReturnValueAttribute) : nameof(PureAttribute);
@@ -583,15 +582,24 @@ namespace ReCommendedExtension.Analyzers.Annotation
             {
                 Debug.Assert(conditionalAttribute != null);
 
-                consumer.AddHighlighting(
-                    new ConditionalAnnotationHint(
-                        attributesOwnerDeclaration,
-                        conditionalAttribute.Attribute,
-                        conditionalAttribute.Conditions.Count == 1
-                            ? $"Attribute will be ignored if the '{conditionalAttribute.Conditions[0]}' condition is not defined."
-                            : string.Format(
-                                "Attribute will be ignored if none of the following conditions is defined: {0}.",
-                                string.Join(", ", from condition in conditionalAttribute.Conditions orderby condition select $"'{condition}'"))));
+                if (conditionalAttribute.Conditions.Count == 1)
+                {
+                    consumer.AddHighlighting(
+                        new ConditionalAnnotationHint(
+                            attributesOwnerDeclaration,
+                            conditionalAttribute.Attribute,
+                            $"Attribute will be ignored if the '{conditionalAttribute.Conditions[0]}' condition is not defined."));
+                }
+                else
+                {
+                    var conditions = string.Join(", ", from condition in conditionalAttribute.Conditions orderby condition select $"'{condition}'");
+
+                    consumer.AddHighlighting(
+                        new ConditionalAnnotationHint(
+                            attributesOwnerDeclaration,
+                            conditionalAttribute.Attribute,
+                            $"Attribute will be ignored if none of the following conditions is defined: {conditions}."));
+                }
             }
         }
 
@@ -688,16 +696,16 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 }
                 else
                 {
+                    const string notNullAttributeShortName = NullnessProvider.NotNullAttributeShortName;
+
                     var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
                         attributesOwnerDeclaration,
-                        NullnessProvider.NotNullAttributeShortName);
+                        notNullAttributeShortName);
                     if (nonNullAnnotationAttributeType != null)
                     {
                         consumer.AddHighlighting(
                             new MissingAnnotationWarning(
-                                string.Format(
-                                    "Declared element can never be null by default, but is not annotated with '{0}'.",
-                                    NullnessProvider.NotNullAttributeShortName),
+                                $"Declared element can never be null by default, but is not annotated with '{notNullAttributeShortName}'.",
                                 attributesOwnerDeclaration));
                     }
                     break;
@@ -719,20 +727,20 @@ namespace ReCommendedExtension.Analyzers.Annotation
                     {
                         if (attributeMark == null)
                         {
+                            const string notNullAttributeShortName = NullnessProvider.NotNullAttributeShortName;
+                            const string canBeNullAttributeShortName = NullnessProvider.CanBeNullAttributeShortName;
+
                             var nonNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
                                 attributesOwnerDeclaration,
-                                NullnessProvider.NotNullAttributeShortName);
+                                notNullAttributeShortName);
                             var canBeNullAnnotationAttributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
                                 attributesOwnerDeclaration,
-                                NullnessProvider.CanBeNullAttributeShortName);
+                                canBeNullAttributeShortName);
                             if (nonNullAnnotationAttributeType != null || canBeNullAnnotationAttributeType != null)
                             {
                                 consumer.AddHighlighting(
                                     new MissingAnnotationWarning(
-                                        string.Format(
-                                            @"Declared element is nullable, but is not annotated with '{0}' or '{1}'.",
-                                            NullnessProvider.NotNullAttributeShortName,
-                                            NullnessProvider.CanBeNullAttributeShortName),
+                                        $"Declared element is nullable, but is not annotated with '{notNullAttributeShortName}' or '{canBeNullAttributeShortName}'.",
                                         attributesOwnerDeclaration));
                             }
                             break;
@@ -845,11 +853,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                         new NotAllowedAnnotationWarning(
                             attributesOwnerDeclaration,
                             itemNotNullAttribute,
-                            string.Format(
-                                "Annotation is not allowed because the declared element must be an {0}<T> (or its descendant), "
-                                + "or a generic task-like type, or a {1}<T>.",
-                                nameof(IEnumerable<int>),
-                                nameof(Lazy<int>))));
+                            $"Annotation is not allowed because the declared element must be an {nameof(IEnumerable<int>)}<T> (or its descendant), or a generic task-like type, or a {nameof(Lazy<int>)}<T>."));
                 }
             }
         }

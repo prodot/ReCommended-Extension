@@ -91,6 +91,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
                 {
                     case NullableAnnotation.NotAnnotated:
                     case NullableAnnotation.NotNullable:
+                    case NullableAnnotation.RuntimeNotNullable:
                         return CSharpControlFlowNullReferenceState.NOT_NULL;
 
                     case NullableAnnotation.Annotated:
@@ -229,8 +230,10 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
             if (assertion is AssertionStatement assertionStatement)
             {
                 if (nullabilityInspector != null
-                    && nullabilityInspector.ConditionIsAlwaysTrueOrFalseExpressions.TryGetValue(assertionStatement.Expression, out var value))
+                    && nullabilityInspector.ConditionIsAlwaysTrueOrFalseExpressions.TryGetValue(assertionStatement.Expression, out var t))
                 {
+                    var (value, _) = t;
+
                     switch (value)
                     {
                         case ConstantExpressionValue.TRUE when isKnownToBeTrue:

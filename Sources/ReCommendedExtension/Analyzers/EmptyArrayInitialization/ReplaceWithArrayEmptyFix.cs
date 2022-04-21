@@ -29,11 +29,9 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
             {
                 Debug.Assert(CSharpLanguage.Instance != null);
 
-                return string.Format(
-                    "Replace with '{0}.{1}<{2}>()'",
-                    nameof(Array),
-                    nameof(Array.Empty),
-                    highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance));
+                var typeName = highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance);
+
+                return $"Replace with '{nameof(Array)}.{nameof(Array.Empty)}<{typeName}>()'";
             }
         }
 

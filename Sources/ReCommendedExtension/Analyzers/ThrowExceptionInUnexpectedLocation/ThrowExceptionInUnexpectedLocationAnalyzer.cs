@@ -6,11 +6,14 @@ using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
+using JetBrains.ReSharper.Psi.ControlFlow.Impl;
 using JetBrains.ReSharper.Psi.CSharp.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve.Managed;
 using JetBrains.ReSharper.Psi.Modules;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
@@ -18,6 +21,32 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
     [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(ThrowExceptionInUnexpectedLocationWarning) })]
     public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
+        sealed class ControlFlowGraphInspectorWithValueAnalysis : CSharpControlFlowGraphInspector
+        {
+            /// <remarks>
+            /// The originally used
+            /// <see cref="CSharpControlFlowGraphInspector.Inspect(ICSharpControlFlowGraph,ValueAnalysisMode,Func{ITreeNode,ICSharpControlFlowGraph})"/>
+            /// method turns off the value analysis mode (it effectively replaces the provided <paramref name="analysisMode"/> with
+            /// <see cref="ValueAnalysisMode.OFF"/> when the nullable warning context is detected).
+            /// </remarks>
+            [NotNull]
+            public static CSharpControlFlowGraphInspector Inspect([NotNull] ICSharpControlFlowGraph graph, ValueAnalysisMode analysisMode)
+            {
+                var element = (ICSharpTreeNode)graph.Declaration ?? graph.OwnerNode;
+                var universalContext = new UniversalContext(element);
+                var factory = new CSharpControlFlowContextFactory(graph, universalContext, analysisMode, ExecutionBehavior.InstantExecution);
+                var inspector = new ControlFlowGraphInspectorWithValueAnalysis(graph, factory);
+
+                inspector.Inspect();
+
+                return inspector;
+            }
+
+            ControlFlowGraphInspectorWithValueAnalysis(
+                [NotNull] ICSharpControlFlowGraph graph,
+                [NotNull] CSharpControlFlowContextFactory factory) : base(graph, factory, null) { }
+        }
+
         enum Location
         {
             PropertyGetter,
@@ -158,16 +187,14 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                             var controlFlowGraph = (ICSharpControlFlowGraph)ControlFlowBuilder.GetGraph(methodDeclaration);
 
                             var controlFlowEdge = controlFlowGraph?.GetLeafElementsFor(element).FirstOrDefault()?.Entries.FirstOrDefault();
-
                             if (controlFlowEdge != null)
                             {
-                                var inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, ValueAnalysisMode.OPTIMISTIC, false);
+                                var inspector = ControlFlowGraphInspectorWithValueAnalysis.Inspect(controlFlowGraph, ValueAnalysisMode.OPTIMISTIC);
 
-                                var controlFlowContext = inspector.GetContext(controlFlowEdge);
                                 var variableInfo = inspector.FindVariableInfo(parameter);
                                 if (variableInfo != null)
                                 {
-                                    var variableValue = controlFlowContext?.GetVariableDefiniteState(variableInfo);
+                                    var variableValue = inspector.GetContext(controlFlowEdge)?.GetVariableDefiniteState(variableInfo);
                                     if (variableValue == null || variableValue == CSharpControlFlowVariableValue.FALSE)
                                     {
                                         return Location.DisposeMethodWithParameterFalseCodePath;
