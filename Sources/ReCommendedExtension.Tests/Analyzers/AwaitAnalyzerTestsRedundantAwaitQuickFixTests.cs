@@ -18,6 +18,10 @@ namespace ReCommendedExtension.Tests.Analyzers
 
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
         [Test]
+        public void TestMethod_Annotated() => DoNamedTest2();
+
+        [TestNetCore30(ANNOTATIONS_PACKAGE)]
+        [Test]
         public void TestMethod_WithConfigureAwait() => DoNamedTest2();
 
         [TestNetCore30(ANNOTATIONS_PACKAGE)]
