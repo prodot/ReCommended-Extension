@@ -7,6 +7,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -52,7 +53,9 @@ namespace ReCommendedExtension.Analyzers.Await
                 // add [NotNull] annotation
                 if (highlighting.AttributesOwnerDeclaration != null
                     && !highlighting.AttributesOwnerDeclaration.IsNullableAnnotationsContextEnabled()
-                    && !highlighting.AttributesOwnerDeclaration.OverridesInheritedMember())
+                    && !highlighting.AttributesOwnerDeclaration.OverridesInheritedMember()
+                    && highlighting.AttributesOwnerDeclaration.Attributes.All(
+                        a => a.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != NullnessProvider.NotNullAttributeShortName))
                 {
                     var codeAnnotationsConfiguration =
                         highlighting.AttributesOwnerDeclaration.GetPsiServices().GetComponent<CodeAnnotationsConfiguration>();
