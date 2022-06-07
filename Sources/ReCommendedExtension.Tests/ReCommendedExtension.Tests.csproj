@@ -16,12 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Lifetimes" Version="2022.1.4" />
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2022.1.1">
+    <PackageReference Include="JetBrains.Lifetimes" Version="2022.1.5" />
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2022.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
   </ItemGroup>
 
