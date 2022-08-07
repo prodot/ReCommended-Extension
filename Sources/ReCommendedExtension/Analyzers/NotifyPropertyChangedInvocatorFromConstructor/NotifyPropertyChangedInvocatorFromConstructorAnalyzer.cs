@@ -35,20 +35,21 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
                 method.GetPsiServices().GetCodeAnnotationsCache().GetProvider<NotifyPropertyChangedAnnotationProvider>();
 
             return notifyPropertyChangedAnnotationProvider
-                .ContainsNotifyPropertyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
+                .HasNotifyPropertyChangedInvocatorAttribute(method); // true if annotated with [NotifyPropertyChangedInvocator]
         }
 
         protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
         {
             if (IsNotifyPropertyChangedInvocatorFromConstructor(element))
             {
-                var typeName = NotifyPropertyChangedAnnotationProvider.NotifyPropertyChangedInvocatorAttributeShortName;
+                Debug.Assert(
+                    NotifyPropertyChangedAnnotationProvider.NotifyPropertyChangedInvocatorAttributeShortName.EndsWith(
+                        "Attribute",
+                        StringComparison.Ordinal));
 
-                Debug.Assert(typeName != null);
-
-                var attributeName = typeName.EndsWith("Attribute", StringComparison.Ordinal)
-                    ? typeName.Substring(0, typeName.Length - "Attribute".Length)
-                    : typeName;
+                var attributeName = NotifyPropertyChangedAnnotationProvider.NotifyPropertyChangedInvocatorAttributeShortName.Substring(
+                    0,
+                    NotifyPropertyChangedAnnotationProvider.NotifyPropertyChangedInvocatorAttributeShortName.Length - "Attribute".Length);
 
                 consumer.AddHighlighting(
                     new NotifyPropertyChangedInvocatorFromConstructorWarning(

@@ -21,7 +21,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0,
                     value => value + 1,
                     value => value * 2,
-                    value => value);
+                    value => value,
+                    c => c.IntValue);
             }
 
             if (type.IsUint())
@@ -35,7 +36,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0u,
                     value => value + 1u,
                     value => value * 2u,
-                    value => value);
+                    value => value,
+                    c => c.UintValue);
             }
 
             if (type.IsLong())
@@ -49,7 +51,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0L,
                     value => value + 1L,
                     value => value * 2L,
-                    value => value);
+                    value => value,
+                    c => c.LongValue);
             }
 
             if (type.IsUlong())
@@ -63,7 +66,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0ul,
                     value => value + 1ul,
                     value => value * 2ul,
-                    value => value);
+                    value => value,
+                    c => c.UlongValue);
             }
 
             if (type.IsByte())
@@ -77,7 +81,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0,
                     value => (byte)(value + 1),
                     value => (byte)(value * 2),
-                    value => value);
+                    value => value,
+                    c => c.ByteValue);
             }
 
             if (type.IsSbyte())
@@ -91,7 +96,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0,
                     value => (sbyte)(value + 1),
                     value => (sbyte)(value * 2),
-                    value => value);
+                    value => value,
+                    c => c.SbyteValue);
             }
 
             if (type.IsShort())
@@ -105,7 +111,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0,
                     value => (short)(value + 1),
                     value => (short)(value * 2),
-                    value => value);
+                    value => value,
+                    c => c.ShortValue);
             }
 
             if (type.IsUshort())
@@ -119,7 +126,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0,
                     value => (ushort)(value + 1),
                     value => (ushort)(value * 2),
-                    value => value);
+                    value => value,
+                    c => c.UshortValue);
             }
 
             if (type.IsDecimal())
@@ -133,7 +141,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => value == 0m,
                     null,
                     value => value * 2m,
-                    value => (double)value);
+                    value => (double)value,
+                    c => c.DecimalValue);
             }
 
             if (type.IsDouble())
@@ -147,7 +156,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => Math.Abs(value - 0d) < double.Epsilon,
                     null,
                     value => value * 2d,
-                    value => value);
+                    value => value,
+                    c => c.DoubleValue);
             }
 
             if (type.IsFloat())
@@ -161,7 +171,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
                     value => Math.Abs(value - 0f) < float.Epsilon,
                     null,
                     value => value * 2f,
-                    value => value);
+                    value => value,
+                    c => c.FloatValue);
             }
 
             return null;

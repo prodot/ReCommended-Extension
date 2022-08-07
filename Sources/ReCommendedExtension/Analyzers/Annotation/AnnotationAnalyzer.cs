@@ -135,13 +135,8 @@ namespace ReCommendedExtension.Analyzers.Annotation
         {
             switch (constantValue)
             {
-                case var v when v.IsLong():
-                    Debug.Assert(v.Value != null);
-                    return (long)v.Value;
-
-                case var v when v.IsUlong():
-                    Debug.Assert(v.Value != null);
-                    return (ulong)v.Value;
+                case var v when v.IsLong(): return v.LongValue;
+                case var v when v.IsUlong(): return v.UlongValue;
 
                 default: return null;
             }
@@ -263,15 +258,10 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute) && attributeInstance.PositionParameterCount == 2
                 let categoryConstantValue = attributeInstance.PositionParameter(0).ConstantValue
                 let checkIdConstantValue = attributeInstance.PositionParameter(1).ConstantValue
-                where categoryConstantValue != null
-                    && checkIdConstantValue != null
-                    && categoryConstantValue.IsString()
-                    && checkIdConstantValue.IsString()
+                where categoryConstantValue.IsString() && checkIdConstantValue.IsString()
                 let justificationConstantValue = attributeInstance.NamedParameter(nameof(SuppressMessageAttribute.Justification)).ConstantValue
-                where justificationConstantValue == null
-                    || !justificationConstantValue.IsString()
-                    || string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
-                select new { Attribute = attribute, Category = (string)categoryConstantValue.Value, CheckId = (string)checkIdConstantValue.Value };
+                where !justificationConstantValue.IsString() || string.IsNullOrWhiteSpace(justificationConstantValue.StringValue)
+                select new { Attribute = attribute, Category = categoryConstantValue.StringValue, CheckId = checkIdConstantValue.StringValue };
 
             foreach (var suppressMessageAttribute in suppressMessageAttributes)
             {
@@ -294,9 +284,7 @@ namespace ReCommendedExtension.Analyzers.Annotation
                 let justificationConstantValue =
                     attributeInstance.NamedParameter("Justification")
                         .ConstantValue // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
-                where justificationConstantValue == null
-                    || !justificationConstantValue.IsString()
-                    || string.IsNullOrWhiteSpace((string)justificationConstantValue.Value)
+                where !justificationConstantValue.IsString() || string.IsNullOrWhiteSpace(justificationConstantValue.StringValue)
                 select attribute;
 
             foreach (var excludeFromCodeCoverageAttribute in excludeFromCodeCoverageAttributes)
@@ -571,10 +559,8 @@ namespace ReCommendedExtension.Analyzers.Annotation
                     from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
                     where attributeInstance.PositionParameterCount == 1
                     let constantValue = attributeInstance.PositionParameter(0).ConstantValue
-                    where constantValue != null && constantValue.IsString()
-                    let condition = (string)constantValue.Value
-                    where !string.IsNullOrEmpty(condition)
-                    select condition).ToList()
+                    where constantValue.IsString() && !string.IsNullOrEmpty(constantValue.StringValue)
+                    select constantValue.StringValue).ToList()
                 where conditions.Count > 0
                 select new { Attribute = attribute, Conditions = conditions };
 
