@@ -23,10 +23,8 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation
                 from attributeInstance in method.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
                 where attributeInstance.PositionParameterCount == 1
                 let constantValue = attributeInstance.PositionParameter(0).ConstantValue
-                where constantValue != null && constantValue.IsString()
-                let condition = (string)constantValue.Value
-                where !string.IsNullOrEmpty(condition)
-                select condition).ToList();
+                where constantValue.IsString() && !string.IsNullOrEmpty(constantValue.StringValue)
+                select constantValue.StringValue).ToList();
 
             if (declaredConditions.Count == 0)
             {

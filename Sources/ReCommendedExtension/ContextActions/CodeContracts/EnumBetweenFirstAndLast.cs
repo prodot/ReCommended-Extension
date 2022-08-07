@@ -55,16 +55,16 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
             public static EnumContractInfo<E> TryCreate(
                 [NotNull][ItemNotNull] IList<IField> members,
                 [NotNull] Func<E, E, bool> isLessOrEquals,
-                [NotNull] Func<E, E> getNext)
+                [NotNull] Func<E, E> getNext,
+                [NotNull] Func<ConstantValue, E> extractConstantValue)
             {
                 var valueMembers = new Dictionary<E, IField>();
 
                 foreach (var field in members.WithoutObsolete())
                 {
-                    var value = field.ConstantValue.Value;
-                    if (value != null)
+                    if (field.ConstantValue.IsEnum())
                     {
-                        valueMembers[(E)value] = field;
+                        valueMembers[extractConstantValue(field.ConstantValue.ToEnumUnderlyingType())] = field;
                     }
                 }
 

@@ -59,15 +59,16 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 [NotNull] Func<E, bool> isZero,
                 [NotNull] Func<E, E, bool> isLessOrEquals,
                 [NotNull] Func<E, E> getMultipliedWithTwo,
-                [NotNull] string cSharpLiteralSuffix)
+                [NotNull] string cSharpLiteralSuffix,
+                [NotNull] Func<ConstantValue, E> extractConstantValue)
             {
                 var valueMembers = new Dictionary<E, IField>();
+
                 foreach (var member in members.WithoutObsolete())
                 {
-                    var value = member.ConstantValue.Value;
-                    if (value != null)
+                    if (member.ConstantValue.IsEnum())
                     {
-                        var t = (E)value;
+                        var t = extractConstantValue(member.ConstantValue.ToEnumUnderlyingType());
                         if (isLessOrEquals(t, default) && !isZero(t))
                         {
                             return null;

@@ -25,6 +25,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
         [NotNull]
         readonly Func<N, double> convertToDouble;
 
+        [NotNull]
+        readonly Func<ConstantValue, N> extractConstantValue;
+
         public CSharpNumericTypeInfo(
             bool isSigned,
             N one,
@@ -34,7 +37,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             [NotNull] Func<N, bool> isZero,
             [CanBeNull] Func<N, N> getNext,
             [NotNull] Func<N, N> getMultipliedWithTwo,
-            [NotNull] Func<N, double> convertToDouble) : base(isSigned, epsilonLiteral, literalSuffix)
+            [NotNull] Func<N, double> convertToDouble,
+            [NotNull] Func<ConstantValue, N> extractConstantValue) : base(isSigned, epsilonLiteral, literalSuffix)
         {
             this.one = one;
             this.isLessOrEquals = isLessOrEquals;
@@ -42,16 +46,25 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             this.getNext = getNext;
             this.getMultipliedWithTwo = getMultipliedWithTwo;
             this.convertToDouble = convertToDouble;
+            this.extractConstantValue = extractConstantValue;
         }
 
         public override EnumBetweenFirstAndLast.EnumContractInfo TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IList<IField> members)
         {
             Debug.Assert(getNext != null);
 
-            return EnumBetweenFirstAndLast.EnumContractInfo<N>.TryCreate(members, isLessOrEquals, getNext);
+            return EnumBetweenFirstAndLast.EnumContractInfo<N>.TryCreate(members, isLessOrEquals, getNext, extractConstantValue);
         }
 
         public override EnumFlags.EnumContractInfo TryCreateEnumFlags(IList<IField> members)
-            => EnumFlags.EnumContractInfo<N>.TryCreate(members, one, convertToDouble, isZero, isLessOrEquals, getMultipliedWithTwo, LiteralSuffix);
+            => EnumFlags.EnumContractInfo<N>.TryCreate(
+                members,
+                one,
+                convertToDouble,
+                isZero,
+                isLessOrEquals,
+                getMultipliedWithTwo,
+                LiteralSuffix,
+                extractConstantValue);
     }
 }

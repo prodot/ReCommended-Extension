@@ -33,7 +33,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string AnnotationAttributeTypeName => nameof(ValueRangeAttribute);
 
-        protected override AttributeValue[] AnnotationArguments => new[] { new AttributeValue(new ConstantValue(0, null as IType)) };
+        protected override AttributeValue[] AnnotationArguments => new[] { new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT) };
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
         {

@@ -13,5 +13,5 @@ using ReCommendedExtension;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("5.7.1.0")]
-[assembly: AssemblyFileVersion("5.7.1")]
+[assembly: AssemblyVersion("5.7.2.0")]
+[assembly: AssemblyFileVersion("5.7.2")]
