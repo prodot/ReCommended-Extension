@@ -17,7 +17,7 @@ namespace ReCommendedExtension.Tests.Analyzers
             => highlighting is MissingSuppressionJustificationWarning;
 
         [Test]
-        [TestPackages("MSTest.TestFramework")]
+        [TestNetCore31("MSTest.TestFramework")]
         public void TestSuppressMessage_TestProject() => DoNamedTest2();
 
         [Test]
