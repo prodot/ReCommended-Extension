@@ -8,7 +8,6 @@ using ReCommendedExtension.Analyzers.AsyncVoid;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
-    [TestNetFramework45]
     [TestFixture]
     public sealed class AsyncVoidAnalyzerTests : CSharpHighlightingTestBase
     {
@@ -18,12 +17,19 @@ namespace ReCommendedExtension.Tests.Analyzers
             => highlighting is AsyncVoidFunctionExpressionWarning || highlighting is AvoidAsyncVoidWarning;
 
         [Test]
+        [TestNetFramework45]
         public void TestAnonymousMethod() => DoNamedTest2();
 
         [Test]
+        [TestNetFramework45]
         public void TestLambdaExpression() => DoNamedTest2();
 
         [Test]
+        [TestNetFramework45]
         public void TestAsyncVoidMethod() => DoNamedTest2();
+
+        // [Test]
+        // [TestNet60("Microsoft.WindowsAppSDK/1.1.4")]
+        // public void TestAsyncVoidMethodXBind() => DoNamedTest2();
     }
 }
