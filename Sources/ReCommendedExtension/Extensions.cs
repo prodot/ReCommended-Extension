@@ -545,23 +545,18 @@ namespace ReCommendedExtension
 
         public static bool IsEventTarget([NotNull] this IReference reference)
         {
-            var treeNode = reference.GetTreeNode();
-
-            if (treeNode.Parent is IAssignmentExpression assignmentExpression)
+            switch (reference.GetTreeNode().Parent)
             {
-                return assignmentExpression.IsEventSubscriptionOrUnSubscription();
-            }
+                case IAssignmentExpression assignmentExpression: return assignmentExpression.IsEventSubscriptionOrUnSubscription();
 
-            if (treeNode.Parent is ICSharpArgument argument)
-            {
-                var delegateCreation = TryGetDelegateCreation(argument);
-                if (delegateCreation != null)
+                case ICSharpArgument argument:
                 {
-                    assignmentExpression = delegateCreation.Parent as IAssignmentExpression;
-                    if (assignmentExpression != null)
+                    var delegateCreation = TryGetDelegateCreation(argument);
+                    if (delegateCreation != null && delegateCreation.Parent is IAssignmentExpression assignmentExpression)
                     {
                         return assignmentExpression.IsEventSubscriptionOrUnSubscription();
                     }
+                    break;
                 }
             }
 
