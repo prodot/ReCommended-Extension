@@ -479,8 +479,11 @@ namespace ReCommendedExtension
             if (type.IsUnconstrainedGenericType())
             {
                 // unconstrained generic type
+
+                return false;
             }
-            else if (type.IsValueType())
+
+            if (type.IsValueType())
             {
                 // value type (non-nullable and nullable)
 
@@ -489,38 +492,44 @@ namespace ReCommendedExtension
                     case IConstantValueOwner constantValueOwner when type.IsNullable()
                         ? constantValueOwner.ConstantValue.IsNull()
                         : constantValueOwner.ConstantValue.IsDefaultValue(type, element):
-
-                    case IObjectCreationExpression objectCreationExpression
-                        when Equals(objectCreationExpression.Type(), type) && objectCreationExpression.Arguments.Count == 0:
-
-                    case IAsExpression asExpression
-                        when asExpression.Operand != null
-                        && asExpression.Operand.ConstantValue.IsNull()
-                        && asExpression.TypeOperand != null
-                        && Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type)
-                        && type.IsNullable():
                         return true;
+
+                    case IObjectCreationExpression objectCreationExpression:
+                        var structType = type.GetStructType(); // null if type is a generic type
+
+                        return Equals(objectCreationExpression.Type(), type)
+                            && objectCreationExpression.Arguments.Count == 0
+                            && structType != null
+                            && !structType.HasCustomParameterlessConstructor
+                            && (objectCreationExpression.Initializer == null || objectCreationExpression.Initializer.InitializerElements.Count == 0);
+
+                    case IAsExpression asExpression:
+                        return asExpression.Operand != null
+                            && asExpression.Operand.ConstantValue.IsNull()
+                            && asExpression.TypeOperand != null
+                            && Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type)
+                            && type.IsNullable();
+
+                    default: return false;
                 }
             }
-            else
+
+            // reference type
+
+            switch (element)
             {
-                // reference type
+                case IConstantValueOwner constantValueOwner when constantValueOwner.ConstantValue.IsNull()
+                    || constantValueOwner.ConstantValue.IsDefaultValue(type, element):
+                    return true;
 
-                switch (element)
-                {
-                    case IConstantValueOwner constantValueOwner when constantValueOwner.ConstantValue.IsNull()
-                        || constantValueOwner.ConstantValue.IsDefaultValue(type, element):
-
-                    case IAsExpression asExpression
-                        when asExpression.Operand != null
+                case IAsExpression asExpression:
+                    return asExpression.Operand != null
                         && asExpression.Operand.ConstantValue.IsNull()
                         && asExpression.TypeOperand != null
-                        && Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type):
-                        return true;
-                }
-            }
+                        && Equals(CSharpTypeFactory.CreateType(asExpression.TypeOperand), type);
 
-            return false;
+                default: return false;
+            }
         }
 
         public static ValueAnalysisMode GetValueAnalysisMode([NotNull] this ElementProblemAnalyzerData data)

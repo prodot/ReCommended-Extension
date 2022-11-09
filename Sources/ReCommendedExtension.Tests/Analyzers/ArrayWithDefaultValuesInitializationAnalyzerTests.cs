@@ -1,4 +1,5 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
@@ -25,5 +26,14 @@ namespace ReCommendedExtension.Tests.Analyzers
         [NullableContext(NullableContextKind.Enable)]
         [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
         public void TestArrayWithDefaultValuesInitializationWithNullableAnnotations() => DoNamedTest2();
+
+        [Test]
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+        public void TestArrayWithDefaultValuesInitialization_TargetTyped() => DoNamedTest2();
+
+        [Test]
+        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+        [SuppressMessage("ReSharper", "IdentifierTypo")]
+        public void TestArrayWithDefaultValuesInitialization_ParameterlessCtor() => DoNamedTest2();
     }
 }

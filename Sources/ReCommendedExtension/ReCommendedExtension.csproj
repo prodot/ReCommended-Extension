@@ -5,14 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
     <AssemblyOriginatorKeyFile>Properties\ReCommendedExtension.public.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
@@ -20,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2022.2.3">
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2022.2.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

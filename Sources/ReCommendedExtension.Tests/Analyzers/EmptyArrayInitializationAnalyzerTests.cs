@@ -11,7 +11,6 @@ using ReCommendedExtension.Analyzers.EmptyArrayInitialization;
 
 namespace ReCommendedExtension.Tests.Analyzers
 {
-    [TestNetFramework46]
     [TestFixture]
     public sealed class EmptyArrayInitializationAnalyzerTests : CSharpHighlightingTestBase
     {
@@ -22,6 +21,7 @@ namespace ReCommendedExtension.Tests.Analyzers
                 || highlighting is UseArrayEmptyMethodWarning; // to figure out which cases are supported by R#
 
         [Test]
+        [TestNet60]
         [SuppressMessage("ReSharper", "EmptyArrayInitialization")]
         [SuppressMessage("ReSharper", "UseArrayEmptyMethod")]
         public void Compiler()
@@ -43,6 +43,7 @@ namespace ReCommendedExtension.Tests.Analyzers
         }
 
         [Test]
+        [TestNetFramework46]
         public void TestEmptyArrayInitialization() => DoNamedTest2();
     }
 }

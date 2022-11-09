@@ -85,14 +85,16 @@ namespace Test
 
     public class GenericClass_ValueType<T> where T : struct
     {
-        T[] field_nonNullable = { default, default(T), new T() };
+        T[] field_nonNullable = { default, default(T) };
+        T[] field_nonNullable2_ = { default, default(T), new T() };
 
         T?[] field_nullable = { null, null as T?, default, default(T?), new T?() };
         T?[] field_nullable2_ = { null, default(T) };
 
         void Method(T nonNullable, T? nullable)
         {
-            var variable_nonNullable = new[] { default, default(T), new T() };
+            var variable_nonNullable = new[] { default, default(T) };
+            var variable_nonNullable2 = new[] { default, default(T), new T() };
             var variable_nonNullable_ = new[] { default, nonNullable };
 
             var variable_nullable = new[] { null, null as T?, default, default(T?), new T?() };
