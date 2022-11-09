@@ -85,14 +85,16 @@ namespace Test
 
     public class GenericClass_ValueType<T> where T : struct
     {
-        T[] field_nonNullable = |{ default, default(T), new T() }|(29);
+        T[] field_nonNullable = |{ default, default(T) }|(29);
+        T[] field_nonNullable2 = { default, default(T), new T() };
 
         T?[] field_nullable = |{ null, null as T?, default, default(T?), new T?() }|(30);
         T?[] field_nullable2_ = { null, default(T) };
 
         void Method(T nonNullable, T? nullable)
         {
-            var variable_nonNullable = new[] |{ default, default(T), new T() }|(31);
+            var variable_nonNullable = new[] |{ default, default(T) }|(31);
+            var variable_nonNullable2 = new[] { default, default(T), new T() };
             var variable_nonNullable_ = new[] { default, nonNullable };
 
             var variable_nullable = new[] |{ null, null as T?, default, default(T?), new T?() }|(32);
@@ -141,9 +143,9 @@ namespace Test
 (26): ReSharper Suggestion: Use 'new T[2]'.
 (27): ReSharper Suggestion: Use 'new T[2]'.
 (28): ReSharper Suggestion: Use 'new List<T>?[3]'.
-(29): ReSharper Suggestion: Use 'new T[3]'.
+(29): ReSharper Suggestion: Use 'new T[2]'.
 (30): ReSharper Suggestion: Use 'new T?[5]'.
-(31): ReSharper Suggestion: Use 'new T[3]'.
+(31): ReSharper Suggestion: Use 'new T[2]'.
 (32): ReSharper Suggestion: Use 'new T?[5]'.
 (33): ReSharper Suggestion: Use 'new T?[4]'.
 (34): ReSharper Suggestion: Use 'new T?[4]'.
