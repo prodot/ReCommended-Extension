@@ -23,7 +23,7 @@ namespace ReCommendedExtension.ContextActions
         protected override string TextSuffix => "with observable state changes";
 
         protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
-            => declaredElement is IMethod method && !method.ReturnType.IsVoid() && !method.IsAsync;
+            => declaredElement is IMethod method && !method.ReturnType.IsVoid();
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
             => ownerDeclaration.Attributes.FirstOrDefault(
