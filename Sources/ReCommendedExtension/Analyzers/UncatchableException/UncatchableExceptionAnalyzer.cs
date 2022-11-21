@@ -47,6 +47,7 @@ namespace ReCommendedExtension.Analyzers.UncatchableException
             { "System.Data.SyntaxErrorException", "The exception indicates a bug that can be avoided." },
             { "System.Data.VersionNotFoundException", "The exception indicates a bug that can be avoided." },
             { "System.Diagnostics.Contracts.ContractException", "The exception indicates a bug that can be avoided." },
+            { "System.Diagnostics.UnreachableException", "The exception indicates a bug that can be avoided." },
             { "System.DuplicateWaitObjectException", "The exception indicates a bug that can be avoided." },
             { "System.FieldAccessException", "The exception indicates a bug that can be avoided." },
             { "System.IndexOutOfRangeException", "The exception indicates a bug that can be avoided." },
