@@ -58,7 +58,7 @@ namespace ReCommendedExtension.Analyzers.ValueTask
                     universalContext,
                     analysisMode,
                     ExecutionBehavior.InstantExecution,
-                    forceClosuresCollection);
+                    collectClosures: forceClosuresCollection);
 
                 var flowGraphInspector = new Inspector(controlFlowGraph, factory, graphBuilder);
 
