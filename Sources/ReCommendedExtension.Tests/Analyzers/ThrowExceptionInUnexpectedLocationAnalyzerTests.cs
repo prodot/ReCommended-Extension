@@ -10,7 +10,6 @@ using ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
 namespace ReCommendedExtension.Tests.Analyzers
 {
     [TestFixture]
-    [TestNet50]
     public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpHighlightingTestBase
     {
         protected override string RelativeTestDataPath => @"Analyzers\ThrowExceptionInUnexpectedLocation";
@@ -19,10 +18,16 @@ namespace ReCommendedExtension.Tests.Analyzers
             => highlighting is ThrowExceptionInUnexpectedLocationWarning;
 
         [Test]
+        [TestNet50]
         public void TestThrowExceptionInUnexpectedLocation() => DoNamedTest2();
 
         [Test]
+        [TestNet50]
         [NullableContext(NullableContextKind.Enable)]
         public void TestThrowExceptionInUnexpectedLocation_NullableAnnotationContext() => DoNamedTest2();
+
+        [Test]
+        [TestNet70]
+        public void TestThrowExceptionInUnexpectedLocation_UnreachableException() => DoNamedTest2();
     }
 }

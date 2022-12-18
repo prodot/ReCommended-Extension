@@ -69,8 +69,6 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
             ImplicitCastOperator,
         }
 
-        const string disposeMethodName = "Dispose";
-
         [NotNull]
         static IMethod GetMethod([NotNull] ITypeElement type, [NotNull] string name) => type.Methods.First(m => m.ShortName == name);
 
@@ -179,7 +177,8 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
                         return Location.DisposeAsyncMethod;
                     }
 
-                    if (methodDeclaration.DeclaredElement.ShortName == disposeMethodName && methodDeclaration.DeclaredElement.Parameters.Count == 1)
+                    if (methodDeclaration.DeclaredElement.ShortName == nameof(IDisposable.Dispose)
+                        && methodDeclaration.DeclaredElement.Parameters.Count == 1)
                     {
                         var parameter = methodDeclaration.DeclaredElement.Parameters[0];
                         if (parameter != null && parameter.Type.IsBool())
@@ -317,7 +316,7 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
 
                 case Location.DisposeAsyncMethod: return "'DisposeAsync' methods"; // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
 
-                case Location.DisposeMethodWithParameterFalseCodePath: return $"'{disposeMethodName}(false)' code paths";
+                case Location.DisposeMethodWithParameterFalseCodePath: return $"'{nameof(IDisposable.Dispose)}(false)' code paths";
 
                 case Location.EqualityOperator: return "equality operators";
 
@@ -344,6 +343,12 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation
             }
 
             if (exceptionType == null)
+            {
+                return;
+            }
+
+            var unreachableExceptionTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.UnreachableException, element.GetPsiModule());
+            if (unreachableExceptionTypeElement != null && IsOrDerivesFrom(exceptionType, unreachableExceptionTypeElement))
             {
                 return;
             }
