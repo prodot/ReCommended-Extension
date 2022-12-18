@@ -77,6 +77,9 @@ namespace ReCommendedExtension
         [NotNull]
         public static readonly IClrTypeName GenericValueTaskAwaiter = new ClrTypeName("System.Runtime.CompilerServices.ValueTaskAwaiter`1");
 
+        [NotNull]
+        public static readonly IClrTypeName UnreachableException = new ClrTypeName("System.Diagnostics.UnreachableException");
+
         [JetBrains.Annotations.Pure]
         [ContractAnnotation("typeElement:null => false", true)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
