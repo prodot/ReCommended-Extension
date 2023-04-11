@@ -5,7 +5,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions
@@ -22,7 +21,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string TextSuffix => "with observable state changes";
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context)
             => declaredElement is IMethod method && !method.ReturnType.IsVoid();
 
         protected override IAttribute TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)

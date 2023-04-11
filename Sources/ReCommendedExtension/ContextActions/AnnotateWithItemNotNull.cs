@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Util;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
@@ -47,7 +46,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string AnnotationAttributeTypeName => nameof(ItemNotNullAttribute);
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context)
         {
             if (context.IsNullableAnnotationsContextEnabled())
             {

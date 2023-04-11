@@ -31,7 +31,7 @@ namespace ReCommendedExtension.ContextActions
             var attributeType = attributesOwnerDeclaration.GetPsiServices()
                 .GetComponent<CodeAnnotationsConfiguration>()
                 .GetAttributeTypeForElement(attributesOwnerDeclaration, AnnotationAttributeTypeName);
-            if (attributeType != null && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration, psiModule))
+            if (attributeType != null && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration))
             {
                 attributeToReplace = TryGetAttributeToReplace(attributesOwnerDeclaration);
 
@@ -50,9 +50,6 @@ namespace ReCommendedExtension.ContextActions
         [CanBeNull]
         protected virtual IAttribute TryGetAttributeToReplace([NotNull] IAttributesOwnerDeclaration ownerDeclaration) => null;
 
-        protected abstract bool CanBeAnnotated(
-            [CanBeNull] IDeclaredElement declaredElement,
-            [NotNull] ITreeNode context,
-            [NotNull] IPsiModule psiModule);
+        protected abstract bool CanBeAnnotated([CanBeNull] IDeclaredElement declaredElement, [NotNull] ITreeNode context);
     }
 }

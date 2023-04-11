@@ -2,7 +2,6 @@
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
@@ -18,7 +17,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string AnnotationAttributeTypeName => nameof(InstantHandleAttribute);
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context)
             => declaredElement is IParameter parameter
                 && (parameter.Type.IsGenericIEnumerable() || parameter.Type.IsIAsyncEnumerable() || parameter.Type.IsDelegateType());
     }
