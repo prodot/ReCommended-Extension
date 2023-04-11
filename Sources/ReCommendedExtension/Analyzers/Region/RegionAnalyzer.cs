@@ -8,10 +8,7 @@ namespace ReCommendedExtension.Analyzers.Region
 {
     [ElementProblemAnalyzer(
         typeof(IStartRegion),
-        HighlightingTypes = new[]
-        {
-            typeof(EmptyRegionSuggestion), typeof(RegionWithinTypeMemberBodyWarning), typeof(RegionWithSingleElementSuggestion),
-        })]
+        HighlightingTypes = new[] { typeof(RegionWithinTypeMemberBodyWarning), typeof(RegionWithSingleElementSuggestion) })]
     public sealed class RegionAnalyzer : ElementProblemAnalyzer<IStartRegion>
     {
         protected override void Run(IStartRegion element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
@@ -34,15 +31,9 @@ namespace ReCommendedExtension.Analyzers.Region
                     }
                 }
 
-                switch (nonWhitespaceNodes)
+                if (nonWhitespaceNodes == 1)
                 {
-                    case 0:
-                        consumer.AddHighlighting(new EmptyRegionSuggestion("The region is empty.", element));
-                        break;
-
-                    case 1:
-                        consumer.AddHighlighting(new RegionWithSingleElementSuggestion("The region contains a single element.", element));
-                        break;
+                    consumer.AddHighlighting(new RegionWithSingleElementSuggestion("The region contains a single element.", element));
                 }
             }
 

@@ -18,13 +18,6 @@ namespace ReCommendedExtension.Tests.Analyzers
             => highlighting is RegionHighlighting;
 
         [Test]
-        public void TestEmptyRegion() => DoNamedTest2();
-
-        [Test]
-        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-        public void TestEmptyRegion_FileScopedNamespace() => DoNamedTest2();
-
-        [Test]
         public void TestRegionWithSingleElement() => DoNamedTest2();
 
         [Test]
