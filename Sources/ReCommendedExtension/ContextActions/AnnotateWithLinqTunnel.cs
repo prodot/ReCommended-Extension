@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions
@@ -18,7 +17,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string AnnotationAttributeTypeName => nameof(LinqTunnelAttribute);
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context)
             => declaredElement is IMethod method
                 && (method.ReturnType.IsGenericIEnumerable() && method.Parameters.Any(p => p.Type.IsGenericIEnumerable())
                     || method.ReturnType.IsIAsyncEnumerable() && method.Parameters.Any(p => p.Type.IsIAsyncEnumerable()));

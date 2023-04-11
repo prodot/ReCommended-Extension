@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 
@@ -35,7 +34,7 @@ namespace ReCommendedExtension.ContextActions
 
         protected override AttributeValue[] AnnotationArguments => new[] { new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT) };
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context)
         {
             switch (declaredElement)
             {

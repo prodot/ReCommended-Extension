@@ -16,8 +16,7 @@ namespace ReCommendedExtension.Tests.ContextActions
 
         [Test]
         [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-        [TestNetFramework45]
-        [TestPackagesWithAnnotations("System.Threading.Tasks.Extensions")]
+        [TestNetCore20(ANNOTATIONS_PACKAGE, VALUE_TASKS_PACKAGE)]
         public void TestAvailability() => DoNamedTest2();
 
         [Test]

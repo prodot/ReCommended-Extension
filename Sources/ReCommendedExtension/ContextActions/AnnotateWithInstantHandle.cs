@@ -1,12 +1,9 @@
 ﻿using JetBrains.Annotations;
-using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Conversions;
-using JetBrains.ReSharper.Psi.Impl.Types;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions
 {
@@ -20,12 +17,8 @@ namespace ReCommendedExtension.ContextActions
 
         protected override string AnnotationAttributeTypeName => nameof(InstantHandleAttribute);
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context, IPsiModule psiModule)
+        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context)
             => declaredElement is IParameter parameter
-                && (parameter.Type.IsGenericIEnumerable()
-                    || parameter.Type.IsIAsyncEnumerable()
-                    || parameter.Type.IsImplicitlyConvertibleTo(
-                        new DeclaredTypeFromCLRName(PredefinedType.MULTICAST_DELEGATE_FQN, NullableAnnotation.Unknown, psiModule),
-                        context.GetTypeConversionRule()));
+                && (parameter.Type.IsGenericIEnumerable() || parameter.Type.IsIAsyncEnumerable() || parameter.Type.IsDelegateType());
     }
 }

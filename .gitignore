@@ -386,3 +386,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# NuGet locks for tests
+Sources/ReCommendedExtension.Tests/test/data/NuGetLocks/
