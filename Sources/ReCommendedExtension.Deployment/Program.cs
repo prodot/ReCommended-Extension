@@ -25,7 +25,7 @@ namespace ReCommendedExtension.Deployment
 
                 if (isReleaseBuild)
                 {
-                    ResignAssembly(executionDirectoryPath, assemblyPath);
+                    ResignAssembly(assemblyPath);
                 }
 
                 UpdateNuspec(executionDirectoryPath, assemblyPath, out var nuspecPath);
@@ -90,7 +90,7 @@ namespace ReCommendedExtension.Deployment
             Console.WriteLine("done");
         }
 
-        static void ResignAssembly([NotNull] string executionDirectoryPath, [NotNull] string assemblyPath)
+        static void ResignAssembly([NotNull] string assemblyPath)
         {
             Console.WriteLine("Resigning assembly...");
 
@@ -102,11 +102,7 @@ namespace ReCommendedExtension.Deployment
             // set a secret: > dotnet user-secrets set "SNKey" "..."
             // list secrets: > dotnet user-secrets list
 
-            var projectFilePath = Path.Combine(executionDirectoryPath, @"..\..\..", "ReCommendedExtension.Deployment.csproj");
-            var projectFile = XDocument.Load(projectFilePath);
-            Debug.Assert(projectFile.Root != null);
-
-            var userSecretId = (string)projectFile.Root.Elements("PropertyGroup").Elements("UserSecretsId").First();
+            var userSecretId = Assembly.GetExecutingAssembly().GetCustomAttribute<UserSecretsIdAttribute>()?.UserSecretsId;
             Debug.Assert(userSecretId != null);
 
             var secretsPath = PathHelper.GetSecretsPathFromSecretsId(userSecretId);
