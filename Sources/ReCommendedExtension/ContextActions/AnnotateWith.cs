@@ -6,8 +6,11 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Intentions.Util;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -70,6 +73,7 @@ namespace ReCommendedExtension.ContextActions
                 && !attributesOwnerDeclaration.OverridesInheritedMember()
                 && !attributesOwnerDeclaration.IsOnLocalFunctionWithUnsupportedAttributes()
                 && !attributesOwnerDeclaration.IsOnLambdaExpressionWithUnsupportedAttributes()
+                && !attributesOwnerDeclaration.IsOnAnonymousMethodWithUnsupportedAttributes()
                 && (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
             {
                 Debug.Assert(attributesOwnerDeclaration != null);
@@ -109,6 +113,19 @@ namespace ReCommendedExtension.ContextActions
                     attribute = attributeToReplace != null
                         ? attributesOwnerDeclaration.ReplaceAttribute(attributeToReplace, attribute)
                         : attributesOwnerDeclaration.AddAttributeBefore(attribute, null); // add as last attribute
+
+                    if (attributesOwnerDeclaration is IParameter parameter
+                        && parameter.ContainingParametersOwner is ILambdaExpression lambdaExpression
+                        && lambdaExpression.ParameterDeclarations.Count == 1)
+                    {
+                        var treeElement = (TreeElement)parameter;
+                        if (treeElement.PrevSibling == null && treeElement.NextSibling == null)
+                        {
+                            // parenthesize the parameter
+                            ModificationUtil.AddChildBefore(treeElement, CSharpTokenType.LPARENTH.CreateLeafElement());
+                            ModificationUtil.AddChildAfter(treeElement, CSharpTokenType.RPARENTH.CreateLeafElement());
+                        }
+                    }
 
                     ContextActionUtils.FormatWithDefaultProfile(attribute);
                 }

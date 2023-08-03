@@ -268,10 +268,9 @@ namespace ReCommendedExtension
 
                     var parameter = parameterDeclaration.DeclaredElement;
 
-                    Debug.Assert(parameter != null);
-
                     overriddenMethodDeclaration.AddParameterDeclarationBefore(
                         factory.CreateParameterDeclaration(
+                            null,
                             parameter.Kind,
                             parameter.IsParameterArray,
                             parameter.IsVarArg,
@@ -332,15 +331,14 @@ namespace ReCommendedExtension
                 {
                     Debug.Assert(parameterDeclaration != null);
 
-                    var declaredElement = parameterDeclaration.DeclaredElement;
-
-                    Debug.Assert(declaredElement != null);
+                    var parameter = parameterDeclaration.DeclaredElement;
 
                     overriddenIndexerDeclaration.AddParameterDeclarationBefore(
                         factory.CreateParameterDeclaration(
-                            declaredElement.Kind,
-                            declaredElement.IsParameterArray,
-                            declaredElement.IsVarArg,
+                            null,
+                            parameter.Kind,
+                            parameter.IsParameterArray,
+                            parameter.IsVarArg,
                             parameterDeclaration.Type,
                             parameterDeclaration.DeclaredName,
                             null),
@@ -803,6 +801,19 @@ namespace ReCommendedExtension
             {
                 case IParameter parameter when parameter.ContainingParametersOwner is ILambdaExpression:
                 case ILambdaExpression _:
+                    return true;
+            }
+
+            return false;
+        }
+
+        [JetBrains.Annotations.Pure]
+        public static bool IsOnAnonymousMethodWithUnsupportedAttributes([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            switch (attributesOwnerDeclaration.DeclaredElement)
+            {
+                case IParameter parameter when parameter.ContainingParametersOwner is IAnonymousMethodExpression:
+                case IAnonymousMethodExpression _:
                     return true;
             }
 

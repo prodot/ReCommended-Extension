@@ -449,14 +449,25 @@ namespace ReCommendedExtension.Analyzers.ControlFlow
         {
             switch (referenceExpression.Reference.Resolve().DeclaredElement)
             {
-                case IFunction function when nullnessProvider.GetInfo(function) == CodeAnnotationNullableValue.NOT_NULL:
-                    return CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                case ITypeOwner typeOwner when !typeOwner.Type.IsDelegateType():
-                    if (typeOwner is IAttributesOwner attributesOwner
-                        && nullnessProvider.GetInfo(attributesOwner) == CodeAnnotationNullableValue.NOT_NULL)
+                case IFunction function:
+                {
+                    var (annotationNullableValue, _) = nullnessProvider.GetInfo(function);
+                    if (annotationNullableValue == CodeAnnotationNullableValue.NOT_NULL)
                     {
                         return CSharpControlFlowNullReferenceState.NOT_NULL;
+                    }
+
+                    goto default;
+                }
+
+                case ITypeOwner typeOwner when !typeOwner.Type.IsDelegateType():
+                    if (typeOwner is IAttributesOwner attributesOwner)
+                    {
+                        var (annotationNullableValue, _) = nullnessProvider.GetInfo(attributesOwner);
+                        if (annotationNullableValue == CodeAnnotationNullableValue.NOT_NULL)
+                        {
+                            return CSharpControlFlowNullReferenceState.NOT_NULL;
+                        }
                     }
 
                     goto default;

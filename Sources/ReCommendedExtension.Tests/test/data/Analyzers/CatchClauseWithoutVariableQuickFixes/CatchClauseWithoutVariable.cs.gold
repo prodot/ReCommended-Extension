@@ -8,7 +8,7 @@ namespace Test
         {
             try { }
             catch
- {caret}           { }}
+{caret}            { }}
         }
     }
 }

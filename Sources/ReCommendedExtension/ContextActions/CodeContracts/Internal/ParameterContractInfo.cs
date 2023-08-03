@@ -71,9 +71,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             }
 
             var parameter = declaration.DeclaredElement;
-            if (parameter?.ContainingParametersOwner is ITypeMember typeMember
-                && CanAcceptContracts(typeMember)
-                && isAvailableForType(parameter.Type))
+
+            if (parameter.ContainingParametersOwner is ITypeMember typeMember && CanAcceptContracts(typeMember) && isAvailableForType(parameter.Type))
             {
                 ContractKind contractKind;
                 switch (parameter.Kind)
@@ -145,8 +144,6 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
             out ICollection<ICSharpStatement> firstNonContractStatements)
         {
             var parameter = declaration.DeclaredElement;
-
-            Debug.Assert(parameter != null);
 
             switch (parameter.ContainingParametersOwner)
             {
