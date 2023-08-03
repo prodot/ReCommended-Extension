@@ -268,8 +268,6 @@ namespace ReCommendedExtension
 
                     var parameter = parameterDeclaration.DeclaredElement;
 
-                    Debug.Assert(parameter != null);
-
                     overriddenMethodDeclaration.AddParameterDeclarationBefore(
                         factory.CreateParameterDeclaration(
                             null,
@@ -333,16 +331,14 @@ namespace ReCommendedExtension
                 {
                     Debug.Assert(parameterDeclaration != null);
 
-                    var declaredElement = parameterDeclaration.DeclaredElement;
-
-                    Debug.Assert(declaredElement != null);
+                    var parameter = parameterDeclaration.DeclaredElement;
 
                     overriddenIndexerDeclaration.AddParameterDeclarationBefore(
                         factory.CreateParameterDeclaration(
                             null,
-                            declaredElement.Kind,
-                            declaredElement.IsParameterArray,
-                            declaredElement.IsVarArg,
+                            parameter.Kind,
+                            parameter.IsParameterArray,
+                            parameter.IsVarArg,
                             parameterDeclaration.Type,
                             parameterDeclaration.DeclaredName,
                             null),
