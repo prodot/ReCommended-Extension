@@ -272,6 +272,7 @@ namespace ReCommendedExtension
 
                     overriddenMethodDeclaration.AddParameterDeclarationBefore(
                         factory.CreateParameterDeclaration(
+                            null,
                             parameter.Kind,
                             parameter.IsParameterArray,
                             parameter.IsVarArg,
@@ -338,6 +339,7 @@ namespace ReCommendedExtension
 
                     overriddenIndexerDeclaration.AddParameterDeclarationBefore(
                         factory.CreateParameterDeclaration(
+                            null,
                             declaredElement.Kind,
                             declaredElement.IsParameterArray,
                             declaredElement.IsVarArg,
@@ -803,6 +805,19 @@ namespace ReCommendedExtension
             {
                 case IParameter parameter when parameter.ContainingParametersOwner is ILambdaExpression:
                 case ILambdaExpression _:
+                    return true;
+            }
+
+            return false;
+        }
+
+        [JetBrains.Annotations.Pure]
+        public static bool IsOnAnonymousMethodWithUnsupportedAttributes([NotNull] this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+        {
+            switch (attributesOwnerDeclaration.DeclaredElement)
+            {
+                case IParameter parameter when parameter.ContainingParametersOwner is IAnonymousMethodExpression:
+                case IAnonymousMethodExpression _:
                     return true;
             }
 
