@@ -5,17 +5,16 @@ using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.LocalSuppression;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class LocalSuppressionAnalyzerTests : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class LocalSuppressionAnalyzerTests : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\LocalSuppression";
+    protected override string RelativeTestDataPath => @"Analyzers\LocalSuppression";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is LocalSuppressionWarning;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is LocalSuppressionWarning;
 
-        [Test]
-        public void TestLocalSuppression() => DoNamedTest2();
-    }
+    [Test]
+    public void TestLocalSuppression() => DoNamedTest2();
 }

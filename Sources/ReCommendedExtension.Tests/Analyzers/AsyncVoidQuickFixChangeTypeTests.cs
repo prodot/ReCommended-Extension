@@ -3,18 +3,17 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.AsyncVoid;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestNetFramework45]
+[TestFixture]
+public sealed class AsyncVoidQuickFixChangeTypeTests : QuickFixTestBase<ChangeToAsyncTaskFix>
 {
-    [TestNetFramework45]
-    [TestFixture]
-    public sealed class AsyncVoidQuickFixChangeTypeTests : QuickFixTestBase<ChangeToAsyncTaskFix>
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";
 
-        [Test]
-        public void TestAsyncVoidMethod() => DoNamedTest2();
+    [Test]
+    public void TestAsyncVoidMethod() => DoNamedTest2();
 
-        [Test]
-        public void TestAsyncVoidLocalFunction() => DoNamedTest2();
-    }
+    [Test]
+    public void TestAsyncVoidLocalFunction() => DoNamedTest2();
 }

@@ -7,48 +7,47 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Await;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\Await";
+    protected override string RelativeTestDataPath => @"Analyzers\Await";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantCapturedContextSuggestion;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is RedundantCapturedContextSuggestion;
 
-        [TestNetFramework45]
-        [Test]
-        public void TestRedundantCapturedContext() => DoNamedTest2();
+    [TestNetFramework45]
+    [Test]
+    public void TestRedundantCapturedContext() => DoNamedTest2();
 
-        [TestNetCore21]
-        [Test]
-        public void TestRedundantCapturedContext_ValueTask() => DoNamedTest2();
+    [TestNetCore21]
+    [Test]
+    public void TestRedundantCapturedContext_ValueTask() => DoNamedTest2();
 
-        [TestNetCore21]
-        [Test]
-        public void TestRedundantCapturedContext_ReturnValueTask() => DoNamedTest2();
+    [TestNetCore21]
+    [Test]
+    public void TestRedundantCapturedContext_ReturnValueTask() => DoNamedTest2();
 
-        [TestNetCore21]
-        [Test]
-        public void TestRedundantCapturedContext_ValueTask_ReturnTask() => DoNamedTest2();
+    [TestNetCore21]
+    [Test]
+    public void TestRedundantCapturedContext_ValueTask_ReturnTask() => DoNamedTest2();
 
-        [TestNetCore30]
-        [Test]
-        public void TestRedundantCapturedContext_IAsyncTypes() => DoNamedTest2();
+    [TestNetCore30]
+    [Test]
+    public void TestRedundantCapturedContext_IAsyncTypes() => DoNamedTest2();
 
-        [TestNetCore30]
-        [Test]
-        public void TestRedundantCapturedContext_LibraryMode()
-            => ExecuteWithinSettingsTransaction(
-                store =>
-                {
-                    RunGuarded(
-                        () => store.SetValue<DaemonProjectSettings, ConfigureAwaitAnalysisMode>(
-                            s => s.ConfigureAwaitAnalysisMode,
-                            ConfigureAwaitAnalysisMode.Library));
+    [TestNetCore30]
+    [Test]
+    public void TestRedundantCapturedContext_LibraryMode()
+        => ExecuteWithinSettingsTransaction(
+            store =>
+            {
+                RunGuarded(
+                    () => store.SetValue<DaemonProjectSettings, ConfigureAwaitAnalysisMode>(
+                        s => s.ConfigureAwaitAnalysisMode,
+                        ConfigureAwaitAnalysisMode.Library));
 
-                    DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
-                });
-    }
+                DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
+            });
 }

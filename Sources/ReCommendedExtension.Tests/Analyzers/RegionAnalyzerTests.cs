@@ -7,24 +7,23 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Region;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class RegionAnalyzerTests : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class RegionAnalyzerTests : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\Region";
+    protected override string RelativeTestDataPath => @"Analyzers\Region";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RegionHighlighting;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is RegionHighlighting;
 
-        [Test]
-        public void TestRegionWithSingleElement() => DoNamedTest2();
+    [Test]
+    public void TestRegionWithSingleElement() => DoNamedTest2();
 
-        [Test]
-        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-        public void TestRegionWithSingleElement_FileScopedNamespace() => DoNamedTest2();
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    public void TestRegionWithSingleElement_FileScopedNamespace() => DoNamedTest2();
 
-        [Test]
-        public void TestRegionWithinTypeMemberBody() => DoNamedTest2();
-    }
+    [Test]
+    public void TestRegionWithinTypeMemberBody() => DoNamedTest2();
 }

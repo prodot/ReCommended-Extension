@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using JetBrains.Annotations;
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
@@ -10,33 +7,29 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.DelegateInvoke
+namespace ReCommendedExtension.Analyzers.DelegateInvoke;
+
+[QuickFix]
+public sealed class RemoveDelegateInvokeFix : QuickFixBase
 {
-    [QuickFix]
-    public sealed class RemoveDelegateInvokeFix : QuickFixBase
+    readonly RedundantDelegateInvokeSuggestion highlighting;
+
+    public RemoveDelegateInvokeFix(RedundantDelegateInvokeSuggestion highlighting) => this.highlighting = highlighting;
+
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
-        [NotNull]
-        readonly RedundantDelegateInvokeSuggestion highlighting;
-
-        public RemoveDelegateInvokeFix([NotNull] RedundantDelegateInvokeSuggestion highlighting) => this.highlighting = highlighting;
-
-        public override bool IsAvailable(IUserDataHolder cache) => true;
-
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        using (WriteLockCookie.Create())
         {
-            using (WriteLockCookie.Create())
-            {
-                Debug.Assert(highlighting.ReferenceExpression.NameIdentifier != null);
+            var dotToken = highlighting.ReferenceExpression.NameIdentifier.GetPreviousMeaningfulToken();
+            Debug.Assert(dotToken is { });
 
-                var dotToken = highlighting.ReferenceExpression.NameIdentifier.GetPreviousMeaningfulToken();
-                Debug.Assert(dotToken != null);
-
-                ModificationUtil.DeleteChildRange(dotToken, highlighting.ReferenceExpression.NameIdentifier);
-            }
-
-            return _ => { };
+            ModificationUtil.DeleteChildRange(dotToken, highlighting.ReferenceExpression.NameIdentifier);
         }
 
-        public override string Text => $"Remove '{nameof(Action.Invoke)}'";
+        return _ => { };
     }
+
+    public override string Text => $"Remove '{nameof(Action.Invoke)}'";
 }

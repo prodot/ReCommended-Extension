@@ -5,17 +5,16 @@ using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.DelegateInvoke;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class DelegateInvokeQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    [TestFixture]
-    public sealed class DelegateInvokeQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\DelegateInvokeQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\DelegateInvokeQuickFixes";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantDelegateInvokeSuggestion;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is RedundantDelegateInvokeSuggestion;
 
-        [Test]
-        public void TestDelegateInvokeAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestDelegateInvokeAvailability() => DoNamedTest2();
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using System.Diagnostics.Contracts;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Intentions.Util;
 using JetBrains.ReSharper.Psi;
@@ -13,256 +8,211 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
+namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
+
+internal abstract record ContractInfo
 {
-    internal abstract class ContractInfo
+    sealed record ContractStatementInfo
     {
-        sealed class ContractStatementInfo
+        public static IList<ContractStatementInfo> CreateContractStatementInfos(IBlock body)
         {
-            [NotNull]
-            [ItemNotNull]
-            public static IList<ContractStatementInfo> CreateContractStatementInfos([NotNull] IBlock body)
-            {
-                var list = new List<ContractStatementInfo>();
+            var list = new List<ContractStatementInfo>();
 
-                foreach (var statement in body.Statements)
+            foreach (var statement in body.Statements)
+            {
+                if (statement is IExpressionStatement expressionStatement)
                 {
-                    if (statement is IExpressionStatement expressionStatement)
+                    switch (expressionStatement.TryGetContractName())
                     {
-                        switch (expressionStatement.TryGetContractName())
-                        {
-                            case nameof(Contract.Requires):
-                                list.Add(new ContractStatementInfo(ContractKind.Requires, expressionStatement));
-                                continue;
+                        case nameof(Contract.Requires):
+                            list.Add(new ContractStatementInfo { ContractKind = ContractKind.Requires,Statement = expressionStatement});
+                            continue;
 
-                            case nameof(Contract.Ensures):
-                                list.Add(new ContractStatementInfo(ContractKind.Ensures, expressionStatement));
-                                continue;
+                        case nameof(Contract.Ensures):
+                            list.Add(new ContractStatementInfo { ContractKind = ContractKind.Ensures, Statement = expressionStatement });
+                            continue;
 
-                            case nameof(Contract.EnsuresOnThrow):
-                                list.Add(new ContractStatementInfo(ContractKind.EnsuresOnThrow, expressionStatement));
-                                continue;
+                        case nameof(Contract.EnsuresOnThrow):
+                            list.Add(new ContractStatementInfo { ContractKind = ContractKind.EnsuresOnThrow, Statement = expressionStatement });
+                            continue;
 
-                            case nameof(Contract.Invariant):
-                                list.Add(new ContractStatementInfo(ContractKind.Invariant, expressionStatement));
-                                continue;
-                        }
-
-                        break;
+                        case nameof(Contract.Invariant):
+                            list.Add(new ContractStatementInfo { ContractKind = ContractKind.Invariant,Statement = expressionStatement});
+                            continue;
                     }
+
+                    break;
                 }
-
-                return list;
             }
 
-            ContractStatementInfo(ContractKind contractKind, [NotNull] ICSharpStatement statement)
-            {
-                ContractKind = contractKind;
-                Statement = statement;
-            }
-
-            public ContractKind ContractKind { get; }
-
-            [NotNull]
-            public ICSharpStatement Statement { get; }
+            return list;
         }
 
-        protected static bool CanAcceptContracts([NotNull] ITypeMember typeMember)
+        public required ContractKind ContractKind { get; init; }
+
+        public required ICSharpStatement Statement { get; init; }
+    }
+
+    protected static bool CanAcceptContracts(ITypeMember typeMember)
+    {
+        if (typeMember.IsExtern)
         {
-            if (typeMember.IsExtern)
-            {
-                return false;
-            }
-
-            if (typeMember is IOverridableMember overridableMember && overridableMember.GetImmediateSuperMembers().Any())
-            {
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-        [NotNull]
-        static ICSharpStatement CreateContractStatement(
-            ContractKind contractKind,
-            [NotNull] IPsiModule psiModule,
-            [NotNull] IExpression contractExpression)
+        if (typeMember is IOverridableMember overridableMember && overridableMember.GetImmediateSuperMembers().Any())
         {
-            var factory = CSharpElementFactory.GetInstance(contractExpression);
-
-            var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, psiModule);
-
-            switch (contractKind)
-            {
-                case ContractKind.Requires: return factory.CreateStatement($"$0.{nameof(Contract.Requires)}($1);", contractType, contractExpression);
-
-                case ContractKind.Ensures: return factory.CreateStatement($"$0.{nameof(Contract.Ensures)}($1);", contractType, contractExpression);
-
-                case ContractKind.Invariant:
-                    return factory.CreateStatement($"$0.{nameof(Contract.Invariant)}($1);", contractType, contractExpression);
-
-                default: throw new ArgumentOutOfRangeException(nameof(contractKind));
-            }
+            return false;
         }
 
-        protected static void AddContract(
-            ContractKind contractKind,
-            [NotNull] IBlock body,
-            [NotNull] IPsiModule psiModule,
-            [NotNull] Func<IExpression> getContractExpression,
-            [CanBeNull] out ICSharpStatement firstNonContractStatement)
+        return true;
+    }
+
+    static ICSharpStatement CreateContractStatement(
+        ContractKind contractKind,
+        IPsiModule psiModule,
+        IExpression contractExpression)
+    {
+        var factory = CSharpElementFactory.GetInstance(contractExpression);
+
+        var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, psiModule);
+
+        return contractKind switch
         {
-            var contractExpression = getContractExpression();
+            ContractKind.Requires => factory.CreateStatement($"$0.{nameof(Contract.Requires)}($1);", contractType, contractExpression),
+            ContractKind.Ensures => factory.CreateStatement($"$0.{nameof(Contract.Ensures)}($1);", contractType, contractExpression),
+            ContractKind.Invariant => factory.CreateStatement($"$0.{nameof(Contract.Invariant)}($1);", contractType, contractExpression),
 
-            Debug.Assert(contractExpression != null);
+            _ => throw new ArgumentOutOfRangeException(nameof(contractKind)),
+        };
+    }
 
-            var statement = CreateContractStatement(contractKind, psiModule, contractExpression);
+    protected static void AddContract(
+        ContractKind contractKind,
+        IBlock body,
+        IPsiModule psiModule,
+        Func<IExpression> getContractExpression,
+        out ICSharpStatement? firstNonContractStatement)
+    {
+        var contractExpression = getContractExpression();
 
-            var contractStatements = ContractStatementInfo.CreateContractStatementInfos(body);
+        var statement = CreateContractStatement(contractKind, psiModule, contractExpression);
 
-            switch (contractKind)
-            {
-                case ContractKind.Requires:
-                    var lastRequiresStatement = (from s in contractStatements where s.ContractKind == ContractKind.Requires select s.Statement)
-                        .LastOrDefault();
-                    if (lastRequiresStatement != null)
-                    {
-                        statement = body.AddStatementAfter(statement, lastRequiresStatement);
+        var contractStatements = ContractStatementInfo.CreateContractStatementInfos(body);
 
-                        firstNonContractStatement = null;
-                    }
-                    else
-                    {
-                        var firstEnsuresOrEnsuresOnThrowStatement =
-                        (
-                            from s in contractStatements
-                            where s.ContractKind == ContractKind.Ensures || s.ContractKind == ContractKind.EnsuresOnThrow
-                            select s.Statement).FirstOrDefault();
-                        if (firstEnsuresOrEnsuresOnThrowStatement != null)
-                        {
-                            statement = body.AddStatementBefore(statement, firstEnsuresOrEnsuresOnThrowStatement);
-
-                            firstNonContractStatement = null;
-                        }
-                        else
-                        {
-                            firstNonContractStatement = body.Statements.FirstOrDefault();
-                            statement = body.AddStatementBefore(statement, firstNonContractStatement);
-                        }
-                    }
-                    break;
-
-                case ContractKind.Ensures:
-                    var lastEnsuresOrLastRequiresStatement =
-                        (from s in contractStatements where s.ContractKind == ContractKind.Ensures select s.Statement).LastOrDefault()
-                        ?? (from s in contractStatements where s.ContractKind == ContractKind.Requires select s.Statement).LastOrDefault();
-                    if (lastEnsuresOrLastRequiresStatement != null)
-                    {
-                        statement = body.AddStatementAfter(statement, lastEnsuresOrLastRequiresStatement);
-
-                        firstNonContractStatement = null;
-                    }
-                    else
-                    {
-                        var lastEnsuresOnThrowStatement =
-                            (from s in contractStatements where s.ContractKind == ContractKind.EnsuresOnThrow select s.Statement).FirstOrDefault();
-                        if (lastEnsuresOnThrowStatement != null)
-                        {
-                            statement = body.AddStatementBefore(statement, lastEnsuresOnThrowStatement);
-
-                            firstNonContractStatement = null;
-                        }
-                        else
-                        {
-                            firstNonContractStatement = body.Statements.FirstOrDefault();
-                            body.AddStatementBefore(statement, firstNonContractStatement);
-                        }
-                    }
-                    break;
-
-                case ContractKind.Invariant:
-                    var lastInvariantStatement = (from s in contractStatements where s.ContractKind == ContractKind.Invariant select s.Statement)
-                        .LastOrDefault();
-                    statement = body.AddStatementAfter(statement, lastInvariantStatement);
+        switch (contractKind)
+        {
+            case ContractKind.Requires:
+                var lastRequiresStatement = (from s in contractStatements where s.ContractKind == ContractKind.Requires select s.Statement)
+                    .LastOrDefault();
+                if (lastRequiresStatement is { })
+                {
+                    statement = body.AddStatementAfter(statement, lastRequiresStatement);
 
                     firstNonContractStatement = null;
+                }
+                else
+                {
+                    var firstEnsuresOrEnsuresOnThrowStatement =
+                        (from s in contractStatements where s.ContractKind is ContractKind.Ensures or ContractKind.EnsuresOnThrow select s.Statement)
+                        .FirstOrDefault();
+                    if (firstEnsuresOrEnsuresOnThrowStatement is { })
+                    {
+                        statement = body.AddStatementBefore(statement, firstEnsuresOrEnsuresOnThrowStatement);
 
-                    break;
+                        firstNonContractStatement = null;
+                    }
+                    else
+                    {
+                        firstNonContractStatement = body.Statements.FirstOrDefault();
+                        statement = body.AddStatementBefore(statement, firstNonContractStatement);
+                    }
+                }
+                break;
 
-                default: throw new ArgumentOutOfRangeException(nameof(contractKind));
-            }
+            case ContractKind.Ensures:
+                var lastEnsuresOrLastRequiresStatement =
+                    (from s in contractStatements where s.ContractKind == ContractKind.Ensures select s.Statement).LastOrDefault()
+                    ?? (from s in contractStatements where s.ContractKind == ContractKind.Requires select s.Statement).LastOrDefault();
+                if (lastEnsuresOrLastRequiresStatement is { })
+                {
+                    statement = body.AddStatementAfter(statement, lastEnsuresOrLastRequiresStatement);
 
-            ContextActionUtils.FormatWithDefaultProfile(statement);
+                    firstNonContractStatement = null;
+                }
+                else
+                {
+                    var lastEnsuresOnThrowStatement =
+                        (from s in contractStatements where s.ContractKind == ContractKind.EnsuresOnThrow select s.Statement).FirstOrDefault();
+                    if (lastEnsuresOnThrowStatement is { })
+                    {
+                        statement = body.AddStatementBefore(statement, lastEnsuresOnThrowStatement);
+
+                        firstNonContractStatement = null;
+                    }
+                    else
+                    {
+                        firstNonContractStatement = body.Statements.FirstOrDefault();
+                        body.AddStatementBefore(statement, firstNonContractStatement);
+                    }
+                }
+                break;
+
+            case ContractKind.Invariant:
+                var lastInvariantStatement = (from s in contractStatements where s.ContractKind == ContractKind.Invariant select s.Statement)
+                    .LastOrDefault();
+                statement = body.AddStatementAfter(statement, lastInvariantStatement);
+
+                firstNonContractStatement = null;
+
+                break;
+
+            default: throw new ArgumentOutOfRangeException(nameof(contractKind));
         }
 
-        [CanBeNull]
-        public static ContractInfo TryCreate(
-            [CanBeNull] IDeclaration declaration,
-            TreeTextRange selectedTreeRange,
-            [NotNull] Func<IType, bool> isAvailableForType)
-        {
-            switch (declaration)
-            {
-                case IParameterDeclaration parameterDeclaration: return ParameterContractInfo.TryCreate(parameterDeclaration, isAvailableForType);
-
-                case IMethodDeclaration methodDeclaration:
-                    return MethodContractInfo.TryCreate(methodDeclaration, selectedTreeRange, isAvailableForType);
-
-                case IPropertyDeclaration propertyDeclaration:
-                    return PropertyContractInfo.TryCreate(propertyDeclaration, selectedTreeRange, isAvailableForType);
-
-                case IIndexerDeclaration indexerDeclaration:
-                    return PropertyContractInfo.TryCreate(indexerDeclaration, selectedTreeRange, isAvailableForType);
-
-                case IFieldDeclaration fieldDeclaration: return FieldContractInfo.TryCreate(fieldDeclaration, isAvailableForType);
-
-                case IOperatorDeclaration operatorDeclaration:
-                    return OperatorContractInfo.TryCreate(operatorDeclaration, selectedTreeRange, isAvailableForType);
-
-                default: return null;
-            }
-        }
-
-        protected ContractInfo(ContractKind contractKind, [NotNull] IType type)
-        {
-            Debug.Assert(
-                contractKind == ContractKind.Requires
-                || contractKind == ContractKind.Ensures
-                || contractKind == ContractKind.RequiresAndEnsures
-                || contractKind == ContractKind.Invariant);
-
-            ContractKind = contractKind;
-            Type = type;
-        }
-
-        protected ContractKind ContractKind { get; }
-
-        [NotNull]
-        protected IType Type { get; }
-
-        [NotNull]
-        public string GetContractKindForUI()
-        {
-            switch (ContractKind)
-            {
-                case ContractKind.Requires: return "requires";
-
-                case ContractKind.Ensures: return "ensures";
-
-                case ContractKind.RequiresAndEnsures: return "requires & ensures";
-
-                case ContractKind.Invariant: return "invariant";
-
-                default: throw new NotSupportedException();
-            }
-        }
-
-        [NotNull]
-        public abstract string GetContractIdentifierForUI();
-
-        public abstract void AddContracts(
-            [NotNull] ICSharpContextActionDataProvider provider,
-            [NotNull] Func<IExpression, IExpression> getContractExpression,
-            [CanBeNull][ItemNotNull] out ICollection<ICSharpStatement> firstNonContractStatements);
+        ContextActionUtils.FormatWithDefaultProfile(statement);
     }
+
+    public static ContractInfo? TryCreate(IDeclaration? declaration, TreeTextRange selectedTreeRange, Func<IType, bool> isAvailableForType)
+        => declaration switch
+        {
+            IParameterDeclaration parameterDeclaration => ParameterContractInfo.TryCreate(parameterDeclaration, isAvailableForType),
+            IMethodDeclaration methodDeclaration => MethodContractInfo.TryCreate(methodDeclaration, selectedTreeRange, isAvailableForType),
+            IPropertyDeclaration propertyDeclaration => PropertyContractInfo.TryCreate(propertyDeclaration, selectedTreeRange, isAvailableForType),
+            IIndexerDeclaration indexerDeclaration => PropertyContractInfo.TryCreate(indexerDeclaration, selectedTreeRange, isAvailableForType),
+            IFieldDeclaration fieldDeclaration => FieldContractInfo.TryCreate(fieldDeclaration, isAvailableForType),
+            IOperatorDeclaration operatorDeclaration => OperatorContractInfo.TryCreate(operatorDeclaration, selectedTreeRange, isAvailableForType),
+
+            _ => null,
+        };
+
+    protected ContractInfo(ContractKind contractKind, IType type)
+    {
+        Debug.Assert(contractKind is ContractKind.Requires or ContractKind.Ensures or ContractKind.RequiresAndEnsures or ContractKind.Invariant);
+
+        ContractKind = contractKind;
+        Type = type;
+    }
+
+    protected ContractKind ContractKind { get; }
+
+    protected IType Type { get; }
+
+    public string GetContractKindForUI()
+        => ContractKind switch
+        {
+            ContractKind.Requires => "requires",
+            ContractKind.Ensures => "ensures",
+            ContractKind.RequiresAndEnsures => "requires & ensures",
+            ContractKind.Invariant => "invariant",
+
+            _ => throw new NotSupportedException(),
+        };
+
+    public abstract string GetContractIdentifierForUI();
+
+    public abstract void AddContracts(
+        ICSharpContextActionDataProvider provider,
+        Func<IExpression, IExpression> getContractExpression,
+        out ICollection<ICSharpStatement>? firstNonContractStatements);
 }

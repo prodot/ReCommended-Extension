@@ -5,17 +5,16 @@ using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class ArgumentExceptionConstructorArgumentAnalyzerTests : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class ArgumentExceptionConstructorArgumentAnalyzerTests : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\ArgumentExceptionConstructorArgument";
+    protected override string RelativeTestDataPath => @"Analyzers\ArgumentExceptionConstructorArgument";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is ArgumentExceptionConstructorArgumentWarning;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is ArgumentExceptionConstructorArgumentWarning;
 
-        [Test]
-        public void TestArgumentExceptionConstructorArgument() => DoNamedTest2();
-    }
+    [Test]
+    public void TestArgumentExceptionConstructorArgument() => DoNamedTest2();
 }

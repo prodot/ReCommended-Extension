@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using JetBrains.ReSharper.Feature.Services.ContextActions;
+﻿using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -7,66 +6,59 @@ using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
-namespace ReCommendedExtension.ContextActions
-{
-    [ContextAction(
-        Group = "C#",
-        Name = "Annotate with [ItemNotNull] attribute" + ZoneMarker.Suffix,
-        Description = "Annotates with the [ItemNotNull] attribute.")]
-    public sealed class AnnotateWithItemNotNull : AnnotateWithCodeAnnotation
-    {
-        static bool IsAvailableForType([NotNull] IType type, [NotNull] ITreeNode context)
-        {
-            if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(context))
-            {
-                if (CollectionTypeUtil.ElementTypeByCollectionType(type, context, false)?.Classify == TypeClassification.REFERENCE_TYPE)
-                {
-                    return true;
-                }
-            }
+namespace ReCommendedExtension.ContextActions;
 
-            if (type.GetTasklikeUnderlyingType(context)?.Classify == TypeClassification.REFERENCE_TYPE)
+[ContextAction(
+    Group = "C#",
+    Name = "Annotate with [ItemNotNull] attribute" + ZoneMarker.Suffix,
+    Description = "Annotates with the [ItemNotNull] attribute.")]
+public sealed class AnnotateWithItemNotNull : AnnotateWithCodeAnnotation
+{
+    static bool IsAvailableForType(IType type, ITreeNode context)
+    {
+        if ((type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(context))
+            && CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { Classify: TypeClassification.REFERENCE_TYPE })
+        {
+            return true;
+        }
+
+        if (type.GetTasklikeUnderlyingType(context) is { Classify: TypeClassification.REFERENCE_TYPE })
+        {
+            return true;
+        }
+
+        if (type.IsLazy())
+        {
+            var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, context.GetPsiModule());
+            if (type.GetGenericUnderlyingType(typeElement) is { Classify: TypeClassification.REFERENCE_TYPE })
             {
                 return true;
             }
-
-            if (type.IsLazy())
-            {
-                var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, context.GetPsiModule());
-                if (type.GetGenericUnderlyingType(typeElement)?.Classify == TypeClassification.REFERENCE_TYPE)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
-        public AnnotateWithItemNotNull([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
+        return false;
+    }
 
-        protected override string AnnotationAttributeTypeName => nameof(ItemNotNullAttribute);
+    public AnnotateWithItemNotNull(ICSharpContextActionDataProvider provider) : base(provider) { }
 
-        protected override bool CanBeAnnotated(IDeclaredElement declaredElement, ITreeNode context)
+    protected override string AnnotationAttributeTypeName => nameof(ItemNotNullAttribute);
+
+    protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
+    {
+        if (context.IsNullableAnnotationsContextEnabled())
         {
-            if (context.IsNullableAnnotationsContextEnabled())
-            {
-                return false;
-            }
-
-            switch (declaredElement)
-            {
-                case IMethod method: return IsAvailableForType(method.ReturnType, context);
-
-                case IParameter parameter: return IsAvailableForType(parameter.Type, context);
-
-                case IProperty property: return IsAvailableForType(property.Type, context);
-
-                case IDelegate delegateType: return IsAvailableForType(delegateType.InvokeMethod.ReturnType, context);
-
-                case IField field: return IsAvailableForType(field.Type, context);
-            }
-
             return false;
         }
+
+        return declaredElement switch
+        {
+            IMethod method => IsAvailableForType(method.ReturnType, context),
+            IParameter parameter => IsAvailableForType(parameter.Type, context),
+            IProperty property => IsAvailableForType(property.Type, context),
+            IDelegate delegateType => IsAvailableForType(delegateType.InvokeMethod.ReturnType, context),
+            IField field => IsAvailableForType(field.Type, context),
+
+            _ => false,
+        };
     }
 }

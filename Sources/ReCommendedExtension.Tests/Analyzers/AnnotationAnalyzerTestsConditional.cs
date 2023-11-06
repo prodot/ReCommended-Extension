@@ -5,17 +5,16 @@ using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Annotation;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class AnnotationAnalyzerTestsConditional : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class AnnotationAnalyzerTestsConditional : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\Annotation";
+    protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is ConditionalAnnotationHint;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is ConditionalAnnotationHint;
 
-        [Test]
-        public void TestConditional() => DoNamedTest2();
-    }
+    [Test]
+    public void TestConditional() => DoNamedTest2();
 }

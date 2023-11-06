@@ -1,12 +1,8 @@
-using JetBrains.Annotations;
+namespace ReCommendedExtension.Analyzers.ControlFlow;
 
-namespace ReCommendedExtension.Analyzers.ControlFlow
+public abstract record RedundantAssertionSuggestion : Highlighting
 {
-    public abstract class RedundantAssertionSuggestion : Highlighting
-    {
-        private protected RedundantAssertionSuggestion([NotNull] string message) : base(message) { }
+    private protected RedundantAssertionSuggestion(string message) : base(message) { }
 
-        [NotNull]
-        internal abstract Assertion Assertion { get; }
-    }
+    internal abstract Assertion Assertion { get; }
 }

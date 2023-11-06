@@ -1,60 +1,52 @@
-using System.Diagnostics;
-using System.Linq;
-using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReCommendedExtension.Analyzers.Annotation
+namespace ReCommendedExtension.Analyzers.Annotation;
+
+public abstract record AttributeHighlighting : Highlighting
 {
-    public abstract class AttributeHighlighting : Highlighting
+    readonly bool includeAttributeBracketsInRange;
+
+    private protected AttributeHighlighting(
+        IAttributesOwnerDeclaration attributesOwnerDeclaration,
+        IAttribute attribute,
+        bool includeAttributeBracketsInRange,
+        string message) : base(message)
     {
-        readonly bool includeAttributeBracketsInRange;
+        AttributesOwnerDeclaration = attributesOwnerDeclaration;
+        Attribute = attribute;
 
-        private protected AttributeHighlighting(
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
-            [NotNull] IAttribute attribute,
-            bool includeAttributeBracketsInRange,
-            [NotNull] string message) : base(message)
+        this.includeAttributeBracketsInRange = includeAttributeBracketsInRange;
+    }
+
+    internal IAttributesOwnerDeclaration AttributesOwnerDeclaration { get; }
+
+    internal IAttribute Attribute { get; }
+
+    public sealed override DocumentRange CalculateRange()
+    {
+        var range = Attribute.GetDocumentRange();
+
+        if (includeAttributeBracketsInRange)
         {
-            AttributesOwnerDeclaration = attributesOwnerDeclaration;
-            Attribute = attribute;
+            var previousToken = Attribute.PrevTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
+            var nextToken = Attribute.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
 
-            this.includeAttributeBracketsInRange = includeAttributeBracketsInRange;
-        }
-
-        [NotNull]
-        internal IAttributesOwnerDeclaration AttributesOwnerDeclaration { get; }
-
-        [NotNull]
-        internal IAttribute Attribute { get; }
-
-        public sealed override DocumentRange CalculateRange()
-        {
-            var range = Attribute.GetDocumentRange();
-
-            if (includeAttributeBracketsInRange)
+            if (previousToken is { }
+                && nextToken is { }
+                && previousToken.GetTokenType() == CSharpTokenType.LBRACKET
+                && nextToken.GetTokenType() == CSharpTokenType.RBRACKET)
             {
-                var previousToken = Attribute.PrevTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
-                var nextToken = Attribute.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
-
-                if (previousToken != null
-                    && nextToken != null
-                    && previousToken.GetTokenType() == CSharpTokenType.LBRACKET
-                    && nextToken.GetTokenType() == CSharpTokenType.RBRACKET)
-                {
-                    Debug.Assert(range.Document != null);
-
-                    range = new DocumentRange(
-                        range.Document,
-                        new JetBrains.Util.TextRange(
-                            previousToken.GetDocumentRange().TextRange.StartOffset,
-                            nextToken.GetDocumentRange().TextRange.EndOffset));
-                }
+                range = new DocumentRange(
+                    range.Document,
+                    new JetBrains.Util.TextRange(
+                        previousToken.GetDocumentRange().TextRange.StartOffset,
+                        nextToken.GetDocumentRange().TextRange.EndOffset));
             }
-
-            return range;
         }
+
+        return range;
     }
 }

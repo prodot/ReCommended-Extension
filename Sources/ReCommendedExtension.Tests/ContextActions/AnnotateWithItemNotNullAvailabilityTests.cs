@@ -5,23 +5,22 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
-namespace ReCommendedExtension.Tests.ContextActions
+namespace ReCommendedExtension.Tests.ContextActions;
+
+[TestFixture]
+public sealed class AnnotateWithItemNotNullAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithItemNotNull>
 {
-    [TestFixture]
-    public sealed class AnnotateWithItemNotNullAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithItemNotNull>
-    {
-        protected override string ExtraPath => "";
+    protected override string ExtraPath => "";
 
-        protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithItemNotNull";
+    protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithItemNotNull";
 
-        [Test]
-        [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-        [TestNetCore20(ANNOTATIONS_PACKAGE, VALUE_TASKS_PACKAGE)]
-        public void TestAvailability() => DoNamedTest2();
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore20(ANNOTATIONS_PACKAGE, VALUE_TASKS_PACKAGE)]
+    public void TestAvailability() => DoNamedTest2();
 
-        [Test]
-        [TestNetCore30(ANNOTATIONS_PACKAGE)]
-        [NullableContext(NullableContextKind.Enable)]
-        public void TestAvailabilityNullableAnnotationContext() => DoNamedTest2();
-    }
+    [Test]
+    [TestNetCore30(ANNOTATIONS_PACKAGE)]
+    [NullableContext(NullableContextKind.Enable)]
+    public void TestAvailabilityNullableAnnotationContext() => DoNamedTest2();
 }

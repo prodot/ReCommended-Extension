@@ -6,18 +6,17 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ControlFlow;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class ControlFlowQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    [TestFixture]
-    public sealed class ControlFlowQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\ControlFlowQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\ControlFlowQuickFixes";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAssertionStatementSuggestion;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is RedundantAssertionStatementSuggestion;
 
-        [Test]
-        [TestNetCore30(ANNOTATIONS_PACKAGE)]
-        public void TestControlFlowAvailability() => DoNamedTest2();
-    }
+    [Test]
+    [TestNetCore30(ANNOTATIONS_PACKAGE)]
+    public void TestControlFlowAvailability() => DoNamedTest2();
 }

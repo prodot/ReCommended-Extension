@@ -7,23 +7,22 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ControlFlow;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class ControlFlowAnalyzerTests : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class ControlFlowAnalyzerTests : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\ControlFlow";
+    protected override string RelativeTestDataPath => @"Analyzers\ControlFlow";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAssertionSuggestion;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is RedundantAssertionSuggestion;
 
-        [Test]
-        public void TestControlFlow() => DoNamedTest2();
+    [Test]
+    public void TestControlFlow() => DoNamedTest2();
 
-        [NullableContext(NullableContextKind.Enable)]
-        [TestNetCore30(ANNOTATIONS_PACKAGE)]
-        [TestCompilationSymbols("DEBUG")]
-        [Test]
-        public void TestControlFlow_NullableContext() => DoNamedTest2();
-    }
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNetCore30(ANNOTATIONS_PACKAGE)]
+    [TestCompilationSymbols("DEBUG")]
+    [Test]
+    public void TestControlFlow_NullableContext() => DoNamedTest2();
 }

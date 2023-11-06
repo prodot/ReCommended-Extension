@@ -1,5 +1,3 @@
-using System;
-using JetBrains.Annotations;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
@@ -7,40 +5,37 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 
-namespace ReCommendedExtension.Analyzers.AsyncVoid
+namespace ReCommendedExtension.Analyzers.AsyncVoid;
+
+[QuickFix]
+public sealed class ChangeToAsyncTaskFix : QuickFixBase
 {
-    [QuickFix]
-    public sealed class ChangeToAsyncTaskFix : QuickFixBase
+    readonly AvoidAsyncVoidWarning highlighting;
+
+    readonly IDeclaredType taskType;
+
+    public ChangeToAsyncTaskFix(AvoidAsyncVoidWarning highlighting)
     {
-        [NotNull]
-        readonly AvoidAsyncVoidWarning highlighting;
+        this.highlighting = highlighting;
 
-        [NotNull]
-        readonly IDeclaredType taskType;
+        var psiModule = highlighting.Declaration.GetPsiModule();
 
-        public ChangeToAsyncTaskFix([NotNull] AvoidAsyncVoidWarning highlighting)
-        {
-            this.highlighting = highlighting;
+        var predefinedType = psiModule.GetPredefinedType();
 
-            var psiModule = highlighting.Declaration.GetPsiModule();
-
-            var predefinedType = psiModule.GetPredefinedType();
-
-            taskType = predefinedType.Task;
-        }
-
-        public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
-
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
-        {
-            using (WriteLockCookie.Create())
-            {
-                highlighting.Declaration.SetType(taskType.ToIType());
-            }
-
-            return _ => { };
-        }
-
-        public override string Text => $"Change return type to '{taskType.GetClrName().ShortName}'";
+        taskType = predefinedType.Task;
     }
+
+    public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
+        {
+            highlighting.Declaration.SetType(taskType.ToIType());
+        }
+
+        return _ => { };
+    }
+
+    public override string Text => $"Change return type to '{taskType.GetClrName().ShortName}'";
 }

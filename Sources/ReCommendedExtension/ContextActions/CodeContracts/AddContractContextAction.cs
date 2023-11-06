@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using JetBrains.Annotations;
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
@@ -14,29 +11,31 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts
+namespace ReCommendedExtension.ContextActions.CodeContracts;
+
+public abstract class AddContractContextAction : ContextActionBase
 {
-    public abstract class AddContractContextAction : ContextActionBase
+    ContractInfo? contractInfo;
+
+    private protected AddContractContextAction(ICSharpContextActionDataProvider provider) => Provider = provider;
+
+    void AddAnnotation()
     {
-        [CanBeNull]
-        ContractInfo contractInfo;
-
-        private protected AddContractContextAction([NotNull] ICSharpContextActionDataProvider provider) => Provider = provider;
-
-        void AddAnnotation()
+        if (TryGetAnnotationAttributeTypeName() is { } annotationAttributeTypeName)
         {
-            var annotationAttributeTypeName = TryGetAnnotationAttributeTypeName();
-            if (annotationAttributeTypeName != null)
+            var attributesOwnerDeclaration = Provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
+
+            var attributeType = attributesOwnerDeclaration
+                ?.GetPsiServices()
+                .GetComponent<CodeAnnotationsConfiguration>()
+                ?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
+
+            if (attributeType is { })
             {
-                var attributesOwnerDeclaration = Provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
+                Debug.Assert(attributesOwnerDeclaration is { });
 
-                var codeAnnotationsConfiguration = attributesOwnerDeclaration?.GetPsiServices().GetComponent<CodeAnnotationsConfiguration>();
-
-                var attributeType = codeAnnotationsConfiguration?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
-
-                if (attributeType != null
-                    && attributesOwnerDeclaration.Attributes.All(
-                        attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
+                if (attributesOwnerDeclaration.Attributes.All(
+                    attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
                 {
                     var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 
@@ -46,75 +45,70 @@ namespace ReCommendedExtension.ContextActions.CodeContracts
                 }
             }
         }
+    }
 
-        [NotNull]
-        protected ICSharpContextActionDataProvider Provider { get; }
+    protected ICSharpContextActionDataProvider Provider { get; }
 
-        [CanBeNull]
-        protected virtual string TryGetAnnotationAttributeTypeName() => null;
+    protected virtual string? TryGetAnnotationAttributeTypeName() => null;
 
-        protected abstract bool IsAvailableForType([NotNull] IType type);
+    protected abstract bool IsAvailableForType(IType type);
 
-        [NotNull]
-        protected abstract string GetContractTextForUI([NotNull] string contractIdentifier);
+    protected abstract string GetContractTextForUI(string contractIdentifier);
 
-        [NotNull]
-        protected abstract IExpression GetExpression([NotNull] CSharpElementFactory factory, [NotNull] IExpression contractExpression);
+    protected abstract IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression);
 
-        public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
+    [MemberNotNullWhen(true, nameof(contractInfo))]
+    public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
+    {
+        var declaration = Provider.GetSelectedElement<IDeclaration>(true, false);
+
+        if (declaration.IsNullableAnnotationsContextEnabled())
         {
-            var declaration = Provider.GetSelectedElement<IDeclaration>(true, false);
-
-            if (declaration.IsNullableAnnotationsContextEnabled())
-            {
-                return false;
-            }
-
-            contractInfo = ContractInfo.TryCreate(declaration, Provider.SelectedTreeRange, IsAvailableForType);
-
-            return contractInfo != null;
+            return false;
         }
 
-        public sealed override string Text
-        {
-            get
-            {
-                Debug.Assert(contractInfo != null);
+        contractInfo = ContractInfo.TryCreate(declaration, Provider.SelectedTreeRange, IsAvailableForType);
 
-                return $"Add contract ({contractInfo.GetContractKindForUI()}): {GetContractTextForUI(contractInfo.GetContractIdentifierForUI())}";
-            }
+        return contractInfo is { };
+    }
+
+    public sealed override string Text
+    {
+        get
+        {
+            Debug.Assert(contractInfo is { });
+
+            return $"Add contract ({contractInfo.GetContractKindForUI()}): {GetContractTextForUI(contractInfo.GetContractIdentifierForUI())}";
         }
+    }
 
-        protected sealed override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected sealed override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        Debug.Assert(contractInfo is { });
+
+        AddAnnotation();
+
+        contractInfo.AddContracts(
+            Provider,
+            expression => GetExpression(CSharpElementFactory.GetInstance(expression), expression),
+            out var firstNonContractStatements);
+
+        return textControl =>
         {
-            AddAnnotation();
-
-            Debug.Assert(contractInfo != null);
-
-            contractInfo.AddContracts(
-                Provider,
-                expression => GetExpression(CSharpElementFactory.GetInstance(expression), expression),
-                out var firstNonContractStatements);
-
-            return textControl =>
+            if (firstNonContractStatements is { })
             {
-                Debug.Assert(textControl != null);
-
-                if (firstNonContractStatements != null)
+                foreach (var firstNonContractStatement in firstNonContractStatements)
                 {
-                    foreach (var firstNonContractStatement in firstNonContractStatements)
-                    {
-                        var originalPosition = textControl.Caret.Position.Value;
+                    var originalPosition = textControl.Caret.Position.Value;
 
-                        var coordinates = textControl.Document.GetCoordsByOffset(firstNonContractStatement.GetDocumentRange().TextRange.StartOffset);
-                        textControl.Caret.MoveTo(coordinates, CaretVisualPlacement.DontScrollIfVisible);
+                    var coordinates = textControl.Document.GetCoordsByOffset(firstNonContractStatement.GetDocumentRange().TextRange.StartOffset);
+                    textControl.Caret.MoveTo(coordinates, CaretVisualPlacement.DontScrollIfVisible);
 
-                        textControl.EmulateEnter();
+                    textControl.EmulateEnter();
 
-                        textControl.Caret.MoveTo(originalPosition, CaretVisualPlacement.DontScrollIfVisible);
-                    }
+                    textControl.Caret.MoveTo(originalPosition, CaretVisualPlacement.DontScrollIfVisible);
                 }
-            };
-        }
+            }
+        };
     }
 }

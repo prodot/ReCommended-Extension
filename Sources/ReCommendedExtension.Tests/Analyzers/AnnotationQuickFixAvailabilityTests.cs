@@ -6,24 +6,23 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Annotation;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+[TestNetCore30(ANNOTATIONS_PACKAGE)]
+public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    [TestFixture]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is NotAllowedAnnotationWarning
-                || highlighting is ConflictingAnnotationWarning
-                || highlighting is RedundantAnnotationSuggestion
-                || highlighting is InvalidValueRangeBoundaryWarning;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is NotAllowedAnnotationWarning
+            or ConflictingAnnotationWarning
+            or RedundantAnnotationSuggestion
+            or InvalidValueRangeBoundaryWarning;
 
-        [Test]
-        public void TestAnnotationAvailability() => DoNamedTest2();
+    [Test]
+    public void TestAnnotationAvailability() => DoNamedTest2();
 
-        [Test]
-        public void TestCoerceValueRangeBoundaryAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestCoerceValueRangeBoundaryAvailability() => DoNamedTest2();
 }

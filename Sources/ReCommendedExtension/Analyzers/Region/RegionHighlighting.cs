@@ -1,18 +1,14 @@
-using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReCommendedExtension.Analyzers.Region
+namespace ReCommendedExtension.Analyzers.Region;
+
+public abstract record RegionHighlighting : Highlighting
 {
-    public abstract class RegionHighlighting : Highlighting
-    {
-        [NotNull]
-        readonly IStartRegion startRegion;
+    readonly IStartRegion startRegion;
 
-        private protected RegionHighlighting([NotNull] string message, [NotNull] IStartRegion startRegion) : base(message)
-            => this.startRegion = startRegion;
+    private protected RegionHighlighting(string message, IStartRegion startRegion) : base(message) => this.startRegion = startRegion;
 
-        public sealed override DocumentRange CalculateRange() => startRegion.Directive.GetDocumentRange();
-    }
+    public sealed override DocumentRange CalculateRange() => startRegion.Directive.GetDocumentRange();
 }

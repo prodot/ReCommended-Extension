@@ -6,27 +6,26 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.AsyncVoid;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestNetFramework45]
+[TestFixture]
+public sealed class AsyncVoidQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    [TestNetFramework45]
-    [TestFixture]
-    public sealed class AsyncVoidQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is AsyncVoidFunctionExpressionWarning || highlighting is AvoidAsyncVoidWarning;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning;
 
-        [Test]
-        public void TestAnonymousMethodAvailability() => DoNamedTest2();
+    [Test]
+    public void TestAnonymousMethodAvailability() => DoNamedTest2();
 
-        [Test]
-        public void TestLambdaExpressionAvailability() => DoNamedTest2();
+    [Test]
+    public void TestLambdaExpressionAvailability() => DoNamedTest2();
 
-        [Test]
-        public void TestAsyncVoidMethodAvailability() => DoNamedTest2();
+    [Test]
+    public void TestAsyncVoidMethodAvailability() => DoNamedTest2();
 
-        [Test]
-        public void TestAsyncVoidLocalFunctionAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestAsyncVoidLocalFunctionAvailability() => DoNamedTest2();
 }

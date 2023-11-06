@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using JetBrains.Application.Settings;
 using JetBrains.Lifetimes;
@@ -12,39 +10,37 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Annotation;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpHighlightingTestBase
+    protected override string RelativeTestDataPath => @"Analyzers\Annotation";
+
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is MissingSuppressionJustificationWarning;
+
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    protected override void DoTest(Lifetime lifetime, IProject project)
     {
-        protected override string RelativeTestDataPath => @"Analyzers\Annotation";
+        // patch the project type guids (applying [TestFlavours("3AC096D0-A1C2-E12C-1390-A8335801FDAB")] doesn't work)
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is MissingSuppressionJustificationWarning;
-
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        protected override void DoTest(Lifetime lifetime, IProject project)
+        var projectTypeGuids = project.ProjectProperties.ProjectTypeGuids.ToHashSet();
+        if (projectTypeGuids.Add(MsTestProjectFlavor.MsTestProjectFlavorGuid))
         {
-            // patch the project type guids (applying [TestFlavours("3AC096D0-A1C2-E12C-1390-A8335801FDAB")] doesn't work)
-
-            var projectTypeGuids = project.ProjectProperties.ProjectTypeGuids.ToHashSet();
-            if (projectTypeGuids.Add(MsTestProjectFlavor.MsTestProjectFlavorGuid))
-            {
-                var field = project.ProjectProperties.GetType()
-                    .BaseType.GetField("myProjectTypeGuids", BindingFlags.Instance | BindingFlags.NonPublic);
-                field.SetValue(project.ProjectProperties, projectTypeGuids);
-            }
-
-            Assert.True(project.HasFlavour<MsTestProjectFlavor>());
-
-            base.DoTest(lifetime, project);
+            var field = project.ProjectProperties.GetType().BaseType.GetField("myProjectTypeGuids", BindingFlags.Instance | BindingFlags.NonPublic);
+            field.SetValue(project.ProjectProperties, projectTypeGuids);
         }
 
-        [Test]
-        public void TestSuppressMessage_TestProject() => DoNamedTest2();
+        Assert.True(project.HasFlavour<MsTestProjectFlavor>());
 
-        [Test]
-        [TestNet50]
-        public void TestSuppressMessage_TestProject_NET_5() => DoNamedTest2();
+        base.DoTest(lifetime, project);
     }
+
+    [Test]
+    public void TestSuppressMessage_TestProject() => DoNamedTest2();
+
+    [Test]
+    [TestNet50]
+    public void TestSuppressMessage_TestProject_NET_5() => DoNamedTest2();
 }

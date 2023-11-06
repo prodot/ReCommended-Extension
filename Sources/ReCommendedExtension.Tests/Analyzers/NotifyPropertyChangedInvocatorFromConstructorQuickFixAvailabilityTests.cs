@@ -6,18 +6,17 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+[TestPackagesWithAnnotations]
+public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    [TestFixture]
-    [TestPackagesWithAnnotations]
-    public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning;
 
-        [Test]
-        public void TestNotifyPropertyChangedInvocatorFromConstructorAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestNotifyPropertyChangedInvocatorFromConstructorAvailability() => DoNamedTest2();
 }

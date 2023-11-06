@@ -1,5 +1,11 @@
 ﻿<Project>
 
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
         <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -9,5 +15,11 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
     </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="System.Diagnostics" />
+        <Using Include="System.Diagnostics.CodeAnalysis" />
+        <Using Include="JetBrains.Annotations" />
+    </ItemGroup>
 
 </Project>

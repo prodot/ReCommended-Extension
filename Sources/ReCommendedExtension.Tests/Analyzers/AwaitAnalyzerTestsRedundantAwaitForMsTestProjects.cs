@@ -6,19 +6,18 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Await;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestNetFramework45]
+[TestPackages("MSTest.TestFramework/1.3.2")]
+[TestFixture]
+public sealed class AwaitAnalyzerTestsRedundantAwaitForMsTestProjects : CSharpHighlightingTestBase
 {
-    [TestNetFramework45]
-    [TestPackages("MSTest.TestFramework/1.3.2")]
-    [TestFixture]
-    public sealed class AwaitAnalyzerTestsRedundantAwaitForMsTestProjects : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\Await";
+    protected override string RelativeTestDataPath => @"Analyzers\Await";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAwaitSuggestion;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is RedundantAwaitSuggestion;
 
-        [Test]
-        public void TestRedundantAwait_TestProject() => DoNamedTest2();
-    }
+    [Test]
+    public void TestRedundantAwait_TestProject() => DoNamedTest2();
 }

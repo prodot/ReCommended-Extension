@@ -2,14 +2,13 @@
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ControlFlow;
 
-namespace ReCommendedExtension.Tests.Analyzers
-{
-    [TestFixture]
-    public sealed class ControlFlowQuickFixTestsForAssertionStatement : QuickFixTestBase<RemoveAssertionStatementFix>
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\ControlFlowQuickFixes";
+namespace ReCommendedExtension.Tests.Analyzers;
 
-        [Test]
-        public void TestRemoveAssertionStatement() => DoNamedTest2();
-    }
+[TestFixture]
+public sealed class ControlFlowQuickFixTestsForAssertionStatement : QuickFixTestBase<RemoveAssertionStatementFix>
+{
+    protected override string RelativeTestDataPath => @"Analyzers\ControlFlowQuickFixes";
+
+    [Test]
+    public void TestRemoveAssertionStatement() => DoNamedTest2();
 }

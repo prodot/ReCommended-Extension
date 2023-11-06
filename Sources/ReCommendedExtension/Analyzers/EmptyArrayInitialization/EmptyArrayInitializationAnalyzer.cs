@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using JetBrains.Annotations;
-using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -10,83 +6,67 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
-namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization
+namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
+
+[ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(EmptyArrayInitializationWarning) })]
+public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 {
-    [ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(EmptyArrayInitializationWarning) })]
-    public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
+    [Pure]
+    static bool ArrayEmptyMethodExists(IPsiModule psiModule)
+        => TryGetArrayType(psiModule) is { } arrayType
+            && arrayType.Methods.Any(method => method is { IsStatic: true, ShortName: nameof(Array.Empty), Parameters: [] });
+
+    [Pure]
+    internal static ITypeElement? TryGetArrayType(IPsiModule psiModule)
+        => TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARRAY_FQN, psiModule);
+
+    static string CreateHighlightingMessage(IType arrayElementType)
     {
-        [Pure]
-        static bool ArrayEmptyMethodExists([NotNull] IPsiModule psiModule)
+        Debug.Assert(CSharpLanguage.Instance is { });
+
+        return $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayElementType.GetPresentableName(CSharpLanguage.Instance)}>()'.";
+    }
+
+    protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+    {
+        if (!ArrayEmptyMethodExists(element.GetPsiModule()))
         {
-            var arrayType = TryGetArrayType(psiModule);
-            return arrayType != null
-                && arrayType.Methods.Any(method => method.IsStatic && method.ShortName == nameof(Array.Empty) && method.Parameters.Count == 0);
+            return;
         }
 
-        [Pure]
-        [CanBeNull]
-        internal static ITypeElement TryGetArrayType([NotNull] IPsiModule psiModule)
-            => TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARRAY_FQN, psiModule);
-
-        [NotNull]
-        static string CreateHighlightingMessage([NotNull] IType arrayElementType)
+        switch (element)
         {
-            Debug.Assert(CSharpLanguage.Instance != null);
-
-            return $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayElementType.GetPresentableName(CSharpLanguage.Instance)}>()'.";
-        }
-
-        protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
-        {
-            if (!ArrayEmptyMethodExists(element.GetPsiModule()))
+            case IArrayInitializer { InitializerElements: [], Parent: ITypeOwnerDeclaration declaration } arrayInitializer:
             {
-                return;
+                if (declaration.Type.GetScalarType() is { } arrayElementType)
+                {
+                    // T[] variable = { }; // variable or type field declaration with initialization
+                    // T[] Property { get; } = { };
+                    // T[] Property { get; set; } = { };
+
+                    consumer.AddHighlighting(
+                        new EmptyArrayInitializationWarning(CreateHighlightingMessage(arrayElementType), arrayInitializer, arrayElementType));
+                }
+                break;
             }
 
-            switch (element)
-            {
-                case IArrayInitializer arrayInitializer:
-                    if (arrayInitializer.InitializerElements.Count == 0 && arrayInitializer.Parent is ITypeOwnerDeclaration declaration)
-                    {
-                        var arrayElementType = declaration.Type.GetScalarType();
+            // handled by R#: new T[0]
+            // handled by R#: new T[0] { }
 
-                        if (arrayElementType != null)
-                        {
-                            // T[] variable = { }; // variable or type field declaration with initialization
-                            // T[] Property { get; } = { };
-                            // T[] Property { get; set; } = { };
+            case IArrayCreationExpression { Dimensions: [1], DimInits: [], ArrayInitializer.InitializerElements: [] } creationExpression:
+                if (creationExpression.GetContainingNode<IAttribute>() is not { })
+                {
+                    // new T[] { }
 
-                            consumer.AddHighlighting(
-                                new EmptyArrayInitializationWarning(CreateHighlightingMessage(arrayElementType), arrayInitializer, arrayElementType));
-                        }
-                    }
-                    break;
+                    var arrayElementType = creationExpression.GetElementType();
 
-                case IArrayCreationExpression creationExpression:
-                    if (creationExpression.GetContainingNode<IAttribute>() == null)
-                    {
-                        var dimensions = creationExpression.Dimensions;
-                        if (dimensions.Length == 1 && dimensions[0] == 1)
-                        {
-                            var arrayElementType = creationExpression.GetElementType();
-
-                            if (creationExpression.DimInits.Count == 0 && creationExpression.ArrayInitializer?.InitializerElements.Count == 0)
-                            {
-                                // new T[] { }
-
-                                consumer.AddHighlighting(
-                                    new EmptyArrayInitializationWarning(
-                                        CreateHighlightingMessage(arrayElementType),
-                                        creationExpression,
-                                        arrayElementType));
-                            }
-
-                            // handled by R#: new T[0]
-                            // handled by R#: new T[0] { }
-                        }
-                    }
-                    break;
-            }
+                    consumer.AddHighlighting(
+                        new EmptyArrayInitializationWarning(
+                            CreateHighlightingMessage(arrayElementType),
+                            creationExpression,
+                            arrayElementType));
+                }
+                break;
         }
     }
 }

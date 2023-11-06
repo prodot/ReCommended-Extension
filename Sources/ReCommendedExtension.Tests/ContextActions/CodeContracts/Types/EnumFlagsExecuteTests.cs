@@ -3,23 +3,22 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions.CodeContracts;
 
-namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types
+namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types;
+
+[TestNetFramework4]
+[TestFixture]
+public sealed class EnumFlagsExecuteTests : CSharpContextActionExecuteTestBase<EnumFlags>
 {
-    [TestNetFramework4]
-    [TestFixture]
-    public sealed class EnumFlagsExecuteTests : CSharpContextActionExecuteTestBase<EnumFlags>
-    {
-        protected override string ExtraPath => "";
+    protected override string ExtraPath => "";
 
-        protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\EnumFlags";
+    protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\EnumFlags";
 
-        [Test]
-        public void TestExecuteWithZero() => DoNamedTest2();
+    [Test]
+    public void TestExecuteWithZero() => DoNamedTest2();
 
-        [Test]
-        public void TestExecuteWithoutZero() => DoNamedTest2();
+    [Test]
+    public void TestExecuteWithoutZero() => DoNamedTest2();
 
-        [Test]
-        public void TestExecuteWithZeroSingleMember() => DoNamedTest2();
-    }
+    [Test]
+    public void TestExecuteWithZeroSingleMember() => DoNamedTest2();
 }

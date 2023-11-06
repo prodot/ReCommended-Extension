@@ -5,17 +5,16 @@ using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.UncatchableException;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class UncatchableExceptionAnalyzerTests : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class UncatchableExceptionAnalyzerTests : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\UncatchableException";
+    protected override string RelativeTestDataPath => @"Analyzers\UncatchableException";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is UncatchableExceptionWarning;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is UncatchableExceptionWarning;
 
-        [Test]
-        public void TestUncatchableException() => DoNamedTest2();
-    }
+    [Test]
+    public void TestUncatchableException() => DoNamedTest2();
 }

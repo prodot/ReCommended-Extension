@@ -1,41 +1,35 @@
-﻿using System;
-using JetBrains.Annotations;
-using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace ReCommendedExtension.Analyzers.LocalSuppression
+namespace ReCommendedExtension.Analyzers.LocalSuppression;
+
+[ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionWarning) })]
+public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCommentNode>
 {
-    [ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionWarning) })]
-    public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCommentNode>
+    [NonNegativeValue]
+    static int GetLeadingWhitespaceCharacterCount(string commentText)
     {
-        [NonNegativeValue]
-        static int GetLeadingWhitespaceCharacterCount([NotNull] string commentText)
+        var leadingWhitespaceCharacters = 0;
+
+        foreach (var c in commentText)
         {
-            var leadingWhitespaceCharacters = 0;
-
-            foreach (var c in commentText)
+            if (c is ' ' or '\t')
             {
-                switch (c)
-                {
-                    case ' ':
-                    case '\t':
-                        leadingWhitespaceCharacters++;
-                        break;
-
-                    default: return leadingWhitespaceCharacters;
-                }
+                leadingWhitespaceCharacters++;
             }
-
-            return leadingWhitespaceCharacters;
+            else
+            {
+                return leadingWhitespaceCharacters;
+            }
         }
 
-        protected override void Run(ICSharpCommentNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
-        {
-            if (element.GetContainingFunctionLikeDeclarationOrClosure() == null)
-            {
-                return;
-            }
+        return leadingWhitespaceCharacters;
+    }
 
+    protected override void Run(ICSharpCommentNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+    {
+        if (element.GetContainingFunctionLikeDeclarationOrClosure() is { })
+        {
             var leadingWhitespaceCharacterCount = GetLeadingWhitespaceCharacterCount(element.CommentText);
 
             var commentText = element.CommentText.Remove(0, leadingWhitespaceCharacterCount);

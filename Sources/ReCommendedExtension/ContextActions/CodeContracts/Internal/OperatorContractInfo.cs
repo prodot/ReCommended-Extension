@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using System.Diagnostics.Contracts;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -10,69 +6,61 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
+namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
+
+internal sealed record OperatorContractInfo : ContractInfo
 {
-    internal sealed class OperatorContractInfo : ContractInfo
+    public static OperatorContractInfo? TryCreate(
+        IOperatorDeclaration declaration,
+        TreeTextRange selectedTreeRange,
+        Func<IType, bool> isAvailableForType)
     {
-        [CanBeNull]
-        public static OperatorContractInfo TryCreate(
-            [NotNull] IOperatorDeclaration declaration,
-            TreeTextRange selectedTreeRange,
-            [NotNull] Func<IType, bool> isAvailableForType)
+        if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause is not { })
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
+            var operatorElement = declaration.DeclaredElement;
+            Debug.Assert(operatorElement is { });
+
+            if (CanAcceptContracts(operatorElement) && isAvailableForType(operatorElement.ReturnType))
             {
-                var operatorElement = declaration.DeclaredElement;
-
-                Debug.Assert(operatorElement != null);
-
-                if (CanAcceptContracts(operatorElement) && isAvailableForType(operatorElement.ReturnType))
-                {
-                    return new OperatorContractInfo(declaration, operatorElement.ReturnType);
-                }
+                return new OperatorContractInfo(declaration, operatorElement.ReturnType);
             }
-
-            return null;
         }
 
-        [NotNull]
-        readonly IOperatorDeclaration declaration;
+        return null;
+    }
 
-        OperatorContractInfo([NotNull] IOperatorDeclaration declaration, [NotNull] IType type) : base(ContractKind.Ensures, type)
-            => this.declaration = declaration;
+    readonly IOperatorDeclaration declaration;
 
-        public override string GetContractIdentifierForUI() => "result";
+    OperatorContractInfo(IOperatorDeclaration declaration, IType type) : base(ContractKind.Ensures, type) => this.declaration = declaration;
 
-        public override void AddContracts(
-            ICSharpContextActionDataProvider provider,
-            Func<IExpression, IExpression> getContractExpression,
-            out ICollection<ICSharpStatement> firstNonContractStatements)
+    public override string GetContractIdentifierForUI() => "result";
+
+    public override void AddContracts(
+        ICSharpContextActionDataProvider provider,
+        Func<IExpression, IExpression> getContractExpression,
+        out ICollection<ICSharpStatement>? firstNonContractStatements)
+    {
+        if (declaration.Body is { })
         {
-            if (declaration.Body != null)
-            {
-                var factory = CSharpElementFactory.GetInstance(declaration);
+            Debug.Assert(declaration.DeclaredElement is { });
 
-                var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, provider.PsiModule);
+            var factory = CSharpElementFactory.GetInstance(declaration);
 
-                Debug.Assert(declaration.DeclaredElement != null);
+            var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, provider.PsiModule);
 
-                var expression = factory.CreateExpression(
-                    $"$0.{nameof(Contract.Result)}<$1>()",
-                    contractType,
-                    declaration.DeclaredElement.ReturnType);
+            var expression = factory.CreateExpression($"$0.{nameof(Contract.Result)}<$1>()", contractType, declaration.DeclaredElement.ReturnType);
 
-                AddContract(
-                    ContractKind.Ensures,
-                    declaration.Body,
-                    provider.PsiModule,
-                    () => getContractExpression(expression),
-                    out var firstNonContractStatement);
-                firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
-            }
-            else
-            {
-                firstNonContractStatements = null;
-            }
+            AddContract(
+                ContractKind.Ensures,
+                declaration.Body,
+                provider.PsiModule,
+                () => getContractExpression(expression),
+                out var firstNonContractStatement);
+            firstNonContractStatements = firstNonContractStatement is { } ? new[] { firstNonContractStatement } : null;
+        }
+        else
+        {
+            firstNonContractStatements = null;
         }
     }
 }

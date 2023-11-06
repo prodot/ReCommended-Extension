@@ -5,17 +5,16 @@ using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.XamlBindingWithoutMode;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class XamlBindingWithoutMode : XamlHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class XamlBindingWithoutMode : XamlHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\XamlBindingWithoutMode";
+    protected override string RelativeTestDataPath => @"Analyzers\XamlBindingWithoutMode";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is XamlBindingWithoutModeWarning;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is XamlBindingWithoutModeWarning;
 
-        [Test]
-        public void TestXamlBindingWithoutMode() => DoNamedTest2();
-    }
+    [Test]
+    public void TestXamlBindingWithoutMode() => DoNamedTest2();
 }

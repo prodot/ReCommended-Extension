@@ -5,17 +5,16 @@ using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestFixture]
+public sealed class LockOnObjectWithWeakIdentityAnalyzerTests : CSharpHighlightingTestBase
 {
-    [TestFixture]
-    public sealed class LockOnObjectWithWeakIdentityAnalyzerTests : CSharpHighlightingTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\LockOnObjectWithWeakIdentity";
+    protected override string RelativeTestDataPath => @"Analyzers\LockOnObjectWithWeakIdentity";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is LockOnObjectWithWeakIdentityWarning;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is LockOnObjectWithWeakIdentityWarning;
 
-        [Test]
-        public void TestLockOnObjectWithWeakIdentity() => DoNamedTest2();
-    }
+    [Test]
+    public void TestLockOnObjectWithWeakIdentity() => DoNamedTest2();
 }

@@ -1,22 +1,20 @@
-using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts
+namespace ReCommendedExtension.ContextActions.CodeContracts;
+
+public abstract class Numeric : AddContractContextAction
 {
-    public abstract class Numeric : AddContractContextAction
+    private protected Numeric(ICSharpContextActionDataProvider provider) : base(provider) { }
+
+    private protected CSharpNumericTypeInfo? NumericTypeInfo { get; private set; }
+
+    [MemberNotNullWhen(true, nameof(NumericTypeInfo))]
+    protected sealed override bool IsAvailableForType(IType type)
     {
-        private protected Numeric([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
+        NumericTypeInfo = CSharpNumericTypeInfo.TryCreate(type);
 
-        [CanBeNull]
-        private protected CSharpNumericTypeInfo NumericTypeInfo { get; private set; }
-
-        protected sealed override bool IsAvailableForType(IType type)
-        {
-            NumericTypeInfo = CSharpNumericTypeInfo.TryCreate(type);
-
-            return NumericTypeInfo != null;
-        }
+        return NumericTypeInfo is { };
     }
 }

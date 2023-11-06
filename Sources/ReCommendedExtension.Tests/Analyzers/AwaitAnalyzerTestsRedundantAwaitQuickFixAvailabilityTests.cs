@@ -6,21 +6,20 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Await;
 
-namespace ReCommendedExtension.Tests.Analyzers
+namespace ReCommendedExtension.Tests.Analyzers;
+
+[TestNetCore30]
+[TestFixture]
+public sealed class AwaitAnalyzerTestsRedundantAwaitQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    [TestNetCore30]
-    [TestFixture]
-    public sealed class AwaitAnalyzerTestsRedundantAwaitQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
-    {
-        protected override string RelativeTestDataPath => @"Analyzers\AwaitQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\AwaitQuickFixes";
 
-        protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-            => highlighting is RedundantAwaitSuggestion;
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is RedundantAwaitSuggestion;
 
-        [Test]
-        public void TestRedundantAwaitAvailability() => DoNamedTest2();
+    [Test]
+    public void TestRedundantAwaitAvailability() => DoNamedTest2();
 
-        [Test]
-        public void TestRedundantAwaitValueTaskAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestRedundantAwaitValueTaskAvailability() => DoNamedTest2();
 }

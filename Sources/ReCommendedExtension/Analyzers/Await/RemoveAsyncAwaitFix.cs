@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
+﻿using System.Text;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
@@ -13,85 +10,82 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.Await
+namespace ReCommendedExtension.Analyzers.Await;
+
+[QuickFix]
+public sealed class RemoveAsyncAwaitFix : QuickFixBase
 {
-    [QuickFix]
-    public sealed class RemoveAsyncAwaitFix : QuickFixBase
+    readonly RedundantAwaitSuggestion highlighting;
+
+    public RemoveAsyncAwaitFix(RedundantAwaitSuggestion highlighting) => this.highlighting = highlighting;
+
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text
     {
-        [NotNull]
-        readonly RedundantAwaitSuggestion highlighting;
-
-        public RemoveAsyncAwaitFix([NotNull] RedundantAwaitSuggestion highlighting) => this.highlighting = highlighting;
-
-        public override bool IsAvailable(IUserDataHolder cache) => true;
-
-        public override string Text
+        get
         {
-            get
+            var builder = new StringBuilder();
+
+            builder.Append("Remove 'async'/'await'");
+
+            if (highlighting.QuickFixRemovesConfigureAwait)
             {
-                var builder = new StringBuilder();
-
-                builder.Append("Remove 'async'/'await'");
-
-                if (highlighting.QuickFixRemovesConfigureAwait)
-                {
-                    builder.Append("/'");
-                    builder.Append(nameof(Task.ConfigureAwait));
-                    builder.Append("(...)'");
-                }
-
-                return builder.ToString();
+                builder.Append("/'");
+                builder.Append(nameof(Task.ConfigureAwait));
+                builder.Append("(...)'");
             }
+
+            return builder.ToString();
         }
+    }
 
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
         {
-            using (WriteLockCookie.Create())
+            var factory = CSharpElementFactory.GetInstance(highlighting.AwaitExpression);
+
+            // add [NotNull] annotation
+            if (highlighting.AttributesOwnerDeclaration is { }
+                && !highlighting.AttributesOwnerDeclaration.IsNullableAnnotationsContextEnabled()
+                && !highlighting.AttributesOwnerDeclaration.OverridesInheritedMember()
+                && highlighting.AttributesOwnerDeclaration.Attributes.All(
+                    a => a.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != NullnessProvider.NotNullAttributeShortName))
             {
-                var factory = CSharpElementFactory.GetInstance(highlighting.AwaitExpression);
+                var codeAnnotationsConfiguration =
+                    highlighting.AttributesOwnerDeclaration.GetPsiServices().GetComponent<CodeAnnotationsConfiguration>();
 
-                // add [NotNull] annotation
-                if (highlighting.AttributesOwnerDeclaration != null
-                    && !highlighting.AttributesOwnerDeclaration.IsNullableAnnotationsContextEnabled()
-                    && !highlighting.AttributesOwnerDeclaration.OverridesInheritedMember()
-                    && highlighting.AttributesOwnerDeclaration.Attributes.All(
-                        a => a.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != NullnessProvider.NotNullAttributeShortName))
+                var attributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
+                    highlighting.AttributesOwnerDeclaration,
+                    NullnessProvider.NotNullAttributeShortName);
+                if (attributeType is { })
                 {
-                    var codeAnnotationsConfiguration =
-                        highlighting.AttributesOwnerDeclaration.GetPsiServices().GetComponent<CodeAnnotationsConfiguration>();
+                    var attribute = factory.CreateAttribute(attributeType);
 
-                    var attributeType = codeAnnotationsConfiguration.GetAttributeTypeForElement(
-                        highlighting.AttributesOwnerDeclaration,
-                        NullnessProvider.NotNullAttributeShortName);
-
-                    if (attributeType != null)
-                    {
-                        var attribute = factory.CreateAttribute(attributeType);
-
-                        highlighting.AttributesOwnerDeclaration.AddAttributeAfter(
-                            attribute,
-                            highlighting.AttributesOwnerDeclaration.Attributes.LastOrDefault());
-                    }
-                }
-
-                // remove 'async'
-                highlighting.RemoveAsync();
-
-                if (highlighting.StatementToBeReplacedWithReturnStatement != null)
-                {
-                    // replace 'await' with 'return' (and remove 'ConfigureAwait' if available)
-                    ModificationUtil.ReplaceChild(
-                        highlighting.StatementToBeReplacedWithReturnStatement,
-                        factory.CreateStatement("return $0;", highlighting.ExpressionToReturn));
-                }
-                else
-                {
-                    // remove 'await' (and 'ConfigureAwait' if available)
-                    ModificationUtil.ReplaceChild(highlighting.AwaitExpression, factory.CreateExpression("$0", highlighting.ExpressionToReturn));
+                    highlighting.AttributesOwnerDeclaration.AddAttributeAfter(
+                        attribute,
+                        highlighting.AttributesOwnerDeclaration.Attributes.LastOrDefault());
                 }
             }
 
-            return _ => { };
+            // remove 'async'
+            highlighting.RemoveAsync();
+
+            if (highlighting.StatementToBeReplacedWithReturnStatement is { })
+            {
+                // replace 'await' with 'return' (and remove 'ConfigureAwait' if available)
+                ModificationUtil.ReplaceChild(
+                    highlighting.StatementToBeReplacedWithReturnStatement,
+                    factory.CreateStatement("return $0;", highlighting.ExpressionToReturn));
+            }
+            else
+            {
+                // remove 'await' (and 'ConfigureAwait' if available)
+                ModificationUtil.ReplaceChild(highlighting.AwaitExpression, factory.CreateExpression("$0", highlighting.ExpressionToReturn));
+            }
         }
+
+        return _ => { };
     }
 }

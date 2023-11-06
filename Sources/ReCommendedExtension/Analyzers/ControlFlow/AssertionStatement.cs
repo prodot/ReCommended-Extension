@@ -1,72 +1,57 @@
-﻿using System.Diagnostics;
-using JetBrains.Annotations;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReCommendedExtension.Analyzers.ControlFlow
+namespace ReCommendedExtension.Analyzers.ControlFlow;
+
+internal sealed record AssertionStatement : Assertion
 {
-    internal sealed class AssertionStatement : Assertion
+    public static AssertionStatement? TryFromInvocationExpression(
+        IInvocationExpression invocationExpression,
+        AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
+        AssertionConditionAnnotationProvider assertionConditionAnnotationProvider)
     {
-        [CanBeNull]
-        public static AssertionStatement TryFromInvocationExpression(
-            [NotNull] IInvocationExpression invocationExpression,
-            [NotNull] AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
-            [NotNull] AssertionConditionAnnotationProvider assertionConditionAnnotationProvider)
+        if (invocationExpression.Reference.Resolve().DeclaredElement is IMethod method && assertionMethodAnnotationProvider.GetInfo(method))
         {
-            if (invocationExpression.Reference.Resolve().DeclaredElement is IMethod method && assertionMethodAnnotationProvider.GetInfo(method))
+            foreach (var parameter in method.Parameters)
             {
-                foreach (var parameter in method.Parameters)
+                var parameterAssertionCondition = assertionConditionAnnotationProvider.GetInfo(parameter);
+
+                if (parameterAssertionCondition is not { } && parameter.Type.IsBool())
                 {
-                    Debug.Assert(parameter != null);
+                    parameterAssertionCondition = AssertionConditionType.IS_TRUE;
+                }
 
-                    var parameterAssertionCondition = assertionConditionAnnotationProvider.GetInfo(parameter);
-
-                    if (parameterAssertionCondition == null && parameter.Type.IsBool())
+                if (parameterAssertionCondition is { } assertionCondition)
+                {
+                    var argument = invocationExpression.ArgumentList.Arguments.FirstOrDefault(
+                        a => a.MatchingParameter is { } && a.MatchingParameter.Element.ShortName == parameter.ShortName);
+                    if (argument is { Value: { } })
                     {
-                        parameterAssertionCondition = AssertionConditionType.IS_TRUE;
-                    }
-
-                    if (parameterAssertionCondition != null)
-                    {
-                        var argument = invocationExpression.ArgumentList?.Arguments.FirstOrDefault(
-                            a =>
-                            {
-                                Debug.Assert(a != null);
-                                return a.MatchingParameter != null && a.MatchingParameter.Element.ShortName == parameter.ShortName;
-                            });
-                        if (argument?.Value != null)
+                        return new AssertionStatement(assertionCondition)
                         {
-                            return new AssertionStatement(invocationExpression, (AssertionConditionType)parameterAssertionCondition, argument.Value);
-                        }
+                            Statement = invocationExpression,
+                            Expression = argument.Value,
+                        };
                     }
                 }
             }
-
-            return null;
         }
 
-        AssertionStatement(
-            [NotNull] IInvocationExpression statement,
-            AssertionConditionType assertionConditionType,
-            [NotNull] ICSharpExpression expression)
-        {
-            Statement = statement;
-            AssertionConditionType = assertionConditionType;
-            Expression = expression;
-        }
-
-        [NotNull]
-        public IInvocationExpression Statement { get; }
-
-        public override AssertionConditionType AssertionConditionType { get; }
-
-        [NotNull]
-        public ICSharpExpression Expression { get; }
-
-        public override bool Equals(Assertion other) => Statement.GetDocumentRange() == (other as AssertionStatement)?.Statement.GetDocumentRange();
-
-        public override int GetHashCode() => Statement.GetDocumentRange().GetHashCode();
+        return null;
     }
+
+    AssertionStatement(AssertionConditionType assertionConditionType) => AssertionConditionType = assertionConditionType;
+
+    public required IInvocationExpression Statement { get; init; }
+
+    public override AssertionConditionType AssertionConditionType { get; }
+
+    public required ICSharpExpression Expression { get; init; }
+
+    public bool Equals([NotNullWhen(true)] AssertionStatement? other)
+        => other is { } && Statement.GetDocumentRange() == other.Statement.GetDocumentRange();
+
+    public override int GetHashCode() => Statement.GetDocumentRange().GetHashCode();
 }

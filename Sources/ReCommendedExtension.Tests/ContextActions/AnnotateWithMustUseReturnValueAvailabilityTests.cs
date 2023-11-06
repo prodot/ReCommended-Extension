@@ -3,17 +3,16 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
-namespace ReCommendedExtension.Tests.ContextActions
+namespace ReCommendedExtension.Tests.ContextActions;
+
+[TestNetFramework45]
+[TestFixture]
+public sealed class AnnotateWithMustUseReturnValueAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithMustUseReturnValue>
 {
-    [TestNetFramework45]
-    [TestFixture]
-    public sealed class AnnotateWithMustUseReturnValueAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithMustUseReturnValue>
-    {
-        protected override string ExtraPath => "";
+    protected override string ExtraPath => "";
 
-        protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithMustUseReturnValue";
+    protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithMustUseReturnValue";
 
-        [Test]
-        public void TestAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestAvailability() => DoNamedTest2();
 }
