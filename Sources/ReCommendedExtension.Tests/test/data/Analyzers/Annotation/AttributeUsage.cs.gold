@@ -1,0 +1,17 @@
+﻿using System;
+
+namespace Test
+{
+    public class SomeClass { }
+
+    public class |BaseAttribute|(0) : Attribute { }
+
+    public class DerivedAttribute : BaseAttribute { }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class BaseAttribute2 : Attribute { }
+
+    public class DerivedAttribute2 : BaseAttribute2 { }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotate the attribute with 'AttributeUsage'.

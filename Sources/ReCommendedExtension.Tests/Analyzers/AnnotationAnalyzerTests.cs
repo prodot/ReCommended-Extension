@@ -22,7 +22,8 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
             or MissingAnnotationWarning
             or MissingSuppressionJustificationWarning
             or ConflictingAnnotationWarning
-            or InvalidValueRangeBoundaryWarning;
+            or InvalidValueRangeBoundaryWarning
+            or MissingAttributeUsageAnnotationWarning;
 
     [Test]
     [TestNetFramework45]
@@ -78,4 +79,7 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
     [NullableContext(NullableContextKind.Enable)]
     public void TestValueRange() => DoNamedTest2();
+
+    [Test]
+    public void TestAttributeUsage() => DoNamedTest2();
 }

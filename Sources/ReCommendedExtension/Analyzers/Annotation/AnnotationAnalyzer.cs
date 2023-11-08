@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     {
         typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
         typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint),
-        typeof(InvalidValueRangeBoundaryWarning),
+        typeof(InvalidValueRangeBoundaryWarning), typeof(MissingAttributeUsageAnnotationWarning),
     })]
 public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
 {
@@ -477,6 +477,22 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
         }
     }
 
+    static void AnalyzeMissingAttributeUsageAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
+    {
+        if (attributesOwnerDeclaration is IClassDeclaration classDeclaration
+            && classDeclaration.SuperTypes.FirstOrDefault() is { } baseType
+            && baseType.GetTypeElement() is { ShortName: nameof(Attribute) } baseTypeElement
+            && baseTypeElement.GetContainingNamespace() is { ShortName: nameof(System) }
+            && classDeclaration.Attributes.All(
+                a => a.GetAttributeInstance().GetAttributeType().GetClrName().FullName != typeof(AttributeUsageAttribute).FullName))
+        {
+            consumer.AddHighlighting(
+                new MissingAttributeUsageAnnotationWarning(
+                    attributesOwnerDeclaration,
+                    $"Annotate the attribute with '{nameof(AttributeUsageAttribute)[..^"Attribute".Length]}'."));
+        }
+    }
+
     static void AnalyzeConditional(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
         var conditionalAttributes =
@@ -786,6 +802,9 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
 
         // [NonNegativeValue] and [ValueRange(...)] annotations
         AnalyzeNumericRangeAnnotations(consumer, element);
+
+        // [AttributeUsage] annotations
+        AnalyzeMissingAttributeUsageAnnotations(consumer, element);
 
         // attributes annotated as [Conditional]
         AnalyzeConditional(consumer, element);

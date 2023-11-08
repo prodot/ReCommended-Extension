@@ -1,0 +1,10 @@
+﻿using System;
+
+namespace Test
+{
+    public class |BaseAttribute|(0) : Attribute { }
+}
+------------------------------------------------
+0: Annotate the attribute with 'AttributeUsage'.
+QUICKFIXES:
+Annotate with [AttributeUsage]
