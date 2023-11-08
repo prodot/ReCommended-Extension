@@ -28,7 +28,7 @@ public abstract class AddContractContextAction : ContextActionBase
             var attributeType = attributesOwnerDeclaration
                 ?.GetPsiServices()
                 .GetComponent<CodeAnnotationsConfiguration>()
-                ?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
+                .GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
 
             if (attributeType is { })
             {
