@@ -1,0 +1,15 @@
+using System;
+using System.Numerics;
+
+namespace Test
+{
+    internal class Class{caret}2 : IEquatable<Class2>, IEqualityOperators<Class2, Class2, bool>
+    {
+        public bool Equals(Class2 other) => throw new NotImplementedException();
+
+        public static bool operator ==(Class2 left, Class2 right) =>
+          (object)left == right || left is { } && left.Equals(right);
+
+        public static bool operator !=(Class2 left, Class2 right) => !(left == right);
+    }
+}

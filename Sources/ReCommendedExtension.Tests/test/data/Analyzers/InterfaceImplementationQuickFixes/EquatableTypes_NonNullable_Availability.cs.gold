@@ -1,0 +1,69 @@
+﻿using System;
+using System.Numerics;
+
+namespace Test
+{
+    // classes
+
+    internal class |Class2|(0) : IEquatable<Class2>
+    {
+        public bool Equals(Class2 other) => throw new NotImplementedException();
+    }
+
+    internal class |Class2WithOperators|(1) : IEquatable<Class2WithOperators>
+    {
+        public bool Equals(Class2WithOperators other) => throw new NotImplementedException();
+
+        public static bool operator ==(Class2WithOperators left, Class2WithOperators right) => throw new NotImplementedException();
+
+        public static bool operator !=(Class2WithOperators left, Class2WithOperators right) => throw new NotImplementedException();
+    }
+
+    // structs
+
+    internal struct |Struct2|(2) : IEquatable<Struct2>
+    {
+        public bool Equals(Struct2 other) => throw new NotImplementedException();
+    }
+
+    internal struct |Struct2WithOperators|(3) : IEquatable<Struct2WithOperators>
+    {
+        public bool Equals(Struct2WithOperators other) => throw new NotImplementedException();
+
+        public static bool operator ==(Struct2WithOperators left, Struct2WithOperators right) => throw new NotImplementedException();
+
+        public static bool operator !=(Struct2WithOperators left, Struct2WithOperators right) => throw new NotImplementedException();
+    }
+
+    // records
+
+    internal record |ClassRecord1|(4);
+
+    internal record |ClassRecord2|(5) : ClassRecord1;
+
+    internal record struct |StructRecord1|(6);
+}
+------------------------------------------------
+0: Implement the IEqualityOperators<Class2, Class2, bool> interface.
+QUICKFIXES:
+Implement IEqualityOperators<Class2, Class2, bool>
+Implement IEqualityOperators<Class2, Class2, bool> (use the Equals method)
+1: Mark the class as implementing the IEqualityOperators<Class2WithOperators, Class2WithOperators, bool> interface (operators are available).
+QUICKFIXES:
+Mark as implementing IEqualityOperators<Class2WithOperators, Class2WithOperators, bool>
+2: Implement the IEqualityOperators<Struct2, Struct2, bool> interface.
+QUICKFIXES:
+Implement IEqualityOperators<Struct2, Struct2, bool>
+Implement IEqualityOperators<Struct2, Struct2, bool> (use the Equals method)
+3: Mark the struct as implementing the IEqualityOperators<Struct2WithOperators, Struct2WithOperators, bool> interface (operators are available).
+QUICKFIXES:
+Mark as implementing IEqualityOperators<Struct2WithOperators, Struct2WithOperators, bool>
+4: Mark the record as implementing the IEqualityOperators<ClassRecord1, ClassRecord1, bool> interface (operators are available).
+QUICKFIXES:
+Mark as implementing IEqualityOperators<ClassRecord1, ClassRecord1, bool>
+5: Mark the record as implementing the IEqualityOperators<ClassRecord2, ClassRecord2, bool> interface (operators are available).
+QUICKFIXES:
+Mark as implementing IEqualityOperators<ClassRecord2, ClassRecord2, bool>
+6: Mark the record struct as implementing the IEqualityOperators<StructRecord1, StructRecord1, bool> interface (operators are available).
+QUICKFIXES:
+Mark as implementing IEqualityOperators<StructRecord1, StructRecord1, bool>

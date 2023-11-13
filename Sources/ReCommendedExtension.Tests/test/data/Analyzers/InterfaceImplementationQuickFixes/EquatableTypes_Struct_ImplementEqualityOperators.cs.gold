@@ -1,0 +1,12 @@
+using System;
+using System.Numerics;
+
+namespace Test
+{
+    internal class Struct{caret}2 : IEquatable<Struct2>, IEqualityOperators<Struct2, Struct2, bool>
+    {
+        public bool Equals(Struct2 other) => throw new NotImplementedException();
+        public static bool operator ==(Struct2 left, Struct2 right) => throw new NotImplementedException();
+        public static bool operator !=(Struct2 left, Struct2 right) => !(left == right);
+    }
+}
