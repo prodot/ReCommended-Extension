@@ -7,12 +7,12 @@ namespace Test
 
     internal class Class1 { }
 
-    internal class Class2 : IEquatable<Class2> // suggest to implement IEqualityOperators<Class2, Class2, bool>
+    internal class Class2 : IEquatable<Class2> // declare implementation of the IEqualityOperators<Class2, Class2, bool>
     {
         public bool Equals(Class2? other) => throw new NotImplementedException();
     }
 
-    internal class Class2WithOperators : IEquatable<Class2WithOperators> // suggest to declare IEqualityOperators<Class2WithOperators, Class2WithOperators, bool> (operators available)
+    internal class Class2WithOperators : IEquatable<Class2WithOperators> // declare implementation of the IEqualityOperators<Class2WithOperators, Class2WithOperators, bool>
     {
         public bool Equals(Class2WithOperators? other) => throw new NotImplementedException();
 
@@ -41,12 +41,12 @@ namespace Test
 
     internal struct Struct1 { }
 
-    internal struct Struct2 : IEquatable<Struct2> // suggest to implement IEqualityOperators<Struct2, Struct2, bool>
+    internal struct Struct2 : IEquatable<Struct2> // declare implementation of the IEqualityOperators<Struct2, Struct2, bool>
     {
         public bool Equals(Struct2 other) => throw new NotImplementedException();
     }
 
-    internal struct Struct2WithOperators : IEquatable<Struct2WithOperators> // suggest to declare IEqualityOperators<Struct2WithOperators, Struct2WithOperators, bool> (operators available)
+    internal struct Struct2WithOperators : IEquatable<Struct2WithOperators> // declare implementation of the IEqualityOperators<Struct2WithOperators, Struct2WithOperators, bool> (operators available)
     {
         public bool Equals(Struct2WithOperators other) => throw new NotImplementedException();
 
@@ -71,13 +71,13 @@ namespace Test
 
     // records
 
-    internal record ClassRecord1; // implements IEquatable<ClassRecord1>: suggest to declare IEqualityOperators<ClassRecord1, ClassRecord1, bool> (operators available)
+    internal record ClassRecord1; // implements IEquatable<ClassRecord1>: declare implementation of the IEqualityOperators<ClassRecord1, ClassRecord1, bool> (operators available)
 
     internal record ClassRecord1WithOperators : IEqualityOperators<ClassRecord1WithOperators, ClassRecord1WithOperators, bool>; // implements IEquatable<ClassRecord1>
 
-    internal record ClassRecord2 : ClassRecord1; // implements IEquatable<ClassRecord2>: suggest to declare IEqualityOperators<ClassRecord2, ClassRecord2, bool> (operators available)
+    internal record ClassRecord2 : ClassRecord1; // implements IEquatable<ClassRecord2>: declare implementation of the IEqualityOperators<ClassRecord2, ClassRecord2, bool> (operators available)
 
-    internal record struct StructRecord1; // implements IEquatable<StructRecord1>: suggest to declare IEqualityOperators<StructRecord1, StructRecord1, bool> (operators available)
+    internal record struct StructRecord1; // implements IEquatable<StructRecord1>: declare implementation of the IEqualityOperators<StructRecord1, StructRecord1, bool> (operators available)
 
     internal record struct StructRecord1WithOperators : IEqualityOperators<StructRecord1WithOperators, StructRecord1WithOperators, bool>; // implements IEquatable<StructRecord1>
 }

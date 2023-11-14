@@ -1,29 +1,49 @@
-﻿using JetBrains.ReSharper.Feature.Services.QuickFixes;
+﻿using JetBrains.Application.Progress;
+using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.TextControl;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
-public abstract class ImplementEqualityOperatorsInterfaceFix : QuickFixBase
+[QuickFix]
+public sealed class ImplementEqualityOperatorsInterfaceFix : QuickFixBase
 {
-    private protected ImplementEqualityOperatorsInterfaceFix(ImplementEqualityOperatorsSuggestion highlighting) => Highlighting = highlighting;
+    readonly ImplementEqualityOperatorsSuggestion highlighting;
 
-    private protected ImplementEqualityOperatorsSuggestion Highlighting { get; }
+    public ImplementEqualityOperatorsInterfaceFix(ImplementEqualityOperatorsForClassesSuggestion highlighting) => this.highlighting = highlighting;
 
-    private protected void AddBaseInterfaceDeclaration()
+    public ImplementEqualityOperatorsInterfaceFix(ImplementEqualityOperatorsForStructsSuggestion highlighting) => this.highlighting = highlighting;
+
+    public ImplementEqualityOperatorsInterfaceFix(ImplementEqualityOperatorsForRecordsSuggestion highlighting) => this.highlighting = highlighting;
+
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text
+        => $"Declare IEqualityOperators<{highlighting.Declaration.DeclaredName}, {highlighting.Declaration.DeclaredName}, bool>";
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
-        var psiModule = Highlighting.Declaration.GetPsiModule();
+        using (WriteLockCookie.Create())
+        {
+            var psiModule = highlighting.Declaration.GetPsiModule();
 
-        var equalityOperatorsInterface = EquatableAnalyzer.TryGetEqualityOperatorsInterface(psiModule);
-        Debug.Assert(equalityOperatorsInterface is { });
+            var equalityOperatorsInterface = EquatableAnalyzer.TryGetEqualityOperatorsInterface(psiModule);
+            Debug.Assert(equalityOperatorsInterface is { });
 
-        Debug.Assert(Highlighting.Declaration.DeclaredElement is { });
+            Debug.Assert(highlighting.Declaration.DeclaredElement is { });
 
-        var type = TypeFactory.CreateType(Highlighting.Declaration.DeclaredElement);
+            var type = TypeFactory.CreateType(highlighting.Declaration.DeclaredElement);
 
-        Highlighting.Declaration.AddSuperInterface(
-            TypeFactory.CreateType(
-                equalityOperatorsInterface,
-                new IType[] { type, type, TypeFactory.CreateTypeByCLRName(PredefinedType.BOOLEAN_FQN, psiModule) }),
-            false);
+            highlighting.Declaration.AddSuperInterface(
+                TypeFactory.CreateType(
+                    equalityOperatorsInterface,
+                    new IType[] { type, type, TypeFactory.CreateTypeByCLRName(PredefinedType.BOOLEAN_FQN, psiModule) }),
+                false);
+        }
+
+        return _ => { };
     }
 }

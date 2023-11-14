@@ -7,12 +7,12 @@ namespace Test
 
     internal class Class1 { }
 
-    internal class |Class2|(0) : IEquatable<Class2> // suggest to implement IEqualityOperators<Class2, Class2, bool>
+    internal class |Class2|(0) : IEquatable<Class2> // declare implementation of the IEqualityOperators<Class2, Class2, bool>
     {
         public bool Equals(Class2? other) => throw new NotImplementedException();
     }
 
-    internal class |Class2WithOperators|(1) : IEquatable<Class2WithOperators> // suggest to declare IEqualityOperators<Class2WithOperators, Class2WithOperators, bool> (operators available)
+    internal class |Class2WithOperators|(1) : IEquatable<Class2WithOperators> // declare implementation of the IEqualityOperators<Class2WithOperators, Class2WithOperators, bool>
     {
         public bool Equals(Class2WithOperators? other) => throw new NotImplementedException();
 
@@ -41,12 +41,12 @@ namespace Test
 
     internal struct Struct1 { }
 
-    internal struct |Struct2|(2) : IEquatable<Struct2> // suggest to implement IEqualityOperators<Struct2, Struct2, bool>
+    internal struct |Struct2|(2) : IEquatable<Struct2> // declare implementation of the IEqualityOperators<Struct2, Struct2, bool>
     {
         public bool Equals(Struct2 other) => throw new NotImplementedException();
     }
 
-    internal struct |Struct2WithOperators|(3) : IEquatable<Struct2WithOperators> // suggest to declare IEqualityOperators<Struct2WithOperators, Struct2WithOperators, bool> (operators available)
+    internal struct |Struct2WithOperators|(3) : IEquatable<Struct2WithOperators> // declare implementation of the IEqualityOperators<Struct2WithOperators, Struct2WithOperators, bool> (operators available)
     {
         public bool Equals(Struct2WithOperators other) => throw new NotImplementedException();
 
@@ -71,21 +71,21 @@ namespace Test
 
     // records
 
-    internal record |ClassRecord1|(4); // implements IEquatable<ClassRecord1>: suggest to declare IEqualityOperators<ClassRecord1, ClassRecord1, bool> (operators available)
+    internal record |ClassRecord1|(4); // implements IEquatable<ClassRecord1>: declare implementation of the IEqualityOperators<ClassRecord1, ClassRecord1, bool> (operators available)
 
     internal record ClassRecord1WithOperators : IEqualityOperators<ClassRecord1WithOperators, ClassRecord1WithOperators, bool>; // implements IEquatable<ClassRecord1>
 
-    internal record |ClassRecord2|(5) : ClassRecord1; // implements IEquatable<ClassRecord2>: suggest to declare IEqualityOperators<ClassRecord2, ClassRecord2, bool> (operators available)
+    internal record |ClassRecord2|(5) : ClassRecord1; // implements IEquatable<ClassRecord2>: declare implementation of the IEqualityOperators<ClassRecord2, ClassRecord2, bool> (operators available)
 
-    internal record struct |StructRecord1|(6); // implements IEquatable<StructRecord1>: suggest to declare IEqualityOperators<StructRecord1, StructRecord1, bool> (operators available)
+    internal record struct |StructRecord1|(6); // implements IEquatable<StructRecord1>: declare implementation of the IEqualityOperators<StructRecord1, StructRecord1, bool> (operators available)
 
     internal record struct StructRecord1WithOperators : IEqualityOperators<StructRecord1WithOperators, StructRecord1WithOperators, bool>; // implements IEquatable<StructRecord1>
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Implement the IEqualityOperators<Class2, Class2, bool> interface.
-(1): ReSharper Suggestion: Mark the class as implementing the IEqualityOperators<Class2WithOperators, Class2WithOperators, bool> interface (operators are available).
-(2): ReSharper Suggestion: Implement the IEqualityOperators<Struct2, Struct2, bool> interface.
-(3): ReSharper Suggestion: Mark the struct as implementing the IEqualityOperators<Struct2WithOperators, Struct2WithOperators, bool> interface (operators are available).
-(4): ReSharper Suggestion: Mark the record as implementing the IEqualityOperators<ClassRecord1, ClassRecord1, bool> interface (operators are available).
-(5): ReSharper Suggestion: Mark the record as implementing the IEqualityOperators<ClassRecord2, ClassRecord2, bool> interface (operators are available).
-(6): ReSharper Suggestion: Mark the record struct as implementing the IEqualityOperators<StructRecord1, StructRecord1, bool> interface (operators are available).
+(0): ReSharper Suggestion: Declare implementation of the IEqualityOperators<Class2, Class2, bool> interface.
+(1): ReSharper Suggestion: Declare implementation of the IEqualityOperators<Class2WithOperators, Class2WithOperators, bool> interface.
+(2): ReSharper Suggestion: Declare implementation of the IEqualityOperators<Struct2, Struct2, bool> interface.
+(3): ReSharper Suggestion: Declare implementation of the IEqualityOperators<Struct2WithOperators, Struct2WithOperators, bool> interface.
+(4): ReSharper Suggestion: Declare implementation of the IEqualityOperators<ClassRecord1, ClassRecord1, bool> interface.
+(5): ReSharper Suggestion: Declare implementation of the IEqualityOperators<ClassRecord2, ClassRecord2, bool> interface.
+(6): ReSharper Suggestion: Declare implementation of the IEqualityOperators<StructRecord1, StructRecord1, bool> interface.

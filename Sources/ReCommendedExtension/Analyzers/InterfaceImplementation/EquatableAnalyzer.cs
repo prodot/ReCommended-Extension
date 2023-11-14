@@ -9,7 +9,13 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
-[ElementProblemAnalyzer(typeof(IClassLikeDeclaration), HighlightingTypes = new[] { typeof(ImplementEqualityOperatorsSuggestion) })]
+[ElementProblemAnalyzer(
+    typeof(IClassLikeDeclaration),
+    HighlightingTypes = new[]
+    {
+        typeof(ImplementEqualityOperatorsForClassesSuggestion), typeof(ImplementEqualityOperatorsForStructsSuggestion),
+        typeof(ImplementEqualityOperatorsForRecordsSuggestion),
+    })]
 public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclaration>
 {
     [Pure]
@@ -45,17 +51,6 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
         {
             var type = TypeFactory.CreateType(element.DeclaredElement);
 
-            [Pure]
-            bool IsAnyEqualityOperatorAvailable()
-                => element
-                    .DeclaredElement.GetMembers()
-                    .OfType<IOperator>()
-                    .Any(
-                        @operator => @operator.ReturnType.IsBool()
-                            && @operator is { ShortName: "op_Equality" or "op_Inequality", Parameters: [var leftOperand, var rightOperand] }
-                            && leftOperand.Type.Equals(type)
-                            && rightOperand.Type.Equals(type));
-
             switch (element)
             {
                 case IClassDeclaration classDeclaration
@@ -73,21 +68,13 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
                             && leftOperandType.Equals(type)
                             && rightOperandType.Equals(type)
                             && resultType.IsBool()):
-                {
-                    var operatorsAvailable = IsAnyEqualityOperatorAvailable();
-
-                    var name = classDeclaration.DeclaredName;
 
                     consumer.AddHighlighting(
-                        new ImplementEqualityOperatorsSuggestion(
-                            operatorsAvailable
-                                ? $"Mark the class as implementing the IEqualityOperators<{name}, {name}, bool> interface (operators are available)."
-                                : $"Implement the IEqualityOperators<{name}, {name}, bool> interface.",
-                            classDeclaration,
-                            operatorsAvailable));
+                        new ImplementEqualityOperatorsForClassesSuggestion(
+                            $"Declare implementation of the IEqualityOperators<{classDeclaration.DeclaredName}, {classDeclaration.DeclaredName}, bool> interface.",
+                            classDeclaration));
 
                     break;
-                }
 
                 case IStructDeclaration structDeclaration
 
@@ -104,21 +91,13 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
                             && leftOperandType.Equals(type)
                             && rightOperandType.Equals(type)
                             && resultType.IsBool()):
-                {
-                    var operatorsAvailable = IsAnyEqualityOperatorAvailable();
-
-                    var name = structDeclaration.DeclaredName;
 
                     consumer.AddHighlighting(
-                        new ImplementEqualityOperatorsSuggestion(
-                            operatorsAvailable
-                                ? $"Mark the struct as implementing the IEqualityOperators<{name}, {name}, bool> interface (operators are available)."
-                                : $"Implement the IEqualityOperators<{name}, {name}, bool> interface.",
-                            structDeclaration,
-                            operatorsAvailable));
+                        new ImplementEqualityOperatorsForStructsSuggestion(
+                            $"Declare implementation of the IEqualityOperators<{structDeclaration.DeclaredName}, {structDeclaration.DeclaredName}, bool> interface.",
+                            structDeclaration));
 
                     break;
-                }
 
                 case IRecordDeclaration recordDeclaration
 
@@ -129,18 +108,13 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
                             && leftOperandType.Equals(type)
                             && rightOperandType.Equals(type)
                             && resultType.IsBool()):
-                {
-                    var name = recordDeclaration.DeclaredName;
-                    var r = recordDeclaration.IsStruct ? "record struct" : "record";
 
                     consumer.AddHighlighting(
-                        new ImplementEqualityOperatorsSuggestion(
-                            $"Mark the {r} as implementing the IEqualityOperators<{name}, {name}, bool> interface (operators are available).",
-                            recordDeclaration,
-                            true));
+                        new ImplementEqualityOperatorsForRecordsSuggestion(
+                            $"Declare implementation of the IEqualityOperators<{recordDeclaration.DeclaredName}, {recordDeclaration.DeclaredName}, bool> interface.",
+                            recordDeclaration));
 
                     break;
-                }
             }
         }
     }

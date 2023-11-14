@@ -3,10 +3,12 @@ using System.Numerics;
 
 namespace Test
 {
-    internal class Class{caret}2 : IEquatable<Class2>, IEqualityOperators<Class2, Class2, bool>
+    internal class Class2With{caret}Operators : IEquatable<Class2WithOperators>, IEqualityOperators<Class2WithOperators, Class2WithOperators, bool>
     {
-        public bool Equals(Class2? other) => throw new NotImplementedException();
-        public static bool operator ==(Class2? left, Class2? right) => throw new NotImplementedException();
-        public static bool operator !=(Class2? left, Class2? right) => !(left == right);
+        public bool Equals(Class2WithOperators? other) => throw new NotImplementedException();
+
+        public static bool operator ==(Class2WithOperators? left, Class2WithOperators? right) => throw new NotImplementedException();
+
+        public static bool operator !=(Class2WithOperators? left, Class2WithOperators? right) => throw new NotImplementedException();
     }
 }

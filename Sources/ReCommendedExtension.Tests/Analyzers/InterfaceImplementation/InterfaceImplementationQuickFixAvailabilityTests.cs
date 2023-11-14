@@ -13,6 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.InterfaceImplementation;
 [TestFixture]
 [TestNet70]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+[NullableContext(NullableContextKind.Enable)]
 public sealed class InterfaceImplementationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\InterfaceImplementationQuickFixes";
@@ -21,10 +22,5 @@ public sealed class InterfaceImplementationQuickFixAvailabilityTests : QuickFixA
         => highlighting is ImplementEqualityOperatorsSuggestion;
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     public void TestEquatableTypes_Availability() => DoNamedTest2();
-
-    [Test]
-    [NullableContext(NullableContextKind.Disable)]
-    public void TestEquatableTypes_NonNullable_Availability() => DoNamedTest2();
 }

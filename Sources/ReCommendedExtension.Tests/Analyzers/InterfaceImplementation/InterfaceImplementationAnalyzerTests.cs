@@ -11,6 +11,7 @@ using ReCommendedExtension.Analyzers.InterfaceImplementation;
 namespace ReCommendedExtension.Tests.Analyzers.InterfaceImplementation;
 
 [TestFixture]
+[NullableContext(NullableContextKind.Enable)]
 public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\InterfaceImplementation";
@@ -21,24 +22,15 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTes
     [Test]
     [TestNet60]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [NullableContext(NullableContextKind.Enable)]
     public void TestEquatableTypes_NET_6() => DoNamedTest2();
 
     [Test]
     [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-    [NullableContext(NullableContextKind.Enable)]
     public void TestEquatableTypes_CS10() => DoNamedTest2();
 
     [Test]
     [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [NullableContext(NullableContextKind.Enable)]
     public void TestEquatableTypes() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [NullableContext(NullableContextKind.Disable)]
-    public void TestEquatableTypes_NonNullable() => DoNamedTest2();
 }

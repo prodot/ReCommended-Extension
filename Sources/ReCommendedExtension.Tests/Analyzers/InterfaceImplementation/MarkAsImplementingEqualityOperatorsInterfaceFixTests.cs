@@ -10,31 +10,31 @@ namespace ReCommendedExtension.Tests.Analyzers.InterfaceImplementation;
 [TestFixture]
 [TestNet70]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-public sealed class MarkAsImplementingEqualityOperatorsInterfaceFixTests : QuickFixTestBase<MarkAsImplementingEqualityOperatorsInterfaceFix>
+public sealed class MarkAsImplementingEqualityOperatorsInterfaceFixTests : QuickFixTestBase<ImplementEqualityOperatorsInterfaceFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\InterfaceImplementationQuickFixes";
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestEquatableTypes_Class_MarkAsImplementingEqualityOperators() => DoNamedTest2();
+    public void TestEquatableTypes_Class_ImplementEqualityOperators() => DoNamedTest2();
 
     [Test]
-    public void TestEquatableTypes_Struct_MarkAsImplementingEqualityOperators() => DoNamedTest2();
+    public void TestEquatableTypes_Struct_ImplementEqualityOperators() => DoNamedTest2();
 
     [Test]
-    public void TestEquatableTypes_Record_MarkAsImplementingEqualityOperators() => DoNamedTest2();
+    public void TestEquatableTypes_Record_ImplementEqualityOperators() => DoNamedTest2();
 
     [Test]
-    public void TestEquatableTypes_Record_MarkAsImplementingEqualityOperators2() => DoNamedTest2();
+    public void TestEquatableTypes_Record_ImplementEqualityOperators2() => DoNamedTest2();
 
     [Test]
-    public void TestEquatableTypes_Record_MarkAsImplementingEqualityOperators3() => DoNamedTest2();
+    public void TestEquatableTypes_Record_ImplementEqualityOperators3() => DoNamedTest2();
 
     [Test]
-    public void TestEquatableTypes_Record_MarkAsImplementingEqualityOperators4() => DoNamedTest2();
+    public void TestEquatableTypes_Record_ImplementEqualityOperators4() => DoNamedTest2();
 
     [Test]
-    public void TestEquatableTypes_Record_MarkAsImplementingEqualityOperators5() => DoNamedTest2();
+    public void TestEquatableTypes_Record_ImplementEqualityOperators5() => DoNamedTest2();
 
     [Test]
     public void TestEquatableTypes_RecordStruct_MarkAsImplementingEqualityOperators() => DoNamedTest2();
