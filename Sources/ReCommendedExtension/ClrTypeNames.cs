@@ -66,6 +66,8 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName UnreachableException = new ClrTypeName("System.Diagnostics.UnreachableException");
 
+    public static readonly IClrTypeName IEqualityOperators = new ClrTypeName("System.Numerics.IEqualityOperators`3");
+
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static bool IsPredefinedTypeElement([NotNullWhen(true)] ITypeElement? typeElement, IClrTypeName clrName)

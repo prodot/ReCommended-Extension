@@ -1,5 +1,4 @@
-﻿using JetBrains.Metadata.Reader.Impl;
-using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -19,32 +18,16 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclaration>
 {
     [Pure]
-    static IType?[]? GetElementTypesForGenericType(IDeclaredType declaredType)
-    {
-        if (declaredType.GetTypeElement() is { } typeElement)
-        {
-            var elementTypes = new IType?[typeElement.TypeParameters.Count];
-
-            for (var i = 0; i < elementTypes.Length; i++)
-            {
-                if (CollectionTypeUtil.GetElementTypesForGenericType(declaredType, typeElement, i) is [var elementType])
-                {
-                    elementTypes[i] = elementType;
-                }
-            }
-
-            return elementTypes;
-        }
-
-        return null;
-    }
-
-    [Pure]
     internal static ITypeElement? TryGetEqualityOperatorsInterface(IPsiModule psiModule)
-        => TypeElementUtil.GetTypeElementByClrName(new ClrTypeName("System.Numerics.IEqualityOperators`3"), psiModule);
+        => TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IEqualityOperators, psiModule);
 
     protected override void Run(IClassLikeDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
+        if (element.GetContainingClassLikeDeclaration() is { })
+        {
+            return; // ignore nested types
+        }
+
         if (element.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
             && TryGetEqualityOperatorsInterface(element.GetPsiModule()) is { } equalityOperatorsInterface
             && element.DeclaredElement is { })
@@ -58,13 +41,13 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
                     // check if the class implements IEquatable<T> where T is the class
                     when classDeclaration.SuperTypes.Any(
                         baseType => baseType.IsIEquatable()
-                            && GetElementTypesForGenericType(baseType) is [{ } equatableType]
+                            && baseType.TryGetGenericParameterTypes() is [{ } equatableType]
                             && equatableType.Equals(type))
 
                     // check if the class doesn't implement IEqualityOperators<T,T,bool> where T is the class
                     && !classDeclaration.SuperTypes.Any(
                         baseType => DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), equalityOperatorsInterface)
-                            && GetElementTypesForGenericType(baseType) is [{ } leftOperandType, { } rightOperandType, { } resultType]
+                            && baseType.TryGetGenericParameterTypes() is [{ } leftOperandType, { } rightOperandType, { } resultType]
                             && leftOperandType.Equals(type)
                             && rightOperandType.Equals(type)
                             && resultType.IsBool()):
@@ -81,13 +64,13 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
                     // check if the struct implements IEquatable<T> where T is the struct
                     when structDeclaration.SuperTypes.Any(
                         baseType => baseType.IsIEquatable()
-                            && GetElementTypesForGenericType(baseType) is [{ } equatableType]
+                            && baseType.TryGetGenericParameterTypes() is [{ } equatableType]
                             && equatableType.Equals(type))
 
                     // check if the struct doesn't implement IEqualityOperators<T,T,bool> where T is the struct
                     && !structDeclaration.SuperTypes.Any(
                         baseType => DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), equalityOperatorsInterface)
-                            && GetElementTypesForGenericType(baseType) is [{ } leftOperandType, { } rightOperandType, { } resultType]
+                            && baseType.TryGetGenericParameterTypes() is [{ } leftOperandType, { } rightOperandType, { } resultType]
                             && leftOperandType.Equals(type)
                             && rightOperandType.Equals(type)
                             && resultType.IsBool()):
@@ -104,7 +87,7 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
                     // check if the record doesn't implement IEqualityOperators<T,T,bool> where T is the record
                     when !recordDeclaration.SuperTypes.Any(
                         baseType => DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), equalityOperatorsInterface)
-                            && GetElementTypesForGenericType(baseType) is [{ } leftOperandType, { } rightOperandType, { } resultType]
+                            && baseType.TryGetGenericParameterTypes() is [{ } leftOperandType, { } rightOperandType, { } resultType]
                             && leftOperandType.Equals(type)
                             && rightOperandType.Equals(type)
                             && resultType.IsBool()):

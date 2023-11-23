@@ -423,6 +423,27 @@ internal static class Extensions
     }
 
     [JetBrains.Annotations.Pure]
+    public static IType?[]? TryGetGenericParameterTypes(this IDeclaredType declaredType)
+    {
+        if (declaredType.GetTypeElement() is { } typeElement)
+        {
+            var elementTypes = new IType?[typeElement.TypeParameters.Count];
+
+            for (var i = 0; i < elementTypes.Length; i++)
+            {
+                if (CollectionTypeUtil.GetElementTypesForGenericType(declaredType, typeElement, i) is [var elementType])
+                {
+                    elementTypes[i] = elementType;
+                }
+            }
+
+            return elementTypes;
+        }
+
+        return null;
+    }
+
+    [JetBrains.Annotations.Pure]
     public static bool IsDefaultValueOf(this ITreeNode element, IType type)
     {
         switch (element)

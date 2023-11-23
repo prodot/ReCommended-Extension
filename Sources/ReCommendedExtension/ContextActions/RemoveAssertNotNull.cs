@@ -21,16 +21,6 @@ public sealed class RemoveAssertNotNull : ContextActionBase
 
     public RemoveAssertNotNull(ICSharpContextActionDataProvider provider) => this.provider = provider;
 
-    public override string Text
-    {
-        get
-        {
-            Debug.Assert(assertion is { });
-
-            return $"Remove '{assertion.MethodName}()'";
-        }
-    }
-
     [MemberNotNullWhen(true, nameof(assertion))]
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
     {
@@ -39,6 +29,16 @@ public sealed class RemoveAssertNotNull : ContextActionBase
         assertion = invocationExpression is { } ? InlineAssertion.TryFromInvocationExpression(invocationExpression) : null;
 
         return assertion is { };
+    }
+
+    public override string Text
+    {
+        get
+        {
+            Debug.Assert(assertion is { });
+
+            return $"Remove '{assertion.MethodName}()'";
+        }
     }
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)

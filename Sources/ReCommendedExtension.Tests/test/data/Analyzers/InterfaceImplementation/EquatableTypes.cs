@@ -35,7 +35,15 @@ namespace Test
         public bool Equals(Class2? other) => throw new NotImplementedException();
     }
 
-    internal class Class6 : Class5 { }
+    internal class Class6 : Class5
+    {
+        class Nested : IEquatable<Nested>
+        {
+            public bool Equals(Nested? other) => throw new NotImplementedException();
+        }
+
+        record Nested2;
+    }
 
     // structs
 

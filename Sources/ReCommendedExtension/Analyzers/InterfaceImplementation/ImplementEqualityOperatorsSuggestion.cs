@@ -6,10 +6,10 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
 public abstract record ImplementEqualityOperatorsSuggestion : Highlighting
 {
+    readonly IClassLikeDeclaration declaration;
+
     private protected ImplementEqualityOperatorsSuggestion(string message, IClassLikeDeclaration declaration) : base(message)
-        => Declaration = declaration;
+        => this.declaration = declaration;
 
-    internal IClassLikeDeclaration Declaration { get; }
-
-    public sealed override DocumentRange CalculateRange() => Declaration.NameIdentifier.GetDocumentRange();
+    public sealed override DocumentRange CalculateRange() => declaration.NameIdentifier.GetDocumentRange();
 }
