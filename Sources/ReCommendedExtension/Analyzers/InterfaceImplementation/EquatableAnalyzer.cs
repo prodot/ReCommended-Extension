@@ -18,6 +18,36 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclaration>
 {
     [Pure]
+    [ValueRange(0, 2)]
+    static int CountEqualityOperators(ITypeElement declaredElement, IDeclaredType type)
+    {
+        var equalityOperator = false;
+        var inequalityOperator = false;
+
+        foreach (var op in declaredElement.Operators)
+        {
+            if (op.ReturnType.IsBool()
+                && op.Parameters is [{ } leftOperand, { } rightOperand]
+                && leftOperand.Type.Equals(type)
+                && rightOperand.Type.Equals(type))
+            {
+                switch (op.ShortName)
+                {
+                    case "op_Equality":
+                        equalityOperator = true;
+                        break;
+
+                    case "op_Inequality":
+                        inequalityOperator = true;
+                        break;
+                }
+            }
+        }
+
+        return (equalityOperator ? 1 : 0) + (inequalityOperator ? 1 : 0);
+    }
+
+    [Pure]
     internal static ITypeElement? TryGetEqualityOperatorsInterface(IPsiModule psiModule)
         => TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IEqualityOperators, psiModule);
 
@@ -54,7 +84,14 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
 
                     consumer.AddHighlighting(
                         new ImplementEqualityOperatorsForClassesSuggestion(
-                            $"Declare implementation of the IEqualityOperators<{classDeclaration.DeclaredName}, {classDeclaration.DeclaredName}, bool> interface.",
+                            CountEqualityOperators(element.DeclaredElement,type) switch
+                            {
+                                0 => $"Implement IEqualityOperators<{classDeclaration.DeclaredName}, {classDeclaration.DeclaredName}, bool> interface.",
+                                1 => $"Declare IEqualityOperators<{classDeclaration.DeclaredName}, {classDeclaration.DeclaredName}, bool> interface (operators partially available).",
+                                2 => $"Declare IEqualityOperators<{classDeclaration.DeclaredName}, {classDeclaration.DeclaredName}, bool> interface (operators available).",
+
+                                _ => throw new NotSupportedException(),
+                            },
                             classDeclaration));
 
                     break;
@@ -77,7 +114,14 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
 
                     consumer.AddHighlighting(
                         new ImplementEqualityOperatorsForStructsSuggestion(
-                            $"Declare implementation of the IEqualityOperators<{structDeclaration.DeclaredName}, {structDeclaration.DeclaredName}, bool> interface.",
+                            CountEqualityOperators(element.DeclaredElement, type) switch
+                            {
+                                0 => $"Implement IEqualityOperators<{structDeclaration.DeclaredName}, {structDeclaration.DeclaredName}, bool> interface.",
+                                1 => $"Declare IEqualityOperators<{structDeclaration.DeclaredName}, {structDeclaration.DeclaredName}, bool> interface (operators partially available).",
+                                2 => $"Declare IEqualityOperators<{structDeclaration.DeclaredName}, {structDeclaration.DeclaredName}, bool> interface (operators available).",
+
+                                _ => throw new NotSupportedException(),
+                            },
                             structDeclaration));
 
                     break;
@@ -94,7 +138,7 @@ public sealed class EquatableAnalyzer : ElementProblemAnalyzer<IClassLikeDeclara
 
                     consumer.AddHighlighting(
                         new ImplementEqualityOperatorsForRecordsSuggestion(
-                            $"Declare implementation of the IEqualityOperators<{recordDeclaration.DeclaredName}, {recordDeclaration.DeclaredName}, bool> interface.",
+                            $"Declare IEqualityOperators<{recordDeclaration.DeclaredName}, {recordDeclaration.DeclaredName}, bool> interface (operators available).",
                             recordDeclaration));
 
                     break;
