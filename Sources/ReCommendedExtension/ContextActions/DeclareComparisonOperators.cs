@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Util;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using ReCommendedExtension.Analyzers.InterfaceImplementation;
@@ -13,46 +14,46 @@ namespace ReCommendedExtension.ContextActions;
 
 [ContextAction(
     Group = "C#",
-    Name = "Declare IEqualityOperators<T, T, bool>" + ZoneMarker.Suffix,
-    Description = "Declare IEqualityOperators<T, T, bool>.")]
-public sealed class DeclareEqualityOperators : ContextActionBase
+    Name = "Declare IComparisonOperators<T, T, bool>" + ZoneMarker.Suffix,
+    Description = "Declare IComparisonOperators<T, T, bool>.")]
+public sealed class DeclareComparisonOperators : ContextActionBase
 {
     readonly ICSharpContextActionDataProvider provider;
 
     IClassLikeDeclaration? declaration;
-    ITypeElement? equalityOperatorsInterface;
+    ITypeElement? comparisonOperatorsInterface;
 
-    public DeclareEqualityOperators(ICSharpContextActionDataProvider provider) => this.provider = provider;
+    public DeclareComparisonOperators(ICSharpContextActionDataProvider provider) => this.provider = provider;
 
     [MemberNotNullWhen(true, nameof(declaration))]
-    [MemberNotNullWhen(true, nameof(equalityOperatorsInterface))]
+    [MemberNotNullWhen(true, nameof(comparisonOperatorsInterface))]
     public override bool IsAvailable(IUserDataHolder cache)
     {
         if (provider.GetSelectedElement<IClassLikeDeclaration>(true, false) is { } declaration
             && declaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-            && InterfaceImplementationAnalyzer.TryGetEqualityOperatorsInterface(declaration.GetPsiModule()) is { } equalityOperatorsInterface
+            && InterfaceImplementationAnalyzer.TryGetComparisonOperatorsInterface(declaration.GetPsiModule()) is { } comparisonOperatorsInterface
             && declaration.DeclaredElement is { })
         {
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
 
-            var (declaresEquatable, declaresEqualityOperators, _, _) =
-                InterfaceImplementationAnalyzer.GetInterfaces(declaration, type, equalityOperatorsInterface, null, null);
+            var (_, _, declaresComparable, declaresComparisonOperators) = InterfaceImplementationAnalyzer.GetInterfaces(
+                declaration,
+                type,
+                null,
+                comparisonOperatorsInterface,
+                TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IComparableGeneric, declaration.GetPsiModule()));
 
-            this.declaration = declaration switch
-            {
-                IClassDeclaration or IStructDeclaration when declaresEquatable && !declaresEqualityOperators => declaration,
+            this.declaration =
+                declaration is IClassDeclaration or IStructDeclaration or IRecordDeclaration && declaresComparable && !declaresComparisonOperators
+                    ? declaration
+                    : null;
 
-                IRecordDeclaration when !declaresEqualityOperators => declaration,
-
-                _ => null,
-            };
-
-            this.equalityOperatorsInterface = equalityOperatorsInterface;
+            this.comparisonOperatorsInterface = comparisonOperatorsInterface;
         }
         else
         {
             this.declaration = null;
-            this.equalityOperatorsInterface = null;
+            this.comparisonOperatorsInterface = null;
         }
 
         return this.declaration is { };
@@ -64,7 +65,7 @@ public sealed class DeclareEqualityOperators : ContextActionBase
         {
             Debug.Assert(declaration is { });
 
-            return $"Declare IEqualityOperators<{declaration.DeclaredName}, {declaration.DeclaredName}, bool> interface.";
+            return $"Declare IComparisonOperators<{declaration.DeclaredName}, {declaration.DeclaredName}, bool> interface.";
         }
     }
 
@@ -73,7 +74,7 @@ public sealed class DeclareEqualityOperators : ContextActionBase
         try
         {
             Debug.Assert(declaration is { DeclaredElement: { } });
-            Debug.Assert(equalityOperatorsInterface is { });
+            Debug.Assert(comparisonOperatorsInterface is { });
 
             var psiModule = declaration.GetPsiModule();
 
@@ -81,7 +82,7 @@ public sealed class DeclareEqualityOperators : ContextActionBase
 
             declaration.AddSuperInterface(
                 TypeFactory.CreateType(
-                    equalityOperatorsInterface,
+                    comparisonOperatorsInterface,
                     new IType[] { type, type, TypeFactory.CreateTypeByCLRName(PredefinedType.BOOLEAN_FQN, psiModule) }),
                 false);
 
@@ -90,7 +91,7 @@ public sealed class DeclareEqualityOperators : ContextActionBase
         finally
         {
             declaration = null;
-            equalityOperatorsInterface = null;
+            comparisonOperatorsInterface = null;
         }
     }
 }

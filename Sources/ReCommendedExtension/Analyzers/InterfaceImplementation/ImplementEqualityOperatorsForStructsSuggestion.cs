@@ -8,11 +8,11 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
     SeverityId,
     null,
     HighlightingGroupIds.BestPractice,
-    "Implement IEqualityOperators<TSelf, TOther, TResult> for structs" + ZoneMarker.Suffix,
+    "Implement IEqualityOperators<T, T, bool> for structs" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ImplementEqualityOperatorsForStructsSuggestion : ImplementEqualityOperatorsSuggestion
+public sealed record ImplementEqualityOperatorsForStructsSuggestion : ImplementOperatorsSuggestion
 {
     const string SeverityId = "ImplementEqualityOperatorsForStructs";
 

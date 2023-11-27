@@ -44,6 +44,8 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName IEqualityComparer = GetClrTypeName<IEqualityComparer>();
 
+    public static readonly IClrTypeName IComparableGeneric = GetClrTypeName(typeof(IComparable<>));
+
     public static readonly IClrTypeName MemberInfo = GetClrTypeName<System.Reflection.MemberInfo>();
 
     public static readonly IClrTypeName ParameterInfo = GetClrTypeName<ParameterInfo>();
@@ -67,6 +69,8 @@ internal static class ClrTypeNames
     public static readonly IClrTypeName UnreachableException = new ClrTypeName("System.Diagnostics.UnreachableException");
 
     public static readonly IClrTypeName IEqualityOperators = new ClrTypeName("System.Numerics.IEqualityOperators`3");
+
+    public static readonly IClrTypeName IComparisonOperators = new ClrTypeName("System.Numerics.IComparisonOperators`3");
 
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

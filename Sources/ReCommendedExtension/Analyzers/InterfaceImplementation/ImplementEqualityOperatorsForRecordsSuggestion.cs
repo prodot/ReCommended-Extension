@@ -8,11 +8,11 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
     SeverityId,
     null,
     HighlightingGroupIds.BestPractice,
-    "Implement IEqualityOperators<TSelf, TOther, TResult> for records" + ZoneMarker.Suffix,
+    "Implement IEqualityOperators<T, T, bool> for records" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ImplementEqualityOperatorsForRecordsSuggestion : ImplementEqualityOperatorsSuggestion
+public sealed record ImplementEqualityOperatorsForRecordsSuggestion : ImplementOperatorsSuggestion
 {
     const string SeverityId = "ImplementEqualityOperatorsForRecords";
 

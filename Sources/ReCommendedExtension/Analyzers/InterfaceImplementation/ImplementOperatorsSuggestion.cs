@@ -4,11 +4,11 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
-public abstract record ImplementEqualityOperatorsSuggestion : Highlighting
+public abstract record ImplementOperatorsSuggestion : Highlighting
 {
     readonly IClassLikeDeclaration declaration;
 
-    private protected ImplementEqualityOperatorsSuggestion(string message, IClassLikeDeclaration declaration) : base(message)
+    private protected ImplementOperatorsSuggestion(string message, IClassLikeDeclaration declaration) : base(message)
         => this.declaration = declaration;
 
     public sealed override DocumentRange CalculateRange() => declaration.NameIdentifier.GetDocumentRange();

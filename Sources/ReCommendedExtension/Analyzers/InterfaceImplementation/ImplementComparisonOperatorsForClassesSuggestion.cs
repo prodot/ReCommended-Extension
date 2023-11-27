@@ -8,13 +8,13 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
     SeverityId,
     null,
     HighlightingGroupIds.BestPractice,
-    "Implement IEqualityOperators<T, T, bool> for classes" + ZoneMarker.Suffix,
+    "Implement IComparisonOperators<T, T, bool> for classes" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ImplementEqualityOperatorsForClassesSuggestion : ImplementOperatorsSuggestion
+public sealed record ImplementComparisonOperatorsForClassesSuggestion : ImplementOperatorsSuggestion
 {
-    const string SeverityId = "ImplementEqualityOperatorsForClasses";
+    const string SeverityId = "ImplementComparisonOperatorsForClasses";
 
-    internal ImplementEqualityOperatorsForClassesSuggestion(string message, IClassDeclaration declaration) : base(message, declaration) { }
+    internal ImplementComparisonOperatorsForClassesSuggestion(string message, IClassDeclaration declaration) : base(message, declaration) { }
 }
