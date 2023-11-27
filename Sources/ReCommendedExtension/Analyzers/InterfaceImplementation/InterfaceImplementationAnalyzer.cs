@@ -15,6 +15,7 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
         typeof(ImplementEqualityOperatorsForClassesSuggestion), typeof(ImplementEqualityOperatorsForStructsSuggestion),
         typeof(ImplementEqualityOperatorsForRecordsSuggestion), typeof(ImplementComparisonOperatorsForClassesSuggestion),
         typeof(ImplementComparisonOperatorsForStructsSuggestion), typeof(ImplementComparisonOperatorsForRecordsSuggestion),
+        typeof(ImplementEquatableWarning),
     })]
 public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<IClassLikeDeclaration>
 {
@@ -94,60 +95,10 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
     internal static ITypeElement? TryGetComparisonOperatorsInterface(IPsiModule psiModule)
         => TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IComparisonOperators, psiModule);
 
-    [Pure]
-    internal static (bool declaresEquatable, bool declaresEqualityOperators, bool declaresComparable, bool declaresComparisonOperators) GetInterfaces(
-        IClassLikeDeclaration declaration,
-        IDeclaredType type,
-        ITypeElement? equalityOperatorsInterface,
-        ITypeElement? comparisonOperatorsInterface,
-        ITypeElement? comparableInterface)
+    static void AnalyzeOperatorInterfaces(IClassLikeDeclaration element, IHighlightingConsumer consumer, IDeclaredType type)
     {
-        var declaresEquatable = false;
-        var declaresEqualityOperators = false;
-        var declaresComparable = false;
-        var declaresComparisonOperators = false;
+        Debug.Assert(element.DeclaredElement is { });
 
-        foreach (var baseType in declaration.SuperTypes)
-        {
-            if (baseType.IsIEquatable() && baseType.TryGetGenericParameterTypes() is [{ } equatableType] && equatableType.Equals(type))
-            {
-                declaresEquatable = true;
-                continue;
-            }
-
-            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), equalityOperatorsInterface)
-                && baseType.TryGetGenericParameterTypes() is [{ } leftEqualityOperandType, { } rightEqualityOperandType, { } equalityResultType]
-                && leftEqualityOperandType.Equals(type)
-                && rightEqualityOperandType.Equals(type)
-                && equalityResultType.IsBool())
-            {
-                declaresEqualityOperators = true;
-                continue;
-            }
-
-            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparableInterface)
-                && baseType.TryGetGenericParameterTypes() is [{ } comparableType]
-                && comparableType.Equals(type))
-            {
-                declaresComparable = true;
-                continue;
-            }
-
-            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparisonOperatorsInterface)
-                && baseType.TryGetGenericParameterTypes() is [{ } leftComparisonOperandType, { } rightComparisonOperandType, { } comparisonResultType]
-                && leftComparisonOperandType.Equals(type)
-                && rightComparisonOperandType.Equals(type)
-                && comparisonResultType.IsBool())
-            {
-                declaresComparisonOperators = true;
-            }
-        }
-
-        return (declaresEquatable, declaresEqualityOperators, declaresComparable, declaresComparisonOperators);
-    }
-
-    protected override void Run(IClassLikeDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
-    {
         if (element.GetContainingClassLikeDeclaration() is { })
         {
             return; // ignore nested types
@@ -161,11 +112,8 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
         var psiModule = element.GetPsiModule();
 
         if (TryGetEqualityOperatorsInterface(psiModule) is { } equalityOperatorsInterface
-            && TryGetComparisonOperatorsInterface(psiModule) is { } comparisonOperatorsInterface
-            && element.DeclaredElement is { })
+            && TryGetComparisonOperatorsInterface(psiModule) is { } comparisonOperatorsInterface)
         {
-            var type = TypeFactory.CreateType(element.DeclaredElement);
-
             var (declaresEquatable, declaresEqualityOperators, declaresComparable, declaresComparisonOperators) = GetInterfaces(
                 element,
                 type,
@@ -282,6 +230,92 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
                     break;
             }
+        }
+    }
+
+    static void AnalyzeStructs(IClassLikeDeclaration element, IHighlightingConsumer consumer, IDeclaredType type)
+    {
+        Debug.Assert(element.DeclaredElement is { });
+
+        if (element is IStructDeclaration structDeclaration)
+        {
+            var (declaresEquatable, _, _, _) = GetInterfaces(element, type, null, null, null);
+
+            if (!declaresEquatable
+                && element.DeclaredElement.Methods.Any(
+                    method => method is { ShortName: "Equals", IsOverride: true, Parameters: [{ } parameter] }
+                        && method.ReturnType.IsBool()
+                        && parameter.Type.IsObject()))
+            {
+                consumer.AddHighlighting(
+                    new ImplementEquatableWarning(
+                        $"Implement IEquatable<{structDeclaration.DeclaredName}> interface when overriding Equals.",
+                        structDeclaration));
+            }
+        }
+    }
+
+    [Pure]
+    internal static (bool declaresEquatable, bool declaresEqualityOperators, bool declaresComparable, bool declaresComparisonOperators) GetInterfaces(
+        IClassLikeDeclaration declaration,
+        IDeclaredType type,
+        ITypeElement? equalityOperatorsInterface,
+        ITypeElement? comparisonOperatorsInterface,
+        ITypeElement? comparableInterface)
+    {
+        var declaresEquatable = false;
+        var declaresEqualityOperators = false;
+        var declaresComparable = false;
+        var declaresComparisonOperators = false;
+
+        foreach (var baseType in declaration.SuperTypes)
+        {
+            if (baseType.IsIEquatable() && baseType.TryGetGenericParameterTypes() is [{ } equatableType] && equatableType.Equals(type))
+            {
+                declaresEquatable = true;
+                continue;
+            }
+
+            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), equalityOperatorsInterface)
+                && baseType.TryGetGenericParameterTypes() is [{ } leftEqualityOperandType, { } rightEqualityOperandType, { } equalityResultType]
+                && leftEqualityOperandType.Equals(type)
+                && rightEqualityOperandType.Equals(type)
+                && equalityResultType.IsBool())
+            {
+                declaresEqualityOperators = true;
+                continue;
+            }
+
+            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparableInterface)
+                && baseType.TryGetGenericParameterTypes() is [{ } comparableType]
+                && comparableType.Equals(type))
+            {
+                declaresComparable = true;
+                continue;
+            }
+
+            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparisonOperatorsInterface)
+                && baseType.TryGetGenericParameterTypes() is [{ } leftComparisonOperandType, { } rightComparisonOperandType, { } comparisonResultType]
+                && leftComparisonOperandType.Equals(type)
+                && rightComparisonOperandType.Equals(type)
+                && comparisonResultType.IsBool())
+            {
+                declaresComparisonOperators = true;
+            }
+        }
+
+        return (declaresEquatable, declaresEqualityOperators, declaresComparable, declaresComparisonOperators);
+    }
+
+    protected override void Run(IClassLikeDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+    {
+        if (element.DeclaredElement is { })
+        {
+            var type = TypeFactory.CreateType(element.DeclaredElement);
+
+            AnalyzeOperatorInterfaces(element, consumer, type);
+
+            AnalyzeStructs(element, consumer, type);
         }
     }
 }

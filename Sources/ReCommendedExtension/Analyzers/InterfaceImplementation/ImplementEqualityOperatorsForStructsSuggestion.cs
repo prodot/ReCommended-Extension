@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ImplementEqualityOperatorsForStructsSuggestion : ImplementOperatorsSuggestion
+public sealed record ImplementEqualityOperatorsForStructsSuggestion : ImplementOperatorsHighlighting
 {
     const string SeverityId = "ImplementEqualityOperatorsForStructs";
 

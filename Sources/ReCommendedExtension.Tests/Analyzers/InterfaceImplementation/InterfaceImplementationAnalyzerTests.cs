@@ -17,7 +17,7 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTes
     protected override string RelativeTestDataPath => @"Analyzers\InterfaceImplementation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ImplementOperatorsSuggestion;
+        => highlighting is ImplementOperatorsHighlighting;
 
     [Test]
     [TestNet60]
@@ -48,4 +48,7 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTes
     [TestNet60]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     public void TestComparableTypes_NET_6() => DoNamedTest2();
+
+    [Test]
+    public void TestOverriddenEquals() => DoNamedTest2();
 }
