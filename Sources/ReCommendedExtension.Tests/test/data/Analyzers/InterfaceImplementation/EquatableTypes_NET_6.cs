@@ -8,6 +8,9 @@ namespace Test
 
     internal class Class2 : IEquatable<Class2>
     {
+        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw new NotImplementedException();
+
         public bool Equals(Class2? other) => throw new NotImplementedException();
     }
 
@@ -34,6 +37,9 @@ namespace Test
 
     internal struct Struct2 : IEquatable<Struct2>
     {
+        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw new NotImplementedException();
+
         public bool Equals(Struct2 other) => throw new NotImplementedException();
     }
 

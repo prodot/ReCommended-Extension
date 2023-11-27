@@ -51,4 +51,7 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTes
 
     [Test]
     public void TestOverriddenEquals() => DoNamedTest2();
+
+    [Test]
+    public void TestImplementedEquals() => DoNamedTest2();
 }

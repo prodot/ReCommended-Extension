@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
         typeof(ImplementEqualityOperatorsForClassesSuggestion), typeof(ImplementEqualityOperatorsForStructsSuggestion),
         typeof(ImplementEqualityOperatorsForRecordsSuggestion), typeof(ImplementComparisonOperatorsForClassesSuggestion),
         typeof(ImplementComparisonOperatorsForStructsSuggestion), typeof(ImplementComparisonOperatorsForRecordsSuggestion),
-        typeof(ImplementEquatableWarning),
+        typeof(ImplementEquatableWarning), typeof(OverrideEqualsWarning),
     })]
 public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<IClassLikeDeclaration>
 {
@@ -233,24 +233,29 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
         }
     }
 
-    static void AnalyzeStructs(IClassLikeDeclaration element, IHighlightingConsumer consumer, IDeclaredType type)
+    static void AnalyzeEquatableInterface(IClassLikeDeclaration element, IHighlightingConsumer consumer, IDeclaredType type)
     {
         Debug.Assert(element.DeclaredElement is { });
 
-        if (element is IStructDeclaration structDeclaration)
+        if (element is IClassDeclaration or IStructDeclaration)
         {
             var (declaresEquatable, _, _, _) = GetInterfaces(element, type, null, null, null);
 
-            if (!declaresEquatable
-                && element.DeclaredElement.Methods.Any(
-                    method => method is { ShortName: "Equals", IsOverride: true, Parameters: [{ } parameter] }
-                        && method.ReturnType.IsBool()
-                        && parameter.Type.IsObject()))
+            var overridesEquals = element.DeclaredElement.Methods.Any(
+                method => method is { ShortName: "Equals", IsOverride: true, Parameters: [{ } parameter] }
+                    && method.ReturnType.IsBool()
+                    && parameter.Type.IsObject());
+
+            if (!declaresEquatable && overridesEquals && element is IStructDeclaration structDeclaration)
             {
                 consumer.AddHighlighting(
-                    new ImplementEquatableWarning(
-                        $"Implement IEquatable<{structDeclaration.DeclaredName}> interface when overriding Equals.",
-                        structDeclaration));
+                    new ImplementEquatableWarning($"Implement IEquatable<{element.DeclaredName}> when overriding Equals.", structDeclaration));
+            }
+
+            if (declaresEquatable && !overridesEquals)
+            {
+                consumer.AddHighlighting(
+                    new OverrideEqualsWarning($"Override Equals when implementing IEquatable<{element.DeclaredName}>.", element));
             }
         }
     }
@@ -315,7 +320,7 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
             AnalyzeOperatorInterfaces(element, consumer, type);
 
-            AnalyzeStructs(element, consumer, type);
+            AnalyzeEquatableInterface(element, consumer, type);
         }
     }
 }

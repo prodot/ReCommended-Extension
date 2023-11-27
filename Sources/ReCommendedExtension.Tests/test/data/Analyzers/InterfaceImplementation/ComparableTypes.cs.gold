@@ -36,6 +36,9 @@ namespace Test
         IEqualityOperators<Class2WithOperatorsAndInterface, Class2WithOperatorsAndInterface, bool>,
         IComparisonOperators<Class2WithOperatorsAndInterface, Class2WithOperatorsAndInterface, bool>
     {
+        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw new NotImplementedException();
+
         public bool Equals(Class2WithOperatorsAndInterface? other) => throw new NotImplementedException();
         public int CompareTo(Class2WithOperatorsAndInterface? other) => throw new NotImplementedException();
 
@@ -93,6 +96,9 @@ namespace Test
         IEqualityOperators<Struct2WithOperatorsAndInterface, Struct2WithOperatorsAndInterface, bool>,
         IComparisonOperators<Struct2WithOperatorsAndInterface, Struct2WithOperatorsAndInterface, bool>
     {
+        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw new NotImplementedException();
+
         public bool Equals(Struct2WithOperatorsAndInterface other) => throw new NotImplementedException();
         public int CompareTo(Struct2WithOperatorsAndInterface other) => throw new NotImplementedException();
 
