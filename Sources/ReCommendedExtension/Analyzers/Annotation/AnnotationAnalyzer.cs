@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     {
         typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
         typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint),
-        typeof(InvalidValueRangeBoundaryWarning), typeof(MissingAttributeUsageAnnotationWarning),
+        typeof(InvalidValueRangeBoundaryWarning), typeof(MissingAttributeUsageAnnotationWarning), typeof(MissingNotNullWhenAnnotationSuggestion),
     })]
 public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
 {
@@ -489,7 +489,33 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
             consumer.AddHighlighting(
                 new MissingAttributeUsageAnnotationWarning(
                     attributesOwnerDeclaration,
-                    $"Annotate the attribute with '{nameof(AttributeUsageAttribute)[..^"Attribute".Length]}'."));
+                    $"Annotate the attribute with [{nameof(AttributeUsageAttribute)[..^"Attribute".Length]}]."));
+        }
+    }
+
+    static void AnalyzeMissingNotNullWhenAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
+    {
+        if (attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled()
+            && attributesOwnerDeclaration is IParameterDeclaration parameterDeclaration
+            && !parameterDeclaration.IsInsideClosure()
+            && parameterDeclaration.GetContainingTypeMemberDeclarationIgnoringClosures() is IMethodDeclaration
+            {
+                DeclaredName: nameof(IEquatable<int>.Equals), ParameterDeclarations: [var p], DeclaredElement: { },
+            } method
+            && p == parameterDeclaration
+            && method.DeclaredElement.ReturnType.IsBool()
+            && method.GetContainingTypeDeclaration() is IClassDeclaration { DeclaredElement: { } } classDeclaration
+            && parameterDeclaration.Type.Equals(TypeFactory.CreateType(classDeclaration.DeclaredElement))
+            && attributesOwnerDeclaration.Attributes.All(
+                a => a.GetAttributeInstance().GetAttributeType().GetClrName().FullName != ClrTypeNames.NotNullWhenAttribute.FullName))
+        {
+            // we do not verify if the type implements the IEquatable<T> interface: in any case, the parameter should not be null when such a method
+            // returns true
+
+            consumer.AddHighlighting(
+                new MissingNotNullWhenAnnotationSuggestion(
+                    attributesOwnerDeclaration,
+                    $"Annotate the parameter with [{nameof(NotNullWhenAttribute)[..^"Attribute".Length]}(true)]."));
         }
     }
 
@@ -805,6 +831,9 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
 
         // [AttributeUsage] annotations
         AnalyzeMissingAttributeUsageAnnotations(consumer, element);
+
+        // [NotNullWhen(true)] annotations
+        AnalyzeMissingNotNullWhenAnnotations(consumer, element);
 
         // attributes annotated as [Conditional]
         AnalyzeConditional(consumer, element);

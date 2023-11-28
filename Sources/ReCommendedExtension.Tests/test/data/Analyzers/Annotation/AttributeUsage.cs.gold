@@ -14,4 +14,4 @@ namespace Test
     public class DerivedAttribute2 : BaseAttribute2 { }
 }
 ---------------------------------------------------------
-(0): ReSharper Warning: Annotate the attribute with 'AttributeUsage'.
+(0): ReSharper Warning: Annotate the attribute with [AttributeUsage].

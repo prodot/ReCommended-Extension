@@ -1,0 +1,13 @@
+﻿using System;
+
+namespace Test
+{
+    public class Class1 : IEquatable<Class1>
+    {
+        public bool Equals(Class1? |other|(0)) => throw new NotImplementedException();
+    }
+}
+------------------------------------------------
+0: Annotate the parameter with [NotNullWhen(true)].
+QUICKFIXES:
+Annotate with [NotNullWhen(true)]

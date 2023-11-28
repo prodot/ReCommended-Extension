@@ -21,6 +21,8 @@ public sealed class AnnotateWithAttributeUsageFix : QuickFixBase
 
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
+    public override string Text => $"Annotate with [{nameof(AttributeUsageAttribute)[..^"Attribute".Length]}]";
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         IAttribute attribute;
@@ -53,6 +55,4 @@ public sealed class AnnotateWithAttributeUsageFix : QuickFixBase
             textControl.EmulateAction("TextControl.Backspace");
         };
     }
-
-    public override string Text => $"Annotate with [{nameof(AttributeUsageAttribute)[..^"Attribute".Length]}]";
 }

@@ -23,7 +23,8 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
             or MissingSuppressionJustificationWarning
             or ConflictingAnnotationWarning
             or InvalidValueRangeBoundaryWarning
-            or MissingAttributeUsageAnnotationWarning;
+            or MissingAttributeUsageAnnotationWarning
+            or MissingNotNullWhenAnnotationSuggestion;
 
     [Test]
     [TestNetFramework45]
@@ -82,4 +83,16 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     public void TestAttributeUsage() => DoNamedTest2();
+
+    [Test]
+    [TestNetCore30]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    public void TestEquals() => DoNamedTest2();
+
+    [Test]
+    [TestNetCore30]
+    [NullableContext(NullableContextKind.Disable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    public void TestEquals_NoNullableAnnotations() => DoNamedTest2();
 }

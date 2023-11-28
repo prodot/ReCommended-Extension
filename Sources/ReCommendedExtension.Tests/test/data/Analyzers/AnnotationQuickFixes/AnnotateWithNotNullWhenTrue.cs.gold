@@ -1,0 +1,10 @@
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Test
+{
+    public class Class1 : IEquatable<Class1>
+    {
+        public bool Equals([NotNullWhen(true)] Class1? ot{caret}her) => throw new NotImplementedException();
+    }
+}

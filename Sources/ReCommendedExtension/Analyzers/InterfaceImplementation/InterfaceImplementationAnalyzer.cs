@@ -242,7 +242,7 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
             var (declaresEquatable, _, _, _) = GetInterfaces(element, type, null, null, null);
 
             var overridesEquals = element.DeclaredElement.Methods.Any(
-                method => method is { ShortName: "Equals", IsOverride: true, Parameters: [{ } parameter] }
+                method => method is { ShortName: nameof(IEquatable<int>.Equals), IsOverride: true, Parameters: [{ } parameter] }
                     && method.ReturnType.IsBool()
                     && parameter.Type.IsObject());
 
