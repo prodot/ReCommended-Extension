@@ -210,48 +210,45 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
             return;
         }
 
-        var suppressMessageAttributes =
-            from attribute in attributesOwnerDeclaration.Attributes
-            let attributeInstance = attribute.GetAttributeInstance()
-            where Equals(attributeInstance.GetClrName(), ClrTypeNames.SuppressMessageAttribute) && attributeInstance.PositionParameterCount == 2
-            let categoryConstantValue = attributeInstance.PositionParameter(0).ConstantValue
-            let checkIdConstantValue = attributeInstance.PositionParameter(1).ConstantValue
-            where categoryConstantValue.IsString() && checkIdConstantValue.IsString()
-            let justificationConstantValue = attributeInstance.NamedParameter(nameof(SuppressMessageAttribute.Justification)).ConstantValue
-            where !justificationConstantValue.IsString() || string.IsNullOrWhiteSpace(justificationConstantValue.StringValue)
-            select new { Attribute = attribute, Category = categoryConstantValue.StringValue, CheckId = checkIdConstantValue.StringValue };
+        var excludeFromCodeCoverageJustificationPropertyExists =
+            ExcludeFromCodeCoverageJustificationPropertyExists(attributesOwnerDeclaration.GetPsiModule());
 
-        foreach (var suppressMessageAttribute in suppressMessageAttributes)
+        foreach (var attribute in attributesOwnerDeclaration.Attributes)
         {
-            consumer.AddHighlighting(
-                new MissingSuppressionJustificationWarning(
-                    attributesOwnerDeclaration,
-                    suppressMessageAttribute.Attribute,
-                    $"Suppression justification is missing for {suppressMessageAttribute.Category}:{suppressMessageAttribute.CheckId}."));
-        }
+            var attributeType = attribute.GetAttributeType();
 
-        if (!ExcludeFromCodeCoverageJustificationPropertyExists(attributesOwnerDeclaration.GetPsiModule()))
-        {
-            return;
-        }
+            if (attributeType.IsClrType(ClrTypeNames.SuppressMessageAttribute)
+                && attribute.Arguments is
+                [
+                    { Value.ConstantValue: { Kind: ConstantValueKind.String, StringValue: var category } },
+                    { Value.ConstantValue: { Kind: ConstantValueKind.String, StringValue: var checkId } },
+                ]
+                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == nameof(SuppressMessageAttribute.Justification))
+                        ?.Source is not { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var suppressMessageJustification } }
+                    || string.IsNullOrWhiteSpace(suppressMessageJustification)))
+            {
+                consumer.AddHighlighting(
+                    new MissingSuppressionJustificationWarning(
+                        attributesOwnerDeclaration,
+                        attribute,
+                        $"Suppression justification is missing for {category}:{checkId}."));
+            }
 
-        var excludeFromCodeCoverageAttributes =
-            from attribute in attributesOwnerDeclaration.Attributes
-            let attributeInstance = attribute.GetAttributeInstance()
-            where Equals(attributeInstance.GetClrName(), ClrTypeNames.ExcludeFromCodeCoverageAttribute)
-            let justificationConstantValue =
-                attributeInstance.NamedParameter("Justification")
-                    .ConstantValue // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
-            where !justificationConstantValue.IsString() || string.IsNullOrWhiteSpace(justificationConstantValue.StringValue)
-            select attribute;
-
-        foreach (var excludeFromCodeCoverageAttribute in excludeFromCodeCoverageAttributes)
-        {
-            consumer.AddHighlighting(
-                new MissingSuppressionJustificationWarning(
-                    attributesOwnerDeclaration,
-                    excludeFromCodeCoverageAttribute,
-                    "Justification is missing for the exclusion from code coverage."));
+            if (excludeFromCodeCoverageJustificationPropertyExists
+                && attributeType.IsClrType(ClrTypeNames.ExcludeFromCodeCoverageAttribute)
+                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == "Justification")?.Source is
+                        not // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
+                        {
+                            ConstantValue: { Kind: ConstantValueKind.String, StringValue: var excludeFromCodeCoverageJustification },
+                        }
+                    || string.IsNullOrWhiteSpace(excludeFromCodeCoverageJustification)))
+            {
+                consumer.AddHighlighting(
+                    new MissingSuppressionJustificationWarning(
+                        attributesOwnerDeclaration,
+                        attribute,
+                        "Justification is missing for the exclusion from code coverage."));
+            }
         }
     }
 
