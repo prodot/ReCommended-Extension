@@ -421,447 +421,447 @@ Remove 'async'/'await'
 1: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-2: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+2: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-3: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+3: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-4: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+4: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 5: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 6: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-7: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+7: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-8: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+8: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-9: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+9: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 10: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 11: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-12: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+12: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-13: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+13: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-14: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+14: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 15: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 16: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-17: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+17: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-18: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+18: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-19: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+19: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 20: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 21: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-22: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+22: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-23: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+23: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-24: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+24: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 25: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 26: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-27: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+27: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-28: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+28: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-29: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+29: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 30: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 31: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-32: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+32: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-33: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+33: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-34: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+34: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 35: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 36: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-37: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+37: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-38: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+38: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-39: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+39: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 40: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 41: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-42: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+42: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-43: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+43: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-44: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+44: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 45: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 46: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-47: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+47: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-48: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+48: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-49: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+49: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 50: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 51: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-52: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+52: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-53: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+53: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-54: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+54: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 55: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 56: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-57: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+57: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-58: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+58: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-59: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+59: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 60: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 61: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-62: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+62: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-63: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+63: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-64: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+64: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 65: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 66: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-67: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+67: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-68: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+68: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-69: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+69: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 70: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 71: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-72: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+72: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-73: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+73: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-74: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+74: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 75: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 76: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-77: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+77: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-78: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+78: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-79: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+79: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 80: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 81: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-82: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+82: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-83: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+83: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-84: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+84: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 85: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 86: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-87: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+87: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-88: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+88: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-89: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+89: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 90: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 91: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-92: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+92: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-93: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+93: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-94: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+94: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 95: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 96: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-97: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+97: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-98: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+98: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-99: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+99: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 100: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 101: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-102: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+102: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-103: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+103: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-104: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+104: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 105: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 106: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-107: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+107: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-108: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+108: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-109: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+109: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 110: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 111: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-112: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+112: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-113: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+113: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-114: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+114: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 115: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 116: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-117: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+117: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-118: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+118: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-119: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+119: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 120: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 121: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-122: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+122: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-123: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+123: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-124: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+124: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 125: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 126: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-127: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+127: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-128: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+128: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-129: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+129: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 130: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 131: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-132: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+132: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-133: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+133: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-134: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+134: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 135: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 136: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-137: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+137: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-138: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+138: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-139: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+139: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 140: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 141: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-142: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+142: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-143: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+143: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-144: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+144: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'
 145: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
 146: Redundant 'await' (remove 'async'/'await')
 QUICKFIXES:
 Remove 'async'/'await'
-147: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+147: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-148: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+148: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
-149: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(...)')
+Remove 'async'/'await'/'ConfigureAwait(false)'
+149: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
 QUICKFIXES:
-Remove 'async'/'await'/'ConfigureAwait(...)'
+Remove 'async'/'await'/'ConfigureAwait(false)'

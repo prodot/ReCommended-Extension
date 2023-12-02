@@ -29,11 +29,13 @@ public sealed class RemoveAsyncAwaitFix : QuickFixBase
 
             builder.Append("Remove 'async'/'await'");
 
-            if (highlighting.QuickFixRemovesConfigureAwait)
+            if (highlighting.ConfigureAwaitArgument is { })
             {
                 builder.Append("/'");
                 builder.Append(nameof(Task.ConfigureAwait));
-                builder.Append("(...)'");
+                builder.Append('(');
+                builder.Append(highlighting.ConfigureAwaitArgument);
+                builder.Append(")'");
             }
 
             return builder.ToString();

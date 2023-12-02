@@ -1,0 +1,73 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace Tests
+{
+    public class AwaitForMethods
+    {
+        |async|(0) Task Method()
+        {
+            |await|(1) Task.Delay(10);
+        }
+
+        |async|(2) Task Method_WithConfigureAwait(bool continueOnCapturedContext)
+        {
+            |await|(3) Task.Delay(10)|.ConfigureAwait(continueOnCapturedContext)|(4);
+        }
+
+        |async|(5) Task Method_WithConfigureAwait()
+        {
+            |await|(6) Task.Delay(10)|.ConfigureAwait(false)|(7);
+        }
+
+        |async|(8) Task Method_WithConfigureAwaitTrue()
+        {
+            |await|(9) Task.Delay(10)|.ConfigureAwait(true)|(10);
+        }
+
+        async Task Method_WithConfigureAwait(ConfigureAwaitOptions options)
+        {
+            await Task.Delay(10).ConfigureAwait(options);
+        }
+
+        |async|(11) Task Method_WithConfigureAwaitOptions_None()
+        {
+            |await|(12) Task.Delay(10)|.ConfigureAwait(ConfigureAwaitOptions.None)|(13);
+        }
+
+        |async|(14) Task Method_WithConfigureAwaitOptions_ContinueOnCapturedContext()
+        {
+            |await|(15) Task.Delay(10)|.ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext)|(16);
+        }
+
+        async Task Method_WithConfigureAwaitOptions_SuppressThrowing()
+        {
+            await Task.Delay(10).ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext | ConfigureAwaitOptions.SuppressThrowing);
+        }
+
+        async Task Method_WithConfigureAwaitOptions_ForceYielding()
+        {
+            await Task.Delay(10).ConfigureAwait(ConfigureAwaitOptions.ForceYielding);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await')
+(1): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await')
+(2): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(continueOnCapturedContext)')
+(3): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(continueOnCapturedContext)')
+(4): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(continueOnCapturedContext)')
+(5): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
+(6): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
+(7): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(false)')
+(8): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(true)')
+(9): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(true)')
+(10): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(true)')
+(11): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(ConfigureAwaitOptions.None)')
+(12): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(ConfigureAwaitOptions.None)')
+(13): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(ConfigureAwaitOptions.None)')
+(14): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext)')
+(15): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext)')
+(16): ReSharper Dead Code: Redundant 'await' (remove 'async'/'await'/'ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext)')

@@ -50,4 +50,12 @@ public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpHighlight
 
                 DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
             });
+
+    [TestNet80]
+    [Test]
+    public void TestRedundantCapturedContext_NET_8() => DoNamedTest2();
+
+    [TestNet80]
+    [Test]
+    public void TestRedundantCapturedContext_ValueTask_NET_8() => DoNamedTest2();
 }

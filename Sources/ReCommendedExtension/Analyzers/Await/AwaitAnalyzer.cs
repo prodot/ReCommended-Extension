@@ -31,6 +31,35 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
     };
 
     [Pure]
+    static (bool boolean, bool configureAwaitOptions) GetConfigureParameterTypesAwaitForAwaitedExpression(IUnaryExpression? awaitedExpression)
+    {
+        var boolean = false;
+        var configureAwaitOptions = false;
+
+        if ((awaitedExpression?.Type() as IDeclaredType)?.GetTypeElement() is { } typeElement)
+        {
+            foreach (var method in typeElement.Methods)
+            {
+                if (method is { ShortName: nameof(Task.ConfigureAwait), Parameters: [{ } parameter] })
+                {
+                    if (parameter.Type.IsBool())
+                    {
+                        boolean = true;
+                        continue;
+                    }
+
+                    if (parameter.Type.IsClrType(ClrTypeNames.ConfigureAwaitOptions))
+                    {
+                        configureAwaitOptions = true;
+                    }
+                }
+            }
+        }
+
+        return (boolean, configureAwaitOptions);
+    }
+
+    [Pure]
     [ContractAnnotation("=> type: notnull, removeAsync: notnull", true)]
     static void TryGetContainerTypeAndAsyncKeyword(
         IParametersOwnerDeclaration container,
@@ -223,23 +252,27 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
     {
         var configureAwaitNode = configureAwaitInvocationExpression?.InvokedExpression?.LastChild;
 
-        var highlightConfigureAwait = configureAwaitNode is { } && configureAwaitInvocationExpression is { ArgumentList: { } };
+        var configureAwaitArgument = configureAwaitNode is { } && configureAwaitInvocationExpression is { Arguments: [{ } argument] }
+            ? argument.GetText()
+            : null;
 
         var highlighting = new RedundantAwaitSuggestion(
-            $"Redundant 'await' (remove 'async'/'await'{(highlightConfigureAwait ? $"/'{nameof(Task.ConfigureAwait)}(...)'" : "")})",
+            $"Redundant 'await' (remove 'async'/'await'{
+                (configureAwaitArgument is { } ? $"/'{nameof(Task.ConfigureAwait)}({configureAwaitArgument})'" : "")
+            })",
             removeAsync,
             awaitExpression,
             statementToBeReplacedWithReturnStatement,
             expressionToReturn,
-            attributesOwnerDeclaration);
+            attributesOwnerDeclaration,
+            configureAwaitArgument);
 
         consumer.AddHighlighting(highlighting, awaitExpression.AwaitKeyword.GetDocumentRange());
 
         consumer.AddHighlighting(highlighting, asyncKeyword.GetDocumentRange());
 
-        if (highlightConfigureAwait)
+        if (configureAwaitNode is { })
         {
-            Debug.Assert(configureAwaitNode is { });
             Debug.Assert(configureAwaitInvocationExpression is { ArgumentList: { } });
 
             var dotToken = configureAwaitNode.GetPreviousMeaningfulToken();
@@ -327,68 +360,77 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
                     return true;
                 }
 
-                if (awaitExpression.Task is IInvocationExpression configureAwaitInvocationExpression
+                if (awaitExpression.Task is IInvocationExpression { Arguments: [{ Value: { } argument }] } configureAwaitInvocationExpression
                     && configureAwaitInvocationExpression.InvocationExpressionReference.Resolve().DeclaredElement is IMethod
                     {
                         ShortName: nameof(Task.ConfigureAwait), ContainingType: { } methodContainingTypeElement,
                     })
                 {
-                    var methodContainingType = TypeFactory.CreateType(methodContainingTypeElement);
+                    var argumentType = argument.Type();
 
-                    var awaitExpressionWithoutConfigureAwait =
-                        (configureAwaitInvocationExpression.InvokedExpression as IReferenceExpression)?.QualifierExpression;
-                    var awaitExpressionTypeWithoutConfigureAwait = awaitExpressionWithoutConfigureAwait?.Type();
-
-                    if (containerType.IsValueTask() && methodContainingType.IsValueTask() && awaitExpressionTypeWithoutConfigureAwait.IsValueTask()
-                        || containerType.IsTask()
-                        && (methodContainingType.IsTask() && awaitExpressionTypeWithoutConfigureAwait.IsTask()
-                            || methodContainingType.IsGenericTask() && awaitExpressionTypeWithoutConfigureAwait.IsGenericTask()))
+                    if (argumentType.IsBool()
+                        || argumentType.IsClrType(ClrTypeNames.ConfigureAwaitOptions)
+                        && argument is IReferenceExpression { ConstantValue: { Kind: ConstantValueKind.Enum, IntValue: 0 or 1 } })
                     {
-                        // container is ValueTask, awaitExpression (without "ConfigureAwait") is ValueTask
-                        // or
-                        // container is Task, awaitExpression (without "ConfigureAwait") is Task or Task<T>
+                        var methodContainingType = TypeFactory.CreateType(methodContainingTypeElement);
 
-                        Debug.Assert(removeAsync is { });
-                        Debug.Assert(awaitExpressionWithoutConfigureAwait is { });
+                        var awaitExpressionWithoutConfigureAwait =
+                            (configureAwaitInvocationExpression.InvokedExpression as IReferenceExpression)?.QualifierExpression;
+                        var awaitExpressionTypeWithoutConfigureAwait = awaitExpressionWithoutConfigureAwait?.Type();
 
-                        AddRedundantAwaitHighlightings(
-                            consumer,
-                            asyncKeyword,
-                            removeAsync,
-                            awaitExpression,
-                            statementToBeReplacedWithReturnStatement,
-                            awaitExpressionWithoutConfigureAwait,
-                            attributesOwnerDeclaration,
-                            configureAwaitInvocationExpression);
-                        return true;
-                    }
+                        if (containerType.IsValueTask()
+                            && methodContainingType.IsValueTask()
+                            && awaitExpressionTypeWithoutConfigureAwait.IsValueTask()
+                            || containerType.IsTask()
+                            && (methodContainingType.IsTask() && awaitExpressionTypeWithoutConfigureAwait.IsTask()
+                                || methodContainingType.IsGenericTask() && awaitExpressionTypeWithoutConfigureAwait.IsGenericTask()))
+                        {
+                            // container is ValueTask, awaitExpression (without "ConfigureAwait") is ValueTask
+                            // or
+                            // container is Task, awaitExpression (without "ConfigureAwait") is Task or Task<T>
 
-                    if (containerType is { }
-                        && (containerType.IsGenericValueTask()
-                            && methodContainingType.IsGenericValueTask()
-                            && awaitExpressionTypeWithoutConfigureAwait.IsGenericValueTask()
-                            || containerType.IsGenericTask()
-                            && methodContainingType.IsGenericTask()
-                            && awaitExpressionTypeWithoutConfigureAwait.IsGenericTask())
-                        && containerType.Equals(awaitExpressionTypeWithoutConfigureAwait, TypeEqualityComparer.Default))
-                    {
-                        // container is ValueTask<T>, awaitExpression (without "ConfigureAwait") is ValueTask<T>, container type == awaitExpression type (without "ConfigureAwait")
-                        // or
-                        // container is Task<T>, awaitExpression (without "ConfigureAwait") is Task<T>, container type == awaitExpression type (without "ConfigureAwait")
+                            Debug.Assert(removeAsync is { });
+                            Debug.Assert(awaitExpressionWithoutConfigureAwait is { });
 
-                        Debug.Assert(removeAsync is { });
-                        Debug.Assert(awaitExpressionWithoutConfigureAwait is { });
+                            AddRedundantAwaitHighlightings(
+                                consumer,
+                                asyncKeyword,
+                                removeAsync,
+                                awaitExpression,
+                                statementToBeReplacedWithReturnStatement,
+                                awaitExpressionWithoutConfigureAwait,
+                                attributesOwnerDeclaration,
+                                configureAwaitInvocationExpression);
+                            return true;
+                        }
 
-                        AddRedundantAwaitHighlightings(
-                            consumer,
-                            asyncKeyword,
-                            removeAsync,
-                            awaitExpression,
-                            statementToBeReplacedWithReturnStatement,
-                            awaitExpressionWithoutConfigureAwait,
-                            attributesOwnerDeclaration,
-                            configureAwaitInvocationExpression);
-                        return true;
+                        if (containerType is { }
+                            && (containerType.IsGenericValueTask()
+                                && methodContainingType.IsGenericValueTask()
+                                && awaitExpressionTypeWithoutConfigureAwait.IsGenericValueTask()
+                                || containerType.IsGenericTask()
+                                && methodContainingType.IsGenericTask()
+                                && awaitExpressionTypeWithoutConfigureAwait.IsGenericTask())
+                            && containerType.Equals(awaitExpressionTypeWithoutConfigureAwait, TypeEqualityComparer.Default))
+                        {
+                            // container is ValueTask<T>, awaitExpression (without "ConfigureAwait") is ValueTask<T>, container type == awaitExpression type (without "ConfigureAwait")
+                            // or
+                            // container is Task<T>, awaitExpression (without "ConfigureAwait") is Task<T>, container type == awaitExpression type (without "ConfigureAwait")
+
+                            Debug.Assert(removeAsync is { });
+                            Debug.Assert(awaitExpressionWithoutConfigureAwait is { });
+
+                            AddRedundantAwaitHighlightings(
+                                consumer,
+                                asyncKeyword,
+                                removeAsync,
+                                awaitExpression,
+                                statementToBeReplacedWithReturnStatement,
+                                awaitExpressionWithoutConfigureAwait,
+                                attributesOwnerDeclaration,
+                                configureAwaitInvocationExpression);
+                            return true;
+                        }
                     }
                 }
             }
@@ -412,10 +454,23 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
                 .Any(node => node is IUsingStatement or ITryStatement)
             && !HasPreviousUsingDeclaration(returnStatement, container);
 
-        if (hasRedundantCapturedContext && awaitExpression.Task.IsConfigureAwaitAvailable())
+        if (hasRedundantCapturedContext)
         {
-            consumer.AddHighlighting(
-                new RedundantCapturedContextSuggestion($"Redundant captured context (add '.{nameof(Task.ConfigureAwait)}(false)')", awaitExpression));
+            var (boolean, configureAwaitOptions) = GetConfigureParameterTypesAwaitForAwaitedExpression(awaitExpression.Task);
+
+            var actionHint = (boolean, configureAwaitOptions) switch
+            {
+                (true, false) => $"add '.{nameof(Task.ConfigureAwait)}(false)'",
+                (true, true) => $"add '.{nameof(Task.ConfigureAwait)}(false)' or '.{nameof(Task.ConfigureAwait)}(ConfigureAwaitOptions.None)'",
+                (false, true) => $"add '.{nameof(Task.ConfigureAwait)}(ConfigureAwaitOptions.None)'",
+
+                (false, false) => null,
+            };
+
+            if (actionHint is { })
+            {
+                consumer.AddHighlighting(new RedundantCapturedContextSuggestion($"Redundant captured context ({actionHint})", awaitExpression));
+            }
         }
     }
 

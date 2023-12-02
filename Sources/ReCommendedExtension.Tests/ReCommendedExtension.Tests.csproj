@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Lifetimes" Version="2023.2.2" />
+    <PackageReference Include="JetBrains.NuGet.Frameworks" Version="6.6.20230620.113" />
     <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2023.2.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

@@ -595,30 +595,6 @@ internal static class Extensions
         return predefinedTypeName.TypeKeyword.GetTokenType() == CSharpTokenType.VOID_KEYWORD;
     }
 
-    public static bool IsConfigureAwaitAvailable(this IUnaryExpression? awaitedExpression)
-    {
-        if ((awaitedExpression?.Type() as IDeclaredType)?.GetTypeElement() is { } typeElement)
-        {
-            var hasConfigureAwaitMethod = typeElement.Methods.Any(
-                method =>
-                {
-                    if (method is { ShortName: nameof(Task.ConfigureAwait), Parameters: [var parameter] })
-                    {
-                        return parameter.Type.IsBool();
-                    }
-
-                    return false;
-                });
-
-            if (hasConfigureAwaitMethod)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public static bool IsDeclaredInTestProject(this IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
         if (attributesOwnerDeclaration.GetProject() is { } project)

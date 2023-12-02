@@ -74,6 +74,8 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName IComparisonOperators = new ClrTypeName("System.Numerics.IComparisonOperators`3");
 
+    public static readonly IClrTypeName ConfigureAwaitOptions = new ClrTypeName("System.Threading.Tasks.ConfigureAwaitOptions");
+
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static bool IsPredefinedTypeElement([NotNullWhen(true)] ITypeElement? typeElement, IClrTypeName clrName)

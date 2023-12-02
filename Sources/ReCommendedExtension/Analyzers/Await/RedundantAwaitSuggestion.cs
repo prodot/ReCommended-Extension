@@ -28,13 +28,15 @@ public sealed record RedundantAwaitSuggestion : Highlighting
         IAwaitExpression awaitExpression,
         IExpressionStatement? statementToBeReplacedWithReturnStatement,
         ICSharpExpression expressionToReturn,
-        IAttributesOwnerDeclaration? attributesOwnerDeclaration) : base(message)
+        IAttributesOwnerDeclaration? attributesOwnerDeclaration,
+        string? configureAwaitArgument) : base(message)
     {
         RemoveAsync = removeAsync;
         AwaitExpression = awaitExpression;
         StatementToBeReplacedWithReturnStatement = statementToBeReplacedWithReturnStatement;
         ExpressionToReturn = expressionToReturn;
         AttributesOwnerDeclaration = attributesOwnerDeclaration;
+        ConfigureAwaitArgument = configureAwaitArgument;
     }
 
     internal Action RemoveAsync { get; }
@@ -47,7 +49,7 @@ public sealed record RedundantAwaitSuggestion : Highlighting
 
     internal IAttributesOwnerDeclaration? AttributesOwnerDeclaration { get; }
 
-    internal bool QuickFixRemovesConfigureAwait => AwaitExpression.Task != ExpressionToReturn;
+    internal string? ConfigureAwaitArgument { get; }
 
     public override DocumentRange CalculateRange() => throw new NotSupportedException();
 }
