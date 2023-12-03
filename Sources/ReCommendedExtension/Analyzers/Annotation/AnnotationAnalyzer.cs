@@ -100,16 +100,6 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
         };
 
     [Pure]
-    static decimal? TryGetAsDecimal(ConstantValue constantValue)
-        => constantValue switch
-        {
-            var v when v.IsLong() => v.LongValue,
-            var v when v.IsUlong() => v.UlongValue,
-
-            _ => null,
-        };
-
-    [Pure]
     static bool CanContainNullnessAttributes(IAttributesOwnerDeclaration declaration)
     {
         // excluding type, constant, enum member, property/indexer/event accessor, event, type parameter declarations
@@ -331,102 +321,112 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
         var type = null as IType;
         var numericRange = null as NumericRange;
 
-        var nonNegativeValueAttributes =
-            from attribute in attributesOwnerDeclaration.Attributes
-            where attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName == nameof(NonNegativeValueAttribute)
-            select attribute;
-
-        foreach (var attribute in nonNegativeValueAttributes)
+        foreach (var attribute in attributesOwnerDeclaration.Attributes)
         {
-            type ??= TryGetTypeForNumericRange(attributesOwnerDeclaration);
+            var name = attribute.GetAttributeType().GetTypeElement()?.ShortName;
 
-            if (type is not { })
+            if (name is nameof(NonNegativeValueAttribute) or nameof(ValueRangeAttribute))
             {
-                continue;
-            }
-
-            numericRange ??= NumericRange.TryGetFor(type);
-
-            if (numericRange is not { })
-            {
-                consumer.AddHighlighting(
-                    new NotAllowedAnnotationWarning(
-                        attributesOwnerDeclaration,
-                        attribute,
-                        "Annotation is not valid because the type of the declared element is not an integral numeric type."));
-                continue;
-            }
-
-            if (!numericRange.IsSigned)
-            {
-                consumer.AddHighlighting(
-                    new RedundantAnnotationSuggestion(
-                        attributesOwnerDeclaration,
-                        attribute,
-                        "Annotation is redundant because the declared element can never be negative by default."));
-                continue;
-            }
-
-            if (attributesOwnerDeclaration.DeclaredElement is IField { IsConstant: true })
-            {
-                consumer.AddHighlighting(
-                    new RedundantAnnotationSuggestion(
-                        attributesOwnerDeclaration,
-                        attribute,
-                        "Annotation is redundant because the declared element is a constant."));
-            }
-        }
-
-        var valueRangeAttributes =
-            from attribute in attributesOwnerDeclaration.Attributes
-            where attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName == nameof(ValueRangeAttribute)
-            select attribute;
-
-        foreach (var attribute in valueRangeAttributes)
-        {
-            type ??= TryGetTypeForNumericRange(attributesOwnerDeclaration);
-
-            if (type is not { })
-            {
-                continue;
-            }
-
-            numericRange ??= NumericRange.TryGetFor(type);
-
-            if (numericRange is not { })
-            {
-                consumer.AddHighlighting(
-                    new NotAllowedAnnotationWarning(
-                        attributesOwnerDeclaration,
-                        attribute,
-                        "Annotation is not valid because the type of the declared element is not an integral numeric type."));
-                continue;
-            }
-
-            decimal from, to;
-
-            var instance = attribute.GetAttributeInstance();
-            switch (instance.PositionParameterCount)
-            {
-                case 1:
+                if (attributesOwnerDeclaration is IConstantDeclaration)
                 {
-                    if (TryGetAsDecimal(instance.PositionParameter(0).ConstantValue) is { } value)
-                    {
-                        from = to = value;
-
-                        break;
-                    }
-
+                    consumer.AddHighlighting(
+                        new RedundantAnnotationSuggestion(
+                            attributesOwnerDeclaration,
+                            attribute,
+                            "Annotation is redundant because the declared element is a constant."));
                     continue;
                 }
 
-                case 2:
+                type ??= TryGetTypeForNumericRange(attributesOwnerDeclaration);
+
+                if (type is not { })
                 {
-                    if (TryGetAsDecimal(instance.PositionParameter(0).ConstantValue) is { } fromValue
-                        && TryGetAsDecimal(instance.PositionParameter(1).ConstantValue) is { } toValue)
-                    {
-                        from = fromValue;
-                        to = toValue;
+                    continue;
+                }
+
+                numericRange ??= NumericRange.TryGetFor(type);
+
+                if (numericRange is not { })
+                {
+                    consumer.AddHighlighting(
+                        new NotAllowedAnnotationWarning(
+                            attributesOwnerDeclaration,
+                            attribute,
+                            "Annotation is not valid because the type of the declared element is not an integral numeric type."));
+                    continue;
+                }
+
+                switch (name)
+                {
+                    case nameof(NonNegativeValueAttribute):
+                        if (!numericRange.IsSigned)
+                        {
+                            consumer.AddHighlighting(
+                                new RedundantAnnotationSuggestion(
+                                    attributesOwnerDeclaration,
+                                    attribute,
+                                    "Annotation is redundant because the declared element can never be negative by default."));
+                        }
+                        break;
+
+                    case nameof(ValueRangeAttribute):
+                        decimal from, to;
+
+                        switch (attribute.Arguments)
+                        {
+                            case
+                            [
+                                {
+                                    Value.ConstantValue:
+                                    {
+                                        Kind: ConstantValueKind.Int
+                                        or ConstantValueKind.Uint
+                                        or ConstantValueKind.Long
+                                        or ConstantValueKind.Ulong
+                                        or ConstantValueKind.Sbyte
+                                        or ConstantValueKind.Byte
+                                        or ConstantValueKind.Short
+                                        or ConstantValueKind.Ushort,
+                                    } constantValue,
+                                },
+                            ]:
+                                from = to = constantValue.ToDecimalUnchecked();
+                                break;
+
+                            case
+                            [
+                                {
+                                    Value.ConstantValue:
+                                    {
+                                        Kind: ConstantValueKind.Int
+                                        or ConstantValueKind.Uint
+                                        or ConstantValueKind.Long
+                                        or ConstantValueKind.Ulong
+                                        or ConstantValueKind.Sbyte
+                                        or ConstantValueKind.Byte
+                                        or ConstantValueKind.Short
+                                        or ConstantValueKind.Ushort,
+                                    } fromConstantValue,
+                                },
+                                {
+                                    Value.ConstantValue:
+                                    {
+                                        Kind: ConstantValueKind.Int
+                                        or ConstantValueKind.Uint
+                                        or ConstantValueKind.Long
+                                        or ConstantValueKind.Ulong
+                                        or ConstantValueKind.Sbyte
+                                        or ConstantValueKind.Byte
+                                        or ConstantValueKind.Short
+                                        or ConstantValueKind.Ushort,
+                                    } toConstantValue,
+                                },
+                            ]:
+                                (from, to) = (fromConstantValue.ToDecimalUnchecked(), toConstantValue.ToDecimalUnchecked());
+                                break;
+
+                            default: continue;
+                        }
 
                         if (from > to)
                         {
@@ -437,77 +437,60 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
                                     "Annotation is not valid because the 'from' value is greater than the 'to' value."));
                             continue;
                         }
-                    }
-                    else
-                    {
-                        continue;
-                    }
 
-                    break;
+                        if (to < numericRange.MinValue || from > numericRange.MaxValue)
+                        {
+                            consumer.AddHighlighting(
+                                new NotAllowedAnnotationWarning(
+                                    attributesOwnerDeclaration,
+                                    attribute,
+                                    "Annotation is not valid because the declared element can never be in the range."));
+                            continue;
+                        }
+
+                        if (from < numericRange.MinValue && to < numericRange.MaxValue)
+                        {
+                            Debug.Assert(from < to);
+                            Debug.Assert(CSharpLanguage.Instance is { });
+
+                            consumer.AddHighlighting(
+                                new InvalidValueRangeBoundaryWarning(
+                                    attribute.ConstructorArgumentExpressions[0],
+                                    ValueRangeBoundary.Lower,
+                                    type,
+                                    numericRange.IsSigned,
+                                    numericRange.IsSigned
+                                        ? $"The 'from' value is less than the '{type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MinValue)}'."
+                                        : "The 'from' value is negative."));
+                            continue;
+                        }
+
+                        if (from > numericRange.MinValue && to > numericRange.MaxValue)
+                        {
+                            Debug.Assert(from < to);
+                            Debug.Assert(CSharpLanguage.Instance is { });
+
+                            consumer.AddHighlighting(
+                                new InvalidValueRangeBoundaryWarning(
+                                    attribute.ConstructorArgumentExpressions[1],
+                                    ValueRangeBoundary.Higher,
+                                    type,
+                                    numericRange.IsSigned,
+                                    $"The 'to' value is greater than the '{type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}'."));
+                            continue;
+                        }
+
+                        if (from <= numericRange.MinValue && to >= numericRange.MaxValue)
+                        {
+                            consumer.AddHighlighting(
+                                new RedundantAnnotationSuggestion(
+                                    attributesOwnerDeclaration,
+                                    attribute,
+                                    "Annotation is redundant because the declared element is always in the range by default."));
+                        }
+
+                        break;
                 }
-
-                default: continue;
-            }
-
-            if (to < numericRange.MinValue || from > numericRange.MaxValue)
-            {
-                consumer.AddHighlighting(
-                    new NotAllowedAnnotationWarning(
-                        attributesOwnerDeclaration,
-                        attribute,
-                        "Annotation is not valid because the declared element can never be in the range."));
-                continue;
-            }
-
-            if (from < numericRange.MinValue && to < numericRange.MaxValue)
-            {
-                Debug.Assert(from < to);
-                Debug.Assert(CSharpLanguage.Instance is { });
-
-                consumer.AddHighlighting(
-                    new InvalidValueRangeBoundaryWarning(
-                        attribute.ConstructorArgumentExpressions[0],
-                        ValueRangeBoundary.Lower,
-                        type,
-                        numericRange.IsSigned,
-                        numericRange.IsSigned
-                            ? $"The 'from' value is less than the '{type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MinValue)}'."
-                            : "The 'from' value is negative."));
-                continue;
-            }
-
-            if (from > numericRange.MinValue && to > numericRange.MaxValue)
-            {
-                Debug.Assert(from < to);
-                Debug.Assert(CSharpLanguage.Instance is { });
-
-                consumer.AddHighlighting(
-                    new InvalidValueRangeBoundaryWarning(
-                        attribute.ConstructorArgumentExpressions[1],
-                        ValueRangeBoundary.Higher,
-                        type,
-                        numericRange.IsSigned,
-                        $"The 'to' value is greater than the '{type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}'."));
-                continue;
-            }
-
-            if (from <= numericRange.MinValue && to >= numericRange.MaxValue)
-            {
-                consumer.AddHighlighting(
-                    new RedundantAnnotationSuggestion(
-                        attributesOwnerDeclaration,
-                        attribute,
-                        "Annotation is redundant because the declared element is always in the range by default."));
-                continue;
-            }
-
-            if (attributesOwnerDeclaration.DeclaredElement is IField { IsConstant: true })
-            {
-                consumer.AddHighlighting(
-                    new RedundantAnnotationSuggestion(
-                        attributesOwnerDeclaration,
-                        attribute,
-                        "Annotation is redundant because the declared element is a constant."));
             }
         }
     }
