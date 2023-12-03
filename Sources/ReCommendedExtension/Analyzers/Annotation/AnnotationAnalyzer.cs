@@ -9,7 +9,6 @@ using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
@@ -262,27 +261,66 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
 
     static void AnalyzeConflictingPurityAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
-        var groupings = (
-            from attribute in attributesOwnerDeclaration.Attributes
-            let shortName = attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
-            where shortName is nameof(PureAttribute) or nameof(MustUseReturnValueAttribute)
-            group attribute by shortName).ToList();
-
-        if (groupings is [_, _, ..])
+        if (attributesOwnerDeclaration is not IMethodDeclaration)
         {
-            foreach (var (shortName, attributes) in groupings)
+            return;
+        }
+
+        [Pure]
+        static string GetOtherName(string name)
+            => name switch
             {
-                Debug.Assert(shortName is nameof(PureAttribute) or nameof(MustUseReturnValueAttribute));
+                nameof(PureAttribute) => nameof(MustUseReturnValueAttribute),
+                nameof(MustUseReturnValueAttribute) => nameof(PureAttribute),
 
-                var conflictingAnnotation = shortName == nameof(PureAttribute) ? nameof(MustUseReturnValueAttribute) : nameof(PureAttribute);
+                _ => throw new NotSupportedException(),
+            };
 
-                foreach (var attribute in attributes)
+        var attributes = null as List<(string name, IAttribute)>;
+
+        foreach (var attribute in attributesOwnerDeclaration.Attributes)
+        {
+            var name = attribute.GetAttributeType().GetTypeElement()?.ShortName;
+
+            if (name is nameof(PureAttribute) or nameof(MustUseReturnValueAttribute))
+            {
+                switch (attributes)
                 {
-                    consumer.AddHighlighting(
-                        new ConflictingAnnotationWarning(
-                            attributesOwnerDeclaration,
-                            attribute,
-                            $"Annotation conflicts with '{conflictingAnnotation}' annotation."));
+                    case null:
+                        attributes = new List<(string name, IAttribute)> { (name, attribute) };
+                        break;
+
+                    case [(nameof(PureAttribute), _), ..] when name == nameof(PureAttribute):
+                    case [(nameof(MustUseReturnValueAttribute), _), ..] when name == nameof(MustUseReturnValueAttribute):
+                        attributes.Add((name, attribute));
+                        break;
+
+                    case [(nameof(PureAttribute), _), ..] when name == nameof(MustUseReturnValueAttribute):
+                    case [(nameof(MustUseReturnValueAttribute), _), ..] when name == nameof(PureAttribute):
+                        foreach (var (_, a) in attributes)
+                        {
+                            consumer.AddHighlighting(
+                                new ConflictingAnnotationWarning(
+                                    attributesOwnerDeclaration,
+                                    a,
+                                    $"Annotation conflicts with [{name[..^"Attribute".Length]}]."));
+                        }
+                        attributes.Clear();
+
+                        consumer.AddHighlighting(
+                            new ConflictingAnnotationWarning(
+                                attributesOwnerDeclaration,
+                                attribute,
+                                $"Annotation conflicts with [{GetOtherName(name)[..^"Attribute".Length]}]."));
+                        break;
+
+                    case []:
+                        consumer.AddHighlighting(
+                            new ConflictingAnnotationWarning(
+                                attributesOwnerDeclaration,
+                                attribute,
+                                $"Annotation conflicts with [{GetOtherName(name)[..^"Attribute".Length]}]."));
+                        break;
                 }
             }
         }

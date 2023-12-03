@@ -18,5 +18,5 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Warning: Annotation conflicts with 'MustUseReturnValueAttribute' annotation.
-(1): ReSharper Warning: Annotation conflicts with 'PureAttribute' annotation.
+(0): ReSharper Warning: Annotation conflicts with [MustUseReturnValue].
+(1): ReSharper Warning: Annotation conflicts with [Pure].
