@@ -87,19 +87,6 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
     }
 
     [Pure]
-    static IType? TryGetTypeForNumericRange(IAttributesOwnerDeclaration attributesOwnerDeclaration)
-        => attributesOwnerDeclaration.DeclaredElement switch
-        {
-            IMethod method => method.ReturnType,
-            IProperty property => property.Type,
-            IField field => field.Type,
-            IParameter parameter => parameter.Type,
-            IDelegate delegateType => delegateType.InvokeMethod.ReturnType,
-
-            _ => null,
-        };
-
-    [Pure]
     static bool CanContainNullnessAttributes(IAttributesOwnerDeclaration declaration)
     {
         // excluding type, constant, enum member, property/indexer/event accessor, event, type parameter declarations
@@ -178,19 +165,6 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
 
         return null;
     }
-
-    [Pure]
-    static IType? TryGetTypeForIfCanBeAnnotatedWithItemNotNull(IAttributesOwnerDeclaration attributesOwnerDeclaration)
-        => attributesOwnerDeclaration.DeclaredElement switch
-        {
-            IMethod method => method.ReturnType,
-            IParameter parameter => parameter.Type,
-            IProperty property => property.Type,
-            IDelegate delegateType => delegateType.InvokeMethod.ReturnType,
-            IField field => field.Type,
-
-            _ => null,
-        };
 
     static void AnalyzeMissingSuppressionJustification(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
@@ -337,7 +311,16 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
                     continue;
                 }
 
-                type ??= TryGetTypeForNumericRange(attributesOwnerDeclaration);
+                type ??= attributesOwnerDeclaration.DeclaredElement switch
+                {
+                    IMethod method => method.ReturnType,
+                    IProperty property => property.Type,
+                    IField field => field.Type,
+                    IParameter parameter => parameter.Type,
+                    IDelegate delegateType => delegateType.InvokeMethod.ReturnType,
+
+                    _ => null,
+                };
 
                 if (type is not { })
                 {
@@ -539,13 +522,12 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
             && parameterDeclaration.GetContainingTypeMemberDeclarationIgnoringClosures() is IMethodDeclaration
             {
                 DeclaredName: nameof(IEquatable<int>.Equals), ParameterDeclarations: [var p], DeclaredElement: { },
-            } method
+            } methodDeclaration
             && p == parameterDeclaration
-            && method.DeclaredElement.ReturnType.IsBool()
-            && method.GetContainingTypeDeclaration() is IClassDeclaration { DeclaredElement: { } } classDeclaration
+            && methodDeclaration.DeclaredElement.ReturnType.IsBool()
+            && methodDeclaration.GetContainingTypeDeclaration() is IClassDeclaration { DeclaredElement: { } } classDeclaration
             && parameterDeclaration.Type.Equals(TypeFactory.CreateType(classDeclaration.DeclaredElement))
-            && attributesOwnerDeclaration.Attributes.All(
-                a => a.GetAttributeInstance().GetAttributeType().GetClrName().FullName != ClrTypeNames.NotNullWhenAttribute.FullName))
+            && attributesOwnerDeclaration.Attributes.All(a => !a.GetAttributeType().IsClrType(ClrTypeNames.NotNullWhenAttribute)))
         {
             // we do not verify if the type implements the IEquatable<T> interface: in any case, the parameter should not be null when such a method
             // returns true
@@ -775,7 +757,18 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
                 return;
             }
 
-            if (TryGetTypeForIfCanBeAnnotatedWithItemNotNull(attributesOwnerDeclaration) is { } type)
+            var type = attributesOwnerDeclaration.DeclaredElement switch
+            {
+                IMethod method => method.ReturnType,
+                IParameter parameter => parameter.Type,
+                IProperty property => property.Type,
+                IDelegate delegateType => delegateType.InvokeMethod.ReturnType,
+                IField field => field.Type,
+
+                _ => null,
+            };
+
+            if (type is { })
             {
                 if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(attributesOwnerDeclaration))
                 {
