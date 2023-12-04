@@ -12,4 +12,10 @@ namespace Test
     public class BaseAttribute2 : Attribute { }
 
     public class DerivedAttribute2 : BaseAttribute2 { }
+
+    public class DerivedAttribute21 : DerivedAttribute2 { }
+
+    public abstract class BaseAttribute3 : Attribute { }
+
+    public class DerivedAttribute3 : BaseAttribute3 { }
 }

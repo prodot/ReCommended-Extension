@@ -497,12 +497,32 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
 
     static void AnalyzeMissingAttributeUsageAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
-        if (attributesOwnerDeclaration is IClassDeclaration classDeclaration
-            && classDeclaration.SuperTypes.FirstOrDefault() is { } baseType
-            && baseType.GetTypeElement() is { ShortName: nameof(Attribute) } baseTypeElement
-            && baseTypeElement.GetContainingNamespace() is { ShortName: nameof(System) }
-            && classDeclaration.Attributes.All(
-                a => a.GetAttributeInstance().GetAttributeType().GetClrName().FullName != typeof(AttributeUsageAttribute).FullName))
+        [Pure]
+        static bool AnyBaseClassAnnotated(IClassDeclaration classDeclaration)
+        {
+            for (var baseType = classDeclaration.SuperTypes.FirstOrDefault();
+                baseType is { } && baseType.IsClassType();
+                baseType = baseType.GetSuperTypes().FirstOrDefault())
+            {
+                if (baseType.IsClrType(ClrTypeNames.Attribute))
+                {
+                    return false;
+                }
+
+                if (baseType.GetTypeElement() is { } baseTypeElement
+                    && baseTypeElement.HasAttributeInstance(ClrTypeNames.AttributeUsageAttribute, false))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (attributesOwnerDeclaration is IClassDeclaration { IsAbstract: false } classDeclaration
+            && classDeclaration.DeclaredElement.IsAttribute()
+            && classDeclaration.Attributes.All(a => !a.GetAttributeType().IsClrType(ClrTypeNames.AttributeUsageAttribute))
+            && !AnyBaseClassAnnotated(classDeclaration))
         {
             consumer.AddHighlighting(
                 new MissingAttributeUsageAnnotationWarning(
