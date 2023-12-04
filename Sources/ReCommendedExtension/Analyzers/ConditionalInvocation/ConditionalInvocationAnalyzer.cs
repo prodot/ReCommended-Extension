@@ -8,6 +8,7 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation;
 [ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = new[] { typeof(ConditionalInvocationHint) })]
 public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
+    [Pure]
     static IList<string> GetConditionsIfConditionalMethodInvoked(IInvocationExpression invocationExpression)
     {
         if (invocationExpression.Reference.Resolve().DeclaredElement is not IMethod method)
@@ -15,22 +16,27 @@ public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvo
             return Array.Empty<string>(); // cannot analyze => do not highlight
         }
 
-        var declaredConditions = (
-            from attributeInstance in method.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
-            where attributeInstance.PositionParameterCount == 1
-            let constantValue = attributeInstance.PositionParameter(0).ConstantValue
-            where constantValue.IsString() && !string.IsNullOrEmpty(constantValue.StringValue)
-            select constantValue.StringValue).ToList();
-
-        if (declaredConditions is [])
-        {
-            return Array.Empty<string>(); // no declared conditions => do not highlight
-        }
-
         var sourceFile = invocationExpression.GetSourceFile();
         if (sourceFile is not { })
         {
             return Array.Empty<string>(); // cannot analyze => do not highlight
+        }
+
+        var declaredConditions = null as List<string>;
+
+        foreach (var attributeInstance in method.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, true))
+        {
+            if (attributeInstance.PositionParameterCount == 1
+                && attributeInstance.PositionParameter(0).ConstantValue is { Kind: ConstantValueKind.String, StringValue: [_, ..] condition })
+            {
+                declaredConditions ??= new List<string>();
+                declaredConditions.Add(condition);
+            }
+        }
+
+        if (declaredConditions is not { })
+        {
+            return Array.Empty<string>(); // no declared conditions => do not highlight
         }
 
         // initialize with assembly-level conditions
@@ -44,18 +50,12 @@ public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvo
             {
                 switch (treeNode)
                 {
-                    case IDefineDirective defineDirective:
-                        if (!string.IsNullOrEmpty(defineDirective.SymbolName))
-                        {
-                            currentConditions.Add(defineDirective.SymbolName);
-                        }
+                    case IDefineDirective { SymbolName: [_, ..] condition }:
+                        currentConditions.Add(condition);
                         continue;
 
-                    case IUndefDirective undefDirective:
-                        if (!string.IsNullOrEmpty(undefDirective.SymbolName))
-                        {
-                            currentConditions.Remove(undefDirective.SymbolName);
-                        }
+                    case IUndefDirective { SymbolName: [_, ..] condition }:
+                        currentConditions.Remove(condition);
                         continue;
                 }
 

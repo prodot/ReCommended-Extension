@@ -5,7 +5,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.PropertiesExtender;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -216,27 +215,22 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
         return methodDeclaration.Attributes.Any(
             attribute =>
             {
-                if (attribute is { })
+                if (testMethodAttributeTypes is not { })
                 {
-                    if (testMethodAttributeTypes is not { })
+                    testMethodAttributeTypes = new IDeclaredType[testMethodAttributes.Length];
+                    for (var i = 0; i < testMethodAttributes.Length; i++)
                     {
-                        testMethodAttributeTypes = new IDeclaredType[testMethodAttributes.Length];
-                        for (var i = 0; i < testMethodAttributes.Length; i++)
-                        {
-                            testMethodAttributeTypes[i] = TypeFactory.CreateTypeByCLRName(
-                                testMethodAttributes[i],
-                                NullableAnnotation.Unknown,
-                                methodDeclaration.GetPsiModule());
-                        }
+                        testMethodAttributeTypes[i] = TypeFactory.CreateTypeByCLRName(
+                            testMethodAttributes[i],
+                            NullableAnnotation.Unknown,
+                            methodDeclaration.GetPsiModule());
                     }
-
-                    var attributeType = attribute.GetAttributeInstance().GetAttributeType();
-
-                    return testMethodAttributeTypes.Any(
-                        type => attributeType.Equals(type, TypeEqualityComparer.Default) || attributeType.IsSubtypeOf(type));
                 }
 
-                return false;
+                var attributeType = attribute.GetAttributeType();
+
+                return testMethodAttributeTypes.Any(
+                    type => attributeType.Equals(type, TypeEqualityComparer.Default) || attributeType.IsSubtypeOf(type));
             });
     }
 

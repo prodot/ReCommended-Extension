@@ -10,9 +10,7 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProble
 {
     protected override void Run(IObjectCreationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        var declaredElement = element.ConstructorReference.Resolve().DeclaredElement;
-
-        if (declaredElement is IConstructor constructor)
+        if (element.ConstructorReference.Resolve().DeclaredElement is IConstructor constructor)
         {
             Debug.Assert(constructor.ContainingType is { });
 
@@ -34,9 +32,7 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProble
                             && parameters.Any(p => p.ShortName == parameterName))
                         {
                             consumer.AddHighlighting(
-                                new ArgumentExceptionConstructorArgumentWarning(
-                                    "Parameter name used for the exception message.",
-                                    messageArgument));
+                                new ArgumentExceptionConstructorArgumentWarning("Parameter name used for the exception message.", messageArgument));
                         }
                         break;
 
@@ -47,9 +43,7 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProble
                             && parameters.Contains(parameter))
                         {
                             consumer.AddHighlighting(
-                                new ArgumentExceptionConstructorArgumentWarning(
-                                    "Parameter name used for the exception message.",
-                                    messageArgument));
+                                new ArgumentExceptionConstructorArgumentWarning("Parameter name used for the exception message.", messageArgument));
                         }
 
                         break;

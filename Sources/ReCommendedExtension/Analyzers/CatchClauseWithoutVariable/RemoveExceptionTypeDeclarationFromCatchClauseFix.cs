@@ -16,6 +16,8 @@ public sealed class RemoveExceptionTypeDeclarationFromCatchClauseFix : QuickFixB
 
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
+    public override string Text => "Remove exception type";
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
@@ -25,6 +27,4 @@ public sealed class RemoveExceptionTypeDeclarationFromCatchClauseFix : QuickFixB
 
         return _ => { };
     }
-
-    public override string Text => "Remove exception type";
 }

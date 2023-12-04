@@ -19,6 +19,8 @@ public sealed class RemoveAttributeFix : QuickFixBase
 
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
+    public override string Text => "Remove attribute";
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
@@ -28,6 +30,4 @@ public sealed class RemoveAttributeFix : QuickFixBase
 
         return _ => { };
     }
-
-    public override string Text => "Remove attribute";
 }

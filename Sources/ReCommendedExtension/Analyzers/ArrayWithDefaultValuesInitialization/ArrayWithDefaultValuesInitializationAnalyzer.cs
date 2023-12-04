@@ -11,6 +11,7 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization;
 [ElementProblemAnalyzer(typeof(IArrayInitializer), HighlightingTypes = new[] { typeof(ArrayWithDefaultValuesInitializationSuggestion) })]
 public sealed class ArrayWithDefaultValuesInitializationAnalyzer : ElementProblemAnalyzer<IArrayInitializer>
 {
+    [Pure]
     static string CreateHighlightingMessage(string suggestedCode) => $"Use '{suggestedCode}'.";
 
     protected override void Run(IArrayInitializer element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

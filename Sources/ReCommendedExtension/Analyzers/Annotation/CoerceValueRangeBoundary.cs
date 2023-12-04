@@ -18,6 +18,25 @@ public sealed class CoerceValueRangeBoundary : QuickFixBase
 
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
+    public override string Text
+    {
+        get
+        {
+            Debug.Assert(CSharpLanguage.Instance is { });
+
+            return highlighting.Boundary switch
+            {
+                ValueRangeBoundary.Lower => highlighting.TypeIsSigned
+                    ? $"Set the 'from' value to the '{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MinValue)}'"
+                    : "Set the 'from' value to the '0'",
+
+                ValueRangeBoundary.Higher => $"Set the 'to' value to the '{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}'",
+
+                _ => throw new NotSupportedException(),
+            };
+        }
+    }
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
@@ -41,24 +60,5 @@ public sealed class CoerceValueRangeBoundary : QuickFixBase
         }
 
         return _ => { };
-    }
-
-    public override string Text
-    {
-        get
-        {
-            Debug.Assert(CSharpLanguage.Instance is { });
-
-            return highlighting.Boundary switch
-            {
-                ValueRangeBoundary.Lower => highlighting.TypeIsSigned
-                    ? $"Set the 'from' value to the '{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MinValue)}'"
-                    : "Set the 'from' value to the '0'",
-
-                ValueRangeBoundary.Higher => $"Set the 'to' value to the '{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}'",
-
-                _ => throw new NotSupportedException(),
-            };
-        }
     }
 }

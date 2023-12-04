@@ -27,6 +27,8 @@ public sealed class ChangeToAsyncTaskFix : QuickFixBase
 
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
+    public override string Text => $"Change return type to '{taskType.GetClrName().ShortName}'";
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
@@ -36,6 +38,4 @@ public sealed class ChangeToAsyncTaskFix : QuickFixBase
 
         return _ => { };
     }
-
-    public override string Text => $"Change return type to '{taskType.GetClrName().ShortName}'";
 }

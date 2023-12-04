@@ -15,6 +15,8 @@ public sealed class RemoveAsyncFix : QuickFixBase
 
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
+    public override string Text => "Remove 'async' modifier";
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
@@ -24,6 +26,4 @@ public sealed class RemoveAsyncFix : QuickFixBase
 
         return _ => { };
     }
-
-    public override string Text => "Remove 'async' modifier";
 }
