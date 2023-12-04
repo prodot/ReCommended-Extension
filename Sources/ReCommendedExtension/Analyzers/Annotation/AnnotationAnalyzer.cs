@@ -541,39 +541,47 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
 
     static void AnalyzeConditional(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
-        var conditionalAttributes =
-            from attribute in attributesOwnerDeclaration.Attributes
-            let typeElement = attribute.GetAttributeInstance().GetAttributeType().GetTypeElement()
-            where typeElement is { }
-            let conditions =
-            (
-                from attributeInstance in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, false)
-                where attributeInstance.PositionParameterCount == 1
-                let constantValue = attributeInstance.PositionParameter(0).ConstantValue
-                where constantValue.IsString() && !string.IsNullOrEmpty(constantValue.StringValue)
-                select constantValue.StringValue).ToList()
-            where conditions is not []
-            select new { Attribute = attribute, Conditions = conditions };
+        var conditions = null as List<string>;
 
-        foreach (var conditionalAttribute in conditionalAttributes)
+        foreach (var attribute in attributesOwnerDeclaration.Attributes)
         {
-            if (conditionalAttribute.Conditions is [var singleCondition])
+            if (attribute.GetAttributeType().GetTypeElement() is { } typeElement)
             {
-                consumer.AddHighlighting(
-                    new ConditionalAnnotationHint(
-                        attributesOwnerDeclaration,
-                        conditionalAttribute.Attribute,
-                        $"Attribute will be ignored if the '{singleCondition}' condition is not defined."));
-            }
-            else
-            {
-                var conditions = string.Join(", ", from condition in conditionalAttribute.Conditions orderby condition select $"'{condition}'");
+                foreach (var attributeAnnotation in typeElement.GetAttributeInstances(PredefinedType.CONDITIONAL_ATTRIBUTE_CLASS, true))
+                {
+                    if (attributeAnnotation.PositionParameterCount == 1
+                        && attributeAnnotation.PositionParameter(0).ConstantValue is
+                        {
+                            Kind: ConstantValueKind.String, StringValue: [_, ..] condition,
+                        })
+                    {
+                        conditions ??= new List<string>();
+                        conditions.Add(condition);
+                    }
+                }
 
-                consumer.AddHighlighting(
-                    new ConditionalAnnotationHint(
-                        attributesOwnerDeclaration,
-                        conditionalAttribute.Attribute,
-                        $"Attribute will be ignored if none of the following conditions is defined: {conditions}."));
+                switch (conditions)
+                {
+                    case [var singleCondition]:
+                        consumer.AddHighlighting(
+                            new ConditionalAnnotationHint(
+                                attributesOwnerDeclaration,
+                                attribute,
+                                $"Attribute will be ignored if the '{singleCondition}' condition is not defined."));
+                        conditions.Clear();
+                        break;
+
+                    case [_, _, ..]:
+                        consumer.AddHighlighting(
+                            new ConditionalAnnotationHint(
+                                attributesOwnerDeclaration,
+                                attribute,
+                                $"Attribute will be ignored if none of the following conditions is defined: {
+                                    string.Join(", ", from c in conditions orderby c select $"'{c}'")
+                                }."));
+                        conditions.Clear();
+                        break;
+                }
             }
         }
     }
