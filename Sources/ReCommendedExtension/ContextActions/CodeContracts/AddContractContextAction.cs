@@ -48,12 +48,16 @@ public abstract class AddContractContextAction : ContextActionBase
 
     protected ICSharpContextActionDataProvider Provider { get; }
 
+    [Pure]
     protected virtual string? TryGetAnnotationAttributeTypeName() => null;
 
+    [Pure]
     protected abstract bool IsAvailableForType(IType type);
 
+    [Pure]
     protected abstract string GetContractTextForUI(string contractIdentifier);
 
+    [Pure]
     protected abstract IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression);
 
     [MemberNotNullWhen(true, nameof(contractInfo))]

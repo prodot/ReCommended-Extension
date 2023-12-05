@@ -10,6 +10,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 internal sealed record OperatorContractInfo : ContractInfo
 {
+    [JetBrains.Annotations.Pure]
     public static OperatorContractInfo? TryCreate(
         IOperatorDeclaration declaration,
         TreeTextRange selectedTreeRange,

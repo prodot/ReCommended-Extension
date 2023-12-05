@@ -42,6 +42,7 @@ internal sealed record ParameterContractInfo : ContractInfo
         AddContract(ContractKind.Ensures, body, provider.PsiModule, () => getContractExpression(expression), out firstNonContractStatement);
     }
 
+    [JetBrains.Annotations.Pure]
     public static ParameterContractInfo? TryCreate(IParameterDeclaration declaration, Func<IType, bool> isAvailableForType)
     {
         var expressionBodyOwnerDeclaration = declaration.PathToRoot().OfType<IExpressionBodyOwnerDeclaration>().FirstOrDefault();
@@ -50,39 +51,31 @@ internal sealed record ParameterContractInfo : ContractInfo
             return null;
         }
 
-        switch (expressionBodyOwnerDeclaration)
+        if (expressionBodyOwnerDeclaration is IPropertyDeclaration propertyDeclaration
+            && propertyDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.ArrowClause is { })
+            || expressionBodyOwnerDeclaration is IIndexerDeclaration indexerDeclaration
+            && indexerDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.ArrowClause is { }))
         {
-            case IPropertyDeclaration propertyDeclaration
-                when propertyDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.ArrowClause is { }):
-            case IIndexerDeclaration indexerDeclaration
-                when indexerDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.ArrowClause is { }):
-
-                return null;
+            return null;
         }
 
         var parameter = declaration.DeclaredElement;
 
         if (parameter.ContainingParametersOwner is ITypeMember typeMember && CanAcceptContracts(typeMember) && isAvailableForType(parameter.Type))
         {
-            ContractKind contractKind;
-            switch (parameter.Kind)
+            var contractKind = parameter.Kind switch
             {
-                case ParameterKind.VALUE:
-                    contractKind = ContractKind.Requires;
-                    break;
+                ParameterKind.VALUE => ContractKind.Requires,
+                ParameterKind.REFERENCE => ContractKind.RequiresAndEnsures,
+                ParameterKind.OUTPUT => ContractKind.Ensures,
 
-                case ParameterKind.REFERENCE:
-                    contractKind = ContractKind.RequiresAndEnsures;
-                    break;
+                _ => null as ContractKind?,
+            };
 
-                case ParameterKind.OUTPUT:
-                    contractKind = ContractKind.Ensures;
-                    break;
-
-                default: return null;
+            if (contractKind is { } c)
+            {
+                return new ParameterContractInfo(c, declaration, parameter.Type);
             }
-
-            return new ParameterContractInfo(contractKind, declaration, parameter.Type);
         }
 
         return null;

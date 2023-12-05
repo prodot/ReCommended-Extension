@@ -73,19 +73,7 @@ internal abstract record ContractInfo
 
     [JetBrains.Annotations.Pure]
     protected static bool CanAcceptContracts(ITypeMember typeMember)
-    {
-        if (typeMember.IsExtern)
-        {
-            return false;
-        }
-
-        if (typeMember is IOverridableMember overridableMember && overridableMember.GetImmediateSuperMembers().Any())
-        {
-            return false;
-        }
-
-        return true;
-    }
+        => !typeMember.IsExtern && (typeMember is not IOverridableMember overridableMember || !overridableMember.GetImmediateSuperMembers().Any());
 
     [JetBrains.Annotations.Pure]
     static ICSharpStatement CreateContractStatement(
@@ -165,66 +153,68 @@ internal abstract record ContractInfo
             contractClassDeclaration = typeElement.GetDeclarations().FirstOrDefault() as IClassDeclaration;
         }
 
-        if (contractClassDeclaration is not { })
+        if (contractClassDeclaration is { })
         {
-            var typeParameters = typeDeclaration.TypeParameters is not []
-                ? $"<{string.Join(", ", from typeParameter in typeDeclaration.TypeParameters select typeParameter.DeclaredName)}>"
-                : "";
-            var typeParametersForAttribute = typeDeclaration.TypeParameters is not []
-                ? $"<{new string(',', typeDeclaration.TypeParameters.Count - 1)}>"
-                : "";
-
-            contractClassDeclaration = (IClassDeclaration)factory.CreateTypeMemberDeclaration(
-                string.Format(
-                    @"[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
-                    GetSuggestedContractClassName(typeDeclaration),
-                    typeParameters,
-                    typeParametersForAttribute),
-                TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassForAttribute, psiModule),
-                typeDeclaration.DeclaredElement);
-
-            CopyTypeParameterConstraints(
-                factory,
-                typeDeclaration.TypeParameters,
-                contractClassDeclaration.TypeParameters,
-                clause => contractClassDeclaration.AddTypeParameterConstraintsClauseBefore(clause, null));
-
-            var attributeTypeParameters = contractClassDeclaration.TypeParameters.Any()
-                ? $"<{new string(',', contractClassDeclaration.TypeParameters.Count - 1)}>"
-                : "";
-            var typeofExpression = (ITypeofExpression)factory.CreateExpression(
-                $"typeof($0{attributeTypeParameters})",
-                contractClassDeclaration.DeclaredElement);
-
-            // todo: the generated "typeof" expression doesn't contain generics: "<,>"
-            var contractClassAttributeTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassAttribute, psiModule);
-            Debug.Assert(contractClassAttributeTypeElement is { });
-            var attribute = factory.CreateAttribute(
-                contractClassAttributeTypeElement,
-                new[] { new AttributeValue(typeofExpression.ArgumentType) },
-                Array.Empty<Pair<string, AttributeValue>>());
-
-            typeDeclaration.AddAttributeAfter(attribute, null);
-
-            if (typeDeclaration.GetContainingTypeDeclaration() is IClassLikeDeclaration parentTypeDeclaration)
-            {
-                contractClassDeclaration.SetAccessRights(AccessRights.PRIVATE);
-
-                contractClassDeclaration = parentTypeDeclaration.AddClassMemberDeclaration(contractClassDeclaration);
-            }
-            else
-            {
-                if (typeDeclaration.GetContainingNamespaceDeclaration() is { } parentNamespaceDeclaration)
-                {
-                    contractClassDeclaration.SetAccessRights(AccessRights.INTERNAL);
-
-                    contractClassDeclaration =
-                        (IClassDeclaration)parentNamespaceDeclaration.AddTypeDeclarationAfter(contractClassDeclaration, typeDeclaration);
-                }
-            }
-
-            ContextActionUtils.FormatWithDefaultProfile(contractClassDeclaration);
+            return contractClassDeclaration;
         }
+
+        var typeParameters = typeDeclaration.TypeParameters is not []
+            ? $"<{string.Join(", ", from typeParameter in typeDeclaration.TypeParameters select typeParameter.DeclaredName)}>"
+            : "";
+        var typeParametersForAttribute = typeDeclaration.TypeParameters is not []
+            ? $"<{new string(',', typeDeclaration.TypeParameters.Count - 1)}>"
+            : "";
+
+        contractClassDeclaration = (IClassDeclaration)factory.CreateTypeMemberDeclaration(
+            string.Format(
+                @"[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
+                GetSuggestedContractClassName(typeDeclaration),
+                typeParameters,
+                typeParametersForAttribute),
+            TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassForAttribute, psiModule),
+            typeDeclaration.DeclaredElement);
+
+        CopyTypeParameterConstraints(
+            factory,
+            typeDeclaration.TypeParameters,
+            contractClassDeclaration.TypeParameters,
+            clause => contractClassDeclaration.AddTypeParameterConstraintsClauseBefore(clause, null));
+
+        var attributeTypeParameters = contractClassDeclaration.TypeParameters.Any()
+            ? $"<{new string(',', contractClassDeclaration.TypeParameters.Count - 1)}>"
+            : "";
+        var typeofExpression = (ITypeofExpression)factory.CreateExpression(
+            $"typeof($0{attributeTypeParameters})",
+            contractClassDeclaration.DeclaredElement);
+
+        // todo: the generated "typeof" expression doesn't contain generics: "<,>"
+        var contractClassAttributeTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassAttribute, psiModule);
+        Debug.Assert(contractClassAttributeTypeElement is { });
+        var attribute = factory.CreateAttribute(
+            contractClassAttributeTypeElement,
+            new[] { new AttributeValue(typeofExpression.ArgumentType) },
+            Array.Empty<Pair<string, AttributeValue>>());
+
+        typeDeclaration.AddAttributeAfter(attribute, null);
+
+        if (typeDeclaration.GetContainingTypeDeclaration() is IClassLikeDeclaration parentTypeDeclaration)
+        {
+            contractClassDeclaration.SetAccessRights(AccessRights.PRIVATE);
+
+            contractClassDeclaration = parentTypeDeclaration.AddClassMemberDeclaration(contractClassDeclaration);
+        }
+        else
+        {
+            if (typeDeclaration.GetContainingNamespaceDeclaration() is { } parentNamespaceDeclaration)
+            {
+                contractClassDeclaration.SetAccessRights(AccessRights.INTERNAL);
+
+                contractClassDeclaration =
+                    (IClassDeclaration)parentNamespaceDeclaration.AddTypeDeclarationAfter(contractClassDeclaration, typeDeclaration);
+            }
+        }
+
+        ContextActionUtils.FormatWithDefaultProfile(contractClassDeclaration);
 
         return contractClassDeclaration;
     }
@@ -248,50 +238,52 @@ internal abstract record ContractInfo
                     .Any(overridableMemberInstance => overridableMemberInstance.GetHashCode() == declaredElement.GetHashCode())
             select d).FirstOrDefault();
 
-        if (overriddenMethodDeclaration is not { })
+        if (overriddenMethodDeclaration is { })
         {
-            Debug.Assert(declaredElement is { });
-
-            var typeParameters = methodDeclaration.TypeParameterDeclarations.Any()
-                ? $"<{string.Join(", ", from typeParameter in methodDeclaration.TypeParameterDeclarations select typeParameter.DeclaredName)}>"
-                : "";
-
-            var returnStatement = declaredElement.ReturnType.IsVoid() ? "" : " return default($0); ";
-            overriddenMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(
-                $"$0 {methodDeclaration.DeclaredName}{typeParameters}() {{{returnStatement}}}",
-                declaredElement.ReturnType);
-            overriddenMethodDeclaration.SetAccessRights(
-                methodDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
-                    ? AccessRights.PUBLIC
-                    : methodDeclaration.GetAccessRights());
-            overriddenMethodDeclaration.SetOverride(methodDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
-
-            foreach (var parameterDeclaration in methodDeclaration.ParameterDeclarations)
-            {
-                var parameter = parameterDeclaration.DeclaredElement;
-
-                overriddenMethodDeclaration.AddParameterDeclarationBefore(
-                    factory.CreateParameterDeclaration(
-                        null,
-                        parameter.Kind,
-                        parameter.IsParameterArray,
-                        parameter.IsVarArg,
-                        parameterDeclaration.Type,
-                        parameterDeclaration.DeclaredName,
-                        null),
-                    null);
-            }
-
-            CopyTypeParameterConstraints(
-                factory,
-                methodDeclaration.TypeParameterDeclarations,
-                overriddenMethodDeclaration.TypeParameterDeclarations,
-                clause => overriddenMethodDeclaration.AddTypeParameterConstraintsClauseBefore(clause, null));
-
-            overriddenMethodDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenMethodDeclaration);
-
-            ContextActionUtils.FormatWithDefaultProfile(overriddenMethodDeclaration);
+            return overriddenMethodDeclaration;
         }
+
+        Debug.Assert(declaredElement is { });
+
+        var typeParameters = methodDeclaration.TypeParameterDeclarations.Any()
+            ? $"<{string.Join(", ", from typeParameter in methodDeclaration.TypeParameterDeclarations select typeParameter.DeclaredName)}>"
+            : "";
+
+        var returnStatement = declaredElement.ReturnType.IsVoid() ? "" : " return default($0); ";
+        overriddenMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(
+            $"$0 {methodDeclaration.DeclaredName}{typeParameters}() {{{returnStatement}}}",
+            declaredElement.ReturnType);
+        overriddenMethodDeclaration.SetAccessRights(
+            methodDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
+                ? AccessRights.PUBLIC
+                : methodDeclaration.GetAccessRights());
+        overriddenMethodDeclaration.SetOverride(methodDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
+
+        foreach (var parameterDeclaration in methodDeclaration.ParameterDeclarations)
+        {
+            var parameter = parameterDeclaration.DeclaredElement;
+
+            overriddenMethodDeclaration.AddParameterDeclarationBefore(
+                factory.CreateParameterDeclaration(
+                    null,
+                    parameter.Kind,
+                    parameter.IsParameterArray,
+                    parameter.IsVarArg,
+                    parameterDeclaration.Type,
+                    parameterDeclaration.DeclaredName,
+                    null),
+                null);
+        }
+
+        CopyTypeParameterConstraints(
+            factory,
+            methodDeclaration.TypeParameterDeclarations,
+            overriddenMethodDeclaration.TypeParameterDeclarations,
+            clause => overriddenMethodDeclaration.AddTypeParameterConstraintsClauseBefore(clause, null));
+
+        overriddenMethodDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenMethodDeclaration);
+
+        ContextActionUtils.FormatWithDefaultProfile(overriddenMethodDeclaration);
 
         return overriddenMethodDeclaration;
     }
@@ -311,42 +303,44 @@ internal abstract record ContractInfo
                     .Any(overridableMemberInstance => overridableMemberInstance.GetHashCode() == indexerDeclaration.DeclaredElement.GetHashCode())
             select d).FirstOrDefault();
 
-        if (overriddenIndexerDeclaration is not { })
+        if (overriddenIndexerDeclaration is { })
         {
-            Debug.Assert(indexerDeclaration.DeclaredElement is { });
-
-            var getter = indexerDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "";
-            var setter = indexerDeclaration.DeclaredElement.IsWritable ? " set { } " : "";
-            overriddenIndexerDeclaration = (IIndexerDeclaration)factory.CreateTypeMemberDeclaration(
-                $"$0 this[] {{{getter}{setter}}}",
-                indexerDeclaration.DeclaredElement.Type);
-
-            overriddenIndexerDeclaration.SetAccessRights(
-                indexerDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
-                    ? AccessRights.PUBLIC
-                    : indexerDeclaration.GetAccessRights());
-            overriddenIndexerDeclaration.SetOverride(indexerDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
-
-            foreach (var parameterDeclaration in indexerDeclaration.ParameterDeclarations)
-            {
-                var parameter = parameterDeclaration.DeclaredElement;
-
-                overriddenIndexerDeclaration.AddParameterDeclarationBefore(
-                    factory.CreateParameterDeclaration(
-                        null,
-                        parameter.Kind,
-                        parameter.IsParameterArray,
-                        parameter.IsVarArg,
-                        parameterDeclaration.Type,
-                        parameterDeclaration.DeclaredName,
-                        null),
-                    null);
-            }
-
-            overriddenIndexerDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenIndexerDeclaration);
-
-            ContextActionUtils.FormatWithDefaultProfile(overriddenIndexerDeclaration);
+            return overriddenIndexerDeclaration;
         }
+
+        Debug.Assert(indexerDeclaration.DeclaredElement is { });
+
+        var getter = indexerDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "";
+        var setter = indexerDeclaration.DeclaredElement.IsWritable ? " set { } " : "";
+        overriddenIndexerDeclaration = (IIndexerDeclaration)factory.CreateTypeMemberDeclaration(
+            $"$0 this[] {{{getter}{setter}}}",
+            indexerDeclaration.DeclaredElement.Type);
+
+        overriddenIndexerDeclaration.SetAccessRights(
+            indexerDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
+                ? AccessRights.PUBLIC
+                : indexerDeclaration.GetAccessRights());
+        overriddenIndexerDeclaration.SetOverride(indexerDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
+
+        foreach (var parameterDeclaration in indexerDeclaration.ParameterDeclarations)
+        {
+            var parameter = parameterDeclaration.DeclaredElement;
+
+            overriddenIndexerDeclaration.AddParameterDeclarationBefore(
+                factory.CreateParameterDeclaration(
+                    null,
+                    parameter.Kind,
+                    parameter.IsParameterArray,
+                    parameter.IsVarArg,
+                    parameterDeclaration.Type,
+                    parameterDeclaration.DeclaredName,
+                    null),
+                null);
+        }
+
+        overriddenIndexerDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenIndexerDeclaration);
+
+        ContextActionUtils.FormatWithDefaultProfile(overriddenIndexerDeclaration);
 
         return overriddenIndexerDeclaration;
     }
@@ -366,26 +360,28 @@ internal abstract record ContractInfo
                     .Any(overridableMemberInstance => overridableMemberInstance.GetHashCode() == propertyDeclaration.DeclaredElement.GetHashCode())
             select d).FirstOrDefault();
 
-        if (overriddenPropertyDeclaration is not { })
+        if (overriddenPropertyDeclaration is { })
         {
-            Debug.Assert(propertyDeclaration.DeclaredElement is { });
-
-            var getter = propertyDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "";
-            var setter = propertyDeclaration.DeclaredElement.IsWritable ? " set { } " : "";
-            overriddenPropertyDeclaration = (IPropertyDeclaration)factory.CreateTypeMemberDeclaration(
-                $"$0 {propertyDeclaration.DeclaredName} {{{getter}{setter}}}",
-                propertyDeclaration.DeclaredElement.Type);
-
-            overriddenPropertyDeclaration.SetAccessRights(
-                propertyDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
-                    ? AccessRights.PUBLIC
-                    : propertyDeclaration.GetAccessRights());
-            overriddenPropertyDeclaration.SetOverride(propertyDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
-
-            overriddenPropertyDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenPropertyDeclaration);
-
-            ContextActionUtils.FormatWithDefaultProfile(overriddenPropertyDeclaration);
+            return overriddenPropertyDeclaration;
         }
+
+        Debug.Assert(propertyDeclaration.DeclaredElement is { });
+
+        var getter = propertyDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "";
+        var setter = propertyDeclaration.DeclaredElement.IsWritable ? " set { } " : "";
+        overriddenPropertyDeclaration = (IPropertyDeclaration)factory.CreateTypeMemberDeclaration(
+            $"$0 {propertyDeclaration.DeclaredName} {{{getter}{setter}}}",
+            propertyDeclaration.DeclaredElement.Type);
+
+        overriddenPropertyDeclaration.SetAccessRights(
+            propertyDeclaration.GetContainingTypeDeclaration() is IInterfaceDeclaration
+                ? AccessRights.PUBLIC
+                : propertyDeclaration.GetAccessRights());
+        overriddenPropertyDeclaration.SetOverride(propertyDeclaration.GetContainingTypeDeclaration() is IClassDeclaration);
+
+        overriddenPropertyDeclaration = contractClassDeclaration.AddClassMemberDeclaration(overriddenPropertyDeclaration);
+
+        ContextActionUtils.FormatWithDefaultProfile(overriddenPropertyDeclaration);
 
         return overriddenPropertyDeclaration;
     }
@@ -402,15 +398,17 @@ internal abstract record ContractInfo
                 return methodDeclaration.DeclaredElement.HasAttributeInstance(ClrTypeNames.ContractInvariantMethodAttribute, false);
             });
 
-        if (contractInvariantMethodDeclaration is not { })
+        if (contractInvariantMethodDeclaration is { })
         {
-            contractInvariantMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(
-                "[$0] private void ObjectInvariant() { }",
-                TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractInvariantMethodAttribute, psiModule));
-            contractInvariantMethodDeclaration = classLikeDeclaration.AddClassMemberDeclaration(contractInvariantMethodDeclaration);
-
-            ContextActionUtils.FormatWithDefaultProfile(contractInvariantMethodDeclaration);
+            return contractInvariantMethodDeclaration;
         }
+
+        contractInvariantMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(
+            "[$0] private void ObjectInvariant() { }",
+            TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractInvariantMethodAttribute, psiModule));
+        contractInvariantMethodDeclaration = classLikeDeclaration.AddClassMemberDeclaration(contractInvariantMethodDeclaration);
+
+        ContextActionUtils.FormatWithDefaultProfile(contractInvariantMethodDeclaration);
 
         return contractInvariantMethodDeclaration;
     }
@@ -501,6 +499,7 @@ internal abstract record ContractInfo
         ContextActionUtils.FormatWithDefaultProfile(statement);
     }
 
+    [JetBrains.Annotations.Pure]
     public static ContractInfo? TryCreate(IDeclaration? declaration, TreeTextRange selectedTreeRange, Func<IType, bool> isAvailableForType)
         => declaration switch
         {
@@ -526,6 +525,7 @@ internal abstract record ContractInfo
 
     protected IType Type { get; }
 
+    [JetBrains.Annotations.Pure]
     public string GetContractKindForUI()
         => ContractKind switch
         {
@@ -537,6 +537,7 @@ internal abstract record ContractInfo
             _ => throw new NotSupportedException(),
         };
 
+    [JetBrains.Annotations.Pure]
     public abstract string GetContractIdentifierForUI();
 
     public abstract void AddContracts(

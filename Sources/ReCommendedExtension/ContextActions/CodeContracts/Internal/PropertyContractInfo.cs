@@ -10,6 +10,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 internal sealed record PropertyContractInfo : ContractInfo
 {
+    [JetBrains.Annotations.Pure]
     public static PropertyContractInfo? TryCreate(
         IPropertyDeclaration declaration,
         TreeTextRange selectedTreeRange,
@@ -42,6 +43,7 @@ internal sealed record PropertyContractInfo : ContractInfo
         return null;
     }
 
+    [JetBrains.Annotations.Pure]
     public static PropertyContractInfo? TryCreate(
         IIndexerDeclaration declaration,
         TreeTextRange selectedTreeRange,

@@ -4,6 +4,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 internal abstract record CSharpNumericTypeInfo(bool IsSigned, string? EpsilonLiteral, string LiteralSuffix)
 {
+    [Pure]
     public static CSharpNumericTypeInfo? TryCreate(IType type)
     {
         if (type.IsInt())
@@ -174,7 +175,9 @@ internal abstract record CSharpNumericTypeInfo(bool IsSigned, string? EpsilonLit
         return null;
     }
 
+    [Pure]
     public abstract EnumBetweenFirstAndLast.EnumContractInfo? TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IList<IField> members);
 
+    [Pure]
     public abstract EnumFlags.EnumContractInfo? TryCreateEnumFlags(IList<IField> members);
 }

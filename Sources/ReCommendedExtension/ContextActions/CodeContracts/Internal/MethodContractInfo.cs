@@ -10,6 +10,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 internal sealed record MethodContractInfo : ContractInfo
 {
+    [JetBrains.Annotations.Pure]
     public static MethodContractInfo? TryCreate(IMethodDeclaration declaration, TreeTextRange selectedTreeRange, Func<IType, bool> isAvailableForType)
     {
         if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause is not { })

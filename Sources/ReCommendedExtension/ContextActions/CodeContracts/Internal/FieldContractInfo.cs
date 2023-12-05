@@ -8,6 +8,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 internal sealed record FieldContractInfo : ContractInfo
 {
+    [Pure]
     public static FieldContractInfo? TryCreate(IFieldDeclaration declaration, Func<IType, bool> isAvailableForType)
     {
         if (declaration is { IsStatic: false, DeclaredElement: { } }

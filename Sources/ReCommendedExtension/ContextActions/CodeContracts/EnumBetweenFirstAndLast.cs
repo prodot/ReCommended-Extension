@@ -16,6 +16,7 @@ public sealed class EnumBetweenFirstAndLast : AddContractContextAction
 {
     internal abstract record EnumContractInfo
     {
+        [Pure]
         public static EnumContractInfo? TryCreate(IEnum? enumType)
         {
             if (enumType is { } && !enumType.HasAttributeInstance(PredefinedType.FLAGS_ATTRIBUTE_CLASS, false))
@@ -28,8 +29,10 @@ public sealed class EnumBetweenFirstAndLast : AddContractContextAction
             return null;
         }
 
+        [Pure]
         public abstract string GetContractTextForUI(string contractIdentifier);
 
+        [Pure]
         public abstract IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression);
     }
 
@@ -43,6 +46,7 @@ public sealed class EnumBetweenFirstAndLast : AddContractContextAction
             }
         }
 
+        [Pure]
         public static EnumContractInfo<E>? TryCreate(
             IList<IField> members,
             Func<E, E, bool> isLessOrEquals,
