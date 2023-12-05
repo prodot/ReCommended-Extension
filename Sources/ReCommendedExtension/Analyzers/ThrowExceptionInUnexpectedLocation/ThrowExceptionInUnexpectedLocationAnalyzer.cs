@@ -66,8 +66,10 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
         ImplicitCastOperator,
     }
 
+    [Pure]
     static IMethod GetMethod(ITypeElement type, string name) => type.Methods.First(m => m.ShortName == name);
 
+    [Pure]
     static Location? TryGetLocation(ICSharpTreeNode element)
     {
         switch (element.GetContainingFunctionLikeDeclarationOrClosure())
@@ -83,8 +85,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                         }
                         break;
 
-                    case AccessorKind.ADDER or AccessorKind.REMOVER:
-                        return Location.EventAccessor;
+                    case AccessorKind.ADDER or AccessorKind.REMOVER: return Location.EventAccessor;
                 }
                 break;
 
@@ -236,6 +237,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
         return null;
     }
 
+    [Pure]
     static bool IsOrDerivesFrom(IExpressionType exceptionType, ITypeElement baseExceptionType)
     {
         var exceptionTypeElement = exceptionType.ToIType().GetTypeElement();
@@ -276,6 +278,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
         }
     }
 
+    [Pure]
     static string GetText(Location location)
         => location switch
         {

@@ -6,6 +6,7 @@ namespace ReCommendedExtension.Analyzers.LocalSuppression;
 [ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionWarning) })]
 public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCommentNode>
 {
+    [Pure]
     [NonNegativeValue]
     static int GetLeadingWhitespaceCharacterCount(string commentText)
     {
@@ -19,7 +20,7 @@ public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCom
             }
             else
             {
-                return leadingWhitespaceCharacters;
+                break;
             }
         }
 
@@ -32,7 +33,7 @@ public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCom
         {
             var leadingWhitespaceCharacterCount = GetLeadingWhitespaceCharacterCount(element.CommentText);
 
-            var commentText = element.CommentText.Remove(0, leadingWhitespaceCharacterCount);
+            var commentText = element.CommentText[leadingWhitespaceCharacterCount..];
 
             if (commentText.StartsWith("ReSharper disable once", StringComparison.Ordinal))
             {

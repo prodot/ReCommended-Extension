@@ -6,6 +6,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow;
 
 internal abstract record Assertion
 {
+    [Pure]
     public static HashSet<Assertion> CollectAssertions(
         AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
         AssertionConditionAnnotationProvider assertionConditionAnnotationProvider,
@@ -27,11 +28,10 @@ internal abstract record Assertion
 
             if (expression is IInvocationExpression invocationExpression)
             {
-                var assertionStatement = AssertionStatement.TryFromInvocationExpression(
-                    invocationExpression,
-                    assertionMethodAnnotationProvider,
-                    assertionConditionAnnotationProvider);
-                if (assertionStatement is { })
+                if (AssertionStatement.TryFromInvocationExpression(
+                        invocationExpression,
+                        assertionMethodAnnotationProvider,
+                        assertionConditionAnnotationProvider) is { } assertionStatement)
                 {
                     assertions.Add(assertionStatement);
                 }

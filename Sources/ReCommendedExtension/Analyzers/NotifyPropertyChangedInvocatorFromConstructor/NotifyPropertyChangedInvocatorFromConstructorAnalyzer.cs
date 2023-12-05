@@ -2,6 +2,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor;
 
@@ -10,6 +11,21 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
     HighlightingTypes = new[] { typeof(NotifyPropertyChangedInvocatorFromConstructorWarning) })]
 public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
+    [Pure]
+    static bool IsUnderAnonymousMethod(ITreeNode? element)
+    {
+        foreach (var treeNode in element.ContainingNodes())
+        {
+            if (treeNode is IAnonymousFunctionExpression or IQueryParameterPlatform)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    [Pure]
     static bool IsNotifyPropertyChangedInvocatorFromConstructor(IInvocationExpression invocationExpression)
     {
         var containingTypeMemberDeclaration = invocationExpression.GetContainingTypeMemberDeclarationIgnoringClosures();
@@ -18,7 +34,7 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzer : Elem
             return false; // not a constructor => do not highlight
         }
 
-        if (invocationExpression.IsUnderAnonymousMethod())
+        if (IsUnderAnonymousMethod(invocationExpression))
         {
             return false; // called from an anonymous method or a lambda expression => do not highlight
         }

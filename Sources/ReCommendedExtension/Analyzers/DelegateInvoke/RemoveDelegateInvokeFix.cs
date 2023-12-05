@@ -18,6 +18,8 @@ public sealed class RemoveDelegateInvokeFix : QuickFixBase
 
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
+    public override string Text => $"Remove '{nameof(Action.Invoke)}'";
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
@@ -30,6 +32,4 @@ public sealed class RemoveDelegateInvokeFix : QuickFixBase
 
         return _ => { };
     }
-
-    public override string Text => $"Remove '{nameof(Action.Invoke)}'";
 }

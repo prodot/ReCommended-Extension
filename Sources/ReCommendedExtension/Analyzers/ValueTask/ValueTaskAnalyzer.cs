@@ -34,7 +34,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             var containingFile = (ICSharpFile?)declaration.GetContainingFile();
 
             var forceClosuresCollection = false;
-            if ((uint)analysisMode > 0U && shouldDisableValueAnalysisIfNullableWarningsEnabled)
+            if (analysisMode != ValueAnalysisMode.OFF && shouldDisableValueAnalysisIfNullableWarningsEnabled)
             {
                 var file = containingFile;
                 var treeTextRange = declaration.GetTreeTextRange();
@@ -234,26 +234,23 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         }
 
         // build control flow graph of the method
-        var controlFlowGraph = (ICSharpControlFlowGraph?)ControlFlowBuilder.GetGraph(declaration);
-        if (controlFlowGraph is not { })
+        if ((ICSharpControlFlowGraph?)ControlFlowBuilder.GetGraph(declaration) is { } controlFlowGraph)
         {
-            return;
-        }
+            // inspect the control flow graph
+            var inspector = Inspector.Inspect(controlFlowGraph, valueAnalysisMode);
 
-        // inspect the control flow graph
-        var inspector = Inspector.Inspect(controlFlowGraph, valueAnalysisMode);
-
-        // show warnings
-        foreach (var (_, usages) in inspector.PossibleMultipleConsumption)
-        {
-            foreach (var usage in usages)
+            // show warnings
+            foreach (var (_, usages) in inspector.PossibleMultipleConsumption)
             {
-                Debug.Assert(CSharpLanguage.Instance is { });
+                foreach (var usage in usages)
+                {
+                    Debug.Assert(CSharpLanguage.Instance is { });
 
-                consumer.AddHighlighting(
-                    new PossibleMultipleConsumptionWarning(
-                        $"Possible multiple consumption of {usage.Type().GetPresentableName(CSharpLanguage.Instance)}.",
-                        usage));
+                    consumer.AddHighlighting(
+                        new PossibleMultipleConsumptionWarning(
+                            $"Possible multiple consumption of {usage.Type().GetPresentableName(CSharpLanguage.Instance)}.",
+                            usage));
+                }
             }
         }
     }

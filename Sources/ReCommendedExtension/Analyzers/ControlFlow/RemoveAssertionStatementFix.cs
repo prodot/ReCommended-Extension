@@ -18,6 +18,8 @@ public sealed class RemoveAssertionStatementFix : QuickFixBase
 
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
+    public override string Text => "Remove assertion";
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
@@ -33,6 +35,4 @@ public sealed class RemoveAssertionStatementFix : QuickFixBase
 
         return _ => { };
     }
-
-    public override string Text => "Remove assertion";
 }

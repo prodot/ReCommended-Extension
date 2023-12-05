@@ -5,7 +5,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
@@ -35,7 +34,7 @@ public abstract class AddContractContextAction : ContextActionBase
                 Debug.Assert(attributesOwnerDeclaration is { });
 
                 if (attributesOwnerDeclaration.Attributes.All(
-                    attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
+                    attribute => attribute.GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
                 {
                     var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 

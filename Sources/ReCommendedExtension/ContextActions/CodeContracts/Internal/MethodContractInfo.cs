@@ -45,9 +45,9 @@ internal sealed record MethodContractInfo : ContractInfo
 
         if (declaration.IsAbstract || containingTypeDeclaration.IsAbstract)
         {
-            var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
+            var contractClassDeclaration = EnsureContractClass(containingTypeDeclaration, provider.PsiModule);
 
-            var overriddenMethodDeclaration = declaration.EnsureOverriddenMethodInContractClass(contractClassDeclaration);
+            var overriddenMethodDeclaration = EnsureOverriddenMethodInContractClass(declaration, contractClassDeclaration);
 
             body = overriddenMethodDeclaration.Body;
         }

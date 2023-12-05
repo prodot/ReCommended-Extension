@@ -39,21 +39,6 @@ public abstract class AnnotateWith : ContextActionBase
 
     protected virtual bool AllowsMultiple => false;
 
-    public sealed override string Text
-    {
-        get
-        {
-            var typeName = AnnotationAttributeTypeName;
-            var textSuffix = TextSuffix;
-
-            var attributeName = typeName.EndsWith(nameof(Attribute), StringComparison.Ordinal)
-                ? typeName[..^nameof(Attribute).Length]
-                : typeName;
-
-            return $"Annotate with [{attributeName}]{(textSuffix != "" ? $" ({textSuffix})" : "")}";
-        }
-    }
-
     [MemberNotNullWhen(true, nameof(createAttributeFactory))]
     [MemberNotNullWhen(true, nameof(attributesOwnerDeclaration))]
     public sealed override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
@@ -81,6 +66,21 @@ public abstract class AnnotateWith : ContextActionBase
         attributesOwnerDeclaration = null;
 
         return false;
+    }
+
+    public sealed override string Text
+    {
+        get
+        {
+            var typeName = AnnotationAttributeTypeName;
+            var textSuffix = TextSuffix;
+
+            var attributeName = typeName.EndsWith(nameof(Attribute), StringComparison.Ordinal)
+                ? typeName[..^nameof(Attribute).Length]
+                : typeName;
+
+            return $"Annotate with [{attributeName}]{(textSuffix != "" ? $" ({textSuffix})" : "")}";
+        }
     }
 
     protected sealed override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)

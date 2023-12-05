@@ -96,7 +96,7 @@ internal sealed record PropertyContractInfo : ContractInfo
             var classLikeDeclaration = (IClassLikeDeclaration?)declaration.GetContainingTypeDeclaration();
             Debug.Assert(classLikeDeclaration is { });
 
-            var contractInvariantMethodDeclaration = classLikeDeclaration.EnsureContractInvariantMethod(provider.PsiModule);
+            var contractInvariantMethodDeclaration = EnsureContractInvariantMethod(classLikeDeclaration, provider.PsiModule);
 
             if (contractInvariantMethodDeclaration.Body is { })
             {
@@ -127,16 +127,16 @@ internal sealed record PropertyContractInfo : ContractInfo
         {
             var overriddenAccessorOwnerDeclaration = null as IAccessorOwnerDeclaration;
 
-            var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
+            var contractClassDeclaration = EnsureContractClass(containingTypeDeclaration, provider.PsiModule);
 
             if (propertyDeclaration is { })
             {
-                overriddenAccessorOwnerDeclaration = propertyDeclaration.EnsureOverriddenPropertyInContractClass(contractClassDeclaration);
+                overriddenAccessorOwnerDeclaration = EnsureOverriddenPropertyInContractClass(propertyDeclaration, contractClassDeclaration);
             }
 
             if (declaration is IIndexerDeclaration indexerDeclaration)
             {
-                overriddenAccessorOwnerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);
+                overriddenAccessorOwnerDeclaration = EnsureOverriddenIndexerInContractClass(indexerDeclaration, contractClassDeclaration);
             }
 
             Debug.Assert(overriddenAccessorOwnerDeclaration is { });

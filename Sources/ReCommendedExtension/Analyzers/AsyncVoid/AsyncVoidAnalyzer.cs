@@ -3,6 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Search;
 
 namespace ReCommendedExtension.Analyzers.AsyncVoid;
@@ -18,9 +19,70 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
             or AccessibilityDomain.AccessibilityDomainType.PROTECTED
             or AccessibilityDomain.AccessibilityDomainType.PROTECTED_OR_INTERNAL;
 
+    /// <summary>
+    /// Returns the object creation expression <c>new EventHandler(</c><paramref name="argument"/><c>)</c> if used in the pattern
+    /// <c>new EventHandler(</c><paramref name="argument"/><c>)</c> or <c>null</c>.
+    /// </summary>
+    [Pure]
+    static IObjectCreationExpression? TryGetDelegateCreation(ICSharpArgument argument)
+    {
+        var argumentList = argument.Parent as IArgumentList;
+
+        if (argumentList is not { } or { Arguments: not [_] })
+        {
+            return null;
+        }
+
+        return argumentList.Parent as IObjectCreationExpression;
+    }
+
+    [Pure]
+    static bool IsEventTarget(IReference reference)
+    {
+        switch (reference.GetTreeNode().Parent)
+        {
+            case IAssignmentExpression assignmentExpression: return IsEventSubscriptionOrUnSubscription(assignmentExpression);
+
+            case ICSharpArgument argument:
+            {
+                if (TryGetDelegateCreation(argument) is { Parent: IAssignmentExpression assignmentExpression })
+                {
+                    return IsEventSubscriptionOrUnSubscription(assignmentExpression);
+                }
+                break;
+            }
+        }
+
+        if (reference is IReferenceToDelegateCreation referenceToDelegateCreation)
+        {
+            return referenceToDelegateCreation.IsEventSubscription;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Returns <c>true</c> if used in the pattern <c>button.Click ±= </c><paramref name="assignmentExpression"/><c>;</c>.
+    /// </summary>
+    [Pure]
+    static bool IsEventSubscriptionOrUnSubscription(IAssignmentExpression assignmentExpression)
+    {
+        if (assignmentExpression.AssignmentType is not (AssignmentType.PLUSEQ or AssignmentType.MINUSEQ))
+        {
+            return false;
+        }
+
+        if (assignmentExpression.OperatorOperands is not [_, _])
+        {
+            return false;
+        }
+
+        return (assignmentExpression.Dest as IReferenceExpression)?.Reference.Resolve().DeclaredElement is IEvent;
+    }
+
     static void Analyze(IMethodDeclaration methodDeclaration, IHighlightingConsumer consumer)
     {
-        if (!methodDeclaration.IsAsync || !methodDeclaration.IsVoidMethodDeclaration())
+        if (!methodDeclaration.IsAsync || !methodDeclaration.Type.IsVoid())
         {
             return; // not an "async void" method
         }
@@ -65,7 +127,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
         }
         else
         {
-            var count = references.Count(reference => !reference.IsEventTarget());
+            var count = references.Count(reference => !IsEventTarget(reference));
             if (count > 0)
             {
                 consumer.AddHighlighting(
@@ -78,7 +140,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
 
     static void Analyze(ILocalFunctionDeclaration localFunctionDeclaration, IHighlightingConsumer consumer)
     {
-        if (!localFunctionDeclaration.IsAsync || !localFunctionDeclaration.IsVoidMethodDeclaration())
+        if (!localFunctionDeclaration.IsAsync || !localFunctionDeclaration.Type.IsVoid())
         {
             return; // not an "async void" local function
         }
@@ -90,7 +152,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
             localFunctionDeclaration.DeclaredElement,
             solutionSearchDomain,
             NullProgressIndicator.Create());
-        var count = references.Count(reference => !reference.IsEventTarget());
+        var count = references.Count(reference => !IsEventTarget(reference));
         if (count > 0)
         {
             consumer.AddHighlighting(
@@ -107,7 +169,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
             return; // not an "async (...) => ..." expression that returns void
         }
 
-        if (lambdaExpression.Parent is IAssignmentExpression assignmentExpression && assignmentExpression.IsEventSubscriptionOrUnSubscription())
+        if (lambdaExpression.Parent is IAssignmentExpression assignmentExpression && IsEventSubscriptionOrUnSubscription(assignmentExpression))
         {
             return; // direct event target
         }
@@ -129,7 +191,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
         }
 
         if (anonymousMethodExpression.Parent is IAssignmentExpression assignmentExpression
-            && assignmentExpression.IsEventSubscriptionOrUnSubscription())
+            && IsEventSubscriptionOrUnSubscription(assignmentExpression))
         {
             return; // direct event target
         }

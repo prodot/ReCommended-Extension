@@ -7,6 +7,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow;
 
 internal sealed record AssertionStatement : Assertion
 {
+    [Pure]
     public static AssertionStatement? TryFromInvocationExpression(
         IInvocationExpression invocationExpression,
         AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
@@ -23,18 +24,11 @@ internal sealed record AssertionStatement : Assertion
                     parameterAssertionCondition = AssertionConditionType.IS_TRUE;
                 }
 
-                if (parameterAssertionCondition is { } assertionCondition)
+                if (parameterAssertionCondition is { } assertionCondition
+                    && invocationExpression.ArgumentList.Arguments.FirstOrDefault(a => a.MatchingParameter?.Element.ShortName == parameter.ShortName)
+                        is { Value: { } argumentValue })
                 {
-                    var argument = invocationExpression.ArgumentList.Arguments.FirstOrDefault(
-                        a => a.MatchingParameter is { } && a.MatchingParameter.Element.ShortName == parameter.ShortName);
-                    if (argument is { Value: { } })
-                    {
-                        return new AssertionStatement(assertionCondition)
-                        {
-                            Statement = invocationExpression,
-                            Expression = argument.Value,
-                        };
-                    }
+                    return new AssertionStatement(assertionCondition) { Statement = invocationExpression, Expression = argumentValue };
                 }
             }
         }

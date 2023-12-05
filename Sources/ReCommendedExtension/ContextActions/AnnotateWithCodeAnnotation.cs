@@ -2,7 +2,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
@@ -17,7 +16,7 @@ public abstract class AnnotateWithCodeAnnotation : AnnotateWith
     protected virtual AttributeValue[] AnnotationArguments => Array.Empty<AttributeValue>();
 
     protected sealed override bool IsAttribute(IAttribute attribute)
-        => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName == AnnotationAttributeTypeName;
+        => attribute.GetAttributeType().GetClrName().ShortName == AnnotationAttributeTypeName;
 
     protected sealed override Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,

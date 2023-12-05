@@ -19,6 +19,8 @@ public sealed class RemoveNotifyPropertyChangedInvocatorFix : QuickFixBase
 
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
+    public override string Text => "Remove invocation";
+
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
@@ -32,6 +34,4 @@ public sealed class RemoveNotifyPropertyChangedInvocatorFix : QuickFixBase
 
         return _ => { };
     }
-
-    public override string Text => "Remove invocation";
 }

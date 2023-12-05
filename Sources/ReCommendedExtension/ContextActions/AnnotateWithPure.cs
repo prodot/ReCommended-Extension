@@ -2,7 +2,6 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -27,6 +26,6 @@ public sealed class AnnotateWithPure : AnnotateWithCodeAnnotation
 
     protected override IAttribute? TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
         => ownerDeclaration.Attributes.FirstOrDefault(
-            attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
+            attribute => attribute.GetAttributeType().GetClrName().ShortName
                 == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName);
 }

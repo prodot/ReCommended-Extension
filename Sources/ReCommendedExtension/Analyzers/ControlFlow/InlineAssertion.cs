@@ -1,6 +1,5 @@
 ﻿using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -8,6 +7,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow;
 
 internal sealed record InlineAssertion : Assertion
 {
+    [Pure]
     public static InlineAssertion? TryFromInvocationExpression(IInvocationExpression invocationExpression)
     {
         if (invocationExpression.InvokedExpression is IReferenceExpression { QualifierExpression: { } qualifierExpression } referenceExpression
@@ -16,11 +16,9 @@ internal sealed record InlineAssertion : Assertion
             && parameter.Type.Equals(method.ReturnType)
             && method.GetSingleDeclaration<IMethodDeclaration>() is { } methodDeclaration
             && methodDeclaration.Attributes.Any(
-                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().FullName
-                    == PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName)
+                attribute => attribute.GetAttributeType().GetClrName().FullName == PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName)
             && methodDeclaration.Attributes.Any(
-                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
-                    == NullnessProvider.NotNullAttributeShortName))
+                attribute => attribute.GetAttributeType().GetClrName().ShortName == NullnessProvider.NotNullAttributeShortName))
         {
             return new InlineAssertion
             {

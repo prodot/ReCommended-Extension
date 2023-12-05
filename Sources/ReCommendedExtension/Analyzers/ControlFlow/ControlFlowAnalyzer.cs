@@ -134,9 +134,9 @@ public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode
         if (rootNode.IsNullableWarningsContextEnabled())
         {
             nullabilityInspector =
-                (CSharpCompilerNullableInspector)nullableReferenceTypesDataFlowAnalysisRunSynchronizer.RunNullableAnalysisAndGetResults(
+                (CSharpCompilerNullableInspector?)nullableReferenceTypesDataFlowAnalysisRunSynchronizer.RunNullableAnalysisAndGetResults(
                     rootNode,
-                    null, // wrong [NotNull] annotation in R# code
+                    null!, // wrong [NotNull] annotation in R# code
                     ValueAnalysisMode.OFF);
             inspector = null;
             alwaysSuccessTryCastExpressions = null;

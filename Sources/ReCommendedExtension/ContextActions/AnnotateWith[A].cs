@@ -2,7 +2,6 @@ using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl.Special;
 using JetBrains.ReSharper.Psi.Modules;
@@ -15,8 +14,7 @@ public abstract class AnnotateWith<A> : AnnotateWith where A : Attribute
 
     protected sealed override string AnnotationAttributeTypeName => typeof(A).Name;
 
-    protected sealed override bool IsAttribute(IAttribute attribute)
-        => attribute.GetAttributeInstance().GetAttributeType().GetClrName().FullName == typeof(A).FullName;
+    protected sealed override bool IsAttribute(IAttribute attribute) => attribute.GetAttributeType().GetClrName().FullName == typeof(A).FullName;
 
     protected sealed override Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,

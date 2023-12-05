@@ -147,9 +147,9 @@ internal sealed record ParameterContractInfo : ContractInfo
                     var containingTypeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
                     Debug.Assert(containingTypeDeclaration is { });
 
-                    var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
+                    var contractClassDeclaration = EnsureContractClass(containingTypeDeclaration, provider.PsiModule);
 
-                    var overriddenMethodDeclaration = methodDeclaration.EnsureOverriddenMethodInContractClass(contractClassDeclaration);
+                    var overriddenMethodDeclaration = EnsureOverriddenMethodInContractClass(methodDeclaration, contractClassDeclaration);
 
                     body = overriddenMethodDeclaration.Body;
                 }
@@ -182,9 +182,9 @@ internal sealed record ParameterContractInfo : ContractInfo
 
                 if (indexerDeclaration.IsAbstract || containingTypeDeclaration.IsAbstract)
                 {
-                    var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
+                    var contractClassDeclaration = EnsureContractClass(containingTypeDeclaration, provider.PsiModule);
 
-                    var overriddenIndexerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);
+                    var overriddenIndexerDeclaration = EnsureOverriddenIndexerInContractClass(indexerDeclaration, contractClassDeclaration);
 
                     accessorDeclarations = overriddenIndexerDeclaration.AccessorDeclarations;
                 }

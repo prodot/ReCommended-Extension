@@ -36,7 +36,7 @@ internal sealed record FieldContractInfo : ContractInfo
         Func<IExpression, IExpression> getContractExpression,
         out ICollection<ICSharpStatement>? firstNonContractStatements)
     {
-        var contractInvariantMethodDeclaration = classLikeDeclaration.EnsureContractInvariantMethod(provider.PsiModule);
+        var contractInvariantMethodDeclaration = EnsureContractInvariantMethod(classLikeDeclaration, provider.PsiModule);
 
         if (contractInvariantMethodDeclaration.Body is { })
         {

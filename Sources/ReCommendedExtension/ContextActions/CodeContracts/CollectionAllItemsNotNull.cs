@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
@@ -16,6 +15,26 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Description = "Adds a contract that all collection items (or dictionary values) are not null.")]
 public sealed class CollectionAllItemsNotNull : AddContractContextAction
 {
+    [Pure]
+    static bool IsGenericDictionaryWithReferenceTypeValues(IDeclaredType declaredType)
+    {
+        if (declaredType.GetTypeElement() is { } typeElement
+            && declaredType.Module.GetPredefinedType().GenericIDictionary.GetTypeElement() is { } genericInterfaceTypeElement
+            && typeElement.IsDescendantOf(genericInterfaceTypeElement))
+        {
+            foreach (var substitution in typeElement.GetAncestorSubstitution(genericInterfaceTypeElement))
+            {
+                var secondTypeParameter = declaredType.GetSubstitution().Apply(substitution)[genericInterfaceTypeElement.TypeParameters[1]];
+                if (secondTypeParameter.Classify == TypeClassification.REFERENCE_TYPE)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     bool isDictionary;
 
     public CollectionAllItemsNotNull(ICSharpContextActionDataProvider provider) : base(provider) { }
@@ -36,9 +55,7 @@ public sealed class CollectionAllItemsNotNull : AddContractContextAction
                 return true;
             }
 
-            if (type is IDeclaredType declaredType
-                && (declaredType.GetKeyValueTypesForGenericDictionary() ?? Enumerable.Empty<Pair<IType, IType>>()).Any(
-                    pair => pair.Second.Classify == TypeClassification.REFERENCE_TYPE))
+            if (type is IDeclaredType declaredType && IsGenericDictionaryWithReferenceTypeValues(declaredType))
             {
                 isDictionary = true;
                 return true;

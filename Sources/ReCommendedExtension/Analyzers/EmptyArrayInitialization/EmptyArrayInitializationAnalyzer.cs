@@ -40,6 +40,8 @@ public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<IC
             {
                 if (declaration.Type.GetScalarType() is { } arrayElementType)
                 {
+                    // todo: check if R# suggests to use '[]' in this case (C# 12 only)
+
                     // T[] variable = { }; // variable or type field declaration with initialization
                     // T[] Property { get; } = { };
                     // T[] Property { get; set; } = { };
@@ -50,12 +52,15 @@ public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<IC
                 break;
             }
 
+            // todo: check if R# suggests to use '[]' in this case (C# 12 only)
             // handled by R#: new T[0]
             // handled by R#: new T[0] { }
 
             case IArrayCreationExpression { Dimensions: [1], DimInits: [], ArrayInitializer.InitializerElements: [] } creationExpression:
                 if (creationExpression.GetContainingNode<IAttribute>() is not { })
                 {
+                    // todo: check if R# suggests to use '[]' when target type is known (C# 12 only) or Array.Empty<T>()
+
                     // new T[] { }
 
                     var arrayElementType = creationExpression.GetElementType();
@@ -68,5 +73,7 @@ public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<IC
                 }
                 break;
         }
+
+        // todo: check if R# suggests to replace 'Array.Empty<T>()' with '[]' when target type is known and read-only (T[], IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>) (C# 12 only)
     }
 }
