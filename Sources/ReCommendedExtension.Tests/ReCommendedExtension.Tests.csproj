@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);test\packages\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Lifetimes" Version="2023.2.2" />
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2023.2.3">
+    <PackageReference Include="JetBrains.Lifetimes" Version="2023.3.0" />
+    <PackageReference Include="JetBrains.NuGet.Frameworks" Version="6.8.20231120.123" />
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2023.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
   </ItemGroup>
 
