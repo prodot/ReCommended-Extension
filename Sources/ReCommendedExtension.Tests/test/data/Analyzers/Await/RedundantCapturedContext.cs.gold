@@ -27,30 +27,30 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
         }
 
-        async Task Method3() => await Task.Delay(10);
+        async Task Method3() => |await|(2) Task.Delay(10);
 
         async Task<int> Method4()
         {
             if (Environment.UserInteractive)
             {
-                return |await|(2) Task.FromResult(3);
+                return |await|(3) Task.FromResult(3);
             }
 
             await Task.Delay(10);
-            return |await|(3) Task.FromResult(4);
+            return |await|(4) Task.FromResult(4);
         }
 
         async Task<int> Method5()
         {
             await Task.Delay(10);
-            return |await|(4) Task.FromResult(3);
+            return |await|(5) Task.FromResult(3);
 
             int LocalFunction() => 4;
         }
 
-        async Task Method6() => await Task.FromResult(3);
+        async Task Method6() => |await|(6) Task.FromResult(3);
 
-        async Task<int> Method7() => await Task.FromResult(3);
+        async Task<int> Method7() => |await|(7) Task.FromResult(3);
 
         async Task<int> Method_AwaitNonLast()
         {
@@ -160,7 +160,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             Func<Task> Method = async () =>
             {
                 await Task.Delay(10);
-                |await|(5) Task.Delay(20);
+                |await|(8) Task.Delay(20);
             };
 
             Func<Task> Method2 = async () =>
@@ -170,7 +170,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                     await Task.Delay(10);
                 }
 
-                |await|(6) Task.Delay(20);
+                |await|(9) Task.Delay(20);
 
                 int LocalFunction()
                 {
@@ -178,30 +178,30 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             };
 
-            Func<Task> Method3 = async () => await Task.Delay(10);
+            Func<Task> Method3 = async () => |await|(10) Task.Delay(10);
 
             Func<Task<int>> Method4 = async () =>
             {
                 if (Environment.UserInteractive)
                 {
-                    return |await|(7) Task.FromResult(3);
+                    return |await|(11) Task.FromResult(3);
                 }
 
                 await Task.Delay(10);
-                return |await|(8) Task.FromResult(4);
+                return |await|(12) Task.FromResult(4);
             };
 
             Func<Task<int>> Method5 = async () =>
             {
                 await Task.Delay(10);
-                return |await|(9) Task.FromResult(3);
+                return |await|(13) Task.FromResult(3);
 
                 int LocalFunction() => 4;
             };
 
-            Func<Task> Method6 = async () => await Task.FromResult(3);
+            Func<Task> Method6 = async () => |await|(14) Task.FromResult(3);
 
-            Func<Task<int>> Method7 = async () => await Task.FromResult(3);
+            Func<Task<int>> Method7 = async () => |await|(15) Task.FromResult(3);
 
             Func<Task<int>> Method_AwaitNonLast = async () =>
             {
@@ -307,7 +307,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         Func<Task> Method = async () =>
         {
             await Task.Delay(10);
-            |await|(10) Task.Delay(20);
+            |await|(16) Task.Delay(20);
         };
 
         Func<Task> Method2 = async () =>
@@ -317,7 +317,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 await Task.Delay(10);
             }
 
-            |await|(11) Task.Delay(20);
+            |await|(17) Task.Delay(20);
 
             int LocalFunction()
             {
@@ -325,30 +325,30 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
         };
 
-        Func<Task> Method3 = async () => await Task.Delay(10);
+        Func<Task> Method3 = async () => |await|(18) Task.Delay(10);
 
         Func<Task<int>> Method4 = async () =>
         {
             if (Environment.UserInteractive)
             {
-                return |await|(12) Task.FromResult(3);
+                return |await|(19) Task.FromResult(3);
             }
 
             await Task.Delay(10);
-            return |await|(13) Task.FromResult(4);
+            return |await|(20) Task.FromResult(4);
         };
 
         Func<Task<int>> Method5 = async () =>
         {
             await Task.Delay(10);
-            return |await|(14) Task.FromResult(3);
+            return |await|(21) Task.FromResult(3);
 
             int LocalFunction() => 4;
         };
 
-        Func<Task> Method6 = async () => await Task.FromResult(3);
+        Func<Task> Method6 = async () => |await|(22) Task.FromResult(3);
 
-        Func<Task<int>> Method7 = async () => await Task.FromResult(3);
+        Func<Task<int>> Method7 = async () => |await|(23) Task.FromResult(3);
 
         Func<Task<int>> Method_AwaitNonLast = async () =>
         {
@@ -455,7 +455,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             Func<Task> Method = async delegate
             {
                 await Task.Delay(10);
-                |await|(15) Task.Delay(20);
+                |await|(24) Task.Delay(20);
             };
 
             Func<Task> Method2 = async delegate
@@ -465,7 +465,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                     await Task.Delay(10);
                 }
 
-                |await|(16) Task.Delay(20);
+                |await|(25) Task.Delay(20);
 
                 int LocalFunction()
                 {
@@ -473,30 +473,30 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             };
 
-            Func<Task> Method3 = async delegate { await Task.Delay(10); };
+            Func<Task> Method3 = async delegate { |await|(26) Task.Delay(10); };
 
             Func<Task<int>> Method4 = async delegate
             {
                 if (Environment.UserInteractive)
                 {
-                    return |await|(17) Task.FromResult(3);
+                    return |await|(27) Task.FromResult(3);
                 }
 
                 await Task.Delay(10);
-                return |await|(18) Task.FromResult(4);
+                return |await|(28) Task.FromResult(4);
             };
 
             Func<Task<int>> Method5 = async delegate
             {
                 await Task.Delay(10);
-                return |await|(19) Task.FromResult(3);
+                return |await|(29) Task.FromResult(3);
 
                 int LocalFunction() => 4;
             };
 
-            Func<Task> Method6 = async delegate { await Task.FromResult(3); };
+            Func<Task> Method6 = async delegate { |await|(30) Task.FromResult(3); };
 
-            Func<Task<int>> Method7 = async delegate { return await Task.FromResult(3); };
+            Func<Task<int>> Method7 = async delegate { return |await|(31) Task.FromResult(3); };
 
             Func<Task<int>> Method_AwaitNonLast = async delegate
             {
@@ -602,7 +602,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
         Func<Task> Method = async delegate
         {
             await Task.Delay(10);
-            |await|(20) Task.Delay(20);
+            |await|(32) Task.Delay(20);
         };
 
         Func<Task> Method2 = async delegate
@@ -612,7 +612,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 await Task.Delay(10);
             }
 
-            |await|(21) Task.Delay(20);
+            |await|(33) Task.Delay(20);
 
             int LocalFunction()
             {
@@ -620,30 +620,30 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
         };
 
-        Func<Task> Method3 = async delegate { await Task.Delay(10); };
+        Func<Task> Method3 = async delegate { |await|(34) Task.Delay(10); };
 
         Func<Task<int>> Method4 = async delegate
         {
             if (Environment.UserInteractive)
             {
-                return |await|(22) Task.FromResult(3);
+                return |await|(35) Task.FromResult(3);
             }
 
             await Task.Delay(10);
-            return |await|(23) Task.FromResult(4);
+            return |await|(36) Task.FromResult(4);
         };
 
         Func<Task<int>> Method5 = async delegate
         {
             await Task.Delay(10);
-            return |await|(24) Task.FromResult(3);
+            return |await|(37) Task.FromResult(3);
 
             int LocalFunction() => 4;
         };
 
-        Func<Task> Method6 = async delegate { await Task.FromResult(3); };
+        Func<Task> Method6 = async delegate { |await|(38) Task.FromResult(3); };
 
-        Func<Task<int>> Method7 = async delegate { return await Task.FromResult(3); };
+        Func<Task<int>> Method7 = async delegate { return |await|(39) Task.FromResult(3); };
 
         Func<Task<int>> Method_AwaitNonLast = async delegate
         {
@@ -750,7 +750,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             async Task Method()
             {
                 await Task.Delay(10);
-                |await|(25) Task.Delay(20);
+                |await|(40) Task.Delay(20);
             }
 
             async Task Method2()
@@ -760,7 +760,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                     await Task.Delay(10);
                 }
 
-                |await|(26) Task.Delay(20);
+                |await|(41) Task.Delay(20);
 
                 int LocalFunction()
                 {
@@ -768,30 +768,30 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             }
 
-            async Task Method3() => await Task.Delay(10);
+            async Task Method3() => |await|(42) Task.Delay(10);
 
             async Task<int> Method4()
             {
                 if (Environment.UserInteractive)
                 {
-                    return |await|(27) Task.FromResult(3);
+                    return |await|(43) Task.FromResult(3);
                 }
 
                 await Task.Delay(10);
-                return |await|(28) Task.FromResult(4);
+                return |await|(44) Task.FromResult(4);
             }
 
             async Task<int> Method5()
             {
                 await Task.Delay(10);
-                return |await|(29) Task.FromResult(3);
+                return |await|(45) Task.FromResult(3);
 
                 int LocalFunction() => 4;
             }
 
-            async Task Method6() => await Task.FromResult(3);
+            async Task Method6() => |await|(46) Task.FromResult(3);
 
-            async Task<int> Method7() => await Task.FromResult(3);
+            async Task<int> Method7() => |await|(47) Task.FromResult(3);
 
             async Task<int> Method_AwaitNonLast()
             {
@@ -926,3 +926,21 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
 (27): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
 (28): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
 (29): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(30): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(31): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(32): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(33): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(34): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(35): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(36): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(37): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(38): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(39): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(40): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(41): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(42): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(43): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(44): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(45): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(46): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')
+(47): ReSharper Suggestion: Redundant captured context (add '.ConfigureAwait(false)')

@@ -6,7 +6,7 @@ The ReCommended Extension for ReSharper augments the sophisticated code analysis
 - inappropriate use of `async void`,
 - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
 - array initializers (empty arrays or arrays initialized with default values),
-- `await` expression analyzer (add `.ConfigureAwait(false)` for last expressions, remove `async`/`await` for single expressions),
+- `await` expression analyzer (add `.ConfigureAwait(false)` for last expressions),
 - `ValueTask`/`ValueTask<T>` analyzer (possible multiple consumption),
 - incorrect use of `ArgumentException` constructor parameters,
 - locking on weak identity objects,
