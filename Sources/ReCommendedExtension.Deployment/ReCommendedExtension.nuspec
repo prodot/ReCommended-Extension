@@ -18,7 +18,7 @@
             - inappropriate use of "async void",
             - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
             - array initializers (empty arrays or arrays initialized with default values),
-            - "await" expression analyzer (add ".ConfigureAwait(false)" for last expressions, remove "async"/"await" for single expressions),
+            - "await" expression analyzer (add ".ConfigureAwait(false)" for last expressions),
             - "ValueTask" analyzer (possible multiple consumption),
             - incorrect use of "ArgumentException" constructor parameters,
             - locking on weak identity objects,
@@ -33,7 +33,7 @@
         <copyright>{{AssemblyCopyright}}</copyright>
         <tags>recommended extension resharper plugin addin prodot</tags>
         <dependencies>
-            <dependency id="Wave" version="[232.0,232.1)" />
+            <dependency id="Wave" version="[233.0,233.1)" />
         </dependencies>
     </metadata>
     <files>
