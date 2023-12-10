@@ -32,6 +32,5 @@ public sealed class ArrayWithDefaultValuesInitializationAnalyzerTests : CSharpHi
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-    [SuppressMessage("ReSharper", "IdentifierTypo")]
     public void TestArrayWithDefaultValuesInitialization_ParameterlessCtor() => DoNamedTest2();
 }
