@@ -7,12 +7,8 @@ using JetBrains.TextControl;
 namespace ReCommendedExtension.Analyzers.AsyncVoid;
 
 [QuickFix]
-public sealed class RemoveAsyncFix : QuickFixBase
+public sealed class RemoveAsyncFix(AsyncVoidFunctionExpressionWarning highlighting) : QuickFixBase
 {
-    readonly AsyncVoidFunctionExpressionWarning highlighting;
-
-    public RemoveAsyncFix(AsyncVoidFunctionExpressionWarning highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
     public override string Text => "Remove 'async' modifier";

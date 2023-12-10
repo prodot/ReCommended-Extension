@@ -11,13 +11,11 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Annotate with [ValueRange(...)] attribute" + ZoneMarker.Suffix,
     Description = "Annotates with the [ValueRange(...)] attribute.")]
-public sealed class AnnotateWithValueRange : AnnotateWithCodeAnnotation
+public sealed class AnnotateWithValueRange(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
     [Pure]
     static bool IsAvailableForType(IType type)
         => type.IsInt() || type.IsLong() || type.IsShort() || type.IsSbyte() || type.IsUint() || type.IsUlong() || type.IsUshort() || type.IsByte();
-
-    public AnnotateWithValueRange(ICSharpContextActionDataProvider provider) : base(provider) { }
 
     protected override bool AllowsMultiple => true;
 

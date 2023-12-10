@@ -4,11 +4,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.Region;
 
-public abstract record RegionHighlighting : Highlighting
+public abstract class RegionHighlighting(string message, IStartRegion startRegion) : Highlighting(message)
 {
-    readonly IStartRegion startRegion;
-
-    private protected RegionHighlighting(string message, IStartRegion startRegion) : base(message) => this.startRegion = startRegion;
-
     public sealed override DocumentRange CalculateRange() => startRegion.Directive.GetDocumentRange();
 }

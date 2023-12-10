@@ -16,14 +16,10 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Declare IComparisonOperators<T, T, bool>" + ZoneMarker.Suffix,
     Description = "Declare IComparisonOperators<T, T, bool>.")]
-public sealed class DeclareComparisonOperators : ContextActionBase
+public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider provider) : ContextActionBase
 {
-    readonly ICSharpContextActionDataProvider provider;
-
     IClassLikeDeclaration? declaration;
     ITypeElement? comparisonOperatorsInterface;
-
-    public DeclareComparisonOperators(ICSharpContextActionDataProvider provider) => this.provider = provider;
 
     [MemberNotNullWhen(true, nameof(declaration))]
     [MemberNotNullWhen(true, nameof(comparisonOperatorsInterface))]

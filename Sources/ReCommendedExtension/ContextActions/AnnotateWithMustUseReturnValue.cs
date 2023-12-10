@@ -11,10 +11,8 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Annotate method with [MustUseReturnValue] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a method with the [MustUseReturnValue] attribute.")]
-public sealed class AnnotateWithMustUseReturnValue : AnnotateWithCodeAnnotation
+public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
-    public AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override string AnnotationAttributeTypeName => nameof(MustUseReturnValueAttribute);
 
     protected override string TextSuffix => "with observable state changes";

@@ -15,14 +15,10 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Declare IEqualityOperators<T, T, bool>" + ZoneMarker.Suffix,
     Description = "Declare IEqualityOperators<T, T, bool>.")]
-public sealed class DeclareEqualityOperators : ContextActionBase
+public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider provider) : ContextActionBase
 {
-    readonly ICSharpContextActionDataProvider provider;
-
     IClassLikeDeclaration? declaration;
     ITypeElement? equalityOperatorsInterface;
-
-    public DeclareEqualityOperators(ICSharpContextActionDataProvider provider) => this.provider = provider;
 
     [MemberNotNullWhen(true, nameof(declaration))]
     [MemberNotNullWhen(true, nameof(equalityOperatorsInterface))]

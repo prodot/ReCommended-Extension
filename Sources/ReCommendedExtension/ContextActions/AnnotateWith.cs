@@ -14,17 +14,13 @@ using JetBrains.TextControl;
 
 namespace ReCommendedExtension.ContextActions;
 
-public abstract class AnnotateWith : ContextActionBase
+public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : ContextActionBase
 {
-    readonly ICSharpContextActionDataProvider provider;
-
     IAttributesOwnerDeclaration? attributesOwnerDeclaration;
 
     Func<CSharpElementFactory, IAttribute>? createAttributeFactory;
 
     IAttribute? attributeToReplace;
-
-    protected AnnotateWith(ICSharpContextActionDataProvider provider) => this.provider = provider;
 
     protected abstract string AnnotationAttributeTypeName { get; }
 

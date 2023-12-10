@@ -8,22 +8,9 @@ using JetBrains.TextControl;
 namespace ReCommendedExtension.Analyzers.AsyncVoid;
 
 [QuickFix]
-public sealed class ChangeToAsyncTaskFix : QuickFixBase
+public sealed class ChangeToAsyncTaskFix(AvoidAsyncVoidWarning highlighting) : QuickFixBase
 {
-    readonly AvoidAsyncVoidWarning highlighting;
-
-    readonly IDeclaredType taskType;
-
-    public ChangeToAsyncTaskFix(AvoidAsyncVoidWarning highlighting)
-    {
-        this.highlighting = highlighting;
-
-        var psiModule = highlighting.Declaration.GetPsiModule();
-
-        var predefinedType = psiModule.GetPredefinedType();
-
-        taskType = predefinedType.Task;
-    }
+    readonly IDeclaredType taskType = highlighting.Declaration.GetPredefinedType().Task;
 
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

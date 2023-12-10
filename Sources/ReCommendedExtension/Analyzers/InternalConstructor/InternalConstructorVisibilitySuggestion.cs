@@ -15,27 +15,17 @@ namespace ReCommendedExtension.Analyzers.InternalConstructor;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record InternalConstructorVisibilitySuggestion : Highlighting
+public sealed class InternalConstructorVisibilitySuggestion(
+    string message,
+    ITokenNode modifierTokenNode,
+    IConstructorDeclaration constructorDeclaration,
+    AccessRights visibility) : Highlighting(message)
 {
     const string SeverityId = "InternalConstructorVisibility";
 
-    readonly ITokenNode modifierTokenNode;
+    internal IConstructorDeclaration ConstructorDeclaration { get; } = constructorDeclaration;
 
-    internal InternalConstructorVisibilitySuggestion(
-        string message,
-        ITokenNode modifierTokenNode,
-        IConstructorDeclaration constructorDeclaration,
-        AccessRights visibility) : base(message)
-    {
-        this.modifierTokenNode = modifierTokenNode;
-
-        ConstructorDeclaration = constructorDeclaration;
-        Visibility = visibility;
-    }
-
-    internal IConstructorDeclaration ConstructorDeclaration { get; }
-
-    internal AccessRights Visibility { get; }
+    internal AccessRights Visibility { get; } = visibility;
 
     public override DocumentRange CalculateRange() => modifierTokenNode.GetDocumentRange();
 }

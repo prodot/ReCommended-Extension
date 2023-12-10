@@ -12,13 +12,8 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record RedundantAnnotationSuggestion : AttributeHighlighting
+public sealed class RedundantAnnotationSuggestion(IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute, string message)
+    : AttributeHighlighting(attributesOwnerDeclaration, attribute, false, message)
 {
     const string SeverityId = "RedundantAnnotation";
-
-    internal RedundantAnnotationSuggestion(IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute, string message) : base(
-        attributesOwnerDeclaration,
-        attribute,
-        false,
-        message) { }
 }

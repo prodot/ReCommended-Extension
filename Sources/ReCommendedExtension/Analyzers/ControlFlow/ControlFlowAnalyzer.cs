@@ -19,7 +19,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow;
 [ElementProblemAnalyzer(
     typeof(ICSharpTreeNode),
     HighlightingTypes = new[] { typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion) })]
-public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
+public sealed class ControlFlowAnalyzer(
+    CodeAnnotationsCache codeAnnotationsCache,
+    NullableReferenceTypesDataFlowAnalysisRunSynchronizer referenceTypesDataFlowAnalysisRunSynchronizer) : ElementProblemAnalyzer<ICSharpTreeNode>
 {
     [Pure]
     static ICSharpExpression? TryGetOtherOperand(
@@ -91,22 +93,9 @@ public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode
         return CSharpControlFlowNullReferenceState.UNKNOWN;
     }
 
-    readonly NullnessProvider nullnessProvider;
-    readonly AssertionMethodAnnotationProvider assertionMethodAnnotationProvider;
-    readonly AssertionConditionAnnotationProvider assertionConditionAnnotationProvider;
-
-    readonly NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer;
-
-    public ControlFlowAnalyzer(
-        CodeAnnotationsCache codeAnnotationsCache,
-        NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-    {
-        nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
-        assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
-        assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
-
-        this.nullableReferenceTypesDataFlowAnalysisRunSynchronizer = nullableReferenceTypesDataFlowAnalysisRunSynchronizer;
-    }
+    readonly NullnessProvider nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
+    readonly AssertionMethodAnnotationProvider assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
+    readonly AssertionConditionAnnotationProvider assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
 
     void AnalyzeAssertions(
         ElementProblemAnalyzerData data,
@@ -134,7 +123,7 @@ public sealed class ControlFlowAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode
         if (rootNode.IsNullableWarningsContextEnabled())
         {
             nullabilityInspector =
-                (CSharpCompilerNullableInspector?)nullableReferenceTypesDataFlowAnalysisRunSynchronizer.RunNullableAnalysisAndGetResults(
+                (CSharpCompilerNullableInspector?)referenceTypesDataFlowAnalysisRunSynchronizer.RunNullableAnalysisAndGetResults(
                     rootNode,
                     null!, // wrong [NotNull] annotation in R# code
                     ValueAnalysisMode.OFF);

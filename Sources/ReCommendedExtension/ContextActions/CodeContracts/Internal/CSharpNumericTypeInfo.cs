@@ -2,7 +2,7 @@
 
 namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
-internal abstract record CSharpNumericTypeInfo(bool IsSigned, string? EpsilonLiteral, string LiteralSuffix)
+internal abstract class CSharpNumericTypeInfo(bool isSigned, string? epsilonLiteral, string literalSuffix)
 {
     [Pure]
     public static CSharpNumericTypeInfo? TryCreate(IType type)
@@ -174,6 +174,12 @@ internal abstract record CSharpNumericTypeInfo(bool IsSigned, string? EpsilonLit
 
         return null;
     }
+
+    public bool IsSigned { get; } = isSigned;
+
+    public string? EpsilonLiteral { get; } = epsilonLiteral;
+
+    public string LiteralSuffix { get; } = literalSuffix;
 
     [Pure]
     public abstract EnumBetweenFirstAndLast.EnumContractInfo? TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IList<IField> members);

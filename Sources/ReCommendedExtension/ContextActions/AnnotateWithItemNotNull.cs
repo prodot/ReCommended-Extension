@@ -12,7 +12,7 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Annotate with [ItemNotNull] attribute" + ZoneMarker.Suffix,
     Description = "Annotates with the [ItemNotNull] attribute.")]
-public sealed class AnnotateWithItemNotNull : AnnotateWithCodeAnnotation
+public sealed class AnnotateWithItemNotNull(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
     static bool IsAvailableForType(IType type, ITreeNode context)
     {
@@ -38,8 +38,6 @@ public sealed class AnnotateWithItemNotNull : AnnotateWithCodeAnnotation
 
         return false;
     }
-
-    public AnnotateWithItemNotNull(ICSharpContextActionDataProvider provider) : base(provider) { }
 
     protected override string AnnotationAttributeTypeName => nameof(ItemNotNullAttribute);
 

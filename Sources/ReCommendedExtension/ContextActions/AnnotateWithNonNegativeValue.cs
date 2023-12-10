@@ -9,12 +9,10 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Annotate with [NonNegativeValue] attribute" + ZoneMarker.Suffix,
     Description = "Annotates with the [NonNegativeValue] attribute.")]
-public sealed class AnnotateWithNonNegativeValue : AnnotateWithCodeAnnotation
+public sealed class AnnotateWithNonNegativeValue(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
     [Pure]
     static bool IsAvailableForType(IType type) => type.IsInt() || type.IsLong() || type.IsShort() || type.IsSbyte();
-
-    public AnnotateWithNonNegativeValue(ICSharpContextActionDataProvider provider) : base(provider) { }
 
     protected override string AnnotationAttributeTypeName => nameof(NonNegativeValueAttribute);
 

@@ -3,9 +3,7 @@ namespace System.Diagnostics.CodeAnalysis;
 
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 [AttributeUsage(AttributeTargets.Parameter)]
-internal sealed class DoesNotReturnIfAttribute : Attribute
+internal sealed class DoesNotReturnIfAttribute(bool parameterValue) : Attribute
 {
-    public DoesNotReturnIfAttribute(bool parameterValue) => ParameterValue = parameterValue;
-
-    public bool ParameterValue { get; }
+    public bool ParameterValue { get; } = parameterValue;
 }

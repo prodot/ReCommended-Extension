@@ -11,10 +11,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: time span is zero or positive" + ZoneMarker.Suffix,
     Description = "Adds a contract that a time span is greater than or equal to zero.")]
-public sealed class TimeSpanZeroOrPositive : TimeSpan
+public sealed class TimeSpanZeroOrPositive(ICSharpContextActionDataProvider provider) : TimeSpan(provider)
 {
-    public TimeSpanZeroOrPositive(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} >= {nameof(System.TimeSpan.Zero)}";
 
     protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)

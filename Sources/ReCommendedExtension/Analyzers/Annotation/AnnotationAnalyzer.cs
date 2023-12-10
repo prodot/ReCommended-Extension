@@ -20,7 +20,8 @@ namespace ReCommendedExtension.Analyzers.Annotation;
         typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint),
         typeof(InvalidValueRangeBoundaryWarning), typeof(MissingAttributeUsageAnnotationWarning), typeof(MissingNotNullWhenAnnotationSuggestion),
     })]
-public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
+public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache, CodeAnnotationsConfiguration codeAnnotationsConfiguration)
+    : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
 {
     enum AnnotationCase
     {
@@ -555,7 +556,7 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
                             Kind: ConstantValueKind.String, StringValue: [_, ..] condition,
                         })
                     {
-                        conditions ??= new List<string>();
+                        conditions ??= [];
                         conditions.Add(condition);
                     }
                 }
@@ -586,18 +587,8 @@ public sealed class AnnotationAnalyzer : ElementProblemAnalyzer<IAttributesOwner
         }
     }
 
-    readonly NullnessProvider nullnessProvider;
-    readonly ContainerElementNullnessProvider containerElementNullnessProvider;
-
-    readonly CodeAnnotationsConfiguration codeAnnotationsConfiguration;
-
-    public AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache, CodeAnnotationsConfiguration codeAnnotationsConfiguration)
-    {
-        nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
-        containerElementNullnessProvider = codeAnnotationsCache.GetProvider<ContainerElementNullnessProvider>();
-
-        this.codeAnnotationsConfiguration = codeAnnotationsConfiguration;
-    }
+    readonly NullnessProvider nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
+    readonly ContainerElementNullnessProvider containerElementNullnessProvider = codeAnnotationsCache.GetProvider<ContainerElementNullnessProvider>();
 
     [Pure]
     IEnumerable<AttributeMark?> GetAttributeMarks(IAttributesOwnerDeclaration declaration)

@@ -12,12 +12,8 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.Annotation;
 
 [QuickFix]
-public sealed class AnnotateWithNotNullWhenTrueFix : QuickFixBase
+public sealed class AnnotateWithNotNullWhenTrueFix(MissingNotNullWhenAnnotationSuggestion highlighting) : QuickFixBase
 {
-    readonly MissingNotNullWhenAnnotationSuggestion highlighting;
-
-    public AnnotateWithNotNullWhenTrueFix(MissingNotNullWhenAnnotationSuggestion highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text => $"Annotate with [{nameof(NotNullWhenAttribute)[..^"Attribute".Length]}(true)]";

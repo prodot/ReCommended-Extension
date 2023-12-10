@@ -9,10 +9,8 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Annotate method with [LinqTunnel] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a method with the [LinqTunnel] attribute.")]
-public sealed class AnnotateWithLinqTunnel : AnnotateWithCodeAnnotation
+public sealed class AnnotateWithLinqTunnel(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
-    public AnnotateWithLinqTunnel(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override string AnnotationAttributeTypeName => nameof(LinqTunnelAttribute);
 
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)

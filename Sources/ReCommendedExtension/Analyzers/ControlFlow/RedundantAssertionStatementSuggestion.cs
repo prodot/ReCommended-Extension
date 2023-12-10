@@ -13,13 +13,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record RedundantAssertionStatementSuggestion : RedundantAssertionSuggestion
+public sealed class RedundantAssertionStatementSuggestion(string message, AssertionStatement assertion) : RedundantAssertionSuggestion(message)
 {
     const string SeverityId = "RedundantAssertionStatement";
-
-    readonly AssertionStatement assertion;
-
-    internal RedundantAssertionStatementSuggestion(string message, AssertionStatement assertion) : base(message) => this.assertion = assertion;
 
     internal override Assertion Assertion => assertion;
 

@@ -10,12 +10,8 @@ using JetBrains.TextControl;
 namespace ReCommendedExtension.Analyzers.ControlFlow;
 
 [QuickFix]
-public sealed class RemoveAssertionStatementFix : QuickFixBase
+public sealed class RemoveAssertionStatementFix(RedundantAssertionStatementSuggestion highlighting) : QuickFixBase
 {
-    readonly RedundantAssertionStatementSuggestion highlighting;
-
-    public RemoveAssertionStatementFix(RedundantAssertionStatementSuggestion highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
     public override string Text => "Remove assertion";

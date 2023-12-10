@@ -8,10 +8,8 @@ using JetBrains.ReSharper.Psi.Modules;
 
 namespace ReCommendedExtension.ContextActions;
 
-public abstract class AnnotateWith<A> : AnnotateWith where A : Attribute
+public abstract class AnnotateWith<A>(ICSharpContextActionDataProvider provider) : AnnotateWith(provider) where A : Attribute
 {
-    protected AnnotateWith(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected sealed override string AnnotationAttributeTypeName => typeof(A).Name;
 
     protected sealed override bool IsAttribute(IAttribute attribute) => attribute.GetAttributeType().GetClrName().FullName == typeof(A).FullName;

@@ -17,13 +17,8 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed record ConditionalAnnotationHint : AttributeHighlighting
+public sealed class ConditionalAnnotationHint(IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute, string message)
+    : AttributeHighlighting(attributesOwnerDeclaration, attribute, true, message)
 {
     const string SeverityId = "ConditionalAnnotation";
-
-    internal ConditionalAnnotationHint(IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute, string message) : base(
-        attributesOwnerDeclaration,
-        attribute,
-        true,
-        message) { }
 }

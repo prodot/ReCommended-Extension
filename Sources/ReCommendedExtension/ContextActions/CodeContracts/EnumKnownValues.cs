@@ -12,11 +12,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: enum value has valid values" + ZoneMarker.Suffix,
     Description = "Adds a contract that the enum value has the valid values.")]
-public sealed class EnumKnownValues : AddContractContextAction
+public sealed class EnumKnownValues(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
     IList<IField>? members;
-
-    public EnumKnownValues(ICSharpContextActionDataProvider provider) : base(provider) { }
 
     [MemberNotNullWhen(true, nameof(members))]
     protected override bool IsAvailableForType(IType type)

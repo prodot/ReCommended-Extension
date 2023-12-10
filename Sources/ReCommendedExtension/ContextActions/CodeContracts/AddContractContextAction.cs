@@ -12,11 +12,9 @@ using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
-public abstract class AddContractContextAction : ContextActionBase
+public abstract class AddContractContextAction(ICSharpContextActionDataProvider provider) : ContextActionBase
 {
     ContractInfo? contractInfo;
-
-    private protected AddContractContextAction(ICSharpContextActionDataProvider provider) => Provider = provider;
 
     void AddAnnotation()
     {
@@ -46,7 +44,7 @@ public abstract class AddContractContextAction : ContextActionBase
         }
     }
 
-    protected ICSharpContextActionDataProvider Provider { get; }
+    protected ICSharpContextActionDataProvider Provider { get; } = provider;
 
     [Pure]
     protected virtual string? TryGetAnnotationAttributeTypeName() => null;

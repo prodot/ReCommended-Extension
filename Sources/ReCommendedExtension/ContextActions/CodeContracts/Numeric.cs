@@ -4,10 +4,8 @@ using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
-public abstract class Numeric : AddContractContextAction
+public abstract class Numeric(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
-    private protected Numeric(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     private protected CSharpNumericTypeInfo? NumericTypeInfo { get; private set; }
 
     [MemberNotNullWhen(true, nameof(NumericTypeInfo))]

@@ -13,7 +13,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: enum value has the valid flags" + ZoneMarker.Suffix,
     Description = "Adds a contract that the enum value has the valid flags.")]
-public sealed class EnumFlags : AddContractContextAction
+public sealed class EnumFlags(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
     internal abstract record EnumContractInfo
     {
@@ -189,8 +189,6 @@ public sealed class EnumFlags : AddContractContextAction
     }
 
     EnumContractInfo? contractInfo;
-
-    public EnumFlags(ICSharpContextActionDataProvider provider) : base(provider) { }
 
     [MemberNotNullWhen(true, nameof(contractInfo))]
     protected override bool IsAvailableForType(IType type)

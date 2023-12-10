@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid;
 
 [RegisterConfigurableSeverity(SeverityId, null, HighlightingGroupIds.CodeSmell, "Avoid 'async void'" + ZoneMarker.Suffix, "", Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record AvoidAsyncVoidWarning : Highlighting
+public sealed class AvoidAsyncVoidWarning : Highlighting
 {
     const string SeverityId = "AvoidAsyncVoid";
 

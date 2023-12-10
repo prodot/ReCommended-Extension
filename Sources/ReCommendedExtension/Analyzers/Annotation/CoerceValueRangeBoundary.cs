@@ -10,12 +10,8 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.Annotation;
 
 [QuickFix]
-public sealed class CoerceValueRangeBoundary : QuickFixBase
+public sealed class CoerceValueRangeBoundary(InvalidValueRangeBoundaryWarning highlighting) : QuickFixBase
 {
-    readonly InvalidValueRangeBoundaryWarning highlighting;
-
-    public CoerceValueRangeBoundary(InvalidValueRangeBoundaryWarning highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text

@@ -14,14 +14,9 @@ namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ThrowExceptionInUnexpectedLocationWarning : Highlighting
+public sealed class ThrowExceptionInUnexpectedLocationWarning(string message, ICSharpTreeNode thrownStatementOrExpression) : Highlighting(message)
 {
     const string SeverityId = "ThrowExceptionInUnexpectedLocation";
-
-    readonly ICSharpTreeNode thrownStatementOrExpression;
-
-    internal ThrowExceptionInUnexpectedLocationWarning(string message, ICSharpTreeNode thrownStatementOrExpression) : base(message)
-        => this.thrownStatementOrExpression = thrownStatementOrExpression;
 
     public override DocumentRange CalculateRange() => thrownStatementOrExpression.GetDocumentRange();
 }

@@ -11,12 +11,8 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
 
 [QuickFix]
-public sealed class ReplaceWithArrayEmptyFix : QuickFixBase
+public sealed class ReplaceWithArrayEmptyFix(EmptyArrayInitializationWarning highlighting) : QuickFixBase
 {
-    readonly EmptyArrayInitializationWarning highlighting;
-
-    public ReplaceWithArrayEmptyFix(EmptyArrayInitializationWarning highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text

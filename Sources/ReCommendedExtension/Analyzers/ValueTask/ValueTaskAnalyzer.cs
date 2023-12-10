@@ -74,8 +74,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             ITreeNode expression,
             VariableInfo info)
         {
-            var accessExpressionsThroughLocalFunctionCalls =
-                GetAccessExpressionsThroughLocalFunctionCalls(context, expression, info, new HashSet<ITreeNode>());
+            var accessExpressionsThroughLocalFunctionCalls = GetAccessExpressionsThroughLocalFunctionCalls(context, expression, info, []);
 
             return accessExpressionsThroughLocalFunctionCalls;
         }
@@ -207,7 +206,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             }
         }
 
-        public OneToSetMap<Pair<IDeclaredElement, ITreeNode>, ICSharpExpression> PossibleMultipleConsumption { get; } = new();
+        public OneToSetMap<Pair<IDeclaredElement, ITreeNode>, ICSharpExpression> PossibleMultipleConsumption { get; } = [];
 
         public override void Inspect()
         {

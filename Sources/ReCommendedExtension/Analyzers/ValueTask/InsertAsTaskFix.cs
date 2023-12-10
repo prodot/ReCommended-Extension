@@ -10,12 +10,8 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.ValueTask;
 
 [QuickFix]
-public sealed class InsertAsTaskFix : QuickFixBase
+public sealed class InsertAsTaskFix(IntentionalBlockingAttemptWarning highlighting) : QuickFixBase
 {
-    readonly IntentionalBlockingAttemptWarning highlighting;
-
-    public InsertAsTaskFix(IntentionalBlockingAttemptWarning highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text => "Insert '.AsTask()'";

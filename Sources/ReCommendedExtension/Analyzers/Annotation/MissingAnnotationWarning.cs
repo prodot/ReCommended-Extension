@@ -14,13 +14,9 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record MissingAnnotationWarning : Highlighting
+public sealed class MissingAnnotationWarning(string message, IAttributesOwnerDeclaration declaration) : Highlighting(message)
 {
     const string SeverityId = "MissingAnnotation";
-
-    readonly IAttributesOwnerDeclaration declaration;
-
-    internal MissingAnnotationWarning(string message, IAttributesOwnerDeclaration declaration) : base(message) => this.declaration = declaration;
 
     public override DocumentRange CalculateRange() => declaration.GetNameDocumentRange();
 }

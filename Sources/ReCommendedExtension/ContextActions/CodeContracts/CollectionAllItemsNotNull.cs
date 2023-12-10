@@ -13,7 +13,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: all collection items are not null" + ZoneMarker.Suffix,
     Description = "Adds a contract that all collection items (or dictionary values) are not null.")]
-public sealed class CollectionAllItemsNotNull : AddContractContextAction
+public sealed class CollectionAllItemsNotNull(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
     [Pure]
     static bool IsGenericDictionaryWithReferenceTypeValues(IDeclaredType declaredType)
@@ -36,8 +36,6 @@ public sealed class CollectionAllItemsNotNull : AddContractContextAction
     }
 
     bool isDictionary;
-
-    public CollectionAllItemsNotNull(ICSharpContextActionDataProvider provider) : base(provider) { }
 
     protected override bool IsAvailableForType(IType type)
     {

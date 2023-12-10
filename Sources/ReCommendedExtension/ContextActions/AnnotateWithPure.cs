@@ -11,10 +11,8 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Annotate method with [Pure] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a method with the [Pure] attribute.")]
-public sealed class AnnotateWithPure : AnnotateWithCodeAnnotation
+public sealed class AnnotateWithPure(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
-    public AnnotateWithPure(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override string AnnotationAttributeTypeName => nameof(PureAttribute);
 
     protected override string TextSuffix => "no observable state changes";

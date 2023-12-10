@@ -43,7 +43,7 @@ internal abstract record ContractInfo
                     switch (TryGetMemberName(expressionStatement, contractClassFullName))
                     {
                         case nameof(Contract.Requires):
-                            list.Add(new ContractStatementInfo { ContractKind = ContractKind.Requires,Statement = expressionStatement});
+                            list.Add(new ContractStatementInfo { ContractKind = ContractKind.Requires, Statement = expressionStatement });
                             continue;
 
                         case nameof(Contract.Ensures):
@@ -55,7 +55,7 @@ internal abstract record ContractInfo
                             continue;
 
                         case nameof(Contract.Invariant):
-                            list.Add(new ContractStatementInfo { ContractKind = ContractKind.Invariant,Statement = expressionStatement});
+                            list.Add(new ContractStatementInfo { ContractKind = ContractKind.Invariant, Statement = expressionStatement });
                             continue;
                     }
 

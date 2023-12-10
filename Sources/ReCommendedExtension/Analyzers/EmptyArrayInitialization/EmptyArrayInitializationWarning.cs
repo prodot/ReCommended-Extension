@@ -15,19 +15,13 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record EmptyArrayInitializationWarning : Highlighting
+public sealed class EmptyArrayInitializationWarning(string message, ICSharpTreeNode treeNode, IType arrayElementType) : Highlighting(message)
 {
     const string SeverityId = "EmptyArrayInitialization";
 
-    internal EmptyArrayInitializationWarning(string message, ICSharpTreeNode treeNode, IType arrayElementType) : base(message)
-    {
-        TreeNode = treeNode;
-        ArrayElementType = arrayElementType;
-    }
+    internal ICSharpTreeNode TreeNode { get; } = treeNode;
 
-    internal ICSharpTreeNode TreeNode { get; }
-
-    internal IType ArrayElementType { get; }
+    internal IType ArrayElementType { get; } = arrayElementType;
 
     public override DocumentRange CalculateRange() => TreeNode.GetDocumentRange();
 }

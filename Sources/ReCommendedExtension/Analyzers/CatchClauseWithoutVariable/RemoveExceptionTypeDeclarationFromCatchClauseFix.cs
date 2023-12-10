@@ -8,12 +8,8 @@ using JetBrains.TextControl;
 namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable;
 
 [QuickFix]
-public sealed class RemoveExceptionTypeDeclarationFromCatchClauseFix : QuickFixBase
+public sealed class RemoveExceptionTypeDeclarationFromCatchClauseFix(CatchClauseWithoutVariableSuggestion highlighting) : QuickFixBase
 {
-    readonly CatchClauseWithoutVariableSuggestion highlighting;
-
-    public RemoveExceptionTypeDeclarationFromCatchClauseFix(CatchClauseWithoutVariableSuggestion highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
     public override string Text => "Remove exception type";

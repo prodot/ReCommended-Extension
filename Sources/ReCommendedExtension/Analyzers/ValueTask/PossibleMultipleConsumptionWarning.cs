@@ -13,13 +13,9 @@ namespace ReCommendedExtension.Analyzers.ValueTask;
     "Possible multiple consumption of 'ValueTask' or 'ValueTask<T>'",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record PossibleMultipleConsumptionWarning : Highlighting
+public sealed class PossibleMultipleConsumptionWarning(string message, ICSharpExpression usage) : Highlighting(message)
 {
     const string SeverityId = "PossibleMultipleConsumption";
-
-    readonly ICSharpExpression usage;
-
-    internal PossibleMultipleConsumptionWarning(string message, ICSharpExpression usage) : base(message) => this.usage = usage;
 
     public override DocumentRange CalculateRange() => usage.GetHighlightingRange();
 }

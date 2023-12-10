@@ -14,19 +14,14 @@ namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ArrayWithDefaultValuesInitializationSuggestion : Highlighting
+public sealed class ArrayWithDefaultValuesInitializationSuggestion(string message, string? suggestedCode, IArrayInitializer arrayInitializer)
+    : Highlighting(message)
 {
     const string SeverityId = "ArrayWithDefaultValuesInitialization";
 
-    internal ArrayWithDefaultValuesInitializationSuggestion(string message, string? suggestedCode, IArrayInitializer arrayInitializer) : base(message)
-    {
-        SuggestedCode = suggestedCode;
-        ArrayInitializer = arrayInitializer;
-    }
+    internal string? SuggestedCode { get; } = suggestedCode;
 
-    internal string? SuggestedCode { get; }
-
-    internal IArrayInitializer ArrayInitializer { get; }
+    internal IArrayInitializer ArrayInitializer { get; } = arrayInitializer;
 
     public override DocumentRange CalculateRange() => ArrayInitializer.GetDocumentRange();
 }

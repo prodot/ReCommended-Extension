@@ -12,9 +12,7 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ImplementEquatableWarning : ImplementOperatorsHighlighting
+public sealed class ImplementEquatableWarning(string message, IStructDeclaration declaration) : ImplementOperatorsHighlighting(message, declaration)
 {
     const string SeverityId = "ImplementEquatable";
-
-    internal ImplementEquatableWarning(string message, IStructDeclaration declaration) : base(message, declaration) { }
 }

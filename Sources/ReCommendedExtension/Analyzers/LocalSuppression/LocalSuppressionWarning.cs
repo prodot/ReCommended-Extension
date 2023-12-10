@@ -14,27 +14,13 @@ namespace ReCommendedExtension.Analyzers.LocalSuppression;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record LocalSuppressionWarning : Highlighting
+public sealed class LocalSuppressionWarning(
+    string message,
+    ICommentNode comment,
+    [NonNegativeValue] int leadingWhitespaceCharacterCount,
+    bool justOnce) : Highlighting(message)
 {
     const string SeverityId = "LocalSuppression";
-
-    readonly ICommentNode comment;
-
-    [NonNegativeValue]
-    readonly int leadingWhitespaceCharacterCount;
-
-    readonly bool justOnce;
-
-    internal LocalSuppressionWarning(
-        string message,
-        ICommentNode comment,
-        [NonNegativeValue] int leadingWhitespaceCharacterCount,
-        bool justOnce) : base(message)
-    {
-        this.comment = comment;
-        this.leadingWhitespaceCharacterCount = leadingWhitespaceCharacterCount;
-        this.justOnce = justOnce;
-    }
 
     public override DocumentRange CalculateRange()
     {

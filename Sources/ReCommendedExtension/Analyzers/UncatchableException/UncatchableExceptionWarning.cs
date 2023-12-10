@@ -14,13 +14,9 @@ namespace ReCommendedExtension.Analyzers.UncatchableException;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record UncatchableExceptionWarning : Highlighting
+public sealed class UncatchableExceptionWarning(string message, ISpecificCatchClause catchClause) : Highlighting(message)
 {
     const string SeverityId = "UncatchableException";
-
-    readonly ISpecificCatchClause catchClause;
-
-    internal UncatchableExceptionWarning(string message, ISpecificCatchClause catchClause) : base(message) => this.catchClause = catchClause;
 
     public override DocumentRange CalculateRange() => catchClause.ExceptionTypeUsage.GetDocumentRange();
 }

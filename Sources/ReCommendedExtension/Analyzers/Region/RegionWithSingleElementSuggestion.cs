@@ -12,9 +12,7 @@ namespace ReCommendedExtension.Analyzers.Region;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record RegionWithSingleElementSuggestion : RegionHighlighting
+public sealed class RegionWithSingleElementSuggestion(string message, IStartRegion startRegion) : RegionHighlighting(message, startRegion)
 {
     const string SeverityId = "RegionWithSingleElement";
-
-    internal RegionWithSingleElementSuggestion(string message, IStartRegion startRegion) : base(message, startRegion) { }
 }

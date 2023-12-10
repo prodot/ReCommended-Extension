@@ -9,12 +9,8 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.InternalConstructor;
 
 [QuickFix]
-public sealed class ChangeConstructorVisibilityFix : QuickFixBase
+public sealed class ChangeConstructorVisibilityFix(InternalConstructorVisibilitySuggestion highlighting) : QuickFixBase
 {
-    readonly InternalConstructorVisibilitySuggestion highlighting;
-
-    public ChangeConstructorVisibilityFix(InternalConstructorVisibilitySuggestion highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text

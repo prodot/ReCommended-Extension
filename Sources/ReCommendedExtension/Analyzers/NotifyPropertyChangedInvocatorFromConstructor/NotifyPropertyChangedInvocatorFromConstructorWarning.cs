@@ -13,14 +13,11 @@ namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConst
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record NotifyPropertyChangedInvocatorFromConstructorWarning : Highlighting
+public sealed class NotifyPropertyChangedInvocatorFromConstructorWarning(IInvocationExpression invocationExpression, string message) : Highlighting(message)
 {
     const string SeverityId = "NotifyPropertyChangedInvocatorFromConstructor";
 
-    internal NotifyPropertyChangedInvocatorFromConstructorWarning(IInvocationExpression invocationExpression, string message) : base(message)
-        => InvocationExpression = invocationExpression;
-
-    internal IInvocationExpression InvocationExpression { get; }
+    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
 
     public override DocumentRange CalculateRange() => InvocationExpression.GetHighlightingRange();
 }

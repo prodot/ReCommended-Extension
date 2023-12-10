@@ -11,10 +11,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: IntPtr is not zero" + ZoneMarker.Suffix,
     Description = "Adds a contract that the IntPtr (or UIntPtr) value is not zero.")]
-public sealed class IntPtrUIntPtrNonZero : IntPtrUIntPtr
+public sealed class IntPtrUIntPtrNonZero(ICSharpContextActionDataProvider provider) : IntPtrUIntPtr(provider)
 {
-    public IntPtrUIntPtrNonZero(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != {nameof(IntPtr.Zero)}";
 
     protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)

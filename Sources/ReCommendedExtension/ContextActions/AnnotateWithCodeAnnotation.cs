@@ -9,10 +9,8 @@ using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions;
 
-public abstract class AnnotateWithCodeAnnotation : AnnotateWith
+public abstract class AnnotateWithCodeAnnotation(ICSharpContextActionDataProvider provider) : AnnotateWith(provider)
 {
-    protected AnnotateWithCodeAnnotation(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected virtual AttributeValue[] AnnotationArguments => Array.Empty<AttributeValue>();
 
     protected sealed override bool IsAttribute(IAttribute attribute)

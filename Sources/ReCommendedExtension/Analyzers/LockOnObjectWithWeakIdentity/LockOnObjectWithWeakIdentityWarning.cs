@@ -14,13 +14,9 @@ namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record LockOnObjectWithWeakIdentityWarning : Highlighting
+public sealed class LockOnObjectWithWeakIdentityWarning(string message, ICSharpExpression monitor) : Highlighting(message)
 {
     const string SeverityId = "LockOnObjectWithWeakIdentity";
-
-    readonly ICSharpExpression monitor;
-
-    internal LockOnObjectWithWeakIdentityWarning(string message, ICSharpExpression monitor) : base(message) => this.monitor = monitor;
 
     public override DocumentRange CalculateRange() => monitor.GetDocumentRange();
 }

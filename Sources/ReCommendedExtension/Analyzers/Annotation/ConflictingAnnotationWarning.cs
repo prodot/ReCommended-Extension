@@ -12,13 +12,8 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ConflictingAnnotationWarning : AttributeHighlighting
+public sealed class ConflictingAnnotationWarning(IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute, string message)
+    : AttributeHighlighting(attributesOwnerDeclaration, attribute, false, message)
 {
     const string SeverityId = "ConflictingAnnotation";
-
-    internal ConflictingAnnotationWarning(IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute, string message) : base(
-        attributesOwnerDeclaration,
-        attribute,
-        false,
-        message) { }
 }

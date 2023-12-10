@@ -4,10 +4,10 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.ControlFlow;
 
-internal abstract record Assertion
+public abstract record Assertion
 {
     [Pure]
-    public static HashSet<Assertion> CollectAssertions(
+    internal static HashSet<Assertion> CollectAssertions(
         AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
         AssertionConditionAnnotationProvider assertionConditionAnnotationProvider,
         ICSharpTreeNode rootNode)
@@ -46,5 +46,5 @@ internal abstract record Assertion
         return assertions;
     }
 
-    public abstract AssertionConditionType AssertionConditionType { get; }
+    internal abstract AssertionConditionType AssertionConditionType { get; }
 }

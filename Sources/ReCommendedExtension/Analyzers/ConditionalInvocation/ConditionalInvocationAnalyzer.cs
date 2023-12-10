@@ -29,7 +29,7 @@ public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvo
             if (attributeInstance.PositionParameterCount == 1
                 && attributeInstance.PositionParameter(0).ConstantValue is { Kind: ConstantValueKind.String, StringValue: [_, ..] condition })
             {
-                declaredConditions ??= new List<string>();
+                declaredConditions ??= [];
                 declaredConditions.Add(condition);
             }
         }

@@ -12,9 +12,7 @@ namespace ReCommendedExtension.Analyzers.Region;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record RegionWithinTypeMemberBodyWarning : RegionHighlighting
+public sealed class RegionWithinTypeMemberBodyWarning(string message, IStartRegion startRegion) : RegionHighlighting(message, startRegion)
 {
     const string SeverityId = "RegionWithinTypeMemberBody";
-
-    internal RegionWithinTypeMemberBodyWarning(string message, IStartRegion startRegion) : base(message, startRegion) { }
 }

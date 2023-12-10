@@ -14,31 +14,18 @@ namespace ReCommendedExtension.Analyzers.ValueTask;
     "Blocking on value task with 'GetAwaiter().GetResult()' might not block",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record IntentionalBlockingAttemptWarning : Highlighting
+public sealed class IntentionalBlockingAttemptWarning(
+    string message,
+    ICSharpExpression expression,
+    ICSharpExpression valueTaskExpression,
+    IReferenceExpression getAwaiterReferenceExpression,
+    IReferenceExpression getResultReferenceExpression) : Highlighting(message)
 {
     const string SeverityId = "IntentionalBlockingAttempt";
 
-    readonly IReferenceExpression getAwaiterReferenceExpression;
+    internal ICSharpExpression Expression { get; } = expression;
 
-    readonly IReferenceExpression getResultReferenceExpression;
-
-    internal IntentionalBlockingAttemptWarning(
-        string message,
-        ICSharpExpression expression,
-        ICSharpExpression valueTaskExpression,
-        IReferenceExpression getAwaiterReferenceExpression,
-        IReferenceExpression getResultReferenceExpression) : base(message)
-    {
-        this.getAwaiterReferenceExpression = getAwaiterReferenceExpression;
-        this.getResultReferenceExpression = getResultReferenceExpression;
-
-        ValueTaskExpression = valueTaskExpression;
-        Expression = expression;
-    }
-
-    internal ICSharpExpression Expression { get; }
-
-    internal ICSharpExpression ValueTaskExpression { get; }
+    internal ICSharpExpression ValueTaskExpression { get; } = valueTaskExpression;
 
     public override DocumentRange CalculateRange()
     {

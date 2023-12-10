@@ -12,12 +12,8 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization;
 
 [QuickFix]
-public sealed class ReplaceWithNewArrayWithLengthFix : QuickFixBase
+public sealed class ReplaceWithNewArrayWithLengthFix(ArrayWithDefaultValuesInitializationSuggestion highlighting) : QuickFixBase
 {
-    readonly ArrayWithDefaultValuesInitializationSuggestion highlighting;
-
-    public ReplaceWithNewArrayWithLengthFix(ArrayWithDefaultValuesInitializationSuggestion highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text => $"Replace array initialization with '{highlighting.SuggestedCode}'";

@@ -12,7 +12,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: enum value is within the valid enum range" + ZoneMarker.Suffix,
     Description = "Adds a contract that the enum value is within the valid enum range.")]
-public sealed class EnumBetweenFirstAndLast : AddContractContextAction
+public sealed class EnumBetweenFirstAndLast(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
     internal abstract record EnumContractInfo
     {
@@ -98,8 +98,6 @@ public sealed class EnumBetweenFirstAndLast : AddContractContextAction
     }
 
     EnumContractInfo? contractInfo;
-
-    public EnumBetweenFirstAndLast(ICSharpContextActionDataProvider provider) : base(provider) { }
 
     [MemberNotNullWhen(true, nameof(contractInfo))]
     protected override bool IsAvailableForType(IType type)

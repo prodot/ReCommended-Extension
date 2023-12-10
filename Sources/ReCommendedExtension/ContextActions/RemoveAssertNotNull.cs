@@ -13,13 +13,9 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Remove inline assertion for non-nullness" + ZoneMarker.Suffix,
     Description = "Removes inline assertion for non-nullness.")]
-public sealed class RemoveAssertNotNull : ContextActionBase
+public sealed class RemoveAssertNotNull(ICSharpContextActionDataProvider provider) : ContextActionBase
 {
-    readonly ICSharpContextActionDataProvider provider;
-
     InlineAssertion? assertion;
-
-    public RemoveAssertNotNull(ICSharpContextActionDataProvider provider) => this.provider = provider;
 
     [MemberNotNullWhen(true, nameof(assertion))]
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)

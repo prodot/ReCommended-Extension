@@ -13,13 +13,9 @@ namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ArgumentExceptionConstructorArgumentWarning : Highlighting
+public sealed class ArgumentExceptionConstructorArgumentWarning(string message, ICSharpArgument argument) : Highlighting(message)
 {
     const string SeverityId = "ArgumentExceptionConstructorArgument";
-
-    readonly ICSharpArgument argument;
-
-    public ArgumentExceptionConstructorArgumentWarning(string message, ICSharpArgument argument) : base(message) => this.argument = argument;
 
     public override DocumentRange CalculateRange() => argument.GetDocumentRange();
 }

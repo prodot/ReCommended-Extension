@@ -7,10 +7,8 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
 [ContextAction(Group = "C#", Name = "Add contract: number is 0" + ZoneMarker.Suffix, Description = "Adds a contract that a number is 0.")]
-public sealed class NumericZero : Numeric
+public sealed class NumericZero(ICSharpContextActionDataProvider provider) : Numeric(provider)
 {
-    public NumericZero(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} == 0";
 
     protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)

@@ -5,10 +5,10 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.ControlFlow;
 
-internal sealed record InlineAssertion : Assertion
+public sealed record InlineAssertion : Assertion
 {
     [Pure]
-    public static InlineAssertion? TryFromInvocationExpression(IInvocationExpression invocationExpression)
+    internal static InlineAssertion? TryFromInvocationExpression(IInvocationExpression invocationExpression)
     {
         if (invocationExpression.InvokedExpression is IReferenceExpression { QualifierExpression: { } qualifierExpression } referenceExpression
             && referenceExpression.Reference.Resolve().DeclaredElement is IMethod { IsExtensionMethod: true, Parameters: [var parameter] } method
@@ -29,7 +29,7 @@ internal sealed record InlineAssertion : Assertion
         return null;
     }
 
-    public override AssertionConditionType AssertionConditionType => AssertionConditionType.IS_NOT_NULL;
+    internal override AssertionConditionType AssertionConditionType => AssertionConditionType.IS_NOT_NULL;
 
     /// <remarks>
     /// The complete expression including the qualifier (part before the "AssertNotNull") and the "AssertNotNull" invocation.

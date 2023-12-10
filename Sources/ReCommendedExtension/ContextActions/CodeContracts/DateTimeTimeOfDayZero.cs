@@ -11,10 +11,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: date/time doesn't have a time part" + ZoneMarker.Suffix,
     Description = "Adds a contract that the date/time doesn't have a time part.")]
-public sealed class DateTimeTimeOfDayZero : AddContractContextAction
+public sealed class DateTimeTimeOfDayZero(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
-    public DateTimeTimeOfDayZero(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override bool IsAvailableForType(IType type) => type.IsDateTime();
 
     protected override string GetContractTextForUI(string contractIdentifier)

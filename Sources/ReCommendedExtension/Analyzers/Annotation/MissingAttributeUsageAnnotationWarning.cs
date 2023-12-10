@@ -14,14 +14,11 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record MissingAttributeUsageAnnotationWarning : Highlighting
+public sealed class MissingAttributeUsageAnnotationWarning(IAttributesOwnerDeclaration declaration, string message) : Highlighting(message)
 {
     const string SeverityId = "MissingAttributeUsageAnnotation";
 
-    internal MissingAttributeUsageAnnotationWarning(IAttributesOwnerDeclaration declaration, string message) : base(message)
-        => Declaration = declaration;
-
-    internal IAttributesOwnerDeclaration Declaration { get; }
+    internal IAttributesOwnerDeclaration Declaration { get; } = declaration;
 
     public override DocumentRange CalculateRange() => Declaration.GetNameDocumentRange();
 }

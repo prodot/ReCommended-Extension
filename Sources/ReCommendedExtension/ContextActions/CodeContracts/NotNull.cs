@@ -11,10 +11,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: a nullable value is not null" + ZoneMarker.Suffix,
     Description = "Adds a contract that a nullable value is not null.")]
-public sealed class NotNull : AddContractContextAction
+public sealed class NotNull(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
-    public NotNull(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override bool IsAvailableForType(IType type) => type.Classify == TypeClassification.REFERENCE_TYPE;
 
     protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != null";

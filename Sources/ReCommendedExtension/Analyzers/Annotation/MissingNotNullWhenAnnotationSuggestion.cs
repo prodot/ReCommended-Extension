@@ -14,14 +14,11 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record MissingNotNullWhenAnnotationSuggestion : Highlighting
+public sealed class MissingNotNullWhenAnnotationSuggestion(IAttributesOwnerDeclaration declaration, string message) : Highlighting(message)
 {
     const string SeverityId = "MissingNotNullWhenAnnotation";
 
-    internal MissingNotNullWhenAnnotationSuggestion(IAttributesOwnerDeclaration declaration, string message) : base(message)
-        => Declaration = declaration;
-
-    internal IAttributesOwnerDeclaration Declaration { get; }
+    internal IAttributesOwnerDeclaration Declaration { get; } = declaration;
 
     public override DocumentRange CalculateRange() => Declaration.GetNameDocumentRange();
 }

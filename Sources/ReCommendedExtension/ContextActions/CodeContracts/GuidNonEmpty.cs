@@ -11,10 +11,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: Guid is not empty" + ZoneMarker.Suffix,
     Description = "Adds a contract that the Guid is not empty.")]
-public sealed class GuidNonEmpty : AddContractContextAction
+public sealed class GuidNonEmpty(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
-    public GuidNonEmpty(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override bool IsAvailableForType(IType type) => type.IsGuid();
 
     protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != {nameof(Guid.Empty)}";

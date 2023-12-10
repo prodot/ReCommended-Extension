@@ -14,13 +14,9 @@ namespace ReCommendedExtension.Analyzers.XamlBindingWithoutMode;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, XamlLanguage.Name)]
-public sealed record XamlBindingWithoutModeWarning : Highlighting
+public sealed class XamlBindingWithoutModeWarning(string message, IXmlIdentifier nameNode) : Highlighting(message)
 {
     const string SeverityId = "XamlBindingWithoutMode";
-
-    readonly IXmlIdentifier nameNode;
-
-    internal XamlBindingWithoutModeWarning(string message, IXmlIdentifier nameNode) : base(message) => this.nameNode = nameNode;
 
     public override DocumentRange CalculateRange() => nameNode.GetDocumentRange();
 }

@@ -9,10 +9,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: number is negative" + ZoneMarker.Suffix,
     Description = "Adds a contract that a number (signed) is less than 0.")]
-public sealed class SignedNumericNegative : SignedNumeric
+public sealed class SignedNumericNegative(ICSharpContextActionDataProvider provider) : SignedNumeric(provider)
 {
-    public SignedNumericNegative(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} < 0";
 
     protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)

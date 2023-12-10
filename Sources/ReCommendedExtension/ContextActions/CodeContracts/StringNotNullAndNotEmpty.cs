@@ -11,10 +11,8 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: string is not null or empty" + ZoneMarker.Suffix,
     Description = "Adds a contract that a string is not null and not empty.")]
-public sealed class StringNotNullAndNotEmpty : AddContractContextAction
+public sealed class StringNotNullAndNotEmpty(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
-    public StringNotNullAndNotEmpty(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override bool IsAvailableForType(IType type) => type.IsString();
 
     protected override string GetContractTextForUI(string contractIdentifier) => $"!string.{nameof(string.IsNullOrEmpty)}({contractIdentifier})";

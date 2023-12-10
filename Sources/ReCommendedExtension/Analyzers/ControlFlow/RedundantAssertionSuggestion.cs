@@ -1,8 +1,6 @@
 namespace ReCommendedExtension.Analyzers.ControlFlow;
 
-public abstract record RedundantAssertionSuggestion : Highlighting
+public abstract class RedundantAssertionSuggestion(string message) : Highlighting(message)
 {
-    private protected RedundantAssertionSuggestion(string message) : base(message) { }
-
     internal abstract Assertion Assertion { get; }
 }

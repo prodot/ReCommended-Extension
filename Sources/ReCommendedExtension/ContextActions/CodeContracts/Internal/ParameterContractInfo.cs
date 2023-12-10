@@ -46,15 +46,9 @@ internal sealed record ParameterContractInfo : ContractInfo
     public static ParameterContractInfo? TryCreate(IParameterDeclaration declaration, Func<IType, bool> isAvailableForType)
     {
         var expressionBodyOwnerDeclaration = declaration.PathToRoot().OfType<IExpressionBodyOwnerDeclaration>().FirstOrDefault();
-        if (expressionBodyOwnerDeclaration is { ArrowClause: { } })
-        {
-            return null;
-        }
-
-        if (expressionBodyOwnerDeclaration is IPropertyDeclaration propertyDeclaration
-            && propertyDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.ArrowClause is { })
-            || expressionBodyOwnerDeclaration is IIndexerDeclaration indexerDeclaration
-            && indexerDeclaration.AccessorDeclarations.All(accessorDeclaration => accessorDeclaration.ArrowClause is { }))
+        if (expressionBodyOwnerDeclaration is { ArrowClause: { } }
+            or IPropertyDeclaration { AccessorDeclarations: [] or [{ ArrowClause: { } }] or [{ ArrowClause: { } }, { ArrowClause: { } }] }
+            or IIndexerDeclaration { AccessorDeclarations: [] or [{ ArrowClause: { } }] or [{ ArrowClause: { } }, { ArrowClause: { } }] })
         {
             return null;
         }

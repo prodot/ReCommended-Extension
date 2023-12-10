@@ -11,7 +11,7 @@ namespace ReCommendedExtension
         ZoneMarker.ExtensionName,
         ZoneMarker.ExtensionDescription,
         false /* true -> in "Products", false -> in "Features" */)]
-    public interface IReCommendedExtensionZone : IZone, IRequire<ILanguageCSharpZone>, IRequire<ILanguageXamlZone> { }
+    public interface IReCommendedExtensionZone : IZone, IRequire<ILanguageCSharpZone>, IRequire<ILanguageXamlZone>;
 
     [ZoneMarker]
     public sealed class ZoneMarker : IRequire<IReCommendedExtensionZone>

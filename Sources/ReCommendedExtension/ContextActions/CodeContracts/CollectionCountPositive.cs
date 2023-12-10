@@ -11,11 +11,9 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Group = "C#",
     Name = "Add contract: collection is not empty" + ZoneMarker.Suffix,
     Description = "Adds a contract that the collection is not empty.")]
-public sealed class CollectionCountPositive : AddContractContextAction
+public sealed class CollectionCountPositive(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
     bool isArray;
-
-    public CollectionCountPositive(ICSharpContextActionDataProvider provider) : base(provider) { }
 
     protected override bool IsAvailableForType(IType type)
     {

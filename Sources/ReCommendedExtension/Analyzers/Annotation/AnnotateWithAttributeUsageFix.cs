@@ -13,12 +13,8 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.Annotation;
 
 [QuickFix]
-public sealed class AnnotateWithAttributeUsageFix : QuickFixBase
+public sealed class AnnotateWithAttributeUsageFix(MissingAttributeUsageAnnotationWarning highlighting) : QuickFixBase
 {
-    readonly MissingAttributeUsageAnnotationWarning highlighting;
-
-    public AnnotateWithAttributeUsageFix(MissingAttributeUsageAnnotationWarning highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text => $"Annotate with [{nameof(AttributeUsageAttribute)[..^"Attribute".Length]}]";

@@ -12,9 +12,9 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record ImplementComparisonOperatorsForClassesSuggestion : ImplementOperatorsHighlighting
+public sealed class ImplementComparisonOperatorsForClassesSuggestion(string message, IClassDeclaration declaration) : ImplementOperatorsHighlighting(
+    message,
+    declaration)
 {
     const string SeverityId = "ImplementComparisonOperatorsForClasses";
-
-    internal ImplementComparisonOperatorsForClassesSuggestion(string message, IClassDeclaration declaration) : base(message, declaration) { }
 }

@@ -14,14 +14,9 @@ namespace ReCommendedExtension.Analyzers.UnthrowableException;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record UnthrowableExceptionWarning : Highlighting
+public sealed class UnthrowableExceptionWarning(string message, ICSharpExpression thrownStatementExpression) : Highlighting(message)
 {
     const string SeverityId = "UnthrowableException";
-
-    readonly ICSharpExpression thrownStatementExpression;
-
-    internal UnthrowableExceptionWarning(string message, ICSharpExpression thrownStatementExpression) : base(message)
-        => this.thrownStatementExpression = thrownStatementExpression;
 
     public override DocumentRange CalculateRange() => thrownStatementExpression.GetDocumentRange();
 }

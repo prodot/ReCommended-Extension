@@ -10,13 +10,8 @@ using JetBrains.TextControl;
 namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor;
 
 [QuickFix]
-public sealed class RemoveNotifyPropertyChangedInvocatorFix : QuickFixBase
+public sealed class RemoveNotifyPropertyChangedInvocatorFix(NotifyPropertyChangedInvocatorFromConstructorWarning highlighting) : QuickFixBase
 {
-    readonly NotifyPropertyChangedInvocatorFromConstructorWarning highlighting;
-
-    public RemoveNotifyPropertyChangedInvocatorFix(NotifyPropertyChangedInvocatorFromConstructorWarning highlighting)
-        => this.highlighting = highlighting;
-
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 
     public override string Text => "Remove invocation";

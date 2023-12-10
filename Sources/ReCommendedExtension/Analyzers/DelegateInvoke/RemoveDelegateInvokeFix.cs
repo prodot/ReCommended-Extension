@@ -10,12 +10,8 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.DelegateInvoke;
 
 [QuickFix]
-public sealed class RemoveDelegateInvokeFix : QuickFixBase
+public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeSuggestion highlighting) : QuickFixBase
 {
-    readonly RedundantDelegateInvokeSuggestion highlighting;
-
-    public RemoveDelegateInvokeFix(RedundantDelegateInvokeSuggestion highlighting) => this.highlighting = highlighting;
-
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text => $"Remove '{nameof(Action.Invoke)}'";

@@ -14,14 +14,9 @@ namespace ReCommendedExtension.Analyzers.Await;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record RedundantCapturedContextSuggestion : Highlighting
+public sealed class RedundantCapturedContextSuggestion(string message, IAwaitExpression awaitExpression) : Highlighting(message)
 {
     const string SeverityId = "RedundantCapturedContext";
-
-    readonly IAwaitExpression awaitExpression;
-
-    internal RedundantCapturedContextSuggestion(string message, IAwaitExpression awaitExpression) : base(message)
-        => this.awaitExpression = awaitExpression;
 
     public override DocumentRange CalculateRange() => awaitExpression.AwaitKeyword.GetDocumentRange();
 }

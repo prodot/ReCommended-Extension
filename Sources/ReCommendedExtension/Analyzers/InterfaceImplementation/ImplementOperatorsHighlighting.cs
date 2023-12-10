@@ -4,12 +4,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
-public abstract record ImplementOperatorsHighlighting : Highlighting
+public abstract class ImplementOperatorsHighlighting(string message, IClassLikeDeclaration declaration) : Highlighting(message)
 {
-    readonly IClassLikeDeclaration declaration;
-
-    private protected ImplementOperatorsHighlighting(string message, IClassLikeDeclaration declaration) : base(message)
-        => this.declaration = declaration;
-
     public sealed override DocumentRange CalculateRange() => declaration.NameIdentifier.GetDocumentRange();
 }

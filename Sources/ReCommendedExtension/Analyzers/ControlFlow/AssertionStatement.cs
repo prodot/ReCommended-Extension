@@ -5,10 +5,10 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.ControlFlow;
 
-internal sealed record AssertionStatement : Assertion
+public sealed record AssertionStatement : Assertion
 {
     [Pure]
-    public static AssertionStatement? TryFromInvocationExpression(
+    internal static AssertionStatement? TryFromInvocationExpression(
         IInvocationExpression invocationExpression,
         AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
         AssertionConditionAnnotationProvider assertionConditionAnnotationProvider)
@@ -40,7 +40,7 @@ internal sealed record AssertionStatement : Assertion
 
     public required IInvocationExpression Statement { get; init; }
 
-    public override AssertionConditionType AssertionConditionType { get; }
+    internal override AssertionConditionType AssertionConditionType { get; }
 
     public required ICSharpExpression Expression { get; init; }
 

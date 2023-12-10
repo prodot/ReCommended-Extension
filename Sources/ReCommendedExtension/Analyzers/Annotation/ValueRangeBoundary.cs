@@ -1,6 +1,6 @@
 ﻿namespace ReCommendedExtension.Analyzers.Annotation;
 
-internal enum ValueRangeBoundary
+public enum ValueRangeBoundary
 {
     Lower,
     Higher,

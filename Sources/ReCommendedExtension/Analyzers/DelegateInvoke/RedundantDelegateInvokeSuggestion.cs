@@ -19,14 +19,11 @@ namespace ReCommendedExtension.Analyzers.DelegateInvoke;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed record RedundantDelegateInvokeSuggestion : Highlighting
+public sealed class RedundantDelegateInvokeSuggestion(string message, IReferenceExpression referenceExpression) : Highlighting(message)
 {
     const string SeverityId = "RedundantDelegateInvoke";
 
-    internal RedundantDelegateInvokeSuggestion(string message, IReferenceExpression referenceExpression) : base(message)
-        => ReferenceExpression = referenceExpression;
-
-    internal IReferenceExpression ReferenceExpression { get; }
+    internal IReferenceExpression ReferenceExpression { get; } = referenceExpression;
 
     public override DocumentRange CalculateRange()
     {

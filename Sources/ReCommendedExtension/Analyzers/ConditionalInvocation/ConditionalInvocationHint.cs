@@ -20,14 +20,9 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed record ConditionalInvocationHint : Highlighting
+public sealed class ConditionalInvocationHint(string message, IInvocationExpression invocationExpression) : Highlighting(message)
 {
     const string SeverityId = "ConditionalInvocation";
-
-    readonly IInvocationExpression invocationExpression;
-
-    internal ConditionalInvocationHint(string message, IInvocationExpression invocationExpression) : base(message)
-        => this.invocationExpression = invocationExpression;
 
     public override DocumentRange CalculateRange()
     {

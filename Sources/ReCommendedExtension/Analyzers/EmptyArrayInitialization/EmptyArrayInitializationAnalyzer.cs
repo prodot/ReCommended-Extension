@@ -20,6 +20,7 @@ public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<IC
     internal static ITypeElement? TryGetArrayType(IPsiModule psiModule)
         => TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARRAY_FQN, psiModule);
 
+    [Pure]
     static string CreateHighlightingMessage(IType arrayElementType)
     {
         Debug.Assert(CSharpLanguage.Instance is { });

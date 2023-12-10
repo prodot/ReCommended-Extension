@@ -24,18 +24,10 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Set language injection for string literals" + ZoneMarker.Suffix,
     Description = "Set language injection for string literals.")]
-public sealed class SetLanguageInjection : IContextAction
+public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provider) : IContextAction
 {
-    sealed class InjectLanguageActionItem : BulbActionBase
+    sealed class InjectLanguageActionItem(IInjectorProviderInLiterals injectorProvider, ITreeNode ownerNode) : BulbActionBase
     {
-        readonly ITreeNode injectorOwnerNode;
-
-        public InjectLanguageActionItem(IInjectorProviderInLiterals injectorProvider, ITreeNode injectorOwnerNode)
-        {
-            InjectorProvider = injectorProvider;
-            this.injectorOwnerNode = injectorOwnerNode;
-        }
-
         ICSharpCommentNode CreateCommentNode(CSharpElementFactory factory, CommentType commentType)
             => commentType switch
             {
@@ -45,7 +37,7 @@ public sealed class SetLanguageInjection : IContextAction
                 _ => throw new NotSupportedException(),
             };
 
-        public IInjectorProviderInLiterals InjectorProvider { get; }
+        public IInjectorProviderInLiterals InjectorProvider { get; } = injectorProvider;
 
         public HashSet<string>? LanguageEqualsCommentTexts { get; set; }
 
@@ -57,7 +49,7 @@ public sealed class SetLanguageInjection : IContextAction
 
             using (WriteLockCookie.Create())
             {
-                var node = injectorOwnerNode;
+                var node = ownerNode;
                 var commentType = CommentType.MULTILINE_COMMENT;
 
                 switch (node.Parent)
@@ -103,10 +95,6 @@ public sealed class SetLanguageInjection : IContextAction
     static readonly IAnchor submenuAnchor = new SubmenuAnchor(
         IntentionsAnchors.ContextActionsAnchor,
         new RichText("Set language injection or reference"));
-
-    readonly ICSharpContextActionDataProvider provider;
-
-    public SetLanguageInjection(ICSharpContextActionDataProvider provider) => this.provider = provider;
 
     public bool IsAvailable(IUserDataHolder cache)
     {

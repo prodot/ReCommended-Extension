@@ -14,14 +14,9 @@ namespace ReCommendedExtension.Analyzers.YieldReturnWithinLock;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record YieldReturnWithinLockWarning : Highlighting
+public sealed class YieldReturnWithinLockWarning(string message, IYieldStatement yieldReturnStatement) : Highlighting(message)
 {
     const string SeverityId = "YieldReturnWithinLock";
-
-    readonly IYieldStatement yieldReturnStatement;
-
-    internal YieldReturnWithinLockWarning(string message, IYieldStatement yieldReturnStatement) : base(message)
-        => this.yieldReturnStatement = yieldReturnStatement;
 
     public override DocumentRange CalculateRange()
         => yieldReturnStatement.YieldKeyword.GetDocumentRange().JoinRight(yieldReturnStatement.ReturnKeyword.GetDocumentRange());

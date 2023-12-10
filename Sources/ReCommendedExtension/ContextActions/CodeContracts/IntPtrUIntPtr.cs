@@ -5,10 +5,8 @@ using JetBrains.ReSharper.Psi.Impl;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
-public abstract class IntPtrUIntPtr : AddContractContextAction
+public abstract class IntPtrUIntPtr(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
-    private protected IntPtrUIntPtr(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     private protected bool IsSigned { get; private set; }
 
     protected sealed override bool IsAvailableForType(IType type)

@@ -10,10 +10,8 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Annotate parameter with [InstantHandle] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a parameter with the [InstantHandle] attribute.")]
-public sealed class AnnotateWithInstantHandle : AnnotateWithCodeAnnotation
+public sealed class AnnotateWithInstantHandle(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
-    public AnnotateWithInstantHandle(ICSharpContextActionDataProvider provider) : base(provider) { }
-
     protected override string AnnotationAttributeTypeName => nameof(InstantHandleAttribute);
 
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)

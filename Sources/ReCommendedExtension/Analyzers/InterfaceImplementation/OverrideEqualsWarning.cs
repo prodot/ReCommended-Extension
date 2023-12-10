@@ -12,9 +12,7 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record OverrideEqualsWarning : ImplementOperatorsHighlighting
+public sealed class OverrideEqualsWarning(string message, IClassLikeDeclaration declaration) : ImplementOperatorsHighlighting(message, declaration)
 {
     const string SeverityId = "OverrideEquals";
-
-    internal OverrideEqualsWarning(string message, IClassLikeDeclaration declaration) : base(message, declaration) { }
 }

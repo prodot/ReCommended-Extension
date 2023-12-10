@@ -23,8 +23,6 @@ internal static class Extensions
         "Microsoft.VisualStudio.TestPlatform.TestFramework", @"nunit.framework", "xunit.core",
     };
 
-    static readonly Version msTest14MinFileVersion = new(14, 0, 3021, 1);
-
     [Pure]
     public static bool OverridesInheritedMember(this IDeclaration declaration)
     {
@@ -188,44 +186,6 @@ internal static class Extensions
             if (project
                 .GetAssemblyReferences(project.GetCurrentTargetFrameworkId())
                 .Any(assemblyReference => assemblyReference is { } && wellKnownUnitTestingAssemblyNames.Contains(assemblyReference.Name)))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    [Pure]
-    [SuppressMessage("ReSharper", "EmptyGeneralCatchClause", Justification = "The local function should return false in case of any exception.")]
-    public static bool IsDeclaredInOldMsTestProject(this IAttributesOwnerDeclaration attributesOwnerDeclaration)
-    {
-        if (attributesOwnerDeclaration.GetProject() is { } project)
-        {
-            static bool IsReferenceToOldMsTestAssembly(IProjectToAssemblyReference assemblyReference)
-            {
-                if (assemblyReference is
-                    {
-                        Name: "Microsoft.VisualStudio.TestPlatform.TestFramework", ReferenceTarget.HintLocation.FileAccessPath: { },
-                    })
-                {
-                    try
-                    {
-                        var fileVersion = FileVersionInfo.GetVersionInfo(assemblyReference.ReferenceTarget.HintLocation.FileAccessPath);
-                        return new Version(
-                                fileVersion.FileMajorPart,
-                                fileVersion.FileMinorPart,
-                                fileVersion.FileBuildPart,
-                                fileVersion.FilePrivatePart)
-                            < msTest14MinFileVersion;
-                    }
-                    catch { }
-                }
-
-                return false;
-            }
-
-            if (project.GetAssemblyReferences(project.GetCurrentTargetFrameworkId()).Any(IsReferenceToOldMsTestAssembly))
             {
                 return true;
             }

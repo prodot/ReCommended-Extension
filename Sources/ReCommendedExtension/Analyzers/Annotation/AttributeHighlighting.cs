@@ -5,25 +5,15 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
-public abstract record AttributeHighlighting : Highlighting
+public abstract class AttributeHighlighting(
+    IAttributesOwnerDeclaration attributesOwnerDeclaration,
+    IAttribute attribute,
+    bool includeAttributeBracketsInRange,
+    string message) : Highlighting(message)
 {
-    readonly bool includeAttributeBracketsInRange;
+    internal IAttributesOwnerDeclaration AttributesOwnerDeclaration { get; } = attributesOwnerDeclaration;
 
-    private protected AttributeHighlighting(
-        IAttributesOwnerDeclaration attributesOwnerDeclaration,
-        IAttribute attribute,
-        bool includeAttributeBracketsInRange,
-        string message) : base(message)
-    {
-        AttributesOwnerDeclaration = attributesOwnerDeclaration;
-        Attribute = attribute;
-
-        this.includeAttributeBracketsInRange = includeAttributeBracketsInRange;
-    }
-
-    internal IAttributesOwnerDeclaration AttributesOwnerDeclaration { get; }
-
-    internal IAttribute Attribute { get; }
+    internal IAttribute Attribute { get; } = attribute;
 
     public sealed override DocumentRange CalculateRange()
     {

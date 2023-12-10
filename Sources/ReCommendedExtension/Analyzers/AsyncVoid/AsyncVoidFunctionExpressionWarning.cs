@@ -13,19 +13,9 @@ namespace ReCommendedExtension.Analyzers.AsyncVoid;
     "'async void' lambda or anonymous method expression not used as a direct event handler.",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed record AsyncVoidFunctionExpressionWarning : Highlighting
+public sealed class AsyncVoidFunctionExpressionWarning(string message, ITokenNode asyncKeyword, Action removeAsyncModifier) : Highlighting(message)
 {
     const string SeverityId = "AsyncVoidFunctionExpression";
-
-    readonly ITokenNode asyncKeyword;
-
-    readonly Action removeAsyncModifier;
-
-    internal AsyncVoidFunctionExpressionWarning(string message, ITokenNode asyncKeyword, Action removeAsyncModifier) : base(message)
-    {
-        this.asyncKeyword = asyncKeyword;
-        this.removeAsyncModifier = removeAsyncModifier;
-    }
 
     internal void RemoveAsyncModifier() => removeAsyncModifier();
 
