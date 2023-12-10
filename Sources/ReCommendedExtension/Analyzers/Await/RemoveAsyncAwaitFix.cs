@@ -12,6 +12,7 @@ using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.Await;
 
+[Obsolete] // todo: remove
 [QuickFix]
 public sealed class RemoveAsyncAwaitFix : QuickFixBase
 {

@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Analyzers.Await;
 
 [ElementProblemAnalyzer(
     typeof(IAwaitExpression),
-    HighlightingTypes = new[] { typeof(RedundantAwaitSuggestion), typeof(RedundantCapturedContextSuggestion) })]
+    HighlightingTypes = new[] { typeof(RedundantCapturedContextSuggestion) })]
 public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
 {
     static readonly IClrTypeName[] testMethodAttributes =
@@ -234,6 +234,7 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
             });
     }
 
+    [Obsolete] // todo: remove
     static void AddRedundantAwaitHighlightings(
         IHighlightingConsumer consumer,
         ITokenNode asyncKeyword,
@@ -286,6 +287,7 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
         }
     }
 
+    [Obsolete] // todo: remove
     static bool AnalyzeRedundantAwait(
         IAwaitExpression awaitExpression,
         bool isLastExpression,
@@ -491,9 +493,7 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
         {
             var isLastExpression = IsLastExpression(container, element, out var statementToBeReplacedWithReturnStatement);
 
-            var highlightingsAdded = AnalyzeRedundantAwait(element, isLastExpression, container, statementToBeReplacedWithReturnStatement, consumer);
-
-            if (!highlightingsAdded && GetConfigureAwaitAnalysisMode(data) != ConfigureAwaitAnalysisMode.Library)
+            if (GetConfigureAwaitAnalysisMode(data) != ConfigureAwaitAnalysisMode.Library)
             {
                 AnalyzeRedundantCapturedContext(container, element, isLastExpression, consumer);
             }

@@ -18,6 +18,7 @@ namespace ReCommendedExtension.Analyzers.Await;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
+[Obsolete] // todo: remove
 public sealed record RedundantAwaitSuggestion : Highlighting
 {
     const string SeverityId = "RedundantAwait";
