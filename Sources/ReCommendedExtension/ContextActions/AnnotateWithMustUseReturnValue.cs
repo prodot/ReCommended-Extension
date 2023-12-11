@@ -22,5 +22,11 @@ public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvi
 
     protected override IAttribute? TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration)
         => ownerDeclaration.Attributes.FirstOrDefault(
-            attribute => attribute.GetAttributeType().GetClrName().ShortName == PureAnnotationProvider.PureAttributeShortName);
+            attribute =>
+            {
+                var shortName = attribute.GetAttributeType().GetClrName().ShortName;
+
+                return shortName == PureAnnotationProvider.PureAttributeShortName
+                    || shortName == MustDisposeResourceAnnotationProvider.MustDisposeResourceAttributeShortName;
+            });
 }

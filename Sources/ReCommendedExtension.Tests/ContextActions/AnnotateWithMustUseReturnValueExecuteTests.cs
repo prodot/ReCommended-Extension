@@ -14,8 +14,11 @@ public sealed class AnnotateWithMustUseReturnValueExecuteTests : CSharpContextAc
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithMustUseReturnValue";
 
     [Test]
-    public void TestExecuteNonPureMethod() => DoNamedTest2();
+    public void TestExecuteMethod() => DoNamedTest2();
 
     [Test]
-    public void TestExecutePureMethod() => DoNamedTest2();
+    public void TestExecuteMethod_Pure() => DoNamedTest2();
+
+    [Test]
+    public void TestExecuteMethod_MustDisposeResource() => DoNamedTest2();
 }

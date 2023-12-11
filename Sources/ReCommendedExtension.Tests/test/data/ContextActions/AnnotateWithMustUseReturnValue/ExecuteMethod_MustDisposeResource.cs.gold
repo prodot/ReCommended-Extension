@@ -1,0 +1,11 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class ExecutePureMethod
+    {
+        [MustUseReturnValue]
+        IDisposable Meth{caret}od() => throw new NotImplementedException();
+    }
+}
