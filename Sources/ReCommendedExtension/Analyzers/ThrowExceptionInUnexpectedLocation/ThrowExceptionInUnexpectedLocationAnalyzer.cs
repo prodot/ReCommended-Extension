@@ -108,7 +108,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
             case IMethodDeclaration { DeclaredElement: { } } methodDeclaration:
                 var psiModule = element.GetPsiModule();
 
-                var objectClass = TypeElementUtil.GetTypeElementByClrName(PredefinedType.OBJECT_FQN, psiModule);
+                var objectClass = PredefinedType.OBJECT_FQN.TryGetTypeElement(psiModule);
                 Debug.Assert(objectClass is { });
 
                 if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(objectClass, nameof(Equals))))
@@ -124,7 +124,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     return Location.ToStringMethod;
                 }
 
-                var equatableGenericInterface = TypeElementUtil.GetTypeElementByClrName(PredefinedType.GENERIC_IEQUATABLE_FQN, psiModule);
+                var equatableGenericInterface = PredefinedType.GENERIC_IEQUATABLE_FQN.TryGetTypeElement(psiModule);
                 Debug.Assert(equatableGenericInterface is { });
 
                 if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(equatableGenericInterface, nameof(IEquatable<int>.Equals))))
@@ -132,7 +132,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     return Location.EqualsMethod;
                 }
 
-                var equalityComparerGenericInterface = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IEqualityComparerGeneric, psiModule);
+                var equalityComparerGenericInterface = ClrTypeNames.IEqualityComparerGeneric.TryGetTypeElement(psiModule);
                 Debug.Assert(equalityComparerGenericInterface is { });
 
                 if (methodDeclaration.DeclaredElement.OverridesOrImplements(
@@ -146,7 +146,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     return Location.GetHashCodeMethodWithParameter;
                 }
 
-                var equalityComparerInterface = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IEqualityComparer, psiModule);
+                var equalityComparerInterface = ClrTypeNames.IEqualityComparer.TryGetTypeElement(psiModule);
                 Debug.Assert(equalityComparerInterface is { });
 
                 if (methodDeclaration.DeclaredElement.OverridesOrImplements(
@@ -160,7 +160,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     return Location.GetHashCodeMethodWithParameter;
                 }
 
-                var disposableInterface = TypeElementUtil.GetTypeElementByClrName(PredefinedType.IDISPOSABLE_FQN, psiModule);
+                var disposableInterface = PredefinedType.IDISPOSABLE_FQN.TryGetTypeElement(psiModule);
                 Debug.Assert(disposableInterface is { });
 
                 if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(disposableInterface, nameof(IDisposable.Dispose))))
@@ -168,8 +168,8 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     return Location.DisposeMethod;
                 }
 
-                if (TypeElementUtil.GetTypeElementByClrName(PredefinedType.IASYNCDISPOSABLE_FQN, psiModule) is { } iAsyncDisposableTypeElement
-                    && methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(iAsyncDisposableTypeElement, "DisposeAsync")))
+                if (PredefinedType.IASYNCDISPOSABLE_FQN.TryGetTypeElement(psiModule) is { } iAsyncDisposableType
+                    && methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(iAsyncDisposableType, "DisposeAsync")))
                 {
                     // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
                     return Location.DisposeAsyncMethod;
@@ -248,7 +248,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
     {
         ITypeElement GetTypeElementByClrName(IClrTypeName clrTypeName)
         {
-            var typeElement = TypeElementUtil.GetTypeElementByClrName(clrTypeName, psiModule);
+            var typeElement = clrTypeName.TryGetTypeElement(psiModule);
             Debug.Assert(typeElement is { });
 
             return typeElement;
@@ -324,8 +324,8 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
             return;
         }
 
-        var unreachableExceptionTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.UnreachableException, element.GetPsiModule());
-        if (unreachableExceptionTypeElement is { } && IsOrDerivesFrom(exceptionType, unreachableExceptionTypeElement))
+        if (ClrTypeNames.UnreachableException.TryGetTypeElement(element.GetPsiModule()) is { } unreachableExceptionType
+            && IsOrDerivesFrom(exceptionType, unreachableExceptionType))
         {
             return;
         }

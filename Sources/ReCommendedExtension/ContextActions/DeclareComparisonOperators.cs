@@ -5,7 +5,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Util;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using ReCommendedExtension.Analyzers.InterfaceImplementation;
@@ -27,7 +26,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
     {
         if (provider.GetSelectedElement<IClassLikeDeclaration>(true, false) is { } declaration
             && declaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-            && InterfaceImplementationAnalyzer.TryGetComparisonOperatorsInterface(declaration.GetPsiModule()) is { } comparisonOperatorsInterface
+            && ClrTypeNames.IComparisonOperators.TryGetTypeElement(declaration.GetPsiModule()) is { } comparisonOperatorsInterface
             && declaration.DeclaredElement is { })
         {
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
@@ -37,7 +36,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
                 type,
                 null,
                 comparisonOperatorsInterface,
-                TypeElementUtil.GetTypeElementByClrName(PredefinedType.GENERIC_ICOMPARABLE_FQN, declaration.GetPsiModule()));
+                PredefinedType.GENERIC_ICOMPARABLE_FQN.TryGetTypeElement(declaration.GetPsiModule()));
 
             this.declaration =
                 declaration is IClassDeclaration or IStructDeclaration or IRecordDeclaration && declaresComparable && !declaresComparisonOperators
@@ -77,9 +76,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
 
             declaration.AddSuperInterface(
-                TypeFactory.CreateType(
-                    comparisonOperatorsInterface,
-                    new IType[] { type, type, TypeFactory.CreateTypeByCLRName(PredefinedType.BOOLEAN_FQN, psiModule) }),
+                TypeFactory.CreateType(comparisonOperatorsInterface, new[] { type, type, PredefinedType.BOOLEAN_FQN.GetType(psiModule) }),
                 false);
 
             return _ => { };

@@ -27,13 +27,13 @@ public sealed class AnnotateWithItemNotNull(ICSharpContextActionDataProvider pro
             return true;
         }
 
-        if (type.IsLazy())
-        {
-            var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, context.GetPsiModule());
-            if (type.GetGenericUnderlyingType(typeElement) is { Classify: TypeClassification.REFERENCE_TYPE })
+        if (type.IsLazy()
+            && type.GetGenericUnderlyingType(PredefinedType.LAZY_FQN.TryGetTypeElement(context.GetPsiModule())) is
             {
-                return true;
-            }
+                Classify: TypeClassification.REFERENCE_TYPE,
+            })
+        {
+            return true;
         }
 
         return false;

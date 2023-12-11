@@ -3,7 +3,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
@@ -21,5 +20,5 @@ public sealed class GuidNonEmpty(ICSharpContextActionDataProvider provider) : Ad
         => factory.CreateExpression(
             $"$0 != $1.{nameof(Guid.Empty)}",
             contractExpression,
-            TypeElementUtil.GetTypeElementByClrName(PredefinedType.GUID_FQN, Provider.PsiModule));
+            PredefinedType.GUID_FQN.TryGetTypeElement(Provider.PsiModule));
 }

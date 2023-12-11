@@ -3,7 +3,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
@@ -19,5 +18,5 @@ public sealed class TimeSpanNonZero(ICSharpContextActionDataProvider provider) :
         => factory.CreateExpression(
             $"$0 != $1.{nameof(System.TimeSpan.Zero)}",
             contractExpression,
-            TypeElementUtil.GetTypeElementByClrName(PredefinedType.TIMESPAN_FQN, Provider.PsiModule));
+            PredefinedType.TIMESPAN_FQN.TryGetTypeElement(Provider.PsiModule));
 }

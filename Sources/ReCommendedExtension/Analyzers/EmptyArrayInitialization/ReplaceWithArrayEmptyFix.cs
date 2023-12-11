@@ -37,7 +37,7 @@ public sealed class ReplaceWithArrayEmptyFix(EmptyArrayInitializationWarning hig
                 highlighting.TreeNode,
                 factory.CreateExpression(
                     $"$0.{nameof(Array.Empty)}<$1>()",
-                    EmptyArrayInitializationAnalyzer.TryGetArrayType(highlighting.TreeNode.GetPsiModule()),
+                    PredefinedType.ARRAY_FQN.TryGetTypeElement(highlighting.TreeNode.GetPsiModule()),
                     highlighting.ArrayElementType));
         }
 

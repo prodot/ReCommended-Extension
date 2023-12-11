@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
@@ -33,7 +32,7 @@ internal sealed record ParameterContractInfo : ContractInfo
     {
         var factory = CSharpElementFactory.GetInstance(body);
 
-        var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, provider.PsiModule);
+        var contractType = PredefinedType.CONTRACT_FQN.TryGetTypeElement(provider.PsiModule);
 
         var parameterExpression = factory.CreateExpression("$0", parameter);
 

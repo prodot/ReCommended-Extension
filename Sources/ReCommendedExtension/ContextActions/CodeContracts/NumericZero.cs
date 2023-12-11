@@ -2,7 +2,6 @@
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
@@ -19,7 +18,7 @@ public sealed class NumericZero(ICSharpContextActionDataProvider provider) : Num
             ? factory.CreateExpression(
                 $"$1.{nameof(Math.Abs)}($0 - 0{NumericTypeInfo.LiteralSuffix}) < {NumericTypeInfo.EpsilonLiteral}",
                 contractExpression,
-                TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.Math, Provider.PsiModule))
+                ClrTypeNames.Math.TryGetTypeElement(Provider.PsiModule))
             : factory.CreateExpression($"$0 == 0{NumericTypeInfo.LiteralSuffix}", contractExpression);
     }
 }

@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
@@ -160,7 +159,7 @@ internal sealed record PropertyContractInfo : ContractInfo
                 {
                     case AccessorKind.GETTER:
                     {
-                        var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, provider.PsiModule);
+                        var contractType = PredefinedType.CONTRACT_FQN.TryGetTypeElement(provider.PsiModule);
 
                         var resultExpression = factory.CreateExpression($"$0.{nameof(Contract.Result)}<$1>()", contractType, Type);
 

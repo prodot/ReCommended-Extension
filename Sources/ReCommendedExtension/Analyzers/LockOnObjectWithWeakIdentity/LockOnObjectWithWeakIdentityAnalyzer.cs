@@ -11,19 +11,20 @@ namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity;
 [ElementProblemAnalyzer(typeof(ILockStatement), HighlightingTypes = new[] { typeof(LockOnObjectWithWeakIdentityWarning) })]
 public sealed class LockOnObjectWithWeakIdentityAnalyzer : ElementProblemAnalyzer<ILockStatement>
 {
-    static IEnumerable<IClrTypeName> GetClassTypes()
+    static readonly IClrTypeName[] classTypes =
     {
-        yield return PredefinedType.MARSHAL_BY_REF_OBJECT_FQN;
+        // remoting
+        PredefinedType.MARSHAL_BY_REF_OBJECT_FQN,
 
-        yield return ClrTypeNames.MemberInfo;
-        yield return ClrTypeNames.ParameterInfo;
+        // reflection
+        ClrTypeNames.MemberInfo, ClrTypeNames.ParameterInfo,
 
-        yield return ClrTypeNames.OutOfMemoryException;
-        yield return ClrTypeNames.StackOverflowException;
-        yield return ClrTypeNames.ExecutionEngineException;
+        // exceptions
+        ClrTypeNames.OutOfMemoryException, ClrTypeNames.StackOverflowException, ClrTypeNames.ExecutionEngineException,
 
-        yield return PredefinedType.THREAD_FQN;
-    }
+        // threading
+        PredefinedType.THREAD_FQN,
+    };
 
     static string? TryGetHighlightingMessage(ICSharpExpression monitor)
     {
@@ -50,26 +51,21 @@ public sealed class LockOnObjectWithWeakIdentityAnalyzer : ElementProblemAnalyze
 
             var psiModule = monitor.GetPsiModule();
 
-            foreach (var type in GetClassTypes())
+            foreach (var type in classTypes)
             {
-                var objectType = (IClass?)TypeElementUtil.GetTypeElementByClrName(type, psiModule);
+                var objectType = (IClass?)type.TryGetTypeElement(psiModule);
                 Debug.Assert(objectType is { });
 
                 if (monitorTypeElement.IsDescendantOf(objectType))
                 {
                     var typeName = objectType.WithIdSubstitution().GetPresentableName(CSharpLanguage.Instance);
 
-                    if (objectType.IsAbstract)
+                    return objectType switch
                     {
-                        return $"Do not lock on objects derived from the '{typeName}' class.";
-                    }
-
-                    if (objectType.IsSealed)
-                    {
-                        return $"Do not lock on '{typeName}' objects.";
-                    }
-
-                    return $"Do not lock on '{typeName}' objects or objects derived from the '{typeName}' class.";
+                        { IsAbstract: true } => $"Do not lock on objects derived from the '{typeName}' class.",
+                        { IsSealed: true } => $"Do not lock on '{typeName}' objects.",
+                        _ => $"Do not lock on '{typeName}' objects or objects derived from the '{typeName}' class.",
+                    };
                 }
             }
         }

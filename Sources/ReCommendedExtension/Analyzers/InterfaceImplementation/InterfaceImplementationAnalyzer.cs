@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl;
 using JetBrains.ReSharper.Psi.Modules;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
@@ -87,14 +86,6 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
         return (lessThanOperator ? 1 : 0) + (lessThanOrEqualOperator ? 1 : 0) + (greaterThanOperator ? 1 : 0) + (greaterThanOrEqualOperator ? 1 : 0);
     }
 
-    [Pure]
-    internal static ITypeElement? TryGetEqualityOperatorsInterface(IPsiModule psiModule)
-        => TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IEqualityOperators, psiModule);
-
-    [Pure]
-    internal static ITypeElement? TryGetComparisonOperatorsInterface(IPsiModule psiModule)
-        => TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IComparisonOperators, psiModule);
-
     static void AnalyzeOperatorInterfaces(IClassLikeDeclaration element, IHighlightingConsumer consumer, IDeclaredType type)
     {
         Debug.Assert(element.DeclaredElement is { });
@@ -111,15 +102,15 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
         var psiModule = element.GetPsiModule();
 
-        if (TryGetEqualityOperatorsInterface(psiModule) is { } equalityOperatorsInterface
-            && TryGetComparisonOperatorsInterface(psiModule) is { } comparisonOperatorsInterface)
+        if (ClrTypeNames.IEqualityOperators.TryGetTypeElement(psiModule) is { } equalityOperatorsInterface
+            && ClrTypeNames.IComparisonOperators.TryGetTypeElement(psiModule) is { } comparisonOperatorsInterface)
         {
             var (declaresEquatable, declaresEqualityOperators, declaresComparable, declaresComparisonOperators) = GetInterfaces(
                 element,
                 type,
                 equalityOperatorsInterface,
                 comparisonOperatorsInterface,
-                TypeElementUtil.GetTypeElementByClrName(PredefinedType.GENERIC_ICOMPARABLE_FQN, psiModule));
+                PredefinedType.GENERIC_ICOMPARABLE_FQN.TryGetTypeElement(psiModule));
 
             switch (element)
             {

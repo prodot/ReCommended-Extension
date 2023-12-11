@@ -80,7 +80,7 @@ public sealed class CollectionAllItemsNotNull(ICSharpContextActionDataProvider p
 
         var allMethodReference = invokedExpression.Reference;
 
-        var enumerableType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.ENUMERABLE_CLASS, Provider.PsiModule);
+        var enumerableType = PredefinedType.ENUMERABLE_CLASS.TryGetTypeElement(Provider.PsiModule);
         Debug.Assert(enumerableType is { });
 
         var allMethod = enumerableType.Methods.First(method => method.ShortName == nameof(Enumerable.All));

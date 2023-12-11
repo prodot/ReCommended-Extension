@@ -3,7 +3,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
@@ -22,6 +21,6 @@ public sealed class IntPtrUIntPtrZero(ICSharpContextActionDataProvider provider)
         return factory.CreateExpression(
             $"$0 == $1.{nameof(IntPtr.Zero)}",
             contractExpression,
-            TypeElementUtil.GetTypeElementByClrName(IsSigned ? PredefinedType.INTPTR_FQN : PredefinedType.UINTPTR_FQN, Provider.PsiModule));
+            (IsSigned ? PredefinedType.INTPTR_FQN : PredefinedType.UINTPTR_FQN).TryGetTypeElement(Provider.PsiModule));
     }
 }

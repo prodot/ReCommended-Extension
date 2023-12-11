@@ -16,7 +16,7 @@ public sealed record InlineAssertion : Assertion
             && parameter.Type.Equals(method.ReturnType)
             && method.GetSingleDeclaration<IMethodDeclaration>() is { } methodDeclaration
             && methodDeclaration.Attributes.Any(
-                attribute => attribute.GetAttributeType().GetClrName().FullName == PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName)
+                attribute => attribute.GetAttributeType().IsClrType(PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS))
             && methodDeclaration.Attributes.Any(
                 attribute => attribute.GetAttributeType().GetClrName().ShortName == NullnessProvider.NotNullAttributeShortName))
         {

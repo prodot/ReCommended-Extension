@@ -218,11 +218,8 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
     [Pure]
     static bool ExcludeFromCodeCoverageJustificationPropertyExists(IPsiModule psiModule)
-    {
-        var attributeType = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ExcludeFromCodeCoverageAttribute.GetPersistent(), psiModule);
-
-        return attributeType is { } && attributeType.Properties.Any(property => property is { IsStatic: false, ShortName: "Justification" }); // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
-    }
+        => ClrTypeNames.ExcludeFromCodeCoverageAttribute.TryGetTypeElement(psiModule) is { } attributeType
+            && attributeType.Properties.Any(property => property is { IsStatic: false, ShortName: "Justification" }); // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
 
     static void AnalyzeConflictingPurityAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
@@ -800,8 +797,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                 if (type.IsLazy())
                 {
-                    var typeElement = TypeElementUtil.GetTypeElementByClrName(PredefinedType.LAZY_FQN, attributesOwnerDeclaration.GetPsiModule());
-                    if (type.GetGenericUnderlyingType(typeElement) is { Classify: not TypeClassification.REFERENCE_TYPE })
+                    if (type.GetGenericUnderlyingType(PredefinedType.LAZY_FQN.TryGetTypeElement(attributesOwnerDeclaration.GetPsiModule())) is
+                        {
+                            Classify: not TypeClassification.REFERENCE_TYPE,
+                        })
                     {
                         consumer.AddHighlighting(
                             new NotAllowedAnnotationWarning(

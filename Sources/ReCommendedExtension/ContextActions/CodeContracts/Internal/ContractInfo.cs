@@ -83,7 +83,7 @@ internal abstract record ContractInfo
     {
         var factory = CSharpElementFactory.GetInstance(contractExpression);
 
-        var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, psiModule);
+        var contractType = PredefinedType.CONTRACT_FQN.TryGetTypeElement(psiModule);
 
         return contractKind switch
         {
@@ -171,7 +171,7 @@ internal abstract record ContractInfo
                 GetSuggestedContractClassName(typeDeclaration),
                 typeParameters,
                 typeParametersForAttribute),
-            TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassForAttribute, psiModule),
+            ClrTypeNames.ContractClassForAttribute.TryGetTypeElement(psiModule),
             typeDeclaration.DeclaredElement);
 
         CopyTypeParameterConstraints(
@@ -188,7 +188,7 @@ internal abstract record ContractInfo
             contractClassDeclaration.DeclaredElement);
 
         // todo: the generated "typeof" expression doesn't contain generics: "<,>"
-        var contractClassAttributeTypeElement = TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractClassAttribute, psiModule);
+        var contractClassAttributeTypeElement = ClrTypeNames.ContractClassAttribute.TryGetTypeElement(psiModule);
         Debug.Assert(contractClassAttributeTypeElement is { });
         var attribute = factory.CreateAttribute(
             contractClassAttributeTypeElement,
@@ -405,7 +405,7 @@ internal abstract record ContractInfo
 
         contractInvariantMethodDeclaration = (IMethodDeclaration)factory.CreateTypeMemberDeclaration(
             "[$0] private void ObjectInvariant() { }",
-            TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.ContractInvariantMethodAttribute, psiModule));
+            ClrTypeNames.ContractInvariantMethodAttribute.TryGetTypeElement(psiModule));
         contractInvariantMethodDeclaration = classLikeDeclaration.AddClassMemberDeclaration(contractInvariantMethodDeclaration);
 
         ContextActionUtils.FormatWithDefaultProfile(contractInvariantMethodDeclaration);

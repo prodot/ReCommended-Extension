@@ -10,44 +10,38 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProble
 {
     protected override void Run(IObjectCreationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (element.ConstructorReference.Resolve().DeclaredElement is IConstructor constructor)
-        {
-            Debug.Assert(constructor.ContainingType is { });
-
-            var typeName = constructor.ContainingType.GetClrName();
-
-            if ((typeName.Equals(PredefinedType.ARGUMENTEXCEPTION_FQN)
-                    || typeName.Equals(PredefinedType.ARGUMENTNULLEXCEPTION_FQN)
-                    || typeName.Equals(PredefinedType.ARGUMENTOUTOFRANGEEXCEPTION_FQN))
-                && element.Arguments.FirstOrDefault(a => a.MatchingParameter is { Element.ShortName : "message" }) is { } messageArgument
-                && element.GetContainingTypeMemberDeclarationIgnoringClosures() is
-                {
-                    DeclaredElement: IParametersOwner { Parameters: { } parameters },
-                })
+        if (element.ConstructorReference.Resolve().DeclaredElement is IConstructor constructor
+            && (constructor.ContainingType.IsClrType(PredefinedType.ARGUMENTEXCEPTION_FQN)
+                || constructor.ContainingType.IsClrType(PredefinedType.ARGUMENTNULLEXCEPTION_FQN)
+                || constructor.ContainingType.IsClrType(PredefinedType.ARGUMENTOUTOFRANGEEXCEPTION_FQN))
+            && element.Arguments.FirstOrDefault(a => a.MatchingParameter is { Element.ShortName : "message" }) is { } messageArgument
+            && element.GetContainingTypeMemberDeclarationIgnoringClosures() is
             {
-                switch (messageArgument.Value)
-                {
-                    case ILiteralExpression literalExpression:
-                        if (literalExpression.Literal.GetText() is ['\"', .. var parameterName, '\"']
-                            && parameters.Any(p => p.ShortName == parameterName))
-                        {
-                            consumer.AddHighlighting(
-                                new ArgumentExceptionConstructorArgumentWarning("Parameter name used for the exception message.", messageArgument));
-                        }
-                        break;
+                DeclaredElement: IParametersOwner { Parameters: { } parameters },
+            })
+        {
+            switch (messageArgument.Value)
+            {
+                case ILiteralExpression literalExpression:
+                    if (literalExpression.Literal.GetText() is ['\"', .. var parameterName, '\"']
+                        && parameters.Any(p => p.ShortName == parameterName))
+                    {
+                        consumer.AddHighlighting(
+                            new ArgumentExceptionConstructorArgumentWarning("Parameter name used for the exception message.", messageArgument));
+                    }
+                    break;
 
-                    case IInvocationExpression invocationExpression:
-                        if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == "nameof"
-                            && invocationExpression.Arguments is [{ Value: IReferenceExpression referenceExpression }]
-                            && referenceExpression.Reference.Resolve().DeclaredElement is IParameter parameter
-                            && parameters.Contains(parameter))
-                        {
-                            consumer.AddHighlighting(
-                                new ArgumentExceptionConstructorArgumentWarning("Parameter name used for the exception message.", messageArgument));
-                        }
+                case IInvocationExpression invocationExpression:
+                    if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == "nameof"
+                        && invocationExpression.Arguments is [{ Value: IReferenceExpression referenceExpression }]
+                        && referenceExpression.Reference.Resolve().DeclaredElement is IParameter parameter
+                        && parameters.Contains(parameter))
+                    {
+                        consumer.AddHighlighting(
+                            new ArgumentExceptionConstructorArgumentWarning("Parameter name used for the exception message.", messageArgument));
+                    }
 
-                        break;
-                }
+                    break;
             }
         }
     }

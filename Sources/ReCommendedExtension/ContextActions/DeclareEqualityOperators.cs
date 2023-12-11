@@ -26,7 +26,7 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
     {
         if (provider.GetSelectedElement<IClassLikeDeclaration>(true, false) is { } declaration
             && declaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-            && InterfaceImplementationAnalyzer.TryGetEqualityOperatorsInterface(declaration.GetPsiModule()) is { } equalityOperatorsInterface
+            && ClrTypeNames.IEqualityOperators.TryGetTypeElement(declaration.GetPsiModule()) is { } equalityOperatorsInterface
             && declaration.DeclaredElement is { })
         {
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
@@ -76,9 +76,7 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
 
             declaration.AddSuperInterface(
-                TypeFactory.CreateType(
-                    equalityOperatorsInterface,
-                    new IType[] { type, type, TypeFactory.CreateTypeByCLRName(PredefinedType.BOOLEAN_FQN, psiModule) }),
+                TypeFactory.CreateType(equalityOperatorsInterface, new[] { type, type, PredefinedType.BOOLEAN_FQN.GetType(psiModule) }),
                 false);
 
             return _ => { };

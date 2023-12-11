@@ -6,6 +6,8 @@ using System.Windows.Data;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Modules;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension;
 
@@ -76,11 +78,19 @@ internal static class ClrTypeNames
 
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    static bool IsPredefinedTypeElement([NotNullWhen(true)] ITypeElement? typeElement, IClrTypeName clrName)
+    public static bool IsClrType([NotNullWhen(true)] this ITypeElement? typeElement, IClrTypeName clrName)
         => typeElement is { } && typeElement.GetClrName().Equals(clrName);
 
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsClrType([NotNullWhen(true)] this IType? type, IClrTypeName clrName)
-        => type is IDeclaredType declaredType && IsPredefinedTypeElement(declaredType.GetTypeElement(), clrName);
+    public static bool IsClrType([NotNullWhen(true)] this IType? type, IClrTypeName clrName) => type.GetTypeElement().IsClrType(clrName);
+
+    [JetBrains.Annotations.Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ITypeElement? TryGetTypeElement(this IClrTypeName clrName, IPsiModule psiModule)
+        => TypeElementUtil.GetTypeElementByClrName(clrName, psiModule);
+
+    [JetBrains.Annotations.Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static IType GetType(this IClrTypeName clrName, IPsiModule psiModule) => TypeFactory.CreateTypeByCLRName(clrName, psiModule);
 }

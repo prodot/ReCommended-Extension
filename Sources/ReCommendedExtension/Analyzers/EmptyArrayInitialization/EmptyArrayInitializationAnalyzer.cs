@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
 
@@ -13,12 +12,8 @@ public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<IC
 {
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
-        => TryGetArrayType(psiModule) is { } arrayType
+        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType
             && arrayType.Methods.Any(method => method is { IsStatic: true, ShortName: nameof(Array.Empty), Parameters: [] });
-
-    [Pure]
-    internal static ITypeElement? TryGetArrayType(IPsiModule psiModule)
-        => TypeElementUtil.GetTypeElementByClrName(PredefinedType.ARRAY_FQN, psiModule);
 
     [Pure]
     static string CreateHighlightingMessage(IType arrayElementType)
