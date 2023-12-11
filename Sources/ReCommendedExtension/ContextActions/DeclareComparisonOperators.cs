@@ -37,7 +37,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
                 type,
                 null,
                 comparisonOperatorsInterface,
-                TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IComparableGeneric, declaration.GetPsiModule()));
+                TypeElementUtil.GetTypeElementByClrName(PredefinedType.GENERIC_ICOMPARABLE_FQN, declaration.GetPsiModule()));
 
             this.declaration =
                 declaration is IClassDeclaration or IStructDeclaration or IRecordDeclaration && declaresComparable && !declaresComparisonOperators

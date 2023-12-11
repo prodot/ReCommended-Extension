@@ -119,7 +119,7 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
                 type,
                 equalityOperatorsInterface,
                 comparisonOperatorsInterface,
-                TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.IComparableGeneric, psiModule));
+                TypeElementUtil.GetTypeElementByClrName(PredefinedType.GENERIC_ICOMPARABLE_FQN, psiModule));
 
             switch (element)
             {

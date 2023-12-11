@@ -488,13 +488,13 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 baseType is { } && baseType.IsClassType();
                 baseType = baseType.GetSuperTypes().FirstOrDefault())
             {
-                if (baseType.IsClrType(ClrTypeNames.Attribute))
+                if (baseType.IsClrType(PredefinedType.ATTRIBUTE_FQN))
                 {
                     return false;
                 }
 
                 if (baseType.GetTypeElement() is { } baseTypeElement
-                    && baseTypeElement.HasAttributeInstance(ClrTypeNames.AttributeUsageAttribute, false))
+                    && baseTypeElement.HasAttributeInstance(PredefinedType.ATTRIBUTE_USAGE_ATTRIBUTE_CLASS, false))
                 {
                     return true;
                 }
@@ -505,7 +505,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
         if (attributesOwnerDeclaration is IClassDeclaration { IsAbstract: false } classDeclaration
             && classDeclaration.DeclaredElement.IsAttribute()
-            && classDeclaration.Attributes.All(a => !a.GetAttributeType().IsClrType(ClrTypeNames.AttributeUsageAttribute))
+            && classDeclaration.Attributes.All(a => !a.GetAttributeType().IsClrType(PredefinedType.ATTRIBUTE_USAGE_ATTRIBUTE_CLASS))
             && !AnyBaseClassAnnotated(classDeclaration))
         {
             consumer.AddHighlighting(

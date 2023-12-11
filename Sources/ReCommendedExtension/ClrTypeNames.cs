@@ -26,10 +26,6 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName Math = GetClrTypeName(typeof(Math));
 
-    public static readonly IClrTypeName Attribute = GetClrTypeName<Attribute>();
-
-    public static readonly IClrTypeName AttributeUsageAttribute = GetClrTypeName<AttributeUsageAttribute>();
-
     public static readonly IClrTypeName ContractClassForAttribute = GetClrTypeName<ContractClassForAttribute>();
 
     public static readonly IClrTypeName ContractClassAttribute = GetClrTypeName<ContractClassAttribute>();
@@ -49,8 +45,6 @@ internal static class ClrTypeNames
     public static readonly IClrTypeName IEqualityComparerGeneric = GetClrTypeName(typeof(IEqualityComparer<>));
 
     public static readonly IClrTypeName IEqualityComparer = GetClrTypeName<IEqualityComparer>();
-
-    public static readonly IClrTypeName IComparableGeneric = GetClrTypeName(typeof(IComparable<>));
 
     public static readonly IClrTypeName MemberInfo = GetClrTypeName<System.Reflection.MemberInfo>();
 
