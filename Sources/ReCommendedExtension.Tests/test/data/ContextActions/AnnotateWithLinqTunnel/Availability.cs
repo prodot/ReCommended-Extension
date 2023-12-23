@@ -8,7 +8,7 @@ namespace Test
 
         void MethodWithLocalFunction()
         {
-            IEnumerable<string> Local{off}Function(IEnumerable<int> arg) => null;
+            IEnumerable<string> Local{on}Function(IEnumerable<int> arg) => null;
         }
 
         IEnumerable<string> Method{off}2() => null;

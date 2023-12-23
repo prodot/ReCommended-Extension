@@ -14,11 +14,12 @@ public sealed class AnnotateWithNonNegativeValueAvailabilityTests : CSharpContex
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithNonNegativeValue";
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestAvailability() => DoNamedTest2();
 
+    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [TestNet60(ANNOTATIONS_PACKAGE)]
-    [Test]
     public void TestAvailabilityLambda() => DoNamedTest2();
 }
