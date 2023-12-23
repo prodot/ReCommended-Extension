@@ -23,7 +23,7 @@ namespace Test
     {
         public override void NotAnnotated(ref IDisposable p{on}0, out IAsyncDisposable p{on}1) => throw new NotImplementedException();
 
-        public override void Annotated(ref Stream p{off}0, out DisposableRefStruct p{off}1) => throw new NotImplementedException();
+        public override void Annotated(ref Stream p{on}0, out DisposableRefStruct p{on}1) => throw new NotImplementedException();
 
         public override void AnnotatedWithFalse(ref Stream p{on}0, out DisposableRefStruct p{on}1) => throw new NotImplementedException();
 

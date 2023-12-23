@@ -8,10 +8,11 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <DefineConstants>DEBUG;TRACE;MUST_DISPOSE_RESOURCE_NO_TASK_LIKE</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DefineConstants>MUST_DISPOSE_RESOURCE_NO_TASK_LIKE</DefineConstants>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
     </PropertyGroup>

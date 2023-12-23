@@ -1,12 +1,14 @@
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
 namespace ReCommendedExtension.Tests.ContextActions;
 
-[TestNetFramework45]
 [TestFixture]
+[TestNet80(ANNOTATIONS_PACKAGE)]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 public sealed class AnnotateWithMustUseReturnValueExecuteTests : CSharpContextActionExecuteTestBase<AnnotateWithMustUseReturnValue>
 {
     protected override string ExtraPath => "";

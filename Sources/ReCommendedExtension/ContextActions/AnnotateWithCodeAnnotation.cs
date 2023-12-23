@@ -11,31 +11,31 @@ namespace ReCommendedExtension.ContextActions;
 
 public abstract class AnnotateWithCodeAnnotation(ICSharpContextActionDataProvider provider) : AnnotateWith(provider)
 {
-    protected virtual AttributeValue[] AnnotationArguments => Array.Empty<AttributeValue>();
-
-    protected sealed override bool IsAttribute(IAttribute attribute)
-        => attribute.GetAttributeType().GetClrName().ShortName == AnnotationAttributeTypeName;
+    protected override bool IsAttribute(IAttribute attribute) => attribute.GetAttributeType().GetClrName().ShortName == AnnotationAttributeTypeName;
 
     protected sealed override Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,
         IPsiModule psiModule,
-        out IAttribute? attributeToReplace)
+        out IAttribute[] attributesToReplace)
     {
-        var attributeType = attributesOwnerDeclaration.GetPsiServices()
+        var attributeType = attributesOwnerDeclaration
+            .GetPsiServices()
             .GetComponent<CodeAnnotationsConfiguration>()
             .GetAttributeTypeForElement(attributesOwnerDeclaration, AnnotationAttributeTypeName);
         if (attributeType is { } && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration))
         {
-            attributeToReplace = TryGetAttributeToReplace(attributesOwnerDeclaration);
+            attributesToReplace = GetAttributesToReplace(attributesOwnerDeclaration);
 
-            return factory => factory.CreateAttribute(attributeType, AnnotationArguments, Array.Empty<Pair<string, AttributeValue>>());
+            return factory => factory.CreateAttribute(attributeType, GetAnnotationArguments(psiModule), Array.Empty<Pair<string, AttributeValue>>());
         }
 
-        attributeToReplace = null;
+        attributesToReplace = Array.Empty<IAttribute>();
         return null;
     }
 
-    protected virtual IAttribute? TryGetAttributeToReplace(IAttributesOwnerDeclaration ownerDeclaration) => null;
+    [Pure]
+    protected virtual IAttribute[] GetAttributesToReplace(IAttributesOwnerDeclaration ownerDeclaration) => Array.Empty<IAttribute>();
 
+    [Pure]
     protected abstract bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context);
 }

@@ -12,14 +12,14 @@ public abstract class AnnotateWith<A>(ICSharpContextActionDataProvider provider)
 {
     protected sealed override string AnnotationAttributeTypeName => typeof(A).Name;
 
-    protected sealed override bool IsAttribute(IAttribute attribute) => attribute.GetAttributeType().GetClrName().FullName == typeof(A).FullName;
+    protected override bool IsAttribute(IAttribute attribute) => attribute.GetAttributeType().GetClrName().FullName == typeof(A).FullName;
 
     protected sealed override Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,
         IPsiModule psiModule,
-        out IAttribute? attributeToReplace)
+        out IAttribute[] attributesToReplace)
     {
-        attributeToReplace = null;
+        attributesToReplace = Array.Empty<IAttribute>();
 
         if (CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement))
         {
@@ -28,7 +28,8 @@ public abstract class AnnotateWith<A>(ICSharpContextActionDataProvider provider)
                 var fullName = typeof(A).FullName;
                 Debug.Assert(fullName is { });
 
-                return factory.CreateAttribute(new SpecialAttributeInstance(new ClrTypeName(fullName), psiModule));
+                return factory.CreateAttribute(
+                    new SpecialAttributeInstance(new ClrTypeName(fullName), psiModule, () => GetAnnotationArguments(psiModule)));
             };
         }
 

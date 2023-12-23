@@ -6,6 +6,6 @@ namespace Test
     internal class ExecutePureMethod
     {
         [MustDisposeResource]
-        IDisposable Meth{caret}od() => throw new NotImplementedException();
+        int Meth{caret}od() => throw new NotImplementedException();
     }
 }

@@ -27,19 +27,19 @@ namespace NonDisposable
 
     internal class Child : Parent
     {
-        public override int Not{off}Annotated() => 0;
+        public override int Not{on}Annotated() => 0;
 
-        public override int Annotated{off}WithPure() => 0;
+        public override int Annotated{on}WithPure() => 0;
 
         public override int Annotated{off}WithMustUseReturnValue() => 0;
 
-        public override int Annotated{off}WithMustDisposeResource() => 0;
+        public override int Annotated{on}WithMustDisposeResource() => 0;
 
-        public override int Annotated{off}WithMustDisposeResourceFalse() => 0;
+        public override int Annotated{on}WithMustDisposeResourceFalse() => 0;
 
-        public override int Annotated{off}WithMustDisposeResourceTrue() => 0;
+        public override int Annotated{on}WithMustDisposeResourceTrue() => 0;
 
-        public int Oth{off}er() => 0;
+        public int Oth{on}er() => 0;
     }
 }
 
@@ -72,19 +72,19 @@ namespace Disposable
 
     internal class Child : Parent
     {
-        public override IDisposable Not{on}Annotated() => throw new NotImplementedException();
+        public override IDisposable Not{off}Annotated() => throw new NotImplementedException();
 
-        public override IAsyncDisposable Annotated{on}WithPure() => throw new NotImplementedException();
+        public override IAsyncDisposable Annotated{off}WithPure() => throw new NotImplementedException();
 
-        public override Stream Annotated{on}WithMustUseReturnValue() => throw new NotImplementedException();
+        public override Stream Annotated{off}WithMustUseReturnValue() => throw new NotImplementedException();
 
         public override Stream Annotated{off}WithMustDisposeResource() => throw new NotImplementedException();
 
-        public override IAsyncDisposable Annotated{on}WithMustDisposeResourceFalse() => throw new NotImplementedException();
+        public override IAsyncDisposable Annotated{off}WithMustDisposeResourceFalse() => throw new NotImplementedException();
 
         public override IAsyncDisposable Annotated{off}WithMustDisposeResourceTrue() => throw new NotImplementedException();
 
-        public DisposableRefStruct Oth{on}er() => 0;
+        public DisposableRefStruct Oth{off}er() => 0;
     }
 
     internal class ParentTaskLike
@@ -106,34 +106,48 @@ namespace Disposable
 
     internal class ChildTaskLike : ParentTaskLike
     {
-        public override Task<IDisposable> Not{off}Annotated() => throw new NotImplementedException();
+        public override Task<IDisposable> Not{on}Annotated() => throw new NotImplementedException();
 
-        public override Task<IAsyncDisposable> Annotated{off}WithPure() => throw new NotImplementedException();
+        public override Task<IAsyncDisposable> Annotated{on}WithPure() => throw new NotImplementedException();
 
         public override Task<Stream> Annotated{off}WithMustUseReturnValue() => throw new NotImplementedException();
 
-        public override ValueTask<Stream> Annotated{off}WithMustDisposeResource() => throw new NotImplementedException();
+        public override ValueTask<Stream> Annotated{on}WithMustDisposeResource() => throw new NotImplementedException();
 
-        public override ValueTask<IAsyncDisposable> Annotated{off}WithMustDisposeResourceFalse() => throw new NotImplementedException();
+        public override ValueTask<IAsyncDisposable> Annotated{on}WithMustDisposeResourceFalse() => throw new NotImplementedException();
 
-        public ValueTask<IDisposable> Ot{off}her() => throw new NotImplementedException();
+        public ValueTask<IDisposable> Ot{on}her() => throw new NotImplementedException();
     }
 
     internal class WithAnnotations
     {
         [Pure]
-        public IDisposable With{on}Pure() => throw new NotImplementedException();
+        public IDisposable With{off}Pure() => throw new NotImplementedException();
 
         [MustUseReturnValue]
-        public IDisposable With{on}MustUseReturnValue() => throw new NotImplementedException();
+        public IDisposable With{off}MustUseReturnValue() => throw new NotImplementedException();
 
         [MustDisposeResource]
         public IDisposable With{off}MustDisposeResource() => throw new NotImplementedException();
 
         [MustDisposeResource(false)]
-        public IDisposable With{on}MustDisposeResourceFalse() => throw new NotImplementedException();
+        public IDisposable With{off}MustDisposeResourceFalse() => throw new NotImplementedException();
 
         [MustDisposeResource(true)]
         public IDisposable With{off}MustDisposeResourceTrue() => throw new NotImplementedException();
+    }
+}
+
+namespace KindsOfMethods
+{
+    internal class Availability
+    {
+        string Meth{on}od() => null;
+
+        void Method{off}2() => null;
+
+        async Task Method{on}3() => await Task.Yield();
+
+        string Proper{off}ty => null;
     }
 }

@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp.Conversions;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
@@ -228,4 +229,45 @@ internal static class Extensions
     public static bool IsOnAnonymousMethodWithUnsupportedAttributes(this IAttributesOwnerDeclaration attributesOwnerDeclaration)
         => attributesOwnerDeclaration.DeclaredElement is IParameter { ContainingParametersOwner: IAnonymousMethodExpression }
             or IAnonymousMethodExpression;
+
+    [Pure]
+    public static bool IsDisposable(this ITypeElement type, IPsiModule psiModule)
+        => type.IsClrType(PredefinedType.IDISPOSABLE_FQN)
+            || type.IsClrType(PredefinedType.IASYNCDISPOSABLE_FQN)
+            || type.IsDescendantOf(PredefinedType.IDISPOSABLE_FQN.TryGetTypeElement(psiModule))
+            || type.IsDescendantOf(PredefinedType.IASYNCDISPOSABLE_FQN.TryGetTypeElement(psiModule));
+
+    [Pure]
+    public static bool HasDisposeMethods(this IStruct type)
+    {
+        Debug.Assert(type.IsByRefLike);
+
+        return type.Methods.Any(
+            method
+                => method is
+                {
+                    ShortName: "Dispose",
+                    AccessibilityDomain.DomainType:
+                    AccessibilityDomain.AccessibilityDomainType.INTERNAL or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                    TypeParameters: [],
+                    Parameters: [],
+                }
+                && method.ReturnType.IsVoid()
+                || method is
+                {
+                    ShortName: "DisposeAsync",
+                    AccessibilityDomain.DomainType:
+                    AccessibilityDomain.AccessibilityDomainType.INTERNAL or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                    TypeParameters: [],
+                    Parameters: [],
+                }
+                && method.ReturnType.IsValueTask()
+                || method
+                    .GetAttributeInstances(false)
+                    .Any(
+                        attribute => attribute is { PositionParameterCount: 0, NamedParameterCount: 0 }
+                            && attribute.GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute))
+                && method.AccessibilityDomain.DomainType is AccessibilityDomain.AccessibilityDomainType.INTERNAL
+                    or AccessibilityDomain.AccessibilityDomainType.PUBLIC);
+    }
 }

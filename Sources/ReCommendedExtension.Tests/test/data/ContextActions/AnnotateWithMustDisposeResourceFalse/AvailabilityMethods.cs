@@ -78,11 +78,11 @@ namespace Disposable
 
         public override Stream Annotated{on}WithMustUseReturnValue() => throw new NotImplementedException();
 
-        public override Stream Annotated{off}WithMustDisposeResource() => throw new NotImplementedException();
+        public override Stream Annotated{on}WithMustDisposeResource() => throw new NotImplementedException();
 
         public override IAsyncDisposable Annotated{on}WithMustDisposeResourceFalse() => throw new NotImplementedException();
 
-        public override IAsyncDisposable Annotated{off}WithMustDisposeResourceTrue() => throw new NotImplementedException();
+        public override IAsyncDisposable Annotated{on}WithMustDisposeResourceTrue() => throw new NotImplementedException();
 
         public DisposableRefStruct Oth{on}er() => 0;
     }
@@ -128,12 +128,12 @@ namespace Disposable
         public IDisposable With{on}MustUseReturnValue() => throw new NotImplementedException();
 
         [MustDisposeResource]
-        public IDisposable With{off}MustDisposeResource() => throw new NotImplementedException();
+        public IDisposable With{on}MustDisposeResource() => throw new NotImplementedException();
 
         [MustDisposeResource(false)]
-        public IDisposable With{on}MustDisposeResourceFalse() => throw new NotImplementedException();
+        public IDisposable With{off}MustDisposeResourceFalse() => throw new NotImplementedException();
 
         [MustDisposeResource(true)]
-        public IDisposable With{off}MustDisposeResourceTrue() => throw new NotImplementedException();
+        public IDisposable With{on}MustDisposeResourceTrue() => throw new NotImplementedException();
     }
 }

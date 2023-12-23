@@ -1,9 +1,8 @@
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.TextControl;
 
 namespace ReCommendedExtension.ContextActions;
 
@@ -21,7 +20,8 @@ public sealed class AnnotateWithValueRange(ICSharpContextActionDataProvider prov
 
     protected override string AnnotationAttributeTypeName => nameof(ValueRangeAttribute);
 
-    protected override AttributeValue[] AnnotationArguments => new[] { new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT) };
+    protected override AttributeValue[] GetAnnotationArguments(IPsiModule psiModule)
+        => new[] { new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT) };
 
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
         => declaredElement switch
@@ -34,12 +34,4 @@ public sealed class AnnotateWithValueRange(ICSharpContextActionDataProvider prov
 
             _ => false,
         };
-
-    protected override void ExecutePsiTransactionPostProcess(ITextControl textControl, IAttribute attribute)
-    {
-        Debug.Assert(attribute.Arguments is [{ }]);
-
-        textControl.Caret.MoveTo(attribute.Arguments[0].GetDocumentRange().EndOffset, CaretVisualPlacement.DontScrollIfVisible);
-        textControl.EmulateAction("TextControl.Backspace");
-    }
 }

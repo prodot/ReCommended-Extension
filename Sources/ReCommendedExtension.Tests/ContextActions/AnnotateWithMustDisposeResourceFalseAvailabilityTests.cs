@@ -9,11 +9,12 @@ namespace ReCommendedExtension.Tests.ContextActions;
 [TestFixture]
 [TestNet80(ANNOTATIONS_PACKAGE)]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-public sealed class AnnotateWithMustDisposeResourceAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithMustDisposeResource>
+public sealed class AnnotateWithMustDisposeResourceFalseAvailabilityTests
+    : CSharpContextActionAvailabilityTestBase<AnnotateWithMustDisposeResourceFalse>
 {
     protected override string ExtraPath => "";
 
-    protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithMustDisposeResource";
+    protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithMustDisposeResourceFalse";
 
     [Test]
     public void TestAvailabilityTypes() => DoNamedTest2();
