@@ -8,9 +8,7 @@ using JetBrains.ReSharper.Psi.Search;
 
 namespace ReCommendedExtension.Analyzers.AsyncVoid;
 
-[ElementProblemAnalyzer(
-    typeof(ICSharpDeclaration),
-    HighlightingTypes = new[] { typeof(AsyncVoidFunctionExpressionWarning), typeof(AvoidAsyncVoidWarning) })]
+[ElementProblemAnalyzer(typeof(ICSharpDeclaration), HighlightingTypes = [typeof(AsyncVoidFunctionExpressionWarning), typeof(AvoidAsyncVoidWarning)])]
 public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaration>
 {
     [Pure]

@@ -6,9 +6,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor;
 
-[ElementProblemAnalyzer(
-    typeof(IInvocationExpression),
-    HighlightingTypes = new[] { typeof(NotifyPropertyChangedInvocatorFromConstructorWarning) })]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(NotifyPropertyChangedInvocatorFromConstructorWarning)])]
 public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
     [Pure]

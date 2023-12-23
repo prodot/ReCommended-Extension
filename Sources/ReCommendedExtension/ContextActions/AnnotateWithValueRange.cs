@@ -21,8 +21,7 @@ public sealed class AnnotateWithValueRange(ICSharpContextActionDataProvider prov
 
     protected override string AnnotationAttributeTypeName => nameof(ValueRangeAttribute);
 
-    protected override AttributeValue[] GetAnnotationArguments(IPsiModule psiModule)
-        => new[] { new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT) };
+    protected override AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => [new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT)];
 
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
         => declaredElement switch

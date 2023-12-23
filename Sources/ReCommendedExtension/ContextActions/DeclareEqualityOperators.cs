@@ -76,7 +76,7 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
 
             declaration.AddSuperInterface(
-                TypeFactory.CreateType(equalityOperatorsInterface, new[] { type, type, PredefinedType.BOOLEAN_FQN.GetType(psiModule) }),
+                TypeFactory.CreateType(equalityOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(psiModule)]),
                 false);
 
             return _ => { };

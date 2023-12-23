@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.UnthrowableException;
 
-[ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(UnthrowableExceptionWarning) })]
+[ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = [typeof(UnthrowableExceptionWarning)])]
 public sealed class UnthrowableExceptionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 {
     static readonly Dictionary<string, string> unthrowableExceptions = new(StringComparer.Ordinal)

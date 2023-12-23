@@ -46,6 +46,7 @@ internal static class Extensions
         return false;
     }
 
+    [Pure]
     public static IEnumerable<T> WithoutObsolete<T>(this IEnumerable<T> fields) where T : class, IAttributesOwner
         => from field in fields where !field.HasAttributeInstance(PredefinedType.OBSOLETE_ATTRIBUTE_CLASS, false) select field;
 

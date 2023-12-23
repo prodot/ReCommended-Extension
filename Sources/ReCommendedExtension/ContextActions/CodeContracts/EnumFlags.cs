@@ -37,6 +37,7 @@ public sealed class EnumFlags(ICSharpContextActionDataProvider provider) : AddCo
 
     internal sealed record EnumContractInfo<E> : EnumContractInfo where E : struct
     {
+        [Pure]
         static IEnumerable<E> Range(E min, E max, Func<E, E, bool> isLessOrEquals, Func<E, E> getMultipliedWithTwo)
         {
             for (var i = min; isLessOrEquals(i, max); i = getMultipliedWithTwo(i))

@@ -32,6 +32,7 @@ internal abstract record ContractInfo
                     ? referenceExpression.Reference.GetName()
                     : null;
 
+        [JetBrains.Annotations.Pure]
         public static IList<ContractStatementInfo> CreateContractStatementInfos(IBlock body)
         {
             var list = new List<ContractStatementInfo>();
@@ -192,7 +193,7 @@ internal abstract record ContractInfo
         Debug.Assert(contractClassAttributeTypeElement is { });
         var attribute = factory.CreateAttribute(
             contractClassAttributeTypeElement,
-            new[] { new AttributeValue(typeofExpression.ArgumentType) },
+            [new AttributeValue(typeofExpression.ArgumentType)],
             Array.Empty<Pair<string, AttributeValue>>());
 
         typeDeclaration.AddAttributeAfter(attribute, null);

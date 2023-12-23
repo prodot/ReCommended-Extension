@@ -21,14 +21,17 @@ public sealed class EmptyArrayInitializationAnalyzerTests : CSharpHighlightingTe
     [TestNet60]
     [SuppressMessage("ReSharper", "EmptyArrayInitialization")]
     [SuppressMessage("ReSharper", "UseArrayEmptyMethod")]
+    [SuppressMessage("ReSharper", "UseCollectionExpression")]
     public void Compiler()
     {
         static int[] ParamsArray(params int[] items) => items;
-
         Assert.AreSame(Array.Empty<int>(), ParamsArray());
 
         int[] array = { };
         Assert.AreNotSame(Array.Empty<int>(), array);
+
+        int[] array2 = [];
+        Assert.AreSame(Array.Empty<int>(), array2);
 
         Assert.AreNotSame(Array.Empty<int>(), new int[] { });
         Assert.AreNotSame(Array.Empty<int>(), new int[0]);

@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization;
 
-[ElementProblemAnalyzer(typeof(IArrayInitializer), HighlightingTypes = new[] { typeof(ArrayWithDefaultValuesInitializationSuggestion) })]
+[ElementProblemAnalyzer(typeof(IArrayInitializer), HighlightingTypes = [typeof(ArrayWithDefaultValuesInitializationSuggestion)])]
 public sealed class ArrayWithDefaultValuesInitializationAnalyzer : ElementProblemAnalyzer<IArrayInitializer>
 {
     [Pure]

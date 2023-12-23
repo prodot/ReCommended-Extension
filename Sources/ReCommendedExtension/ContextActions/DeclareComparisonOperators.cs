@@ -76,7 +76,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
 
             declaration.AddSuperInterface(
-                TypeFactory.CreateType(comparisonOperatorsInterface, new[] { type, type, PredefinedType.BOOLEAN_FQN.GetType(psiModule) }),
+                TypeFactory.CreateType(comparisonOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(psiModule)]),
                 false);
 
             return _ => { };

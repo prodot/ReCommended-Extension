@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.UncatchableException;
 
-[ElementProblemAnalyzer(typeof(ISpecificCatchClause), HighlightingTypes = new[] { typeof(UncatchableExceptionWarning) })]
+[ElementProblemAnalyzer(typeof(ISpecificCatchClause), HighlightingTypes = [typeof(UncatchableExceptionWarning)])]
 public sealed class UncatchableExceptionAnalyzer : ElementProblemAnalyzer<ISpecificCatchClause>
 {
     static readonly Dictionary<string, string> uncatchableExceptions = new(StringComparer.Ordinal)

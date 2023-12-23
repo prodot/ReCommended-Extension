@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.LocalSuppression;
 
-[ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = new[] { typeof(LocalSuppressionWarning) })]
+[ElementProblemAnalyzer(typeof(ICSharpCommentNode), HighlightingTypes = [typeof(LocalSuppressionWarning)])]
 public sealed class LocalSuppressionAnalyzer : ElementProblemAnalyzer<ICSharpCommentNode>
 {
     [Pure]

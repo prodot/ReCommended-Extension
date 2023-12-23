@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
 
-[ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(EmptyArrayInitializationWarning) })]
+[ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = [typeof(EmptyArrayInitializationWarning)])]
 public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 {
     [Pure]

@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.ConditionalInvocation;
 
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = new[] { typeof(ConditionalInvocationHint) })]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(ConditionalInvocationHint)])]
 public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
     [Pure]

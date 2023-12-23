@@ -35,7 +35,7 @@ public sealed class AnnotateWithAttributeUsageFix(MissingAttributeUsageAnnotatio
 
             attribute = factory.CreateAttribute(
                 typeElement,
-                new[] { new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT) },
+                [new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT)],
                 Array.Empty<Pair<string, AttributeValue>>());
 
             attribute = highlighting.Declaration.AddAttributeBefore(attribute, null); // add as last attribute

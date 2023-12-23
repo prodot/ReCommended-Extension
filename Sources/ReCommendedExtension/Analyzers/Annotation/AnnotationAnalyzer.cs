@@ -14,12 +14,12 @@ namespace ReCommendedExtension.Analyzers.Annotation;
 
 [ElementProblemAnalyzer(
     typeof(IAttributesOwnerDeclaration),
-    HighlightingTypes = new[]
-    {
+    HighlightingTypes =
+    [
         typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
         typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint),
         typeof(InvalidValueRangeBoundaryWarning), typeof(MissingAttributeUsageAnnotationWarning), typeof(MissingNotNullWhenAnnotationSuggestion),
-    })]
+    ])]
 public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache, CodeAnnotationsConfiguration codeAnnotationsConfiguration)
     : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
 {

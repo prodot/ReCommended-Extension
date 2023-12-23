@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument;
 
-[ElementProblemAnalyzer(typeof(IObjectCreationExpression), HighlightingTypes = new[] { typeof(ArgumentExceptionConstructorArgumentWarning) })]
+[ElementProblemAnalyzer(typeof(IObjectCreationExpression), HighlightingTypes = [typeof(ArgumentExceptionConstructorArgumentWarning)])]
 public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProblemAnalyzer<IObjectCreationExpression>
 {
     protected override void Run(IObjectCreationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

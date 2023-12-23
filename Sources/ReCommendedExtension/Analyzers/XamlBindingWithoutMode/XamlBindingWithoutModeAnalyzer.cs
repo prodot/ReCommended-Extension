@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Xml.Tree;
 
 namespace ReCommendedExtension.Analyzers.XamlBindingWithoutMode;
 
-[ElementProblemAnalyzer(typeof(IXmlTreeNode), HighlightingTypes = new[] { typeof(XamlBindingWithoutModeWarning) })]
+[ElementProblemAnalyzer(typeof(IXmlTreeNode), HighlightingTypes = [typeof(XamlBindingWithoutModeWarning)])]
 public sealed class XamlBindingWithoutModeAnalyzer : ElementProblemAnalyzer<IXmlTreeNode>
 {
     protected override void Run(IXmlTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

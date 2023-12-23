@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.InternalConstructor;
 
-[ElementProblemAnalyzer(typeof(IConstructorDeclaration), HighlightingTypes = new[] { typeof(InternalConstructorVisibilitySuggestion) })]
+[ElementProblemAnalyzer(typeof(IConstructorDeclaration), HighlightingTypes = [typeof(InternalConstructorVisibilitySuggestion)])]
 public sealed class InternalConstructorVisibilityAnalyzer : ElementProblemAnalyzer<IConstructorDeclaration>
 {
     /// <remarks>

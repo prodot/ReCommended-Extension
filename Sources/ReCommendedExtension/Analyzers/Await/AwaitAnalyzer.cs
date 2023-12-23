@@ -9,7 +9,7 @@ using JetBrains.Util.dataStructures;
 
 namespace ReCommendedExtension.Analyzers.Await;
 
-[ElementProblemAnalyzer(typeof(IAwaitExpression), HighlightingTypes = new[] { typeof(RedundantCapturedContextSuggestion) })]
+[ElementProblemAnalyzer(typeof(IAwaitExpression), HighlightingTypes = [typeof(RedundantCapturedContextSuggestion)])]
 public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
 {
     [Pure]

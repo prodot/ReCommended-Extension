@@ -8,11 +8,11 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.LockOnObjectWithWeakIdentity;
 
-[ElementProblemAnalyzer(typeof(ILockStatement), HighlightingTypes = new[] { typeof(LockOnObjectWithWeakIdentityWarning) })]
+[ElementProblemAnalyzer(typeof(ILockStatement), HighlightingTypes = [typeof(LockOnObjectWithWeakIdentityWarning)])]
 public sealed class LockOnObjectWithWeakIdentityAnalyzer : ElementProblemAnalyzer<ILockStatement>
 {
     static readonly IClrTypeName[] classTypes =
-    {
+    [
         // remoting
         PredefinedType.MARSHAL_BY_REF_OBJECT_FQN,
 
@@ -24,8 +24,9 @@ public sealed class LockOnObjectWithWeakIdentityAnalyzer : ElementProblemAnalyze
 
         // threading
         PredefinedType.THREAD_FQN,
-    };
+    ];
 
+    [Pure]
     static string? TryGetHighlightingMessage(ICSharpExpression monitor)
     {
         if (monitor.GetOperandThroughParenthesis() is IThisExpression)

@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.YieldReturnWithinLock;
 
-[ElementProblemAnalyzer(typeof(IYieldStatement), HighlightingTypes = new[] { typeof(YieldReturnWithinLockWarning) })]
+[ElementProblemAnalyzer(typeof(IYieldStatement), HighlightingTypes = [typeof(YieldReturnWithinLockWarning)])]
 public sealed class YieldReturnWithinLockAnalyzer : ElementProblemAnalyzer<IYieldStatement>
 {
     protected override void Run(IYieldStatement element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

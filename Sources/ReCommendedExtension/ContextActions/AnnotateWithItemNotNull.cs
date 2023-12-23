@@ -14,6 +14,7 @@ namespace ReCommendedExtension.ContextActions;
     Description = "Annotates with the [ItemNotNull] attribute.")]
 public sealed class AnnotateWithItemNotNull(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
+    [Pure]
     static bool IsAvailableForType(IType type, ITreeNode context)
     {
         if ((type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(context))

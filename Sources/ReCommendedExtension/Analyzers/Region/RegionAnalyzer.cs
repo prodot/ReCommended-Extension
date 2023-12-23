@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Analyzers.Region;
 
 [ElementProblemAnalyzer(
     typeof(IStartRegion),
-    HighlightingTypes = new[] { typeof(RegionWithinTypeMemberBodyWarning), typeof(RegionWithSingleElementSuggestion) })]
+    HighlightingTypes = [typeof(RegionWithinTypeMemberBodyWarning), typeof(RegionWithSingleElementSuggestion)])]
 public sealed class RegionAnalyzer : ElementProblemAnalyzer<IStartRegion>
 {
     protected override void Run(IStartRegion element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

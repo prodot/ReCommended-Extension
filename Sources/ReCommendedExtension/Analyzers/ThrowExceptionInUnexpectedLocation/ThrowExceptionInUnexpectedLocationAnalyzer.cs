@@ -15,7 +15,7 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
 
-[ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = new[] { typeof(ThrowExceptionInUnexpectedLocationWarning) })]
+[ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = [typeof(ThrowExceptionInUnexpectedLocationWarning)])]
 public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 {
     sealed class ControlFlowGraphInspectorWithValueAnalysis : CSharpControlFlowGraphInspector
@@ -26,6 +26,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
         /// method turns off the value analysis mode (it effectively replaces the provided <paramref name="analysisMode"/> with
         /// <see cref="ValueAnalysisMode.OFF"/> when the nullable warning context is detected).
         /// </remarks>
+        [Pure]
         public static CSharpControlFlowGraphInspector Inspect(ICSharpControlFlowGraph graph, ValueAnalysisMode analysisMode)
         {
             var element = (ICSharpTreeNode?)graph.Declaration ?? graph.OwnerNode;
@@ -244,6 +245,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
         return exceptionTypeElement is { } && exceptionTypeElement.IsDescendantOf(baseExceptionType);
     }
 
+    [Pure]
     static IEnumerable<ITypeElement> GetAllowedExceptions(Location location, IPsiModule psiModule)
     {
         ITypeElement GetTypeElementByClrName(IClrTypeName clrTypeName)

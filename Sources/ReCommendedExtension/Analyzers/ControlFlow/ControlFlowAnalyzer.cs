@@ -18,7 +18,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow;
 
 [ElementProblemAnalyzer(
     typeof(ICSharpTreeNode),
-    HighlightingTypes = new[] { typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion) })]
+    HighlightingTypes = [typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion)])]
 public sealed class ControlFlowAnalyzer(
     CodeAnnotationsCache codeAnnotationsCache,
     NullableReferenceTypesDataFlowAnalysisRunSynchronizer referenceTypesDataFlowAnalysisRunSynchronizer) : ElementProblemAnalyzer<ICSharpTreeNode>

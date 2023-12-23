@@ -36,5 +36,6 @@ public abstract class AnnotateWith<A>(ICSharpContextActionDataProvider provider)
         return null;
     }
 
+    [Pure]
     protected abstract bool CanBeAnnotated(IDeclaredElement? declaredElement);
 }

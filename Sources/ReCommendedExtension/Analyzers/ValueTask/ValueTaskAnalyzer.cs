@@ -17,11 +17,12 @@ namespace ReCommendedExtension.Analyzers.ValueTask;
 
 [ElementProblemAnalyzer(
     typeof(ICSharpTreeNode),
-    HighlightingTypes = new[] { typeof(PossibleMultipleConsumptionWarning), typeof(IntentionalBlockingAttemptWarning) })]
+    HighlightingTypes = [typeof(PossibleMultipleConsumptionWarning), typeof(IntentionalBlockingAttemptWarning)])]
 public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 {
     sealed class Inspector : CSharpControlFlowGraphInspector
     {
+        [Pure]
         public static Inspector Inspect(
             ICSharpControlFlowGraph controlFlowGraph,
             ValueAnalysisMode analysisMode,
@@ -69,16 +70,14 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         IResolveContext ResolveContext => ContextFactory.ResolveContext;
 
+        [Pure]
         IEnumerable<ITreeNode> GetAccessExpressionsThroughLocalFunctionCalls(
             CSharpControlFlowContext context,
             ITreeNode expression,
             VariableInfo info)
-        {
-            var accessExpressionsThroughLocalFunctionCalls = GetAccessExpressionsThroughLocalFunctionCalls(context, expression, info, []);
+            => GetAccessExpressionsThroughLocalFunctionCalls(context, expression, info, []);
 
-            return accessExpressionsThroughLocalFunctionCalls;
-        }
-
+        [Pure]
         bool IsPossibleConsumptionUsage(ICSharpExpression ex, IDeclaredElement? element)
         {
             var type = element.Type();
@@ -131,6 +130,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             return true;
         }
 
+        [Pure]
         bool IsPossibleConsumption(CSharpControlFlowContext context, ICSharpExpression expression, VariableInfo info)
         {
             foreach (var localFunctionCall in GetAccessExpressionsThroughLocalFunctionCalls(context, expression, info))

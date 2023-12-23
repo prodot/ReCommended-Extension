@@ -3,19 +3,18 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl;
-using JetBrains.ReSharper.Psi.Modules;
 
 namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
 [ElementProblemAnalyzer(
     typeof(IClassLikeDeclaration),
-    HighlightingTypes = new[]
-    {
+    HighlightingTypes =
+    [
         typeof(ImplementEqualityOperatorsForClassesSuggestion), typeof(ImplementEqualityOperatorsForStructsSuggestion),
         typeof(ImplementEqualityOperatorsForRecordsSuggestion), typeof(ImplementComparisonOperatorsForClassesSuggestion),
         typeof(ImplementComparisonOperatorsForStructsSuggestion), typeof(ImplementComparisonOperatorsForRecordsSuggestion),
         typeof(ImplementEquatableWarning), typeof(OverrideEqualsWarning),
-    })]
+    ])]
 public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<IClassLikeDeclaration>
 {
     [Pure]

@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable;
 
-[ElementProblemAnalyzer(typeof(ISpecificCatchClause), HighlightingTypes = new[] { typeof(CatchClauseWithoutVariableSuggestion) })]
+[ElementProblemAnalyzer(typeof(ISpecificCatchClause), HighlightingTypes = [typeof(CatchClauseWithoutVariableSuggestion)])]
 public sealed class CatchClauseWithoutVariableAnalyzer : ElementProblemAnalyzer<ISpecificCatchClause>
 {
     protected override void Run(ISpecificCatchClause element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

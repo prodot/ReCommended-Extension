@@ -28,6 +28,7 @@ public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provid
 {
     sealed class InjectLanguageActionItem(IInjectorProviderInLiterals injectorProvider, ITreeNode ownerNode) : BulbActionBase
     {
+        [Pure]
         ICSharpCommentNode CreateCommentNode(CSharpElementFactory factory, CommentType commentType)
             => commentType switch
             {

@@ -34,7 +34,7 @@ public sealed class AnnotateWithNotNullWhenTrueFix(MissingNotNullWhenAnnotationS
 
             var attribute = factory.CreateAttribute(
                 typeElement,
-                new[] { new AttributeValue(ConstantValue.Bool(true, psiModule)) },
+                [new AttributeValue(ConstantValue.Bool(true, psiModule))],
                 Array.Empty<Pair<string, AttributeValue>>());
 
             attribute = highlighting.Declaration.AddAttributeBefore(attribute, null); // add as last attribute

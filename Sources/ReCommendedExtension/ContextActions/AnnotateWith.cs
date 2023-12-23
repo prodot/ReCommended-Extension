@@ -27,6 +27,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
     [Pure]
     protected abstract bool IsAttribute(IAttribute attribute);
 
+    [Pure]
     protected abstract Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,
         IPsiModule psiModule,
