@@ -175,7 +175,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     return Location.DisposeAsyncMethod;
                 }
 
-                if (methodDeclaration.DeclaredElement is { ShortName: nameof(IDisposable.Dispose), Parameters: [{ } parameter] }
+                if (methodDeclaration.DeclaredElement is { ShortName: nameof(IDisposable.Dispose), TypeParameters: [], Parameters: [{ } parameter] }
                     && parameter.Type.IsBool())
                 {
                     var controlFlowGraph = (ICSharpControlFlowGraph?)ControlFlowBuilder.GetGraph(methodDeclaration);

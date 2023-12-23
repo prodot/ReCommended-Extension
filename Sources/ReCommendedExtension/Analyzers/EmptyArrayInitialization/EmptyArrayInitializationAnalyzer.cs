@@ -13,7 +13,7 @@ public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<IC
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
         => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType
-            && arrayType.Methods.Any(method => method is { IsStatic: true, ShortName: nameof(Array.Empty), Parameters: [] });
+            && arrayType.Methods.Any(method => method is { IsStatic: true, ShortName: nameof(Array.Empty), TypeParameters: [_], Parameters: [] });
 
     [Pure]
     static string CreateHighlightingMessage(IType arrayElementType)

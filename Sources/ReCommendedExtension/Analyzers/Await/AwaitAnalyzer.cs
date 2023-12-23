@@ -22,7 +22,7 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
         {
             foreach (var method in typeElement.Methods)
             {
-                if (method is { ShortName: nameof(Task.ConfigureAwait), Parameters: [{ } parameter] })
+                if (method is { ShortName: nameof(Task.ConfigureAwait), TypeParameters: [], Parameters: [{ } parameter] })
                 {
                     if (parameter.Type.IsBool())
                     {
