@@ -12,11 +12,11 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.Annotation;
 
 [QuickFix]
-public sealed class AnnotateWithNotNullWhenTrueFix(MissingNotNullWhenAnnotationSuggestion highlighting) : QuickFixBase
+public sealed class AnnotateWithNotNullWhenTrueFix(MissingNotNullWhenAnnotationSuggestion highlighting) : QuickFixBase // todo: make it ContextAction
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Annotate with [{nameof(NotNullWhenAttribute)[..^"Attribute".Length]}(true)]";
+    public override string Text => $"Annotate with [{nameof(NotNullWhenAttribute).WithoutSuffix()}(true)]";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {

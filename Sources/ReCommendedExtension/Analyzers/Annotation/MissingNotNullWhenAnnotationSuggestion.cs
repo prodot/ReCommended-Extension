@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class MissingNotNullWhenAnnotationSuggestion(IAttributesOwnerDeclaration declaration, string message) : Highlighting(message)
+public sealed class MissingNotNullWhenAnnotationSuggestion(IAttributesOwnerDeclaration declaration, string message) : Highlighting(message) // todo: use MissingAnnotationWarning instead
 {
     const string SeverityId = "MissingNotNullWhenAnnotation";
 

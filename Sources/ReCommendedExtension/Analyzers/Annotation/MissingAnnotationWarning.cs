@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     SeverityId,
     null,
     HighlightingGroupIds.ConstraintViolation,
-    "Missing nullability annotation" + ZoneMarker.Suffix,
+    "Missing annotation" + ZoneMarker.Suffix,
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
@@ -18,5 +18,13 @@ public sealed class MissingAnnotationWarning(string message, IAttributesOwnerDec
 {
     const string SeverityId = "MissingAnnotation";
 
-    public override DocumentRange CalculateRange() => declaration.GetNameDocumentRange();
+    public override DocumentRange CalculateRange()
+    {
+        if (declaration is IPrimaryConstructorDeclaration primaryConstructor)
+        {
+            return primaryConstructor.GetDocumentRange();
+        }
+
+        return declaration.GetNameDocumentRange();
+    }
 }

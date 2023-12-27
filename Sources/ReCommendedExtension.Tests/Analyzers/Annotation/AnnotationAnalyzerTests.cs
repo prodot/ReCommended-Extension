@@ -1,5 +1,6 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -24,7 +25,8 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
             or ConflictingAnnotationWarning
             or InvalidValueRangeBoundaryWarning
             or MissingAttributeUsageAnnotationWarning
-            or MissingNotNullWhenAnnotationSuggestion;
+            or MissingNotNullWhenAnnotationSuggestion
+            or InParameterWithMustDisposeResourceAttributeWarning; // to figure out which cases are supported by R#
 
     [Test]
     [TestNetFramework45]
@@ -46,10 +48,6 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     [TestNet50]
     public void TestSuppressMessage_NET_5() => DoNamedTest2();
-
-    [Test]
-    [TestNetFramework45]
-    public void TestPureWithMustUseReturnValue() => DoNamedTest2();
 
     [TestCase("Other_Pessimistic.cs", ValueAnalysisMode.PESSIMISTIC)]
     [TestCase("Other_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
@@ -95,4 +93,40 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     [NullableContext(NullableContextKind.Disable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     public void TestEquals_NoNullableAnnotations() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestPurityAndDisposability_Types() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestPurityAndDisposability_Constructors() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestPurityAndDisposability_PrimaryConstructors() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestPurityAndDisposability_Methods() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestPurityAndDisposability_LocalFunctions() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestPurityAndDisposability_Parameters() => DoNamedTest2();
 }

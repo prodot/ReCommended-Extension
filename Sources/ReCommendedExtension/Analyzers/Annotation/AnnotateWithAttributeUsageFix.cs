@@ -13,11 +13,11 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.Annotation;
 
 [QuickFix]
-public sealed class AnnotateWithAttributeUsageFix(MissingAttributeUsageAnnotationWarning highlighting) : QuickFixBase
+public sealed class AnnotateWithAttributeUsageFix(MissingAttributeUsageAnnotationWarning highlighting) : QuickFixBase // todo: make it ContextAction
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Annotate with [{nameof(AttributeUsageAttribute)[..^"Attribute".Length]}]";
+    public override string Text => $"Annotate with [{nameof(AttributeUsageAttribute).WithoutSuffix()}]";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {

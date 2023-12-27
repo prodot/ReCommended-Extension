@@ -3,7 +3,6 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -18,28 +17,18 @@ public abstract class AddContractContextAction(ICSharpContextActionDataProvider 
 
     void AddAnnotation()
     {
-        if (TryGetAnnotationAttributeTypeName() is { } annotationAttributeTypeName)
+        if (TryGetAnnotationAttributeTypeName() is { } annotationAttributeTypeName
+            && Provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false) is { } attributesOwnerDeclaration)
         {
-            var attributesOwnerDeclaration = Provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
-
-            var attributeType = attributesOwnerDeclaration
-                ?.GetPsiServices()
-                .GetComponent<CodeAnnotationsConfiguration>()
-                .GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
-
-            if (attributeType is { })
+            var attributeType = attributesOwnerDeclaration.TryGetAnnotationAttributeType(annotationAttributeTypeName);
+            if (attributeType is { } && attributesOwnerDeclaration.Attributes.All(
+                attribute => attribute.GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
             {
-                Debug.Assert(attributesOwnerDeclaration is { });
+                var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 
-                if (attributesOwnerDeclaration.Attributes.All(
-                    attribute => attribute.GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
-                {
-                    var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
+                var attribute = factory.CreateAttribute(attributeType);
 
-                    var attribute = factory.CreateAttribute(attributeType);
-
-                    attributesOwnerDeclaration.AddAttributeAfter(attribute, attributesOwnerDeclaration.Attributes.LastOrDefault());
-                }
+                attributesOwnerDeclaration.AddAttributeAfter(attribute, attributesOwnerDeclaration.Attributes.LastOrDefault());
             }
         }
     }

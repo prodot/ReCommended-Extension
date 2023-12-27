@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     SeverityId,
     null,
     HighlightingGroupIds.DeclarationRedundancy,
-    "Redundant nullability annotation" + ZoneMarker.Suffix,
+    "Redundant annotation" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]

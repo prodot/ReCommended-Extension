@@ -5,6 +5,7 @@ using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.LinqTools;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Conversions;
@@ -14,6 +15,7 @@ using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using JetBrains.Util;
 
 namespace ReCommendedExtension;
 
@@ -270,5 +272,54 @@ internal static class Extensions
                             && attribute.GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute))
                 && method.AccessibilityDomain.DomainType is AccessibilityDomain.AccessibilityDomainType.INTERNAL
                     or AccessibilityDomain.AccessibilityDomainType.PUBLIC);
+    }
+
+    [Pure]
+    public static bool IsDisposable(this IType type, ITreeNode context)
+        => type.GetTypeElement() is { } typeElement
+            && (typeElement.IsDisposable(context.GetPsiModule()) && !type.IsTask() && !type.IsGenericTask()
+                || type is IDeclaredType declaredType && declaredType.GetTypeElement() is IStruct { IsByRefLike: true } s && s.HasDisposeMethods())
+            || type.IsTasklike(context)
+            && type.GetTasklikeUnderlyingType(context).GetTypeElement() is { } awaitedTypeElement
+            && awaitedTypeElement.IsDisposable(context.GetPsiModule())
+            && !awaitedTypeElement.Type().IsTask()
+            && !awaitedTypeElement.Type().IsGenericTask();
+
+    // todo: remove compiler directive "MUST_DISPOSE_RESOURCE_NO_TASK_LIKE" when [MustDisposeResource] supports task-like method and parameters (https://youtrack.jetbrains.com/issue/RSRP-495289/MustDisposeResource-should-support-task-like-method-and-parameters)
+
+    [Pure]
+#if !MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
+    [Obsolete($"Use the {nameof(IsDisposable)} method instead.")]
+#endif
+    public static bool IsDisposable_IgnoreTaskLike(this IType type, ITreeNode context)
+        => type.GetTypeElement() is { } typeElement
+            && (typeElement.IsDisposable(context.GetPsiModule()) && !type.IsTask() && !type.IsGenericTask()
+                || type is IDeclaredType declaredType && declaredType.GetTypeElement() is IStruct { IsByRefLike: true } s && s.HasDisposeMethods());
+
+    [Pure]
+    public static ITypeElement? TryGetAnnotationAttributeType(this IAttributesOwnerDeclaration attributesOwnerDeclaration, string attributeShortName)
+        => attributesOwnerDeclaration
+            .GetPsiServices()
+            .GetComponent<CodeAnnotationsConfiguration>()
+            .GetAttributeTypeForElement(attributesOwnerDeclaration, attributeShortName);
+
+    [Pure]
+    public static bool IsAnnotationProvided(this IAttributesOwnerDeclaration attributesOwnerDeclaration, string attributeShortName)
+        => attributesOwnerDeclaration.TryGetAnnotationAttributeType(attributeShortName) is { };
+
+    [Pure]
+    public static string WithoutSuffix(this string attributeShortName)
+    {
+        Debug.Assert(attributeShortName.EndsWith("Attribute", StringComparison.Ordinal));
+
+        return attributeShortName[..^"Attribute".Length];
+    }
+
+    [Pure]
+    public static string WithFirstCharacterUpperCased(this string value)
+    {
+        Debug.Assert(value is [>= 'a' and <= 'z', ..]);
+
+        return $"{value[0].ToUpperFast().ToString()}{value[1..]}";
     }
 }

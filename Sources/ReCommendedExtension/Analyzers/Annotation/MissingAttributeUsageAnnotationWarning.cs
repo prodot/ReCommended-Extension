@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class MissingAttributeUsageAnnotationWarning(IAttributesOwnerDeclaration declaration, string message) : Highlighting(message)
+public sealed class MissingAttributeUsageAnnotationWarning(IAttributesOwnerDeclaration declaration, string message) : Highlighting(message) // todo: use MissingAnnotationWarning instead
 {
     const string SeverityId = "MissingAttributeUsageAnnotation";
 

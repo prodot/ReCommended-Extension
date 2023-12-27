@@ -53,17 +53,12 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzer : Elem
     {
         if (IsNotifyPropertyChangedInvocatorFromConstructor(element))
         {
-            Debug.Assert(
-                NotifyPropertyChangedAnnotationProvider.NotifyPropertyChangedInvocatorAttributeShortName.EndsWith(
-                    "Attribute",
-                    StringComparison.Ordinal));
-
-            var attributeName = NotifyPropertyChangedAnnotationProvider.NotifyPropertyChangedInvocatorAttributeShortName[..^"Attribute".Length];
+            var name = nameof(NotifyPropertyChangedInvocatorAttribute).WithoutSuffix();
 
             consumer.AddHighlighting(
                 new NotifyPropertyChangedInvocatorFromConstructorWarning(
                     element,
-                    $"Invocation of a method annotated with [{attributeName}] from a constructor is redundant."));
+                    $"Invocation of a method annotated with [{name}] from a constructor is redundant."));
         }
     }
 }

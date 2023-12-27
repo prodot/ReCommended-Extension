@@ -69,6 +69,31 @@ namespace DisposableWithNearestTypeAnnotated
     internal record Child{off}Record : ParentRecord { }
 }
 
+namespace DisposableWithNearestTypeAnnotatedAgain
+{
+    [MustDisposeResource]
+    internal class GrandParent : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    internal class Parent : GrandParent { }
+
+    [MustDisposeResource]
+    internal class Chil{off}d : Parent { }
+
+    internal record GrandParentRecord : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource(true)]
+    internal record ParentRecord : GrandParentRecord { }
+
+    [MustDisposeResource]
+    internal record Child{off}Record : ParentRecord { }
+}
+
 namespace DisposableAnnotated
 {
     [MustDisposeResource]

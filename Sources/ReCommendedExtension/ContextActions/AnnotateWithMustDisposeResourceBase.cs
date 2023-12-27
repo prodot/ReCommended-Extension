@@ -3,31 +3,12 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions;
 
-// todo: remove compiler directive "MUST_DISPOSE_RESOURCE_NO_TASK_LIKE" when [MustDisposeResource] supports task-like method and parameters (https://youtrack.jetbrains.com/issue/RSRP-495289/MustDisposeResource-should-support-task-like-method-and-parameters)
-
 public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
-    [Pure]
-    static bool IsDisposable(IType type, ITreeNode context)
-        => type.GetTypeElement() is { } typeElement
-            && (typeElement.IsDisposable(context.GetPsiModule()) && !type.IsTask() && !type.IsGenericTask()
-                || type is IDeclaredType declaredType && declaredType.GetTypeElement() is IStruct { IsByRefLike: true } s && s.HasDisposeMethods())
-
-#if !MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-            || type.IsTasklike(context)
-            && type.GetTasklikeUnderlyingType(context).GetTypeElement() is { } awaitedTypeElement
-            && awaitedTypeElement.IsDisposable(context.GetPsiModule())
-            && !awaitedTypeElement.Type().IsTask()
-            && !awaitedTypeElement.Type().IsGenericTask()
-#endif
-    ;
-
     [Pure]
     protected abstract bool IsTypeAnnotated(ITypeElement type);
 
@@ -55,11 +36,11 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
 
         IConstructor { ContainingType: IStruct { IsByRefLike: true } s } => s.HasDisposeMethods(),
 
-        IMethod method => IsDisposable(method.ReturnType, context) && !IsAnyBaseMethodAnnotated(method),
+        IMethod method => method.ReturnType.IsDisposable_IgnoreTaskLike(context) && !IsAnyBaseMethodAnnotated(method),
 
-        ILocalFunction localFunction => IsDisposable(localFunction.ReturnType, context),
+        ILocalFunction localFunction => localFunction.ReturnType.IsDisposable_IgnoreTaskLike(context),
 
-        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => IsDisposable(parameter.Type, context)
+        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => parameter.Type.IsDisposable_IgnoreTaskLike(context)
             && !IsParameterOfAnyBaseMethodAnnotated(parameter),
 
         _ => false,

@@ -4,9 +4,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions;
 
@@ -50,17 +48,6 @@ public sealed class AnnotateWithPure(ICSharpContextActionDataProvider provider) 
     }
 
     [Pure]
-    static bool IsDisposable(IType type, ITreeNode context)
-        => type.GetTypeElement() is { } typeElement
-            && (typeElement.IsDisposable(context.GetPsiModule()) && !type.IsTask() && !type.IsGenericTask()
-                || type is IDeclaredType declaredType && declaredType.GetTypeElement() is IStruct { IsByRefLike: true } s && s.HasDisposeMethods())
-            || type.IsTasklike(context)
-            && type.GetTasklikeUnderlyingType(context).GetTypeElement() is { } awaitedTypeElement
-            && awaitedTypeElement.IsDisposable(context.GetPsiModule())
-            && !awaitedTypeElement.Type().IsTask()
-            && !awaitedTypeElement.Type().IsGenericTask();
-
-    [Pure]
     bool IsAnyBaseMethodAnnotated(IMethod method)
         => method
             .GetAllSuperMembers()
@@ -79,10 +66,10 @@ public sealed class AnnotateWithPure(ICSharpContextActionDataProvider provider) 
         => declaredElement switch
         {
             IMethod method => ReturnsAnyValueWithoutRefParameters(method)
-                && !IsDisposable(method.ReturnType, context)
+                && !method.ReturnType.IsDisposable(context)
                 && !IsAnyBaseMethodAnnotated(method),
 
-            ILocalFunction localFunction => ReturnsAnyValueWithoutRefParameters(localFunction) && !IsDisposable(localFunction.ReturnType, context),
+            ILocalFunction localFunction => ReturnsAnyValueWithoutRefParameters(localFunction) && !localFunction.ReturnType.IsDisposable(context),
 
             _ => false,
         };

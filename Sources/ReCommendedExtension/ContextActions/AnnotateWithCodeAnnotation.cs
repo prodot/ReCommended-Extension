@@ -1,6 +1,5 @@
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
@@ -18,10 +17,7 @@ public abstract class AnnotateWithCodeAnnotation(ICSharpContextActionDataProvide
         IPsiModule psiModule,
         out IAttribute[] attributesToReplace)
     {
-        var attributeType = attributesOwnerDeclaration
-            .GetPsiServices()
-            .GetComponent<CodeAnnotationsConfiguration>()
-            .GetAttributeTypeForElement(attributesOwnerDeclaration, AnnotationAttributeTypeName);
+        var attributeType = attributesOwnerDeclaration.TryGetAnnotationAttributeType(AnnotationAttributeTypeName);
         if (attributeType is { } && CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement, attributesOwnerDeclaration))
         {
             attributesToReplace = GetAttributesToReplace(attributesOwnerDeclaration);

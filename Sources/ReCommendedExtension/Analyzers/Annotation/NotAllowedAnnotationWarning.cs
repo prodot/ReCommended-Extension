@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     SeverityId,
     null,
     HighlightingGroupIds.ConstraintViolation,
-    "Nullability annotation is not allowed" + ZoneMarker.Suffix,
+    "Annotation is not allowed" + ZoneMarker.Suffix,
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]

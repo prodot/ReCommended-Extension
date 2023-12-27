@@ -2,6 +2,7 @@ using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
@@ -31,9 +32,7 @@ public abstract class AttributeHighlighting(
             {
                 range = new DocumentRange(
                     range.Document,
-                    new JetBrains.Util.TextRange(
-                        previousToken.GetDocumentRange().TextRange.StartOffset,
-                        nextToken.GetDocumentRange().TextRange.EndOffset));
+                    new TextRange(previousToken.GetDocumentRange().TextRange.StartOffset, nextToken.GetDocumentRange().TextRange.EndOffset));
             }
         }
 
