@@ -87,6 +87,6 @@ namespace Test_Annotated
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Annotate the parameter with [NotNullWhen(true)].
-(1): ReSharper Suggestion: Annotate the parameter with [NotNullWhen(true)].
-(2): ReSharper Suggestion: Annotate the parameter with [NotNullWhen(true)].
+(0): ReSharper Warning: Annotate the parameter with [NotNullWhen(true)].
+(1): ReSharper Warning: Annotate the parameter with [NotNullWhen(true)].
+(2): ReSharper Warning: Annotate the parameter with [NotNullWhen(true)].

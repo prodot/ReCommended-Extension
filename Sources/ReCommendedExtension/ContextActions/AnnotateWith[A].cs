@@ -12,7 +12,7 @@ public abstract class AnnotateWith<A>(ICSharpContextActionDataProvider provider)
 {
     protected sealed override string AnnotationAttributeTypeName => typeof(A).Name;
 
-    protected override bool IsAttribute(IAttribute attribute) => attribute.GetAttributeType().GetClrName().FullName == typeof(A).FullName;
+    protected sealed override bool IsAttribute(IAttribute attribute) => attribute.GetAttributeType().GetClrName().FullName == typeof(A).FullName;
 
     protected sealed override Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,

@@ -24,8 +24,6 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
             or MissingSuppressionJustificationWarning
             or ConflictingAnnotationWarning
             or InvalidValueRangeBoundaryWarning
-            or MissingAttributeUsageAnnotationWarning
-            or MissingNotNullWhenAnnotationSuggestion
             or InParameterWithMustDisposeResourceAttributeWarning; // to figure out which cases are supported by R#
 
     [Test]

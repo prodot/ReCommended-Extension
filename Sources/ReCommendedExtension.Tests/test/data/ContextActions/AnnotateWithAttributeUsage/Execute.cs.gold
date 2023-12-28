@@ -3,5 +3,5 @@
 namespace Test
 {
     [AttributeUsage({caret})]
-    public class BaseAttribute : Attribute { }
+    internal class SomeAttribute : Attribute { }
 }

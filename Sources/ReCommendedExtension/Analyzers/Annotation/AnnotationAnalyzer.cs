@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     [
         typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
         typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint),
-        typeof(InvalidValueRangeBoundaryWarning), typeof(MissingAttributeUsageAnnotationWarning), typeof(MissingNotNullWhenAnnotationSuggestion),
+        typeof(InvalidValueRangeBoundaryWarning),
     ])]
 public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache) : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
 {
@@ -342,7 +342,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         {
             if (TryGetAttributeNameIfAnnotationProvided(kind) is { })
             {
-                consumer.AddHighlighting(new MissingAnnotationWarning(message, element));
+                consumer.AddHighlighting(new MissingAnnotationWarning(element, message));
             }
         }
 
@@ -1121,16 +1121,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             && !AnyBaseClassAnnotated(classDeclaration))
         {
             consumer.AddHighlighting(
-                new MissingAttributeUsageAnnotationWarning(
-                    attributesOwnerDeclaration,
-                    $"Annotate the attribute with [{nameof(AttributeUsageAttribute).WithoutSuffix()}]."));
+                new MissingAnnotationWarning(attributesOwnerDeclaration, $"Annotate the attribute with [{nameof(AttributeUsageAttribute).WithoutSuffix()}]."));
         }
     }
 
     static void AnalyzeMissingNotNullWhenAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
         if (attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled()
-            && attributesOwnerDeclaration is IParameterDeclaration parameterDeclaration
+            && attributesOwnerDeclaration is IParameterDeclaration { DeclaredElement.Kind: ParameterKind.VALUE } parameterDeclaration
             && !parameterDeclaration.IsInsideClosure()
             && parameterDeclaration.GetContainingTypeMemberDeclarationIgnoringClosures() is IMethodDeclaration
             {
@@ -1147,9 +1145,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             // returns true
 
             consumer.AddHighlighting(
-                new MissingNotNullWhenAnnotationSuggestion(
-                    attributesOwnerDeclaration,
-                    $"Annotate the parameter with [{nameof(NotNullWhenAttribute).WithoutSuffix()}(true)]."));
+                new MissingAnnotationWarning(attributesOwnerDeclaration, $"Annotate the parameter with [{nameof(NotNullWhenAttribute).WithoutSuffix()}(true)]."));
         }
     }
 
@@ -1279,8 +1275,8 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 {
                     consumer.AddHighlighting(
                         new MissingAnnotationWarning(
-                            $"Declared element can never be null by default, but is not annotated with '{nameof(NotNullAttribute)}'.",
-                            attributesOwnerDeclaration));
+                            attributesOwnerDeclaration,
+                            $"Declared element can never be null by default, but is not annotated with '{nameof(NotNullAttribute)}'."));
                 }
                 break;
             }
@@ -1306,8 +1302,8 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         {
                             consumer.AddHighlighting(
                                 new MissingAnnotationWarning(
-                                    $"Declared element is nullable, but is not annotated with '{nameof(NotNullAttribute)}' or '{nameof(CanBeNullAttribute)}'.",
-                                    attributesOwnerDeclaration));
+                                    attributesOwnerDeclaration,
+                                    $"Declared element is nullable, but is not annotated with '{nameof(NotNullAttribute)}' or '{nameof(CanBeNullAttribute)}'."));
                         }
                         break;
                     }
@@ -1448,8 +1444,6 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
     protected override void Run(IAttributesOwnerDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        // todo: consider merging 'Missing...' warnings or splitting 'Redundant...' and 'NotAllowed' highlightings
-
         if (!element.IsNullableAnnotationsContextEnabled())
         {
             // [NotNull], [CanBeNull] annotations

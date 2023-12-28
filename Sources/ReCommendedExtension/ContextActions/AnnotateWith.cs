@@ -22,6 +22,8 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
     IAttribute[] attributesToReplace = Array.Empty<IAttribute>();
 
+    protected ICSharpContextActionDataProvider Provider => provider;
+
     protected abstract string AnnotationAttributeTypeName { get; }
 
     [Pure]
