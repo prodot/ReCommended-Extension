@@ -121,4 +121,10 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
     public void TestPurityAndDisposability_Parameters() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestPurityAndDisposability_DisposableOverride() => DoNamedTest2();
 }

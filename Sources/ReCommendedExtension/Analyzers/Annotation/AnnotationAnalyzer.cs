@@ -315,6 +315,12 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             => method.GetAllSuperMembers().Any(baseMethod => IsAnnotated(baseMethod.Member, kind));
 
         [Pure]
+        static bool IsMethodOverridenWithOtherReturnType(IMethod method)
+            => method.IsOverride
+                && method.GetImmediateSuperMembers().FirstOrDefault() is { Member: IMethod baseMethod }
+                && !TypeEqualityComparer.Default.Equals(baseMethod.ReturnType, method.ReturnType);
+
+        [Pure]
         static bool IsParameterOfAnyBaseMethodAnnotated(IParameter parameter, PurityOrDisposabilityKind kind)
         {
             if (parameter.ContainingParametersOwner is IMethod method)
@@ -684,41 +690,71 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         }
                         else
                         {
-                            if (methodOrLocalFunction is IMethod method
-                                && IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource))
+                            var highlighted = false;
+
+                            if (methodOrLocalFunction is IMethod method)
+                            {
+                                if (IsMethodOverridenWithOtherReturnType(method))
+                                {
+                                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                    HighlightNotAllowed(
+                                        PurityOrDisposabilityKind.MustDisposeResource,
+                                        $"Overriden method return type becomes disposable, the only valid annotation is [{name}(false)].");
+
+                                    highlighted = true;
+                                }
+
+                                if (!highlighted && IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource))
+                                {
+                                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                    HighlightRedundant(
+                                        PurityOrDisposabilityKind.MustDisposeResource,
+                                        $"Annotation is redundant because a base method is already annotated with [{name}].");
+
+                                    highlighted = true;
+                                }
+                            }
+
+                            if (!highlighted && IsMustDisposeResourceTrueAttribute(annotation))
+                            {
+                                HighlightRedundantMustDisposeResourceTrueArgument(
+                                    $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                            }
+                        }
+#else
+                        var highlighted = false;
+
+                        if (methodOrLocalFunction is IMethod method)
+                        {
+                            if (IsMethodOverridenWithOtherReturnType(method))
+                            {
+                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                HighlightNotAllowed(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"Overriden method return type becomes disposable, the only valid annotation is [{name}(false)].");
+
+                                highlighted = true;
+                            }
+
+                            if (!highlighted && IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource))
                             {
                                 var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
                                 HighlightRedundant(
                                     PurityOrDisposabilityKind.MustDisposeResource,
                                     $"Annotation is redundant because a base method is already annotated with [{name}].");
-                            }
-                            else
-                            {
-                                if (IsMustDisposeResourceTrueAttribute(annotation))
-                                {
-                                    HighlightRedundantMustDisposeResourceTrueArgument(
-                                        $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
-                                }
-                            }
-                        }
-#else
-                        if (methodOrLocalFunction is IMethod method
-                            && IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource))
-                        {
-                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                            HighlightRedundant(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Annotation is redundant because a base method is already annotated with [{name}].");
-                        }
-                        else
-                        {
-                            if (IsMustDisposeResourceTrueAttribute(annotation))
-                            {
-                                HighlightRedundantMustDisposeResourceTrueArgument(
-                                    $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                highlighted = true;
                             }
+                        }
+
+                        if (!highlighted && IsMustDisposeResourceTrueAttribute(annotation))
+                        {
+                            HighlightRedundantMustDisposeResourceTrueArgument(
+                                $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
                         }
 #endif
                     }
@@ -738,27 +774,51 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         PurityOrDisposabilityKind.MustDisposeResourceFalse))
                     {
 #if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                        if (!returnType.IsTasklike(element)
-                            && (methodOrLocalFunction is IMethod method
-                                && !IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource)
-                                || methodOrLocalFunction is ILocalFunction))
+                        if (!returnType.IsTasklike(element))
                         {
-                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+                            if (methodOrLocalFunction is IMethod m2 && IsMethodOverridenWithOtherReturnType(m2))
+                            {
+                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                            HighlightMissing(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"{functionDescription.WithFirstCharacterUpperCased()} with the disposable return type is not annotated with [{name}] or [{name}(false)].");
+                                HighlightMissing(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"Overriden method, which return type becomes disposable, is not annotated with [{name}(false)].");
+                            }
+                            else
+                            {
+                                if (methodOrLocalFunction is IMethod method
+                                    && !IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource)
+                                    || methodOrLocalFunction is ILocalFunction)
+                                {
+                                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                    HighlightMissing(
+                                        PurityOrDisposabilityKind.MustDisposeResource,
+                                        $"{functionDescription.WithFirstCharacterUpperCased()} with the disposable return type is not annotated with [{name}] or [{name}(false)].");
+                                }
+                            }
                         }
 #else
-                        if (methodOrLocalFunction is IMethod method
-                            && !IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource)
-                            || methodOrLocalFunction is ILocalFunction)
+                        if (methodOrLocalFunction is IMethod m2 && IsMethodOverridenWithOtherReturnType(m2))
                         {
                             var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
                             HighlightMissing(
                                 PurityOrDisposabilityKind.MustDisposeResource,
-                                $"{functionDescription.WithFirstCharacterUpperCased()} with the disposable return type is not annotated with [{name}] or [{name}(false)].");
+                                $"Overriden method, which return type becomes disposable, is not annotated with [{name}(false)].");
+                        }
+                        else
+                        {
+                            if (methodOrLocalFunction is IMethod method
+                                && !IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource)
+                                || methodOrLocalFunction is ILocalFunction)
+                            {
+                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                HighlightMissing(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"{functionDescription.WithFirstCharacterUpperCased()} with the disposable return type is not annotated with [{name}] or [{name}(false)].");
+                            }
                         }
 #endif
                     }
