@@ -13,6 +13,8 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
+// todo: remove compiler directive "MUST_DISPOSE_RESOURCE_NO_TASK_LIKE" when [MustDisposeResource] supports task-like method and parameters (https://youtrack.jetbrains.com/issue/RSRP-495289/MustDisposeResource-should-support-task-like-method-and-parameters)
+
 [ElementProblemAnalyzer(
     typeof(IAttributesOwnerDeclaration),
     HighlightingTypes =
@@ -642,7 +644,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     _ => throw new NotSupportedException(),
                 };
 
-                if (returnType.IsDisposable(element))
+                if (returnType.IsDisposable(element) || returnType.IsTasklikeOfIsDisposable(element))
                 {
                     if (IsAnnotated(methodOrLocalFunction, PurityOrDisposabilityKind.Pure))
                     {
@@ -941,7 +943,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             case IParameterDeclaration { DeclaredElement: { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter }:
             {
-                if (parameter.Type.IsDisposable(element))
+                if (parameter.Type.IsDisposable(element) || parameter.Type.IsTasklikeOfIsDisposable(element))
                 {
                     if (TryGetAnnotation(parameter, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {

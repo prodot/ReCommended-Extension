@@ -36,12 +36,23 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
 
         IConstructor { ContainingType: IStruct { IsByRefLike: true } s } => s.HasDisposeMethods(),
 
-        IMethod method => method.ReturnType.IsDisposable_IgnoreTaskLike(context) && !IsAnyBaseMethodAnnotated(method),
+#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
+        IMethod method => method.ReturnType.IsDisposable(context) && !IsAnyBaseMethodAnnotated(method),
 
-        ILocalFunction localFunction => localFunction.ReturnType.IsDisposable_IgnoreTaskLike(context),
+        ILocalFunction localFunction => localFunction.ReturnType.IsDisposable(context),
 
-        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => parameter.Type.IsDisposable_IgnoreTaskLike(context)
+        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => parameter.Type.IsDisposable(context)
             && !IsParameterOfAnyBaseMethodAnnotated(parameter),
+#else
+        IMethod method => (method.ReturnType.IsDisposable(context) || method.ReturnType.IsTasklikeOfIsDisposable(context))
+            && !IsAnyBaseMethodAnnotated(method),
+
+        ILocalFunction localFunction => localFunction.ReturnType.IsDisposable(context) || localFunction.ReturnType.IsTasklikeOfIsDisposable(context),
+
+        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => (parameter.Type.IsDisposable(context)
+                || parameter.Type.IsTasklikeOfIsDisposable(context))
+            && !IsParameterOfAnyBaseMethodAnnotated(parameter),
+#endif
 
         _ => false,
     };

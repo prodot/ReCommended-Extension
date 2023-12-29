@@ -10,7 +10,7 @@ namespace ReCommendedExtension.ContextActions;
 
 [ContextAction(
     Group = "C#",
-    Name = "Annotate method with [MustUseReturnValue] attribute" + ZoneMarker.Suffix,
+    Name = "Annotate methods with [MustUseReturnValue] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a method with the [MustUseReturnValue] attribute.")]
 public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
@@ -32,11 +32,18 @@ public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvi
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
         => declaredElement switch
         {
+#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
             IMethod method => !method.ReturnType.IsVoid()
-                && !method.ReturnType.IsDisposable_IgnoreTaskLike(context)
+                && !method.ReturnType.IsDisposable(context)
                 && !IsAnyBaseMethodAnnotated(method),
+#else
+            IMethod method => !method.ReturnType.IsVoid()
+                && !method.ReturnType.IsDisposable(context)
+                && !method.ReturnType.IsTasklikeOfIsDisposable(context)
+                && !IsAnyBaseMethodAnnotated(method),
+#endif
 
-            ILocalFunction localFunction => !localFunction.ReturnType.IsVoid() && !localFunction.ReturnType.IsDisposable_IgnoreTaskLike(context),
+            ILocalFunction localFunction => !localFunction.ReturnType.IsVoid() && !localFunction.ReturnType.IsDisposable(context),
 
             _ => false,
         };

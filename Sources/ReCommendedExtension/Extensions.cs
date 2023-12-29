@@ -241,60 +241,61 @@ internal static class Extensions
             || type.IsDescendantOf(PredefinedType.IASYNCDISPOSABLE_FQN.TryGetTypeElement(psiModule));
 
     [Pure]
+    public static bool IsDisposeMethod(this IMethod method)
+        => method is
+            {
+                ShortName: "Dispose",
+                IsStatic: false,
+                AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.INTERNAL
+                or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                TypeParameters: [],
+                Parameters: [],
+            }
+            && method.ReturnType.IsVoid();
+
+    [Pure]
+    public static bool IsDisposeAsyncMethod(this IMethod method)
+        => method is
+            {
+                ShortName: "DisposeAsync",
+                IsStatic: false,
+                AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.INTERNAL
+                or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                TypeParameters: [],
+                Parameters: [],
+            }
+            && method.ReturnType.IsValueTask();
+
+    [Pure]
     public static bool HasDisposeMethods(this IStruct type)
     {
         Debug.Assert(type.IsByRefLike);
 
         return type.Methods.Any(
-            method
-                => method is
+            method => method.IsDisposeMethod()
+                || method.IsDisposeAsyncMethod()
+                || method.GetAttributeInstances(false).Any(attribute => attribute.GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute))
+                && method is
                 {
-                    ShortName: "Dispose",
-                    AccessibilityDomain.DomainType:
-                    AccessibilityDomain.AccessibilityDomainType.INTERNAL or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                    TypeParameters: [],
-                    Parameters: [],
-                }
-                && method.ReturnType.IsVoid()
-                || method is
-                {
-                    ShortName: "DisposeAsync",
-                    AccessibilityDomain.DomainType:
-                    AccessibilityDomain.AccessibilityDomainType.INTERNAL or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                    TypeParameters: [],
-                    Parameters: [],
-                }
-                && method.ReturnType.IsValueTask()
-                || method
-                    .GetAttributeInstances(false)
-                    .Any(
-                        attribute => attribute is { PositionParameterCount: 0, NamedParameterCount: 0 }
-                            && attribute.GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute))
-                && method.AccessibilityDomain.DomainType is AccessibilityDomain.AccessibilityDomainType.INTERNAL
-                    or AccessibilityDomain.AccessibilityDomainType.PUBLIC);
+                    IsStatic: false,
+                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.INTERNAL
+                    or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                });
     }
 
     [Pure]
     public static bool IsDisposable(this IType type, ITreeNode context)
         => type.GetTypeElement() is { } typeElement
             && (typeElement.IsDisposable(context.GetPsiModule()) && !type.IsTask() && !type.IsGenericTask()
-                || type is IDeclaredType declaredType && declaredType.GetTypeElement() is IStruct { IsByRefLike: true } s && s.HasDisposeMethods())
-            || type.IsTasklike(context)
+                || type is IDeclaredType declaredType && declaredType.GetTypeElement() is IStruct { IsByRefLike: true } s && s.HasDisposeMethods());
+
+    [Pure]
+    public static bool IsTasklikeOfIsDisposable(this IType type, ITreeNode context)
+        => type.IsTasklike(context)
             && type.GetTasklikeUnderlyingType(context).GetTypeElement() is { } awaitedTypeElement
             && awaitedTypeElement.IsDisposable(context.GetPsiModule())
             && !awaitedTypeElement.Type().IsTask()
             && !awaitedTypeElement.Type().IsGenericTask();
-
-    // todo: remove compiler directive "MUST_DISPOSE_RESOURCE_NO_TASK_LIKE" when [MustDisposeResource] supports task-like method and parameters (https://youtrack.jetbrains.com/issue/RSRP-495289/MustDisposeResource-should-support-task-like-method-and-parameters)
-
-    [Pure]
-#if !MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-    [Obsolete($"Use the {nameof(IsDisposable)} method instead.")]
-#endif
-    public static bool IsDisposable_IgnoreTaskLike(this IType type, ITreeNode context)
-        => type.GetTypeElement() is { } typeElement
-            && (typeElement.IsDisposable(context.GetPsiModule()) && !type.IsTask() && !type.IsGenericTask()
-                || type is IDeclaredType declaredType && declaredType.GetTypeElement() is IStruct { IsByRefLike: true } s && s.HasDisposeMethods());
 
     [Pure]
     public static ITypeElement? TryGetAnnotationAttributeType(this IAttributesOwnerDeclaration attributesOwnerDeclaration, string attributeShortName)
