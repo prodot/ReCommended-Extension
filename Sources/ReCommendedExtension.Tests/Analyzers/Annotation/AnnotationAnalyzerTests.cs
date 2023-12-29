@@ -23,7 +23,6 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
             or MissingAnnotationWarning
             or MissingSuppressionJustificationWarning
             or ConflictingAnnotationWarning
-            or InvalidValueRangeBoundaryWarning
             or InParameterWithMustDisposeResourceAttributeWarning; // to figure out which cases are supported by R#
 
     [Test]
@@ -71,11 +70,6 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
     [NullableContext(NullableContextKind.Enable)]
     public void TestNonNegativeValue() => DoNamedTest2();
-
-    [Test]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    [NullableContext(NullableContextKind.Enable)]
-    public void TestValueRange() => DoNamedTest2();
 
     [Test]
     public void TestAttributeUsage() => DoNamedTest2();

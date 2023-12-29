@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     [
         typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
         typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint),
-        typeof(InvalidValueRangeBoundaryWarning),
+        typeof(InvalidValueRangeBoundaryWarning), typeof(RedundantAnnotationArgumentSuggestion),
     ])]
 public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache) : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
 {
@@ -252,10 +252,16 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 && attribute.PositionParameter(0).ConstantValue is { Kind: ConstantValueKind.Bool, BoolValue: false };
 
         [Pure]
-        static bool IsAnnotated(IAttributesSet attributesSet, PurityOrDisposabilityKind kind)
+        static bool IsMustDisposeResourceTrueAttribute(IAttributeInstance attribute)
+            => attribute.GetAttributeShortName() == nameof(MustDisposeResourceAttribute)
+                && attribute.PositionParameterCount == 1
+                && attribute.PositionParameter(0).ConstantValue is { Kind: ConstantValueKind.Bool, BoolValue: true };
+
+        [Pure]
+        static IAttributeInstance? TryGetAnnotation(IAttributesSet attributesSet, PurityOrDisposabilityKind kind)
             => attributesSet
                 .GetAttributeInstances(AttributesSource.Self)
-                .Any(
+                .FirstOrDefault(
                     a => kind switch
                     {
                         PurityOrDisposabilityKind.Pure => IsPureAttribute(a),
@@ -267,13 +273,19 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     });
 
         [Pure]
-        static bool IsAnnotatedWithAnyOf(IAttributesSet attributesSet, PurityOrDisposabilityKind kind1, PurityOrDisposabilityKind kind2)
+        static bool IsAnnotated(IAttributesSet attributesSet, PurityOrDisposabilityKind kind) => TryGetAnnotation(attributesSet, kind) is { };
+
+        [Pure]
+        static IAttributeInstance? TryGetAnnotationAnyOf(
+            IAttributesSet attributesSet,
+            PurityOrDisposabilityKind kind1,
+            PurityOrDisposabilityKind kind2)
         {
             Debug.Assert(kind1 != kind2);
 
             return attributesSet
                 .GetAttributeInstances(AttributesSource.Self)
-                .Any(
+                .FirstOrDefault(
                     a => kind1 switch
                         {
                             PurityOrDisposabilityKind.MustDisposeResource => IsMustDisposeResourceAttribute(a),
@@ -289,6 +301,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                             _ => throw new NotSupportedException(),
                         });
         }
+
+        [Pure]
+        static bool IsAnnotatedWithAnyOf(IAttributesSet attributesSet, PurityOrDisposabilityKind kind1, PurityOrDisposabilityKind kind2)
+            => TryGetAnnotationAnyOf(attributesSet, kind1, kind2) is { };
 
         [Pure]
         static bool IsAnyBaseTypeAnnotated(ITypeElement type, PurityOrDisposabilityKind kind)
@@ -348,25 +364,19 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
         void HighlightRedundant(PurityOrDisposabilityKind kind, string message)
         {
-            if (TryGetAttributeNameIfAnnotationProvided(kind) is { } attributeName)
+            if (TryGetAttributeNameIfAnnotationProvided(kind) is { } attributeName
+                && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute)
             {
-                consumer.AddHighlighting(
-                    new RedundantAnnotationSuggestion(
-                        element,
-                        element.Attributes.First(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName),
-                        message));
+                consumer.AddHighlighting(new RedundantAnnotationSuggestion(element, attribute, message));
             }
         }
 
         void HighlightNotAllowed(PurityOrDisposabilityKind kind, string message)
         {
-            if (TryGetAttributeNameIfAnnotationProvided(kind) is { } attributeName)
+            if (TryGetAttributeNameIfAnnotationProvided(kind) is { } attributeName
+                && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute)
             {
-                consumer.AddHighlighting(
-                    new NotAllowedAnnotationWarning(
-                        element,
-                        element.Attributes.First(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName),
-                        message));
+                consumer.AddHighlighting(new NotAllowedAnnotationWarning(element, attribute, message));
             }
         }
 
@@ -374,13 +384,23 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         {
             Debug.Assert(kind != otherKind);
 
-            if (TryGetAttributeNameIfAnnotationProvided(kind) is { } attributeName && TryGetAttributeNameIfAnnotationProvided(otherKind) is { })
+            if (TryGetAttributeNameIfAnnotationProvided(kind) is { } attributeName
+                && TryGetAttributeNameIfAnnotationProvided(otherKind) is { }
+                && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute)
             {
-                consumer.AddHighlighting(
-                    new ConflictingAnnotationWarning(
-                        element,
-                        element.Attributes.First(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName),
-                        message));
+                consumer.AddHighlighting(new ConflictingAnnotationWarning(element, attribute, message));
+            }
+        }
+
+        void HighlightRedundantMustDisposeResourceTrueArgument(string message)
+        {
+            if (TryGetAttributeNameIfAnnotationProvided(PurityOrDisposabilityKind.MustDisposeResource) is { } attributeName
+                && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is
+                {
+                    Arguments: [var argument],
+                } attribute)
+            {
+                consumer.AddHighlighting(new RedundantAnnotationArgumentSuggestion(element, attribute, argument, message));
             }
         }
 
@@ -408,14 +428,24 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                             $"{typeDescription.WithFirstCharacterUpperCased()} is disposable, but not annotated with [{name}] or [{name}(false)].");
                     }
 
-                    if (IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource)
-                        && IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
+                    if (TryGetAnnotation(type, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {
-                        var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+                        if (IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
+                        {
+                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                        HighlightRedundant(
-                            PurityOrDisposabilityKind.MustDisposeResource,
-                            $"Annotation is redundant because a base {typeDescription} is already annotated with [{name}].");
+                            HighlightRedundant(
+                                PurityOrDisposabilityKind.MustDisposeResource,
+                                $"Annotation is redundant because a base {typeDescription} is already annotated with [{name}].");
+                        }
+                        else
+                        {
+                            if (IsMustDisposeResourceTrueAttribute(annotation))
+                            {
+                                HighlightRedundantMustDisposeResourceTrueArgument(
+                                    $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                            }
+                        }
                     }
                 }
                 else
@@ -502,16 +532,26 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                                 $"Constructor of the disposable {typeDescription} (with the [{name}(false)] annotation) is not annotated with [{name}] or [{name}(false)].");
                         }
 
-                        if (IsAnnotated(constructor, PurityOrDisposabilityKind.MustDisposeResource)
-                            && (IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource)
-                                || IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
-                            && typeDeclaration is IClassDeclaration or IRecordDeclaration { IsStruct: false })
+                        if (TryGetAnnotation(constructor, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                         {
-                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+                            if ((IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource)
+                                    || IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
+                                && typeDeclaration is IClassDeclaration or IRecordDeclaration { IsStruct: false })
+                            {
+                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                            HighlightRedundant(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Annotation is redundant because the {typeDescription} or a base {typeDescription} is already annotated with [{name}].");
+                                HighlightRedundant(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"Annotation is redundant because the {typeDescription} or a base {typeDescription} is already annotated with [{name}].");
+                            }
+                            else
+                            {
+                                if (IsMustDisposeResourceTrueAttribute(annotation))
+                                {
+                                    HighlightRedundantMustDisposeResourceTrueArgument(
+                                        $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                }
+                            }
                         }
 
                         if (!IsAnnotatedWithAnyOf(
@@ -559,15 +599,25 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                                 $"Constructor of the disposable struct is not annotated with [{name}] or [{name}(false)].");
                         }
 
-                        if (IsAnnotatedWithAnyOf(
+                        if (TryGetAnnotationAnyOf(
                                 constructor,
                                 PurityOrDisposabilityKind.MustDisposeResource,
-                                PurityOrDisposabilityKind.MustDisposeResourceFalse)
-                            && !type.HasDisposeMethods())
+                                PurityOrDisposabilityKind.MustDisposeResourceFalse) is { } annotation)
                         {
-                            HighlightNotAllowed(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                "Annotation is not valid because the struct is not disposable.");
+                            if (type.HasDisposeMethods())
+                            {
+                                if (IsMustDisposeResourceTrueAttribute(annotation))
+                                {
+                                    HighlightRedundantMustDisposeResourceTrueArgument(
+                                        $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                }
+                            }
+                            else
+                            {
+                                HighlightNotAllowed(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    "Annotation is not valid because the struct is not disposable.");
+                            }
                         }
                         break;
                     }
@@ -623,7 +673,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 #endif
                     }
 
-                    if (IsAnnotated(methodOrLocalFunction, PurityOrDisposabilityKind.MustDisposeResource))
+                    if (TryGetAnnotation(methodOrLocalFunction, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {
 #if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
                         if (returnType.IsTasklike(element))
@@ -643,6 +693,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                                     PurityOrDisposabilityKind.MustDisposeResource,
                                     $"Annotation is redundant because a base method is already annotated with [{name}].");
                             }
+                            else
+                            {
+                                if (IsMustDisposeResourceTrueAttribute(annotation))
+                                {
+                                    HighlightRedundantMustDisposeResourceTrueArgument(
+                                        $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                }
+                            }
                         }
 #else
                         if (methodOrLocalFunction is IMethod method
@@ -653,6 +711,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                             HighlightRedundant(
                                 PurityOrDisposabilityKind.MustDisposeResource,
                                 $"Annotation is redundant because a base method is already annotated with [{name}].");
+                        }
+                        else
+                        {
+                            if (IsMustDisposeResourceTrueAttribute(annotation))
+                            {
+                                HighlightRedundantMustDisposeResourceTrueArgument(
+                                    $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                            }
                         }
 #endif
                     }
@@ -708,13 +774,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                         HighlightMissing(
                             PurityOrDisposabilityKind.MustUseReturnValue,
-                            $"{
-                                functionDescription.WithFirstCharacterUpperCased()
-                            } with the task-like disposable return type is not annotated with [{
-                                name
-                            }] (annotating with [{
-                                name2
-                            }] is not yet supported).");
+                            $"{functionDescription.WithFirstCharacterUpperCased()} with the task-like disposable return type is not annotated with [{name}] (annotating with [{name2}] is not yet supported).");
                     }
 #endif
                 }
@@ -823,7 +883,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             {
                 if (parameter.Type.IsDisposable(element))
                 {
-                    if (IsAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
+                    if (TryGetAnnotation(parameter, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {
 #if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
                         if (parameter.Type.IsTasklike(element))
@@ -831,6 +891,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                             HighlightNotAllowed(
                                 PurityOrDisposabilityKind.MustDisposeResource,
                                 "Annotation is not valid because task-like disposable parameters are not yet supported.");
+                        }
+                        else
+                        {
+                            if (IsMustDisposeResourceTrueAttribute(annotation))
+                            {
+                                HighlightRedundantMustDisposeResourceTrueArgument(
+                                    $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                            }
                         }
 #else
                         if (IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
@@ -840,6 +908,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                             HighlightRedundant(
                                 PurityOrDisposabilityKind.MustDisposeResource,
                                 $"Annotation is redundant because the parameter of a base method is already annotated with [{name}].");
+                        }
+                        else
+                        {
+                            if (IsMustDisposeResourceTrueAttribute(annotation))
+                            {
+                                HighlightRedundantMustDisposeResourceTrueArgument(
+                                    $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                            }
                         }
 #endif
                     }

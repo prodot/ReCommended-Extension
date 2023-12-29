@@ -16,7 +16,7 @@ public abstract class AttributeHighlighting(
 
     internal IAttribute Attribute { get; } = attribute;
 
-    public sealed override DocumentRange CalculateRange()
+    public override DocumentRange CalculateRange()
     {
         var range = Attribute.GetDocumentRange();
 
