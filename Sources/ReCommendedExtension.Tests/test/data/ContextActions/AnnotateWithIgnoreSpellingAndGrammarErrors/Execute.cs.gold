@@ -1,0 +1,10 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class SomeClass
+    {
+        public void ParameterTypes([IgnoreSpellingAndGrammarErrors] string p{caret}0) { }
+    }
+}
