@@ -161,18 +161,13 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     return Location.GetHashCodeMethodWithParameter;
                 }
 
-                var disposableInterface = PredefinedType.IDISPOSABLE_FQN.TryGetTypeElement(psiModule);
-                Debug.Assert(disposableInterface is { });
-
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(disposableInterface, nameof(IDisposable.Dispose))))
+                if (methodDeclaration.DeclaredElement.IsDisposeMethod())
                 {
                     return Location.DisposeMethod;
                 }
 
-                if (PredefinedType.IASYNCDISPOSABLE_FQN.TryGetTypeElement(psiModule) is { } iAsyncDisposableType
-                    && methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(iAsyncDisposableType, "DisposeAsync")))
+                if (methodDeclaration.DeclaredElement.IsDisposeAsyncMethod())
                 {
-                    // todo: use 'nameof(IAsyncDisposable.DisposeAsync)'
                     return Location.DisposeAsyncMethod;
                 }
 

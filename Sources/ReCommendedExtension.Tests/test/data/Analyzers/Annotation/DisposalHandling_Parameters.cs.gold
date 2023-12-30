@@ -1,0 +1,41 @@
+﻿using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class TestClass
+    {
+        public void Disposable(
+            [HandlesResourceDisposal] IDisposable p0,
+            [HandlesResourceDisposal] in IDisposable p1,
+            [HandlesResourceDisposal] ref readonly IDisposable p2,
+            [MustDisposeResource][HandlesResourceDisposal] ref IDisposable p3,
+            [MustDisposeResource][|HandlesResourceDisposal|(0)] out IDisposable p4) => throw new NotImplementedException();
+
+        public void NonDisposable(
+            [|HandlesResourceDisposal|(1)] int p0,
+            [|HandlesResourceDisposal|(2)] in int p1,
+            [|HandlesResourceDisposal|(3)] ref readonly int p2,
+            [|HandlesResourceDisposal|(4)] ref int p3,
+            [|HandlesResourceDisposal|(5)] out int p4) => throw new NotImplementedException();
+    }
+
+    internal class BaseClass
+    {
+        public virtual void Method([HandlesResourceDisposal] IDisposable p0) { }
+    }
+
+    internal class DerivedClass : BaseClass
+    {
+        public override void Method([|HandlesResourceDisposal|(6)] IDisposable p0) { }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotation is not valid for non-input parameters.
+(1): ReSharper Warning: Annotation is not valid because the parameter is not disposable.
+(2): ReSharper Warning: Annotation is not valid because the parameter is not disposable.
+(3): ReSharper Warning: Annotation is not valid because the parameter is not disposable.
+(4): ReSharper Warning: Annotation is not valid because the parameter is not disposable.
+(5): ReSharper Warning: Annotation is not valid for non-input parameters.
+(6): ReSharper Warning: Annotation is redundant because the parameter of a base method is already annotated with [HandlesResourceDisposal].

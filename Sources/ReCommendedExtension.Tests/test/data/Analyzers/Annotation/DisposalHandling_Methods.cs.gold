@@ -1,0 +1,69 @@
+﻿using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal record NonDisposable
+    {
+        [|HandlesResourceDisposal|(0)]
+        public void Close() { }
+    }
+
+    [MustDisposeResource]
+    internal class DisposableClass : IDisposable
+    {
+        [|HandlesResourceDisposal|(1)]
+        public void Dispose() { }
+
+        [HandlesResourceDisposal]
+        public void Close() { }
+
+        [HandlesResourceDisposal]
+        public virtual void CloseAnnotated() { }
+
+        [|HandlesResourceDisposal|(2)]
+        public static void StaticMethod() { }
+
+        [|HandlesResourceDisposal|(3)]
+        void PrivateMethod() { }
+    }
+
+    internal class DerivedClass : DisposableClass
+    {
+        [|HandlesResourceDisposal|(4)]
+        public override void CloseAnnotated() { }
+    }
+
+    [MustDisposeResource]
+    internal class AsyncDisposableClass : IAsyncDisposable
+    {
+        [|HandlesResourceDisposal|(5)]
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+
+        [HandlesResourceDisposal]
+        public ValueTask Close() => ValueTask.CompletedTask;
+    }
+
+    [method: MustDisposeResource]
+    internal ref struct DisposableRefStruct()
+    {
+        [|HandlesResourceDisposal|(6)]
+        public void Dispose() { }
+
+        [|HandlesResourceDisposal|(7)]
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+
+        [HandlesResourceDisposal]
+        public ValueTask Close() => ValueTask.CompletedTask;
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotation is not valid for methods of non-disposable types.
+(1): ReSharper Warning: Annotation is redundant for 'Dispose' methods.
+(2): ReSharper Warning: Annotation is not valid for static methods.
+(3): ReSharper Warning: Annotation is not valid for private methods.
+(4): ReSharper Warning: Annotation is redundant because a base method is already annotated with [HandlesResourceDisposal].
+(5): ReSharper Warning: Annotation is redundant for 'DisposeAsync' methods.
+(6): ReSharper Warning: Annotation is redundant for 'Dispose' methods.
+(7): ReSharper Warning: Annotation is redundant for 'DisposeAsync' methods.

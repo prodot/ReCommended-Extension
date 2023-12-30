@@ -31,6 +31,15 @@ namespace Test
         public void Other(ref IDisposable p0, out DisposableRefStruct p1) => throw new NotImplementedException();
     }
 
+    internal class Child2 : Parent
+    {
+        public override void NotAnnotated(ref IDisposable p0, out IAsyncDisposable p1) => throw new NotImplementedException();
+
+        public override void Annotated([MustDisposeResource] ref Stream p0, [MustDisposeResource] out DisposableRefStruct p1) => throw new NotImplementedException();
+
+        public override void AnnotatedWithFalse([MustDisposeResource(false)] ref Stream p0, [MustDisposeResource(false)] out DisposableRefStruct p1) => throw new NotImplementedException();
+    }
+
     internal class ParentTaskLike
     {
         public virtual void NotAnnotated(ref ValueTask<IDisposable> p0, out Task<IAsyncDisposable> p1) => throw new NotImplementedException();

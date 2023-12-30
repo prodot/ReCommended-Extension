@@ -12,44 +12,69 @@ namespace ReCommendedExtension.ContextActions;
 
 public sealed class AnnotateWithHandlesResourceDisposal(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)
 {
+    [Pure]
+    bool IsAttribute(IAttributeInstance attribute) => attribute.GetAttributeShortName() == AnnotationAttributeTypeName;
+
+    [Pure]
+    bool IsAnyBaseMethodAnnotated(IMethod method)
+        => method.GetAllSuperMembers().Any(baseMethod => baseMethod.Member.GetAttributeInstances(AttributesSource.Self).Any(IsAttribute));
+
+    [Pure]
+    bool IsParameterOfAnyBaseMethodAnnotated(IParameter parameter)
+    {
+        if (parameter.ContainingParametersOwner is IMethod method)
+        {
+            var parameterIndex = method.Parameters.IndexOf(parameter);
+
+            foreach (var member in method.GetAllSuperMembers())
+            {
+                var baseMethod = (IMethod)member.Member;
+
+                if (baseMethod.Parameters.ElementAtOrDefault(parameterIndex) is { } baseMethodParameter
+                    && TypeEqualityComparer.Default.Equals(parameter.Type, baseMethodParameter.Type)
+                    && parameter.Kind == baseMethodParameter.Kind
+                    && baseMethodParameter.GetAttributeInstances(AttributesSource.Self).Any(IsAttribute))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    [Pure]
+    bool IsAnyBasePropertyAnnotated(IProperty property)
+        => property.GetAllSuperMembers().Any(baseProperty => baseProperty.Member.GetAttributeInstances(AttributesSource.Self).Any(IsAttribute));
+
     protected override string AnnotationAttributeTypeName => nameof(HandlesResourceDisposalAttribute);
 
+    protected override bool AllowsInheritedMethods => true;
+
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
-    {
-        switch (declaredElement)
+        => declaredElement switch
         {
-            case IMethod
-            {
-                IsStatic: false,
-                AccessibilityDomain.DomainType: not (AccessibilityDomain.AccessibilityDomainType.PRIVATE
-                or AccessibilityDomain.AccessibilityDomainType.NONE),
-                ContainingType: { },
-            } method:
-                var disposableInterface = PredefinedType.IDISPOSABLE_FQN.TryGetTypeElement(context.GetPsiModule());
-                var disposeMethod = disposableInterface?.Methods.FirstOrDefault(m => m.ShortName == nameof(IDisposable.Dispose));
+            IMethod
+                {
+                    IsStatic: false,
+                    AccessibilityDomain.DomainType: not (AccessibilityDomain.AccessibilityDomainType.PRIVATE
+                    or AccessibilityDomain.AccessibilityDomainType.NONE),
+                    ContainingType: { },
+                } method => !IsAnyBaseMethodAnnotated(method)
+                && method.ContainingType.IsDisposable(context.GetPsiModule())
+                && !method.IsDisposeMethod()
+                && !method.IsDisposeAsyncMethod()
+                || method.ContainingType is IStruct { IsByRefLike: true }
+                && !method.IsDisposeMethodByConvention()
+                && !method.IsDisposeAsyncMethodByConvention(),
 
-                var asyncDisposableInterface = PredefinedType.IASYNCDISPOSABLE_FQN.TryGetTypeElement(context.GetPsiModule());
-                var disposeAsyncMethod = asyncDisposableInterface?.Methods.FirstOrDefault(m => m.ShortName == "DisposeAsync"); // todo: use nameof(IAsyncDisposable.DisposeAsync)
+            IParameter { Kind: ParameterKind.VALUE or ParameterKind.INPUT or ParameterKind.READONLY_REFERENCE or ParameterKind.REFERENCE } parameter
+                => parameter.Type.IsDisposable(context) && !IsParameterOfAnyBaseMethodAnnotated(parameter),
 
-                return method.ContainingType.IsDescendantOf(disposableInterface)
-                    && disposeMethod is { }
-                    && !method.OverridesOrImplements(disposeMethod)
-                    || method.ContainingType.IsDescendantOf(asyncDisposableInterface)
-                    && disposeAsyncMethod is { }
-                    && !method.OverridesOrImplements(disposeAsyncMethod)
-                    || method.ContainingType is IStruct { IsByRefLike: true } && !method.IsDisposeMethod() && !method.IsDisposeAsyncMethod();
+            IProperty property => property.Type.IsDisposable(context) && !IsAnyBasePropertyAnnotated(property),
 
-            case IParameter
-            {
-                Kind: ParameterKind.VALUE or ParameterKind.INPUT or ParameterKind.READONLY_REFERENCE or ParameterKind.REFERENCE,
-            } parameter:
-                return parameter.Type.IsDisposable(context);
+            IField field => field.Type.IsDisposable(context),
 
-            case IProperty property: return property.Type.IsDisposable(context);
-
-            case IField field: return field.Type.IsDisposable(context);
-
-            default: return false;
-        }
-    }
+            _ => false,
+        };
 }

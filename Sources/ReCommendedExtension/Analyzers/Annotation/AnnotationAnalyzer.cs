@@ -956,16 +956,27 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         }
                         else
                         {
-                            if (IsMustDisposeResourceTrueAttribute(annotation))
+                            if (IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
                             {
-                                HighlightRedundantMustDisposeResourceTrueArgument(
-                                    $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                HighlightRedundant(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"Annotation is redundant because the parameter of a base method is already annotated with [{name}].");
+                            }
+                            else
+                            {
+                                if (IsMustDisposeResourceTrueAttribute(annotation))
+                                {
+                                    HighlightRedundantMustDisposeResourceTrueArgument(
+                                        $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                }
                             }
                         }
 #else
                         if (IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
                         {
-                            var name = nameof(IsMustDisposeResourceAttribute).WithoutSuffix();
+                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
                             HighlightRedundant(
                                 PurityOrDisposabilityKind.MustDisposeResource,
@@ -999,7 +1010,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         if (!IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource)
                             && !parameter.Type.IsTasklike(element))
                         {
-                            var name = nameof(IsMustDisposeResourceAttribute).WithoutSuffix();
+                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
                             HighlightMissing(
                                 PurityOrDisposabilityKind.MustDisposeResource,
@@ -1008,7 +1019,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 #else
                         if (!IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
                         {
-                            var name = nameof(IsMustDisposeResourceAttribute).WithoutSuffix();
+                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
                             HighlightMissing(
                                 PurityOrDisposabilityKind.MustDisposeResource,
@@ -1032,6 +1043,177 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                 break;
             }
+        }
+    }
+
+    static void AnalyzeDisposalHandling(IHighlightingConsumer consumer, IAttributesOwnerDeclaration element)
+    {
+        [Pure]
+        static bool IsAnnotated(IAttributesSet attributesSet)
+            => attributesSet
+                .GetAttributeInstances(AttributesSource.Self)
+                .Any(a => a.GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute));
+
+        [Pure]
+        static bool IsAnyBaseMethodAnnotated(IMethod method) => method.GetAllSuperMembers().Any(baseMethod => IsAnnotated(baseMethod.Member));
+
+        [Pure]
+        static bool IsParameterOfAnyBaseMethodAnnotated(IParameter parameter)
+        {
+            if (parameter.ContainingParametersOwner is IMethod method)
+            {
+                var parameterIndex = method.Parameters.IndexOf(parameter);
+
+                foreach (var member in method.GetAllSuperMembers())
+                {
+                    var baseMethod = (IMethod)member.Member;
+
+                    if (baseMethod.Parameters.ElementAtOrDefault(parameterIndex) is { } baseMethodParameter
+                        && TypeEqualityComparer.Default.Equals(parameter.Type, baseMethodParameter.Type)
+                        && parameter.Kind == baseMethodParameter.Kind
+                        && IsAnnotated(baseMethodParameter))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        [Pure]
+        static bool IsAnyBasePropertyAnnotated(IProperty property)
+            => property.GetAllSuperMembers().Any(baseProperty => IsAnnotated(baseProperty.Member));
+
+        [Pure]
+        IAttribute? TryGetAttributeIfAnnotationProvided()
+            => element.IsAnnotationProvided(nameof(HandlesResourceDisposalAttribute))
+                ? element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute))
+                : null;
+
+        void HighlightNotAllowed(string message)
+        {
+            if (TryGetAttributeIfAnnotationProvided() is { } attribute)
+            {
+                consumer.AddHighlighting(new NotAllowedAnnotationWarning(element, attribute, message));
+            }
+        }
+
+        void HighlightRedundant(string message)
+        {
+            if (TryGetAttributeIfAnnotationProvided() is { } attribute)
+            {
+                consumer.AddHighlighting(new NotAllowedAnnotationWarning(element, attribute, message));
+            }
+        }
+
+        switch (element)
+        {
+            case IMethodDeclaration { DeclaredElement: { ContainingType: { } } method }:
+                if (IsAnnotated(method))
+                {
+                    if (method.IsStatic)
+                    {
+                        HighlightNotAllowed("Annotation is not valid for static methods.");
+                    }
+
+                    if (method.AccessibilityDomain.DomainType is AccessibilityDomain.AccessibilityDomainType.PRIVATE
+                        or AccessibilityDomain.AccessibilityDomainType.NONE)
+                    {
+                        HighlightNotAllowed("Annotation is not valid for private methods.");
+                    }
+
+                    if (method.ContainingType.IsDisposable(element.GetPsiModule()) || method.ContainingType is IStruct { IsByRefLike: true })
+                    {
+                        if (method.IsDisposeMethod())
+                        {
+                            HighlightRedundant($"Annotation is redundant for '{nameof(IDisposable.Dispose)}' methods.");
+                        }
+
+                        if (method.IsDisposeAsyncMethod())
+                        {
+                            HighlightRedundant("Annotation is redundant for 'DisposeAsync' methods."); // todo: use nameof(IAsyncDisposable.DisposeAsync)
+                        }
+
+                        if (method.ContainingType is IStruct { IsByRefLike: true })
+                        {
+                            if (method.IsDisposeMethodByConvention())
+                            {
+                                HighlightRedundant("Annotation is redundant for 'Dispose' methods.");
+                            }
+
+                            if (method.IsDisposeAsyncMethodByConvention())
+                            {
+                                HighlightRedundant("Annotation is redundant for 'DisposeAsync' methods.");
+                            }
+                        }
+
+                        if (IsAnyBaseMethodAnnotated(method))
+                        {
+                            var name = nameof(HandlesResourceDisposalAttribute).WithoutSuffix();
+
+                            HighlightRedundant($"Annotation is redundant because a base method is already annotated with [{name}].");
+                        }
+                    }
+                    else
+                    {
+                        HighlightNotAllowed("Annotation is not valid for methods of non-disposable types.");
+                    }
+                }
+                break;
+
+            case IParameterDeclaration { DeclaredElement: { } parameter }:
+                if (IsAnnotated(parameter))
+                {
+                    if (parameter.Kind is ParameterKind.VALUE or ParameterKind.INPUT or ParameterKind.READONLY_REFERENCE or ParameterKind.REFERENCE)
+                    {
+                        if (parameter.Type.IsDisposable(element))
+                        {
+                            if (IsParameterOfAnyBaseMethodAnnotated(parameter))
+                            {
+                                var name = nameof(HandlesResourceDisposalAttribute).WithoutSuffix();
+
+                                HighlightRedundant(
+                                    $"Annotation is redundant because the parameter of a base method is already annotated with [{name}].");
+                            }
+                        }
+                        else
+                        {
+                            HighlightNotAllowed("Annotation is not valid because the parameter is not disposable.");
+                        }
+                    }
+                    else
+                    {
+                        HighlightNotAllowed("Annotation is not valid for non-input parameters.");
+                    }
+                }
+                break;
+
+            case IPropertyDeclaration { DeclaredElement: { } property }:
+                if (IsAnnotated(property))
+                {
+                    if (property.Type.IsDisposable(element))
+                    {
+                        if (IsAnyBasePropertyAnnotated(property))
+                        {
+                            var name = nameof(HandlesResourceDisposalAttribute).WithoutSuffix();
+
+                            HighlightRedundant($"Annotation is redundant because a base property is already annotated with [{name}].");
+                        }
+                    }
+                    else
+                    {
+                        HighlightNotAllowed("Annotation is not valid because the property is not disposable.");
+                    }
+                }
+                break;
+
+            case IFieldDeclaration { DeclaredElement: { } field }:
+                if (IsAnnotated(field) && !field.Type.IsDisposable(element))
+                {
+                    HighlightNotAllowed("Annotation is not valid because the field is not disposable.");
+                }
+                break;
         }
     }
 
@@ -1613,6 +1795,9 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
         // [Pure], [MustUseReturnValue], [MustDisposeResource], and [MustDisposeResource(false)] annotations
         AnalyzePurityAndDisposability(consumer, element);
+
+        // [MustDisposeResource] annotations
+        AnalyzeDisposalHandling(consumer, element);
 
         // [NonNegativeValue] and [ValueRange(...)] annotations
         AnalyzeNumericRangeAnnotations(consumer, element);
