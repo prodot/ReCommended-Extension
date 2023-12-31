@@ -32,12 +32,11 @@ public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<IC
 
         switch (element)
         {
-            case IArrayInitializer { InitializerElements: [], Parent: ITypeOwnerDeclaration declaration } arrayInitializer:
+            case IArrayInitializer { InitializerElements: [], Parent: ITypeOwnerDeclaration declaration } arrayInitializer
+                when element.GetCSharpLanguageLevel() <= CSharpLanguageLevel.CSharp110:
             {
                 if (declaration.Type.GetScalarType() is { } arrayElementType)
                 {
-                    // todo: check if R# suggests to use '[]' in this case (C# 12 only)
-
                     // T[] variable = { }; // variable or type field declaration with initialization
                     // T[] Property { get; } = { };
                     // T[] Property { get; set; } = { };
