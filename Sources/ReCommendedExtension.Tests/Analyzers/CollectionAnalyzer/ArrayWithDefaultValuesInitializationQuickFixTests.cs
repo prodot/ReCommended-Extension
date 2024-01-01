@@ -3,14 +3,14 @@ using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
-using ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization;
+using ReCommendedExtension.Analyzers.Collection;
 
-namespace ReCommendedExtension.Tests.Analyzers.ArrayWithDefaultValuesInitialization;
+namespace ReCommendedExtension.Tests.Analyzers.CollectionAnalyzer;
 
 [TestFixture]
 public sealed class ArrayWithDefaultValuesInitializationQuickFixTests : QuickFixTestBase<ReplaceWithNewArrayWithLengthFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\ArrayWithDefaultValuesInitializationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
 
     [Test]
     public void TestArrayWithDefaultValuesInitialization() => DoNamedTest2();

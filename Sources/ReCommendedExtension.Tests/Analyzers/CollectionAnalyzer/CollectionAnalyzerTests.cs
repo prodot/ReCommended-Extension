@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
@@ -6,18 +7,19 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
-using ReCommendedExtension.Analyzers.EmptyArrayInitialization;
+using ReCommendedExtension.Analyzers.Collection;
 
-namespace ReCommendedExtension.Tests.Analyzers.EmptyArrayInitialization;
+namespace ReCommendedExtension.Tests.Analyzers.CollectionAnalyzer;
 
 [TestFixture]
-public sealed class EmptyArrayInitializationAnalyzerTests : CSharpHighlightingTestBase
+public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\EmptyArrayInitialization";
+    protected override string RelativeTestDataPath => @"Analyzers\Collection";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseEmptyForArrayInitializationWarning
             or UseCollectionExpressionForEmptyInitializationWarning
+            or ArrayWithDefaultValuesInitializationSuggestion
             or UseArrayEmptyMethodWarning // to figure out which cases are supported by R#
             or UseCollectionExpressionWarning; // to figure out which cases are supported by R#
 
@@ -55,4 +57,25 @@ public sealed class EmptyArrayInitializationAnalyzerTests : CSharpHighlightingTe
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
     public void TestEmptyArrayInitialization_CS12() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestArrayWithDefaultValuesInitialization() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    public void TestArrayWithDefaultValuesInitialization_CS12() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    public void TestArrayWithDefaultValuesInitializationWithNullableAnnotations() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+    public void TestArrayWithDefaultValuesInitialization_TargetTyped() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    public void TestArrayWithDefaultValuesInitialization_ParameterlessCtor() => DoNamedTest2();
 }

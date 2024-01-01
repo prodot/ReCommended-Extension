@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
+namespace ReCommendedExtension.Analyzers.Collection;
 
 [RegisterConfigurableSeverity(
     SeverityId,

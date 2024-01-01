@@ -2,16 +2,16 @@
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
-using ReCommendedExtension.Analyzers.EmptyArrayInitialization;
+using ReCommendedExtension.Analyzers.Collection;
 
-namespace ReCommendedExtension.Tests.Analyzers.EmptyArrayInitialization;
+namespace ReCommendedExtension.Tests.Analyzers.CollectionAnalyzer;
 
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
 [TestNetFramework46]
 [TestFixture]
 public sealed class ReplaceWithArrayEmptyQuickFixTests : QuickFixTestBase<ReplaceWithArrayEmptyFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\EmptyArrayInitializationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
 
     [Test]
     public void TestEmptyArrayInitialization() => DoNamedTest2();

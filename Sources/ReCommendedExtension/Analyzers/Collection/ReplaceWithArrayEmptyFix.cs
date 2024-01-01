@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
+namespace ReCommendedExtension.Analyzers.Collection;
 
 [QuickFix]
 public sealed class ReplaceWithArrayEmptyFix(UseEmptyForArrayInitializationWarning highlighting) : QuickFixBase

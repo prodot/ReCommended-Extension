@@ -9,7 +9,7 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.ArrayWithDefaultValuesInitialization;
+namespace ReCommendedExtension.Analyzers.Collection;
 
 [QuickFix]
 public sealed class ReplaceWithNewArrayWithLengthFix(ArrayWithDefaultValuesInitializationSuggestion highlighting) : QuickFixBase
