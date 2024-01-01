@@ -9,7 +9,7 @@ using ReCommendedExtension;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("prodot GmbH")]
 [assembly: AssemblyProduct(ZoneMarker.ExtensionId)]
-[assembly: AssemblyCopyright("© 2012-2023 prodot GmbH")]
+[assembly: AssemblyCopyright("© 2012-2024 prodot GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
