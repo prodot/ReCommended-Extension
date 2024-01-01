@@ -128,7 +128,7 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
 
             if (actionHint is { })
             {
-                consumer.AddHighlighting(new RedundantCapturedContextSuggestion($"Redundant captured context ({actionHint})", awaitExpression));
+                consumer.AddHighlighting(new RedundantCapturedContextSuggestion($"Redundant captured context ({actionHint}).", awaitExpression));
             }
         }
     }
