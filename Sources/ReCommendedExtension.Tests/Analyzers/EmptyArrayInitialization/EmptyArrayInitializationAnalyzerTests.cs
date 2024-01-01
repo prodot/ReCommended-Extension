@@ -16,7 +16,8 @@ public sealed class EmptyArrayInitializationAnalyzerTests : CSharpHighlightingTe
     protected override string RelativeTestDataPath => @"Analyzers\EmptyArrayInitialization";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is EmptyArrayInitializationWarning
+        => highlighting is UseEmptyForArrayInitializationWarning
+            or UseCollectionExpressionForEmptyInitializationWarning
             or UseArrayEmptyMethodWarning // to figure out which cases are supported by R#
             or UseCollectionExpressionWarning; // to figure out which cases are supported by R#
 

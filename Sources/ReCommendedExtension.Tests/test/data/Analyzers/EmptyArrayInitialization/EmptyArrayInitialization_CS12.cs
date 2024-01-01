@@ -30,6 +30,8 @@ namespace Test
 
             int[] array4 = { };
             int[] array4_ = { 1, 2, 3 };
+            int[] array4__ = new int[] { };
+            int[] array4___ = Array.Empty<int>();
 
             var array5_ = new int[2, 3];
             var array6_ = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
@@ -38,6 +40,9 @@ namespace Test
             var array8_ = new int[][,] { };
 
             var array9_ = new int[,][] { };
+
+            int[] array10 = new int[0];
+            int[] array10_ = new int[0] { };
         }
 
         [Array(Array = new int[] { })]

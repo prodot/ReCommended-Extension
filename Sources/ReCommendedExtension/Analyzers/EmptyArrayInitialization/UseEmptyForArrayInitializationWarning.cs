@@ -15,9 +15,9 @@ namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class EmptyArrayInitializationWarning(string message, ICSharpTreeNode treeNode, IType arrayElementType) : Highlighting(message)
+public sealed class UseEmptyForArrayInitializationWarning(string message, ICSharpTreeNode treeNode, IType arrayElementType) : Highlighting(message)
 {
-    const string SeverityId = "EmptyArrayInitialization";
+    const string SeverityId = "UseEmptyForArrayInitialization";
 
     internal ICSharpTreeNode TreeNode { get; } = treeNode;
 

@@ -19,17 +19,19 @@ namespace Test
         [Array(|new int[]|(2) { })]
         void Method()
         {
-            var array1 = |new int[] { }|(3);
+            var array1 = new int[] { };
             var array1_ = new[] { 1, 2, 3 };
 
-            var array2 = |new int[0]|(4);
+            var array2 = |new int[0]|(3);
             var array2_ = new int[3];
 
-            var array3 = |new int[0x0] { }|(5);
+            var array3 = |new int[0x0] { }|(4);
             var array3_ = new[3] { 1, 2, 3 };
 
-            int[] array4 = |{ }|(6);
-            int[] array4_ = |{|(7) 1, 2, 3 };
+            int[] array4 = |{ }|(5);
+            int[] array4_ = |{|(6) 1, 2, 3 };
+            int[] array4__ = |new int[]|(7) { };
+            int[] array4___ = Array.Empty<int>();
 
             var array5_ = new int[2, 3];
             var array6_ = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
@@ -38,70 +40,76 @@ namespace Test
             var array8_ = new int[][,] { };
 
             var array9_ = new int[,][] { };
+
+            int[] array10 = ||new int[0]|(8)|(9);
+            int[] array10_ = ||new int[0]|(11) { }|(10);
         }
 
-        [Array(Array = |new int[]|(8) { })]
-        int[] Property { get; } = |{ }|(9);
+        [Array(Array = |new int[]|(12) { })]
+        int[] Property { get; } = |{ }|(13);
 
-        int[] Property_ { get; } = |{|(10) 1, 2, 3 };
+        int[] Property_ { get; } = |{|(14) 1, 2, 3 };
 
-        int[] Property2 { get; set; } = |{ }|(11);
+        int[] Property2 { get; set; } = |{ }|(15);
 
-        int[] Property2_ { get; set; } = |{|(12) 1, 2, 3 };
+        int[] Property2_ { get; set; } = |{|(16) 1, 2, 3 };
     }
 
     public class GenericClass<T> where T : new()
     {
-        T[] field = |{ }|(13);
+        T[] field = |{ }|(17);
 
-        T[] field_ = |{|(14) new T() };
+        T[] field_ = |{|(18) new T() };
 
         void Method()
         {
-            var array1 = |new T[] { }|(15);
+            var array1 = new T[] { };
             var array1_ = new[] { new T() };
 
-            var array2 = |new T[0b0]|(16);
+            var array2 = |new T[0b0]|(19);
             var array2_ = new T[1];
 
-            var array3 = |new T[default] { }|(17);
+            var array3 = |new T[default] { }|(20);
             var array3_ = new[1] { new T() };
 
-            T[] array4 = |{ }|(18);
-            T[] array4_ = |{|(19) new T() };
+            T[] array4 = |{ }|(21);
+            T[] array4_ = |{|(22) new T() };
         }
 
-        T[] Property { get; } = |{ }|(20);
+        T[] Property { get; } = |{ }|(23);
 
-        T[] Property_ { get; } = |{|(21) new T() };
+        T[] Property_ { get; } = |{|(24) new T() };
 
-        T[] Property2 { get; set; } = |{ }|(22);
+        T[] Property2 { get; set; } = |{ }|(25);
 
-        T[] Property2_ { get; set; } = |{|(23) new T() };
+        T[] Property2_ { get; set; } = |{|(26) new T() };
     }
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: Use collection expression
 (1): ReSharper Suggestion: Use collection expression
 (2): ReSharper Dead Code: Use collection expression
-(3): ReSharper Warning: Use 'Array.Empty<int>()'.
+(3): ReSharper Suggestion: Use 'Array<int>.Empty()'
 (4): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(5): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(5): ReSharper Suggestion: Use collection expression
 (6): ReSharper Suggestion: Use collection expression
-(7): ReSharper Suggestion: Use collection expression
-(8): ReSharper Dead Code: Use collection expression
-(9): ReSharper Suggestion: Use collection expression
-(10): ReSharper Suggestion: Use collection expression
-(11): ReSharper Suggestion: Use collection expression
-(12): ReSharper Suggestion: Use collection expression
+(7): ReSharper Dead Code: Use collection expression
+(8): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(9): ReSharper Warning: Use collection expression.
+(10): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(11): ReSharper Dead Code: Use collection expression
+(12): ReSharper Dead Code: Use collection expression
 (13): ReSharper Suggestion: Use collection expression
 (14): ReSharper Suggestion: Use collection expression
-(15): ReSharper Warning: Use 'Array.Empty<T>()'.
-(16): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(17): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(15): ReSharper Suggestion: Use collection expression
+(16): ReSharper Suggestion: Use collection expression
+(17): ReSharper Suggestion: Use collection expression
 (18): ReSharper Suggestion: Use collection expression
-(19): ReSharper Suggestion: Use collection expression
-(20): ReSharper Suggestion: Use collection expression
+(19): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(20): ReSharper Suggestion: Use 'Array<T>.Empty()'
 (21): ReSharper Suggestion: Use collection expression
 (22): ReSharper Suggestion: Use collection expression
 (23): ReSharper Suggestion: Use collection expression
+(24): ReSharper Suggestion: Use collection expression
+(25): ReSharper Suggestion: Use collection expression
+(26): ReSharper Suggestion: Use collection expression

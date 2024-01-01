@@ -7,7 +7,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.EmptyArrayInitialization;
 
-[ElementProblemAnalyzer(typeof(ICSharpTreeNode), HighlightingTypes = [typeof(EmptyArrayInitializationWarning)])]
+[ElementProblemAnalyzer(
+    typeof(ICSharpTreeNode),
+    HighlightingTypes = [typeof(UseEmptyForArrayInitializationWarning), typeof(UseCollectionExpressionForEmptyInitializationWarning)])]
 public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 {
     [Pure]
@@ -25,48 +27,70 @@ public sealed class EmptyArrayInitializationAnalyzer : ElementProblemAnalyzer<IC
 
     protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (!ArrayEmptyMethodExists(element.GetPsiModule()))
+        if (element.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120)
         {
-            return;
-        }
+            // covered by R#: (target-typed)                      T[] variable = { };
+            // covered by R#: (target-typed)                      T[] Property { get; } = { };
+            // covered by R#: (target-typed)                      T[] Property { get; set; } = { };
+            // covered by R# (target-typed and non-target-typed): new T[0] { }
+            // covered by R# (non-target-typed):                  new T[0]
+            // NOT covered by R# (target-typed):                  new T[0]
 
-        switch (element)
-        {
-            case IArrayInitializer { InitializerElements: [], Parent: ITypeOwnerDeclaration declaration } arrayInitializer
-                when element.GetCSharpLanguageLevel() <= CSharpLanguageLevel.CSharp110:
+            switch (element)
             {
-                if (declaration.Type.GetScalarType() is { } arrayElementType)
+                case IArrayCreationExpression
+                {
+                    Dimensions: [1], DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: not { },
+                } creationExpression when TypeEqualityComparer.Default.Equals(
+                    creationExpression.Type(),
+                    creationExpression.GetImplicitlyConvertedTo()):
+                {
+                    // new T[0]
+
+                    consumer.AddHighlighting(
+                        new UseCollectionExpressionForEmptyInitializationWarning("Use collection expression.", creationExpression));
+                    break;
+                }
+            }
+        }
+        else
+        {
+            if (!ArrayEmptyMethodExists(element.GetPsiModule()))
+            {
+                return;
+            }
+
+            // covered by R#:     new T[0] { }
+            // NOT covered by R#: T[] variable = { };
+            // NOT covered by R#: T[] Property { get; } = { };
+            // NOT covered by R#: T[] Property { get; set; } = { };
+
+            switch (element)
+            {
+                case IArrayInitializer { InitializerElements: [], Parent: ITypeOwnerDeclaration declaration } arrayInitializer
+                    when declaration.Type.GetScalarType() is { } arrayElementType:
                 {
                     // T[] variable = { }; // variable or type field declaration with initialization
                     // T[] Property { get; } = { };
                     // T[] Property { get; set; } = { };
 
                     consumer.AddHighlighting(
-                        new EmptyArrayInitializationWarning(CreateHighlightingMessage(arrayElementType), arrayInitializer, arrayElementType));
+                        new UseEmptyForArrayInitializationWarning(CreateHighlightingMessage(arrayElementType), arrayInitializer, arrayElementType));
+                    break;
                 }
-                break;
-            }
 
-            // todo: check if R# suggests to use '[]' in this case (C# 12 only)
-            // handled by R#: new T[0]
-            // handled by R#: new T[0] { }
-
-            case IArrayCreationExpression { Dimensions: [1], DimInits: [], ArrayInitializer.InitializerElements: [] } creationExpression:
-                if (creationExpression.GetContainingNode<IAttribute>() is not { })
+                case IArrayCreationExpression { Dimensions: [1], DimInits: [], ArrayInitializer.InitializerElements: [] } creationExpression
+                    when creationExpression.GetContainingNode<IAttribute>() is not { }:
                 {
-                    // todo: check if R# suggests to use '[]' when target type is known (C# 12 only) or Array.Empty<T>()
-
                     // new T[] { }
 
                     var arrayElementType = creationExpression.GetElementType();
 
                     consumer.AddHighlighting(
-                        new EmptyArrayInitializationWarning(
-                            CreateHighlightingMessage(arrayElementType),
-                            creationExpression,
-                            arrayElementType));
+                        new UseEmptyForArrayInitializationWarning(CreateHighlightingMessage(arrayElementType), creationExpression, arrayElementType));
+                    break;
                 }
-                break;
+            }
         }
 
         // todo: check if R# suggests to replace 'Array.Empty<T>()' with '[]' when target type is known and read-only (T[], IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>) (C# 12 only)

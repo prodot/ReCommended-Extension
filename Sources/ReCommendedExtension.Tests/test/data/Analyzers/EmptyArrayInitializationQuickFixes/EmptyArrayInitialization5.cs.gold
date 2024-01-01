@@ -1,0 +1,12 @@
+﻿namespace Test
+{
+    public class NonGenericClass
+    {
+        void Method()
+        {
+            Method2({caret}[]);
+        }
+
+        void Method2(int[] array) { }
+    }
+}
