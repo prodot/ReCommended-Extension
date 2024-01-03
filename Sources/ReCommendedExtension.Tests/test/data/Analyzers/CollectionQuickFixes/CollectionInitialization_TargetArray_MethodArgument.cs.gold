@@ -1,0 +1,14 @@
+﻿using System;
+
+namespace TargetArray
+{
+    public class GenericClass<T> where T : new()
+    {
+        void Method(T a, T b, T c)
+        {
+            Consumer({caret}[]);
+        }
+
+        void Consumer(T[] items) { }
+    }
+}

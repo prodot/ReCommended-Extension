@@ -1,0 +1,190 @@
+﻿using System;
+
+namespace TargetArray
+{
+    public class NonGenericClass
+    {
+        int[] field1 = |new int[]|(0) { };
+        int[] field2 = |new int[]|(1) { 1, 2, 3 };
+        int[] field3 = ||new int[0]|(3) { }|(2);
+        int[] field4 = |new int[3]|(4) { 1, 2, 3 };
+        int[] field5 = ||new int[0]|(5)|(6);
+        int[] field6 = new int[3];
+        int[] field7 = |new[]|(7) { 1, 2, 3 };
+        int[] field8 = |{ }|(8);
+        int[] field9 = |{|(9) 1, 2, 3 };
+
+        void Method(int a, int b, int c)
+        {
+            int[] var1 = |new int[]|(10) { };
+            int[] var2 = |new int[]|(11) { a, b, c };
+            int[] var3 = ||new int[0]|(13) { }|(12);
+            int[] var4 = |new int[3]|(14) { a, b, c };
+            int[] var5 = ||new int[0]|(15)|(16);
+            int[] var6 = new int[3];
+            int[] var7 = |new[]|(17) { a, b, c };
+            int[] var8 = |{ }|(18);
+            int[] var9 = |{|(19) a, b, c };
+
+            Consumer(|new int[]|(20) { });
+            Consumer(|new int[]|(21) { a, b, c });
+            Consumer(||new int[0]|(23) { }|(22));
+            Consumer(|new int[3]|(24) { a, b, c });
+            Consumer(||new int[0]|(25)|(26));
+            Consumer(new int[3]);
+            Consumer(|new[]|(27) { a, b, c });
+
+            ConsumerGeneric(|new int[]|(28) { });
+            ConsumerGeneric(|new int[]|(29) { a, b, c });
+            ConsumerGeneric<int>(||new int[0]|(31) { }|(30));
+            ConsumerGeneric(|new int[3]|(32) { a, b, c });
+            ConsumerGeneric(||new int[0]|(33)|(34));
+            ConsumerGeneric(new int[3]);
+            ConsumerGeneric(|new[]|(35) { a, b, c });
+        }
+
+        void Consumer(int[] items) { }
+        void ConsumerGeneric<T>(T[] items) { }
+
+        int[] Property1 { get; } = |new int[]|(36) { };
+        int[] Property2 { get; } = |new int[]|(37) { 1, 2, 3 };
+        int[] Property3 { get; set; } = ||new int[0]|(39) { }|(38);
+        int[] Property4 { get; set; } = |new int[3]|(40) { 1, 2, 3 };
+        int[] Property5 => ||new int[0]|(41)|(42);
+        int[] Property6 => new int[3];
+        int[] Property7 => |new[]|(43) { 1, 2, 3 };
+        int[] Property8 { get; } = |{ }|(44);
+        int[] Property9 { get; set; } = |{|(45) 1, 2, 3 };
+    }
+
+    public class GenericClass<T> where T : new()
+    {
+        T[] field1 = |new T[]|(46) { };
+        T[] field2 = |new T[]|(47) { default, default(T), new() };
+        T[] field3 = ||new T[0]|(49) { }|(48);
+        T[] field4 = |new T[3]|(50) { default, default(T), new() };
+        T[] field5 = ||new T[0]|(51)|(52);
+        T[] field6 = new T[3];
+        T[] field7 = |new[]|(53) { default, default(T), new() };
+        T[] field8 = |{ }|(54);
+        T[] field9 = |{|(55) default, default(T), new() };
+
+        void Method(T a, T b, T c)
+        {
+            T[] var1 = |new T[]|(56) { };
+            T[] var2 = |new T[]|(57) { a, b, c };
+            T[] var3 = ||new T[0]|(59) { }|(58);
+            T[] var4 = |new T[3]|(60) { a, b, c };
+            T[] var5 = ||new T[0]|(61)|(62);
+            T[] var6 = new T[3];
+            T[] var7 = |new[]|(63) { a, b, c };
+            T[] var8 = |{ }|(64);
+            T[] var9 = |{|(65) a, b, c };
+
+            Consumer(|new T[]|(66) { });
+            Consumer(|new T[]|(67) { a, b, c });
+            Consumer(||new T[0]|(69) { }|(68));
+            Consumer(|new T[3]|(70) { a, b, c });
+            Consumer(||new T[0]|(71)|(72));
+            Consumer(new T[3]);
+            Consumer(|new[]|(73) { a, b, c });
+        }
+
+        void Consumer(T[] items) { }
+
+        T[] Property1 { get; } = |new T[]|(74) { };
+        T[] Property2 { get; } = |new T[]|(75) { default, default(T), new() };
+        T[] Property3 { get; set; } = ||new T[0]|(77) { }|(76);
+        T[] Property4 { get; set; } = |new T[3]|(78) { default, default(T), new() };
+        T[] Property5 => ||new T[0]|(79)|(80);
+        T[] Property6 => new T[3];
+        T[] Property7 => |new[]|(81) { default, default(T), new() };
+        T[] Property8 { get; } = |{ }|(82);
+        T[] Property9 { get; set; } = |{|(83) default, default(T), new() };
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Use collection expression
+(1): ReSharper Dead Code: Use collection expression
+(2): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(3): ReSharper Dead Code: Use collection expression
+(4): ReSharper Dead Code: Use collection expression
+(5): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(6): ReSharper Dead Code: Use collection expression.
+(7): ReSharper Dead Code: Use collection expression
+(8): ReSharper Suggestion: Use collection expression
+(9): ReSharper Suggestion: Use collection expression
+(10): ReSharper Dead Code: Use collection expression
+(11): ReSharper Dead Code: Use collection expression
+(12): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(13): ReSharper Dead Code: Use collection expression
+(14): ReSharper Dead Code: Use collection expression
+(15): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(16): ReSharper Dead Code: Use collection expression.
+(17): ReSharper Dead Code: Use collection expression
+(18): ReSharper Suggestion: Use collection expression
+(19): ReSharper Suggestion: Use collection expression
+(20): ReSharper Dead Code: Use collection expression
+(21): ReSharper Dead Code: Use collection expression
+(22): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(23): ReSharper Dead Code: Use collection expression
+(24): ReSharper Dead Code: Use collection expression
+(25): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(26): ReSharper Dead Code: Use collection expression.
+(27): ReSharper Dead Code: Use collection expression
+(28): ReSharper Dead Code: Use collection expression.
+(29): ReSharper Dead Code: Use collection expression
+(30): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(31): ReSharper Dead Code: Use collection expression
+(32): ReSharper Dead Code: Use collection expression
+(33): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(34): ReSharper Dead Code: Use collection expression.
+(35): ReSharper Dead Code: Use collection expression
+(36): ReSharper Dead Code: Use collection expression
+(37): ReSharper Dead Code: Use collection expression
+(38): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(39): ReSharper Dead Code: Use collection expression
+(40): ReSharper Dead Code: Use collection expression
+(41): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(42): ReSharper Dead Code: Use collection expression.
+(43): ReSharper Dead Code: Use collection expression
+(44): ReSharper Suggestion: Use collection expression
+(45): ReSharper Suggestion: Use collection expression
+(46): ReSharper Dead Code: Use collection expression
+(47): ReSharper Dead Code: Use collection expression
+(48): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(49): ReSharper Dead Code: Use collection expression
+(50): ReSharper Dead Code: Use collection expression
+(51): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(52): ReSharper Dead Code: Use collection expression.
+(53): ReSharper Dead Code: Use collection expression
+(54): ReSharper Suggestion: Use collection expression
+(55): ReSharper Suggestion: Use collection expression
+(56): ReSharper Dead Code: Use collection expression
+(57): ReSharper Dead Code: Use collection expression
+(58): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(59): ReSharper Dead Code: Use collection expression
+(60): ReSharper Dead Code: Use collection expression
+(61): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(62): ReSharper Dead Code: Use collection expression.
+(63): ReSharper Dead Code: Use collection expression
+(64): ReSharper Suggestion: Use collection expression
+(65): ReSharper Suggestion: Use collection expression
+(66): ReSharper Dead Code: Use collection expression
+(67): ReSharper Dead Code: Use collection expression
+(68): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(69): ReSharper Dead Code: Use collection expression
+(70): ReSharper Dead Code: Use collection expression
+(71): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(72): ReSharper Dead Code: Use collection expression.
+(73): ReSharper Dead Code: Use collection expression
+(74): ReSharper Dead Code: Use collection expression
+(75): ReSharper Dead Code: Use collection expression
+(76): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(77): ReSharper Dead Code: Use collection expression
+(78): ReSharper Dead Code: Use collection expression
+(79): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(80): ReSharper Dead Code: Use collection expression.
+(81): ReSharper Dead Code: Use collection expression
+(82): ReSharper Suggestion: Use collection expression
+(83): ReSharper Suggestion: Use collection expression

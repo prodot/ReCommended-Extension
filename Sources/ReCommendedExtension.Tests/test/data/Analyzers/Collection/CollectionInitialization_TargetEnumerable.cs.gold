@@ -1,0 +1,167 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace TargetEnumerable
+{
+    public class NonGenericClass
+    {
+        IEnumerable<int> field1 = |new int[]|(0) { };
+        IEnumerable<int> field2 = |new int[]|(1) { 1, 2, 3 };
+        IEnumerable<int> field3 = ||new int[0]|(3) { }|(2);
+        IEnumerable<int> field4 = |new int[3]|(4) { 1, 2, 3 };
+        IEnumerable<int> field5 = ||new int[0]|(5)|(6);
+        IEnumerable<int> field6 = new int[3];
+        IEnumerable<int> field7 = |new[]|(7) { 1, 2, 3 };
+
+        void Method(int a, int b, int c)
+        {
+            IEnumerable<int> var1 = |new int[]|(8) { };
+            IEnumerable<int> var2 = |new int[]|(9) { a, b, c };
+            IEnumerable<int> var3 = ||new int[0]|(11) { }|(10);
+            IEnumerable<int> var4 = |new int[3]|(12) { a, b, c };
+            IEnumerable<int> var5 = ||new int[0]|(13)|(14);
+            IEnumerable<int> var6 = new int[3];
+            IEnumerable<int> var7 = |new[]|(15) { a, b, c };
+
+            Consumer(|new int[]|(16) { });
+            Consumer(|new int[]|(17) { a, b, c });
+            Consumer(||new int[0]|(19) { }|(18));
+            Consumer(|new int[3]|(20) { a, b, c });
+            Consumer(||new int[0]|(21)|(22));
+            Consumer(new int[3]);
+            Consumer(|new[]|(23) { a, b, c });
+
+            ConsumerGeneric(|new int[]|(24) { });
+            ConsumerGeneric(|new int[]|(25) { a, b, c });
+            ConsumerGeneric<int>(||new int[0]|(27) { }|(26));
+            ConsumerGeneric(|new int[3]|(28) { a, b, c });
+            ConsumerGeneric(||new int[0]|(29)|(30));
+            ConsumerGeneric(new int[3]);
+            ConsumerGeneric(|new[]|(31) { a, b, c });
+        }
+
+        void Consumer(IEnumerable<int> items) { }
+        void ConsumerGeneric<T>(IEnumerable<T> items) { }
+
+        IEnumerable<int> Property1 { get; } = |new int[]|(32) { };
+        IEnumerable<int> Property2 { get; } = |new int[]|(33) { 1, 2, 3 };
+        IEnumerable<int> Property3 { get; set; } = ||new int[0]|(35) { }|(34);
+        IEnumerable<int> Property4 { get; set; } = |new int[3]|(36) { 1, 2, 3 };
+        IEnumerable<int> Property5 => ||new int[0]|(37)|(38);
+        IEnumerable<int> Property6 => new int[3];
+        IEnumerable<int> Property7 => |new[]|(39) { 1, 2, 3 };
+    }
+
+    public class GenericClass<T> where T : new()
+    {
+        IEnumerable<T> field1 = |new T[]|(40) { };
+        IEnumerable<T> field2 = |new T[]|(41) { default, default(T), new() };
+        IEnumerable<T> field3 = ||new T[0]|(43) { }|(42);
+        IEnumerable<T> field4 = |new T[3]|(44) { default, default(T), new() };
+        IEnumerable<T> field5 = ||new T[0]|(45)|(46);
+        IEnumerable<T> field6 = new T[3];
+        IEnumerable<T> field7 = |new[]|(47) { default, default(T), new() };
+
+        void Method(T a, T b, T c)
+        {
+            IEnumerable<T> var1 = |new T[]|(48) { };
+            IEnumerable<T> var2 = |new T[]|(49) { a, b, c };
+            IEnumerable<T> var3 = ||new T[0]|(51) { }|(50);
+            IEnumerable<T> var4 = |new T[3]|(52) { a, b, c };
+            IEnumerable<T> var5 = ||new T[0]|(53)|(54);
+            IEnumerable<T> var6 = new T[3];
+            IEnumerable<T> var7 = |new[]|(55) { a, b, c };
+
+            Consumer(|new T[]|(56) { });
+            Consumer(|new T[]|(57) { a, b, c });
+            Consumer(||new T[0]|(59) { }|(58));
+            Consumer(|new T[3]|(60) { a, b, c });
+            Consumer(||new T[0]|(61)|(62));
+            Consumer(new T[3]);
+            Consumer(|new[]|(63) { a, b, c });
+        }
+
+        void Consumer(IEnumerable<T> items) { }
+
+        IEnumerable<T> Property1 { get; } = |new T[]|(64) { };
+        IEnumerable<T> Property2 { get; } = |new T[]|(65) { default, default(T), new() };
+        IEnumerable<T> Property3 { get; set; } = ||new T[0]|(67) { }|(66);
+        IEnumerable<T> Property4 { get; set; } = |new T[3]|(68) { default, default(T), new() };
+        IEnumerable<T> Property5 => ||new T[0]|(69)|(70);
+        IEnumerable<T> Property6 => new T[3];
+        IEnumerable<T> Property7 => |new[]|(71) { default, default(T), new() };
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Use collection expression.
+(1): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(2): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(3): ReSharper Dead Code: Use collection expression.
+(4): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(5): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(6): ReSharper Dead Code: Use collection expression.
+(7): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(8): ReSharper Dead Code: Use collection expression.
+(9): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(10): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(11): ReSharper Dead Code: Use collection expression.
+(12): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(13): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(14): ReSharper Dead Code: Use collection expression.
+(15): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(16): ReSharper Dead Code: Use collection expression.
+(17): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(18): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(19): ReSharper Dead Code: Use collection expression.
+(20): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(21): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(22): ReSharper Dead Code: Use collection expression.
+(23): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(24): ReSharper Dead Code: Use collection expression.
+(25): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(26): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(27): ReSharper Dead Code: Use collection expression.
+(28): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(29): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(30): ReSharper Dead Code: Use collection expression.
+(31): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(32): ReSharper Dead Code: Use collection expression.
+(33): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(34): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(35): ReSharper Dead Code: Use collection expression.
+(36): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(37): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(38): ReSharper Dead Code: Use collection expression.
+(39): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(40): ReSharper Dead Code: Use collection expression.
+(41): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(42): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(43): ReSharper Dead Code: Use collection expression.
+(44): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(45): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(46): ReSharper Dead Code: Use collection expression.
+(47): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(48): ReSharper Dead Code: Use collection expression.
+(49): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(50): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(51): ReSharper Dead Code: Use collection expression.
+(52): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(53): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(54): ReSharper Dead Code: Use collection expression.
+(55): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(56): ReSharper Dead Code: Use collection expression.
+(57): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(58): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(59): ReSharper Dead Code: Use collection expression.
+(60): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(61): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(62): ReSharper Dead Code: Use collection expression.
+(63): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(64): ReSharper Dead Code: Use collection expression.
+(65): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(66): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(67): ReSharper Dead Code: Use collection expression.
+(68): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(69): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(70): ReSharper Dead Code: Use collection expression.
+(71): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).

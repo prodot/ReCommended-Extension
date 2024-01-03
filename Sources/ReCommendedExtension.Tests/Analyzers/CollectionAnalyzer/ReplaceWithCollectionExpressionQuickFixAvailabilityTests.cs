@@ -12,13 +12,16 @@ namespace ReCommendedExtension.Tests.Analyzers.CollectionAnalyzer;
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 [TestNet80]
 [TestFixture]
-public sealed class ReplaceWithEmptyCollectionExpressionQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class ReplaceWithCollectionExpressionQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseCollectionExpressionForEmptyInitializationWarning;
+        => highlighting is UseTargetTypedCollectionExpressionSuggestion;
 
     [Test]
-    public void TestEmptyArrayInitializationAvailability2() => DoNamedTest2();
+    public void TestCollectionInitialization_TargetArray_Availability() => DoNamedTest2();
+
+    [Test]
+    public void TestCollectionInitialization_TargetEnumerable_Availability() => DoNamedTest2();
 }

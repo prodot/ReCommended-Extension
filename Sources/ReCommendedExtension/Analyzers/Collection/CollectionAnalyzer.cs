@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.Collection;
 
@@ -13,7 +14,7 @@ namespace ReCommendedExtension.Analyzers.Collection;
     typeof(ICSharpTreeNode),
     HighlightingTypes =
     [
-        typeof(UseEmptyForArrayInitializationWarning), typeof(UseCollectionExpressionForEmptyInitializationWarning),
+        typeof(UseEmptyForArrayInitializationWarning), typeof(UseTargetTypedCollectionExpressionSuggestion),
         typeof(ArrayWithDefaultValuesInitializationSuggestion),
     ])]
 public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
@@ -30,6 +31,22 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     TypeParameters: [_],
                     Parameters: [],
                 });
+
+    [Pure]
+    static IType? TryGetTargetType(IArrayCreationExpression arrayCreationExpression)
+    {
+        var targetType = arrayCreationExpression.GetImplicitlyConvertedTo();
+
+        return targetType.IsUnknown ? null : targetType;
+    }
+
+    [Pure]
+    static bool IsTargetTyped(IArrayCreationExpression arrayCreationExpression, [NotNullWhen(true)] IType? targetType)
+        => TypeEqualityComparer.Default.Equals(TryGetTargetType(arrayCreationExpression), targetType);
+
+    [Pure]
+    static IType? TryConstructType(IClrTypeName genericTypeName, IType[] typeArguments, IPsiModule psiModule)
+        => genericTypeName.TryGetTypeElement(psiModule) is { } tryGetTypeElement ? TypeFactory.CreateType(tryGetTypeElement, typeArguments) : null;
 
     [Pure]
     static IType? TryGetArrayElementType(IArrayInitializer arrayInitializer)
@@ -116,22 +133,143 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     break;
                 }
 
-                case IArrayCreationExpression
+                case IArrayCreationExpression { Dimensions: [1], DimInits: [], ArrayInitializer.InitializerElements: [] } creationExpression
+                    when creationExpression.GetContainingNode<IAttribute>() is not { }
+                    && TryGetTargetType(creationExpression) is not { }
+                    && ArrayEmptyMethodExists(element.GetPsiModule()):
                 {
-                    Dimensions: [1], DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: not { },
-                } creationExpression when TypeEqualityComparer.Default.Equals(
-                    creationExpression.Type(),
-                    creationExpression.GetImplicitlyConvertedTo()):
-                {
-                    // new T[0]  ->  []
+                    // new T[] { }  ->  Array.Empty<T>();
+
+                    var arrayElementType = creationExpression.GetElementType();
+
+                    Debug.Assert(CSharpLanguage.Instance is { });
 
                     consumer.AddHighlighting(
-                        new UseCollectionExpressionForEmptyInitializationWarning("Use collection expression.", creationExpression));
+                        new UseEmptyForArrayInitializationWarning(
+                            $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayElementType.GetPresentableName(CSharpLanguage.Instance)}>()'.",
+                            creationExpression,
+                            arrayElementType));
                     break;
                 }
-            }
 
-            // todo: check if R# suggests to replace 'Array.Empty<T>()' with '[]' when target type is known and read-only (T[], IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>)
+                case IArrayCreationExpression { Dimensions: [1] } arrayCreationExpression when arrayCreationExpression.DimInits is []
+                    || arrayCreationExpression.DimInits is [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: var count } }]
+                    && count == (arrayCreationExpression.ArrayInitializer?.InitializerElements.Count ?? 0):
+                {
+                    // new T[] { }      ->  []
+                    // new T[] { ... }  ->  [...]
+                    // new T[0] { }     ->  []
+                    // new T[n] { ... } ->  [...]
+                    // new T[0]         ->  []
+                    // new[] { ... }    ->  [...]
+
+                    var isEmptyArray = arrayCreationExpression is { DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }] }
+                        or { DimInits: [], ArrayInitializer.InitializerElements: [] };
+
+                    var methodReferenceToSetInferredTypeArguments = isEmptyArray
+                        && arrayCreationExpression is
+                        {
+                            Parent: ICSharpArgument
+                            {
+                                MatchingParameter:
+                                {
+                                    Substitution: var substitution, Element.ContainingParametersOwner: IMethod { TypeParameters: not [] },
+                                },
+                                Invocation: IInvocationExpression
+                                {
+                                    InvokedExpression: IReferenceExpression { TypeArguments: [] } methodReference,
+                                },
+                            },
+                        }
+                        && !substitution.IsEmpty()
+                            ? methodReference
+                            : null;
+
+                    var psiModule = arrayCreationExpression.GetPsiModule();
+                    var typeArguments = new[] { arrayCreationExpression.GetElementType() };
+
+                    // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
+                    if (IsTargetTyped(arrayCreationExpression, TryConstructType(PredefinedType.GENERIC_IENUMERABLE_FQN, typeArguments, psiModule))
+                        || IsTargetTyped(
+                            arrayCreationExpression,
+                            TryConstructType(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN, typeArguments, psiModule))
+                        || IsTargetTyped(
+                            arrayCreationExpression,
+                            TryConstructType(PredefinedType.GENERIC_IREADONLYLIST_FQN, typeArguments, psiModule)))
+                    {
+                        consumer.AddHighlighting(
+                            new UseTargetTypedCollectionExpressionSuggestion(
+                                isEmptyArray
+                                    ? "Use collection expression."
+                                    : "Use collection expression (a compiler-synthesized read-only collection will be used).",
+                                arrayCreationExpression,
+                                methodReferenceToSetInferredTypeArguments));
+                    }
+
+                    // target-typed to ICollection<T>
+                    if (IsTargetTyped(arrayCreationExpression, TryConstructType(PredefinedType.GENERIC_ICOLLECTION_FQN, typeArguments, psiModule)))
+                    {
+                        // get target-typed item type to preserve the nullability
+                        var listItemType = TryGetTargetType(arrayCreationExpression)
+                            .GetGenericUnderlyingType(PredefinedType.GENERIC_ICOLLECTION_FQN.TryGetTypeElement(psiModule));
+
+                        Debug.Assert(listItemType is { });
+                        Debug.Assert(CSharpLanguage.Instance is { });
+
+                        var type = TryConstructType(PredefinedType.GENERIC_LIST_FQN, [listItemType], psiModule)
+                            ?.GetPresentableName(CSharpLanguage.Instance);
+
+                        consumer.AddHighlighting(
+                            new UseTargetTypedCollectionExpressionSuggestion(
+                                $"Use collection expression ({type} will be used).",
+                                arrayCreationExpression,
+                                methodReferenceToSetInferredTypeArguments));
+                    }
+
+                    // target-typed to IList<T>
+                    if (IsTargetTyped(arrayCreationExpression, TryConstructType(PredefinedType.GENERIC_ILIST_FQN, typeArguments, psiModule)))
+                    {
+                        // get target-typed item type to preserve the nullability
+                        var listItemType = TryGetTargetType(arrayCreationExpression)
+                            .GetGenericUnderlyingType(PredefinedType.GENERIC_ILIST_FQN.TryGetTypeElement(psiModule));
+
+                        Debug.Assert(listItemType is { });
+                        Debug.Assert(CSharpLanguage.Instance is { });
+
+                        var type = TryConstructType(PredefinedType.GENERIC_LIST_FQN, [listItemType], psiModule)
+                            ?.GetPresentableName(CSharpLanguage.Instance);
+
+                        consumer.AddHighlighting(
+                            new UseTargetTypedCollectionExpressionSuggestion(
+                                $"Use collection expression ({type} will be used).",
+                                arrayCreationExpression,
+                                methodReferenceToSetInferredTypeArguments));
+                    }
+
+                    // target-typed to T[]: cases not covered by R#
+                    // - empty arrays passed to a method, which requires setting inferred type arguments
+                    // - empty arrays without items ('new T[0]')
+                    if (isEmptyArray
+                        && IsTargetTyped(arrayCreationExpression, TypeFactory.CreateArrayType(arrayCreationExpression.GetElementType(), 1))
+                        && (arrayCreationExpression.ArrayInitializer is not { }
+                            || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { }))
+                    {
+                        consumer.AddHighlighting(
+                            new UseTargetTypedCollectionExpressionSuggestion(
+                                "Use collection expression.",
+                                arrayCreationExpression,
+                                methodReferenceToSetInferredTypeArguments));
+                    }
+
+                    break;
+                }
+
+                // todo: target-typed empty dictionary: new Dictionary<K,V>() -> []
+                // todo: target-typed empty dictionary: new() -> []
+
+                // todo: target-typed empty array: Array.Empty<T>() -> [] (when target type is: T[], IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>)
+                // todo: target-typed empty array: Array.Empty<T>() -> [] (List<T> will be used) (when target type is: ICollection<T>, IList<T>)
+            }
         }
         else
         {
@@ -142,7 +280,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
             switch (element)
             {
-                case IArrayInitializer { InitializerElements: not { } or [], Parent: ITypeOwnerDeclaration declaration } arrayInitializer
+                case IArrayInitializer { InitializerElements: [], Parent: ITypeOwnerDeclaration declaration } arrayInitializer
                     when declaration.Type.GetScalarType() is { } arrayElementType && ArrayEmptyMethodExists(element.GetPsiModule()):
                 {
                     // T[] variable = { };                ->  T[] variable = Array.Empty<T>();
@@ -176,11 +314,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     break;
                 }
 
-                case IArrayCreationExpression
-                    {
-                        Dimensions: [1], DimInits: [], ArrayInitializer.InitializerElements: not { } or [],
-                    } creationExpression when creationExpression.GetContainingNode<IAttribute>() is not { }
-                    && ArrayEmptyMethodExists(element.GetPsiModule()):
+                case IArrayCreationExpression { Dimensions: [1], DimInits: [], ArrayInitializer.InitializerElements: [], } creationExpression
+                    when creationExpression.GetContainingNode<IAttribute>() is not { } && ArrayEmptyMethodExists(element.GetPsiModule()):
                 {
                     // new T[] { }  ->  Array.Empty<T>();
 

@@ -1,0 +1,94 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace TargetEnumerable
+{
+    public class NonGenericClass
+    {
+        IEnumerable<int> field1 = new int[] { };
+        IEnumerable<int> field2 = new int[] { 1, 2, 3 };
+        IEnumerable<int> field3 = new int[0] { };
+        IEnumerable<int> field4 = new int[3] { 1, 2, 3 };
+        IEnumerable<int> field5 = new int[0];
+        IEnumerable<int> field6 = new int[3];
+        IEnumerable<int> field7 = new[] { 1, 2, 3 };
+
+        void Method(int a, int b, int c)
+        {
+            IEnumerable<int> var1 = new int[] { };
+            IEnumerable<int> var2 = new int[] { a, b, c };
+            IEnumerable<int> var3 = new int[0] { };
+            IEnumerable<int> var4 = new int[3] { a, b, c };
+            IEnumerable<int> var5 = new int[0];
+            IEnumerable<int> var6 = new int[3];
+            IEnumerable<int> var7 = new[] { a, b, c };
+
+            Consumer(new int[] { });
+            Consumer(new int[] { a, b, c });
+            Consumer(new int[0] { });
+            Consumer(new int[3] { a, b, c });
+            Consumer(new int[0]);
+            Consumer(new int[3]);
+            Consumer(new[] { a, b, c });
+
+            ConsumerGeneric(new int[] { });
+            ConsumerGeneric(new int[] { a, b, c });
+            ConsumerGeneric<int>(new int[0] { });
+            ConsumerGeneric(new int[3] { a, b, c });
+            ConsumerGeneric(new int[0]);
+            ConsumerGeneric(new int[3]);
+            ConsumerGeneric(new[] { a, b, c });
+        }
+
+        void Consumer(IEnumerable<int> items) { }
+        void ConsumerGeneric<T>(IEnumerable<T> items) { }
+
+        IEnumerable<int> Property1 { get; } = new int[] { };
+        IEnumerable<int> Property2 { get; } = new int[] { 1, 2, 3 };
+        IEnumerable<int> Property3 { get; set; } = new int[0] { };
+        IEnumerable<int> Property4 { get; set; } = new int[3] { 1, 2, 3 };
+        IEnumerable<int> Property5 => new int[0];
+        IEnumerable<int> Property6 => new int[3];
+        IEnumerable<int> Property7 => new[] { 1, 2, 3 };
+    }
+
+    public class GenericClass<T> where T : new()
+    {
+        IEnumerable<T> field1 = new T[] { };
+        IEnumerable<T> field2 = new T[] { default, default(T), new() };
+        IEnumerable<T> field3 = new T[0] { };
+        IEnumerable<T> field4 = new T[3] { default, default(T), new() };
+        IEnumerable<T> field5 = new T[0];
+        IEnumerable<T> field6 = new T[3];
+        IEnumerable<T> field7 = new[] { default, default(T), new() };
+
+        void Method(T a, T b, T c)
+        {
+            IEnumerable<T> var1 = new T[] { };
+            IEnumerable<T> var2 = new T[] { a, b, c };
+            IEnumerable<T> var3 = new T[0] { };
+            IEnumerable<T> var4 = new T[3] { a, b, c };
+            IEnumerable<T> var5 = new T[0];
+            IEnumerable<T> var6 = new T[3];
+            IEnumerable<T> var7 = new[] { a, b, c };
+
+            Consumer(new T[] { });
+            Consumer(new T[] { a, b, c });
+            Consumer(new T[0] { });
+            Consumer(new T[3] { a, b, c });
+            Consumer(new T[0]);
+            Consumer(new T[3]);
+            Consumer(new[] { a, b, c });
+        }
+
+        void Consumer(IEnumerable<T> items) { }
+
+        IEnumerable<T> Property1 { get; } = new T[] { };
+        IEnumerable<T> Property2 { get; } = new T[] { default, default(T), new() };
+        IEnumerable<T> Property3 { get; set; } = new T[0] { };
+        IEnumerable<T> Property4 { get; set; } = new T[3] { default, default(T), new() };
+        IEnumerable<T> Property5 => new T[0];
+        IEnumerable<T> Property6 => new T[3];
+        IEnumerable<T> Property7 => new[] { default, default(T), new() };
+    }
+}
