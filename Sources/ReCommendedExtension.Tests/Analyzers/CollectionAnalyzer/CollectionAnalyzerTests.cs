@@ -66,34 +66,34 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_TargetArray() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_Target_Array() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_TargetEnumerable() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_Target_IEnumerable() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_TargetReadOnlyCollection() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_Target_IReadOnlyCollection() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_TargetReadOnlyList() => DoNamedTest2();
-
-    [Test]
-    [NullableContext(NullableContextKind.Enable)]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    public void TestCollectionInitialization_Array_TargetCollection() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_Target_IReadOnlyList() => DoNamedTest2();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_TargetList() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_Target_ICollection() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestCollectionInitialization_Array_Target_IList() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
