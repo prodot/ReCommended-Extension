@@ -21,7 +21,7 @@ public sealed class ReplaceWithArrayEmptyFix(UseEmptyForArrayInitializationWarni
         {
             Debug.Assert(CSharpLanguage.Instance is { });
 
-            var typeName = highlighting.ArrayElementType.GetPresentableName(CSharpLanguage.Instance);
+            var typeName = highlighting.ArrayItemType.GetPresentableName(CSharpLanguage.Instance);
 
             return $"Replace with '{nameof(Array)}.{nameof(Array.Empty)}<{typeName}>()'";
         }
@@ -38,7 +38,7 @@ public sealed class ReplaceWithArrayEmptyFix(UseEmptyForArrayInitializationWarni
                 factory.CreateExpression(
                     $"$0.{nameof(Array.Empty)}<$1>()",
                     PredefinedType.ARRAY_FQN.TryGetTypeElement(highlighting.TreeNode.GetPsiModule()),
-                    highlighting.ArrayElementType));
+                    highlighting.ArrayItemType));
         }
 
         return _ => { };
