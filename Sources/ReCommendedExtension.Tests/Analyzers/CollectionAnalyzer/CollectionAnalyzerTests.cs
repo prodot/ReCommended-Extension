@@ -61,39 +61,39 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_NonTargetTyped() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_NonTargetTyped() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_TargetArray() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_TargetArray() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_TargetEnumerable() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_TargetEnumerable() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_TargetReadOnlyCollection() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_TargetReadOnlyCollection() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_TargetReadOnlyList() => DoNamedTest2();
-
-    [Test]
-    [NullableContext(NullableContextKind.Enable)]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    public void TestCollectionInitialization_TargetCollection() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_TargetReadOnlyList() => DoNamedTest2();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_TargetList() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_TargetCollection() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestCollectionInitialization_Array_TargetList() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
