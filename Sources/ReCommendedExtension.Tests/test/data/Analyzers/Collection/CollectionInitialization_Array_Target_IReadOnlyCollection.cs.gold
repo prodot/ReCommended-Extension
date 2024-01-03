@@ -93,75 +93,75 @@ namespace TargetReadOnlyCollection
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Use collection expression.
-(1): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(0): ReSharper Suggestion: Use collection expression.
+(1): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (2): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(3): ReSharper Dead Code: Use collection expression.
-(4): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(3): ReSharper Suggestion: Use collection expression.
+(4): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (5): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(6): ReSharper Dead Code: Use collection expression.
-(7): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
-(8): ReSharper Dead Code: Use collection expression.
-(9): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(6): ReSharper Suggestion: Use collection expression.
+(7): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(8): ReSharper Suggestion: Use collection expression.
+(9): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (10): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(11): ReSharper Dead Code: Use collection expression.
-(12): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(11): ReSharper Suggestion: Use collection expression.
+(12): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (13): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(14): ReSharper Dead Code: Use collection expression.
-(15): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
-(16): ReSharper Dead Code: Use collection expression.
-(17): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(14): ReSharper Suggestion: Use collection expression.
+(15): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(16): ReSharper Suggestion: Use collection expression.
+(17): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (18): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(19): ReSharper Dead Code: Use collection expression.
-(20): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(19): ReSharper Suggestion: Use collection expression.
+(20): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (21): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(22): ReSharper Dead Code: Use collection expression.
-(23): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
-(24): ReSharper Dead Code: Use collection expression.
-(25): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(22): ReSharper Suggestion: Use collection expression.
+(23): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(24): ReSharper Suggestion: Use collection expression.
+(25): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (26): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(27): ReSharper Dead Code: Use collection expression.
-(28): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(27): ReSharper Suggestion: Use collection expression.
+(28): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (29): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(30): ReSharper Dead Code: Use collection expression.
-(31): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
-(32): ReSharper Dead Code: Use collection expression.
-(33): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(30): ReSharper Suggestion: Use collection expression.
+(31): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(32): ReSharper Suggestion: Use collection expression.
+(33): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (34): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(35): ReSharper Dead Code: Use collection expression.
-(36): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(35): ReSharper Suggestion: Use collection expression.
+(36): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (37): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(38): ReSharper Dead Code: Use collection expression.
-(39): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
-(40): ReSharper Dead Code: Use collection expression.
-(41): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(38): ReSharper Suggestion: Use collection expression.
+(39): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(40): ReSharper Suggestion: Use collection expression.
+(41): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (42): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(43): ReSharper Dead Code: Use collection expression.
-(44): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(43): ReSharper Suggestion: Use collection expression.
+(44): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (45): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(46): ReSharper Dead Code: Use collection expression.
-(47): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
-(48): ReSharper Dead Code: Use collection expression.
-(49): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(46): ReSharper Suggestion: Use collection expression.
+(47): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(48): ReSharper Suggestion: Use collection expression.
+(49): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (50): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(51): ReSharper Dead Code: Use collection expression.
-(52): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(51): ReSharper Suggestion: Use collection expression.
+(52): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (53): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(54): ReSharper Dead Code: Use collection expression.
-(55): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
-(56): ReSharper Dead Code: Use collection expression.
-(57): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(54): ReSharper Suggestion: Use collection expression.
+(55): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(56): ReSharper Suggestion: Use collection expression.
+(57): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (58): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(59): ReSharper Dead Code: Use collection expression.
-(60): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(59): ReSharper Suggestion: Use collection expression.
+(60): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (61): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(62): ReSharper Dead Code: Use collection expression.
-(63): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
-(64): ReSharper Dead Code: Use collection expression.
-(65): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(62): ReSharper Suggestion: Use collection expression.
+(63): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(64): ReSharper Suggestion: Use collection expression.
+(65): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (66): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(67): ReSharper Dead Code: Use collection expression.
-(68): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(67): ReSharper Suggestion: Use collection expression.
+(68): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (69): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(70): ReSharper Dead Code: Use collection expression.
-(71): ReSharper Dead Code: Use collection expression (a compiler-synthesized read-only collection will be used).
+(70): ReSharper Suggestion: Use collection expression.
+(71): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).

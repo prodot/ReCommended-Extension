@@ -110,7 +110,7 @@ namespace TargetArray
 (3): ReSharper Dead Code: Use collection expression
 (4): ReSharper Dead Code: Use collection expression
 (5): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(6): ReSharper Dead Code: Use collection expression.
+(6): ReSharper Suggestion: Use collection expression.
 (7): ReSharper Dead Code: Use collection expression
 (8): ReSharper Suggestion: Use collection expression
 (9): ReSharper Suggestion: Use collection expression
@@ -120,7 +120,7 @@ namespace TargetArray
 (13): ReSharper Dead Code: Use collection expression
 (14): ReSharper Dead Code: Use collection expression
 (15): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(16): ReSharper Dead Code: Use collection expression.
+(16): ReSharper Suggestion: Use collection expression.
 (17): ReSharper Dead Code: Use collection expression
 (18): ReSharper Suggestion: Use collection expression
 (19): ReSharper Suggestion: Use collection expression
@@ -130,15 +130,15 @@ namespace TargetArray
 (23): ReSharper Dead Code: Use collection expression
 (24): ReSharper Dead Code: Use collection expression
 (25): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(26): ReSharper Dead Code: Use collection expression.
+(26): ReSharper Suggestion: Use collection expression.
 (27): ReSharper Dead Code: Use collection expression
-(28): ReSharper Dead Code: Use collection expression.
+(28): ReSharper Suggestion: Use collection expression.
 (29): ReSharper Dead Code: Use collection expression
 (30): ReSharper Suggestion: Use 'Array<int>.Empty()'
 (31): ReSharper Dead Code: Use collection expression
 (32): ReSharper Dead Code: Use collection expression
 (33): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(34): ReSharper Dead Code: Use collection expression.
+(34): ReSharper Suggestion: Use collection expression.
 (35): ReSharper Dead Code: Use collection expression
 (36): ReSharper Dead Code: Use collection expression
 (37): ReSharper Dead Code: Use collection expression
@@ -146,7 +146,7 @@ namespace TargetArray
 (39): ReSharper Dead Code: Use collection expression
 (40): ReSharper Dead Code: Use collection expression
 (41): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(42): ReSharper Dead Code: Use collection expression.
+(42): ReSharper Suggestion: Use collection expression.
 (43): ReSharper Dead Code: Use collection expression
 (44): ReSharper Suggestion: Use collection expression
 (45): ReSharper Suggestion: Use collection expression
@@ -156,7 +156,7 @@ namespace TargetArray
 (49): ReSharper Dead Code: Use collection expression
 (50): ReSharper Dead Code: Use collection expression
 (51): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(52): ReSharper Dead Code: Use collection expression.
+(52): ReSharper Suggestion: Use collection expression.
 (53): ReSharper Dead Code: Use collection expression
 (54): ReSharper Suggestion: Use collection expression
 (55): ReSharper Suggestion: Use collection expression
@@ -166,7 +166,7 @@ namespace TargetArray
 (59): ReSharper Dead Code: Use collection expression
 (60): ReSharper Dead Code: Use collection expression
 (61): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(62): ReSharper Dead Code: Use collection expression.
+(62): ReSharper Suggestion: Use collection expression.
 (63): ReSharper Dead Code: Use collection expression
 (64): ReSharper Suggestion: Use collection expression
 (65): ReSharper Suggestion: Use collection expression
@@ -176,7 +176,7 @@ namespace TargetArray
 (69): ReSharper Dead Code: Use collection expression
 (70): ReSharper Dead Code: Use collection expression
 (71): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(72): ReSharper Dead Code: Use collection expression.
+(72): ReSharper Suggestion: Use collection expression.
 (73): ReSharper Dead Code: Use collection expression
 (74): ReSharper Dead Code: Use collection expression
 (75): ReSharper Dead Code: Use collection expression
@@ -184,7 +184,7 @@ namespace TargetArray
 (77): ReSharper Dead Code: Use collection expression
 (78): ReSharper Dead Code: Use collection expression
 (79): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(80): ReSharper Dead Code: Use collection expression.
+(80): ReSharper Suggestion: Use collection expression.
 (81): ReSharper Dead Code: Use collection expression
 (82): ReSharper Suggestion: Use collection expression
 (83): ReSharper Suggestion: Use collection expression
