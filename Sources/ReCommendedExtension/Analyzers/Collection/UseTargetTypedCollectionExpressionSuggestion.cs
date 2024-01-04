@@ -17,12 +17,18 @@ namespace ReCommendedExtension.Analyzers.Collection;
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
 public sealed class UseTargetTypedCollectionExpressionSuggestion(
     string message,
-    IArrayCreationExpression expression,
+    ICreationExpression expression,
+    ICSharpExpression? spreadItem,
+    TreeNodeCollection<IInitializerElement>? items,
     IReferenceExpression? methodReferenceToSetInferredTypeArguments) : Highlighting(message)
 {
     const string SeverityId = "UseTargetTypedCollectionExpression"; // a collection expression is always target-typed (needed a distinguished id)
 
-    internal IArrayCreationExpression Expression { get; } = expression;
+    internal ICreationExpression Expression { get; } = expression;
+
+    internal ICSharpExpression? SpreadItem { get; } = spreadItem;
+
+    internal TreeNodeCollection<IInitializerElement> Items { get; } = items ?? TreeNodeCollection<IInitializerElement>.Empty;
 
     internal IReferenceExpression? MethodReferenceToSetInferredTypeArguments { get; } = methodReferenceToSetInferredTypeArguments;
 
@@ -30,15 +36,20 @@ public sealed class UseTargetTypedCollectionExpressionSuggestion(
     {
         if (Expression.NewKeyword is { })
         {
-            if (Expression.Dims is [{ } rankSpecifier])
+            if (Expression is IArrayCreationExpression arrayCreationExpression)
             {
-                return new DocumentRange(Expression.NewKeyword.GetDocumentStartOffset(), rankSpecifier.GetDocumentEndOffset());
+                if (arrayCreationExpression.Dims is [{ } rankSpecifier])
+                {
+                    return new DocumentRange(Expression.NewKeyword.GetDocumentStartOffset(), rankSpecifier.GetDocumentEndOffset());
+                }
+
+                if (arrayCreationExpression.RBracket is { NodeType: TokenNodeType { TokenRepresentation: "]" } })
+                {
+                    return new DocumentRange(Expression.NewKeyword.GetDocumentStartOffset(), arrayCreationExpression.RBracket.GetDocumentEndOffset());
+                }
             }
 
-            if (Expression.RBracket is { NodeType: TokenNodeType { TokenRepresentation: "]" } })
-            {
-                return new DocumentRange(Expression.NewKeyword.GetDocumentStartOffset(), Expression.RBracket.GetDocumentEndOffset());
-            }
+            return Expression.NewKeyword.GetDocumentRange();
         }
 
         return Expression.GetDocumentRange();

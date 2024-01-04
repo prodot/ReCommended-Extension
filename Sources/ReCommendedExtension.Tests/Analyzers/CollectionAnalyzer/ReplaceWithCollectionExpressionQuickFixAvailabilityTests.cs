@@ -20,8 +20,8 @@ public sealed class ReplaceWithCollectionExpressionQuickFixAvailabilityTests : Q
         => highlighting is UseTargetTypedCollectionExpressionSuggestion;
 
     [Test]
-    public void TestCollectionInitialization_TargetArray_Availability() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_Target_Array_Availability() => DoNamedTest2();
 
     [Test]
-    public void TestCollectionInitialization_TargetEnumerable_Availability() => DoNamedTest2();
+    public void TestCollectionInitialization_Array_Target_IEnumerable_Availability() => DoNamedTest2();
 }

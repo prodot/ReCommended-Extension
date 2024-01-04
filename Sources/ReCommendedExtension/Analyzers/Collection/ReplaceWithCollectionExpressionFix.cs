@@ -1,10 +1,8 @@
 ﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon.CSharp.Utils;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Resources.Shell;
@@ -18,7 +16,7 @@ public sealed class ReplaceWithCollectionExpressionFix(UseTargetTypedCollectionE
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '[{(highlighting.Expression.ArrayInitializer is { InitializerElements: [_, ..] } ? "..." : "")}]'";
+    public override string Text => $"Replace with '[{(highlighting is { SpreadItem: { } } or { Items: [_, ..] } ? "..." : "")}]'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
@@ -39,11 +37,14 @@ public sealed class ReplaceWithCollectionExpressionFix(UseTargetTypedCollectionE
                 highlighting.MethodReferenceToSetInferredTypeArguments.SetTypeArguments(typeArguments);
             }
 
-            ModificationUtil.ReplaceChild(
-                highlighting.Expression,
-                highlighting.Expression.ArrayInitializer is { InitializerElements: [_, ..] items }
-                    ? factory.CreateExpression($"[{string.Join(", ", from item in items select item.GetText())}]")
-                    : factory.CreateExpression("[]"));
+            var items = from item in highlighting.Items select item.GetText();
+
+            if (highlighting.SpreadItem is { })
+            {
+                items = items.Prepend($"..{highlighting.SpreadItem.GetText()}");
+            }
+
+            ModificationUtil.ReplaceChild(highlighting.Expression, factory.CreateExpression($"[{string.Join(", ", items)}]"));
         }
 
         return _ => { };

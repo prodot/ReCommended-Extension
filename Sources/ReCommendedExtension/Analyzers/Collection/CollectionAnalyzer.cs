@@ -32,17 +32,47 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     Parameters: [],
                 });
 
-    [Pure]
-    static IType? TryGetTargetType(IArrayCreationExpression arrayCreationExpression)
+    [Conditional("DEBUG")]
+    static void AssertListConstructors(IPsiModule psiModule)
     {
-        var targetType = arrayCreationExpression.GetImplicitlyConvertedTo();
+        var listType = PredefinedType.GENERIC_LIST_FQN.TryGetTypeElement(psiModule);
+        Debug.Assert(listType is { });
+
+        var constructors =
+            (from c in listType.Constructors orderby c.Parameters.Count, c.Parameters.FirstOrDefault()?.Type.IsGenericIEnumerable() select c)
+            .ToList();
+
+        Debug.Assert(
+            constructors is [{ Parameters: [] }, { Parameters: [{ Type: var intParameter }] }, { Parameters: [{ Type: var enumerableParameter }] }]
+            && intParameter.IsInt()
+            && enumerableParameter.IsGenericIEnumerable());
+    }
+
+    [Pure]
+    static IType? TryGetTargetType(IExpression expression)
+    {
+        var targetType = expression.GetImplicitlyConvertedTo();
 
         return targetType.IsUnknown ? null : targetType;
     }
 
     [Pure]
+    static IReferenceExpression? TryGetMethodReferenceToSetInferredTypeArguments(ICreationExpression treeNode)
+        => treeNode is
+            {
+                Parent: ICSharpArgument
+                {
+                    MatchingParameter: { Substitution: var substitution, Element.ContainingParametersOwner: IMethod { TypeParameters: not [] } },
+                    Invocation: IInvocationExpression { InvokedExpression: IReferenceExpression { TypeArguments: [] } methodReference },
+                },
+            }
+            && !substitution.IsEmpty()
+                ? methodReference
+                : null;
+
+    [Pure]
     static IType? TryConstructType(IClrTypeName genericTypeName, IType[] typeArguments, IPsiModule psiModule)
-        => genericTypeName.TryGetTypeElement(psiModule) is { } tryGetTypeElement ? TypeFactory.CreateType(tryGetTypeElement, typeArguments) : null;
+        => genericTypeName.TryGetTypeElement(psiModule) is { } typeElement ? TypeFactory.CreateType(typeElement, typeArguments) : null;
 
     [Pure]
     static IType? TryGetArrayElementType(IArrayInitializer arrayInitializer)
@@ -134,7 +164,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     && count == (arrayCreationExpression.ArrayInitializer?.InitializerElements.Count ?? 0):
                 {
                     var psiModule = arrayCreationExpression.GetPsiModule();
-                    var arrayItemType = arrayCreationExpression.GetElementType();
+                    var itemType = arrayCreationExpression.GetElementType();
 
                     if (TryGetTargetType(arrayCreationExpression) is { } targetType)
                     {
@@ -149,38 +179,26 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                             or { DimInits: [], ArrayInitializer.InitializerElements: [] };
 
                         var methodReferenceToSetInferredTypeArguments = isEmptyArray
-                            && arrayCreationExpression is
-                            {
-                                Parent: ICSharpArgument
-                                {
-                                    MatchingParameter:
-                                    {
-                                        Substitution: var substitution, Element.ContainingParametersOwner: IMethod { TypeParameters: not [] },
-                                    },
-                                    Invocation: IInvocationExpression
-                                    {
-                                        InvokedExpression: IReferenceExpression { TypeArguments: [] } methodReference,
-                                    },
-                                },
-                            }
-                            && !substitution.IsEmpty()
-                                ? methodReference
-                                : null;
+                            ? TryGetMethodReferenceToSetInferredTypeArguments(arrayCreationExpression)
+                            : null;
 
-                        var typeArguments = new[] { arrayItemType };
+                        var typeArguments = new[] { itemType };
 
                         [Pure]
-                        bool IsTargetTypedTo(IClrTypeName clrTypeName)
-                            => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
+                        IClrTypeName? TryGetClrTypeNameIfTargetTypedToAnyOf(params IClrTypeName[] clrTypeNames)
+                            => clrTypeNames.FirstOrDefault(
+                                clrTypeName => TypeEqualityComparer.Default.Equals(
+                                    targetType,
+                                    TryConstructType(clrTypeName, typeArguments, psiModule)));
 
                         [Pure]
-                        bool IsTargetTypedToArray()
-                            => TypeEqualityComparer.Default.Equals(targetType, TypeFactory.CreateArrayType(arrayItemType, 1));
+                        bool IsTargetTypedToArray() => TypeEqualityComparer.Default.Equals(targetType, TypeFactory.CreateArrayType(itemType, 1));
 
                         // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
-                        if (IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
-                            || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
-                            || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN))
+                        if (TryGetClrTypeNameIfTargetTypedToAnyOf(
+                                PredefinedType.GENERIC_IENUMERABLE_FQN,
+                                PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN,
+                                PredefinedType.GENERIC_IREADONLYLIST_FQN) is { })
                         {
                             consumer.AddHighlighting(
                                 new UseTargetTypedCollectionExpressionSuggestion(
@@ -188,45 +206,30 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                                         ? "Use collection expression."
                                         : "Use collection expression (a compiler-synthesized read-only collection will be used).",
                                     arrayCreationExpression,
+                                    null,
+                                    arrayCreationExpression.ArrayInitializer?.InitializerElements,
                                     methodReferenceToSetInferredTypeArguments));
                         }
 
-                        // target-typed to ICollection<T>
-                        if (IsTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN))
+                        // target-typed to ICollection<T> or IList<T>
+                        if (TryGetClrTypeNameIfTargetTypedToAnyOf(PredefinedType.GENERIC_ICOLLECTION_FQN, PredefinedType.GENERIC_ILIST_FQN) is
+                            { } targetTypeClrTypeName)
                         {
                             // get target-typed item type to preserve the nullability
-                            var collectionItemType =
-                                targetType.GetGenericUnderlyingType(PredefinedType.GENERIC_ICOLLECTION_FQN.TryGetTypeElement(psiModule));
+                            var collectionItemType = targetType.GetGenericUnderlyingType(targetTypeClrTypeName.TryGetTypeElement(psiModule));
 
                             Debug.Assert(collectionItemType is { });
                             Debug.Assert(CSharpLanguage.Instance is { });
 
-                            var type = TryConstructType(PredefinedType.GENERIC_LIST_FQN, [collectionItemType], psiModule)
+                            var typeName = TryConstructType(PredefinedType.GENERIC_LIST_FQN, [collectionItemType], psiModule)
                                 ?.GetPresentableName(CSharpLanguage.Instance);
 
                             consumer.AddHighlighting(
                                 new UseTargetTypedCollectionExpressionSuggestion(
-                                    $"Use collection expression ('{type}' will be used).",
+                                    $"Use collection expression ('{typeName}' will be used).",
                                     arrayCreationExpression,
-                                    methodReferenceToSetInferredTypeArguments));
-                        }
-
-                        // target-typed to IList<T>
-                        if (IsTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN))
-                        {
-                            // get target-typed item type to preserve the nullability
-                            var listItemType = targetType.GetGenericUnderlyingType(PredefinedType.GENERIC_ILIST_FQN.TryGetTypeElement(psiModule));
-
-                            Debug.Assert(listItemType is { });
-                            Debug.Assert(CSharpLanguage.Instance is { });
-
-                            var type = TryConstructType(PredefinedType.GENERIC_LIST_FQN, [listItemType], psiModule)
-                                ?.GetPresentableName(CSharpLanguage.Instance);
-
-                            consumer.AddHighlighting(
-                                new UseTargetTypedCollectionExpressionSuggestion(
-                                    $"Use collection expression ('{type}' will be used).",
-                                    arrayCreationExpression,
+                                    null,
+                                    arrayCreationExpression.ArrayInitializer?.InitializerElements,
                                     methodReferenceToSetInferredTypeArguments));
                         }
 
@@ -242,6 +245,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                                 new UseTargetTypedCollectionExpressionSuggestion(
                                     "Use collection expression.",
                                     arrayCreationExpression,
+                                    null,
+                                    null,
                                     methodReferenceToSetInferredTypeArguments));
                         }
                     }
@@ -257,9 +262,104 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                             consumer.AddHighlighting(
                                 new UseEmptyForArrayInitializationWarning(
-                                    $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayItemType.GetPresentableName(CSharpLanguage.Instance)}>()'.",
+                                    $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{itemType.GetPresentableName(CSharpLanguage.Instance)}>()'.",
                                     arrayCreationExpression,
-                                    arrayItemType));
+                                    itemType));
+                        }
+                    }
+
+                    break;
+                }
+
+                case IObjectCreationExpression objectCreationExpression when TryGetTargetType(objectCreationExpression) is { } targetType:
+                {
+                    var type = objectCreationExpression.Type();
+
+                    if (type.IsGenericList())
+                    {
+                        var psiModule = objectCreationExpression.GetPsiModule();
+
+                        AssertListConstructors(psiModule);
+
+                        var itemType = type.GetGenericUnderlyingType(PredefinedType.GENERIC_LIST_FQN.TryGetTypeElement(psiModule));
+                        Debug.Assert(itemType is { });
+
+                        var parameterType = objectCreationExpression.Arguments.FirstOrDefault()?.MatchingParameter?.Type;
+
+                        var isEmptyList = (parameterType is not { } || !parameterType.IsGenericIEnumerable())
+                            && objectCreationExpression.Initializer is not { InitializerElements: [_, ..] };
+                        var isCapacitySpecified = parameterType.IsInt()
+                            && objectCreationExpression.Arguments[0].Expression is { } arg
+                            && arg.IsConstantValue()
+                            && arg.ConstantValue.IntValue > (objectCreationExpression.Initializer?.InitializerElements.Count ?? 0);
+
+                        var methodReferenceToSetInferredTypeArguments =
+                            isEmptyList ? TryGetMethodReferenceToSetInferredTypeArguments(objectCreationExpression) : null;
+
+                        var typeArguments = new[] { itemType };
+
+                        [Pure]
+                        bool IsTargetTypedTo(IClrTypeName clrTypeName)
+                            => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
+
+                        [Pure]
+                        IClrTypeName? TryGetClrTypeNameIfTargetTypedToAnyOf(params IClrTypeName[] clrTypeNames)
+                            => clrTypeNames.FirstOrDefault(
+                                clrTypeName => TypeEqualityComparer.Default.Equals(
+                                    targetType,
+                                    TryConstructType(clrTypeName, typeArguments, psiModule)));
+
+                        // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
+                        if (TryGetClrTypeNameIfTargetTypedToAnyOf(
+                                PredefinedType.GENERIC_IENUMERABLE_FQN,
+                                PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN,
+                                PredefinedType.GENERIC_IREADONLYLIST_FQN) is { } targetTypeClrTypeName)
+                        {
+                            // get target-typed item type to preserve the nullability
+                            var arrayItemType = targetType.GetGenericUnderlyingType(targetTypeClrTypeName.TryGetTypeElement(psiModule));
+
+                            Debug.Assert(arrayItemType is { });
+                            Debug.Assert(CSharpLanguage.Instance is { });
+
+                            var typeName = TypeFactory.CreateArrayType(arrayItemType, 1).GetPresentableName(CSharpLanguage.Instance);
+
+                            consumer.AddHighlighting(
+                                new UseTargetTypedCollectionExpressionSuggestion(
+                                    isEmptyList
+                                        ? $"Use collection expression ('{typeName}' will be used)."
+                                        : "Use collection expression (a compiler-synthesized read-only collection will be used).",
+                                    objectCreationExpression,
+                                    parameterType.IsGenericIEnumerable() ? objectCreationExpression.Arguments[0].Value : null,
+                                    objectCreationExpression.Initializer?.InitializerElements,
+                                    methodReferenceToSetInferredTypeArguments));
+                        }
+
+                        // target-typed to ICollection<T> or IList<T>
+                        if (TryGetClrTypeNameIfTargetTypedToAnyOf(PredefinedType.GENERIC_ICOLLECTION_FQN, PredefinedType.GENERIC_ILIST_FQN) is { })
+                        {
+                            consumer.AddHighlighting(
+                                new UseTargetTypedCollectionExpressionSuggestion(
+                                    "Use collection expression.",
+                                    objectCreationExpression,
+                                    parameterType.IsGenericIEnumerable() ? objectCreationExpression.Arguments[0].Value : null,
+                                    objectCreationExpression.Initializer?.InitializerElements,
+                                    methodReferenceToSetInferredTypeArguments));
+                        }
+
+                        // target-typed to List<T>: cases not covered by R#
+                        // - empty list without a specified capacity passed to a method, which requires setting inferred type arguments
+                        if (isEmptyList
+                            && !isCapacitySpecified
+                            && methodReferenceToSetInferredTypeArguments is { }
+                            && IsTargetTypedTo(PredefinedType.GENERIC_LIST_FQN))
+                        {
+                            consumer.AddHighlighting(
+                                new UseTargetTypedCollectionExpressionSuggestion(
+                                    "Use collection expression.",
+                                    objectCreationExpression,
+                                    null,
+                                    null,
+                                    methodReferenceToSetInferredTypeArguments));
                         }
                     }
 

@@ -96,7 +96,7 @@ namespace Test
 (7): ReSharper Suggestion: Use collection expression
 (8): ReSharper Dead Code: Use collection expression
 (9): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(10): ReSharper Dead Code: Use collection expression.
+(10): ReSharper Suggestion: Use collection expression.
 (11): ReSharper Suggestion: Use 'Array<int>.Empty()'
 (12): ReSharper Dead Code: Use collection expression
 (13): ReSharper Dead Code: Use collection expression
