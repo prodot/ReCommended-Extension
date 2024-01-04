@@ -19,6 +19,21 @@ namespace ReCommendedExtension.Analyzers.Collection;
     ])]
 public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 {
+    [Flags]
+    enum ListArguments
+    {
+        Capacity = 1 << 0,
+        Collection = 1 << 1,
+    }
+
+    [Flags]
+    enum HashSetArguments
+    {
+        Capacity = 1 << 0,
+        Collection = 1 << 1,
+        Comparer = 1 << 2,
+    }
+
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
         => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType
@@ -39,13 +54,58 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         Debug.Assert(listType is { });
 
         var constructors =
-            (from c in listType.Constructors orderby c.Parameters.Count, c.Parameters.FirstOrDefault()?.Type.IsGenericIEnumerable() select c)
-            .ToList();
+        (
+            from c in listType.Constructors
+            where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
+            orderby c.Parameters.Count, c.Parameters.FirstOrDefault()?.Type.IsGenericIEnumerable()
+            select c).ToList();
 
         Debug.Assert(
             constructors is [{ Parameters: [] }, { Parameters: [{ Type: var intParameter }] }, { Parameters: [{ Type: var enumerableParameter }] }]
             && intParameter.IsInt()
             && enumerableParameter.IsGenericIEnumerable());
+    }
+
+    [Conditional("DEBUG")]
+    static void AssertHashSetConstructors(IPsiModule psiModule)
+    {
+        var hashSetType = PredefinedType.HASHSET_FQN.TryGetTypeElement(psiModule);
+        Debug.Assert(hashSetType is { });
+
+        [Pure]
+        static int GetOrder(IType? parameterType)
+            => parameterType switch
+            {
+                _ when parameterType.IsInt() => 0,
+                _ when parameterType.IsGenericIEnumerable() => 1,
+                _ when parameterType.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN) => 2,
+
+                _ => -1,
+            };
+
+        var constructors =
+        (
+            from c in hashSetType.Constructors
+            where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
+            orderby c.Parameters.Count, GetOrder(c.Parameters.FirstOrDefault()?.Type)
+            select c).ToList();
+
+        Debug.Assert(
+            constructors is
+            [
+                { Parameters: [] }, { Parameters: [{ Type: var intParameter }] }, { Parameters: [{ Type: var enumerableParameter }] },
+                { Parameters: [{ Type: var comparerParameter }] },
+                { Parameters: [{ Type: var intParameter2 }, { Type: var comparerParameter2 }] },
+                { Parameters: [{ Type: var enumerableParameter2 }, { Type: var comparerParameter3 }] },
+            ]
+            && intParameter.IsInt()
+            && intParameter2.IsInt()
+            && enumerableParameter.IsGenericIEnumerable()
+            && enumerableParameter2.IsGenericIEnumerable()
+            && comparerParameter.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+            && comparerParameter3.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN));
     }
 
     [Pure]
@@ -316,6 +376,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 AnalyzeListCreationExpression(consumer, objectCreationExpression, type, targetType);
             }
+
+            if (type.IsClrType(PredefinedType.HASHSET_FQN))
+            {
+                AnalyzeHashSetCreationExpression(consumer, objectCreationExpression, type, targetType);
+            }
         }
     }
 
@@ -332,14 +397,17 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         var itemType = type.GetGenericUnderlyingType(PredefinedType.GENERIC_LIST_FQN.TryGetTypeElement(psiModule));
         Debug.Assert(itemType is { });
 
-        var parameterType = listCreationExpression.Arguments.FirstOrDefault()?.MatchingParameter?.Type;
+        var parameterType = listCreationExpression.Arguments is [{ MatchingParameter.Type: var t }] ? t : null;
+        var arguments =
+            (parameterType.IsInt()
+                && listCreationExpression.Arguments[0].Expression is { } arg
+                && arg.IsConstantValue()
+                && arg.ConstantValue.IntValue > (listCreationExpression.Initializer?.InitializerElements.Count ?? 0)
+                    ? ListArguments.Capacity
+                    : 0)
+            | (parameterType.IsGenericIEnumerable() ? ListArguments.Collection : 0);
 
-        var isEmptyList = (parameterType is not { } || !parameterType.IsGenericIEnumerable())
-            && listCreationExpression.Initializer is not { InitializerElements: [_, ..] };
-        var isCapacitySpecified = parameterType.IsInt()
-            && listCreationExpression.Arguments[0].Expression is { } arg
-            && arg.IsConstantValue()
-            && arg.ConstantValue.IntValue > (listCreationExpression.Initializer?.InitializerElements.Count ?? 0);
+        var isEmptyList = (arguments & ListArguments.Collection) == 0 && listCreationExpression.Initializer is not { InitializerElements: [_, ..] };
 
         var methodReferenceToSetInferredTypeArguments = isEmptyList ? TryGetMethodReferenceToSetInferredTypeArguments(listCreationExpression) : null;
 
@@ -394,7 +462,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         // target-typed to List<T>: cases not covered by R#
         // - empty list without a specified capacity passed to a method, which requires setting inferred type arguments
         if (isEmptyList
-            && !isCapacitySpecified
+            && (arguments & ListArguments.Capacity) == 0
             && methodReferenceToSetInferredTypeArguments is { }
             && IsTargetTypedTo(PredefinedType.GENERIC_LIST_FQN))
         {
@@ -402,6 +470,76 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 new UseTargetTypedCollectionExpressionSuggestion(
                     "Use collection expression.",
                     listCreationExpression,
+                    null,
+                    null,
+                    methodReferenceToSetInferredTypeArguments));
+        }
+    }
+
+    static void AnalyzeHashSetCreationExpression(
+        IHighlightingConsumer consumer,
+        IObjectCreationExpression hashSetCreationExpression,
+        IType type,
+        IType targetType)
+    {
+        var psiModule = hashSetCreationExpression.GetPsiModule();
+
+        AssertHashSetConstructors(psiModule);
+
+        var itemType = type.GetGenericUnderlyingType(PredefinedType.HASHSET_FQN.TryGetTypeElement(psiModule));
+        Debug.Assert(itemType is { });
+
+        var parameterTypes = hashSetCreationExpression.Arguments switch
+        {
+            [{ MatchingParameter.Type: var t }] => [t, null],
+            [{ MatchingParameter.Type: var t0 }, { MatchingParameter.Type: var t1 }] => [t0, t1],
+            _ => new IType?[2],
+        };
+        var arguments =
+            (parameterTypes[0].IsInt()
+                && hashSetCreationExpression.Arguments[0].Expression is { } arg
+                && arg.IsConstantValue()
+                && arg.ConstantValue.IntValue > (hashSetCreationExpression.Initializer?.InitializerElements.Count ?? 0)
+                    ? HashSetArguments.Capacity
+                    : 0)
+            | (parameterTypes[0].IsGenericIEnumerable() ? HashSetArguments.Collection : 0)
+            | (parameterTypes[0].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+                && hashSetCreationExpression.Arguments[0].Expression is { } a0
+                && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
+                || parameterTypes[1].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+                && hashSetCreationExpression.Arguments[1].Expression is { } a1
+                && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
+                    ? HashSetArguments.Comparer
+                    : 0);
+
+        var isEmptyHashSet = (arguments & HashSetArguments.Collection) == 0
+            && hashSetCreationExpression.Initializer is not { InitializerElements: [_, ..] };
+
+        var methodReferenceToSetInferredTypeArguments =
+            isEmptyHashSet ? TryGetMethodReferenceToSetInferredTypeArguments(hashSetCreationExpression) : null;
+
+        var typeArguments = new[] { itemType };
+
+        [Pure]
+        bool IsTargetTypedTo(IClrTypeName clrTypeName)
+            => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
+
+        // [Pure]
+        // IClrTypeName? TryGetClrTypeNameIfTargetTypedToAnyOf(params IClrTypeName[] clrTypeNames)
+        //     => clrTypeNames.FirstOrDefault(
+        //         clrTypeName => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule)));
+
+        // target-typed to List<T>: cases not covered by R#
+        // - empty list without a specified capacity passed to a method, which requires setting inferred type arguments
+        if (isEmptyHashSet
+            && (arguments & (HashSetArguments.Capacity | HashSetArguments.Comparer)) == 0
+            && methodReferenceToSetInferredTypeArguments is { }
+            && IsTargetTypedTo(PredefinedType.HASHSET_FQN))
+        {
+            consumer.AddHighlighting(
+                new UseTargetTypedCollectionExpressionSuggestion(
+                    "Use collection expression.",
+                    hashSetCreationExpression,
                     null,
                     null,
                     methodReferenceToSetInferredTypeArguments));
