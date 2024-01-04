@@ -34,6 +34,15 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         Comparer = 1 << 2,
     }
 
+    [Flags]
+    enum DictionaryArguments
+    {
+        Capacity = 1 << 0,
+        Dictionary = 1 << 1,
+        Pairs = 1 << 2,
+        Comparer = 1 << 3,
+    }
+
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
         => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType
@@ -93,19 +102,66 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         Debug.Assert(
             constructors is
             [
-                { Parameters: [] }, { Parameters: [{ Type: var intParameter }] }, { Parameters: [{ Type: var enumerableParameter }] },
-                { Parameters: [{ Type: var comparerParameter }] },
+                { Parameters: [] }, { Parameters: [{ Type: var intParameter1 }] }, { Parameters: [{ Type: var enumerableParameter1 }] },
+                { Parameters: [{ Type: var comparerParameter1 }] },
                 { Parameters: [{ Type: var intParameter2 }, { Type: var comparerParameter2 }] },
                 { Parameters: [{ Type: var enumerableParameter2 }, { Type: var comparerParameter3 }] },
             ]
-            && intParameter.IsInt()
+            && intParameter1.IsInt()
             && intParameter2.IsInt()
-            && enumerableParameter.IsGenericIEnumerable()
+            && enumerableParameter1.IsGenericIEnumerable()
+            && enumerableParameter2.IsGenericIEnumerable()
+            && comparerParameter1.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+            && comparerParameter3.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN));
+    }
+
+    [Conditional("DEBUG")]
+    static void AssertDictionaryConstructors(IPsiModule psiModule)
+    {
+        var dictionaryType = PredefinedType.GENERIC_DICTIONARY_FQN.TryGetTypeElement(psiModule);
+        Debug.Assert(dictionaryType is { });
+
+        [Pure]
+        static int GetOrder(IType? parameterType)
+            => parameterType switch
+            {
+                _ when parameterType.IsInt() => 0,
+                _ when parameterType.IsIDictionary() => 1,
+                _ when parameterType.IsGenericIEnumerable() => 2,
+                _ when parameterType.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN) => 3,
+
+                _ => -1,
+            };
+
+        var constructors =
+        (
+            from c in dictionaryType.Constructors
+            where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
+            orderby c.Parameters.Count, GetOrder(c.Parameters.FirstOrDefault()?.Type)
+            select c).ToList();
+
+        Debug.Assert(
+            constructors is
+            [
+                { Parameters: [] }, { Parameters: [{ Type: var intParameter1 }] }, { Parameters: [{ Type: var dictionaryParameter1 }] },
+                { Parameters: [{ Type: var enumerableParameter1 }] }, { Parameters: [{ Type: var comparerParameter }] },
+                { Parameters: [{ Type: var intParameter2 }, { Type: var comparerParameter2 }] },
+                { Parameters: [{ Type: var dictionaryParameter2 }, { Type: var comparerParameter3 }] },
+                { Parameters: [{ Type: var enumerableParameter2 }, { Type: var comparerParameter4 }] },
+            ]
+            && intParameter1.IsInt()
+            && intParameter2.IsInt()
+            && dictionaryParameter1.IsIDictionary()
+            && dictionaryParameter2.IsIDictionary()
+            && enumerableParameter1.IsGenericIEnumerable()
             && enumerableParameter2.IsGenericIEnumerable()
             && comparerParameter.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
             && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
             && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter3.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN));
+            && comparerParameter3.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+            && comparerParameter4.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN));
     }
 
     [Pure]
@@ -262,18 +318,16 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     var typeArguments = new[] { itemType };
 
                     [Pure]
-                    IClrTypeName? TryGetClrTypeNameIfTargetTypedToAnyOf(params IClrTypeName[] clrTypeNames)
-                        => clrTypeNames.FirstOrDefault(
-                            clrTypeName => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule)));
+                    bool IsTargetTypedTo(IClrTypeName clrTypeName)
+                        => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
 
                     [Pure]
                     bool IsTargetTypedToArray() => TypeEqualityComparer.Default.Equals(targetType, TypeFactory.CreateArrayType(itemType, 1));
 
                     // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
-                    if (TryGetClrTypeNameIfTargetTypedToAnyOf(
-                            PredefinedType.GENERIC_IENUMERABLE_FQN,
-                            PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN,
-                            PredefinedType.GENERIC_IREADONLYLIST_FQN) is { })
+                    if (IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
+                        || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
+                        || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN))
                     {
                         consumer.AddHighlighting(
                             new UseTargetTypedCollectionExpressionSuggestion(
@@ -287,11 +341,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     }
 
                     // target-typed to ICollection<T> or IList<T>
-                    if (TryGetClrTypeNameIfTargetTypedToAnyOf(PredefinedType.GENERIC_ICOLLECTION_FQN, PredefinedType.GENERIC_ILIST_FQN) is
-                        { } targetTypeClrTypeName)
+                    if (IsTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) || IsTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN))
                     {
                         // get target-typed item type to preserve the nullability
-                        var collectionItemType = targetType.GetGenericUnderlyingType(targetTypeClrTypeName.TryGetTypeElement(psiModule));
+                        var collectionItemType = TypesUtil.GetTypeArgumentValue(targetType, 0);
 
                         Debug.Assert(collectionItemType is { });
                         Debug.Assert(CSharpLanguage.Instance is { });
@@ -381,6 +434,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 AnalyzeHashSetCreationExpression(consumer, objectCreationExpression, type, targetType);
             }
+
+            if (type.IsClrType(PredefinedType.GENERIC_DICTIONARY_FQN))
+            {
+                AnalyzeDictionaryCreationExpression(consumer, objectCreationExpression, type, targetType);
+            }
         }
     }
 
@@ -394,7 +452,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         AssertListConstructors(psiModule);
 
-        var itemType = type.GetGenericUnderlyingType(PredefinedType.GENERIC_LIST_FQN.TryGetTypeElement(psiModule));
+        var itemType = TypesUtil.GetTypeArgumentValue(type, 0);
         Debug.Assert(itemType is { });
 
         var parameterType = listCreationExpression.Arguments is [{ MatchingParameter.Type: var t }] ? t : null;
@@ -417,19 +475,13 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         bool IsTargetTypedTo(IClrTypeName clrTypeName)
             => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
 
-        [Pure]
-        IClrTypeName? TryGetClrTypeNameIfTargetTypedToAnyOf(params IClrTypeName[] clrTypeNames)
-            => clrTypeNames.FirstOrDefault(
-                clrTypeName => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule)));
-
         // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
-        if (TryGetClrTypeNameIfTargetTypedToAnyOf(
-                PredefinedType.GENERIC_IENUMERABLE_FQN,
-                PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN,
-                PredefinedType.GENERIC_IREADONLYLIST_FQN) is { } targetTypeClrTypeName)
+        if (IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
+            || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
+            || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN))
         {
             // get target-typed item type to preserve the nullability
-            var arrayItemType = targetType.GetGenericUnderlyingType(targetTypeClrTypeName.TryGetTypeElement(psiModule));
+            var arrayItemType = TypesUtil.GetTypeArgumentValue(targetType, 0);
 
             Debug.Assert(arrayItemType is { });
             Debug.Assert(CSharpLanguage.Instance is { });
@@ -448,7 +500,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         }
 
         // target-typed to ICollection<T> or IList<T>
-        if (TryGetClrTypeNameIfTargetTypedToAnyOf(PredefinedType.GENERIC_ICOLLECTION_FQN, PredefinedType.GENERIC_ILIST_FQN) is { })
+        if (IsTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) || IsTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN))
         {
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
@@ -486,7 +538,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         AssertHashSetConstructors(psiModule);
 
-        var itemType = type.GetGenericUnderlyingType(PredefinedType.HASHSET_FQN.TryGetTypeElement(psiModule));
+        var itemType = TypesUtil.GetTypeArgumentValue(type, 0);
         Debug.Assert(itemType is { });
 
         var parameterTypes = hashSetCreationExpression.Arguments switch
@@ -524,13 +576,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         bool IsTargetTypedTo(IClrTypeName clrTypeName)
             => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
 
-        // [Pure]
-        // IClrTypeName? TryGetClrTypeNameIfTargetTypedToAnyOf(params IClrTypeName[] clrTypeNames)
-        //     => clrTypeNames.FirstOrDefault(
-        //         clrTypeName => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule)));
-
-        // target-typed to List<T>: cases not covered by R#
-        // - empty list without a specified capacity passed to a method, which requires setting inferred type arguments
+        // target-typed to HashSet<T>: cases not covered by R#
+        // - empty hash set without a specified capacity or comparer passed to a method, which requires setting inferred type arguments
         if (isEmptyHashSet
             && (arguments & (HashSetArguments.Capacity | HashSetArguments.Comparer)) == 0
             && methodReferenceToSetInferredTypeArguments is { }
@@ -540,6 +587,73 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 new UseTargetTypedCollectionExpressionSuggestion(
                     "Use collection expression.",
                     hashSetCreationExpression,
+                    null,
+                    null,
+                    methodReferenceToSetInferredTypeArguments));
+        }
+    }
+
+    static void AnalyzeDictionaryCreationExpression(
+        IHighlightingConsumer consumer,
+        IObjectCreationExpression dictionaryCreationExpression,
+        IType type,
+        IType targetType)
+    {
+        var psiModule = dictionaryCreationExpression.GetPsiModule();
+
+        AssertDictionaryConstructors(psiModule);
+
+        var keyType = TypesUtil.GetTypeArgumentValue(type, 0);
+        var valueType = TypesUtil.GetTypeArgumentValue(type, 1);
+        Debug.Assert(keyType is { });
+        Debug.Assert(valueType is { });
+
+        var parameterTypes = dictionaryCreationExpression.Arguments switch
+        {
+            [{ MatchingParameter.Type: var t }] => [t, null],
+            [{ MatchingParameter.Type: var t0 }, { MatchingParameter.Type: var t1 }] => [t0, t1],
+            _ => new IType?[2],
+        };
+        var arguments =
+            (parameterTypes[0].IsInt()
+                && dictionaryCreationExpression.Arguments[0].Expression is { } arg
+                && arg.IsConstantValue()
+                && arg.ConstantValue.IntValue > (dictionaryCreationExpression.Initializer?.InitializerElements.Count ?? 0)
+                    ? DictionaryArguments.Capacity
+                    : 0)
+            | (parameterTypes[0].IsIDictionary() ? DictionaryArguments.Dictionary : 0)
+            | (parameterTypes[0].IsGenericIEnumerable() ? DictionaryArguments.Pairs : 0)
+            | (parameterTypes[0].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+                && dictionaryCreationExpression.Arguments[0].Expression is { } a0
+                && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
+                || parameterTypes[1].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+                && dictionaryCreationExpression.Arguments[1].Expression is { } a1
+                && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
+                    ? DictionaryArguments.Comparer
+                    : 0);
+
+        var isEmptyDictionary = (arguments & (DictionaryArguments.Dictionary | DictionaryArguments.Pairs)) == 0
+            && dictionaryCreationExpression.Initializer is not { InitializerElements: [_, ..] };
+
+        var methodReferenceToSetInferredTypeArguments =
+            isEmptyDictionary ? TryGetMethodReferenceToSetInferredTypeArguments(dictionaryCreationExpression) : null;
+
+        var typeArguments = new[] { keyType, valueType };
+
+        [Pure]
+        bool IsTargetTypedTo(IClrTypeName clrTypeName)
+            => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
+
+        // target-typed to Dictionary<T>: cases not covered by R#
+        // - empty dictionary without a specified capacity or comparer
+        if (isEmptyDictionary
+            && (arguments & (DictionaryArguments.Capacity | DictionaryArguments.Comparer)) == 0
+            && IsTargetTypedTo(PredefinedType.GENERIC_DICTIONARY_FQN))
+        {
+            consumer.AddHighlighting(
+                new UseTargetTypedCollectionExpressionSuggestion(
+                    "Use collection expression.",
+                    dictionaryCreationExpression,
                     null,
                     null,
                     methodReferenceToSetInferredTypeArguments));
@@ -561,9 +675,6 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             case IObjectCreationExpression objectCreationExpression:
                 AnalyzeObjectCreationExpression(consumer, objectCreationExpression);
                 break;
-
-            // todo: target-typed empty dictionary: new Dictionary<K,V>() -> []
-            // todo: target-typed empty dictionary: new() -> []
 
             // todo: target-typed empty array: Array.Empty<T>() -> [] (when target type is: T[], IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>)
             // todo: target-typed empty array: Array.Empty<T>() -> [] (List<T> will be used) (when target type is: ICollection<T>, IList<T>)

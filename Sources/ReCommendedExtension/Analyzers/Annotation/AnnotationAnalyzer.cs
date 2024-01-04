@@ -1738,10 +1738,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                 if (type.IsLazy())
                 {
-                    if (type.GetGenericUnderlyingType(PredefinedType.LAZY_FQN.TryGetTypeElement(attributesOwnerDeclaration.GetPsiModule())) is
-                        {
-                            Classify: not TypeClassification.REFERENCE_TYPE,
-                        })
+                    if (TypesUtil.GetTypeArgumentValue(type, 0) is { Classify: not TypeClassification.REFERENCE_TYPE })
                     {
                         consumer.AddHighlighting(
                             new NotAllowedAnnotationWarning(

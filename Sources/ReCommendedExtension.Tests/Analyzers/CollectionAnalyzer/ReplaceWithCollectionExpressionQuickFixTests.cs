@@ -81,4 +81,16 @@ public sealed class ReplaceWithCollectionExpressionQuickFixTests : QuickFixTestB
 
     [Test]
     public void TestCollectionInitialization_List_Target_IEnumerable_GenericMethodArgument() => DoNamedTest2();
+
+    [Test]
+    public void TestCollectionInitialization_Dictionary_Target_Dictionary_Field() => DoNamedTest2();
+
+    [Test]
+    public void TestCollectionInitialization_Dictionary_Target_Dictionary_Property() => DoNamedTest2();
+
+    [Test]
+    public void TestCollectionInitialization_Dictionary_Target_Dictionary_MethodArgument() => DoNamedTest2();
+
+    [Test]
+    public void TestCollectionInitialization_Dictionary_Target_Dictionary_GenericMethodArgument_InferredTypeArguments() => DoNamedTest2();
 }

@@ -28,11 +28,7 @@ public sealed class AnnotateWithItemNotNull(ICSharpContextActionDataProvider pro
             return true;
         }
 
-        if (type.IsLazy()
-            && type.GetGenericUnderlyingType(PredefinedType.LAZY_FQN.TryGetTypeElement(context.GetPsiModule())) is
-            {
-                Classify: TypeClassification.REFERENCE_TYPE,
-            })
+        if (type.IsLazy() && TypesUtil.GetTypeArgumentValue(type, 0) is { Classify: TypeClassification.REFERENCE_TYPE })
         {
             return true;
         }

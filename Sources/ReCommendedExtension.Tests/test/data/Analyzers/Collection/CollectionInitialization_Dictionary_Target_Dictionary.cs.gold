@@ -1,0 +1,225 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace TargetDictionary
+{
+    public class NonGenericClass
+    {
+        Dictionary<int, string> field01 = |new|(0) Dictionary<int, string>();
+        Dictionary<int, string> field02 = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
+        Dictionary<int, string> field03 = new Dictionary<int, string>(8);
+        Dictionary<int, string> field04 = new Dictionary<int, string>(8) { [1] = "one", [2] = "two" };
+        Dictionary<int, string> field17 = |new|(1)();
+        Dictionary<int, string> field18 = new() { { 1, "one" }, { 2, "two" } };
+        Dictionary<int, string> field19 = new(8);
+        Dictionary<int, string> field20 = new(8) { [1] = "one", [2] = "two" };
+
+        void Method(int a, int b, string x, string y, IDictionary<int, string> dict, IEnumerable<KeyValuePair<int, string>> pairs, IEqualityComparer<int> comparer)
+        {
+            Dictionary<int, string> var01 = |new|(2) Dictionary<int, string>();
+            Dictionary<int, string> var02 = new Dictionary<int, string> { {a, x }, { b, y } };
+            Dictionary<int, string> var03 = new Dictionary<int, string>(8);
+            Dictionary<int, string> var04 = new Dictionary<int, string>(8) { [a] = x, [b] = y };
+            Dictionary<int, string> var05 = new Dictionary<int, string>(dict);
+            Dictionary<int, string> var06 = new Dictionary<int, string>(dict) { { a, x }, { b, y } };
+            Dictionary<int, string> var07 = new Dictionary<int, string>(pairs);
+            Dictionary<int, string> var08 = new Dictionary<int, string>(pairs) { [a] = x, [b] = y };
+            Dictionary<int, string> var09 = new Dictionary<int, string>(comparer);
+            Dictionary<int, string> var10 = new Dictionary<int, string>(comparer) { { a, x }, { b, y } };
+            Dictionary<int, string> var11 = new Dictionary<int, string>(8, comparer);
+            Dictionary<int, string> var12 = new Dictionary<int, string>(8, comparer) { [a] = x, [b] = y };
+            Dictionary<int, string> var13 = new Dictionary<int, string>(dict, comparer);
+            Dictionary<int, string> var14 = new Dictionary<int, string>(dict, comparer) { { a, x }, { b, y } };
+            Dictionary<int, string> var15 = new Dictionary<int, string>(pairs, comparer);
+            Dictionary<int, string> var16 = new Dictionary<int, string>(pairs, comparer) { [a] = x, [b] = y };
+            Dictionary<int, string> var17 = |new|(3)();
+            Dictionary<int, string> var18 = new() { { a, x }, { b, y } };
+            Dictionary<int, string> var19 = new(8);
+            Dictionary<int, string> var20 = new(8) { [a] = x, [b] = y };
+            Dictionary<int, string> var21 = new(dict);
+            Dictionary<int, string> var22 = new(dict) { { a, x }, { b, y } };
+            Dictionary<int, string> var23 = new(pairs);
+            Dictionary<int, string> var24 = new(pairs) { [a] = x, [b] = y };
+            Dictionary<int, string> var25 = new(comparer);
+            Dictionary<int, string> var26 = new(comparer) { { a, x }, { b, y } };
+            Dictionary<int, string> var27 = new(8, comparer);
+            Dictionary<int, string> var28 = new(8, comparer) { [a] = x, [b] = y };
+            Dictionary<int, string> var29 = new(dict, comparer);
+            Dictionary<int, string> var30 = new(dict, comparer) { { a, x }, { b, y } };
+            Dictionary<int, string> var31 = new(pairs, comparer);
+            Dictionary<int, string> var32 = new(pairs, comparer) { [a] = x, [b] = y };
+
+            Consumer(|new|(4) Dictionary<int, string>());
+            Consumer(new Dictionary<int, string> { { a, x }, { b, y } });
+            Consumer(new Dictionary<int, string>(8));
+            Consumer(new Dictionary<int, string>(8) { [a] = x, [b] = y });
+            Consumer(new Dictionary<int, string>(dict));
+            Consumer(new Dictionary<int, string>(dict) { { a, x }, { b, y } });
+            Consumer(new Dictionary<int, string>(pairs));
+            Consumer(new Dictionary<int, string>(pairs) { [a] = x, [b] = y });
+            Consumer(new Dictionary<int, string>(comparer));
+            Consumer(new Dictionary<int, string>(comparer) { { a, x }, { b, y } });
+            Consumer(new Dictionary<int, string>(8, comparer));
+            Consumer(new Dictionary<int, string>(8, comparer) { [a] = x, [b] = y });
+            Consumer(new Dictionary<int, string>(dict, comparer));
+            Consumer(new Dictionary<int, string>(dict, comparer) { { a, x }, { b, y } });
+            Consumer(new Dictionary<int, string>(pairs, comparer));
+            Consumer(new Dictionary<int, string>(pairs, comparer) { [a] = x, [b] = y });
+            Consumer(|new|(5)());
+            Consumer(new() { { a, x }, { b, y } });
+            Consumer(new(8));
+            Consumer(new(8) { [a] = x, [b] = y });
+            Consumer(new(dict));
+            Consumer(new(dict) { { a, x }, { b, y } });
+            Consumer(new(pairs));
+            Consumer(new(pairs) { [a] = x, [b] = y });
+            Consumer(new(comparer));
+            Consumer(new(comparer) { { a, x }, { b, y } });
+            Consumer(new(8, comparer));
+            Consumer(new(8, comparer) { [a] = x, [b] = y });
+            Consumer(new(dict, comparer));
+            Consumer(new(dict, comparer) { { a, x }, { b, y } });
+            Consumer(new(pairs, comparer));
+            Consumer(new(pairs, comparer) { [a] = x, [b] = y });
+
+            ConsumerGeneric(|new|(6) Dictionary<int, string>());
+            ConsumerGeneric(new Dictionary<int, string> { { a, x }, { b, y } });
+            ConsumerGeneric<int, string>(new Dictionary<int, string>(8));
+            ConsumerGeneric<int, string>(new Dictionary<int, string>(8) { [a] = x, [b] = y });
+            ConsumerGeneric(new Dictionary<int, string>(dict));
+            ConsumerGeneric(new Dictionary<int, string>(dict) { { a, x }, { b, y } });
+            ConsumerGeneric(new Dictionary<int, string>(pairs));
+            ConsumerGeneric(new Dictionary<int, string>(pairs) { [a] = x, [b] = y });
+            ConsumerGeneric(new Dictionary<int, string>(comparer));
+            ConsumerGeneric(new Dictionary<int, string>(comparer) { { a, x }, { b, y } });
+            ConsumerGeneric(new Dictionary<int, string>(8, comparer));
+            ConsumerGeneric(new Dictionary<int, string>(8, comparer) { [a] = x, [b] = y });
+            ConsumerGeneric(new Dictionary<int, string>(dict, comparer));
+            ConsumerGeneric(new Dictionary<int, string>(dict, comparer) { { a, x }, { b, y } });
+            ConsumerGeneric(new Dictionary<int, string>(pairs, comparer));
+            ConsumerGeneric(new Dictionary<int, string>(pairs, comparer) { [a] = x, [b] = y });
+        }
+
+        void Consumer(Dictionary<int, string> items) { }
+        void ConsumerGeneric<K, V>(Dictionary<K, V> items) where K : notnull { }
+
+        Dictionary<int, string> Property01 { get; } = |new|(7) Dictionary<int, string>();
+        Dictionary<int, string> Property02 { get; } = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
+        Dictionary<int, string> Property03 { get; set; } = new Dictionary<int, string>(8);
+        Dictionary<int, string> Property04 { get; set; } = new Dictionary<int, string>(8) { [1] = "one", [2] = "two" };
+        Dictionary<int, string> Property17 => |new|(8)();
+        Dictionary<int, string> Property18 => new() { { 1, "one" }, { 2, "two" } };
+        Dictionary<int, string> Property19 => new(8);
+        Dictionary<int, string> Property20 => new(8) { [1] = "one", [2] = "two" };
+    }
+
+    public class GenericClass<K, V> where K: struct where V : new()
+    {
+        Dictionary<K, V> field01 = |new|(9) Dictionary<K, V>();
+        Dictionary<K, V> field02 = new Dictionary<K, V> { { default, new() } };
+        Dictionary<K, V> field03 = new Dictionary<K, V>(8);
+        Dictionary<K, V> field04 = new Dictionary<K, V>(8) { [default] = new() };
+        Dictionary<K, V> field17 = |new|(10)();
+        Dictionary<K, V> field18 = new() { { default, new() } };
+        Dictionary<K, V> field19 = new(8);
+        Dictionary<K, V> field20 = new(8) { [default] = new() };
+
+        void Method(K a, K b, V x, V y, IDictionary<K, V> dict, IEnumerable<KeyValuePair<K, V>> pairs, IEqualityComparer<K> comparer)
+        {
+            Dictionary<K, V> var01 = |new|(11) Dictionary<K, V>();
+            Dictionary<K, V> var02 = new Dictionary<K, V> { { a, x }, { b, y } };
+            Dictionary<K, V> var03 = new Dictionary<K, V>(8);
+            Dictionary<K, V> var04 = new Dictionary<K, V>(8) { [a] = x, [b] = y };
+            Dictionary<K, V> var05 = new Dictionary<K, V>(dict);
+            Dictionary<K, V> var06 = new Dictionary<K, V>(dict) { { a, x }, { b, y } };
+            Dictionary<K, V> var07 = new Dictionary<K, V>(pairs);
+            Dictionary<K, V> var08 = new Dictionary<K, V>(pairs) { [a] = x, [b] = y };
+            Dictionary<K, V> var09 = new Dictionary<K, V>(comparer);
+            Dictionary<K, V> var10 = new Dictionary<K, V>(comparer) { { a, x }, { b, y } };
+            Dictionary<K, V> var11 = new Dictionary<K, V>(8, comparer);
+            Dictionary<K, V> var12 = new Dictionary<K, V>(8, comparer) { [a] = x, [b] = y };
+            Dictionary<K, V> var13 = new Dictionary<K, V>(dict, comparer);
+            Dictionary<K, V> var14 = new Dictionary<K, V>(dict, comparer) { { a, x }, { b, y } };
+            Dictionary<K, V> var15 = new Dictionary<K, V>(pairs, comparer);
+            Dictionary<K, V> var16 = new Dictionary<K, V>(pairs, comparer) { [a] = x, [b] = y };
+            Dictionary<K, V> var17 = |new|(12)();
+            Dictionary<K, V> var18 = new() { { a, x }, { b, y } };
+            Dictionary<K, V> var19 = new(8);
+            Dictionary<K, V> var20 = new(8) { [a] = x, [b] = y };
+            Dictionary<K, V> var21 = new(dict);
+            Dictionary<K, V> var22 = new(dict) { { a, x }, { b, y } };
+            Dictionary<K, V> var23 = new(pairs);
+            Dictionary<K, V> var24 = new(pairs) { [a] = x, [b] = y };
+            Dictionary<K, V> var25 = new(comparer);
+            Dictionary<K, V> var26 = new(comparer) { { a, x }, { b, y } };
+            Dictionary<K, V> var27 = new(8, comparer);
+            Dictionary<K, V> var28 = new(8, comparer) { [a] = x, [b] = y };
+            Dictionary<K, V> var29 = new(dict, comparer);
+            Dictionary<K, V> var30 = new(dict, comparer) { { a, x }, { b, y } };
+            Dictionary<K, V> var31 = new(pairs, comparer);
+            Dictionary<K, V> var32 = new(pairs, comparer) { [a] = x, [b] = y };
+
+            Consumer(|new|(13) Dictionary<K, V>());
+            Consumer(new Dictionary<K, V> { { a, x }, { b, y } });
+            Consumer(new Dictionary<K, V>(8));
+            Consumer(new Dictionary<K, V>(8) { [a] = x, [b] = y });
+            Consumer(new Dictionary<K, V>(dict));
+            Consumer(new Dictionary<K, V>(dict) { { a, x }, { b, y } });
+            Consumer(new Dictionary<K, V>(pairs));
+            Consumer(new Dictionary<K, V>(pairs) { [a] = x, [b] = y });
+            Consumer(new Dictionary<K, V>(comparer));
+            Consumer(new Dictionary<K, V>(comparer) { { a, x }, { b, y } });
+            Consumer(new Dictionary<K, V>(8, comparer));
+            Consumer(new Dictionary<K, V>(8, comparer) { [a] = x, [b] = y });
+            Consumer(new Dictionary<K, V>(dict, comparer));
+            Consumer(new Dictionary<K, V>(dict, comparer) { { a, x }, { b, y } });
+            Consumer(new Dictionary<K, V>(pairs, comparer));
+            Consumer(new Dictionary<K, V>(pairs, comparer) { [a] = x, [b] = y });
+            Consumer(|new|(14)());
+            Consumer(new() { { a, x }, { b, y } });
+            Consumer(new(8));
+            Consumer(new(8) { [a] = x, [b] = y });
+            Consumer(new(dict));
+            Consumer(new(dict) { { a, x }, { b, y } });
+            Consumer(new(pairs));
+            Consumer(new(pairs) { [a] = x, [b] = y });
+            Consumer(new(comparer));
+            Consumer(new(comparer) { { a, x }, { b, y } });
+            Consumer(new(8, comparer));
+            Consumer(new(8, comparer) { [a] = x, [b] = y });
+            Consumer(new(dict, comparer));
+            Consumer(new(dict, comparer) { { a, x }, { b, y } });
+            Consumer(new(pairs, comparer));
+            Consumer(new(pairs, comparer) { [a] = x, [b] = y });
+        }
+
+        void Consumer(Dictionary<K, V> items) { }
+
+        Dictionary<K, V> Property01 { get; } = |new|(15) Dictionary<K, V>();
+        Dictionary<K, V> Property02 { get; } = new Dictionary<K, V> { { default, new() } };
+        Dictionary<K, V> Property03 { get; set; } = new Dictionary<K, V>(8);
+        Dictionary<K, V> Property04 { get; set; } = new Dictionary<K, V>(8) { [default] = new() };
+        Dictionary<K, V> Property17 => |new|(16)();
+        Dictionary<K, V> Property18 => new() { { default, new() } };
+        Dictionary<K, V> Property19 => new(8);
+        Dictionary<K, V> Property20 => new(8) { [default] = new() };
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use collection expression.
+(1): ReSharper Suggestion: Use collection expression.
+(2): ReSharper Suggestion: Use collection expression.
+(3): ReSharper Suggestion: Use collection expression.
+(4): ReSharper Suggestion: Use collection expression.
+(5): ReSharper Suggestion: Use collection expression.
+(6): ReSharper Suggestion: Use collection expression.
+(7): ReSharper Suggestion: Use collection expression.
+(8): ReSharper Suggestion: Use collection expression.
+(9): ReSharper Suggestion: Use collection expression.
+(10): ReSharper Suggestion: Use collection expression.
+(11): ReSharper Suggestion: Use collection expression.
+(12): ReSharper Suggestion: Use collection expression.
+(13): ReSharper Suggestion: Use collection expression.
+(14): ReSharper Suggestion: Use collection expression.
+(15): ReSharper Suggestion: Use collection expression.
+(16): ReSharper Suggestion: Use collection expression.
