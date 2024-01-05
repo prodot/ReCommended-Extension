@@ -150,6 +150,18 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
+    public void TestCollectionInitialization_HashSet_Target_IEnumerable() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestCollectionInitialization_HashSet_Target_IReadOnlyCollection() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
     public void TestCollectionInitialization_Dictionary_NonTargetTyped() => DoNamedTest2();
 
     [Test]

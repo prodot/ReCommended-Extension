@@ -77,6 +77,40 @@ namespace Test
             List<A> var9 = new List<B>();
         }
 
+        void HashSets(A a, B b)
+        {
+            IEnumerable<object> var1 = new HashSet<int>() { 1, 2, 3 };
+            IEnumerable<object> var2 = new HashSet<string>() { "one", "two", "three" };
+
+            IEnumerable<A> var2 = new HashSet<B>() { b, b };
+            IReadOnlyCollection<A> var3 = new HashSet<B>() { b, b };
+            IReadOnlySet<A> var3 = new HashSet<B>() { b, b };
+
+            ICollection<A> var6 = new HashSet<B>() { b, b };
+            ISet<A> var7 = new HashSet<B>() { b, b };
+
+            ISet<C> var8 = new HashSet<B> { b, b };
+
+            HashSet<A> var9 = new HashSet<B>() { b, b };
+        }
+
+        void HashSetsEmpty(A a, B b)
+        {
+            IEnumerable<object> var1 = new HashSet<int>();
+            IEnumerable<object> var2 = new HashSet<string>();
+
+            IEnumerable<A> var2 = new HashSet<B>();
+            IReadOnlyCollection<A> var3 = new HashSet<B>();
+            IReadOnlySet<A> var3 = new HashSet<B>();
+
+            ICollection<A> var6 = new HashSet<B>();
+            ISet<A> var7 = new HashSet<B>();
+
+            ISet<C> var8 = new HashSet<B>;
+
+            HashSet<A> var9 = new HashSet<B>();
+        }
+
         void DictionariesEmpty()
         {
             IDictionary<int, string> var1 = new Dictionary<int, string>();

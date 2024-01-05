@@ -653,7 +653,25 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             return false;
         }
 
-        // todo: empty hash set targeting IEnumerable<T> or IReadOnlyCollection<T>
+        if (isEmptyHashSet
+            && (IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN) || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)))
+        {
+            // get target-typed item type to preserve the nullability
+            var arrayItemType = TypesUtil.GetTypeArgumentValue(targetType, 0);
+
+            Debug.Assert(arrayItemType is { });
+            Debug.Assert(CSharpLanguage.Instance is { });
+
+            var typeName = TypeFactory.CreateArrayType(arrayItemType, 1).GetPresentableName(CSharpLanguage.Instance);
+
+            consumer.AddHighlighting(
+                new UseTargetTypedCollectionExpressionSuggestion(
+                    $"Use collection expression ('{typeName}' will be used).",
+                    hashSetCreationExpression,
+                    null,
+                    null,
+                    methodReferenceToSetInferredTypeArguments));
+        }
 
         // target-typed to HashSet<T>: cases not covered by R#
         // - empty hash set without a specified capacity or comparer passed to a method, which requires setting inferred type arguments
