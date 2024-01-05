@@ -318,21 +318,64 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     var typeArguments = new[] { itemType };
 
                     [Pure]
-                    bool IsTargetTypedTo(IClrTypeName clrTypeName)
-                        => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
+                    bool IsTargetTypedTo(IClrTypeName clrTypeName, out bool isCovariantTypeUsed)
+                    {
+                        if (TryConstructType(clrTypeName, typeArguments, psiModule) is { } clrType)
+                        {
+                            if (itemType.Classify == TypeClassification.REFERENCE_TYPE
+                                && TypesUtil.GetTypeParameters(clrType) is [{ Variance: TypeParameterVariance.OUT }]
+                                && TypesUtil.GetTypeArgumentValue(targetType, 0) is { Classify: TypeClassification.REFERENCE_TYPE } targetItemType
+                                && itemType.IsImplicitlyConvertibleTo(targetItemType, ClrPredefinedTypeConversionRule.INSTANCE))
+                            {
+                                if (TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, [targetItemType], psiModule)))
+                                {
+                                    isCovariantTypeUsed = true;
+                                    return true;
+                                }
+
+                                isCovariantTypeUsed = false;
+                                return false;
+                            }
+
+                            isCovariantTypeUsed = false;
+                            return TypeEqualityComparer.Default.Equals(targetType, clrType);
+                        }
+
+                        isCovariantTypeUsed = false;
+                        return false;
+                    }
 
                     [Pure]
                     bool IsTargetTypedToArray() => TypeEqualityComparer.Default.Equals(targetType, TypeFactory.CreateArrayType(itemType, 1));
 
                     // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
-                    if (IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
-                        || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
-                        || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN))
+                    var (isCovariantType2Used, isCovariantType3Used) = (false, false);
+                    if (IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN, out var isCovariantType1Used)
+                        || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN, out isCovariantType2Used)
+                        || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN, out isCovariantType3Used))
                     {
+                        string? covariantTypeName;
+                        if (isCovariantType1Used || isCovariantType2Used || isCovariantType3Used)
+                        {
+                            // get target-typed item type to preserve the nullability
+                            var arrayItemType = TypesUtil.GetTypeArgumentValue(targetType, 0);
+
+                            Debug.Assert(arrayItemType is { });
+                            Debug.Assert(CSharpLanguage.Instance is { });
+
+                            covariantTypeName = TypeFactory.CreateArrayType(arrayItemType, 1).GetPresentableName(CSharpLanguage.Instance);
+                        }
+                        else
+                        {
+                            covariantTypeName = null;
+                        }
+
                         consumer.AddHighlighting(
                             new UseTargetTypedCollectionExpressionSuggestion(
                                 isEmptyArray
-                                    ? "Use collection expression."
+                                    ? covariantTypeName is { }
+                                        ? $"Use collection expression ('{covariantTypeName}' will be used)."
+                                        : "Use collection expression."
                                     : "Use collection expression (a compiler-synthesized read-only collection will be used).",
                                 arrayCreationExpression,
                                 null,
@@ -341,7 +384,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     }
 
                     // target-typed to ICollection<T> or IList<T>
-                    if (IsTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) || IsTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN))
+                    if (IsTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN, out _) || IsTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN, out _))
                     {
                         // get target-typed item type to preserve the nullability
                         var collectionItemType = TypesUtil.GetTypeArgumentValue(targetType, 0);
@@ -473,7 +516,24 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         [Pure]
         bool IsTargetTypedTo(IClrTypeName clrTypeName)
-            => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
+        {
+            if (TryConstructType(clrTypeName, typeArguments, psiModule) is { } clrType)
+            {
+                if (itemType.Classify == TypeClassification.REFERENCE_TYPE
+                    && TypesUtil.GetTypeParameters(clrType) is [{ Variance: TypeParameterVariance.OUT }]
+                    && TypesUtil.GetTypeArgumentValue(targetType, 0) is { Classify: TypeClassification.REFERENCE_TYPE } targetItemType
+                    && itemType.IsImplicitlyConvertibleTo(targetItemType, ClrPredefinedTypeConversionRule.INSTANCE))
+                {
+                    return TypeEqualityComparer.Default.Equals(
+                        targetType,
+                        TryConstructType(clrTypeName, [targetItemType], psiModule));
+                }
+
+                return TypeEqualityComparer.Default.Equals(targetType, clrType);
+            }
+
+            return false;
+        }
 
         // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
         if (IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
@@ -574,7 +634,26 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         [Pure]
         bool IsTargetTypedTo(IClrTypeName clrTypeName)
-            => TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, typeArguments, psiModule));
+        {
+            if (TryConstructType(clrTypeName, typeArguments, psiModule) is { } clrType)
+            {
+                if (itemType.Classify == TypeClassification.REFERENCE_TYPE
+                    && TypesUtil.GetTypeParameters(clrType) is [{ Variance: TypeParameterVariance.OUT }]
+                    && TypesUtil.GetTypeArgumentValue(targetType, 0) is { Classify: TypeClassification.REFERENCE_TYPE } targetItemType
+                    && itemType.IsImplicitlyConvertibleTo(targetItemType, ClrPredefinedTypeConversionRule.INSTANCE))
+                {
+                    return TypeEqualityComparer.Default.Equals(
+                        targetType,
+                        TryConstructType(clrTypeName, [targetItemType], psiModule));
+                }
+
+                return TypeEqualityComparer.Default.Equals(targetType, clrType);
+            }
+
+            return false;
+        }
+
+        // todo: empty hash set targeting IEnumerable<T> or IReadOnlyCollection<T>
 
         // target-typed to HashSet<T>: cases not covered by R#
         // - empty hash set without a specified capacity or comparer passed to a method, which requires setting inferred type arguments
