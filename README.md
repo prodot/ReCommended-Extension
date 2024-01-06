@@ -2,6 +2,8 @@
 
 The ReCommended Extension for ReSharper augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
+- advanced disposable object analysis built around the `[MustDisposeResource]` and `[HandlesResourceDisposal]` annotations,
+- detection of more cases when collection expressions can be used,
 - detection of redundant assertions,
 - inappropriate use of `async void`,
 - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
