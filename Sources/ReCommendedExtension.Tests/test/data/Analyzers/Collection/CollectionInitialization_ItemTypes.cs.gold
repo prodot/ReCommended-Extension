@@ -43,14 +43,31 @@ namespace Test
             A[] var9 = new B[] { };
         }
 
+        void ArraysEmpty2(A a, B b)
+        {
+            IEnumerable<object> var1 = Array.Empty<int>();
+            IEnumerable<object> var2 = |Array.Empty<string>()|(9);
+
+            IEnumerable<A> var3 = |Array.Empty<B>()|(10);
+            IReadOnlyCollection<A> var4 = |Array.Empty<B>()|(11);
+            IReadOnlyList<A> var5 = |Array.Empty<B>()|(12);
+
+            ICollection<A> var6 = Array.Empty<B>();
+            IList<A> var7 = Array.Empty<B>();
+
+            IList<C> var8 = Array.Empty<B>();
+
+            A[] var9 = Array.Empty<B>();
+        }
+
         void Lists(A a, B b)
         {
             IEnumerable<object> var1 = new List<int>() { 1, 2, 3 };
-            IEnumerable<object> var2 = |new|(9) List<string>() { "one", "two", "three" };
+            IEnumerable<object> var2 = |new|(13) List<string>() { "one", "two", "three" };
 
-            IEnumerable<A> var2 = |new|(10) List<B>() { b, b };
-            IReadOnlyCollection<A> var3 = |new|(11) List<B>() { b, b };
-            IReadOnlyList<A> var4 = |new|(12) List<B>() { b, b };
+            IEnumerable<A> var2 = |new|(14) List<B>() { b, b };
+            IReadOnlyCollection<A> var3 = |new|(15) List<B>() { b, b };
+            IReadOnlyList<A> var4 = |new|(16) List<B>() { b, b };
             
             ICollection<A> var6 = new List<B>() { b, b };
             IList<A> var7 = new List<B>() { b, b };
@@ -63,11 +80,11 @@ namespace Test
         void ListsEmpty(A a, B b)
         {
             IEnumerable<object> var1 = new List<int>();
-            IEnumerable<object> var2 = |new|(13) List<string>();
+            IEnumerable<object> var2 = |new|(17) List<string>();
 
-            IEnumerable<A> var2 = |new|(14) List<B>();
-            IReadOnlyCollection<A> var3 = |new|(15) List<B>();
-            IReadOnlyList<A> var4 = |new|(16) List<B>();
+            IEnumerable<A> var2 = |new|(18) List<B>();
+            IReadOnlyCollection<A> var3 = |new|(19) List<B>();
+            IReadOnlyList<A> var4 = |new|(20) List<B>();
 
             ICollection<A> var6 = new List<B>();
             IList<A> var7 = new List<B>();
@@ -97,10 +114,10 @@ namespace Test
         void HashSetsEmpty(A a, B b)
         {
             IEnumerable<object> var1 = new HashSet<int>();
-            IEnumerable<object> var2 = |new|(17) HashSet<string>();
+            IEnumerable<object> var2 = |new|(21) HashSet<string>();
 
-            IEnumerable<A> var2 = |new|(18) HashSet<B>();
-            IReadOnlyCollection<A> var3 = |new|(19) HashSet<B>();
+            IEnumerable<A> var2 = |new|(22) HashSet<B>();
+            IReadOnlyCollection<A> var3 = |new|(23) HashSet<B>();
             IReadOnlySet<A> var3 = new HashSet<B>();
 
             ICollection<A> var6 = new HashSet<B>();
@@ -127,14 +144,18 @@ namespace Test
 (6): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (7): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (8): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(9): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(10): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(11): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(12): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(13): ReSharper Suggestion: Use collection expression ('object[]' will be used).
-(14): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(15): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(16): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(9): ReSharper Suggestion: Use collection expression ('object[]' will be used).
+(10): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(11): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(12): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(13): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(14): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(15): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(16): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (17): ReSharper Suggestion: Use collection expression ('object[]' will be used).
 (18): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (19): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(20): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(21): ReSharper Suggestion: Use collection expression ('object[]' will be used).
+(22): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(23): ReSharper Suggestion: Use collection expression ('A[]' will be used).

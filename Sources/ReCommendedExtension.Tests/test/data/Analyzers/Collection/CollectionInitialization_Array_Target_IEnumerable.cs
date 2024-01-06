@@ -12,6 +12,7 @@ namespace TargetEnumerable
         IEnumerable<int> field5 = new int[0];
         IEnumerable<int> field6 = new int[3];
         IEnumerable<int> field7 = new[] { 1, 2, 3 };
+        IEnumerable<int> field8 = Array.Empty<int>();
 
         void Method(int a, int b, int c)
         {
@@ -22,6 +23,7 @@ namespace TargetEnumerable
             IEnumerable<int> var5 = new int[0];
             IEnumerable<int> var6 = new int[3];
             IEnumerable<int> var7 = new[] { a, b, c };
+            IEnumerable<int> var8 = Array.Empty<int>();
 
             Consumer(new int[] { });
             Consumer(new int[] { a, b, c });
@@ -30,6 +32,7 @@ namespace TargetEnumerable
             Consumer(new int[0]);
             Consumer(new int[3]);
             Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<int>());
 
             ConsumerGeneric(new int[] { });
             ConsumerGeneric(new int[] { a, b, c });
@@ -38,6 +41,7 @@ namespace TargetEnumerable
             ConsumerGeneric(new int[0]);
             ConsumerGeneric(new int[3]);
             ConsumerGeneric(new[] { a, b, c });
+            ConsumerGeneric(Array.Empty<int>());
         }
 
         void Consumer(IEnumerable<int> items) { }
@@ -50,6 +54,7 @@ namespace TargetEnumerable
         IEnumerable<int> Property5 => new int[0];
         IEnumerable<int> Property6 => new int[3];
         IEnumerable<int> Property7 => new[] { 1, 2, 3 };
+        IEnumerable<int> Property8 => Array.Empty<int>();
     }
 
     public class GenericClass<T> where T : new()
@@ -61,6 +66,7 @@ namespace TargetEnumerable
         IEnumerable<T> field5 = new T[0];
         IEnumerable<T> field6 = new T[3];
         IEnumerable<T> field7 = new[] { default, default(T), new() };
+        IEnumerable<T> field8 = Array.Empty<T>();
 
         void Method(T a, T b, T c)
         {
@@ -71,6 +77,7 @@ namespace TargetEnumerable
             IEnumerable<T> var5 = new T[0];
             IEnumerable<T> var6 = new T[3];
             IEnumerable<T> var7 = new[] { a, b, c };
+            IEnumerable<T> var8 = Array.Empty<T>();
 
             Consumer(new T[] { });
             Consumer(new T[] { a, b, c });
@@ -79,6 +86,7 @@ namespace TargetEnumerable
             Consumer(new T[0]);
             Consumer(new T[3]);
             Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<T>());
         }
 
         void Consumer(IEnumerable<T> items) { }
@@ -90,5 +98,6 @@ namespace TargetEnumerable
         IEnumerable<T> Property5 => new T[0];
         IEnumerable<T> Property6 => new T[3];
         IEnumerable<T> Property7 => new[] { default, default(T), new() };
+        IEnumerable<T> Property8 => Array.Empty<T>();
     }
 }

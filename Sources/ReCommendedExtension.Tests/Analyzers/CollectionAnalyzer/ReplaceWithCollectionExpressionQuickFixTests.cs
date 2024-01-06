@@ -26,6 +26,9 @@ public sealed class ReplaceWithCollectionExpressionQuickFixTests : QuickFixTestB
     public void TestCollectionInitialization_Array_Target_Array_GenericMethodArgument_InferredTypeArguments_2() => DoNamedTest2();
 
     [Test]
+    public void TestCollectionInitialization_Array_Target_Array_GenericMethodArgument_InferredTypeArguments_3() => DoNamedTest2();
+
+    [Test]
     public void TestCollectionInitialization_Array_Target_IEnumerable_Field_Empty_1() => DoNamedTest2();
 
     [Test]

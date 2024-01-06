@@ -12,6 +12,7 @@ namespace TargetList
         IList<int> field5 = new int[0];
         IList<int> field6 = new int[3];
         IList<int> field7 = new[] { 1, 2, 3 };
+        IList<int> field8 = Array.Empty<int>();
 
         void Method(int a, int b, int c)
         {
@@ -22,6 +23,7 @@ namespace TargetList
             IList<int> var5 = new int[0];
             IList<int> var6 = new int[3];
             IList<int> var7 = new[] { a, b, c };
+            IList<int> var8 = Array.Empty<int>();
 
             Consumer(new int[] { });
             Consumer(new int[] { a, b, c });
@@ -30,6 +32,7 @@ namespace TargetList
             Consumer(new int[0]);
             Consumer(new int[3]);
             Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<int>());
 
             ConsumerGeneric(new int[] { });
             ConsumerGeneric(new int[] { a, b, c });
@@ -38,6 +41,7 @@ namespace TargetList
             ConsumerGeneric(new int[0]);
             ConsumerGeneric(new int[3]);
             ConsumerGeneric(new[] { a, b, c });
+            ConsumerGeneric(Array.Empty<int>());
         }
 
         void Consumer(IList<int> items) { }
@@ -50,6 +54,7 @@ namespace TargetList
         IList<string?> Property5 => new string?[0];
         IList<string?> Property6 => new string?[3];
         IList<string?> Property7 => new[] { "one", "two", "three", null };
+        IList<string?> Property8 => Array.Empty<int>();
     }
 
     public class GenericClass<T> where T : new()
@@ -61,6 +66,7 @@ namespace TargetList
         IList<T> field5 = new T[0];
         IList<T> field6 = new T[3];
         IList<T> field7 = new[] { default, default(T), new() };
+        IList<T> field8 = Array.Empty<T>();
 
         void Method(T a, T b, T c)
         {
@@ -71,6 +77,7 @@ namespace TargetList
             IList<T> var5 = new T[0];
             IList<T> var6 = new T[3];
             IList<T> var7 = new[] { a, b, c };
+            IList<T> var8 = Array.Empty<T>();
 
             Consumer(new T[] { });
             Consumer(new T[] { a, b, c });
@@ -79,6 +86,7 @@ namespace TargetList
             Consumer(new T[0]);
             Consumer(new T[3]);
             Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<T>());
         }
 
         void Consumer(IList<T> items) { }
@@ -90,5 +98,6 @@ namespace TargetList
         IList<T> Property5 => new T[0];
         IList<T> Property6 => new T[3];
         IList<T> Property7 => new[] { default, default(T), new() };
+        IList<T> Property8 => Array.Empty<T>();
     }
 }

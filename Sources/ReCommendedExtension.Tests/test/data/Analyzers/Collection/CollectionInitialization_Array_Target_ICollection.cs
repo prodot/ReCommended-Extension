@@ -12,6 +12,7 @@ namespace TargetCollection
         ICollection<int> field5 = new int[0];
         ICollection<int> field6 = new int[3];
         ICollection<int> field7 = new[] { 1, 2, 3 };
+        ICollection<int> field8 = Array.Empty<int>();
 
         void Method(int a, int b, int c)
         {
@@ -22,6 +23,7 @@ namespace TargetCollection
             ICollection<int> var5 = new int[0];
             ICollection<int> var6 = new int[3];
             ICollection<int> var7 = new[] { a, b, c };
+            ICollection<int> var8 = Array.Empty<int>();
 
             Consumer(new int[] { });
             Consumer(new int[] { a, b, c });
@@ -30,6 +32,7 @@ namespace TargetCollection
             Consumer(new int[0]);
             Consumer(new int[3]);
             Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<int>());
 
             ConsumerGeneric(new int[] { });
             ConsumerGeneric(new int[] { a, b, c });
@@ -38,6 +41,7 @@ namespace TargetCollection
             ConsumerGeneric(new int[0]);
             ConsumerGeneric(new int[3]);
             ConsumerGeneric(new[] { a, b, c });
+            ConsumerGeneric(Array.Empty<int>());
         }
 
         void Consumer(ICollection<int> items) { }
@@ -50,6 +54,7 @@ namespace TargetCollection
         ICollection<string?> Property5 => new string?[0];
         ICollection<string?> Property6 => new string?[3];
         ICollection<string?> Property7 => new[] { "one", "two", "three", null };
+        ICollection<string?> Property8 => Array.Empty<int>();
     }
 
     public class GenericClass<T> where T : new()
@@ -61,6 +66,7 @@ namespace TargetCollection
         ICollection<T> field5 = new T[0];
         ICollection<T> field6 = new T[3];
         ICollection<T> field7 = new[] { default, default(T), new() };
+        ICollection<T> field8 = Array.Empty<T>();
 
         void Method(T a, T b, T c)
         {
@@ -71,6 +77,7 @@ namespace TargetCollection
             ICollection<T> var5 = new T[0];
             ICollection<T> var6 = new T[3];
             ICollection<T> var7 = new[] { a, b, c };
+            ICollection<T> var8 = Array.Empty<T>();
 
             Consumer(new T[] { });
             Consumer(new T[] { a, b, c });
@@ -79,6 +86,7 @@ namespace TargetCollection
             Consumer(new T[0]);
             Consumer(new T[3]);
             Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<T>());
         }
 
         void Consumer(ICollection<T> items) { }
@@ -90,5 +98,6 @@ namespace TargetCollection
         ICollection<T> Property5 => new T[0];
         ICollection<T> Property6 => new T[3];
         ICollection<T> Property7 => new[] { default, default(T), new() };
+        ICollection<T> Property8 => Array.Empty<T>();
     }
 }

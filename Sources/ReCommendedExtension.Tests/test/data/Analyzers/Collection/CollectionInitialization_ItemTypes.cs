@@ -43,6 +43,23 @@ namespace Test
             A[] var9 = new B[] { };
         }
 
+        void ArraysEmpty2(A a, B b)
+        {
+            IEnumerable<object> var1 = Array.Empty<int>();
+            IEnumerable<object> var2 = Array.Empty<string>();
+
+            IEnumerable<A> var3 = Array.Empty<B>();
+            IReadOnlyCollection<A> var4 = Array.Empty<B>();
+            IReadOnlyList<A> var5 = Array.Empty<B>();
+
+            ICollection<A> var6 = Array.Empty<B>();
+            IList<A> var7 = Array.Empty<B>();
+
+            IList<C> var8 = Array.Empty<B>();
+
+            A[] var9 = Array.Empty<B>();
+        }
+
         void Lists(A a, B b)
         {
             IEnumerable<object> var1 = new List<int>() { 1, 2, 3 };

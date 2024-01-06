@@ -44,17 +44,19 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     }
 
     [Pure]
+    static bool IsArrayEmptyMethod(IMethod method)
+        => method is
+        {
+            ShortName: nameof(Array.Empty),
+            IsStatic: true,
+            AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+            TypeParameters: [_],
+            Parameters: [],
+        };
+
+    [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
-        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType
-            && arrayType.Methods.Any(
-                method => method is
-                {
-                    ShortName: nameof(Array.Empty),
-                    IsStatic: true,
-                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                    TypeParameters: [_],
-                    Parameters: [],
-                });
+        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType && arrayType.Methods.Any(IsArrayEmptyMethod);
 
     [Conditional("DEBUG")]
     static void AssertListConstructors(IPsiModule psiModule)
@@ -173,7 +175,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     }
 
     [Pure]
-    static IReferenceExpression? TryGetMethodReferenceToSetInferredTypeArguments(ICreationExpression treeNode)
+    static IReferenceExpression? TryGetMethodReferenceToSetInferredTypeArguments(ICSharpExpression treeNode)
         => treeNode is
             {
                 Parent: ICSharpArgument
@@ -757,6 +759,118 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         }
     }
 
+    static void AnalyzeArrayEmptyInvocation(IHighlightingConsumer consumer, IInvocationExpression arrayEmptyInvocationExpression)
+    {
+        Debug.Assert(arrayEmptyInvocationExpression.TypeArguments is [_]);
+
+        if (arrayEmptyInvocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120
+            && TryGetTargetType(arrayEmptyInvocationExpression) is { } targetType)
+        {
+            var psiModule = arrayEmptyInvocationExpression.GetPsiModule();
+
+            var itemType = arrayEmptyInvocationExpression.TypeArguments[0];
+
+            var methodReferenceToSetInferredTypeArguments = TryGetMethodReferenceToSetInferredTypeArguments(arrayEmptyInvocationExpression);
+
+            var typeArguments = new[] { itemType };
+
+            [Pure]
+            bool IsTargetTypedTo(IClrTypeName clrTypeName, out bool isCovariantTypeUsed)
+            {
+                if (TryConstructType(clrTypeName, typeArguments, psiModule) is { } clrType)
+                {
+                    if (itemType.Classify == TypeClassification.REFERENCE_TYPE
+                        && TypesUtil.GetTypeParameters(clrType) is [{ Variance: TypeParameterVariance.OUT }]
+                        && TypesUtil.GetTypeArgumentValue(targetType, 0) is { Classify: TypeClassification.REFERENCE_TYPE } targetItemType
+                        && itemType.IsImplicitlyConvertibleTo(targetItemType, ClrPredefinedTypeConversionRule.INSTANCE))
+                    {
+                        if (TypeEqualityComparer.Default.Equals(targetType, TryConstructType(clrTypeName, [targetItemType], psiModule)))
+                        {
+                            isCovariantTypeUsed = true;
+                            return true;
+                        }
+
+                        isCovariantTypeUsed = false;
+                        return false;
+                    }
+
+                    isCovariantTypeUsed = false;
+                    return TypeEqualityComparer.Default.Equals(targetType, clrType);
+                }
+
+                isCovariantTypeUsed = false;
+                return false;
+            }
+
+            [Pure]
+            bool IsTargetTypedToArray() => TypeEqualityComparer.Default.Equals(targetType, TypeFactory.CreateArrayType(itemType, 1));
+
+            // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
+            var (isCovariantType2Used, isCovariantType3Used) = (false, false);
+            if (IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN, out var isCovariantType1Used)
+                || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN, out isCovariantType2Used)
+                || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN, out isCovariantType3Used))
+            {
+                string? covariantTypeName;
+                if (isCovariantType1Used || isCovariantType2Used || isCovariantType3Used)
+                {
+                    // get target-typed item type to preserve the nullability
+                    var arrayItemType = TypesUtil.GetTypeArgumentValue(targetType, 0);
+
+                    Debug.Assert(arrayItemType is { });
+                    Debug.Assert(CSharpLanguage.Instance is { });
+
+                    covariantTypeName = TypeFactory.CreateArrayType(arrayItemType, 1).GetPresentableName(CSharpLanguage.Instance);
+                }
+                else
+                {
+                    covariantTypeName = null;
+                }
+
+                consumer.AddHighlighting(
+                    new UseTargetTypedCollectionExpressionSuggestion(
+                        covariantTypeName is { } ? $"Use collection expression ('{covariantTypeName}' will be used)." : "Use collection expression.",
+                        arrayEmptyInvocationExpression,
+                        null,
+                        null,
+                        methodReferenceToSetInferredTypeArguments));
+            }
+
+            // target-typed to ICollection<T> or IList<T>
+            if (IsTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN, out _) || IsTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN, out _))
+            {
+                // get target-typed item type to preserve the nullability
+                var collectionItemType = TypesUtil.GetTypeArgumentValue(targetType, 0);
+
+                Debug.Assert(collectionItemType is { });
+                Debug.Assert(CSharpLanguage.Instance is { });
+
+                var typeName = TryConstructType(PredefinedType.GENERIC_LIST_FQN, [collectionItemType], psiModule)
+                    ?.GetPresentableName(CSharpLanguage.Instance);
+
+                consumer.AddHighlighting(
+                    new UseTargetTypedCollectionExpressionSuggestion(
+                        $"Use collection expression ('{typeName}' will be used).",
+                        arrayEmptyInvocationExpression,
+                        null,
+                        null,
+                        methodReferenceToSetInferredTypeArguments));
+            }
+
+            // target-typed to T[]
+            if (IsTargetTypedToArray())
+            {
+                consumer.AddHighlighting(
+                    new UseTargetTypedCollectionExpressionSuggestion(
+                        "Use collection expression.",
+                        arrayEmptyInvocationExpression,
+                        null,
+                        null,
+                        methodReferenceToSetInferredTypeArguments));
+            }
+        }
+    }
+
     protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         switch (element)
@@ -773,8 +887,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 AnalyzeObjectCreationExpression(consumer, objectCreationExpression);
                 break;
 
-            // todo: target-typed empty array: Array.Empty<T>() -> [] (when target type is: T[], IEnumerable<T>, IReadOnlyCollection<T>, IReadOnlyList<T>)
-            // todo: target-typed empty array: Array.Empty<T>() -> [] (List<T> will be used) (when target type is: ICollection<T>, IList<T>)
+            case IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression
+                when reference.Resolve().DeclaredElement is IMethod method && IsArrayEmptyMethod(method):
+                AnalyzeArrayEmptyInvocation(consumer, invocationExpression);
+                break;
         }
     }
 }

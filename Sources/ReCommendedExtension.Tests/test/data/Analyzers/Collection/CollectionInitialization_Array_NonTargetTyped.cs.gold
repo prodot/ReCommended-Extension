@@ -13,6 +13,7 @@ namespace NonTargetTyped
             var var5 = |new int[0]|(2);
             var var6 = new int[3];
             var var7 = new[] { a, b, c };
+            var var8 = Array.Empty<int>();
         }
     }
 
@@ -27,6 +28,7 @@ namespace NonTargetTyped
             var var5 = |new T[0]|(5);
             var var6 = new T[3];
             var var7 = new[] { a, b, c };
+            var var8 = Array.Empty<T>();
         }
     }
 }

@@ -12,6 +12,7 @@ namespace TargetReadOnlyList
         IReadOnlyList<int> field5 = new int[0];
         IReadOnlyList<int> field6 = new int[3];
         IReadOnlyList<int> field7 = new[] { 1, 2, 3 };
+        IReadOnlyList<int> field8 = Array.Empty<int>();
 
         void Method(int a, int b, int c)
         {
@@ -22,6 +23,7 @@ namespace TargetReadOnlyList
             IReadOnlyList<int> var5 = new int[0];
             IReadOnlyList<int> var6 = new int[3];
             IReadOnlyList<int> var7 = new[] { a, b, c };
+            IReadOnlyList<int> var8 = Array.Empty<int>();
 
             Consumer(new int[] { });
             Consumer(new int[] { a, b, c });
@@ -30,6 +32,7 @@ namespace TargetReadOnlyList
             Consumer(new int[0]);
             Consumer(new int[3]);
             Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<int>());
 
             ConsumerGeneric(new int[] { });
             ConsumerGeneric(new int[] { a, b, c });
@@ -38,6 +41,7 @@ namespace TargetReadOnlyList
             ConsumerGeneric(new int[0]);
             ConsumerGeneric(new int[3]);
             ConsumerGeneric(new[] { a, b, c });
+            ConsumerGeneric(Array.Empty<int>());
         }
 
         void Consumer(IReadOnlyList<int> items) { }
@@ -50,6 +54,7 @@ namespace TargetReadOnlyList
         IReadOnlyList<int> Property5 => new int[0];
         IReadOnlyList<int> Property6 => new int[3];
         IReadOnlyList<int> Property7 => new[] { 1, 2, 3 };
+        IReadOnlyList<int> Property8 => Array.Empty<int>();
     }
 
     public class GenericClass<T> where T : new()
@@ -61,6 +66,7 @@ namespace TargetReadOnlyList
         IReadOnlyList<T> field5 = new T[0];
         IReadOnlyList<T> field6 = new T[3];
         IReadOnlyList<T> field7 = new[] { default, default(T), new() };
+        IReadOnlyList<T> field8 = Array.Empty<T>();
 
         void Method(T a, T b, T c)
         {
@@ -71,6 +77,7 @@ namespace TargetReadOnlyList
             IReadOnlyList<T> var5 = new T[0];
             IReadOnlyList<T> var6 = new T[3];
             IReadOnlyList<T> var7 = new[] { a, b, c };
+            IReadOnlyList<T> var8 = Array.Empty<T>();
 
             Consumer(new T[] { });
             Consumer(new T[] { a, b, c });
@@ -79,6 +86,7 @@ namespace TargetReadOnlyList
             Consumer(new T[0]);
             Consumer(new T[3]);
             Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<T>());
         }
 
         void Consumer(IReadOnlyList<T> items) { }
@@ -90,5 +98,6 @@ namespace TargetReadOnlyList
         IReadOnlyList<T> Property5 => new T[0];
         IReadOnlyList<T> Property6 => new T[3];
         IReadOnlyList<T> Property7 => new[] { default, default(T), new() };
+        IReadOnlyList<T> Property8 => Array.Empty<T>();
     }
 }
