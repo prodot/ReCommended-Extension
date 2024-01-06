@@ -110,7 +110,7 @@ internal static class Extensions
     }
 
     [Pure]
-    public static bool IsDefaultValueOf(this ITreeNode element, IType type)
+    public static bool IsDefaultValueOf([NotNullWhen(true)] this ITreeNode? element, IType type)
     {
         switch (element)
         {

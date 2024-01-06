@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
@@ -16,19 +15,13 @@ public sealed class ReplaceWithNewArrayWithLengthFix(ArrayWithDefaultValuesIniti
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace array initialization with '{highlighting.SuggestedCode}'";
+    public override string Text => $"Replace with '{highlighting.SuggestedCode}'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
-            ICSharpTreeNode node = highlighting.ArrayInitializer.Parent switch
-            {
-                ITypeOwnerDeclaration => highlighting.ArrayInitializer,
-                IArrayCreationExpression creationExpression => creationExpression,
-
-                _ => throw new NotSupportedException(),
-            };
+            var node = highlighting.TreeNode.Parent as IArrayCreationExpression ?? highlighting.TreeNode;
 
             var factory = CSharpElementFactory.GetInstance(node);
 

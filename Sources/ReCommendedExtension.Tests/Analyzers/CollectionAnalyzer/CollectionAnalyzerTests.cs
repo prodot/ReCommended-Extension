@@ -196,4 +196,10 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     public void TestArrayWithDefaultValuesInitialization_ParameterlessCtor() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestCollectionExpressionWithDefaultValuesInitialization() => DoNamedTest2();
 }

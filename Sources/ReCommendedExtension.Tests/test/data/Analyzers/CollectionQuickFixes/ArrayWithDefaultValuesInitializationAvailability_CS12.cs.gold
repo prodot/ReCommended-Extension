@@ -28,19 +28,19 @@
 ------------------------------------------------
 0: Use 'new int[3]'.
 QUICKFIXES:
-Replace array initialization with 'new int[3]'
+Replace with 'new int[3]'
 1: Use 'new string[3]'.
 QUICKFIXES:
-Replace array initialization with 'new string[3]'
+Replace with 'new string[3]'
 2: Use 'new string[3]'.
 QUICKFIXES:
-Replace array initialization with 'new string[3]'
+Replace with 'new string[3]'
 3: Use 'new T[2]'.
 QUICKFIXES:
-Replace array initialization with 'new T[2]'
+Replace with 'new T[2]'
 4: Use 'new T[2]'.
 QUICKFIXES:
-Replace array initialization with 'new T[2]'
+Replace with 'new T[2]'
 5: Use 'new T[2]'.
 QUICKFIXES:
-Replace array initialization with 'new T[2]'
+Replace with 'new T[2]'

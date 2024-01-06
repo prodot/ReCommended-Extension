@@ -10,18 +10,18 @@ namespace ReCommendedExtension.Analyzers.Collection;
     SeverityId,
     null,
     HighlightingGroupIds.LanguageUsage,
-    "Use 'new T[n]' for arrays with default values" + ZoneMarker.Suffix,
+    "Use 'new T[n]' for arrays and collection expressions with default values" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class ArrayWithDefaultValuesInitializationSuggestion(string message, string? suggestedCode, IArrayInitializer arrayInitializer)
+public sealed class ArrayWithDefaultValuesInitializationSuggestion(string message, string? suggestedCode, ICSharpTreeNode treeNode)
     : Highlighting(message)
 {
     const string SeverityId = "ArrayWithDefaultValuesInitialization";
 
     internal string? SuggestedCode { get; } = suggestedCode;
 
-    internal IArrayInitializer ArrayInitializer { get; } = arrayInitializer;
+    internal ICSharpTreeNode TreeNode { get; } = treeNode;
 
-    public override DocumentRange CalculateRange() => ArrayInitializer.GetDocumentRange();
+    public override DocumentRange CalculateRange() => TreeNode.GetDocumentRange();
 }

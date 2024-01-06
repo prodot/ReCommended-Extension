@@ -203,10 +203,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         };
 
     [Pure]
-    static string BuildArrayCreationExpressionCode(IArrayInitializer arrayInitializer, IType arrayElementType)
+    static string BuildArrayCreationExpressionCode(
+        IType arrayElementType,
+        [ValueRange(1, int.MaxValue)] int itemCount,
+        bool isNullableAnnotationsContextEnabled)
     {
-        Debug.Assert(arrayInitializer.InitializerElements is [_, ..]);
-
         var builder = new StringBuilder();
         builder.Append("new ");
 
@@ -216,7 +217,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         if (builder is [.., not '?'])
         {
-            var isNullableReferenceType = arrayInitializer.IsNullableAnnotationsContextEnabled()
+            var isNullableReferenceType = isNullableAnnotationsContextEnabled
                 && arrayElementType is { Classify: TypeClassification.REFERENCE_TYPE, NullableAnnotation: NullableAnnotation.NotAnnotated };
 
             if (isNullableReferenceType)
@@ -228,7 +229,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         {
             // workaround for R# 2020.2
 
-            if (arrayInitializer.IsNullableAnnotationsContextEnabled())
+            if (isNullableAnnotationsContextEnabled)
             {
                 switch (arrayElementType.Classify)
                 {
@@ -241,7 +242,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         }
 
         builder.Append('[');
-        builder.Append(arrayInitializer.InitializerElements.Count);
+        builder.Append(itemCount);
         builder.Append(']');
 
         return builder.ToString();
@@ -256,7 +257,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 // { d, default, default(T) }  ->  new T[n] // where d is the default value for the T
 
-                var arrayCreationExpressionCode = BuildArrayCreationExpressionCode(arrayInitializer, arrayItemType);
+                var arrayCreationExpressionCode = BuildArrayCreationExpressionCode(
+                    arrayItemType,
+                    arrayInitializer.InitializerElements.Count,
+                    arrayInitializer.IsNullableAnnotationsContextEnabled());
 
                 consumer.AddHighlighting(
                     new ArrayWithDefaultValuesInitializationSuggestion(
@@ -759,6 +763,47 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         }
     }
 
+    static void AnalyzeCollectionExpression(IHighlightingConsumer consumer, ICollectionExpression collectionExpression)
+    {
+        if (collectionExpression.CollectionElements is [_, ..])
+        {
+            var targetTypeInfo = collectionExpression.GetTargetTypeInfo();
+
+            if (targetTypeInfo.ElementType is { } collectionItemType)
+            {
+                var psiModule = collectionExpression.GetPsiModule();
+
+                var typeArguments = new[] { collectionItemType };
+
+                [Pure]
+                bool IsTargetTypedToArray()
+                    => TypeEqualityComparer.Default.Equals(targetTypeInfo.TargetType, TypeFactory.CreateArrayType(collectionItemType, 1));
+
+                [Pure]
+                bool IsTargetTypedTo(IClrTypeName clrTypeName)
+                    => TypeEqualityComparer.Default.Equals(targetTypeInfo.TargetType, TryConstructType(clrTypeName, typeArguments, psiModule));
+
+                if (collectionExpression.CollectionElements.All(item => item.Expression.IsDefaultValueOf(collectionItemType))
+                    && (IsTargetTypedToArray()
+                        || IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
+                        || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
+                        || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN)))
+                {
+                    var arrayCreationExpressionCode = BuildArrayCreationExpressionCode(
+                        collectionItemType,
+                        collectionExpression.CollectionElements.Count,
+                        collectionExpression.IsNullableAnnotationsContextEnabled());
+
+                    consumer.AddHighlighting(
+                        new ArrayWithDefaultValuesInitializationSuggestion(
+                            $"Use '{arrayCreationExpressionCode}'.",
+                            arrayCreationExpressionCode,
+                            collectionExpression));
+                }
+            }
+        }
+    }
+
     static void AnalyzeArrayEmptyInvocation(IHighlightingConsumer consumer, IInvocationExpression arrayEmptyInvocationExpression)
     {
         Debug.Assert(arrayEmptyInvocationExpression.TypeArguments is [_]);
@@ -885,6 +930,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
             case IObjectCreationExpression objectCreationExpression:
                 AnalyzeObjectCreationExpression(consumer, objectCreationExpression);
+                break;
+
+            case ICollectionExpression collectionExpression:
+                AnalyzeCollectionExpression(consumer, collectionExpression);
                 break;
 
             case IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression

@@ -31,4 +31,9 @@ public sealed class ArrayWithDefaultValuesInitializationQuickFixTests : QuickFix
     [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     public void TestArrayWithDefaultValuesInitialization6() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    public void TestArrayWithDefaultValuesInitialization7() => DoNamedTest2();
 }
