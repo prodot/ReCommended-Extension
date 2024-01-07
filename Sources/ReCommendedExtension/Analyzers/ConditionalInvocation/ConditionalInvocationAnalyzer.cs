@@ -9,17 +9,17 @@ namespace ReCommendedExtension.Analyzers.ConditionalInvocation;
 public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
     [Pure]
-    static IList<string> GetConditionsIfConditionalMethodInvoked(IInvocationExpression invocationExpression)
+    static IReadOnlyList<string> GetConditionsIfConditionalMethodInvoked(IInvocationExpression invocationExpression)
     {
         if (invocationExpression.Reference.Resolve().DeclaredElement is not IMethod method)
         {
-            return Array.Empty<string>(); // cannot analyze => do not highlight
+            return []; // cannot analyze => do not highlight
         }
 
         var sourceFile = invocationExpression.GetSourceFile();
         if (sourceFile is not { })
         {
-            return Array.Empty<string>(); // cannot analyze => do not highlight
+            return []; // cannot analyze => do not highlight
         }
 
         var declaredConditions = null as List<string>;
@@ -36,7 +36,7 @@ public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvo
 
         if (declaredConditions is not { })
         {
-            return Array.Empty<string>(); // no declared conditions => do not highlight
+            return []; // no declared conditions => do not highlight
         }
 
         // initialize with assembly-level conditions

@@ -8,7 +8,6 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
@@ -191,10 +190,7 @@ internal abstract record ContractInfo
         // todo: the generated "typeof" expression doesn't contain generics: "<,>"
         var contractClassAttributeTypeElement = ClrTypeNames.ContractClassAttribute.TryGetTypeElement(psiModule);
         Debug.Assert(contractClassAttributeTypeElement is { });
-        var attribute = factory.CreateAttribute(
-            contractClassAttributeTypeElement,
-            [new AttributeValue(typeofExpression.ArgumentType)],
-            Array.Empty<Pair<string, AttributeValue>>());
+        var attribute = factory.CreateAttribute(contractClassAttributeTypeElement, [new AttributeValue(typeofExpression.ArgumentType)], []);
 
         typeDeclaration.AddAttributeAfter(attribute, null);
 

@@ -20,7 +20,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
     Func<CSharpElementFactory, IAttribute>? createAttributeFactory;
 
-    IAttribute[] attributesToReplace = Array.Empty<IAttribute>();
+    IAttribute[] attributesToReplace = [];
 
     protected ICSharpContextActionDataProvider Provider => provider;
 
@@ -42,7 +42,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
     protected virtual bool AllowsMultiple => false;
 
     [Pure]
-    protected virtual AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => Array.Empty<AttributeValue>();
+    protected virtual AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => [];
 
     [MemberNotNullWhen(true, nameof(createAttributeFactory))]
     [MemberNotNullWhen(true, nameof(attributesOwnerDeclaration))]
@@ -66,7 +66,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
             }
         }
 
-        attributesToReplace = Array.Empty<IAttribute>();
+        attributesToReplace = [];
         createAttributeFactory = null;
         attributesOwnerDeclaration = null;
 
@@ -165,7 +165,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
         }
         finally
         {
-            attributesToReplace = Array.Empty<IAttribute>();
+            attributesToReplace = [];
             createAttributeFactory = null;
             attributesOwnerDeclaration = null;
         }

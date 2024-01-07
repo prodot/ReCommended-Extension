@@ -19,7 +19,7 @@ public abstract class AnnotateWith<A>(ICSharpContextActionDataProvider provider)
         IPsiModule psiModule,
         out IAttribute[] attributesToReplace)
     {
-        attributesToReplace = Array.Empty<IAttribute>();
+        attributesToReplace = [];
 
         if (CanBeAnnotated(attributesOwnerDeclaration.DeclaredElement))
         {

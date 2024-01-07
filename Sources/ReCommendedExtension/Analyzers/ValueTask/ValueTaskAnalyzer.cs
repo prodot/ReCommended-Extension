@@ -61,7 +61,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             return flowGraphInspector;
         }
 
-        readonly Dictionary<ICSharpExpression, bool> isPossibleConsumptionCache = new();
+        readonly Dictionary<ICSharpExpression, bool> isPossibleConsumptionCache = [];
 
         Inspector(
             ICSharpControlFlowGraph controlFlowGraph,

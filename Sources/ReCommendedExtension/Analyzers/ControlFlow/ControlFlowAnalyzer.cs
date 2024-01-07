@@ -134,8 +134,7 @@ public sealed class ControlFlowAnalyzer(
         {
             nullabilityInspector = null;
             inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
-            alwaysSuccessTryCastExpressions =
-                new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions ?? Array.Empty<IAsExpression>());
+            alwaysSuccessTryCastExpressions = new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions);
         }
 
         foreach (var assertion in assertions)

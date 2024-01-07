@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions;
 
@@ -22,15 +21,15 @@ public abstract class AnnotateWithCodeAnnotation(ICSharpContextActionDataProvide
         {
             attributesToReplace = GetAttributesToReplace(attributesOwnerDeclaration);
 
-            return factory => factory.CreateAttribute(attributeType, GetAnnotationArguments(psiModule), Array.Empty<Pair<string, AttributeValue>>());
+            return factory => factory.CreateAttribute(attributeType, GetAnnotationArguments(psiModule), []);
         }
 
-        attributesToReplace = Array.Empty<IAttribute>();
+        attributesToReplace = [];
         return null;
     }
 
     [Pure]
-    protected virtual IAttribute[] GetAttributesToReplace(IAttributesOwnerDeclaration ownerDeclaration) => Array.Empty<IAttribute>();
+    protected virtual IAttribute[] GetAttributesToReplace(IAttributesOwnerDeclaration ownerDeclaration) => [];
 
     [Pure]
     protected abstract bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context);
