@@ -566,7 +566,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         }
 
         // target-typed to ICollection<T> or IList<T>
-        if (IsTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) || IsTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN))
+        if ((arguments & ListArguments.Capacity) == 0
+            && (IsTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) || IsTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN)))
         {
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
