@@ -60,9 +60,12 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
     {
         get
         {
-            Debug.Assert(declaration is { });
+            Debug.Assert(declaration is { DeclaredElement: { } });
+            Debug.Assert(CSharpLanguage.Instance is { });
 
-            return $"Declare IEqualityOperators<{declaration.DeclaredName}, {declaration.DeclaredName}, bool> interface.";
+            var name = TypeFactory.CreateType(declaration.DeclaredElement).GetPresentableName(CSharpLanguage.Instance);
+
+            return $"Declare IEqualityOperators<{name}, {name}, bool> interface.";
         }
     }
 

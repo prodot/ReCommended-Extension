@@ -117,7 +117,9 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
                     if (declaresEquatable && !declaresEqualityOperators)
                     {
-                        var name = classDeclaration.DeclaredName;
+                        Debug.Assert(CSharpLanguage.Instance is { });
+
+                        var name = type.GetPresentableName(CSharpLanguage.Instance);
 
                         consumer.AddHighlighting(
                             new ImplementEqualityOperatorsForClassesSuggestion(
@@ -134,7 +136,9 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
                     if (declaresComparable && !declaresComparisonOperators)
                     {
-                        var name = classDeclaration.DeclaredName;
+                        Debug.Assert(CSharpLanguage.Instance is { });
+
+                        var name = type.GetPresentableName(CSharpLanguage.Instance);
 
                         consumer.AddHighlighting(
                             new ImplementComparisonOperatorsForClassesSuggestion(
@@ -155,7 +159,9 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
                     if (declaresEquatable && !declaresEqualityOperators)
                     {
-                        var name = structDeclaration.DeclaredName;
+                        Debug.Assert(CSharpLanguage.Instance is { });
+
+                        var name = type.GetPresentableName(CSharpLanguage.Instance);
 
                         consumer.AddHighlighting(
                             new ImplementEqualityOperatorsForStructsSuggestion(
@@ -172,7 +178,9 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
                     if (declaresComparable && !declaresComparisonOperators)
                     {
-                        var name = structDeclaration.DeclaredName;
+                        Debug.Assert(CSharpLanguage.Instance is { });
+
+                        var name = type.GetPresentableName(CSharpLanguage.Instance);
 
                         consumer.AddHighlighting(
                             new ImplementComparisonOperatorsForStructsSuggestion(
@@ -193,7 +201,9 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
                     if (!declaresEqualityOperators)
                     {
-                        var name = recordDeclaration.DeclaredName;
+                        Debug.Assert(CSharpLanguage.Instance is { });
+
+                        var name = type.GetPresentableName(CSharpLanguage.Instance);
 
                         consumer.AddHighlighting(
                             new ImplementEqualityOperatorsForRecordsSuggestion(
@@ -203,7 +213,9 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
                     if (declaresComparable && !declaresComparisonOperators)
                     {
-                        var name = recordDeclaration.DeclaredName;
+                        Debug.Assert(CSharpLanguage.Instance is { });
+
+                        var name = type.GetPresentableName(CSharpLanguage.Instance);
 
                         consumer.AddHighlighting(
                             new ImplementComparisonOperatorsForRecordsSuggestion(
@@ -238,14 +250,22 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
             if (!declaresEquatable && overridesEquals && element is IStructDeclaration structDeclaration)
             {
+                Debug.Assert(CSharpLanguage.Instance is { });
+
+                var name = type.GetPresentableName(CSharpLanguage.Instance);
+
                 consumer.AddHighlighting(
-                    new ImplementEquatableWarning($"Implement IEquatable<{element.DeclaredName}> when overriding Equals.", structDeclaration));
+                    new ImplementEquatableWarning($"Implement IEquatable<{name}> when overriding Equals.", structDeclaration));
             }
 
             if (declaresEquatable && !overridesEquals)
             {
+                Debug.Assert(CSharpLanguage.Instance is { });
+
+                var name = type.GetPresentableName(CSharpLanguage.Instance);
+
                 consumer.AddHighlighting(
-                    new OverrideEqualsWarning($"Override Equals when implementing IEquatable<{element.DeclaredName}>.", element));
+                    new OverrideEqualsWarning($"Override Equals when implementing IEquatable<{name}>.", element));
             }
         }
     }

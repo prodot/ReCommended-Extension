@@ -56,9 +56,12 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
     {
         get
         {
-            Debug.Assert(declaration is { });
+            Debug.Assert(declaration is { DeclaredElement: { } });
+            Debug.Assert(CSharpLanguage.Instance is { });
 
-            return $"Declare IComparisonOperators<{declaration.DeclaredName}, {declaration.DeclaredName}, bool> interface.";
+            var name = TypeFactory.CreateType(declaration.DeclaredElement).GetPresentableName(CSharpLanguage.Instance);
+
+            return $"Declare IComparisonOperators<{name}, {name}, bool> interface.";
         }
     }
 
