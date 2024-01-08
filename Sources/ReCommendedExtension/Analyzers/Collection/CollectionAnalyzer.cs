@@ -44,7 +44,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     }
 
     [Pure]
-    static bool IsArrayEmptyMethod(IMethod method)
+    static bool IsEmptyMethod(IMethod method)
         => method is
         {
             ShortName: nameof(Array.Empty),
@@ -56,7 +56,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
-        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType && arrayType.Methods.Any(IsArrayEmptyMethod);
+        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType && arrayType.Methods.Any(IsEmptyMethod);
 
     [Conditional("DEBUG")]
     static void AssertListConstructors(IPsiModule psiModule)
@@ -938,7 +938,9 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 break;
 
             case IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression
-                when reference.Resolve().DeclaredElement is IMethod method && IsArrayEmptyMethod(method):
+                when reference.Resolve().DeclaredElement is IMethod method
+                && method.ContainingType.IsClrType(PredefinedType.ARRAY_FQN)
+                && IsEmptyMethod(method):
                 AnalyzeArrayEmptyInvocation(consumer, invocationExpression);
                 break;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Test
 {
@@ -58,6 +59,12 @@ namespace Test
             IList<C> var8 = Array.Empty<B>();
 
             A[] var9 = Array.Empty<B>();
+        }
+
+        void EnumerableEmpty()
+        {
+            IEnumerable<int> var1 = Enumerable.Empty<int>();
+            IEnumerable<object> var2 = Enumerable.Empty<string>();
         }
 
         void Lists(A a, B b)
