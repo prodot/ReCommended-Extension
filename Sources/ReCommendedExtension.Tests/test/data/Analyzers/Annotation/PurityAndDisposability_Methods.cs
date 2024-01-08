@@ -539,4 +539,23 @@ namespace Disposable
         [MustDisposeResource]
         public ValueTask<IDisposable> All() => throw new NotImplementedException();
     }
+
+    internal class NullableTypes
+    {
+        [MustDisposeResource]
+        public class Class : IDisposable
+        {
+            public void Dispose() { }
+        }
+
+        [method: MustDisposeResource]
+        public struct Struct() : IDisposable
+        {
+            public void Dispose() { }
+        }
+
+        public Class? NullableClass() => throw new NotImplementedException();
+
+        public Struct? NullableStruct() => throw new NotImplementedException();
+    }
 }

@@ -539,6 +539,25 @@ namespace Disposable
         [|MustDisposeResource|(139)]
         public ValueTask<IDisposable> All() => throw new NotImplementedException();
     }
+
+    internal class NullableTypes
+    {
+        [MustDisposeResource]
+        public class Class : IDisposable
+        {
+            public void Dispose() { }
+        }
+
+        [method: MustDisposeResource]
+        public struct Struct() : IDisposable
+        {
+            public void Dispose() { }
+        }
+
+        public Class? |NullableClass|(140)() => throw new NotImplementedException();
+
+        public Struct? |NullableStruct|(141)() => throw new NotImplementedException();
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: Annotation is not valid because the method return type is not disposable.
@@ -681,3 +700,5 @@ namespace Disposable
 (137): ReSharper Warning: Annotation is not valid because task-like disposable method return types are not yet supported.
 (138): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (139): ReSharper Warning: Annotation is not valid because task-like disposable method return types are not yet supported.
+(140): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(141): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].

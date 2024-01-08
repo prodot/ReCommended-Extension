@@ -309,17 +309,39 @@ internal static class Extensions
 
     [Pure]
     public static bool IsDisposable(this IType type, ITreeNode context)
-        => type.GetTypeElement() is { } typeElement
-            && (typeElement.IsDisposable(context.GetPsiModule()) && !type.IsTask() && !type.IsGenericTask()
-                || type is IDeclaredType declaredType && declaredType.GetTypeElement() is IStruct { IsByRefLike: true } s && s.HasDisposeMethods());
+    {
+        if (type.GetTypeElement() is { } typeElement)
+        {
+            var psiModule = context.GetPsiModule();
+
+            return typeElement.IsDisposable(psiModule) && !type.IsTask() && !type.IsGenericTask()
+                || typeElement.IsNullableOfT()
+                && TypesUtil.GetTypeArgumentValue(type, 0).GetTypeElement() is { } structType
+                && structType.IsDisposable(psiModule)
+                || typeElement is IStruct { IsByRefLike: true } s && s.HasDisposeMethods();
+        }
+
+        return false;
+    }
 
     [Pure]
     public static bool IsTasklikeOfIsDisposable(this IType type, ITreeNode context)
-        => type.IsTasklike(context)
-            && type.GetTasklikeUnderlyingType(context).GetTypeElement() is { } awaitedTypeElement
-            && awaitedTypeElement.IsDisposable(context.GetPsiModule())
-            && !awaitedTypeElement.Type().IsTask()
-            && !awaitedTypeElement.Type().IsGenericTask();
+    {
+        if (type.IsTasklike(context) && type.GetTasklikeUnderlyingType(context).GetTypeElement() is { } awaitedTypeElement)
+        {
+            var psiModule = context.GetPsiModule();
+
+            var awaitedType = awaitedTypeElement.Type();
+
+            return awaitedTypeElement.IsDisposable(psiModule) && !awaitedType.IsTask() && !awaitedType.IsGenericTask()
+                || awaitedTypeElement.IsNullableOfT()
+                && awaitedType is { }
+                && TypesUtil.GetTypeArgumentValue(awaitedType, 0).GetTypeElement() is { } structType
+                && structType.IsDisposable(psiModule);
+        }
+
+        return false;
+    }
 
     [Pure]
     public static ITypeElement? TryGetAnnotationAttributeType(this IAttributesOwnerDeclaration attributesOwnerDeclaration, string attributeShortName)
