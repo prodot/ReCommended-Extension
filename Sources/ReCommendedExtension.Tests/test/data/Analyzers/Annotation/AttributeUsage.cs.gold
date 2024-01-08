@@ -19,6 +19,14 @@ namespace Test
 
     public class |DerivedAttribute3|(2) : BaseAttribute3 { }
 }
+
+namespace PartialClasses
+{
+    public partial class PartialClassAttribute { }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public partial class PartialClassAttribute : Attribute { }
+}
 ---------------------------------------------------------
 (0): ReSharper Warning: Annotate the attribute with [AttributeUsage].
 (1): ReSharper Warning: Annotate the attribute with [AttributeUsage].

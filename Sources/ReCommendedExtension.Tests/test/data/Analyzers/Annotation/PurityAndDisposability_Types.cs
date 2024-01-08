@@ -209,6 +209,28 @@ namespace Structs
     }
 }
 
+namespace PartialTypes
+{
+    internal partial class DisposableClass { }
+
+    [MustDisposeResource]
+    internal partial class DisposableClass : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    internal partial struct DisposableStruct
+    {
+        [MustDisposeResource]
+        public Struct(int x) { }
+    }
+
+    internal partial struct DisposableStruct : IDisposable
+    {
+        public void Dispose() { }
+    }
+}
+
 namespace Other
 {
     internal interface IInterface { }

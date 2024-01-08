@@ -19,3 +19,11 @@ namespace Test
 
     public class DerivedAttribute3 : BaseAttribute3 { }
 }
+
+namespace PartialClasses
+{
+    public partial class PartialClassAttribute { }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public partial class PartialClassAttribute : Attribute { }
+}
