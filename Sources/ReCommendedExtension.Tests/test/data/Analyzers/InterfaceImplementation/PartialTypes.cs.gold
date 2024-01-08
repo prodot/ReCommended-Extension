@@ -1,0 +1,45 @@
+﻿using System;
+using System.Numerics;
+
+namespace Test
+{
+    internal partial class |EqualityClass|(0)
+    {
+        public static bool operator ==(EqualityClass? left, EqualityClass? right) => throw new NotImplementedException();
+        public static bool operator !=(EqualityClass? left, EqualityClass? right) => throw new NotImplementedException();
+    }
+
+    internal partial class |EqualityClass|(1) : IEquatable<EqualityClass>
+    {
+        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw new NotImplementedException();
+
+        public bool Equals(EqualityClass? other) => throw new NotImplementedException();        
+    }
+
+    internal partial class ||ComparisonClass|(2)|(3)
+    {
+        public static bool operator ==(ComparisonClass? left, ComparisonClass? right) => throw new NotImplementedException();
+        public static bool operator !=(ComparisonClass? left, ComparisonClass? right) => throw new NotImplementedException();
+        public static bool operator <(ComparisonClass? left, ComparisonClass? right) => throw new NotImplementedException();
+        public static bool operator >(ComparisonClass? left, ComparisonClass? right) => throw new NotImplementedException();
+        public static bool operator <=(ComparisonClass? left, ComparisonClass? right) => throw new NotImplementedException();
+        public static bool operator >=(ComparisonClass? left, ComparisonClass? right) => throw new NotImplementedException();
+    }
+
+    internal partial class ||ComparisonClass|(4)|(5) : IEquatable<ComparisonClass>, IComparable<ComparisonClass>
+    {
+        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw new NotImplementedException();
+
+        public bool Equals(ComparisonClass? other) => throw new NotImplementedException();
+        public int CompareTo(ComparisonClass? other) => throw new NotImplementedException();
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Declare IEqualityOperators<EqualityClass, EqualityClass, bool> interface (operators available).
+(1): ReSharper Suggestion: Declare IEqualityOperators<EqualityClass, EqualityClass, bool> interface (operators available).
+(2): ReSharper Suggestion: Declare IComparisonOperators<ComparisonClass, ComparisonClass, bool> interface (operators available).
+(3): ReSharper Suggestion: Declare IEqualityOperators<ComparisonClass, ComparisonClass, bool> interface (operators available).
+(4): ReSharper Suggestion: Declare IComparisonOperators<ComparisonClass, ComparisonClass, bool> interface (operators available).
+(5): ReSharper Suggestion: Declare IEqualityOperators<ComparisonClass, ComparisonClass, bool> interface (operators available).

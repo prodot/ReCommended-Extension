@@ -29,10 +29,12 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
             && ClrTypeNames.IEqualityOperators.TryGetTypeElement(declaration.GetPsiModule()) is { } equalityOperatorsInterface
             && declaration.DeclaredElement is { })
         {
-            var type = TypeFactory.CreateType(declaration.DeclaredElement);
-
-            var (declaresEquatable, declaresEqualityOperators, _, _) =
-                InterfaceImplementationAnalyzer.GetInterfaces(declaration, type, equalityOperatorsInterface, null, null);
+            var (declaresEquatable, declaresEqualityOperators, _, _) = InterfaceImplementationAnalyzer.GetInterfaces(
+                declaration.DeclaredElement,
+                TypeFactory.CreateType(declaration.DeclaredElement),
+                equalityOperatorsInterface,
+                null,
+                null);
 
             this.declaration = declaration switch
             {

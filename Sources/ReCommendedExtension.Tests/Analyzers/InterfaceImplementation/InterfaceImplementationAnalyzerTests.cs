@@ -54,4 +54,9 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTes
 
     [Test]
     public void TestImplementedEquals() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestPartialTypes() => DoNamedTest2();
 }

@@ -29,11 +29,9 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
             && ClrTypeNames.IComparisonOperators.TryGetTypeElement(declaration.GetPsiModule()) is { } comparisonOperatorsInterface
             && declaration.DeclaredElement is { })
         {
-            var type = TypeFactory.CreateType(declaration.DeclaredElement);
-
             var (_, _, declaresComparable, declaresComparisonOperators) = InterfaceImplementationAnalyzer.GetInterfaces(
-                declaration,
-                type,
+                declaration.DeclaredElement,
+                TypeFactory.CreateType(declaration.DeclaredElement),
                 null,
                 comparisonOperatorsInterface,
                 PredefinedType.GENERIC_ICOMPARABLE_FQN.TryGetTypeElement(declaration.GetPsiModule()));
