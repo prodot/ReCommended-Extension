@@ -207,6 +207,22 @@ namespace Structs
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    public class PublicContainer
+    {
+        ref struct |NestedRefStructWithDispose|(20)
+        {
+            public void Dispose() { }
+        }
+    }
+
+    internal class InternalContainer
+    {
+        ref struct |NestedRefStructWithDispose|(21)
+        {
+            public void Dispose() { }
+        }
+    }
 }
 
 namespace PartialTypes
@@ -260,3 +276,5 @@ namespace Other
 (17): ReSharper Warning: Record is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (18): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (19): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(20): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(21): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].

@@ -1117,8 +1117,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         HighlightNotAllowed("Annotation is not valid for static methods.");
                     }
 
-                    if (method.AccessibilityDomain.DomainType is AccessibilityDomain.AccessibilityDomainType.PRIVATE
-                        or AccessibilityDomain.AccessibilityDomainType.NONE)
+                    if (method.GetAccessRights() is AccessRights.PRIVATE or AccessRights.NONE)
                     {
                         HighlightNotAllowed("Annotation is not valid for private methods.");
                     }

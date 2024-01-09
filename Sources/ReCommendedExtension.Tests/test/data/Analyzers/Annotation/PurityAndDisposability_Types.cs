@@ -207,6 +207,22 @@ namespace Structs
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    public class PublicContainer
+    {
+        ref struct NestedRefStructWithDispose
+        {
+            public void Dispose() { }
+        }
+    }
+
+    internal class InternalContainer
+    {
+        ref struct NestedRefStructWithDispose
+        {
+            public void Dispose() { }
+        }
+    }
 }
 
 namespace PartialTypes

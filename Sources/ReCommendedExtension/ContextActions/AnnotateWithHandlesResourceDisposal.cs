@@ -54,19 +54,14 @@ public sealed class AnnotateWithHandlesResourceDisposal(ICSharpContextActionData
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
         => declaredElement switch
         {
-            IMethod
-                {
-                    IsStatic: false,
-                    AccessibilityDomain.DomainType: not (AccessibilityDomain.AccessibilityDomainType.PRIVATE
-                    or AccessibilityDomain.AccessibilityDomainType.NONE),
-                    ContainingType: { },
-                } method => !IsAnyBaseMethodAnnotated(method)
-                && method.ContainingType.IsDisposable(context.GetPsiModule())
-                && !method.IsDisposeMethod()
-                && !method.IsDisposeAsyncMethod()
-                || method.ContainingType is IStruct { IsByRefLike: true }
-                && !method.IsDisposeMethodByConvention()
-                && !method.IsDisposeAsyncMethodByConvention(),
+            IMethod { IsStatic: false, ContainingType: { } } method => method.GetAccessRights() is not (AccessRights.PRIVATE or AccessRights.NONE)
+                && (!IsAnyBaseMethodAnnotated(method)
+                    && method.ContainingType.IsDisposable(context.GetPsiModule())
+                    && !method.IsDisposeMethod()
+                    && !method.IsDisposeAsyncMethod()
+                    || method.ContainingType is IStruct { IsByRefLike: true }
+                    && !method.IsDisposeMethodByConvention()
+                    && !method.IsDisposeAsyncMethodByConvention()),
 
             IParameter { Kind: ParameterKind.VALUE or ParameterKind.INPUT or ParameterKind.READONLY_REFERENCE or ParameterKind.REFERENCE } parameter
                 => parameter.Type.IsDisposable(context) && !IsParameterOfAnyBaseMethodAnnotated(parameter),

@@ -266,29 +266,15 @@ internal static class Extensions
 
     [Pure]
     public static bool IsDisposeMethodByConvention(this IMethod method)
-        => method is
-            {
-                ShortName: "Dispose",
-                IsStatic: false,
-                AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.INTERNAL
-                or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                TypeParameters: [],
-                Parameters: [],
-            }
-            && method.ReturnType.IsVoid();
+        => method is { ShortName: "Dispose", IsStatic: false, TypeParameters: [], Parameters: [] }
+            && method.ReturnType.IsVoid()
+            && method.GetAccessRights() is AccessRights.INTERNAL or AccessRights.PUBLIC;
 
     [Pure]
     public static bool IsDisposeAsyncMethodByConvention(this IMethod method)
-        => method is
-            {
-                ShortName: "DisposeAsync",
-                IsStatic: false,
-                AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.INTERNAL
-                or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                TypeParameters: [],
-                Parameters: [],
-            }
-            && method.ReturnType.IsValueTask();
+        => method is { ShortName: "DisposeAsync", IsStatic: false, TypeParameters: [], Parameters: [] }
+            && method.ReturnType.IsValueTask()
+            && method.GetAccessRights() is AccessRights.INTERNAL or AccessRights.PUBLIC;
 
     [Pure]
     public static bool HasDisposeMethods(this IStruct type)
@@ -299,12 +285,8 @@ internal static class Extensions
             method => method.IsDisposeMethodByConvention()
                 || method.IsDisposeAsyncMethodByConvention()
                 || method.GetAttributeInstances(false).Any(attribute => attribute.GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute))
-                && method is
-                {
-                    IsStatic: false,
-                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.INTERNAL
-                    or AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                });
+                && !method.IsStatic
+                && method.GetAccessRights() is AccessRights.INTERNAL or AccessRights.PUBLIC);
     }
 
     [Pure]
