@@ -3,6 +3,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
@@ -283,14 +284,15 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
         var declaresComparable = false;
         var declaresComparisonOperators = false;
 
-        foreach (var baseType in declaredElement.GetSuperTypes())
+        foreach (var baseType in declaredElement.GetAllSuperTypes())
         {
             if (baseType.IsObject())
             {
                 continue;
             }
 
-            if (baseType.IsIEquatable()
+            if (!declaresEquatable
+                && baseType.IsIEquatable()
                 && baseType.TryGetGenericParameterTypes() is [{ } equatableType]
                 && TypeEqualityComparer.Default.Equals(equatableType, type))
             {
@@ -298,7 +300,8 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
                 continue;
             }
 
-            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), equalityOperatorsInterface)
+            if (!declaresEqualityOperators
+                && DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), equalityOperatorsInterface)
                 && baseType.TryGetGenericParameterTypes() is [{ } leftEqualityOperandType, { } rightEqualityOperandType, { } equalityResultType]
                 && TypeEqualityComparer.Default.Equals(leftEqualityOperandType, type)
                 && TypeEqualityComparer.Default.Equals(rightEqualityOperandType, type)
@@ -308,7 +311,8 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
                 continue;
             }
 
-            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparableInterface)
+            if (!declaresComparable
+                && DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparableInterface)
                 && baseType.TryGetGenericParameterTypes() is [{ } comparableType]
                 && TypeEqualityComparer.Default.Equals(comparableType, type))
             {
@@ -316,7 +320,8 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
                 continue;
             }
 
-            if (DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparisonOperatorsInterface)
+            if (!declaresComparisonOperators
+                && DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparisonOperatorsInterface)
                 && baseType.TryGetGenericParameterTypes() is [{ } leftComparisonOperandType, { } rightComparisonOperandType, { } comparisonResultType]
                 && TypeEqualityComparer.Default.Equals(leftComparisonOperandType, type)
                 && TypeEqualityComparer.Default.Equals(rightComparisonOperandType, type)

@@ -33,7 +33,6 @@ namespace Test
     internal class Class2WithOperatorsAndInterface : 
         IEquatable<Class2WithOperatorsAndInterface>,
         IComparable<Class2WithOperatorsAndInterface>, 
-        IEqualityOperators<Class2WithOperatorsAndInterface, Class2WithOperatorsAndInterface, bool>,
         IComparisonOperators<Class2WithOperatorsAndInterface, Class2WithOperatorsAndInterface, bool>
     {
         public override bool Equals(object? obj) => throw new NotImplementedException();
@@ -93,7 +92,6 @@ namespace Test
     internal struct Struct2WithOperatorsAndInterface : 
         IEquatable<Struct2WithOperatorsAndInterface>,
         IComparable<Struct2WithOperatorsAndInterface>, 
-        IEqualityOperators<Struct2WithOperatorsAndInterface, Struct2WithOperatorsAndInterface, bool>,
         IComparisonOperators<Struct2WithOperatorsAndInterface, Struct2WithOperatorsAndInterface, bool>
     {
         public override bool Equals(object? obj) => throw new NotImplementedException();

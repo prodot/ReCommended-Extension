@@ -21,12 +21,12 @@ namespace Test
 
     internal interface IEquatableOfClass4 : IEquatable<Class4> { }
 
-    internal class Class4 : IEquatableOfClass4
+    internal class |Class4|(0) : IEquatableOfClass4
     {
         public bool Equals(Class4? other) => throw new NotImplementedException();
     }
 
-    internal class Class5 : IEquatableExtended<Class5>
+    internal class |Class5|(1) : IEquatableExtended<Class5>
     {
         public bool Equals(Class5? other) => throw new NotImplementedException();
     }
@@ -50,12 +50,12 @@ namespace Test
 
     internal interface IEquatableOfStruct4 : IEquatable<Struct4> { }
 
-    internal class Struct4 : IEquatableOfStruct4
+    internal class |Struct4|(2) : IEquatableOfStruct4
     {
         public bool Equals(Struct4 other) => throw new NotImplementedException();
     }
 
-    internal class Struct5 : IEquatableExtended<Struct5>
+    internal class |Struct5|(3) : IEquatableExtended<Struct5>
     {
         public bool Equals(Struct5 other) => throw new NotImplementedException();
     }
@@ -67,3 +67,7 @@ namespace Test
     internal record struct StructRecord1; // implements IEquatable<StructRecord1>
 }
 ---------------------------------------------------------
+(0): ReSharper Warning: Override Equals when implementing IEquatable<Class4>.
+(1): ReSharper Warning: Override Equals when implementing IEquatable<Class5>.
+(2): ReSharper Warning: Override Equals when implementing IEquatable<Struct4>.
+(3): ReSharper Warning: Override Equals when implementing IEquatable<Struct5>.
