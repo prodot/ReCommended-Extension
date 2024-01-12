@@ -171,7 +171,17 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         var targetType = expression.GetImplicitlyConvertedTo();
 
-        return targetType.IsUnknown ? null : targetType;
+        if (targetType.IsUnknown)
+        {
+            return null;
+        }
+
+        if (expression.Parent is IReferenceExpression referenceExpression && referenceExpression.IsExtensionMethodInvocation())
+        {
+            return null;
+        }
+
+        return targetType;
     }
 
     [Pure]

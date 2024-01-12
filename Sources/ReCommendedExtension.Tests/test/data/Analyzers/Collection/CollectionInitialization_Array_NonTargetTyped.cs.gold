@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace NonTargetTyped
 {
@@ -14,6 +15,8 @@ namespace NonTargetTyped
             var var6 = new int[3];
             var var7 = new[] { a, b, c };
             var var8 = Array.Empty<int>();
+
+            IEnumerable<int> var9 = Array.Empty<int>().AsEnumerable();
         }
     }
 
@@ -29,6 +32,8 @@ namespace NonTargetTyped
             var var6 = new T[3];
             var var7 = new[] { a, b, c };
             var var8 = Array.Empty<T>();
+
+            IEnumerable<T> var9 = Array.Empty<T>().AsEnumerable();
         }
     }
 }
