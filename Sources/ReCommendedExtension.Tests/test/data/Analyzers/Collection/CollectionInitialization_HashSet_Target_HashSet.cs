@@ -168,4 +168,45 @@ namespace TargetHashSet
         HashSet<T> Property15 => new(8);
         HashSet<T> Property16 => new(8) { 1, 2, 3 };
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        HashSet<A> field14 = new() { new B(1), new B(2), new B(3) };
+        HashSet<A> field16 = new(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq, IEqualityComparer<A> comparer)
+        {
+            HashSet<A> var14 = new() { a, b, c };
+            HashSet<A> var16 = new(8) { a, b, c };
+            HashSet<A> var17 = new(seq);
+            HashSet<A> var18 = new(seq) { a, b, c };
+            HashSet<A> var19 = new(comparer);
+            HashSet<A> var20 = new(comparer) { a, b, c };
+            HashSet<A> var21 = new(8, comparer);
+            HashSet<A> var22 = new(8, comparer) { a, b, c };
+            HashSet<A> var23 = new(seq, comparer);
+            HashSet<A> var24 = new(seq, comparer) { a, b, c };
+
+            Consumer(new() { a, b, c });
+            Consumer(new(8) { a, b, c });
+            Consumer(new(seq));
+            Consumer(new(seq) { a, b, c });
+            Consumer(new(comparer));
+            Consumer(new(comparer) { a, b, c });
+            Consumer(new(8, comparer));
+            Consumer(new(8, comparer) { a, b, c });
+            Consumer(new(seq, comparer));
+            Consumer(new(seq, comparer) { a, b, c });
+        }
+
+        void Consumer(HashSet<A> items) { }
+
+        HashSet<A> Property13 => new();
+        HashSet<A> Property14 => new() { new B(1), new B(2), new B(3) };
+        HashSet<A> Property15 => new(8);
+        HashSet<A> Property16 => new(8) { new B(1), new B(2), new B(3) };
+    }
 }

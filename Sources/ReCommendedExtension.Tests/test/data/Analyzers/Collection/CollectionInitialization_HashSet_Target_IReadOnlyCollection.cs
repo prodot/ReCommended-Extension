@@ -104,4 +104,51 @@ namespace TargetReadOnlyCollection
         IReadOnlyCollection<T> Property03 { get; set; } = new HashSet<T>(8);
         IReadOnlyCollection<T> Property04 { get; set; } = new HashSet<T>(8) { 1, 2, 3 };
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IReadOnlyCollection<A> field01 = new HashSet<B>();
+        IReadOnlyCollection<A> field02 = new HashSet<B> { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> field03 = new HashSet<B>(8);
+        IReadOnlyCollection<A> field04 = new HashSet<B>(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq, IEqualityComparer<B> comparer)
+        {
+            IReadOnlyCollection<A> var01 = new HashSet<B>();
+            IReadOnlyCollection<A> var02 = new HashSet<B> { a, b, c };
+            IReadOnlyCollection<A> var03 = new HashSet<B>(8);
+            IReadOnlyCollection<A> var04 = new HashSet<B>(8) { a, b, c };
+            IReadOnlyCollection<A> var05 = new HashSet<B>(seq);
+            IReadOnlyCollection<A> var06 = new HashSet<B>(seq) { a, b, c };
+            IReadOnlyCollection<A> var07 = new HashSet<B>(comparer);
+            IReadOnlyCollection<A> var08 = new HashSet<B>(comparer) { a, b, c };
+            IReadOnlyCollection<A> var09 = new HashSet<B>(8, comparer);
+            IReadOnlyCollection<A> var10 = new HashSet<B>(8, comparer) { a, b, c };
+            IReadOnlyCollection<A> var11 = new HashSet<B>(seq, comparer);
+            IReadOnlyCollection<A> var12 = new HashSet<B>(seq, comparer) { a, b, c };
+
+            Consumer(new HashSet<B>());
+            Consumer(new HashSet<B> { a, b, c });
+            Consumer(new HashSet<B>(8));
+            Consumer(new HashSet<B>(8) { a, b, c });
+            Consumer(new HashSet<B>(seq));
+            Consumer(new HashSet<B>(seq) { a, b, c });
+            Consumer(new HashSet<B>(comparer));
+            Consumer(new HashSet<B>(comparer) { a, b, c });
+            Consumer(new HashSet<B>(8, comparer));
+            Consumer(new HashSet<B>(8, comparer) { a, b, c });
+            Consumer(new HashSet<B>(seq, comparer));
+            Consumer(new HashSet<B>(seq, comparer) { a, b, c });
+        }
+
+        void Consumer(IReadOnlyCollection<A> items) { }
+
+        IReadOnlyCollection<A> Property01 { get; } = new HashSet<B>();
+        IReadOnlyCollection<A> Property02 { get; } = new HashSet<B> { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> Property03 { get; set; } = new HashSet<B>(8);
+        IReadOnlyCollection<A> Property04 { get; set; } = new HashSet<B>(8) { new B(1), new B(2), new B(3) };
+    }
 }

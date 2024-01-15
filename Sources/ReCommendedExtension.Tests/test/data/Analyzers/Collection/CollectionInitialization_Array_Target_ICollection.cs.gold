@@ -100,6 +100,53 @@ namespace TargetCollection
         ICollection<T> Property7 => |new[]|(78) { default, default(T), new() };
         ICollection<T> Property8 => |Array.Empty<T>()|(79);
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        ICollection<A> field1 = |new B[]|(80) { };
+        ICollection<A> field2 = new B[] { new(1), new(2), new(3) };
+        ICollection<A> field3 = ||new B[0]|(82) { }|(81);
+        ICollection<A> field4 = |new B[3]|(83) { new B(1), new B(2), new B(3) };
+        ICollection<A> field5 = ||new B[0]|(84)|(85);
+        ICollection<A> field6 = new B[3];
+        ICollection<A> field7 = |new[]|(86) { new B(1), new B(2), new B(3) };
+        ICollection<A> field8 = |Array.Empty<B>()|(87);
+
+        void Method(B a, B b, B c)
+        {
+            ICollection<A> var1 = |new B[]|(88) { };
+            ICollection<A> var2 = |new B[]|(89) { a, b, c };
+            ICollection<A> var3 = ||new B[0]|(91) { }|(90);
+            ICollection<A> var4 = |new B[3]|(92) { a, b, c };
+            ICollection<A> var5 = ||new B[0]|(93)|(94);
+            ICollection<A> var6 = new B[3];
+            ICollection<A> var7 = |new[]|(95) { a, b, c };
+            ICollection<A> var8 = |Array.Empty<B>()|(96);
+
+            Consumer(|new B[]|(97) { });
+            Consumer(|new B[]|(98) { a, b, c });
+            Consumer(||new B[0]|(100) { }|(99));
+            Consumer(|new B[3]|(101) { a, b, c });
+            Consumer(||new B[0]|(102)|(103));
+            Consumer(new B[3]);
+            Consumer(|new[]|(104) { a, b, c });
+            Consumer(|Array.Empty<B>()|(105));
+        }
+
+        void Consumer(ICollection<A> items) { }
+
+        ICollection<A> Property1 { get; } = |new B[]|(106) { };
+        ICollection<A> Property2 { get; } = new B[] { new(1), new(2), new(3) };
+        ICollection<A> Property3 { get; set; } = ||new B[0]|(108) { }|(107);
+        ICollection<A> Property4 { get; set; } = |new B[3]|(109) { new B(1), new B(2), new B(3) };
+        ICollection<A> Property5 => ||new B[0]|(110)|(111);
+        ICollection<A> Property6 => new B[3];
+        ICollection<A> Property7 => |new[]|(112) { new B(1), new B(2), new B(3) };
+        ICollection<A> Property8 => |Array.Empty<B>()|(113);
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
@@ -182,3 +229,37 @@ namespace TargetCollection
 (77): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (78): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (79): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(80): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(81): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(82): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(83): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(84): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(85): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(86): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(87): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(88): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(89): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(90): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(91): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(92): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(93): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(94): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(95): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(96): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(97): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(98): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(99): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(100): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(101): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(102): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(103): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(104): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(105): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(106): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(107): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(108): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(109): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(110): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(111): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(112): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(113): ReSharper Suggestion: Use collection expression ('List<A>' will be used).

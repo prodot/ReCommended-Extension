@@ -74,4 +74,39 @@ namespace TargetEnumerable
         IEnumerable<T> Property03 { get; set; } = new List<T>(8);
         IEnumerable<T> Property04 { get; set; } = new List<T>(8) { default, default(T), new() };
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IEnumerable<A> field01 = new List<B>();
+        IEnumerable<A> field02 = new List<B>() { new(1), new(2), new(3) };
+        IEnumerable<A> field03 = new List<B>(8);
+        IEnumerable<A> field04 = new List<B>(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq)
+        {
+            IEnumerable<A> var01 = new List<B>();
+            IEnumerable<A> var02 = new List<B> { a, b, c };
+            IEnumerable<A> var03 = new List<B>(8);
+            IEnumerable<A> var04 = new List<B>(8) { a, b, c };
+            IEnumerable<A> var05 = new List<B>(seq);
+            IEnumerable<A> var06 = new List<B>(seq) { a, b, c };
+
+            Consumer(new List<B>());
+            Consumer(new List<B> { a, b, c });
+            Consumer(new List<B>(8));
+            Consumer(new List<B>(8) { a, b, c });
+            Consumer(new List<B>(seq));
+            Consumer(new List<B>(seq) { a, b, c });
+        }
+
+        void Consumer(IEnumerable<A> items) { }
+
+        IEnumerable<A> Property01 { get; } = new List<B>();
+        IEnumerable<A> Property02 { get; } = new List<B> { new(1), new(2), new(3) };
+        IEnumerable<A> Property03 { get; set; } = new List<B>(8);
+        IEnumerable<A> Property04 { get; set; } = new List<B>(8) { new B(1), new B(2), new B(3) };
+    }
 }

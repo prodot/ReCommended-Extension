@@ -104,4 +104,51 @@ namespace TargetEnumerable
         IEnumerable<T> Property03 { get; set; } = new HashSet<T>(8);
         IEnumerable<T> Property04 { get; set; } = new HashSet<T>(8) { 1, 2, 3 };
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IEnumerable<A> field01 = new HashSet<B>();
+        IEnumerable<A> field02 = new HashSet<B> { new(1), new(2), new(3) };
+        IEnumerable<A> field03 = new HashSet<B>(8);
+        IEnumerable<A> field04 = new HashSet<B>(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq, IEqualityComparer<B> comparer)
+        {
+            IEnumerable<A> var01 = new HashSet<B>();
+            IEnumerable<A> var02 = new HashSet<B> { a, b, c };
+            IEnumerable<A> var03 = new HashSet<B>(8);
+            IEnumerable<A> var04 = new HashSet<B>(8) { a, b, c };
+            IEnumerable<A> var05 = new HashSet<B>(seq);
+            IEnumerable<A> var06 = new HashSet<B>(seq) { a, b, c };
+            IEnumerable<A> var07 = new HashSet<B>(comparer);
+            IEnumerable<A> var08 = new HashSet<B>(comparer) { a, b, c };
+            IEnumerable<A> var09 = new HashSet<B>(8, comparer);
+            IEnumerable<A> var10 = new HashSet<B>(8, comparer) { a, b, c };
+            IEnumerable<A> var11 = new HashSet<B>(seq, comparer);
+            IEnumerable<A> var12 = new HashSet<B>(seq, comparer) { a, b, c };
+
+            Consumer(new HashSet<B>());
+            Consumer(new HashSet<B> { a, b, c });
+            Consumer(new HashSet<B>(8));
+            Consumer(new HashSet<B>(8) { a, b, c });
+            Consumer(new HashSet<B>(seq));
+            Consumer(new HashSet<B>(seq) { a, b, c });
+            Consumer(new HashSet<B>(comparer));
+            Consumer(new HashSet<B>(comparer) { a, b, c });
+            Consumer(new HashSet<B>(8, comparer));
+            Consumer(new HashSet<B>(8, comparer) { a, b, c });
+            Consumer(new HashSet<B>(seq, comparer));
+            Consumer(new HashSet<B>(seq, comparer) { a, b, c });
+        }
+
+        void Consumer(IEnumerable<A> items) { }
+
+        IEnumerable<A> Property01 { get; } = new HashSet<B>();
+        IEnumerable<A> Property02 { get; } = new HashSet<B> { new(1), new(2), new(3) };
+        IEnumerable<A> Property03 { get; set; } = new HashSet<B>(8);
+        IEnumerable<A> Property04 { get; set; } = new HashSet<B>(8) { new B(1), new B(2), new B(3) };
+    }
 }

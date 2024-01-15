@@ -74,6 +74,41 @@ namespace TargetReadOnlyList
         IReadOnlyList<T> Property03 { get; set; } = |new|(44) List<T>(8);
         IReadOnlyList<T> Property04 { get; set; } = |new|(45) List<T>(8) { default, default(T), new() };
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IReadOnlyList<A> field01 = |new|(46) List<B>();
+        IReadOnlyList<A> field02 = new List<B>() { new(1), new(2), new(3) };
+        IReadOnlyList<A> field03 = |new|(47) List<B>(8);
+        IReadOnlyList<A> field04 = |new|(48) List<B>(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq)
+        {
+            IReadOnlyList<A> var01 = |new|(49) List<B>();
+            IReadOnlyList<A> var02 = |new|(50) List<B> { a, b, c };
+            IReadOnlyList<A> var03 = |new|(51) List<B>(8);
+            IReadOnlyList<A> var04 = |new|(52) List<B>(8) { a, b, c };
+            IReadOnlyList<A> var05 = |new|(53) List<B>(seq);
+            IReadOnlyList<A> var06 = |new|(54) List<B>(seq) { a, b, c };
+
+            Consumer(|new|(55) List<B>());
+            Consumer(|new|(56) List<B> { a, b, c });
+            Consumer(|new|(57) List<B>(8));
+            Consumer(|new|(58) List<B>(8) { a, b, c });
+            Consumer(|new|(59) List<B>(seq));
+            Consumer(|new|(60) List<B>(seq) { a, b, c });
+        }
+
+        void Consumer(IReadOnlyList<A> items) { }
+
+        IReadOnlyList<A> Property01 { get; } = |new|(61) List<B>();
+        IReadOnlyList<A> Property02 { get; } = new List<B> { new(1), new(2), new(3) };
+        IReadOnlyList<A> Property03 { get; set; } = |new|(62) List<B>(8);
+        IReadOnlyList<A> Property04 { get; set; } = |new|(63) List<B>(8) { new B(1), new B(2), new B(3) };
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: Use collection expression ('int[]' will be used).
@@ -122,3 +157,21 @@ namespace TargetReadOnlyList
 (43): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (44): ReSharper Suggestion: Use collection expression ('T[]' will be used).
 (45): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(46): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(47): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(48): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(49): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(50): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(51): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(52): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(53): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(54): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(55): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(56): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(57): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(58): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(59): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(60): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(61): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(62): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(63): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).

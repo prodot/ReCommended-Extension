@@ -114,4 +114,31 @@ namespace TargetList
         List<T> Property09 => new(8);
         List<T> Property10 => new(8) { default, default(T), new() };
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        List<A> field08 = new() { new B(1), new B(2), new B(3) };
+        List<A> field10 = new(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq)
+        {
+            List<A> var08 = new() { a, b, c };
+            List<A> var10 = new(8) { a, b, c };
+            List<A> var11 = new(seq);
+            List<A> var12 = new(seq) { a, b, c };
+
+            Consumer(new() { a, b, c });
+            Consumer(new(8) { a, b, c });
+            Consumer(new(seq));
+            Consumer(new(seq) { a, b, c });
+        }
+
+        void Consumer(List<A> items) { }
+
+        List<A> Property08 => new() { new B(1), new B(2), new B(3) };
+        List<A> Property10 => new(8) { new B(1), new B(2), new B(3) };
+    }
 }

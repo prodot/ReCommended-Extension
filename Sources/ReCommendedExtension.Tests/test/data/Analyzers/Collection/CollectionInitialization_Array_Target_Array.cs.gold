@@ -111,6 +111,53 @@ namespace TargetArray
         T[] Property09 { get; set; } = |{|(91) default, default(T), new() };
         T[] Property10 { get; set; } = |Array.Empty<T>()|(92);
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        A[] field1 = |new B[]|(93) { };
+        A[] field2 = new B[] { new(1), new(2), new(3) };
+        A[] field3 = ||new B[0]|(95) { }|(94);
+        A[] field4 = |new B[3]|(96) { new B(1), new B(2), new B(3) };
+        A[] field5 = ||new B[0]|(97)|(98);
+        A[] field6 = new B[3];
+        A[] field7 = |new[]|(99) { new B(1), new B(2), new B(3) };
+        A[] field8 = |Array.Empty<B>()|(100);
+
+        void Method(B a, B b, B c)
+        {
+            A[] var1 = |new B[]|(101) { };
+            A[] var2 = |new B[]|(102) { a, b, c };
+            A[] var3 = ||new B[0]|(104) { }|(103);
+            A[] var4 = |new B[3]|(105) { a, b, c };
+            A[] var5 = ||new B[0]|(106)|(107);
+            A[] var6 = new B[3];
+            A[] var7 = |new[]|(108) { a, b, c };
+            A[] var8 = |Array.Empty<B>()|(109);
+
+            Consumer(|new B[]|(110) { });
+            Consumer(|new B[]|(111) { a, b, c });
+            Consumer(||new B[0]|(113) { }|(112));
+            Consumer(|new B[3]|(114) { a, b, c });
+            Consumer(||new B[0]|(115)|(116));
+            Consumer(new B[3]);
+            Consumer(|new[]|(117) { a, b, c });
+            Consumer(|Array.Empty<B>()|(118));
+        }
+
+        void Consumer(A[] items) { }
+
+        A[] Property1 { get; } = |new B[]|(119) { };
+        A[] Property2 { get; } = new B[] { new(1), new(2), new(3) };
+        A[] Property3 { get; set; } = ||new B[0]|(121) { }|(120);
+        A[] Property4 { get; set; } = |new B[3]|(122) { new B(1), new B(2), new B(3) };
+        A[] Property5 => ||new B[0]|(123)|(124);
+        A[] Property6 => new B[3];
+        A[] Property7 => |new[]|(125) { new B(1), new B(2), new B(3) };
+        A[] Property8 => |Array.Empty<B>()|(126);
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Dead Code: Use collection expression
@@ -206,3 +253,37 @@ namespace TargetArray
 (90): ReSharper Suggestion: Use collection expression
 (91): ReSharper Suggestion: Use collection expression
 (92): ReSharper Suggestion: Use collection expression.
+(93): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(94):<overlapped> ReSharper Suggestion: Use 'Array<B>.Empty()'
+(95): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(96): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(97):<overlapped> ReSharper Suggestion: Use 'Array<B>.Empty()'
+(98): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(99): ReSharper Dead Code: Use collection expression
+(100): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(101): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(102): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(103):<overlapped> ReSharper Suggestion: Use 'Array<B>.Empty()'
+(104): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(105): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(106):<overlapped> ReSharper Suggestion: Use 'Array<B>.Empty()'
+(107): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(108): ReSharper Dead Code: Use collection expression
+(109): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(110): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(111): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(112):<overlapped> ReSharper Suggestion: Use 'Array<B>.Empty()'
+(113): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(114): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(115):<overlapped> ReSharper Suggestion: Use 'Array<B>.Empty()'
+(116): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(117): ReSharper Dead Code: Use collection expression
+(118): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(119): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(120):<overlapped> ReSharper Suggestion: Use 'Array<B>.Empty()'
+(121): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(122): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(123):<overlapped> ReSharper Suggestion: Use 'Array<B>.Empty()'
+(124): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(125): ReSharper Dead Code: Use collection expression
+(126): ReSharper Suggestion: Use collection expression ('A[]' will be used).

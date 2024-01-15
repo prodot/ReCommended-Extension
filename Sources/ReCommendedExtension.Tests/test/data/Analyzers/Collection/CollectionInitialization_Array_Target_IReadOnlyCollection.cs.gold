@@ -100,6 +100,53 @@ namespace TargetReadOnlyCollection
         IReadOnlyCollection<T> Property7 => |new[]|(79) { default, default(T), new() };
         IReadOnlyCollection<T> Property8 => |Array.Empty<T>()|(80);
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IReadOnlyCollection<A> field1 = |new B[]|(81) { };
+        IReadOnlyCollection<A> field2 = new B[] { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> field3 = ||new B[0]|(83) { }|(82);
+        IReadOnlyCollection<A> field4 = |new B[3]|(84) { new B(1), new B(2), new B(3) };
+        IReadOnlyCollection<A> field5 = ||new B[0]|(85)|(86);
+        IReadOnlyCollection<A> field6 = new B[3];
+        IReadOnlyCollection<A> field7 = |new[]|(87) { new B(1), new B(2), new B(3) };
+        IReadOnlyCollection<A> field8 = |Array.Empty<B>()|(88);
+
+        void Method(B a, B b, B c)
+        {
+            IReadOnlyCollection<A> var1 = |new B[]|(89) { };
+            IReadOnlyCollection<A> var2 = |new B[]|(90) { a, b, c };
+            IReadOnlyCollection<A> var3 = ||new B[0]|(92) { }|(91);
+            IReadOnlyCollection<A> var4 = |new B[3]|(93) { a, b, c };
+            IReadOnlyCollection<A> var5 = ||new B[0]|(94)|(95);
+            IReadOnlyCollection<A> var6 = new B[3];
+            IReadOnlyCollection<A> var7 = |new[]|(96) { a, b, c };
+            IReadOnlyCollection<A> var8 = |Array.Empty<B>()|(97);
+
+            Consumer(|new B[]|(98) { });
+            Consumer(|new B[]|(99) { a, b, c });
+            Consumer(||new B[0]|(101) { }|(100));
+            Consumer(|new B[3]|(102) { a, b, c });
+            Consumer(||new B[0]|(103)|(104));
+            Consumer(new B[3]);
+            Consumer(|new[]|(105) { a, b, c });
+            Consumer(|Array.Empty<B>()|(106));
+        }
+
+        void Consumer(IReadOnlyCollection<A> items) { }
+
+        IReadOnlyCollection<A> Property1 { get; } = |new B[]|(107) { };
+        IReadOnlyCollection<A> Property2 { get; } = new B[] { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> Property3 { get; set; } = ||new B[0]|(109) { }|(108);
+        IReadOnlyCollection<A> Property4 { get; set; } = |new B[3]|(110) { new B(1), new B(2), new B(3) };
+        IReadOnlyCollection<A> Property5 => ||new B[0]|(111)|(112);
+        IReadOnlyCollection<A> Property6 => new B[3];
+        IReadOnlyCollection<A> Property7 => |new[]|(113) { new B(1), new B(2), new B(3) };
+        IReadOnlyCollection<A> Property8 => |Array.Empty<B>()|(114);
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: Use collection expression.
@@ -183,3 +230,37 @@ namespace TargetReadOnlyCollection
 (78): ReSharper Suggestion: Use collection expression.
 (79): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
 (80): ReSharper Suggestion: Use collection expression.
+(81): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(82): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(83): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(84): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(85): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(86): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(87): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(88): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(89): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(90): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(91): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(92): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(93): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(94): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(95): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(96): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(97): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(98): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(99): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(100): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(101): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(102): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(103): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(104): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(105): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(106): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(107): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(108): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(109): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(110): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(111): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(112): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(113): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
+(114): ReSharper Suggestion: Use collection expression ('A[]' will be used).

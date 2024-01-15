@@ -100,4 +100,51 @@ namespace TargetEnumerable
         IEnumerable<T> Property7 => new[] { default, default(T), new() };
         IEnumerable<T> Property8 => Array.Empty<T>();
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IEnumerable<A> field1 = new B[] { };
+        IEnumerable<A> field2 = new B[] { new(1), new(2), new(3) };
+        IEnumerable<A> field3 = new B[0] { };
+        IEnumerable<A> field4 = new B[3] { new B(1), new B(2), new B(3) };
+        IEnumerable<A> field5 = new B[0];
+        IEnumerable<A> field6 = new B[3];
+        IEnumerable<A> field7 = new[] { new B(1), new B(2), new B(3) };
+        IEnumerable<A> field8 = Array.Empty<B>();
+
+        void Method(B a, B b, B c)
+        {
+            IEnumerable<A> var1 = new B[] { };
+            IEnumerable<A> var2 = new B[] { a, b, c };
+            IEnumerable<A> var3 = new B[0] { };
+            IEnumerable<A> var4 = new B[3] { a, b, c };
+            IEnumerable<A> var5 = new B[0];
+            IEnumerable<A> var6 = new B[3];
+            IEnumerable<A> var7 = new[] { a, b, c };
+            IEnumerable<A> var8 = Array.Empty<B>();
+
+            Consumer(new B[] { });
+            Consumer(new B[] { a, b, c });
+            Consumer(new B[0] { });
+            Consumer(new B[3] { a, b, c });
+            Consumer(new B[0]);
+            Consumer(new B[3]);
+            Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<B>());
+        }
+
+        void Consumer(IEnumerable<A> items) { }
+
+        IEnumerable<A> Property1 { get; } = new B[] { };
+        IEnumerable<A> Property2 { get; } = new B[] { new(1), new(2), new(3) };
+        IEnumerable<A> Property3 { get; set; } = new B[0] { };
+        IEnumerable<A> Property4 { get; set; } = new B[3] { new B(1), new B(2), new B(3) };
+        IEnumerable<A> Property5 => new B[0];
+        IEnumerable<A> Property6 => new B[3];
+        IEnumerable<A> Property7 => new[] { new B(1), new B(2), new B(3) };
+        IEnumerable<A> Property8 => Array.Empty<B>();
+    }
 }

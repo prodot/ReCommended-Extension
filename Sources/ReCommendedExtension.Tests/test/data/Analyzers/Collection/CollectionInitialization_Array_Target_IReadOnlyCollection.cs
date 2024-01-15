@@ -100,4 +100,51 @@ namespace TargetReadOnlyCollection
         IReadOnlyCollection<T> Property7 => new[] { default, default(T), new() };
         IReadOnlyCollection<T> Property8 => Array.Empty<T>();
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IReadOnlyCollection<A> field1 = new B[] { };
+        IReadOnlyCollection<A> field2 = new B[] { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> field3 = new B[0] { };
+        IReadOnlyCollection<A> field4 = new B[3] { new B(1), new B(2), new B(3) };
+        IReadOnlyCollection<A> field5 = new B[0];
+        IReadOnlyCollection<A> field6 = new B[3];
+        IReadOnlyCollection<A> field7 = new[] { new B(1), new B(2), new B(3) };
+        IReadOnlyCollection<A> field8 = Array.Empty<B>();
+
+        void Method(B a, B b, B c)
+        {
+            IReadOnlyCollection<A> var1 = new B[] { };
+            IReadOnlyCollection<A> var2 = new B[] { a, b, c };
+            IReadOnlyCollection<A> var3 = new B[0] { };
+            IReadOnlyCollection<A> var4 = new B[3] { a, b, c };
+            IReadOnlyCollection<A> var5 = new B[0];
+            IReadOnlyCollection<A> var6 = new B[3];
+            IReadOnlyCollection<A> var7 = new[] { a, b, c };
+            IReadOnlyCollection<A> var8 = Array.Empty<B>();
+
+            Consumer(new B[] { });
+            Consumer(new B[] { a, b, c });
+            Consumer(new B[0] { });
+            Consumer(new B[3] { a, b, c });
+            Consumer(new B[0]);
+            Consumer(new B[3]);
+            Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<B>());
+        }
+
+        void Consumer(IReadOnlyCollection<A> items) { }
+
+        IReadOnlyCollection<A> Property1 { get; } = new B[] { };
+        IReadOnlyCollection<A> Property2 { get; } = new B[] { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> Property3 { get; set; } = new B[0] { };
+        IReadOnlyCollection<A> Property4 { get; set; } = new B[3] { new B(1), new B(2), new B(3) };
+        IReadOnlyCollection<A> Property5 => new B[0];
+        IReadOnlyCollection<A> Property6 => new B[3];
+        IReadOnlyCollection<A> Property7 => new[] { new B(1), new B(2), new B(3) };
+        IReadOnlyCollection<A> Property8 => Array.Empty<B>();
+    }
 }

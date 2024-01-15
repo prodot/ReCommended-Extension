@@ -100,4 +100,51 @@ namespace TargetReadOnlyList
         IReadOnlyList<T> Property7 => new[] { default, default(T), new() };
         IReadOnlyList<T> Property8 => Array.Empty<T>();
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IReadOnlyList<A> field1 = new B[] { };
+        IReadOnlyList<A> field2 = new B[] { new(1), new(2), new(3) };
+        IReadOnlyList<A> field3 = new B[0] { };
+        IReadOnlyList<A> field4 = new B[3] { new B(1), new B(2), new B(3) };
+        IReadOnlyList<A> field5 = new B[0];
+        IReadOnlyList<A> field6 = new B[3];
+        IReadOnlyList<A> field7 = new[] { new B(1), new B(2), new B(3) };
+        IReadOnlyList<A> field8 = Array.Empty<B>();
+
+        void Method(B a, B b, B c)
+        {
+            IReadOnlyList<A> var1 = new B[] { };
+            IReadOnlyList<A> var2 = new B[] { a, b, c };
+            IReadOnlyList<A> var3 = new B[0] { };
+            IReadOnlyList<A> var4 = new B[3] { a, b, c };
+            IReadOnlyList<A> var5 = new B[0];
+            IReadOnlyList<A> var6 = new B[3];
+            IReadOnlyList<A> var7 = new[] { a, b, c };
+            IReadOnlyList<A> var8 = Array.Empty<B>();
+
+            Consumer(new B[] { });
+            Consumer(new B[] { a, b, c });
+            Consumer(new B[0] { });
+            Consumer(new B[3] { a, b, c });
+            Consumer(new B[0]);
+            Consumer(new B[3]);
+            Consumer(new[] { a, b, c });
+            Consumer(Array.Empty<B>());
+        }
+
+        void Consumer(IReadOnlyList<A> items) { }
+
+        IReadOnlyList<A> Property1 { get; } = new B[] { };
+        IReadOnlyList<A> Property2 { get; } = new B[] { new(1), new(2), new(3) };
+        IReadOnlyList<A> Property3 { get; set; } = new B[0] { };
+        IReadOnlyList<A> Property4 { get; set; } = new B[3] { new B(1), new B(2), new B(3) };
+        IReadOnlyList<A> Property5 => new B[0];
+        IReadOnlyList<A> Property6 => new B[3];
+        IReadOnlyList<A> Property7 => new[] { new B(1), new B(2), new B(3) };
+        IReadOnlyList<A> Property8 => Array.Empty<B>();
+    }
 }

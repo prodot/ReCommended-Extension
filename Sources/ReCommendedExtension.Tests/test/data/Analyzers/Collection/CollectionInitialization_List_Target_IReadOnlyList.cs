@@ -74,4 +74,39 @@ namespace TargetReadOnlyList
         IReadOnlyList<T> Property03 { get; set; } = new List<T>(8);
         IReadOnlyList<T> Property04 { get; set; } = new List<T>(8) { default, default(T), new() };
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IReadOnlyList<A> field01 = new List<B>();
+        IReadOnlyList<A> field02 = new List<B>() { new(1), new(2), new(3) };
+        IReadOnlyList<A> field03 = new List<B>(8);
+        IReadOnlyList<A> field04 = new List<B>(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq)
+        {
+            IReadOnlyList<A> var01 = new List<B>();
+            IReadOnlyList<A> var02 = new List<B> { a, b, c };
+            IReadOnlyList<A> var03 = new List<B>(8);
+            IReadOnlyList<A> var04 = new List<B>(8) { a, b, c };
+            IReadOnlyList<A> var05 = new List<B>(seq);
+            IReadOnlyList<A> var06 = new List<B>(seq) { a, b, c };
+
+            Consumer(new List<B>());
+            Consumer(new List<B> { a, b, c });
+            Consumer(new List<B>(8));
+            Consumer(new List<B>(8) { a, b, c });
+            Consumer(new List<B>(seq));
+            Consumer(new List<B>(seq) { a, b, c });
+        }
+
+        void Consumer(IReadOnlyList<A> items) { }
+
+        IReadOnlyList<A> Property01 { get; } = new List<B>();
+        IReadOnlyList<A> Property02 { get; } = new List<B> { new(1), new(2), new(3) };
+        IReadOnlyList<A> Property03 { get; set; } = new List<B>(8);
+        IReadOnlyList<A> Property04 { get; set; } = new List<B>(8) { new B(1), new B(2), new B(3) };
+    }
 }

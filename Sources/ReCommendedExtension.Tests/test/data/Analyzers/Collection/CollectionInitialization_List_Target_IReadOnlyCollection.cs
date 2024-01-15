@@ -74,4 +74,39 @@ namespace TargetReadOnlyCollection
         IReadOnlyCollection<T> Property03 { get; set; } = new List<T>(8);
         IReadOnlyCollection<T> Property04 { get; set; } = new List<T>(8) { default, default(T), new() };
     }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IReadOnlyCollection<A> field01 = new List<B>();
+        IReadOnlyCollection<A> field02 = new List<B>() { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> field03 = new List<B>(8);
+        IReadOnlyCollection<A> field04 = new List<B>(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq)
+        {
+            IReadOnlyCollection<A> var01 = new List<B>();
+            IReadOnlyCollection<A> var02 = new List<B> { a, b, c };
+            IReadOnlyCollection<A> var03 = new List<B>(8);
+            IReadOnlyCollection<A> var04 = new List<B>(8) { a, b, c };
+            IReadOnlyCollection<A> var05 = new List<B>(seq);
+            IReadOnlyCollection<A> var06 = new List<B>(seq) { a, b, c };
+
+            Consumer(new List<B>());
+            Consumer(new List<B> { a, b, c });
+            Consumer(new List<B>(8));
+            Consumer(new List<B>(8) { a, b, c });
+            Consumer(new List<B>(seq));
+            Consumer(new List<B>(seq) { a, b, c });
+        }
+
+        void Consumer(IReadOnlyCollection<A> items) { }
+
+        IReadOnlyCollection<A> Property01 { get; } = new List<B>();
+        IReadOnlyCollection<A> Property02 { get; } = new List<B> { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> Property03 { get; set; } = new List<B>(8);
+        IReadOnlyCollection<A> Property04 { get; set; } = new List<B>(8) { new B(1), new B(2), new B(3) };
+    }
 }
