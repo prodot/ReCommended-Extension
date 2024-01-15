@@ -522,7 +522,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                                     : "Use collection expression.",
                                 arrayCreationExpression,
                                 null,
-                                null,
+                                arrayCreationExpression.ArrayInitializer?.InitializerElements,
                                 methodReferenceToSetInferredTypeArguments));
                     }
                 }
