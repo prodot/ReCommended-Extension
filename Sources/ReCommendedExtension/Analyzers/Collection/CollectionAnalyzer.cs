@@ -571,21 +571,25 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         if (objectCreationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120
             && TryGetTargetType(objectCreationExpression) is { } targetType)
         {
-            var type = objectCreationExpression.Type();
-
-            if (type.IsGenericList())
+            switch (objectCreationExpression.Type())
             {
-                AnalyzeListCreationExpression(consumer, objectCreationExpression, type, targetType);
-            }
+                case var type when type.IsGenericList():
+                    AnalyzeListCreationExpression(consumer, objectCreationExpression, type, targetType);
+                    break;
 
-            if (type.IsClrType(PredefinedType.HASHSET_FQN))
-            {
-                AnalyzeHashSetCreationExpression(consumer, objectCreationExpression, type, targetType);
-            }
+                case var type when type.IsClrType(PredefinedType.HASHSET_FQN):
+                    AnalyzeHashSetCreationExpression(consumer, objectCreationExpression, type, targetType);
+                    break;
 
-            if (type.IsClrType(PredefinedType.GENERIC_DICTIONARY_FQN))
-            {
-                AnalyzeDictionaryCreationExpression(consumer, objectCreationExpression, type, targetType);
+                case var type when type.IsClrType(PredefinedType.GENERIC_DICTIONARY_FQN):
+                    AnalyzeDictionaryCreationExpression(consumer, objectCreationExpression, type, targetType);
+                    break;
+
+                case var type when type.GetTypeElement<ITypeElement>() is { } typeElement
+                    && typeElement.IsDescendantOf(typeElement.Module.GetPredefinedType().GenericIEnumerable.GetTypeElement())
+                    && typeElement.CanInstantiateWithPublicDefaultConstructor():
+                    AnalyzeOtherCollectionCreationExpression(consumer, objectCreationExpression, type, targetType);
+                    break;
             }
         }
     }
@@ -812,6 +816,34 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 new UseTargetTypedCollectionExpressionSuggestion(
                     "Use collection expression.",
                     dictionaryCreationExpression,
+                    null,
+                    null,
+                    methodReferenceToSetInferredTypeArguments));
+        }
+    }
+
+    static void AnalyzeOtherCollectionCreationExpression(
+        IHighlightingConsumer consumer,
+        IObjectCreationExpression collectionCreationExpression,
+        IType type,
+        IType targetType)
+    {
+        var isPublicDefaultCtorUsed = collectionCreationExpression is { Arguments: [], Initializer: not { InitializerElements: [_, ..] } };
+
+        var methodReferenceToSetInferredTypeArguments =
+            isPublicDefaultCtorUsed ? TryGetMethodReferenceToSetInferredTypeArguments(collectionCreationExpression) : null;
+
+        [Pure]
+        bool IsTargetTypedToItsOwnType() => TypeEqualityComparer.Default.Equals(targetType, type);
+
+        // target-typed to its own type: cases not covered by R#
+        // - public default constructor used
+        if (isPublicDefaultCtorUsed && IsTargetTypedToItsOwnType())
+        {
+            consumer.AddHighlighting(
+                new UseTargetTypedCollectionExpressionSuggestion(
+                    "Use collection expression.",
+                    collectionCreationExpression,
                     null,
                     null,
                     methodReferenceToSetInferredTypeArguments));
