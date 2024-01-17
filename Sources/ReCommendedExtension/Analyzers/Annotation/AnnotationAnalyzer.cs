@@ -1442,30 +1442,6 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         }
     }
 
-    static void AnalyzeMissingNotNullWhenAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
-    {
-        if (attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled()
-            && attributesOwnerDeclaration is IParameterDeclaration { DeclaredElement.Kind: ParameterKind.VALUE } parameterDeclaration
-            && !parameterDeclaration.IsInsideClosure()
-            && parameterDeclaration.GetContainingTypeMemberDeclarationIgnoringClosures() is IMethodDeclaration
-            {
-                DeclaredName: nameof(IEquatable<int>.Equals), TypeParameterDeclarations: [], ParameterDeclarations: [var p], DeclaredElement: { },
-            } methodDeclaration
-            && p == parameterDeclaration
-            && methodDeclaration.DeclaredElement.ReturnType.IsBool()
-            && methodDeclaration.GetContainingTypeDeclaration() is IClassDeclaration { DeclaredElement: { } } classDeclaration
-            && parameterDeclaration.Type.Equals(TypeFactory.CreateType(classDeclaration.DeclaredElement))
-            && attributesOwnerDeclaration.Attributes.All(a => !a.GetAttributeType().IsClrType(ClrTypeNames.NotNullWhenAttribute))
-            && ClrTypeNames.NotNullWhenAttribute.TryGetTypeElement(attributesOwnerDeclaration.GetPsiModule()) is { })
-        {
-            // we do not verify if the type implements the IEquatable<T> interface: in any case, the parameter should not be null when such a method
-            // returns true
-
-            consumer.AddHighlighting(
-                new MissingAnnotationWarning(attributesOwnerDeclaration, $"Annotate the parameter with [{nameof(NotNullWhenAttribute).WithoutSuffix()}(true)]."));
-        }
-    }
-
     static void AnalyzeConditional(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
         var conditions = null as List<string>;
@@ -1798,9 +1774,6 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
         // [AttributeUsage] annotations
         AnalyzeMissingAttributeUsageAnnotations(consumer, element);
-
-        // [NotNullWhen(true)] annotations
-        AnalyzeMissingNotNullWhenAnnotations(consumer, element);
 
         // attributes annotated as [Conditional]
         AnalyzeConditional(consumer, element);

@@ -38,8 +38,6 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName ExcludeFromCodeCoverageAttribute = GetClrTypeName<ExcludeFromCodeCoverageAttribute>();
 
-    public static readonly IClrTypeName NotNullWhenAttribute = GetClrTypeName<NotNullWhenAttribute>();
-
     public static readonly IClrTypeName NotSupportedException = GetClrTypeName<NotSupportedException>();
 
     public static readonly IClrTypeName KeyNotFoundException = GetClrTypeName<KeyNotFoundException>();
