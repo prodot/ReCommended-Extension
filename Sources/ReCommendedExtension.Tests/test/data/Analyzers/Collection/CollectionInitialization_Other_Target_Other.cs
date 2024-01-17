@@ -18,6 +18,15 @@ namespace TargetDictionary
         IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
     }
 
+    class CustomCollectionWithAdd<T> : IEnumerable<T>
+    {
+        public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
+
+        IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+
+        public void Add(T item) { }
+    }
+
     public class NonGenericClass
     {
         Stack<int> field01 = new Stack<int>();
@@ -32,6 +41,8 @@ namespace TargetDictionary
         CustomCollection field14 = new();
         CustomCollection<int> field15 = new CustomCollection<int>();
         CustomCollection<int> field16 = new();
+        CustomCollectionWithAdd<int> field17 = new CustomCollectionWithAdd<int>();
+        CustomCollectionWithAdd<int> field18 = new();
 
         void Method(IEnumerable<int> seq)
         {
@@ -51,6 +62,8 @@ namespace TargetDictionary
             CustomCollection var14 = new();
             CustomCollection<int> var15 = new CustomCollection<int>();
             CustomCollection<int> var16 = new();
+            CustomCollectionWithAdd<int> var17 = new CustomCollectionWithAdd<int>();
+            CustomCollectionWithAdd<int> var18 = new();
 
             Consumer1(new Stack<int>());
             Consumer1(new Stack<int>(3));
@@ -68,6 +81,8 @@ namespace TargetDictionary
             Consumer3(new());
             Consumer4(new CustomCollection<int>());
             Consumer4(new());
+            Consumer5(new CustomCollectionWithAdd<int>());
+            Consumer5(new());
 
             ConsumerGeneric1(new Stack<int>());
             ConsumerGeneric1(new Stack<int>(3));
@@ -76,16 +91,19 @@ namespace TargetDictionary
             ConsumerGeneric2(new Queue<int>(3));
             ConsumerGeneric2(new Queue<int>(seq));
             ConsumerGeneric4(new CustomCollection<int>());
+            ConsumerGeneric5(new CustomCollectionWithAdd<int>());
         }
 
         void Consumer1(Stack<int> items) { }
         void Consumer2(Queue<int> items) { }
         void Consumer3(CustomCollection items) { }
         void Consumer4(CustomCollection<int> items) { }
+        void Consumer5(CustomCollectionWithAdd<int> items) { }
 
         void ConsumerGeneric1<T>(Stack<T> items) { }
         void ConsumerGeneric2<T>(Queue<T> items) { }
         void ConsumerGeneric4<T>(CustomCollection<T> items) { }
+        void ConsumerGeneric5<T>(CustomCollectionWithAdd<T> items) { }
 
         Stack<int> Property01 { get; } = new Stack<int>();
         Stack<int> Property02 { get; } = new Stack<int>(3);
@@ -99,6 +117,8 @@ namespace TargetDictionary
         CustomCollection Property14 => new();
         CustomCollection<int> Property15 => new CustomCollection<int>();
         CustomCollection<int> Property16 => new();
+        CustomCollectionWithAdd<int> Property17 => new CustomCollectionWithAdd<int>();
+        CustomCollectionWithAdd<int> Property18 => new();
     }
 
     public class GenericClass<T>
@@ -113,6 +133,8 @@ namespace TargetDictionary
         Queue<T> field11 = new(3);
         CustomCollection<T> field15 = new CustomCollection<T>();
         CustomCollection<T> field16 = new();
+        CustomCollectionWithAdd<T> field17 = new CustomCollectionWithAdd<T>();
+        CustomCollectionWithAdd<T> field18 = new();
 
         void Method(IEnumerable<T> seq)
         {
@@ -130,6 +152,8 @@ namespace TargetDictionary
             Queue<T> var12 = new(seq);
             CustomCollection<T> var15 = new CustomCollection<T>();
             CustomCollection<T> var16 = new();
+            CustomCollectionWithAdd<T> var17 = new CustomCollectionWithAdd<T>();
+            CustomCollectionWithAdd<T> var18 = new();
 
             Consumer1(new Stack<T>());
             Consumer1(new Stack<T>(3));
@@ -145,11 +169,14 @@ namespace TargetDictionary
             Consumer2(new(seq));
             Consumer4(new CustomCollection<T>());
             Consumer4(new());
+            Consumer5(new CustomCollectionWithAdd<T>());
+            Consumer5(new());
         }
 
         void Consumer1(Stack<T> items) { }
         void Consumer2(Queue<T> items) { }
         void Consumer4(CustomCollection<T> items) { }
+        void Consumer5(CustomCollectionWithAdd<T> items) { }
 
         Stack<T> Property01 { get; } = new Stack<T>();
         Stack<T> Property02 { get; } = new Stack<T>(3);
@@ -161,5 +188,7 @@ namespace TargetDictionary
         Queue<T> Property11 { get; set; } = new(3);
         CustomCollection<T> Property15 => new CustomCollection<T>();
         CustomCollection<T> Property16 => new();
+        CustomCollectionWithAdd<T> Property17 => new CustomCollectionWithAdd<T>();
+        CustomCollectionWithAdd<T> Property18 => new();
     }
 }

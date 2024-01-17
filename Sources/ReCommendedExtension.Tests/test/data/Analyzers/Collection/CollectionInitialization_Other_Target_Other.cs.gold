@@ -18,6 +18,15 @@ namespace TargetDictionary
         IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
     }
 
+    class CustomCollectionWithAdd<T> : IEnumerable<T>
+    {
+        public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
+
+        IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+
+        public void Add(T item) { }
+    }
+
     public class NonGenericClass
     {
         Stack<int> field01 = |new|(0) Stack<int>();
@@ -32,135 +41,155 @@ namespace TargetDictionary
         CustomCollection field14 = |new|(5)();
         CustomCollection<int> field15 = |new|(6) CustomCollection<int>();
         CustomCollection<int> field16 = |new|(7)();
+        CustomCollectionWithAdd<int> field17 = |new|(8) CustomCollectionWithAdd<int>();
+        CustomCollectionWithAdd<int> field18 = |new|(9)();
 
         void Method(IEnumerable<int> seq)
         {
-            Stack<int> var01 = |new|(8) Stack<int>();
+            Stack<int> var01 = |new|(10) Stack<int>();
             Stack<int> var02 = new Stack<int>(3);
             Stack<int> var03 = new Stack<int>(seq);
-            Stack<int> var04 = |new|(9)();
+            Stack<int> var04 = |new|(11)();
             Stack<int> var05 = new(3);
             Stack<int> var06 = new(seq);
-            Queue<int> var07 = |new|(10) Queue<int>();
+            Queue<int> var07 = |new|(12) Queue<int>();
             Queue<int> var08 = new Queue<int>(3);
             Queue<int> var09 = new Queue<int>(seq);
-            Queue<int> var10 = |new|(11)();
+            Queue<int> var10 = |new|(13)();
             Queue<int> var11 = new(3);
             Queue<int> var12 = new(seq);
-            CustomCollection var13 = |new|(12) CustomCollection();
-            CustomCollection var14 = |new|(13)();
-            CustomCollection<int> var15 = |new|(14) CustomCollection<int>();
-            CustomCollection<int> var16 = |new|(15)();
+            CustomCollection var13 = |new|(14) CustomCollection();
+            CustomCollection var14 = |new|(15)();
+            CustomCollection<int> var15 = |new|(16) CustomCollection<int>();
+            CustomCollection<int> var16 = |new|(17)();
+            CustomCollectionWithAdd<int> var17 = |new|(18) CustomCollectionWithAdd<int>();
+            CustomCollectionWithAdd<int> var18 = |new|(19)();
 
-            Consumer1(|new|(16) Stack<int>());
+            Consumer1(|new|(20) Stack<int>());
             Consumer1(new Stack<int>(3));
             Consumer1(new Stack<int>(seq));
-            Consumer1(|new|(17)());
+            Consumer1(|new|(21)());
             Consumer1(new(3));
             Consumer1(new(seq));
-            Consumer2(|new|(18) Queue<int>());
+            Consumer2(|new|(22) Queue<int>());
             Consumer2(new Queue<int>(3));
             Consumer2(new Queue<int>(seq));
-            Consumer2(|new|(19)());
+            Consumer2(|new|(23)());
             Consumer2(new(3));
             Consumer2(new(seq));
-            Consumer3(|new|(20) CustomCollection());
-            Consumer3(|new|(21)());
-            Consumer4(|new|(22) CustomCollection<int>());
-            Consumer4(|new|(23)());
+            Consumer3(|new|(24) CustomCollection());
+            Consumer3(|new|(25)());
+            Consumer4(|new|(26) CustomCollection<int>());
+            Consumer4(|new|(27)());
+            Consumer5(|new|(28) CustomCollectionWithAdd<int>());
+            Consumer5(|new|(29)());
 
-            ConsumerGeneric1(|new|(24) Stack<int>());
+            ConsumerGeneric1(|new|(30) Stack<int>());
             ConsumerGeneric1(new Stack<int>(3));
             ConsumerGeneric1(new Stack<int>(seq));
-            ConsumerGeneric2<int>(|new|(25) Queue<int>());
+            ConsumerGeneric2<int>(|new|(31) Queue<int>());
             ConsumerGeneric2(new Queue<int>(3));
             ConsumerGeneric2(new Queue<int>(seq));
-            ConsumerGeneric4(|new|(26) CustomCollection<int>());
+            ConsumerGeneric4(|new|(32) CustomCollection<int>());
+            ConsumerGeneric5(|new|(33) CustomCollectionWithAdd<int>());
         }
 
         void Consumer1(Stack<int> items) { }
         void Consumer2(Queue<int> items) { }
         void Consumer3(CustomCollection items) { }
         void Consumer4(CustomCollection<int> items) { }
+        void Consumer5(CustomCollectionWithAdd<int> items) { }
 
         void ConsumerGeneric1<T>(Stack<T> items) { }
         void ConsumerGeneric2<T>(Queue<T> items) { }
         void ConsumerGeneric4<T>(CustomCollection<T> items) { }
+        void ConsumerGeneric5<T>(CustomCollectionWithAdd<T> items) { }
 
-        Stack<int> Property01 { get; } = |new|(27) Stack<int>();
+        Stack<int> Property01 { get; } = |new|(34) Stack<int>();
         Stack<int> Property02 { get; } = new Stack<int>(3);
-        Stack<int> Property04 { get; } = |new|(28)();
+        Stack<int> Property04 { get; } = |new|(35)();
         Stack<int> Property05 { get; } = new(3);
-        Queue<int> Property07 { get; set; } = |new|(29) Queue<int>();
+        Queue<int> Property07 { get; set; } = |new|(36) Queue<int>();
         Queue<int> Property08 { get; set; } = new Queue<int>(3);
-        Queue<int> Property10 { get; set; } = |new|(30)();
+        Queue<int> Property10 { get; set; } = |new|(37)();
         Queue<int> Property11 { get; set; } = new(3);
-        CustomCollection Property13 => |new|(31) CustomCollection();
-        CustomCollection Property14 => |new|(32)();
-        CustomCollection<int> Property15 => |new|(33) CustomCollection<int>();
-        CustomCollection<int> Property16 => |new|(34)();
+        CustomCollection Property13 => |new|(38) CustomCollection();
+        CustomCollection Property14 => |new|(39)();
+        CustomCollection<int> Property15 => |new|(40) CustomCollection<int>();
+        CustomCollection<int> Property16 => |new|(41)();
+        CustomCollectionWithAdd<int> Property17 => |new|(42) CustomCollectionWithAdd<int>();
+        CustomCollectionWithAdd<int> Property18 => |new|(43)();
     }
 
     public class GenericClass<T>
     {
-        Stack<T> field01 = |new|(35) Stack<T>();
+        Stack<T> field01 = |new|(44) Stack<T>();
         Stack<T> field02 = new Stack<T>(3);
-        Stack<T> field04 = |new|(36)();
+        Stack<T> field04 = |new|(45)();
         Stack<T> field05 = new(3);
-        Queue<T> field07 = |new|(37) Queue<T>();
+        Queue<T> field07 = |new|(46) Queue<T>();
         Queue<T> field08 = new Queue<T>(3);
-        Queue<T> field10 = |new|(38)();
+        Queue<T> field10 = |new|(47)();
         Queue<T> field11 = new(3);
-        CustomCollection<T> field15 = |new|(39) CustomCollection<T>();
-        CustomCollection<T> field16 = |new|(40)();
+        CustomCollection<T> field15 = |new|(48) CustomCollection<T>();
+        CustomCollection<T> field16 = |new|(49)();
+        CustomCollectionWithAdd<T> field17 = |new|(50) CustomCollectionWithAdd<T>();
+        CustomCollectionWithAdd<T> field18 = |new|(51)();
 
         void Method(IEnumerable<T> seq)
         {
-            Stack<T> var01 = |new|(41) Stack<T>();
+            Stack<T> var01 = |new|(52) Stack<T>();
             Stack<T> var02 = new Stack<T>(3);
             Stack<T> var03 = new Stack<T>(seq);
-            Stack<T> var04 = |new|(42)();
+            Stack<T> var04 = |new|(53)();
             Stack<T> var05 = new(3);
             Stack<T> var06 = new(seq);
-            Queue<T> var07 = |new|(43) Queue<T>();
+            Queue<T> var07 = |new|(54) Queue<T>();
             Queue<T> var08 = new Queue<T>(3);
             Queue<T> var09 = new Queue<T>(seq);
-            Queue<T> var10 = |new|(44)();
+            Queue<T> var10 = |new|(55)();
             Queue<T> var11 = new(3);
             Queue<T> var12 = new(seq);
-            CustomCollection<T> var15 = |new|(45) CustomCollection<T>();
-            CustomCollection<T> var16 = |new|(46)();
+            CustomCollection<T> var15 = |new|(56) CustomCollection<T>();
+            CustomCollection<T> var16 = |new|(57)();
+            CustomCollectionWithAdd<T> var17 = |new|(58) CustomCollectionWithAdd<T>();
+            CustomCollectionWithAdd<T> var18 = |new|(59)();
 
-            Consumer1(|new|(47) Stack<T>());
+            Consumer1(|new|(60) Stack<T>());
             Consumer1(new Stack<T>(3));
             Consumer1(new Stack<T>(seq));
-            Consumer1(|new|(48)());
+            Consumer1(|new|(61)());
             Consumer1(new(3));
             Consumer1(new(seq));
-            Consumer2(|new|(49) Queue<T>());
+            Consumer2(|new|(62) Queue<T>());
             Consumer2(new Queue<T>(3));
             Consumer2(new Queue<T>(seq));
-            Consumer2(|new|(50)());
+            Consumer2(|new|(63)());
             Consumer2(new(3));
             Consumer2(new(seq));
-            Consumer4(|new|(51) CustomCollection<T>());
-            Consumer4(|new|(52)());
+            Consumer4(|new|(64) CustomCollection<T>());
+            Consumer4(|new|(65)());
+            Consumer5(|new|(66) CustomCollectionWithAdd<T>());
+            Consumer5(|new|(67)());
         }
 
         void Consumer1(Stack<T> items) { }
         void Consumer2(Queue<T> items) { }
         void Consumer4(CustomCollection<T> items) { }
+        void Consumer5(CustomCollectionWithAdd<T> items) { }
 
-        Stack<T> Property01 { get; } = |new|(53) Stack<T>();
+        Stack<T> Property01 { get; } = |new|(68) Stack<T>();
         Stack<T> Property02 { get; } = new Stack<T>(3);
-        Stack<T> Property04 { get; } = |new|(54)();
+        Stack<T> Property04 { get; } = |new|(69)();
         Stack<T> Property05 { get; } = new(3);
-        Queue<T> Property07 { get; set; } = |new|(55) Queue<T>();
+        Queue<T> Property07 { get; set; } = |new|(70) Queue<T>();
         Queue<T> Property08 { get; set; } = new Queue<T>(3);
-        Queue<T> Property10 { get; set; } = |new|(56)();
+        Queue<T> Property10 { get; set; } = |new|(71)();
         Queue<T> Property11 { get; set; } = new(3);
-        CustomCollection<T> Property15 => |new|(57) CustomCollection<T>();
-        CustomCollection<T> Property16 => |new|(58)();
+        CustomCollection<T> Property15 => |new|(72) CustomCollection<T>();
+        CustomCollection<T> Property16 => |new|(73)();
+        CustomCollectionWithAdd<T> Property17 => |new|(74) CustomCollectionWithAdd<T>();
+        CustomCollectionWithAdd<T> Property18 => |new|(75)();
     }
 }
 ---------------------------------------------------------
@@ -172,8 +201,8 @@ namespace TargetDictionary
 (5): ReSharper Suggestion: Use collection expression.
 (6): ReSharper Suggestion: Use collection expression.
 (7): ReSharper Suggestion: Use collection expression.
-(8): ReSharper Suggestion: Use collection expression.
-(9): ReSharper Suggestion: Use collection expression.
+(8): ReSharper Hint: Use collection expression
+(9): ReSharper Hint: Use collection expression
 (10): ReSharper Suggestion: Use collection expression.
 (11): ReSharper Suggestion: Use collection expression.
 (12): ReSharper Suggestion: Use collection expression.
@@ -182,8 +211,8 @@ namespace TargetDictionary
 (15): ReSharper Suggestion: Use collection expression.
 (16): ReSharper Suggestion: Use collection expression.
 (17): ReSharper Suggestion: Use collection expression.
-(18): ReSharper Suggestion: Use collection expression.
-(19): ReSharper Suggestion: Use collection expression.
+(18): ReSharper Hint: Use collection expression
+(19): ReSharper Hint: Use collection expression
 (20): ReSharper Suggestion: Use collection expression.
 (21): ReSharper Suggestion: Use collection expression.
 (22): ReSharper Suggestion: Use collection expression.
@@ -192,8 +221,8 @@ namespace TargetDictionary
 (25): ReSharper Suggestion: Use collection expression.
 (26): ReSharper Suggestion: Use collection expression.
 (27): ReSharper Suggestion: Use collection expression.
-(28): ReSharper Suggestion: Use collection expression.
-(29): ReSharper Suggestion: Use collection expression.
+(28): ReSharper Hint: Use collection expression
+(29): ReSharper Hint: Use collection expression
 (30): ReSharper Suggestion: Use collection expression.
 (31): ReSharper Suggestion: Use collection expression.
 (32): ReSharper Suggestion: Use collection expression.
@@ -206,20 +235,37 @@ namespace TargetDictionary
 (39): ReSharper Suggestion: Use collection expression.
 (40): ReSharper Suggestion: Use collection expression.
 (41): ReSharper Suggestion: Use collection expression.
-(42): ReSharper Suggestion: Use collection expression.
-(43): ReSharper Suggestion: Use collection expression.
+(42): ReSharper Hint: Use collection expression
+(43): ReSharper Hint: Use collection expression
 (44): ReSharper Suggestion: Use collection expression.
 (45): ReSharper Suggestion: Use collection expression.
 (46): ReSharper Suggestion: Use collection expression.
 (47): ReSharper Suggestion: Use collection expression.
 (48): ReSharper Suggestion: Use collection expression.
 (49): ReSharper Suggestion: Use collection expression.
-(50): ReSharper Suggestion: Use collection expression.
-(51): ReSharper Suggestion: Use collection expression.
+(50): ReSharper Hint: Use collection expression
+(51): ReSharper Hint: Use collection expression
 (52): ReSharper Suggestion: Use collection expression.
 (53): ReSharper Suggestion: Use collection expression.
 (54): ReSharper Suggestion: Use collection expression.
 (55): ReSharper Suggestion: Use collection expression.
 (56): ReSharper Suggestion: Use collection expression.
 (57): ReSharper Suggestion: Use collection expression.
-(58): ReSharper Suggestion: Use collection expression.
+(58): ReSharper Hint: Use collection expression
+(59): ReSharper Hint: Use collection expression
+(60): ReSharper Suggestion: Use collection expression.
+(61): ReSharper Suggestion: Use collection expression.
+(62): ReSharper Suggestion: Use collection expression.
+(63): ReSharper Suggestion: Use collection expression.
+(64): ReSharper Suggestion: Use collection expression.
+(65): ReSharper Suggestion: Use collection expression.
+(66): ReSharper Hint: Use collection expression
+(67): ReSharper Hint: Use collection expression
+(68): ReSharper Suggestion: Use collection expression.
+(69): ReSharper Suggestion: Use collection expression.
+(70): ReSharper Suggestion: Use collection expression.
+(71): ReSharper Suggestion: Use collection expression.
+(72): ReSharper Suggestion: Use collection expression.
+(73): ReSharper Suggestion: Use collection expression.
+(74): ReSharper Hint: Use collection expression
+(75): ReSharper Hint: Use collection expression

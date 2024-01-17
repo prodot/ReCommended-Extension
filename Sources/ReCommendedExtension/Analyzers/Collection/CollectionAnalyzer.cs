@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
@@ -57,6 +58,33 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
         => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType && arrayType.Methods.Any(IsEmptyMethod);
+
+    [Pure]
+    static bool HasAccessibleAddMethod(IAccessContext accessContext, ITypeElement typeElement, bool checkBaseClasses = true)
+    {
+        if (typeElement.IsObjectClass() || typeElement is IInterface)
+        {
+            return false;
+        }
+
+        foreach (var method in typeElement.Methods)
+        {
+            if (method is { ShortName: "Add", TypeParameters: [] } && AccessUtil.IsSymbolAccessible(method, accessContext))
+
+            {
+                return true;
+            }
+        }
+
+        if (checkBaseClasses)
+        {
+            return typeElement.GetAllSuperTypeElements().Any(baseClass => HasAccessibleAddMethod(accessContext, baseClass, false));
+        }
+
+        // todo: find accessible "Add" extension methods
+
+        return false;
+    }
 
     [Conditional("DEBUG")]
     static void AssertListConstructors(IPsiModule psiModule)
@@ -588,7 +616,12 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 case var type when type.GetTypeElement<ITypeElement>() is { } typeElement
                     && typeElement.IsDescendantOf(typeElement.Module.GetPredefinedType().GenericIEnumerable.GetTypeElement())
                     && typeElement.CanInstantiateWithPublicDefaultConstructor():
-                    AnalyzeOtherCollectionCreationExpression(consumer, objectCreationExpression, type, targetType);
+                    AnalyzeOtherCollectionCreationExpression(
+                        consumer,
+                        objectCreationExpression,
+                        type,
+                        HasAccessibleAddMethod(new ElementAccessContext(objectCreationExpression), typeElement),
+                        targetType);
                     break;
             }
         }
@@ -739,7 +772,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         }
 
         // target-typed to HashSet<T>: cases not covered by R#
-        // - empty hash set without a specified capacity or comparer passed to a method, which requires setting inferred type arguments
+        // - empty hash set without a specified capacity or comparer, or passed to a method, which requires setting inferred type arguments
         if (isEmptyHashSet
             && (arguments & (HashSetArguments.Capacity | HashSetArguments.Comparer)) == 0
             && methodReferenceToSetInferredTypeArguments is { }
@@ -826,6 +859,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         IHighlightingConsumer consumer,
         IObjectCreationExpression collectionCreationExpression,
         IType type,
+        bool hasAccessibleAddMethod,
         IType targetType)
     {
         var isPublicDefaultCtorUsed = collectionCreationExpression is { Arguments: [], Initializer: not { InitializerElements: [_, ..] } };
@@ -837,8 +871,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         bool IsTargetTypedToItsOwnType() => TypeEqualityComparer.Default.Equals(targetType, type);
 
         // target-typed to its own type: cases not covered by R#
-        // - public default constructor used
-        if (isPublicDefaultCtorUsed && IsTargetTypedToItsOwnType())
+        // - public default constructor used or passed to a method, which requires setting inferred type arguments
+        if (isPublicDefaultCtorUsed && IsTargetTypedToItsOwnType() && (!hasAccessibleAddMethod || methodReferenceToSetInferredTypeArguments is { }))
         {
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(

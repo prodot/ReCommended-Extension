@@ -9,7 +9,7 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Collection;
 
-namespace ReCommendedExtension.Tests.Analyzers.CollectionAnalyzer;
+namespace ReCommendedExtension.Tests.Analyzers.Collection;
 
 [TestFixture]
 public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
