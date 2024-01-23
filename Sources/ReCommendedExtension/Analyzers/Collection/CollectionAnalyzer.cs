@@ -494,6 +494,9 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                                         ? $"Use collection expression ('{covariantTypeName}' will be used)."
                                         : "Use collection expression."
                                     : "Use collection expression (a compiler-synthesized read-only collection will be used).",
+                                isEmptyArray
+                                    ? covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null
+                                    : "a compiler-synthesized read-only collection will be used",
                                 arrayCreationExpression,
                                 null,
                                 arrayCreationExpression.ArrayInitializer?.InitializerElements,
@@ -514,6 +517,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         consumer.AddHighlighting(
                             new UseTargetTypedCollectionExpressionSuggestion(
                                 $"Use collection expression ('{typeName}' will be used).",
+                                $"'{typeName}' will be used",
                                 arrayCreationExpression,
                                 null,
                                 arrayCreationExpression.ArrayInitializer?.InitializerElements,
@@ -548,6 +552,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                                 covariantTypeName is { }
                                     ? $"Use collection expression ('{covariantTypeName}' will be used)."
                                     : "Use collection expression.",
+                                covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null,
                                 arrayCreationExpression,
                                 null,
                                 arrayCreationExpression.ArrayInitializer?.InitializerElements,
@@ -671,6 +676,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     isEmptyList
                         ? $"Use collection expression ('{typeName}' will be used)."
                         : "Use collection expression (a compiler-synthesized read-only collection will be used).",
+                    isEmptyList ? $"'{typeName}' will be used" : "a compiler-synthesized read-only collection will be used",
                     listCreationExpression,
                     parameterType.IsGenericIEnumerable() ? listCreationExpression.Arguments[0].Value : null,
                     listCreationExpression.Initializer?.InitializerElements,
@@ -685,6 +691,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
                     "Use collection expression.",
+                    null,
                     listCreationExpression,
                     parameterType.IsGenericIEnumerable() ? listCreationExpression.Arguments[0].Value : null,
                     listCreationExpression.Initializer?.InitializerElements,
@@ -701,6 +708,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
                     "Use collection expression.",
+                    null,
                     listCreationExpression,
                     null,
                     null,
@@ -765,6 +773,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
                     $"Use collection expression ('{typeName}' will be used).",
+                    $"'{typeName}' will be used",
                     hashSetCreationExpression,
                     null,
                     null,
@@ -781,6 +790,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
                     "Use collection expression.",
+                    null,
                     hashSetCreationExpression,
                     null,
                     null,
@@ -848,6 +858,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
                     "Use collection expression.",
+                    null,
                     dictionaryCreationExpression,
                     null,
                     null,
@@ -877,6 +888,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
                     "Use collection expression.",
+                    null,
                     collectionCreationExpression,
                     null,
                     null,
@@ -969,6 +981,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
                         covariantTypeName is { } ? $"Use collection expression ('{covariantTypeName}' will be used)." : "Use collection expression.",
+                        covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null,
                         arrayEmptyInvocationExpression,
                         null,
                         null,
@@ -989,6 +1002,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
                         $"Use collection expression ('{typeName}' will be used).",
+                        $"'{typeName}' will be used",
                         arrayEmptyInvocationExpression,
                         null,
                         null,
@@ -1013,9 +1027,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
-                        covariantTypeName is { }
-                            ? $"Use collection expression ('{covariantTypeName}' will be used)."
-                            : "Use collection expression.",
+                        covariantTypeName is { } ? $"Use collection expression ('{covariantTypeName}' will be used)." : "Use collection expression.",
+                        covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null,
                         arrayEmptyInvocationExpression,
                         null,
                         null,

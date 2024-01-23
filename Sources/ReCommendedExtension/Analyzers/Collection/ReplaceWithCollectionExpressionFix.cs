@@ -1,4 +1,5 @@
-﻿using JetBrains.Application.Progress;
+﻿using System.Text;
+using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
@@ -16,7 +17,31 @@ public sealed class ReplaceWithCollectionExpressionFix(UseTargetTypedCollectionE
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '[{(highlighting is { SpreadItem: { } } or { Items: [_, ..] } ? "..." : "")}]'";
+    public override string Text
+    {
+        get
+        {
+            var builder = new StringBuilder();
+
+            builder.Append("Replace with '[");
+
+            if (highlighting is { SpreadItem: { } } or { Items: [_, ..] })
+            {
+                builder.Append("...");
+            }
+
+            builder.Append("]'");
+
+            if (highlighting.OtherTypeNameHint is { })
+            {
+                builder.Append(" (");
+                builder.Append(highlighting.OtherTypeNameHint);
+                builder.Append(')');
+            }
+
+            return builder.ToString();
+        }
+    }
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {

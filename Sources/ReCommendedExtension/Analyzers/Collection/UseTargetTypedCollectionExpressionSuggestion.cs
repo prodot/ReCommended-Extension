@@ -17,12 +17,15 @@ namespace ReCommendedExtension.Analyzers.Collection;
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
 public sealed class UseTargetTypedCollectionExpressionSuggestion(
     string message,
+    string? otherTypeNameHint,
     ICSharpExpression expression,
     ICSharpExpression? spreadItem,
     TreeNodeCollection<IInitializerElement>? items,
     IReferenceExpression? methodReferenceToSetInferredTypeArguments) : Highlighting(message)
 {
     const string SeverityId = "UseTargetTypedCollectionExpression"; // a collection expression is always target-typed (needed a distinguished id)
+
+    internal string? OtherTypeNameHint { get; } = otherTypeNameHint;
 
     internal ICSharpExpression Expression { get; } = expression;
 
