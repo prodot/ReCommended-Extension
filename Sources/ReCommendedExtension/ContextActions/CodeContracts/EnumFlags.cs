@@ -161,7 +161,7 @@ public sealed class EnumFlags(ICSharpContextActionDataProvider provider) : AddCo
             var pattern = new StringBuilder("$0 >= $1 && $0 <= ");
             if (fields is [_, _, ..])
             {
-                pattern.Append("(");
+                pattern.Append('(');
             }
 
             var args = new object[fields.Count + 2];
@@ -182,7 +182,7 @@ public sealed class EnumFlags(ICSharpContextActionDataProvider provider) : AddCo
             }
             if (fields is [_, _, ..])
             {
-                pattern.Append(")");
+                pattern.Append(')');
             }
 
             return factory.CreateExpression(pattern.ToString(), args);
