@@ -9,9 +9,9 @@ using ReCommendedExtension;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("prodot GmbH")]
 [assembly: AssemblyProduct(ZoneMarker.ExtensionId)]
-[assembly: AssemblyCopyright("© 2012-2023 prodot GmbH")]
+[assembly: AssemblyCopyright("© 2012-2024 prodot GmbH")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("5.10.15.0")]
-[assembly: AssemblyFileVersion("5.10.15")]
+[assembly: AssemblyVersion("5.10.16.0")]
+[assembly: AssemblyFileVersion("5.10.16")]
