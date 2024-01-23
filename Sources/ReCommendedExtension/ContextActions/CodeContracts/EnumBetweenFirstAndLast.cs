@@ -23,7 +23,7 @@ public sealed class EnumBetweenFirstAndLast(ICSharpContextActionDataProvider pro
             {
                 return CSharpNumericTypeInfo
                     .TryCreate(enumType.GetUnderlyingType())
-                    ?.TryCreateEnumContractInfoForEnumBetweenFirstAndLast(enumType.EnumMembers.ToList());
+                    ?.TryCreateEnumContractInfoForEnumBetweenFirstAndLast([..enumType.EnumMembers]);
             }
 
             return null;
@@ -49,7 +49,7 @@ public sealed class EnumBetweenFirstAndLast(ICSharpContextActionDataProvider pro
 
         [Pure]
         public static EnumContractInfo<E>? TryCreate(
-            IList<IField> members,
+            IField[] members,
             Func<E, E, bool> isLessOrEquals,
             Func<E, E> getNext,
             Func<ConstantValue, E> extractConstantValue)

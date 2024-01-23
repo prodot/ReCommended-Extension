@@ -58,11 +58,14 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
     };
 
     protected sealed override IAttribute[] GetAttributesToReplace(IAttributesOwnerDeclaration ownerDeclaration)
-        => (
+        =>
+        [
+            ..
             from attribute in ownerDeclaration.Attributes
             let shortName = attribute.GetAttributeType().GetClrName().ShortName
             where shortName == MustDisposeResourceAnnotationProvider.MustDisposeResourceAttributeShortName
                 || shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
                 || shortName == PureAnnotationProvider.PureAttributeShortName
-            select attribute).ToArray();
+            select attribute,
+        ];
 }

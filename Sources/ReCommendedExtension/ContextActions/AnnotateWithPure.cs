@@ -78,10 +78,13 @@ public sealed class AnnotateWithPure(ICSharpContextActionDataProvider provider) 
         };
 
     protected override IAttribute[] GetAttributesToReplace(IAttributesOwnerDeclaration ownerDeclaration)
-        => (
+        =>
+        [
+            ..
             from attribute in ownerDeclaration.Attributes
             let shortName = attribute.GetAttributeType().GetClrName().ShortName
             where shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
                 || shortName == MustDisposeResourceAnnotationProvider.MustDisposeResourceAttributeShortName
-            select attribute).ToArray();
+            select attribute,
+        ];
 }

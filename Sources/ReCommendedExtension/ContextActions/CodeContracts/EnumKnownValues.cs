@@ -14,7 +14,7 @@ namespace ReCommendedExtension.ContextActions.CodeContracts;
     Description = "Adds a contract that the enum value has the valid values.")]
 public sealed class EnumKnownValues(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
-    IList<IField>? members;
+    IField[]? members;
 
     [MemberNotNullWhen(true, nameof(members))]
     protected override bool IsAvailableForType(IType type)
@@ -23,7 +23,7 @@ public sealed class EnumKnownValues(ICSharpContextActionDataProvider provider) :
 
         if (enumType is { } && !enumType.HasAttributeInstance(PredefinedType.FLAGS_ATTRIBUTE_CLASS, false))
         {
-            members = enumType.EnumMembers.WithoutObsolete().ToList();
+            members = [..enumType.EnumMembers.WithoutObsolete()];
 
             if (members is not [])
             {
@@ -43,7 +43,7 @@ public sealed class EnumKnownValues(ICSharpContextActionDataProvider provider) :
         const int maxItemsToShow = 3;
 
         return string.Join(" || ", from field in members.Take(maxItemsToShow) select $"{contractIdentifier} == {field.ShortName}")
-            + (members.Count > maxItemsToShow ? "..." : "");
+            + (members.Length > maxItemsToShow ? "..." : "");
     }
 
     protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
@@ -52,10 +52,10 @@ public sealed class EnumKnownValues(ICSharpContextActionDataProvider provider) :
 
         var pattern = new StringBuilder();
 
-        var args = new object[members.Count + 1];
+        var args = new object[members.Length + 1];
         args[0] = contractExpression;
 
-        for (var i = 0; i < members.Count; i++)
+        for (var i = 0; i < members.Length; i++)
         {
             if (i > 0)
             {

@@ -14,14 +14,14 @@ internal sealed class CSharpNumericTypeInfo<N>(
     Func<N, double> toDouble,
     Func<ConstantValue, N> constantValue) : CSharpNumericTypeInfo(isSigned, epsilonLiteral, literalSuffix) where N : struct
 {
-    public override EnumBetweenFirstAndLast.EnumContractInfo? TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IList<IField> members)
+    public override EnumBetweenFirstAndLast.EnumContractInfo? TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IField[] members)
     {
         Debug.Assert(next is { });
 
         return EnumBetweenFirstAndLast.EnumContractInfo<N>.TryCreate(members, lessOrEquals, next, constantValue);
     }
 
-    public override EnumFlags.EnumContractInfo? TryCreateEnumFlags(IList<IField> members)
+    public override EnumFlags.EnumContractInfo? TryCreateEnumFlags(IField[] members)
         => EnumFlags.EnumContractInfo<N>.TryCreate(
             members,
             one,

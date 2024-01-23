@@ -22,7 +22,7 @@ public sealed class EnumFlags(ICSharpContextActionDataProvider provider) : AddCo
         {
             if (enumType is { } && enumType.HasAttributeInstance(PredefinedType.FLAGS_ATTRIBUTE_CLASS, false))
             {
-                return CSharpNumericTypeInfo.TryCreate(enumType.GetUnderlyingType())?.TryCreateEnumFlags(enumType.EnumMembers.ToList());
+                return CSharpNumericTypeInfo.TryCreate(enumType.GetUnderlyingType())?.TryCreateEnumFlags([..enumType.EnumMembers]);
             }
 
             return null;
@@ -48,7 +48,7 @@ public sealed class EnumFlags(ICSharpContextActionDataProvider provider) : AddCo
 
         [Pure]
         public static EnumContractInfo<E>? TryCreate(
-            IList<IField> members,
+            IField[] members,
             E one,
             Func<E, double> convertToDouble,
             Func<E, bool> isZero,

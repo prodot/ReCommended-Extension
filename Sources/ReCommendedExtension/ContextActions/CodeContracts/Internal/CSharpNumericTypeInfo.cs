@@ -182,8 +182,8 @@ internal abstract class CSharpNumericTypeInfo(bool isSigned, string? epsilonLite
     public string LiteralSuffix { get; } = literalSuffix;
 
     [Pure]
-    public abstract EnumBetweenFirstAndLast.EnumContractInfo? TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IList<IField> members);
+    public abstract EnumBetweenFirstAndLast.EnumContractInfo? TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IField[] members);
 
     [Pure]
-    public abstract EnumFlags.EnumContractInfo? TryCreateEnumFlags(IList<IField> members);
+    public abstract EnumFlags.EnumContractInfo? TryCreateEnumFlags(IField[] members);
 }

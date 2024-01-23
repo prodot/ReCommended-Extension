@@ -49,10 +49,13 @@ public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvi
         };
 
     protected override IAttribute[] GetAttributesToReplace(IAttributesOwnerDeclaration ownerDeclaration)
-        => (
+        =>
+        [
+            ..
             from attribute in ownerDeclaration.Attributes
             let shortName = attribute.GetAttributeType().GetClrName().ShortName
             where shortName == PureAnnotationProvider.PureAttributeShortName
                 || shortName == MustDisposeResourceAnnotationProvider.MustDisposeResourceAttributeShortName
-            select attribute).ToArray();
+            select attribute,
+        ];
 }

@@ -32,7 +32,7 @@ internal abstract record ContractInfo
                     : null;
 
         [JetBrains.Annotations.Pure]
-        public static IList<ContractStatementInfo> CreateContractStatementInfos(IBlock body)
+        public static List<ContractStatementInfo> CreateContractStatementInfos(IBlock body)
         {
             var list = new List<ContractStatementInfo>();
 
