@@ -204,9 +204,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             return null;
         }
 
-        if (expression.Parent is IReferenceExpression referenceExpression && referenceExpression.IsExtensionMethodInvocation())
+        switch (expression.Parent)
         {
-            return null;
+            case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
+            case IQueryFirstFrom or IQueryParameterPlatform:
+                return null;
         }
 
         return targetType;
