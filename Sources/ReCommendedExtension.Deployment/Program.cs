@@ -110,7 +110,7 @@ internal static class Program
 
     static void UpdateNuspec(string executionDirectoryPath, string assemblyPath, out string nuspecPath)
     {
-        Console.Write(@"Updating nuspec...");
+        Console.Write("Updating nuspec...");
 
         var assembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
 

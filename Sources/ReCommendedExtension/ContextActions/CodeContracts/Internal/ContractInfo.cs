@@ -167,7 +167,7 @@ internal abstract record ContractInfo
 
         contractClassDeclaration = (IClassDeclaration)factory.CreateTypeMemberDeclaration(
             string.Format(
-                @"[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
+                "[$0(typeof($1{2}))] abstract class {0}{1} : $1{1} {{ }}",
                 GetSuggestedContractClassName(typeDeclaration),
                 typeParameters,
                 typeParametersForAttribute),

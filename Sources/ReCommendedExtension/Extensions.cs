@@ -23,7 +23,7 @@ internal static class Extensions
 {
     static readonly HashSet<string> wellKnownUnitTestingAssemblyNames = new(StringComparer.OrdinalIgnoreCase)
     {
-        "Microsoft.VisualStudio.TestPlatform.TestFramework", @"nunit.framework", "xunit.core",
+        "Microsoft.VisualStudio.TestPlatform.TestFramework", "nunit.framework", "xunit.core",
     };
 
     [Pure]
