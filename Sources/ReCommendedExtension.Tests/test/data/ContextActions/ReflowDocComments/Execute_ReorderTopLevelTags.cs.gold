@@ -1,0 +1,28 @@
+﻿using System;
+
+namespace Test
+{
+    public class Execute
+    {
+        /// <summary>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">1</exception>
+        /// <exception cref="InvalidOperationException">2</exception>
+        /// <exception cref="InvalidOperationException">3</exception>
+        /// <exception cref="InvalidOperationException">4</exception>
+        /// <remarks>
+        /// </remarks>
+        /// <example></example>
+        /// <seealso cref="Execute"/>
+        /// <seealso href="https://github.com"/>
+        /// <seealso href="https://jetbrains.com"/>
+        /// <custom_1></custom_1>
+        /// <custom_2 custom_attribute="custom attribute value"></custom_2{caret}>
+        public bool Method<T, U>(int x, int y) => true;
+    }
+}
