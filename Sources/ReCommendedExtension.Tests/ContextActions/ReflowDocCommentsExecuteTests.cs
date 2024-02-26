@@ -1,4 +1,7 @@
+using System.Linq.Expressions;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.Xml.CodeStyle;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
@@ -11,15 +14,35 @@ public sealed class ReflowDocCommentsExecuteTests : CSharpContextActionExecuteTe
 
     protected override string RelativeTestDataPath => @"ContextActions\ReflowDocComments";
 
-    [Test]
-    public void TestExecute_WrapTopLevelTags() => DoNamedTest2();
+    static void SetValue<T>(IContextBoundSettingsStore store, Expression<Func<XmlDocFormatterSettingsKey, T>> lambdaExpression, T value)
+        => store.SetValue(lambdaExpression, value);
+
+    void DoNamedTestWithSettings()
+        => ExecuteWithinSettingsTransaction(
+            store =>
+            {
+                RunGuarded(
+                    () =>
+                    {
+                        SetValue(store, s => s.INDENT_SIZE, 4);
+                        SetValue(store, s => s.WRAP_LIMIT, 150);
+                        SetValue(store, s => s.TagSpacesAroundAttributeEq, false);
+                        SetValue(store, s => s.TagSpaceAfterLastAttr, false);
+                        SetValue(store, s => s.TagSpaceBeforeHeaderEnd1, false);
+                    });
+
+                DoNamedTest2();
+            });
 
     [Test]
-    public void TestExecute_WrapNestedTags() => DoNamedTest2();
+    public void TestExecute_WrapTopLevelTags() => DoNamedTestWithSettings();
 
     [Test]
-    public void TestExecute_WrapNestedTags_Para() => DoNamedTest2();
+    public void TestExecute_WrapNestedTags() => DoNamedTestWithSettings();
 
     [Test]
-    public void TestExecute_ReorderTopLevelTags() => DoNamedTest2();
+    public void TestExecute_WrapNestedTags_Para() => DoNamedTestWithSettings();
+
+    [Test]
+    public void TestExecute_ReorderTopLevelTags() => DoNamedTestWithSettings();
 }
