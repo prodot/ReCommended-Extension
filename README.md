@@ -18,7 +18,7 @@ The ReCommended Extension for ReSharper augments the sophisticated code analysis
 
 The most highlightings also have quick fixes for obvious solutions.
 
-Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReSharper annotations, setting language injections, etc.
+Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReSharper annotations, adjusting XML doc comments, setting language injections, etc.
 
 [show more...](https://github.com/prodot/ReCommended-Extension/wiki)
 
