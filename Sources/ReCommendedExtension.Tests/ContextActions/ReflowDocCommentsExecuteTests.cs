@@ -1,7 +1,9 @@
 using System.Linq.Expressions;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Xml.CodeStyle;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
@@ -45,4 +47,9 @@ public sealed class ReflowDocCommentsExecuteTests : CSharpContextActionExecuteTe
 
     [Test]
     public void TestExecute_ReorderTopLevelTags() => DoNamedTestWithSettings();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestExecute_Case_1() => DoNamedTestWithSettings();
 }

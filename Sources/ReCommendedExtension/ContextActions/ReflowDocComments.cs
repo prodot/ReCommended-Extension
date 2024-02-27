@@ -1142,27 +1142,32 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                 foreach (var tagInfo in topLevelTags)
                 {
-                    var relevantTags = from tag in tags where tag.GetFullTagName() == tagInfo.Name select tag;
-
-                    if (tagInfo.Attribute == TopLevelTagAttribute.Name
-                        && tagInfo.TryGetDeclarations?.Invoke(docCommentBlock.Parent) is { } declarations)
+                    var relevantTags = (from tag in tags where tag.GetFullTagName() == tagInfo.Name select tag).ToList();
+                    if (relevantTags is [_, ..])
                     {
-                        // use the declaration order
-
-                        var relevantTagsByName = relevantTags.ToDictionary(
-                            tag => tag.GetAttribute("name")?.Value?.UnquotedValue,
-                            StringComparer.Ordinal);
-
-                        foreach (var declaration in declarations)
+                        if (tagInfo.Attribute == TopLevelTagAttribute.Name
+                            && tagInfo.TryGetDeclarations?.Invoke(docCommentBlock.Parent) is { } declarations)
                         {
-                            ReflowTag(builder, relevantTagsByName[declaration.DeclaredName], tagInfo, maxLength, settings);
+                            // use the declaration order
+
+                            var relevantTagsByName = relevantTags.ToDictionary(
+                                tag => tag.GetAttribute("name")?.Value?.UnquotedValue,
+                                StringComparer.Ordinal);
+
+                            foreach (var declaration in declarations)
+                            {
+                                if (relevantTagsByName.TryGetValue(declaration.DeclaredName, out var tag))
+                                {
+                                    ReflowTag(builder, tag, tagInfo, maxLength, settings);
+                                }
+                            }
                         }
-                    }
-                    else
-                    {
-                        foreach (var tag in relevantTags)
+                        else
                         {
-                            ReflowTag(builder, tag, tagInfo, maxLength, settings);
+                            foreach (var tag in relevantTags)
+                            {
+                                ReflowTag(builder, tag, tagInfo, maxLength, settings);
+                            }
                         }
                     }
                 }
