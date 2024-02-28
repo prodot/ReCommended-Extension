@@ -504,7 +504,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                         {
                             // typical case: <c>...</c>
 
-                            yield return Token.Tag(BuildTag(tagName, null, nestedTag.InnerValue, TagOption.Expanded, settings), nestedTagInfo, space);
+                            yield return Token.Tag(BuildTag(tagName, null, nestedTag.InnerText, TagOption.Expanded, settings), nestedTagInfo, space);
 
                             space = false;
                             break;
@@ -571,9 +571,9 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                             Debug.Assert(attribute is { });
 
                             yield return Token.Tag(
-                                nestedTag.IsEmptyTag || nestedTag.InnerValue == ""
+                                nestedTag.IsEmptyTag || nestedTag.InnerText == ""
                                     ? BuildTag(tagName, attribute, null, TagOption.Collapsed, settings)
-                                    : BuildTag(tagName, attribute, nestedTag.InnerValue, TagOption.Expanded, settings),
+                                    : BuildTag(tagName, attribute, nestedTag.InnerText, TagOption.Expanded, settings),
                                 nestedTagInfo,
                                 space);
 

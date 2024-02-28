@@ -57,4 +57,9 @@ public sealed class ReflowDocCommentsExecuteTests : CSharpContextActionExecuteTe
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
     public void TestExecute_Case_2() => DoNamedTestWithSettings();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80(ANNOTATIONS_PACKAGE)]
+    public void TestExecute_Case_3() => DoNamedTestWithSettings();
 }

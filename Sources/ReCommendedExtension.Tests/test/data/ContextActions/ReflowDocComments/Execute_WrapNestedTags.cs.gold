@@ -30,7 +30,8 @@ namespace Test
         ///         <description></description>
         ///     </item>
         /// </list>
-        /// <c>Lorem ipsum dolor sit amet consequat duo elitr justo feugait molestie augue in sed ea facilisi vero hendrerit. Gubergren ut diam dolor vel et dolor eu in takimata nibh dolores ut.</c>
+        /// <c>Lorem ipsum dolor sit amet consequat duo elitr justo feugait molestie augue in sed ea facilisi vero hendrerit.
+        /// Gubergren ut diam dolor vel et dolor eu in takimata nibh dolores ut.</c>
         /// <code>
         ///     Lorem ipsum dolor sit amet consequat
         ///     duo elitr justo feugait molestie
