@@ -436,7 +436,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                 continue;
             }
 
-            if (AreEqual(node.NodeType, xmlTokenTypes.TEXT))
+            if (AreEqual(node.NodeType, xmlTokenTypes.TEXT) || AreEqual(node.NodeType, xmlTokenTypes.ENTITY_REF))
             {
                 yield return Token.Lexeme(node.GetText(), space);
                 space = false;
@@ -682,94 +682,101 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
         return attributeValue; // null if attribute was not found
     }
 
-    /// <remarks>
-    /// <list type="bullet">
-    /// <listheader><description>D</description></listheader>
-    /// </list>
-    /// </remarks>
     [Pure]
-    static bool AreTopLevelTagsValid(TreeNodeCollection<IXmlTag> tags, ITreeNode? parentDeclaration)
+    static bool AreTopLevelTagsValid(IXmlFile xmlFile, ITreeNode? parentDeclaration)
     {
         var detectedTags = null as HashSet<string>;
 
-        foreach (var tag in tags)
+        foreach (var node in xmlFile.Children())
         {
-            if (topLevelTagsByName.TryGetValue(tag.GetFullTagName(), out var tagInfo))
+            if (AreEqual(node.NodeType, xmlTokenTypes.SPACE) || AreEqual(node.NodeType, xmlTokenTypes.NEW_LINE))
             {
-                switch (tagInfo.Attribute)
-                {
-                    case TopLevelTagAttribute.None:
-                    {
-                        if (tag.GetAttributes().Any())
-                        {
-                            return false; // the tag should not have any attribute
-                        }
-
-                        detectedTags ??= new HashSet<string>(StringComparer.Ordinal);
-
-                        if (detectedTags.Add(tagInfo.Name))
-                        {
-                            break;
-                        }
-
-                        return false; // there should only be one tag
-                    }
-
-                    case TopLevelTagAttribute.Name:
-                    {
-                        if (TryGetValidAttributeValue(tag, "name") is not { } attributeValue)
-                        {
-                            return false; // attribute not found, or duplicate, or an unknown attribute detected
-                        }
-
-                        if (tagInfo.TryGetDeclarations?.Invoke(parentDeclaration) is not { } declarations)
-                        {
-                            return false; // no declarations
-                        }
-
-                        if (declarations.All(declaration => declaration.DeclaredName != attributeValue))
-                        {
-                            return false; // unknown value
-                        }
-
-                        detectedTags ??= new HashSet<string>(StringComparer.Ordinal);
-
-                        if (detectedTags.Add($"{tagInfo.Name}.{attributeValue}"))
-                        {
-                            break;
-                        }
-
-                        return false; // there should only be one tag with the attribute value
-                    }
-
-                    case TopLevelTagAttribute.Cref:
-                    {
-                        if (TryGetValidAttributeValue(tag, "cref") is not { })
-                        {
-                            return false; // attribute not found, or duplicate, or an unknown attribute detected
-                        }
-
-                        break;
-                    }
-
-                    case TopLevelTagAttribute.CrefOrHref:
-                    {
-                        if (TryGetValidAttributeValue(tag, "cref", "href") is not { })
-                        {
-                            return false; // attribute not found, or duplicate, or an unknown attribute detected
-                        }
-
-                        break;
-                    }
-
-                    default: throw new NotSupportedException();
-                }
-
-                if (!AreNestedTagsValid(tag.InnerTags))
-                {
-                    return false;
-                }
+                continue;
             }
+
+            if (node is IXmlTag tag)
+            {
+                if (topLevelTagsByName.TryGetValue(tag.GetFullTagName(), out var tagInfo))
+                {
+                    switch (tagInfo.Attribute)
+                    {
+                        case TopLevelTagAttribute.None:
+                        {
+                            if (tag.GetAttributes().Any())
+                            {
+                                return false; // the tag should not have any attribute
+                            }
+
+                            detectedTags ??= new HashSet<string>(StringComparer.Ordinal);
+
+                            if (detectedTags.Add(tagInfo.Name))
+                            {
+                                break;
+                            }
+
+                            return false; // there should only be one tag
+                        }
+
+                        case TopLevelTagAttribute.Name:
+                        {
+                            if (TryGetValidAttributeValue(tag, "name") is not { } attributeValue)
+                            {
+                                return false; // attribute not found, or duplicate, or an unknown attribute detected
+                            }
+
+                            if (tagInfo.TryGetDeclarations?.Invoke(parentDeclaration) is not { } declarations)
+                            {
+                                return false; // no declarations
+                            }
+
+                            if (declarations.All(declaration => declaration.DeclaredName != attributeValue))
+                            {
+                                return false; // unknown value
+                            }
+
+                            detectedTags ??= new HashSet<string>(StringComparer.Ordinal);
+
+                            if (detectedTags.Add($"{tagInfo.Name}.{attributeValue}"))
+                            {
+                                break;
+                            }
+
+                            return false; // there should only be one tag with the attribute value
+                        }
+
+                        case TopLevelTagAttribute.Cref:
+                        {
+                            if (TryGetValidAttributeValue(tag, "cref") is not { })
+                            {
+                                return false; // attribute not found, or duplicate, or an unknown attribute detected
+                            }
+
+                            break;
+                        }
+
+                        case TopLevelTagAttribute.CrefOrHref:
+                        {
+                            if (TryGetValidAttributeValue(tag, "cref", "href") is not { })
+                            {
+                                return false; // attribute not found, or duplicate, or an unknown attribute detected
+                            }
+
+                            break;
+                        }
+
+                        default: throw new NotSupportedException();
+                    }
+
+                    if (!AreNestedTagsValid(tag.InnerTags))
+                    {
+                        return false;
+                    }
+                }
+
+                continue;
+            }
+
+            return false; // not a whitespace or an XML tag
         }
 
         return true;
@@ -1105,7 +1112,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
         if (docCommentBlock is { })
         {
             if (docCommentBlock.DocComments.All(docComment => docComment.CommentType == CommentType.DOC_COMMENT)
-                && AreTopLevelTagsValid(docCommentBlock.GetXmlPsi().XmlFile.InnerTags, docCommentBlock.Parent))
+                && AreTopLevelTagsValid(docCommentBlock.GetXmlPsi().XmlFile, docCommentBlock.Parent))
             {
                 return true; // supporting only "///"-style doc comments
             }

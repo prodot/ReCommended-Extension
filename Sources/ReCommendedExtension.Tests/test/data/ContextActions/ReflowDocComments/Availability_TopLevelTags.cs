@@ -30,6 +30,13 @@ namespace Test
         // The above method returns tr{off}ue or false.
     }
 
+    public class NonAvailability
+    {
+        /// <summary>{off}</summary>#
+        /// <remarks />
+        public void TextBetweenTopLevelTags() { }
+    }
+
     public class NonAvailability_Summary
     {
         /// <summary>{off}</summary>
