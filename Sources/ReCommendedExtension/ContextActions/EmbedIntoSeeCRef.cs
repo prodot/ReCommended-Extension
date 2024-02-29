@@ -9,7 +9,7 @@ namespace ReCommendedExtension.ContextActions;
     Description = """Embed the word or selection into <see cref="..."/> in XML doc comments.""")]
 public sealed class EmbedIntoSeeCRef(ICSharpContextActionDataProvider provider) : EncompassInDocComment(provider)
 {
-    protected override string Encompass(string text) => $"""<see cref="{text}"/>""";
+    protected override string Encompass(string text, Settings settings) => BuildTag("see", ("cref", text), null, TagOption.Collapsed, settings);
 
     public override string Text => """Embed into <see cref="..."/>""";
 }

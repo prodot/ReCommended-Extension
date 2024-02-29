@@ -1,7 +1,5 @@
-﻿using System.Linq.Expressions;
-using System.Text;
+﻿using System.Text;
 using JetBrains.Application.Progress;
-using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
@@ -10,7 +8,6 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Xml.CodeStyle;
 using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.ReSharper.Psi.Xml.XmlDocComments;
 using JetBrains.ReSharper.Resources.Shell;
@@ -23,38 +20,8 @@ namespace ReCommendedExtension.ContextActions;
     Group = "C#",
     Name = "Reflow XML doc comments" + ZoneMarker.Suffix,
     Description = "Reflow XML doc comments XML doc comments, i.e. apply smart formatting, tag reordering, etc.")]
-public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider) : ContextActionBase
+public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider) : XmlDocCommentContextAction
 {
-    sealed record Settings
-    {
-        [Pure]
-        static T GetValue<T>(IContextBoundSettingsStore store, Expression<Func<XmlDocFormatterSettingsKey, T>> lambdaExpression)
-            => store.GetValue(lambdaExpression);
-
-        [Pure]
-        public static Settings Load(IContextBoundSettingsStore store)
-            => new()
-            {
-                IndentSize = GetValue(store, s => s.INDENT_SIZE),
-                WrapLimit = GetValue(store, s => s.WRAP_LIMIT),
-                TagSpacesAroundAttributeEq = GetValue(store, s => s.TagSpacesAroundAttributeEq),
-                TagSpaceAfterLastAttr = GetValue(store, s => s.TagSpaceAfterLastAttr),
-                TagSpaceBeforeHeaderEnd1 = GetValue(store, s => s.TagSpaceBeforeHeaderEnd1),
-            };
-
-        [ValueRange(1, int.MaxValue)]
-        public required int IndentSize { get; init; }
-
-        [NonNegativeValue]
-        public required int WrapLimit { get; init; }
-
-        public required bool TagSpacesAroundAttributeEq { get; init; }
-
-        public required bool TagSpaceAfterLastAttr { get; init; }
-
-        public required bool TagSpaceBeforeHeaderEnd1 { get; init; }
-    }
-
     enum TopLevelTagAttribute
     {
         /// <summary>
@@ -300,110 +267,6 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
     static readonly XmlTokenTypes xmlTokenTypes = XmlTokenTypes.GetInstance<XmlDocLanguage>();
 
-    enum TagOption
-    {
-        /// <remarks>
-        /// E.g. <c><![CDATA[<Tag...></Tag>]]></c>
-        /// </remarks>
-        Expanded,
-
-        /// <remarks>
-        /// E.g. <c><![CDATA[<Tag.../>]]></c>
-        /// </remarks>
-        Collapsed,
-
-        /// <remarks>
-        /// E.g. <c><![CDATA[<Tag...>]]></c>
-        /// </remarks>
-        HeaderOnly,
-
-        /// <remarks>
-        /// E.g. <c><![CDATA[</Tag>]]></c>
-        /// </remarks>
-        FooterOnly,
-    }
-
-    static void AppendTag(StringBuilder builder, string tagName, IXmlAttribute? attribute, TagOption option, Settings settings)
-    {
-        Debug.Assert(
-            option is TagOption.Collapsed or TagOption.Expanded or TagOption.HeaderOnly || option == TagOption.FooterOnly && attribute is not { });
-
-        builder.Append('<');
-
-        if (option == TagOption.FooterOnly)
-        {
-            builder.Append('/');
-        }
-
-        builder.Append(tagName);
-
-        if (attribute is { })
-        {
-            builder.Append(' ');
-            builder.Append(attribute.AttributeName);
-
-            if (settings.TagSpacesAroundAttributeEq)
-            {
-                builder.Append(" = ");
-            }
-            else
-            {
-                builder.Append('=');
-            }
-
-            builder.Append('"');
-            builder.Append(attribute.Value?.UnquotedValue);
-            builder.Append('"');
-
-            if (settings.TagSpaceAfterLastAttr)
-            {
-                builder.Append(' ');
-            }
-        }
-
-        switch (option)
-        {
-            case TagOption.Expanded:
-                builder.Append("></");
-                builder.Append(tagName);
-                builder.Append('>');
-                break;
-
-            case TagOption.Collapsed:
-                if (settings.TagSpaceBeforeHeaderEnd1 && (attribute is not { } || !settings.TagSpaceAfterLastAttr))
-                {
-                    builder.Append(' ');
-                }
-                builder.Append("/>");
-                break;
-
-            case TagOption.HeaderOnly or TagOption.FooterOnly:
-                builder.Append('>');
-                break;
-        }
-    }
-
-    [Pure]
-    static string BuildTag(string tagName, IXmlAttribute? attribute, string? interior, TagOption option, Settings settings)
-    {
-        var builder = new StringBuilder();
-
-        if (interior is { })
-        {
-            Debug.Assert(option == TagOption.Expanded);
-
-            AppendTag(builder, tagName, attribute, TagOption.HeaderOnly, settings);
-            builder.Append(interior);
-            AppendTag(builder, tagName, null, TagOption.FooterOnly, settings);
-        }
-        else
-        {
-            AppendTag(builder, tagName, attribute, option, settings);
-        }
-
-        return builder.ToString();
-    }
-
     [Pure]
     static IReadOnlyList<ITypeParameterDeclaration>? TryGetTypeParameters(ITreeNode? treeNode)
         => treeNode switch
@@ -468,18 +331,18 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                                                 or InstructionTokenKind.EndOneLineAttempt,
                                             }))
                             {
-                                yield return Token.Tag(BuildTag(tagName, null, null, TagOption.Collapsed, settings), nestedTagInfo);
+                                yield return Token.Tag(BuildTag(tagName, null, TagOption.Collapsed, settings), nestedTagInfo);
                             }
                             else
                             {
-                                yield return Token.Tag(BuildTag(tagName, null, null, TagOption.HeaderOnly, settings), nestedTagInfo);
+                                yield return Token.Tag(BuildTag(tagName, null, TagOption.HeaderOnly, settings), nestedTagInfo);
 
                                 foreach (var nestedToken in Tokenize(nestedTag, settings))
                                 {
                                     yield return nestedToken;
                                 }
 
-                                yield return Token.Tag(BuildTag(tagName, null, null, TagOption.FooterOnly, settings), nestedTagInfo);
+                                yield return Token.Tag(BuildTag(tagName, null, TagOption.FooterOnly, settings), nestedTagInfo);
                             }
 
                             yield return Token.ForceLineBreak;
@@ -492,7 +355,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                         {
                             // typical case: <br/>
 
-                            yield return Token.Tag(BuildTag(tagName, null, null, TagOption.Collapsed, settings), nestedTagInfo);
+                            yield return Token.Tag(BuildTag(tagName, null, TagOption.Collapsed, settings), nestedTagInfo);
                             yield return Token.ForceLineBreak;
 
                             space = false;
@@ -504,7 +367,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                         {
                             // typical case: <c>...</c>
 
-                            yield return Token.Tag(BuildTag(tagName, null, nestedTag.InnerText, TagOption.Expanded, settings), nestedTagInfo, space);
+                            yield return Token.Tag(BuildTag(tagName, nestedTag.InnerText, TagOption.Expanded, settings), nestedTagInfo, space);
 
                             space = false;
                             break;
@@ -515,7 +378,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                             // typical case: <code>...</code>
 
                             yield return Token.BeginMultiline;
-                            yield return Token.Tag(BuildTag(tagName, null, null, TagOption.HeaderOnly, settings), nestedTagInfo);
+                            yield return Token.Tag(BuildTag(tagName, null, TagOption.HeaderOnly, settings), nestedTagInfo);
                             yield return Token.BeginIndentation;
 
                             var lines = nestedTag.InnerText.Split(["\r\n", "\n", "\r"], StringSplitOptions.None);
@@ -575,7 +438,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                             }
 
                             yield return Token.EndIndentation;
-                            yield return Token.Tag(BuildTag(tagName, null, null, TagOption.FooterOnly, settings), nestedTagInfo);
+                            yield return Token.Tag(BuildTag(tagName, null, TagOption.FooterOnly, settings), nestedTagInfo);
                             yield return Token.EndMultiline;
 
                             space = false;
@@ -629,7 +492,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                             }
 
                             yield return Token.EndIndentation;
-                            yield return Token.Tag(BuildTag(tagName, null, null, TagOption.FooterOnly, settings), nestedTagInfo);
+                            yield return Token.Tag(BuildTag(tagName, null, TagOption.FooterOnly, settings), nestedTagInfo);
                             yield return Token.EndMultiline;
 
                             space = false;
@@ -641,7 +504,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                             // typical case: <listheader>...</listheader> or <item>...</item> or <term>...</term> or <description>...</description>
 
                             yield return Token.BeginOneLineAttempt;
-                            yield return Token.Tag(BuildTag(tagName, null, null, TagOption.HeaderOnly, settings), nestedTagInfo);
+                            yield return Token.Tag(BuildTag(tagName, null, TagOption.HeaderOnly, settings), nestedTagInfo);
                             yield return Token.BeginIndentation;
 
                             foreach (var nestedToken in Tokenize(nestedTag, settings))
@@ -650,7 +513,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                             }
 
                             yield return Token.EndIndentation;
-                            yield return Token.Tag(BuildTag(tagName, null, null, TagOption.FooterOnly, settings), nestedTagInfo);
+                            yield return Token.Tag(BuildTag(tagName, null, TagOption.FooterOnly, settings), nestedTagInfo);
                             yield return Token.EndOneLineAttempt;
 
                             space = false;
@@ -1116,7 +979,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                     ReflowTokens(Tokenize(tag, settings), oneLineBuilder, maxLength, 0, settings);
                 }
 
-                AppendTag(oneLineBuilder, tagInfo.Name, null, TagOption.FooterOnly, settings);
+                AppendTag(oneLineBuilder, tagInfo.Name, TagOption.FooterOnly, settings);
 
                 if (oneLineBuilder.Length <= maxLength)
                 {
@@ -1130,7 +993,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
         builder.AppendLine();
         ReflowTokens(Tokenize(tag, settings), builder, maxLength, tagInfo.Flow == TopLevelTagFlow.Multiline ? 0 : settings.IndentSize, settings);
         builder.AppendLine();
-        AppendTag(builder, tagInfo.Name, null, TagOption.FooterOnly, settings);
+        AppendTag(builder, tagInfo.Name, TagOption.FooterOnly, settings);
         builder.AppendLine();
     }
 
@@ -1165,7 +1028,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
             using (WriteLockCookie.Create())
             {
-                var settings = Settings.Load(provider.PsiServices.SettingsStore.BindToContextTransient(ContextRange.ApplicationWide));
+                var settings = Settings.Load(provider);
 
                 var position = (int)docCommentBlock.GetDocumentRange().StartOffset.ToDocumentCoords().Column;
 

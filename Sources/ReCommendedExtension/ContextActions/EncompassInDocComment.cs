@@ -1,6 +1,5 @@
 ﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -10,7 +9,7 @@ using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions;
 
-public abstract class EncompassInDocComment(ICSharpContextActionDataProvider provider) : ContextActionBase
+public abstract class EncompassInDocComment(ICSharpContextActionDataProvider provider) : XmlDocCommentContextAction
 {
     [Pure]
     static (int start, int end) GetWordBoundaries(string text, [NonNegativeValue] int position)
@@ -46,7 +45,7 @@ public abstract class EncompassInDocComment(ICSharpContextActionDataProvider pro
     int end;
 
     [Pure]
-    protected abstract string Encompass(string text);
+    protected abstract string Encompass(string text, Settings settings);
 
     [MemberNotNullWhen(true, nameof(docCommentNode))]
     public sealed override bool IsAvailable(IUserDataHolder cache)
@@ -92,6 +91,8 @@ public abstract class EncompassInDocComment(ICSharpContextActionDataProvider pro
     {
         try
         {
+            var settings = Settings.Load(provider);
+
             Debug.Assert(docCommentNode is { });
 
             var text = docCommentNode.GetText();
@@ -102,7 +103,7 @@ public abstract class EncompassInDocComment(ICSharpContextActionDataProvider pro
 
             var factory = CSharpElementFactory.GetInstance(docCommentNode);
 
-            var updatedDocCommentNode = factory.CreateComment($"{text[..start]}{Encompass(text[start..end])}{text[end..]}");
+            var updatedDocCommentNode = factory.CreateComment($"{text[..start]}{Encompass(text[start..end], settings)}{text[end..]}");
 
             docCommentNode.ReplaceBy(updatedDocCommentNode);
 

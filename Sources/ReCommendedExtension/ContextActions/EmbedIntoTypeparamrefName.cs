@@ -9,7 +9,8 @@ namespace ReCommendedExtension.ContextActions;
     Description = """Embed the word or selection into <typeparamref name="..."/> in XML doc comments.""")]
 public sealed class EmbedIntoTypeparamrefName(ICSharpContextActionDataProvider provider) : EncompassInDocComment(provider)
 {
-    protected override string Encompass(string text) => $"""<typeparamref name="{text}"/>""";
+    protected override string Encompass(string text, Settings settings)
+        => BuildTag("typeparamref", ("name", text), null, TagOption.Collapsed, settings);
 
     public override string Text => """Embed into <typeparamref name="..."/>""";
 }
