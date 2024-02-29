@@ -520,6 +520,12 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                             var lines = nestedTag.InnerText.Split(["\r\n", "\n", "\r"], StringSplitOptions.None);
 
+                            // remove trailing whitespace
+                            for (var i = 0; i < lines.Length; i++)
+                            {
+                                lines[i] = lines[i].TrimEnd();
+                            }
+
                             var (start, end) = (0, lines.Length - 1);
 
                             // skip leading empty strings
@@ -536,9 +542,35 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                             if (start <= end)
                             {
+                                Debug.Assert(lines.Skip(start).Take(end - start + 1).Any(line => line != ""));
+
+                                // find the common indentation of the non-empty lines
+
+                                var shortestLineIndentation = int.MaxValue;
+
                                 for (var i = start; i <= end; i++)
                                 {
-                                    yield return Token.Code(lines[i]);
+                                    if (lines[i] == "")
+                                    {
+                                        continue;
+                                    }
+
+                                    var lineIndentation = lines[i].TakeWhile(char.IsWhiteSpace).Count();
+
+                                    if (lineIndentation == 0)
+                                    {
+                                        shortestLineIndentation = 0;
+                                        break;
+                                    }
+
+                                    shortestLineIndentation = Math.Min(shortestLineIndentation, lineIndentation);
+                                }
+
+                                Debug.Assert(shortestLineIndentation < int.MaxValue);
+
+                                for (var i = start; i <= end; i++)
+                                {
+                                    yield return Token.Code(lines[i] != "" ? lines[i][shortestLineIndentation..] : "");
                                 }
                             }
 

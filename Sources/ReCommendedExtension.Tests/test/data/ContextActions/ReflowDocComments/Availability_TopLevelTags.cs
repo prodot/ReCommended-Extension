@@ -30,6 +30,20 @@ namespace Test
         // The above method returns tr{off}ue or false.
     }
 
+    public class Availability_PrimaryConstructors
+    {
+        /// <summary>
+        /// {on}
+        /// </summary>
+        public class Parameterless() { }
+
+        /// <summary>
+        /// {off}<c>docCommentBlock.GetXmlPsi()</c> fails when a primary constructor has parameters
+        /// </summary>
+        /// <param name="q"></param>
+        public class WithParameter(int q) { }
+    }
+
     public class NonAvailability
     {
         /// <summary>{off}</summary>#

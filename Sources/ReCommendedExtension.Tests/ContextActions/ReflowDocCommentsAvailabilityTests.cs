@@ -1,4 +1,6 @@
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
@@ -12,6 +14,7 @@ public sealed class ReflowDocCommentsAvailabilityTests : CSharpContextActionAvai
     protected override string RelativeTestDataPath => @"ContextActions\ReflowDocComments";
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     public void TestAvailability_TopLevelTags() => DoNamedTest2();
 
     [Test]
