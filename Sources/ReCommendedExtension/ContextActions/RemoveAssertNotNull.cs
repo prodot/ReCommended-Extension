@@ -13,7 +13,7 @@ using ReCommendedExtension.Analyzers.ControlFlow;
 namespace ReCommendedExtension.ContextActions
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Remove inline assertion for non-nullness" + ZoneMarker.Suffix,
         Description = "Removes inline assertion for non-nullness.")]
     public sealed class RemoveAssertNotNull : ContextActionBase

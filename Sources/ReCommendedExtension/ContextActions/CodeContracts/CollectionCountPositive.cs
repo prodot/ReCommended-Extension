@@ -12,7 +12,7 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Add contract: collection is not empty" + ZoneMarker.Suffix,
         Description = "Adds a contract that the collection is not empty.")]
     public sealed class CollectionCountPositive : AddContractContextAction

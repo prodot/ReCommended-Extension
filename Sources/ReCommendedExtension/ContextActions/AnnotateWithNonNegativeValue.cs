@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Annotate with [NonNegativeValue] attribute" + ZoneMarker.Suffix,
         Description = "Annotates with the [NonNegativeValue] attribute.")]
     public sealed class AnnotateWithNonNegativeValue : AnnotateWithCodeAnnotation

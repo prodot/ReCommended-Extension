@@ -10,7 +10,7 @@ using JetBrains.TextControl;
 namespace ReCommendedExtension.ContextActions
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Annotate with [ValueRange(...)] attribute" + ZoneMarker.Suffix,
         Description = "Annotates with the [ValueRange(...)] attribute.")]
     public sealed class AnnotateWithValueRange : AnnotateWithCodeAnnotation

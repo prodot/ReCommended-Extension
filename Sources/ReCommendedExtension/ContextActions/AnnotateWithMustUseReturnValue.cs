@@ -10,7 +10,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Annotate method with [MustUseReturnValue] attribute" + ZoneMarker.Suffix,
         Description = "Annotates a method with the [MustUseReturnValue] attribute.")]
     public sealed class AnnotateWithMustUseReturnValue : AnnotateWithCodeAnnotation

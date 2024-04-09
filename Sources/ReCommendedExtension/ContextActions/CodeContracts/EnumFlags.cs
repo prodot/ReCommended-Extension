@@ -15,7 +15,7 @@ using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Add contract: enum value has the valid flags" + ZoneMarker.Suffix,
         Description = "Adds a contract that the enum value has the valid flags.")]
     public sealed class EnumFlags : AddContractContextAction

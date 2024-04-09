@@ -10,7 +10,7 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Add contract: number is not 0" + ZoneMarker.Suffix,
         Description = "Adds a contract that a number (signed) is not 0.")]
     public sealed class SignedNumericNonZero : SignedNumeric

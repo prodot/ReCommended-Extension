@@ -9,7 +9,10 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
-    [ContextAction(Group = "C#", Name = "Add contract: number is 0" + ZoneMarker.Suffix, Description = "Adds a contract that a number is 0.")]
+    [ContextAction(
+        GroupType = typeof(CSharpContextActions),
+        Name = "Add contract: number is 0" + ZoneMarker.Suffix,
+        Description = "Adds a contract that a number is 0.")]
     public sealed class NumericZero : Numeric
     {
         public NumericZero([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
