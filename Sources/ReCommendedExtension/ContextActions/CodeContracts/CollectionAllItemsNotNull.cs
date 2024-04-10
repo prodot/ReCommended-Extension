@@ -14,7 +14,7 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Add contract: all collection items are not null" + ZoneMarker.Suffix,
         Description = "Adds a contract that all collection items (or dictionary values) are not null.")]
     public sealed class CollectionAllItemsNotNull : AddContractContextAction

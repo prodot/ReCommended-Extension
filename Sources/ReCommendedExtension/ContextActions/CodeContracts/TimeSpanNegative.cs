@@ -9,7 +9,7 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Add contract: time span is negative" + ZoneMarker.Suffix,
         Description = "Adds a contract that a time span is less than zero.")]
     public sealed class TimeSpanNegative : TimeSpan

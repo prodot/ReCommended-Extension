@@ -11,7 +11,7 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Add contract: IntPtr is zero" + ZoneMarker.Suffix,
         Description = "Adds a contract that the IntPtr (or UIntPtr) value is zero.")]
     public sealed class IntPtrUIntPtrZero : IntPtrUIntPtr

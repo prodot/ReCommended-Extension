@@ -17,11 +17,11 @@ namespace ReCommendedExtension.Tests.Analyzers
             => highlighting is MissingSuppressionJustificationWarning;
 
         [Test]
-        [TestPackages("xunit.core")]
+        [TestPackages("xunit.core/2.4.1")]
         public void TestSuppressMessage_TestProject() => DoNamedTest2();
 
         [Test]
-        [TestNet50("xunit.core")]
+        [TestNet50("xunit.core/2.4.1")]
         public void TestSuppressMessage_TestProject_NET_5() => DoNamedTest2();
     }
 }

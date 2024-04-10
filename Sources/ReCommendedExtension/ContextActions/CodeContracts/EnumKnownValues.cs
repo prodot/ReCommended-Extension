@@ -13,7 +13,7 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Add contract: enum value has valid values" + ZoneMarker.Suffix,
         Description = "Adds a contract that the enum value has the valid values.")]
     public sealed class EnumKnownValues : AddContractContextAction

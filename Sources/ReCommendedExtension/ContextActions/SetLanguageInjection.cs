@@ -26,7 +26,7 @@ using JetBrains.Util;
 namespace ReCommendedExtension.ContextActions
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Set language injection for string literals" + ZoneMarker.Suffix,
         Description = "Set language injection for string literals.")]
     public sealed class SetLanguageInjection : IContextAction

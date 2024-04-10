@@ -9,7 +9,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions.CodeContracts
 {
     [ContextAction(
-        Group = "C#",
+        GroupType = typeof(CSharpContextActions),
         Name = "Add contract: a nullable value is not null" + ZoneMarker.Suffix,
         Description = "Adds a contract that a nullable value is not null.")]
     public sealed class NotNull : AddContractContextAction
