@@ -281,7 +281,8 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
     [Pure]
     static IReadOnlyList<IParameterDeclaration>? TryGetParameters(ITreeNode? treeNode)
-        => (treeNode as IParametersOwnerDeclaration)?.ParameterDeclarations as IReadOnlyList<IParameterDeclaration>;
+        => (treeNode as IParametersOwnerDeclaration ?? (treeNode as IClassLikeDeclaration)?.PrimaryConstructorDeclaration)?.ParameterDeclarations as
+            IReadOnlyList<IParameterDeclaration>;
 
     [Pure]
     static bool AreEqual(NodeType x, NodeType y) => x.Index == y.Index;

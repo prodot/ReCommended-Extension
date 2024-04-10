@@ -38,7 +38,7 @@ namespace Test
         public class Parameterless() { }
 
         /// <summary>
-        /// {off}<c>docCommentBlock.GetXmlPsi()</c> fails when a primary constructor has parameters
+        /// {on}
         /// </summary>
         /// <param name="q"></param>
         public class WithParameter(int q) { }
