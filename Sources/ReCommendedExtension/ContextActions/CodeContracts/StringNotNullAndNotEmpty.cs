@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Add contract: string is not null or empty" + ZoneMarker.Suffix,
     Description = "Adds a contract that a string is not null and not empty.")]
 public sealed class StringNotNullAndNotEmpty(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)

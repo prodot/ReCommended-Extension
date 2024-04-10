@@ -9,7 +9,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions.Annotations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Annotate method with [Pure] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a method with the [Pure] attribute.")]
 public sealed class AnnotateWithPure(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)

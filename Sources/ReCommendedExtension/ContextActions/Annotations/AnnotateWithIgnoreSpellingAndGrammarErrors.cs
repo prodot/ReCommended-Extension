@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions.Annotations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Annotate parameters with [IgnoreSpellingAndGrammarErrors] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a parameter with the [IgnoreSpellingAndGrammarErrors] attribute.")]
 

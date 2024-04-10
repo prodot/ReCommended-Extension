@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 namespace ReCommendedExtension.ContextActions.DocComments;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = """Embed the word or selection into <paramref name="..."/> in XML doc comments""" + ZoneMarker.Suffix,
     Description = """Embed the word or selection into <paramref name="..."/> in XML doc comments.""")]
 public sealed class EmbedIntoParamrefName(ICSharpContextActionDataProvider provider) : EncompassInDocComment(provider)

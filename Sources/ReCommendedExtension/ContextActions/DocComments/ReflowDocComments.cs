@@ -17,7 +17,7 @@ using JetBrains.Util;
 namespace ReCommendedExtension.ContextActions.DocComments;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Reflow XML doc comments" + ZoneMarker.Suffix,
     Description = "Reflow XML doc comments XML doc comments, i.e. apply smart formatting, tag reordering, etc.")]
 public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider) : XmlDocCommentContextAction

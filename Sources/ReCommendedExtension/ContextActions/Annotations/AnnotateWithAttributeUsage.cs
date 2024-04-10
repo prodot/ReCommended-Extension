@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.Annotations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Annotate attribute type with [AttributeUsage] attribute" + ZoneMarker.Suffix,
     Description = "Annotates an attribute type with the [AttributeUsage] attribute.")]
 

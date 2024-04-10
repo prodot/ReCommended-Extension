@@ -918,7 +918,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 bool IsTargetTypedTo(IClrTypeName clrTypeName)
                     => TypeEqualityComparer.Default.Equals(targetTypeInfo.TargetType, TryConstructType(clrTypeName, typeArguments, psiModule));
 
-                if (collectionExpression.CollectionElements.All(item => item.Expression.IsDefaultValueOf(collectionItemType))
+                if (collectionExpression.CollectionElements.All(
+                        item => item is IExpressionElement expressionElement && expressionElement.Expression.IsDefaultValueOf(collectionItemType))
                     && (IsTargetTypedToArray()
                         || IsTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
                         || IsTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)

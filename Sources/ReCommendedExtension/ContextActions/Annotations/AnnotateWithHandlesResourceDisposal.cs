@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions.Annotations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Annotate methods, parameters, properties, and fields with [HandlesResourceDisposal] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a method, a parameter, a property, or a field with the [HandlesResourceDisposal] attribute.")]
 

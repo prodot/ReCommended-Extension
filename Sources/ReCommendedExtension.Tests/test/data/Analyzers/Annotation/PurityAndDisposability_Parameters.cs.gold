@@ -86,6 +86,6 @@ namespace Test
 (15): ReSharper Warning: Annotation is not valid because task-like disposable parameters are not yet supported.
 (16): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
 (17): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
-(18): ReSharper Warning: Annotation is not valid for input parameters.
+(18): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
 (19): ReSharper Warning: Annotation is not valid because the parameter is not disposable.
 (20): ReSharper Warning: Annotation is not valid because the parameter is not disposable.

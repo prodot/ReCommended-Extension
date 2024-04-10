@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions.Annotations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Annotate with [ValueRange(...)] attribute" + ZoneMarker.Suffix,
     Description = "Annotates with the [ValueRange(...)] attribute.")]
 public sealed class AnnotateWithValueRange(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)

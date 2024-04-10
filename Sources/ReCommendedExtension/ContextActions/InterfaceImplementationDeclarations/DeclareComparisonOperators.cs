@@ -12,7 +12,7 @@ using ReCommendedExtension.Analyzers.InterfaceImplementation;
 namespace ReCommendedExtension.ContextActions.InterfaceImplementationDeclarations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Declare IComparisonOperators<T, T, bool>" + ZoneMarker.Suffix,
     Description = "Declare IComparisonOperators<T, T, bool>.")]
 public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider provider) : ContextActionBase

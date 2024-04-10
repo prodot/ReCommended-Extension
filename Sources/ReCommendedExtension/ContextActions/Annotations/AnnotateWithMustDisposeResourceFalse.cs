@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Modules;
 namespace ReCommendedExtension.ContextActions.Annotations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Annotate types, methods, and parameters with [MustDisposeResource(false)] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a type, a method, or a parameter with the [MustDisposeResource(false)] attribute.")]
 public sealed class AnnotateWithMustDisposeResourceFalse(ICSharpContextActionDataProvider provider) : AnnotateWithMustDisposeResourceBase(provider)

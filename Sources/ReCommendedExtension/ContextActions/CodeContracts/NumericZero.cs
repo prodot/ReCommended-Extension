@@ -5,7 +5,10 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
-[ContextAction(Group = "C#", Name = "Add contract: number is 0" + ZoneMarker.Suffix, Description = "Adds a contract that a number is 0.")]
+[ContextAction(
+    GroupType = typeof(CSharpContextActions),
+    Name = "Add contract: number is 0" + ZoneMarker.Suffix,
+    Description = "Adds a contract that a number is 0.")]
 public sealed class NumericZero(ICSharpContextActionDataProvider provider) : Numeric(provider)
 {
     protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} == 0";

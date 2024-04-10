@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Add contract: Guid is not empty" + ZoneMarker.Suffix,
     Description = "Adds a contract that the Guid is not empty.")]
 public sealed class GuidNonEmpty(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)

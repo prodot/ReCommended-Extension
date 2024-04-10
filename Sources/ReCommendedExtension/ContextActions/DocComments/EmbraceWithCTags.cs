@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 namespace ReCommendedExtension.ContextActions.DocComments;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Embrace the word or selection with <c>...</c> in XML doc comments" + ZoneMarker.Suffix,
     Description = "Embraces the word or selection with <c>...</c> in XML doc comments.")]
 public sealed class EmbraceWithCTags(ICSharpContextActionDataProvider provider) : EncompassInDocComment(provider)

@@ -927,20 +927,6 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 break;
             }
 
-            case IParameterDeclaration { DeclaredElement: { Kind: ParameterKind.READONLY_REFERENCE } parameter }:
-            {
-                if (IsAnnotatedWithAnyOf(
-                    parameter,
-                    PurityOrDisposabilityKind.MustDisposeResource,
-                    PurityOrDisposabilityKind.MustDisposeResourceFalse))
-                {
-                    // this is a workaround for the missing warning for the [MustDisposeResource] annotation on 'ref readonly' parameters
-                    HighlightNotAllowed(PurityOrDisposabilityKind.MustDisposeResource, "Annotation is not valid for input parameters.");
-                }
-
-                break;
-            }
-
             case IParameterDeclaration { DeclaredElement: { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter }:
             {
                 if (parameter.Type.IsDisposable(element) || parameter.Type.IsTasklikeOfIsDisposable(element))

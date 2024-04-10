@@ -12,7 +12,7 @@ using ReCommendedExtension.Analyzers.InterfaceImplementation;
 namespace ReCommendedExtension.ContextActions.InterfaceImplementationDeclarations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Declare IEqualityOperators<T, T, bool>" + ZoneMarker.Suffix,
     Description = "Declare IEqualityOperators<T, T, bool>.")]
 public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider provider) : ContextActionBase

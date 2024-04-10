@@ -17,11 +17,11 @@ public sealed class AnnotationAnalyzerTestsForNUnitTestProjects : CSharpHighligh
         => highlighting is MissingSuppressionJustificationWarning;
 
     [Test]
-    [TestNetFramework47]
-    [TestPackages("nunit")]
+    [TestNetFramework46]
+    [TestPackages("nunit/3.13.3")]
     public void TestSuppressMessage_TestProject() => DoNamedTest2();
 
     [Test]
-    [TestNet50("nunit")]
+    [TestNet50("nunit/3.13.3")]
     public void TestSuppressMessage_TestProject_NET_5() => DoNamedTest2();
 }

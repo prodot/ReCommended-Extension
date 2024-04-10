@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Util;
 namespace ReCommendedExtension.ContextActions.Annotations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Annotate parameter with [InstantHandle] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a parameter with the [InstantHandle] attribute.")]
 public sealed class AnnotateWithInstantHandle(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)

@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace ReCommendedExtension.ContextActions.Annotations;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Annotate methods with [LinqTunnel] attribute" + ZoneMarker.Suffix,
     Description = "Annotates a method with the [LinqTunnel] attribute.")]
 public sealed class AnnotateWithLinqTunnel(ICSharpContextActionDataProvider provider) : AnnotateWithCodeAnnotation(provider)

@@ -9,7 +9,7 @@ using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
 [ContextAction(
-    Group = "C#",
+    GroupType = typeof(CSharpContextActions),
     Name = "Add contract: enum value is within the valid enum range" + ZoneMarker.Suffix,
     Description = "Adds a contract that the enum value is within the valid enum range.")]
 public sealed class EnumBetweenFirstAndLast(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
