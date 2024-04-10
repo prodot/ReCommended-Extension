@@ -106,17 +106,17 @@ namespace Disposable
 
     internal class ChildTaskLike : ParentTaskLike
     {
-        public override Task<IDisposable> Not{on}Annotated() => throw new NotImplementedException();
+        public override Task<IDisposable> Not{off}Annotated() => throw new NotImplementedException();
 
-        public override Task<IAsyncDisposable> Annotated{on}WithPure() => throw new NotImplementedException();
+        public override Task<IAsyncDisposable> Annotated{off}WithPure() => throw new NotImplementedException();
 
         public override Task<Stream> Annotated{off}WithMustUseReturnValue() => throw new NotImplementedException();
 
-        public override ValueTask<Stream> Annotated{on}WithMustDisposeResource() => throw new NotImplementedException();
+        public override ValueTask<Stream> Annotated{off}WithMustDisposeResource() => throw new NotImplementedException();
 
-        public override ValueTask<IAsyncDisposable> Annotated{on}WithMustDisposeResourceFalse() => throw new NotImplementedException();
+        public override ValueTask<IAsyncDisposable> Annotated{off}WithMustDisposeResourceFalse() => throw new NotImplementedException();
 
-        public ValueTask<IDisposable> Ot{on}her() => throw new NotImplementedException();
+        public ValueTask<IDisposable> Ot{off}her() => throw new NotImplementedException();
     }
 
     internal class WithAnnotations

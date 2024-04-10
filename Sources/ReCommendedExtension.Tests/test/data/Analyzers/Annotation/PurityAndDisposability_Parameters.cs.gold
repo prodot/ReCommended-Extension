@@ -42,29 +42,29 @@ namespace Test
 
     internal class ParentTaskLike
     {
-        public virtual void NotAnnotated(ref ValueTask<IDisposable> p0, out Task<IAsyncDisposable> p1) => throw new NotImplementedException();
+        public virtual void NotAnnotated(ref ValueTask<IDisposable> |p0|(12), out Task<IAsyncDisposable> |p1|(13)) => throw new NotImplementedException();
 
-        public virtual void Annotated([|MustDisposeResource|(12)] ref ValueTask<Stream> p0, [|MustDisposeResource|(13)] out Task<IDisposable> p1) => throw new NotImplementedException();
+        public virtual void Annotated([MustDisposeResource] ref ValueTask<Stream> p0, [MustDisposeResource] out Task<IDisposable> p1) => throw new NotImplementedException();
 
-        public virtual void AnnotatedWithFalse([|MustDisposeResource(false)|(14)] ref ValueTask<Stream> p0, [|MustDisposeResource(false)|(15)] out Task<IAsyncDisposable> p1) => throw new NotImplementedException();
+        public virtual void AnnotatedWithFalse([MustDisposeResource(false)] ref ValueTask<Stream> p0, [MustDisposeResource(false)] out Task<IAsyncDisposable> p1) => throw new NotImplementedException();
     }
 
     internal class ChildTaskLike : ParentTaskLike
     {
-        public override void NotAnnotated(ref ValueTask<IDisposable> p0, out Task<IAsyncDisposable> p1) => throw new NotImplementedException();
+        public override void NotAnnotated(ref ValueTask<IDisposable> |p0|(14), out Task<IAsyncDisposable> |p1|(15)) => throw new NotImplementedException();
 
         public override void Annotated(ref ValueTask<Stream> p0, out Task<IDisposable> p1) => throw new NotImplementedException();
 
-        public override void AnnotatedWithFalse(ref ValueTask<Stream> p0, out Task<IAsyncDisposable> p1) => throw new NotImplementedException();
+        public override void AnnotatedWithFalse(ref ValueTask<Stream> |p0|(16), out Task<IAsyncDisposable> |p1|(17)) => throw new NotImplementedException();
 
-        public void Other(ref Task<IDisposable> p0, out ValueTask<Stream> p1) => throw new NotImplementedException();
+        public void Other(ref Task<IDisposable> |p0|(18), out ValueTask<Stream> |p1|(19)) => throw new NotImplementedException();
     }
 
     internal class Other
     {
-        public void InputParameters([|MustDisposeResource|(16)] IDisposable p0, [|MustDisposeResource|(17)] in IDisposable p1, [|MustDisposeResource|(18)] ref readonly IDisposable p2) { }
+        public void InputParameters([|MustDisposeResource|(20)] IDisposable p0, [|MustDisposeResource|(21)] in IDisposable p1, [|MustDisposeResource|(22)] ref readonly IDisposable p2) { }
 
-        public void NonDisposable([|MustDisposeResource|(19)] ref int p0, [|MustDisposeResource|(20)] out int p1) => throw new NotImplementedException();
+        public void NonDisposable([|MustDisposeResource|(23)] ref int p0, [|MustDisposeResource|(24)] out int p1) => throw new NotImplementedException();
     }
 }
 ---------------------------------------------------------
@@ -80,12 +80,16 @@ namespace Test
 (9): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (10): ReSharper Suggestion: Annotation is redundant because the parameter of a base method is already annotated with [MustDisposeResource].
 (11): ReSharper Suggestion: Annotation is redundant because the parameter of a base method is already annotated with [MustDisposeResource].
-(12): ReSharper Warning: Annotation is not valid because task-like disposable parameters are not yet supported.
-(13): ReSharper Warning: Annotation is not valid because task-like disposable parameters are not yet supported.
-(14): ReSharper Warning: Annotation is not valid because task-like disposable parameters are not yet supported.
-(15): ReSharper Warning: Annotation is not valid because task-like disposable parameters are not yet supported.
-(16): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
-(17): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
-(18): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
-(19): ReSharper Warning: Annotation is not valid because the parameter is not disposable.
-(20): ReSharper Warning: Annotation is not valid because the parameter is not disposable.
+(12): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(13): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(14): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(15): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(16): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(17): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(18): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(19): ReSharper Warning: Parameter is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(20): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
+(21): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
+(22): ReSharper Warning: Meaningless [MustDisposeResource] annotation for an input parameter
+(23): ReSharper Warning: Annotation is not valid because the parameter is not disposable.
+(24): ReSharper Warning: Annotation is not valid because the parameter is not disposable.

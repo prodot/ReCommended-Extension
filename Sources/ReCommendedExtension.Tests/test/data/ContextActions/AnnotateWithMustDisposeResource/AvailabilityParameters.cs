@@ -41,13 +41,13 @@ namespace Test
 
     internal class ChildTaskLike : ParentTaskLike
     {
-        public override void NotAnnotated(ref ValueTask<IDisposable> p{off}0, out Task<IAsyncDisposable> p{off}1) => throw new NotImplementedException();
+        public override void NotAnnotated(ref ValueTask<IDisposable> p{on}0, out Task<IAsyncDisposable> p{on}1) => throw new NotImplementedException();
 
         public override void Annotated(ref ValueTask<Stream> p{off}0, out Task<IDisposable> p{off}1) => throw new NotImplementedException();
 
-        public override void AnnotatedWithFalse(ref ValueTask<Stream> p{off}0, out Task<IAsyncDisposable> p{off}1) => throw new NotImplementedException();
+        public override void AnnotatedWithFalse(ref ValueTask<Stream> p{on}0, out Task<IAsyncDisposable> p{on}1) => throw new NotImplementedException();
 
-        public void Other(ref Task<IDisposable> p{off}0, out ValueTask<Stream> p{off}1) => throw new NotImplementedException();
+        public void Other(ref Task<IDisposable> p{on}0, out ValueTask<Stream> p{on}1) => throw new NotImplementedException();
     }
 
     internal class Other

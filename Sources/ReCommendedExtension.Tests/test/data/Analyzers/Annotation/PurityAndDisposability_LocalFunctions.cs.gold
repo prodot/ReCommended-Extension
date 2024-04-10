@@ -59,19 +59,19 @@ namespace Test
             [|MustUseReturnValue|(17)]
             IAsyncDisposable |AsyncDisposable|(18)() => throw new NotImplementedException();
 
-            [MustUseReturnValue]
-            Task<IDisposable> DisposableTaskLike() => throw new NotImplementedException();
-
-            [MustUseReturnValue]
-            ValueTask<IAsyncDisposable> AsyncDisposableTaskLike() => throw new NotImplementedException();
-
             [|MustUseReturnValue|(19)]
-            DisposableRefStruct |Disposable2|(20)() => throw new NotImplementedException();
+            Task<IDisposable> |DisposableTaskLike|(20)() => throw new NotImplementedException();
+
+            [|MustUseReturnValue|(21)]
+            ValueTask<IAsyncDisposable> |AsyncDisposableTaskLike|(22)() => throw new NotImplementedException();
+
+            [|MustUseReturnValue|(23)]
+            DisposableRefStruct |Disposable2|(24)() => throw new NotImplementedException();
         }
 
         public void AnnotatedWithMustDisposeResource()
         {
-            [|MustDisposeResource|(21)]
+            [|MustDisposeResource|(25)]
             int NonDisposable() => 0;
 
             [MustDisposeResource]
@@ -80,11 +80,11 @@ namespace Test
             [MustDisposeResource]
             IAsyncDisposable AsyncDisposable() => throw new NotImplementedException();
 
-            [|MustDisposeResource|(22)]
-            Task<IDisposable> |DisposableTaskLike|(23)() => throw new NotImplementedException();
+            [MustDisposeResource]
+            Task<IDisposable> DisposableTaskLike() => throw new NotImplementedException();
 
-            [|MustDisposeResource|(24)]
-            ValueTask<IAsyncDisposable> |AsyncDisposableTaskLike|(25)() => throw new NotImplementedException();
+            [MustDisposeResource]
+            ValueTask<IAsyncDisposable> AsyncDisposableTaskLike() => throw new NotImplementedException();
 
             [MustDisposeResource]
             DisposableRefStruct Disposable2() => throw new NotImplementedException();
@@ -101,11 +101,11 @@ namespace Test
             [MustDisposeResource(true)]
             IAsyncDisposable AsyncDisposable() => throw new NotImplementedException();
 
-            [|MustDisposeResource(true)|(27)]
-            Task<IDisposable> |DisposableTaskLike|(28)() => throw new NotImplementedException();
+            [MustDisposeResource(true)]
+            Task<IDisposable> DisposableTaskLike() => throw new NotImplementedException();
 
-            [|MustDisposeResource(true)|(29)]
-            ValueTask<IAsyncDisposable> |AsyncDisposableTaskLike|(30)() => throw new NotImplementedException();
+            [MustDisposeResource(true)]
+            ValueTask<IAsyncDisposable> AsyncDisposableTaskLike() => throw new NotImplementedException();
 
             [MustDisposeResource(true)]
             DisposableRefStruct Disposable2() => throw new NotImplementedException();
@@ -113,7 +113,7 @@ namespace Test
 
         public void AnnotatedWithMustDisposeResourceFalse()
         {
-            [|MustDisposeResource(false)|(31)]
+            [|MustDisposeResource(false)|(27)]
             int NonDisposable() => 0;
 
             [MustDisposeResource(false)]
@@ -122,11 +122,11 @@ namespace Test
             [MustDisposeResource(false)]
             IAsyncDisposable AsyncDisposable() => throw new NotImplementedException();
 
-            [|MustDisposeResource(false)|(32)]
-            Task<IDisposable> |DisposableTaskLike|(33)() => throw new NotImplementedException();
+            [MustDisposeResource(false)]
+            Task<IDisposable> DisposableTaskLike() => throw new NotImplementedException();
 
-            [|MustDisposeResource(false)|(34)]
-            ValueTask<IAsyncDisposable> |AsyncDisposableTaskLike|(35)() => throw new NotImplementedException();
+            [MustDisposeResource(false)]
+            ValueTask<IAsyncDisposable> AsyncDisposableTaskLike() => throw new NotImplementedException();
 
             [MustDisposeResource(false)]
             DisposableRefStruct Disposable2() => throw new NotImplementedException();
@@ -136,17 +136,17 @@ namespace Test
 ---------------------------------------------------------
 (0): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (1): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(2): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
-(3): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
+(2): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(3): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (4): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (5): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
 (6): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (7): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
 (8): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (9): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
-(10): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
+(10): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (11): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
-(12): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
+(12): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (13): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
 (14): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (15): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
@@ -155,18 +155,10 @@ namespace Test
 (18): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (19): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
 (20): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(21): ReSharper Warning: Annotation is not valid because the local function return type is not disposable.
-(22): ReSharper Warning: Annotation is not valid because task-like disposable local function return types are not yet supported.
-(23): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
-(24): ReSharper Warning: Annotation is not valid because task-like disposable local function return types are not yet supported.
-(25): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
+(21): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
+(22): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(23): ReSharper Warning: Annotation is not valid because the local function return type is disposable.
+(24): ReSharper Warning: Local function with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(25): ReSharper Warning: Annotation is not valid because the local function return type is not disposable.
 (26): ReSharper Warning: Annotation is not valid because the local function return type is not disposable.
-(27): ReSharper Warning: Annotation is not valid because task-like disposable local function return types are not yet supported.
-(28): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
-(29): ReSharper Warning: Annotation is not valid because task-like disposable local function return types are not yet supported.
-(30): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
-(31): ReSharper Warning: Annotation is not valid because the local function return type is not disposable.
-(32): ReSharper Warning: Annotation is not valid because task-like disposable local function return types are not yet supported.
-(33): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
-(34): ReSharper Warning: Annotation is not valid because task-like disposable local function return types are not yet supported.
-(35): ReSharper Warning: Local function with the task-like disposable return type is not annotated with [MustUseReturnValue] (annotating with [MustDisposeResource] is not yet supported).
+(27): ReSharper Warning: Annotation is not valid because the local function return type is not disposable.

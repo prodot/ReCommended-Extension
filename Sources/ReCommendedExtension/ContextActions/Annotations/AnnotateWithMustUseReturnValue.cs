@@ -32,16 +32,10 @@ public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvi
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
         => declaredElement switch
         {
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-            IMethod method => !method.ReturnType.IsVoid()
-                && !method.ReturnType.IsDisposable(context)
-                && !IsAnyBaseMethodAnnotated(method),
-#else
             IMethod method => !method.ReturnType.IsVoid()
                 && !method.ReturnType.IsDisposable(context)
                 && !method.ReturnType.IsTasklikeOfIsDisposable(context)
                 && !IsAnyBaseMethodAnnotated(method),
-#endif
 
             ILocalFunction localFunction => !localFunction.ReturnType.IsVoid() && !localFunction.ReturnType.IsDisposable(context),
 

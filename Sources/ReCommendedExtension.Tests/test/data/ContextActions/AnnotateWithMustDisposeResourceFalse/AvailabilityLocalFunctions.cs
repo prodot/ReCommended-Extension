@@ -19,9 +19,9 @@ namespace Test
 
             IAsyncDisposable Async{on}Disposable() => throw new NotImplementedException();
 
-            Task<IDisposable> Disposable{off}TaskLike() => throw new NotImplementedException();
+            Task<IDisposable> Disposable{on}TaskLike() => throw new NotImplementedException();
 
-            ValueTask<IAsyncDisposable> AsyncDisposable{off}TaskLike() => throw new NotImplementedException();
+            ValueTask<IAsyncDisposable> AsyncDisposable{on}TaskLike() => throw new NotImplementedException();
 
             DisposableRefStruct Dispo{on}sable2() => throw new NotImplementedException();
         }
@@ -38,10 +38,10 @@ namespace Test
             IAsyncDisposable Async{on}Disposable() => throw new NotImplementedException();
 
             [Pure]
-            Task<IDisposable> Disposable{off}TaskLike() => throw new NotImplementedException();
+            Task<IDisposable> Disposable{on}TaskLike() => throw new NotImplementedException();
 
             [Pure]
-            ValueTask<IAsyncDisposable> AsyncDisposable{off}TaskLike() => throw new NotImplementedException();
+            ValueTask<IAsyncDisposable> AsyncDisposable{on}TaskLike() => throw new NotImplementedException();
 
             [Pure]
             DisposableRefStruct Dispo{on}sable2() => throw new NotImplementedException();
@@ -59,10 +59,10 @@ namespace Test
             IAsyncDisposable Async{on}Disposable() => throw new NotImplementedException();
 
             [MustUseReturnValue]
-            Task<IDisposable> Disposable{off}TaskLike() => throw new NotImplementedException();
+            Task<IDisposable> Disposable{on}TaskLike() => throw new NotImplementedException();
 
             [MustUseReturnValue]
-            ValueTask<IAsyncDisposable> AsyncDisposable{off}TaskLike() => throw new NotImplementedException();
+            ValueTask<IAsyncDisposable> AsyncDisposable{on}TaskLike() => throw new NotImplementedException();
 
             [MustUseReturnValue]
             DisposableRefStruct Dispo{on}sable2() => throw new NotImplementedException();
@@ -80,10 +80,10 @@ namespace Test
             IAsyncDisposable Async{on}Disposable() => throw new NotImplementedException();
 
             [MustDisposeResource]
-            Task<IDisposable> Disposable{off}TaskLike() => throw new NotImplementedException();
+            Task<IDisposable> Disposable{on}TaskLike() => throw new NotImplementedException();
 
             [MustDisposeResource]
-            ValueTask<IAsyncDisposable> AsyncDisposable{off}TaskLike() => throw new NotImplementedException();
+            ValueTask<IAsyncDisposable> AsyncDisposable{on}TaskLike() => throw new NotImplementedException();
 
             [MustDisposeResource]
             DisposableRefStruct Dispo{on}sable2() => throw new NotImplementedException();
@@ -101,10 +101,10 @@ namespace Test
             IAsyncDisposable Async{on}Disposable() => throw new NotImplementedException();
 
             [MustDisposeResource(true)]
-            Task<IDisposable> Disposable{off}TaskLike() => throw new NotImplementedException();
+            Task<IDisposable> Disposable{on}TaskLike() => throw new NotImplementedException();
 
             [MustDisposeResource(true)]
-            ValueTask<IAsyncDisposable> AsyncDisposable{off}TaskLike() => throw new NotImplementedException();
+            ValueTask<IAsyncDisposable> AsyncDisposable{on}TaskLike() => throw new NotImplementedException();
 
             [MustDisposeResource(true)]
             DisposableRefStruct Dispo{on}sable2() => throw new NotImplementedException();

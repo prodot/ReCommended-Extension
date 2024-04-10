@@ -13,8 +13,6 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
-// todo: remove compiler directive "MUST_DISPOSE_RESOURCE_NO_TASK_LIKE" when [MustDisposeResource] supports task-like method and parameters (https://youtrack.jetbrains.com/issue/RSRP-495289/MustDisposeResource-should-support-task-like-method-and-parameters)
-
 [ElementProblemAnalyzer(
     typeof(IAttributesOwnerDeclaration),
     HighlightingTypes =
@@ -655,77 +653,13 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                     if (IsAnnotated(methodOrLocalFunction, PurityOrDisposabilityKind.MustUseReturnValue))
                     {
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                        if (returnType.IsTasklike(element))
-                        {
-                            if (methodOrLocalFunction is IMethod method
-                                && IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustUseReturnValue))
-                            {
-                                var name = nameof(MustUseReturnValueAttribute).WithoutSuffix();
-
-                                HighlightRedundant(
-                                    PurityOrDisposabilityKind.MustUseReturnValue,
-                                    $"Annotation is redundant because a base method is already annotated with [{name}].");
-                            }
-                        }
-                        else
-                        {
-                            HighlightNotAllowed(
-                                PurityOrDisposabilityKind.MustUseReturnValue,
-                                $"Annotation is not valid because the {functionDescription} return type is disposable.");
-                        }
-#else
                         HighlightNotAllowed(
                             PurityOrDisposabilityKind.MustUseReturnValue,
                             $"Annotation is not valid because the {functionDescription} return type is disposable.");
-#endif
                     }
 
                     if (TryGetAnnotation(methodOrLocalFunction, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                        if (returnType.IsTasklike(element))
-                        {
-                            HighlightNotAllowed(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Annotation is not valid because task-like disposable {functionDescription} return types are not yet supported.");
-                        }
-                        else
-                        {
-                            var highlighted = false;
-
-                            if (methodOrLocalFunction is IMethod method)
-                            {
-                                if (IsMethodOverridenWithOtherReturnType(method))
-                                {
-                                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                                    HighlightNotAllowed(
-                                        PurityOrDisposabilityKind.MustDisposeResource,
-                                        $"Overriden method return type becomes disposable, the only valid annotation is [{name}(false)].");
-
-                                    highlighted = true;
-                                }
-
-                                if (!highlighted && IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource))
-                                {
-                                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                                    HighlightRedundant(
-                                        PurityOrDisposabilityKind.MustDisposeResource,
-                                        $"Annotation is redundant because a base method is already annotated with [{name}].");
-
-                                    highlighted = true;
-                                }
-                            }
-
-                            if (!highlighted && IsMustDisposeResourceTrueAttribute(annotation))
-                            {
-                                HighlightRedundantMustDisposeResourceTrueArgument(
-                                    $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
-                            }
-                        }
-#else
                         var highlighted = false;
 
                         if (methodOrLocalFunction is IMethod method)
@@ -758,49 +692,13 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                             HighlightRedundantMustDisposeResourceTrueArgument(
                                 $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
                         }
-#endif
                     }
-
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                    if (IsAnnotated(methodOrLocalFunction, PurityOrDisposabilityKind.MustDisposeResourceFalse) && returnType.IsTasklike(element))
-                    {
-                        HighlightNotAllowed(
-                            PurityOrDisposabilityKind.MustDisposeResourceFalse,
-                            $"Annotation is not valid because task-like disposable {functionDescription} return types are not yet supported.");
-                    }
-#endif
 
                     if (!IsAnnotatedWithAnyOf(
                         methodOrLocalFunction,
                         PurityOrDisposabilityKind.MustDisposeResource,
                         PurityOrDisposabilityKind.MustDisposeResourceFalse))
                     {
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                        if (!returnType.IsTasklike(element))
-                        {
-                            if (methodOrLocalFunction is IMethod m2 && IsMethodOverridenWithOtherReturnType(m2))
-                            {
-                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                                HighlightMissing(
-                                    PurityOrDisposabilityKind.MustDisposeResource,
-                                    $"Overriden method, which return type becomes disposable, is not annotated with [{name}(false)].");
-                            }
-                            else
-                            {
-                                if (methodOrLocalFunction is IMethod method
-                                    && !IsAnyBaseMethodAnnotated(method, PurityOrDisposabilityKind.MustDisposeResource)
-                                    || methodOrLocalFunction is ILocalFunction)
-                                {
-                                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                                    HighlightMissing(
-                                        PurityOrDisposabilityKind.MustDisposeResource,
-                                        $"{functionDescription.WithFirstCharacterUpperCased()} with the disposable return type is not annotated with [{name}] or [{name}(false)].");
-                                }
-                            }
-                        }
-#else
                         if (methodOrLocalFunction is IMethod m2 && IsMethodOverridenWithOtherReturnType(m2))
                         {
                             var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
@@ -822,23 +720,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                                     $"{functionDescription.WithFirstCharacterUpperCased()} with the disposable return type is not annotated with [{name}] or [{name}(false)].");
                             }
                         }
-#endif
                     }
-
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                    if (!IsAnnotated(methodOrLocalFunction, PurityOrDisposabilityKind.MustUseReturnValue)
-                        && returnType.IsTasklike(element)
-                        && (methodOrLocalFunction is IMethod m && !IsAnyBaseMethodAnnotated(m, PurityOrDisposabilityKind.MustUseReturnValue)
-                            || methodOrLocalFunction is ILocalFunction))
-                    {
-                        var name = nameof(MustUseReturnValueAttribute).WithoutSuffix();
-                        var name2 = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                        HighlightMissing(
-                            PurityOrDisposabilityKind.MustUseReturnValue,
-                            $"{functionDescription.WithFirstCharacterUpperCased()} with the task-like disposable return type is not annotated with [{name}] (annotating with [{name2}] is not yet supported).");
-                    }
-#endif
                 }
                 else
                 {
@@ -933,33 +815,6 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 {
                     if (TryGetAnnotation(parameter, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                        if (parameter.Type.IsTasklike(element))
-                        {
-                            HighlightNotAllowed(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                "Annotation is not valid because task-like disposable parameters are not yet supported.");
-                        }
-                        else
-                        {
-                            if (IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
-                            {
-                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                                HighlightRedundant(
-                                    PurityOrDisposabilityKind.MustDisposeResource,
-                                    $"Annotation is redundant because the parameter of a base method is already annotated with [{name}].");
-                            }
-                            else
-                            {
-                                if (IsMustDisposeResourceTrueAttribute(annotation))
-                                {
-                                    HighlightRedundantMustDisposeResourceTrueArgument(
-                                        $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
-                                }
-                            }
-                        }
-#else
                         if (IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
                         {
                             var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
@@ -976,42 +831,19 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                                     $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
                             }
                         }
-#endif
                     }
 
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                    if (IsAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResourceFalse) && parameter.Type.IsTasklike(element))
-                    {
-                        HighlightNotAllowed(
-                            PurityOrDisposabilityKind.MustDisposeResourceFalse,
-                            "Annotation is not valid because task-like disposable parameters are not yet supported.");
-                    }
-#endif
                     if (!IsAnnotatedWithAnyOf(
-                        parameter,
-                        PurityOrDisposabilityKind.MustDisposeResource,
-                        PurityOrDisposabilityKind.MustDisposeResourceFalse))
+                            parameter,
+                            PurityOrDisposabilityKind.MustDisposeResource,
+                            PurityOrDisposabilityKind.MustDisposeResourceFalse)
+                        && !IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
                     {
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-                        if (!IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource)
-                            && !parameter.Type.IsTasklike(element))
-                        {
-                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+                        var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                            HighlightMissing(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Parameter is disposable, but not annotated with [{name}] or [{name}(false)].");
-                        }
-#else
-                        if (!IsParameterOfAnyBaseMethodAnnotated(parameter, PurityOrDisposabilityKind.MustDisposeResource))
-                        {
-                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                            HighlightMissing(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Parameter is disposable, but not annotated with [{name}] or [{name}(false)].");
-                        }
-#endif
+                        HighlightMissing(
+                            PurityOrDisposabilityKind.MustDisposeResource,
+                            $"Parameter is disposable, but not annotated with [{name}] or [{name}(false)].");
                     }
                 }
                 else

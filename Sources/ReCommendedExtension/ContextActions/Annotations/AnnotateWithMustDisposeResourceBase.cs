@@ -36,14 +36,6 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
 
         IConstructor { ContainingType: IStruct { IsByRefLike: true } s } => s.HasDisposeMethods(),
 
-#if MUST_DISPOSE_RESOURCE_NO_TASK_LIKE
-        IMethod method => method.ReturnType.IsDisposable(context) && !IsAnyBaseMethodAnnotated(method),
-
-        ILocalFunction localFunction => localFunction.ReturnType.IsDisposable(context),
-
-        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => parameter.Type.IsDisposable(context)
-            && !IsParameterOfAnyBaseMethodAnnotated(parameter),
-#else
         IMethod method => (method.ReturnType.IsDisposable(context) || method.ReturnType.IsTasklikeOfIsDisposable(context))
             && !IsAnyBaseMethodAnnotated(method),
 
@@ -52,7 +44,6 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
         IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => (parameter.Type.IsDisposable(context)
                 || parameter.Type.IsTasklikeOfIsDisposable(context))
             && !IsParameterOfAnyBaseMethodAnnotated(parameter),
-#endif
 
         _ => false,
     };
