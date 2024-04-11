@@ -34,7 +34,7 @@ public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvi
         {
             IMethod method => !method.ReturnType.IsVoid()
                 && !method.ReturnType.IsDisposable(context)
-                && !method.ReturnType.IsTasklikeOfIsDisposable(context)
+                && !method.ReturnType.IsTasklikeOfDisposable(context)
                 && !IsAnyBaseMethodAnnotated(method),
 
             ILocalFunction localFunction => !localFunction.ReturnType.IsVoid() && !localFunction.ReturnType.IsDisposable(context),

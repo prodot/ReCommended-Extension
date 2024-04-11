@@ -67,12 +67,12 @@ public sealed class AnnotateWithPure(ICSharpContextActionDataProvider provider) 
         {
             IMethod method => ReturnsAnyValueWithoutRefParameters(method)
                 && !method.ReturnType.IsDisposable(context)
-                && !method.ReturnType.IsTasklikeOfIsDisposable(context)
+                && !method.ReturnType.IsTasklikeOfDisposable(context)
                 && !IsAnyBaseMethodAnnotated(method),
 
             ILocalFunction localFunction => ReturnsAnyValueWithoutRefParameters(localFunction)
                 && !localFunction.ReturnType.IsDisposable(context)
-                && !localFunction.ReturnType.IsTasklikeOfIsDisposable(context),
+                && !localFunction.ReturnType.IsTasklikeOfDisposable(context),
 
             _ => false,
         };

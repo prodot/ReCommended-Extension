@@ -642,7 +642,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     _ => throw new NotSupportedException(),
                 };
 
-                if (returnType.IsDisposable(element) || returnType.IsTasklikeOfIsDisposable(element))
+                if (returnType.IsDisposable(element) || returnType.IsTasklikeOfDisposable(element))
                 {
                     if (IsAnnotated(methodOrLocalFunction, PurityOrDisposabilityKind.Pure))
                     {
@@ -811,7 +811,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             case IParameterDeclaration { DeclaredElement: { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter }:
             {
-                if (parameter.Type.IsDisposable(element) || parameter.Type.IsTasklikeOfIsDisposable(element))
+                if (parameter.Type.IsDisposable(element) || parameter.Type.IsTasklikeOfDisposable(element))
                 {
                     if (TryGetAnnotation(parameter, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {

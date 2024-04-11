@@ -307,17 +307,16 @@ internal static class Extensions
     }
 
     [Pure]
-    public static bool IsTasklikeOfIsDisposable(this IType type, ITreeNode context)
+    public static bool IsTasklikeOfDisposable(this IType type, ITreeNode context)
     {
-        if (type.IsTasklike(context) && type.GetTasklikeUnderlyingType(context).GetTypeElement() is { } awaitedTypeElement)
+        if (type.IsTasklike(context)
+            && type.GetTasklikeUnderlyingType(context) is { } awaitedType
+            && awaitedType.GetTypeElement() is { } awaitedTypeElement)
         {
             var psiModule = context.GetPsiModule();
 
-            var awaitedType = awaitedTypeElement.Type();
-
             return awaitedTypeElement.IsDisposable(psiModule) && !awaitedType.IsTask() && !awaitedType.IsGenericTask()
                 || awaitedTypeElement.IsNullableOfT()
-                && awaitedType is { }
                 && TypesUtil.GetTypeArgumentValue(awaitedType, 0).GetTypeElement() is { } structType
                 && structType.IsDisposable(psiModule);
         }

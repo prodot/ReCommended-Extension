@@ -557,5 +557,9 @@ namespace Disposable
         public Class? NullableClass() => throw new NotImplementedException();
 
         public Struct? NullableStruct() => throw new NotImplementedException();
+
+        public ValueTask<Class?> NullableClassTaskLike() => throw new NotImplementedException();
+
+        public ValueTask<Struct?> NullableStructTaskLike() => throw new NotImplementedException();
     }
 }
