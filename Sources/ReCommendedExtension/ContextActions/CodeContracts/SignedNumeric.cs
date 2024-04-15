@@ -1,32 +1,28 @@
-using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts
+namespace ReCommendedExtension.ContextActions.CodeContracts;
+
+public abstract class SignedNumeric(ICSharpContextActionDataProvider provider) : AddContractContextAction(provider)
 {
-    public abstract class SignedNumeric : AddContractContextAction
+    private protected CSharpNumericTypeInfo? NumericTypeInfo { get; private set; }
+
+    [MemberNotNullWhen(true, nameof(NumericTypeInfo))]
+    protected sealed override bool IsAvailableForType(IType type)
     {
-        private protected SignedNumeric([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
+        NumericTypeInfo = CSharpNumericTypeInfo.TryCreate(type);
 
-        [CanBeNull]
-        private protected CSharpNumericTypeInfo NumericTypeInfo { get; private set; }
-
-        protected sealed override bool IsAvailableForType(IType type)
+        if (NumericTypeInfo is { })
         {
-            NumericTypeInfo = CSharpNumericTypeInfo.TryCreate(type);
-
-            if (NumericTypeInfo != null)
+            if (NumericTypeInfo.IsSigned)
             {
-                if (NumericTypeInfo.IsSigned)
-                {
-                    return true;
-                }
-
-                NumericTypeInfo = null;
+                return true;
             }
 
-            return false;
+            NumericTypeInfo = null;
         }
+
+        return false;
     }
 }

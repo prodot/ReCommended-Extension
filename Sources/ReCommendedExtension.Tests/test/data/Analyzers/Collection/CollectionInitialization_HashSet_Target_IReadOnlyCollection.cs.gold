@@ -1,0 +1,195 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace TargetReadOnlyCollection
+{
+    public class NonGenericClass
+    {
+        IReadOnlyCollection<int> field01 = |new|(0) HashSet<int>();
+        IReadOnlyCollection<int> field02 = new HashSet<int> { 1, 2, 3 };
+        IReadOnlyCollection<int> field03 = |new|(1) HashSet<int>(8);
+        IReadOnlyCollection<int> field04 = new HashSet<int>(8) { 1, 2, 3 };
+
+        void Method(int a, int b, int c, IEnumerable<int> seq, IEqualityComparer<int> comparer)
+        {
+            IReadOnlyCollection<int> var01 = |new|(2) HashSet<int>();
+            IReadOnlyCollection<int> var02 = new HashSet<int> { a, b, c };
+            IReadOnlyCollection<int> var03 = |new|(3) HashSet<int>(8);
+            IReadOnlyCollection<int> var04 = new HashSet<int>(8) { a, b, c };
+            IReadOnlyCollection<int> var05 = new HashSet<int>(seq);
+            IReadOnlyCollection<int> var06 = new HashSet<int>(seq) { a, b, c };
+            IReadOnlyCollection<int> var07 = |new|(4) HashSet<int>(comparer);
+            IReadOnlyCollection<int> var08 = new HashSet<int>(comparer) { a, b, c };
+            IReadOnlyCollection<int> var09 = |new|(5) HashSet<int>(8, comparer);
+            IReadOnlyCollection<int> var10 = new HashSet<int>(8, comparer) { a, b, c };
+            IReadOnlyCollection<int> var11 = new HashSet<int>(seq, comparer);
+            IReadOnlyCollection<int> var12 = new HashSet<int>(seq, comparer) { a, b, c };
+
+            Consumer(|new|(6) HashSet<int>());
+            Consumer(new HashSet<int> { a, b, c });
+            Consumer(|new|(7) HashSet<int>(8));
+            Consumer(new HashSet<int>(8) { a, b, c });
+            Consumer(new HashSet<int>(seq));
+            Consumer(new HashSet<int>(seq) { a, b, c });
+            Consumer(|new|(8) HashSet<int>(comparer));
+            Consumer(new HashSet<int>(comparer) { a, b, c });
+            Consumer(|new|(9) HashSet<int>(8, comparer));
+            Consumer(new HashSet<int>(8, comparer) { a, b, c });
+            Consumer(new HashSet<int>(seq, comparer));
+            Consumer(new HashSet<int>(seq, comparer) { a, b, c });
+
+            ConsumerGeneric(|new|(10) HashSet<int>());
+            ConsumerGeneric(new HashSet<int> { a, b, c });
+            ConsumerGeneric<int>(|new|(11) HashSet<int>(8));
+            ConsumerGeneric<int>(new HashSet<int>(8) { a, b, c });
+            ConsumerGeneric(new HashSet<int>(seq));
+            ConsumerGeneric(new HashSet<int>(seq) { a, b, c });
+            ConsumerGeneric(|new|(12) HashSet<int>(comparer));
+            ConsumerGeneric(new HashSet<int>(comparer) { a, b, c });
+            ConsumerGeneric(|new|(13) HashSet<int>(8, comparer));
+            ConsumerGeneric(new HashSet<int>(8, comparer) { a, b, c });
+            ConsumerGeneric(new HashSet<int>(seq, comparer));
+            ConsumerGeneric(new HashSet<int>(seq, comparer) { a, b, c });
+        }
+
+        void Consumer(IReadOnlyCollection<int> items) { }
+        void ConsumerGeneric<T>(IReadOnlyCollection<T> items) { }
+
+        IReadOnlyCollection<int> Property01 { get; } = |new|(14) HashSet<int>();
+        IReadOnlyCollection<int> Property02 { get; } = new HashSet<int> { 1, 2, 3 };
+        IReadOnlyCollection<int> Property03 { get; set; } = |new|(15) HashSet<int>(8);
+        IReadOnlyCollection<int> Property04 { get; set; } = new HashSet<int>(8) { 1, 2, 3 };
+    }
+
+    public class GenericClass<T> where T : new()
+    {
+        IReadOnlyCollection<T> field01 = |new|(16) HashSet<T>();
+        IReadOnlyCollection<T> field02 = new HashSet<T> { default, default(T), new() };
+        IReadOnlyCollection<T> field03 = |new|(17) HashSet<T>(8);
+        IReadOnlyCollection<T> field04 = new HashSet<T>(8) { default, default(T), new() };
+
+        void Method(T a, T b, T c, IEnumerable<T> seq, IEqualityComparer<T> comparer)
+        {
+            IReadOnlyCollection<T> var01 = |new|(18) HashSet<T>();
+            IReadOnlyCollection<T> var02 = new HashSet<T> { a, b, c };
+            IReadOnlyCollection<T> var03 = |new|(19) HashSet<T>(8);
+            IReadOnlyCollection<T> var04 = new HashSet<T>(8) { a, b, c };
+            IReadOnlyCollection<T> var05 = new HashSet<T>(seq);
+            IReadOnlyCollection<T> var06 = new HashSet<T>(seq) { a, b, c };
+            IReadOnlyCollection<T> var07 = |new|(20) HashSet<T>(comparer);
+            IReadOnlyCollection<T> var08 = new HashSet<T>(comparer) { a, b, c };
+            IReadOnlyCollection<T> var09 = |new|(21) HashSet<T>(8, comparer);
+            IReadOnlyCollection<T> var10 = new HashSet<T>(8, comparer) { a, b, c };
+            IReadOnlyCollection<T> var11 = new HashSet<T>(seq, comparer);
+            IReadOnlyCollection<T> var12 = new HashSet<T>(seq, comparer) { a, b, c };
+
+            Consumer(|new|(22) HashSet<T>());
+            Consumer(new HashSet<T> { a, b, c });
+            Consumer(|new|(23) HashSet<T>(8));
+            Consumer(new HashSet<T>(8) { a, b, c });
+            Consumer(new HashSet<T>(seq));
+            Consumer(new HashSet<T>(seq) { a, b, c });
+            Consumer(|new|(24) HashSet<T>(comparer));
+            Consumer(new HashSet<T>(comparer) { a, b, c });
+            Consumer(|new|(25) HashSet<T>(8, comparer));
+            Consumer(new HashSet<T>(8, comparer) { a, b, c });
+            Consumer(new HashSet<T>(seq, comparer));
+            Consumer(new HashSet<T>(seq, comparer) { a, b, c });
+        }
+
+        void Consumer(IReadOnlyCollection<T> items) { }
+
+        IReadOnlyCollection<T> Property01 { get; } = |new|(26) HashSet<T>();
+        IReadOnlyCollection<T> Property02 { get; } = new HashSet<T> { 1, 2, 3 };
+        IReadOnlyCollection<T> Property03 { get; set; } = |new|(27) HashSet<T>(8);
+        IReadOnlyCollection<T> Property04 { get; set; } = new HashSet<T>(8) { 1, 2, 3 };
+    }
+
+    internal class A { }
+    internal class B(int x = 0) : A { }
+
+    public class InferenceClass
+    {
+        IReadOnlyCollection<A> field01 = |new|(28) HashSet<B>();
+        IReadOnlyCollection<A> field02 = new HashSet<B> { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> field03 = |new|(29) HashSet<B>(8);
+        IReadOnlyCollection<A> field04 = new HashSet<B>(8) { new B(1), new B(2), new B(3) };
+
+        void Method(B a, B b, B c, IEnumerable<B> seq, IEqualityComparer<B> comparer)
+        {
+            IReadOnlyCollection<A> var01 = |new|(30) HashSet<B>();
+            IReadOnlyCollection<A> var02 = new HashSet<B> { a, b, c };
+            IReadOnlyCollection<A> var03 = |new|(31) HashSet<B>(8);
+            IReadOnlyCollection<A> var04 = new HashSet<B>(8) { a, b, c };
+            IReadOnlyCollection<A> var05 = new HashSet<B>(seq);
+            IReadOnlyCollection<A> var06 = new HashSet<B>(seq) { a, b, c };
+            IReadOnlyCollection<A> var07 = |new|(32) HashSet<B>(comparer);
+            IReadOnlyCollection<A> var08 = new HashSet<B>(comparer) { a, b, c };
+            IReadOnlyCollection<A> var09 = |new|(33) HashSet<B>(8, comparer);
+            IReadOnlyCollection<A> var10 = new HashSet<B>(8, comparer) { a, b, c };
+            IReadOnlyCollection<A> var11 = new HashSet<B>(seq, comparer);
+            IReadOnlyCollection<A> var12 = new HashSet<B>(seq, comparer) { a, b, c };
+
+            Consumer(|new|(34) HashSet<B>());
+            Consumer(new HashSet<B> { a, b, c });
+            Consumer(|new|(35) HashSet<B>(8));
+            Consumer(new HashSet<B>(8) { a, b, c });
+            Consumer(new HashSet<B>(seq));
+            Consumer(new HashSet<B>(seq) { a, b, c });
+            Consumer(|new|(36) HashSet<B>(comparer));
+            Consumer(new HashSet<B>(comparer) { a, b, c });
+            Consumer(|new|(37) HashSet<B>(8, comparer));
+            Consumer(new HashSet<B>(8, comparer) { a, b, c });
+            Consumer(new HashSet<B>(seq, comparer));
+            Consumer(new HashSet<B>(seq, comparer) { a, b, c });
+        }
+
+        void Consumer(IReadOnlyCollection<A> items) { }
+
+        IReadOnlyCollection<A> Property01 { get; } = |new|(38) HashSet<B>();
+        IReadOnlyCollection<A> Property02 { get; } = new HashSet<B> { new(1), new(2), new(3) };
+        IReadOnlyCollection<A> Property03 { get; set; } = |new|(39) HashSet<B>(8);
+        IReadOnlyCollection<A> Property04 { get; set; } = new HashSet<B>(8) { new B(1), new B(2), new B(3) };
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(1): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(2): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(3): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(4): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(5): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(6): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(7): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(8): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(9): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(10): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(11): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(12): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(13): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(14): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(15): ReSharper Suggestion: Use collection expression ('int[]' will be used).
+(16): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(17): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(18): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(19): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(20): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(21): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(22): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(23): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(24): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(25): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(26): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(27): ReSharper Suggestion: Use collection expression ('T[]' will be used).
+(28): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(29): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(30): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(31): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(32): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(33): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(34): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(35): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(36): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(37): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(38): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(39): ReSharper Suggestion: Use collection expression ('A[]' will be used).

@@ -1,0 +1,52 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    [MustDisposeResource(|true|(0))]
+    internal class Class : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    internal class ClassWithConstructor : IDisposable
+    {
+        [MustDisposeResource(|true|(1))]
+        public ClassWithConstructor() { }
+
+        public void Dispose() { }
+    }
+
+    [method: MustDisposeResource(|true|(2))]
+    internal class ClassWithPrimaryConstructor() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    internal class Methods
+    {
+        [MustDisposeResource(|true|(3))]
+        public IDisposable Method() => throw new NotImplementedException();
+
+        public void LocalFunctions()
+        {
+            [MustDisposeResource(|true|(4))]
+            IDisposable LocalFunction() => throw new NotImplementedException();
+        }
+
+        public void Parameters([MustDisposeResource(|true|(5))] out IDisposable parameter) => throw new NotImplementedException();
+    }
+
+    [MustDisposeResource(false)]
+    internal class ClassWithFalse : IDisposable
+    {
+        public void Dispose() { }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
+(1): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
+(2): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
+(3): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
+(4): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
+(5): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.

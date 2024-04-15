@@ -1,0 +1,11 @@
+using System;
+using System.Numerics;
+
+namespace Test
+{
+    internal record struct StructRecord{caret}1 : IEqualityOperators<StructRecord1, StructRecord1, bool>
+    {
+        public required int X { get; init; }
+        public required int Y { get; init; }
+    }
+}

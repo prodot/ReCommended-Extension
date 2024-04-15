@@ -1,0 +1,10 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace Types
+{
+    class Test
+    {
+        public void MethodOutput([MustDisposeResource(false)] out IDisposable p{caret}1) => throw new NotImplementedException();
+    }
+}

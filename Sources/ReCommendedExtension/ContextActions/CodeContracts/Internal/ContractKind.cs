@@ -1,11 +1,10 @@
-﻿namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
+﻿namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
+
+internal enum ContractKind
 {
-    internal enum ContractKind
-    {
-        Requires,
-        Ensures,
-        RequiresAndEnsures,
-        Invariant,
-        EnsuresOnThrow,
-    }
+    Requires,
+    Ensures,
+    RequiresAndEnsures,
+    Invariant,
+    EnsuresOnThrow,
 }

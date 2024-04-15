@@ -1,0 +1,7 @@
+﻿using System;
+
+namespace Test
+{
+    [AttributeUsage({caret})]
+    internal class SomeAttribute : Attribute { }
+}

@@ -1,70 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
+namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
+
+internal sealed class CSharpNumericTypeInfo<N>(
+    bool isSigned,
+    N one,
+    string literalSuffix,
+    string? epsilonLiteral,
+    Func<N, N, bool> lessOrEquals,
+    Func<N, bool> zero,
+    Func<N, N>? next,
+    Func<N, N> multipliedWithTwo,
+    Func<N, double> toDouble,
+    Func<ConstantValue, N> constantValue) : CSharpNumericTypeInfo(isSigned, epsilonLiteral, literalSuffix) where N : struct
 {
-    internal sealed class CSharpNumericTypeInfo<N> : CSharpNumericTypeInfo where N : struct
+    public override EnumBetweenFirstAndLast.EnumContractInfo? TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IField[] members)
     {
-        readonly N one;
+        Debug.Assert(next is { });
 
-        [NotNull]
-        readonly Func<N, N, bool> isLessOrEquals;
-
-        [NotNull]
-        readonly Func<N, bool> isZero;
-
-        [CanBeNull]
-        readonly Func<N, N> getNext;
-
-        [NotNull]
-        readonly Func<N, N> getMultipliedWithTwo;
-
-        [NotNull]
-        readonly Func<N, double> convertToDouble;
-
-        [NotNull]
-        readonly Func<ConstantValue, N> extractConstantValue;
-
-        public CSharpNumericTypeInfo(
-            bool isSigned,
-            N one,
-            [NotNull] string literalSuffix,
-            [CanBeNull] string epsilonLiteral,
-            [NotNull] Func<N, N, bool> isLessOrEquals,
-            [NotNull] Func<N, bool> isZero,
-            [CanBeNull] Func<N, N> getNext,
-            [NotNull] Func<N, N> getMultipliedWithTwo,
-            [NotNull] Func<N, double> convertToDouble,
-            [NotNull] Func<ConstantValue, N> extractConstantValue) : base(isSigned, epsilonLiteral, literalSuffix)
-        {
-            this.one = one;
-            this.isLessOrEquals = isLessOrEquals;
-            this.isZero = isZero;
-            this.getNext = getNext;
-            this.getMultipliedWithTwo = getMultipliedWithTwo;
-            this.convertToDouble = convertToDouble;
-            this.extractConstantValue = extractConstantValue;
-        }
-
-        public override EnumBetweenFirstAndLast.EnumContractInfo TryCreateEnumContractInfoForEnumBetweenFirstAndLast(IList<IField> members)
-        {
-            Debug.Assert(getNext != null);
-
-            return EnumBetweenFirstAndLast.EnumContractInfo<N>.TryCreate(members, isLessOrEquals, getNext, extractConstantValue);
-        }
-
-        public override EnumFlags.EnumContractInfo TryCreateEnumFlags(IList<IField> members)
-            => EnumFlags.EnumContractInfo<N>.TryCreate(
-                members,
-                one,
-                convertToDouble,
-                isZero,
-                isLessOrEquals,
-                getMultipliedWithTwo,
-                LiteralSuffix,
-                extractConstantValue);
+        return EnumBetweenFirstAndLast.EnumContractInfo<N>.TryCreate(members, lessOrEquals, next, constantValue);
     }
+
+    public override EnumFlags.EnumContractInfo? TryCreateEnumFlags(IField[] members)
+        => EnumFlags.EnumContractInfo<N>.TryCreate(
+            members,
+            one,
+            toDouble,
+            zero,
+            lessOrEquals,
+            multipliedWithTwo,
+            LiteralSuffix,
+            constantValue);
 }

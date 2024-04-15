@@ -1,0 +1,257 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace TargetEnumerable
+{
+    public class NonGenericClass
+    {
+        IEnumerable<int> field1 = |new int[]|(0) { };
+        IEnumerable<int> field2 = |new int[]|(1) { 1, 2, 3 };
+        IEnumerable<int> field3 = |new int[0]|(2) { };
+        IEnumerable<int> field4 = |new int[3]|(3) { 1, 2, 3 };
+        IEnumerable<int> field5 = |new int[0]|(4);
+        IEnumerable<int> field6 = new int[3];
+        IEnumerable<int> field7 = |new[]|(5) { 1, 2, 3 };
+
+        void Method(int a, int b, int c)
+        {
+            IEnumerable<int> var1 = |new int[]|(6) { };
+            IEnumerable<int> var2 = |new int[]|(7) { a, b, c };
+            IEnumerable<int> var3 = |new int[0]|(8) { };
+            IEnumerable<int> var4 = |new int[3]|(9) { a, b, c };
+            IEnumerable<int> var5 = |new int[0]|(10);
+            IEnumerable<int> var6 = new int[3];
+            IEnumerable<int> var7 = |new[]|(11) { a, b, c };
+
+            Consumer(|new int[]|(12) { });
+            Consumer(|new int[]|(13) { a, b, c });
+            Consumer(|new int[0]|(14) { });
+            Consumer(|new int[3]|(15) { a, b, c });
+            Consumer(|new int[0]|(16));
+            Consumer(new int[3]);
+            Consumer(|new[]|(17) { a, b, c });
+
+            ConsumerGeneric(|new int[]|(18) { });
+            ConsumerGeneric(|new int[]|(19) { a, b, c });
+            ConsumerGeneric<int>(|new int[0]|(20) { });
+            ConsumerGeneric(|new int[3]|(21) { a, b, c });
+            ConsumerGeneric(|new int[0]|(22));
+            ConsumerGeneric(new int[3]);
+            ConsumerGeneric(|new[]|(23) { a, b, c });
+        }
+
+        void Consumer(IEnumerable<int> items) { }
+        void ConsumerGeneric<T>(IEnumerable<T> items) { }
+
+        IEnumerable<int> Property1 { get; } = |new int[]|(24) { };
+        IEnumerable<int> Property2 { get; } = |new int[]|(25) { 1, 2, 3 };
+        IEnumerable<int> Property3 { get; set; } = |new int[0]|(26) { };
+        IEnumerable<int> Property4 { get; set; } = |new int[3]|(27) { 1, 2, 3 };
+        IEnumerable<int> Property5 => |new int[0]|(28);
+        IEnumerable<int> Property6 => new int[3];
+        IEnumerable<int> Property7 => |new[]|(29) { 1, 2, 3 };
+    }
+
+    public class GenericClass<T> where T : new()
+    {
+        IEnumerable<T> field1 = |new T[]|(30) { };
+        IEnumerable<T> field2 = |new T[]|(31) { default, default(T), new() };
+        IEnumerable<T> field3 = |new T[0]|(32) { };
+        IEnumerable<T> field4 = |new T[3]|(33) { default, default(T), new() };
+        IEnumerable<T> field5 = |new T[0]|(34);
+        IEnumerable<T> field6 = new T[3];
+        IEnumerable<T> field7 = |new[]|(35) { default, default(T), new() };
+
+        void Method(T a, T b, T c)
+        {
+            IEnumerable<T> var1 = |new T[]|(36) { };
+            IEnumerable<T> var2 = |new T[]|(37) { a, b, c };
+            IEnumerable<T> var3 = |new T[0]|(38) { };
+            IEnumerable<T> var4 = |new T[3]|(39) { a, b, c };
+            IEnumerable<T> var5 = |new T[0]|(40);
+            IEnumerable<T> var6 = new T[3];
+            IEnumerable<T> var7 = |new[]|(41) { a, b, c };
+
+            Consumer(|new T[]|(42) { });
+            Consumer(|new T[]|(43) { a, b, c });
+            Consumer(|new T[0]|(44) { });
+            Consumer(|new T[3]|(45) { a, b, c });
+            Consumer(|new T[0]|(46));
+            Consumer(new T[3]);
+            Consumer(|new[]|(47) { a, b, c });
+        }
+
+        void Consumer(IEnumerable<T> items) { }
+
+        IEnumerable<T> Property1 { get; } = |new T[]|(48) { };
+        IEnumerable<T> Property2 { get; } = |new T[]|(49) { default, default(T), new() };
+        IEnumerable<T> Property3 { get; set; } = |new T[0]|(50) { };
+        IEnumerable<T> Property4 { get; set; } = |new T[3]|(51) { default, default(T), new() };
+        IEnumerable<T> Property5 => |new T[0]|(52);
+        IEnumerable<T> Property6 => new T[3];
+        IEnumerable<T> Property7 => |new[]|(53) { default, default(T), new() };
+    }
+}
+------------------------------------------------
+0: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+1: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+2: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+3: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+4: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+5: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+6: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+7: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+8: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+9: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+10: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+11: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+12: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+13: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+14: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+15: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+16: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+17: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+18: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+19: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+20: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+21: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+22: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+23: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+24: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+25: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+26: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+27: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+28: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+29: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+30: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+31: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+32: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+33: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+34: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+35: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+36: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+37: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+38: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+39: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+40: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+41: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+42: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+43: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+44: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+45: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+46: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+47: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+48: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+49: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+50: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+51: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)
+52: Use collection expression.
+QUICKFIXES:
+Replace with '[]'
+53: Use collection expression (a compiler-synthesized read-only collection will be used).
+QUICKFIXES:
+Replace with '[...]' (a compiler-synthesized read-only collection will be used)

@@ -15,6 +15,11 @@ namespace Test
         delegate int Cal{on}lback();
 
         const int cons{off}tant = 3;
+
+        void MethodWithLocalFunction()
+        {
+            int Local{on}Function() => 3;
+        }
     }
 
     internal class Types

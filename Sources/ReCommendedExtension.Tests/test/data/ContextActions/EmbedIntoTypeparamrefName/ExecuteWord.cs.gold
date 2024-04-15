@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Test
+{
+    public class Availability
+    {
+        /// <summary>
+        /// Wraps a T method.
+        /// </summary>
+        /// <returns><typeparamref name="T"/>{caret} value</returns>
+        /// <remarks>
+        /// T
+        /// value
+        /// </remarks>
+        public T Method<T>(T value) => value;
+    }
+}

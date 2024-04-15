@@ -1,228 +1,206 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using System.Diagnostics.Contracts;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts.Internal
+namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
+
+internal sealed record PropertyContractInfo : ContractInfo
 {
-    internal sealed class PropertyContractInfo : ContractInfo
+    [JetBrains.Annotations.Pure]
+    public static PropertyContractInfo? TryCreate(
+        IPropertyDeclaration declaration,
+        TreeTextRange selectedTreeRange,
+        Func<IType, bool> isAvailableForType)
     {
-        [CanBeNull]
-        public static PropertyContractInfo TryCreate(
-            [NotNull] IPropertyDeclaration declaration,
-            TreeTextRange selectedTreeRange,
-            [NotNull] Func<IType, bool> isAvailableForType)
+        if (declaration.GetNameRange().Contains(selectedTreeRange)
+            && declaration.ArrowClause is not { }
+            && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause is not { }))
         {
-            if (declaration.GetNameRange().Contains(selectedTreeRange)
-                && declaration.ArrowClause == null
-                && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
+            var property = declaration.DeclaredElement;
+            Debug.Assert(property is { });
+
+            if (CanAcceptContracts(property) && isAvailableForType(property.Type))
             {
-                var property = declaration.DeclaredElement;
-
-                Debug.Assert(property != null);
-
-                if (CanAcceptContracts(property) && isAvailableForType(property.Type))
-                {
-                    var contractKind = declaration.IsAuto
-                        ? declaration.IsStatic
-                            ? (ContractKind?)null
-                            : ContractKind.Invariant
-                        : property.IsReadable
-                            ? property.IsWritable
-                                ? ContractKind.RequiresAndEnsures
-                                : ContractKind.Ensures
-                            : property.IsWritable
-                                ? (ContractKind?)ContractKind.Requires
-                                : null;
-                    if (contractKind != null)
-                    {
-                        return new PropertyContractInfo((ContractKind)contractKind, declaration, property.Type);
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        [CanBeNull]
-        public static PropertyContractInfo TryCreate(
-            [NotNull] IIndexerDeclaration declaration,
-            TreeTextRange selectedTreeRange,
-            [NotNull] Func<IType, bool> isAvailableForType)
-        {
-            if (declaration.GetNameRange().Contains(selectedTreeRange)
-                && declaration.ArrowClause == null
-                && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
-            {
-                var property = declaration.DeclaredElement;
-
-                Debug.Assert(property != null);
-
-                if (CanAcceptContracts(property) && isAvailableForType(property.Type))
-                {
-                    var contractKind = property.IsReadable
-                        ? property.IsWritable
-                            ? ContractKind.RequiresAndEnsures
-                            : ContractKind.Ensures
+                var contractKind = declaration.IsAuto
+                    ? declaration.IsStatic ? null as ContractKind? : ContractKind.Invariant
+                    : property.IsReadable
+                        ? property.IsWritable ? ContractKind.RequiresAndEnsures : ContractKind.Ensures
                         : property.IsWritable
-                            ? (ContractKind?)ContractKind.Requires
+                            ? ContractKind.Requires
                             : null;
-                    if (contractKind != null)
-                    {
-                        return new PropertyContractInfo((ContractKind)contractKind, declaration, property.Type);
-                    }
+
+                if (contractKind is { } c)
+                {
+                    return new PropertyContractInfo(c, declaration, property.Type);
                 }
             }
-
-            return null;
         }
 
-        [NotNull]
-        readonly IAccessorOwnerDeclaration declaration;
+        return null;
+    }
 
-        PropertyContractInfo(ContractKind contractKind, [NotNull] IAccessorOwnerDeclaration declaration, [NotNull] IType type) : base(
-            contractKind,
-            type)
+    [JetBrains.Annotations.Pure]
+    public static PropertyContractInfo? TryCreate(
+        IIndexerDeclaration declaration,
+        TreeTextRange selectedTreeRange,
+        Func<IType, bool> isAvailableForType)
+    {
+        if (declaration.GetNameRange().Contains(selectedTreeRange)
+            && declaration.ArrowClause is not { }
+            && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause is not { }))
         {
-            Debug.Assert(
-                contractKind == ContractKind.Requires
-                || contractKind == ContractKind.Ensures
-                || contractKind == ContractKind.RequiresAndEnsures
-                || contractKind == ContractKind.Invariant);
+            var property = declaration.DeclaredElement;
+            Debug.Assert(property is { });
 
-            this.declaration = declaration;
-        }
-
-        public override string GetContractIdentifierForUI() => declaration.DeclaredName;
-
-        public override void AddContracts(
-            ICSharpContextActionDataProvider provider,
-            Func<IExpression, IExpression> getContractExpression,
-            out ICollection<ICSharpStatement> firstNonContractStatements)
-        {
-            var factory = CSharpElementFactory.GetInstance(declaration);
-
-            var propertyDeclaration = declaration as IPropertyDeclaration;
-            if (propertyDeclaration != null && propertyDeclaration.IsAuto)
+            if (CanAcceptContracts(property) && isAvailableForType(property.Type))
             {
-                var classLikeDeclaration = (IClassLikeDeclaration)declaration.GetContainingTypeDeclaration();
+                var contractKind = property.IsReadable
+                    ? property.IsWritable ? ContractKind.RequiresAndEnsures : ContractKind.Ensures
+                    : property.IsWritable
+                        ? ContractKind.Requires
+                        : null as ContractKind?;
 
-                Debug.Assert(classLikeDeclaration != null);
-
-                var contractInvariantMethodDeclaration = classLikeDeclaration.EnsureContractInvariantMethod(provider.PsiModule);
-
-                if (contractInvariantMethodDeclaration.Body != null)
+                if (contractKind is { } c)
                 {
-                    var expression = factory.CreateExpression("$0", declaration.DeclaredElement);
-
-                    AddContract(
-                        ContractKind.Invariant,
-                        contractInvariantMethodDeclaration.Body,
-                        provider.PsiModule,
-                        () => getContractExpression(expression),
-                        out var firstNonContractStatement);
-                    firstNonContractStatements = firstNonContractStatement != null ? new[] { firstNonContractStatement } : null;
+                    return new PropertyContractInfo(c, declaration, property.Type);
                 }
-                else
-                {
-                    firstNonContractStatements = null;
-                }
-
-                return;
             }
+        }
 
-            TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
+        return null;
+    }
 
-            var containingTypeDeclaration = declaration.GetContainingTypeDeclaration();
-            Debug.Assert(containingTypeDeclaration != null);
+    readonly IAccessorOwnerDeclaration declaration;
 
-            if (declaration.IsAbstract || containingTypeDeclaration.IsAbstract)
+    PropertyContractInfo(ContractKind contractKind, IAccessorOwnerDeclaration declaration, IType type) : base(contractKind, type)
+    {
+        Debug.Assert(contractKind is ContractKind.Requires or ContractKind.Ensures or ContractKind.RequiresAndEnsures or ContractKind.Invariant);
+
+        this.declaration = declaration;
+    }
+
+    public override string GetContractIdentifierForUI() => declaration.DeclaredName;
+
+    public override void AddContracts(
+        ICSharpContextActionDataProvider provider,
+        Func<IExpression, IExpression> getContractExpression,
+        out ICollection<ICSharpStatement>? firstNonContractStatements)
+    {
+        var factory = CSharpElementFactory.GetInstance(declaration);
+
+        var propertyDeclaration = declaration as IPropertyDeclaration;
+        if (propertyDeclaration is { IsAuto: true })
+        {
+            var classLikeDeclaration = (IClassLikeDeclaration?)declaration.GetContainingTypeDeclaration();
+            Debug.Assert(classLikeDeclaration is { });
+
+            var contractInvariantMethodDeclaration = EnsureContractInvariantMethod(classLikeDeclaration, provider.PsiModule);
+
+            if (contractInvariantMethodDeclaration.Body is { })
             {
-                IAccessorOwnerDeclaration overriddenAccessorOwnerDeclaration = null;
+                var expression = factory.CreateExpression("$0", declaration.DeclaredElement);
 
-                var contractClassDeclaration = containingTypeDeclaration.EnsureContractClass(provider.PsiModule);
-
-                if (propertyDeclaration != null)
-                {
-                    overriddenAccessorOwnerDeclaration = propertyDeclaration.EnsureOverriddenPropertyInContractClass(contractClassDeclaration);
-                }
-
-                if (declaration is IIndexerDeclaration indexerDeclaration)
-                {
-                    overriddenAccessorOwnerDeclaration = indexerDeclaration.EnsureOverriddenIndexerInContractClass(contractClassDeclaration);
-                }
-
-                Debug.Assert(overriddenAccessorOwnerDeclaration != null);
-
-                accessorDeclarations = overriddenAccessorOwnerDeclaration.AccessorDeclarations;
+                AddContract(
+                    ContractKind.Invariant,
+                    contractInvariantMethodDeclaration.Body,
+                    provider.PsiModule,
+                    () => getContractExpression(expression),
+                    out var firstNonContractStatement);
+                firstNonContractStatements = firstNonContractStatement is { } ? new[] { firstNonContractStatement } : null;
             }
             else
             {
-                accessorDeclarations = declaration.AccessorDeclarations;
+                firstNonContractStatements = null;
             }
 
-            firstNonContractStatements = new List<ICSharpStatement>(2);
+            return;
+        }
 
-            foreach (var accessorDeclaration in accessorDeclarations)
+        TreeNodeCollection<IAccessorDeclaration> accessorDeclarations;
+
+        var containingTypeDeclaration = declaration.GetContainingTypeDeclaration();
+        Debug.Assert(containingTypeDeclaration is { });
+
+        if (declaration.IsAbstract || containingTypeDeclaration.IsAbstract)
+        {
+            var overriddenAccessorOwnerDeclaration = null as IAccessorOwnerDeclaration;
+
+            var contractClassDeclaration = EnsureContractClass(containingTypeDeclaration, provider.PsiModule);
+
+            if (propertyDeclaration is { })
             {
-                Debug.Assert(accessorDeclaration != null);
+                overriddenAccessorOwnerDeclaration = EnsureOverriddenPropertyInContractClass(propertyDeclaration, contractClassDeclaration);
+            }
 
-                if (accessorDeclaration.Body != null)
+            if (declaration is IIndexerDeclaration indexerDeclaration)
+            {
+                overriddenAccessorOwnerDeclaration = EnsureOverriddenIndexerInContractClass(indexerDeclaration, contractClassDeclaration);
+            }
+
+            Debug.Assert(overriddenAccessorOwnerDeclaration is { });
+
+            accessorDeclarations = overriddenAccessorOwnerDeclaration.AccessorDeclarations;
+        }
+        else
+        {
+            accessorDeclarations = declaration.AccessorDeclarations;
+        }
+
+        firstNonContractStatements = new List<ICSharpStatement>(2);
+
+        foreach (var accessorDeclaration in accessorDeclarations)
+        {
+            if (accessorDeclaration.Body is { })
+            {
+                switch (accessorDeclaration.Kind)
                 {
-                    switch (accessorDeclaration.Kind)
+                    case AccessorKind.GETTER:
                     {
-                        case AccessorKind.GETTER:
+                        var contractType = PredefinedType.CONTRACT_FQN.TryGetTypeElement(provider.PsiModule);
+
+                        var resultExpression = factory.CreateExpression($"$0.{nameof(Contract.Result)}<$1>()", contractType, Type);
+
+                        AddContract(
+                            ContractKind.Ensures,
+                            accessorDeclaration.Body,
+                            provider.PsiModule,
+                            () => getContractExpression(resultExpression),
+                            out var firstNonContractStatement);
+
+                        if (firstNonContractStatement is { })
                         {
-                            var contractType = TypeElementUtil.GetTypeElementByClrName(PredefinedType.CONTRACT_FQN, provider.PsiModule);
-
-                            var resultExpression = factory.CreateExpression($"$0.{nameof(Contract.Result)}<$1>()", contractType, Type);
-
-                            AddContract(
-                                ContractKind.Ensures,
-                                accessorDeclaration.Body,
-                                provider.PsiModule,
-                                () => getContractExpression(resultExpression),
-                                out var firstNonContractStatement);
-
-                            if (firstNonContractStatement != null)
-                            {
-                                firstNonContractStatements.Add(firstNonContractStatement);
-                            }
-                            break;
+                            firstNonContractStatements.Add(firstNonContractStatement);
                         }
+                        break;
+                    }
 
-                        case AccessorKind.SETTER:
+                    case AccessorKind.SETTER:
+                    {
+                        var valueExpression = factory.CreateExpression("value");
+
+                        AddContract(
+                            ContractKind.Requires,
+                            accessorDeclaration.Body,
+                            provider.PsiModule,
+                            () => getContractExpression(valueExpression),
+                            out var firstNonContractStatement);
+
+                        if (firstNonContractStatement is { })
                         {
-                            var valueExpression = factory.CreateExpression("value");
-
-                            AddContract(
-                                ContractKind.Requires,
-                                accessorDeclaration.Body,
-                                provider.PsiModule,
-                                () => getContractExpression(valueExpression),
-                                out var firstNonContractStatement);
-
-                            if (firstNonContractStatement != null)
-                            {
-                                firstNonContractStatements.Add(firstNonContractStatement);
-                            }
-                            break;
+                            firstNonContractStatements.Add(firstNonContractStatement);
                         }
+                        break;
                     }
                 }
             }
+        }
 
-            if (firstNonContractStatements.Count == 0)
-            {
-                firstNonContractStatements = null;
-            }
+        if (firstNonContractStatements.Count == 0)
+        {
+            firstNonContractStatements = null;
         }
     }
 }

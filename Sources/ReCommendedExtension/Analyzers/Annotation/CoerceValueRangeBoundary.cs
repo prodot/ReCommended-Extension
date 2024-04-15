@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using JetBrains.Annotations;
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
@@ -10,67 +7,54 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.Annotation
+namespace ReCommendedExtension.Analyzers.Annotation;
+
+[QuickFix]
+public sealed class CoerceValueRangeBoundary(InvalidValueRangeBoundaryWarning highlighting) : QuickFixBase
 {
-    [QuickFix]
-    public sealed class CoerceValueRangeBoundary : QuickFixBase
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text
     {
-        [NotNull]
-        readonly InvalidValueRangeBoundaryWarning highlighting;
-
-        public CoerceValueRangeBoundary([NotNull] InvalidValueRangeBoundaryWarning highlighting) => this.highlighting = highlighting;
-
-        public override bool IsAvailable(IUserDataHolder cache) => true;
-
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        get
         {
-            using (WriteLockCookie.Create())
+            Debug.Assert(CSharpLanguage.Instance is { });
+
+            return highlighting.Boundary switch
             {
-                Debug.Assert(CSharpLanguage.Instance != null);
+                ValueRangeBoundary.Lower => highlighting.TypeIsSigned
+                    ? $"Set the 'from' value to the '{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MinValue)}'"
+                    : "Set the 'from' value to the '0'",
 
-                var factory = CSharpElementFactory.GetInstance(highlighting.PositionParameter);
+                ValueRangeBoundary.Higher => $"Set the 'to' value to the '{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}'",
 
-                string expression;
-                switch (highlighting.Boundary)
-                {
-                    case ValueRangeBoundary.Lower:
-                        expression = highlighting.TypeIsSigned
-                            ? highlighting.Type.GetPresentableName(CSharpLanguage.Instance) + "." + nameof(int.MinValue)
-                            : "0";
-                        break;
+                _ => throw new NotSupportedException(),
+            };
+        }
+    }
 
-                    case ValueRangeBoundary.Higher:
-                        expression = highlighting.Type.GetPresentableName(CSharpLanguage.Instance) + "." + nameof(int.MaxValue);
-                        break;
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
+        {
+            Debug.Assert(CSharpLanguage.Instance is { });
 
-                    default: throw new NotSupportedException();
-                }
+            var factory = CSharpElementFactory.GetInstance(highlighting.PositionParameter);
 
-                highlighting.PositionParameter.ReplaceBy(factory.CreateExpressionAsIs(expression));
-            }
+            var expression = highlighting.Boundary switch
+            {
+                ValueRangeBoundary.Lower => highlighting.TypeIsSigned
+                    ? $"{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MinValue)}"
+                    : "0",
 
-            return _ => { };
+                ValueRangeBoundary.Higher => $"{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}",
+
+                _ => throw new NotSupportedException(),
+            };
+
+            highlighting.PositionParameter.ReplaceBy(factory.CreateExpressionAsIs(expression));
         }
 
-        public override string Text
-        {
-            get
-            {
-                Debug.Assert(CSharpLanguage.Instance != null);
-
-                switch (highlighting.Boundary)
-                {
-                    case ValueRangeBoundary.Lower:
-                        return highlighting.TypeIsSigned
-                            ? $"Set the 'from' value to the '{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MinValue)}'"
-                            : "Set the 'from' value to the '0'";
-
-                    case ValueRangeBoundary.Higher:
-                        return $"Set the 'to' value to the '{highlighting.Type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}'";
-
-                    default: throw new NotSupportedException();
-                }
-            }
-        }
+        return _ => { };
     }
 }

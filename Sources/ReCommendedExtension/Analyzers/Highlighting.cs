@@ -1,22 +1,15 @@
-using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 
-namespace ReCommendedExtension.Analyzers
+namespace ReCommendedExtension.Analyzers;
+
+public abstract class Highlighting(string message) : IHighlighting
 {
-    public abstract class Highlighting : IHighlighting
-    {
-        [NotNull]
-        readonly string message;
+    public string ErrorStripeToolTip => message;
 
-        private protected Highlighting([NotNull] string message) => this.message = message;
+    public string ToolTip => message;
 
-        public string ErrorStripeToolTip => message;
+    public bool IsValid() => true;
 
-        public string ToolTip => message;
-
-        public bool IsValid() => true;
-
-        public abstract DocumentRange CalculateRange();
-    }
+    public abstract DocumentRange CalculateRange();
 }

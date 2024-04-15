@@ -2,16 +2,15 @@ using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 
-namespace ReCommendedExtension.Tests.ContextActions
+namespace ReCommendedExtension.Tests.ContextActions;
+
+[TestFixture]
+public sealed class RemoveAssertNotNullExecuteTests : CSharpContextActionExecuteTestBase<RemoveAssertNotNull>
 {
-    [TestFixture]
-    public sealed class RemoveAssertNotNullExecuteTests : CSharpContextActionExecuteTestBase<RemoveAssertNotNull>
-    {
-        protected override string ExtraPath => "";
+    protected override string ExtraPath => "";
 
-        protected override string RelativeTestDataPath => @"ContextActions\RemoveAssertNotNull";
+    protected override string RelativeTestDataPath => @"ContextActions\RemoveAssertNotNull";
 
-        [Test]
-        public void TestExecute() => DoNamedTest2();
-    }
+    [Test]
+    public void TestExecute() => DoNamedTest2();
 }

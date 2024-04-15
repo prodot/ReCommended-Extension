@@ -3,17 +3,16 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions.CodeContracts;
 
-namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Elements
+namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Elements;
+
+[TestNetFramework4]
+[TestFixture]
+public sealed class FieldAvailabilityTests : CSharpContextActionAvailabilityTestBase<NotNull>
 {
-    [TestNetFramework4]
-    [TestFixture]
-    public sealed class FieldAvailabilityTests : CSharpContextActionAvailabilityTestBase<NotNull>
-    {
-        protected override string ExtraPath => "";
+    protected override string ExtraPath => "";
 
-        protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Elements\Field";
+    protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Elements\Field";
 
-        [Test]
-        public void TestAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestAvailability() => DoNamedTest2();
 }

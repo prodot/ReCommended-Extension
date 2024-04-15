@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using JetBrains.Annotations;
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
@@ -10,64 +7,53 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using ReCommendedExtension.Analyzers.ControlFlow;
 
-namespace ReCommendedExtension.ContextActions
+namespace ReCommendedExtension.ContextActions;
+
+[ContextAction(
+    GroupType = typeof(CSharpContextActions),
+    Name = "Remove inline assertion for non-nullness" + ZoneMarker.Suffix,
+    Description = "Removes inline assertion for non-nullness.")]
+public sealed class RemoveAssertNotNull(ICSharpContextActionDataProvider provider) : ContextActionBase
 {
-    [ContextAction(
-        GroupType = typeof(CSharpContextActions),
-        Name = "Remove inline assertion for non-nullness" + ZoneMarker.Suffix,
-        Description = "Removes inline assertion for non-nullness.")]
-    public sealed class RemoveAssertNotNull : ContextActionBase
+    InlineAssertion? assertion;
+
+    [MemberNotNullWhen(true, nameof(assertion))]
+    public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
     {
-        [NotNull]
-        readonly ICSharpContextActionDataProvider provider;
+        var invocationExpression = provider.GetSelectedElement<IInvocationExpression>(true, false);
 
-        [CanBeNull]
-        InlineAssertion assertion;
+        assertion = invocationExpression is { } ? InlineAssertion.TryFromInvocationExpression(invocationExpression) : null;
 
-        public RemoveAssertNotNull([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
+        return assertion is { };
+    }
 
-        public override string Text
+    public override string Text
+    {
+        get
         {
-            get
-            {
-                Debug.Assert(assertion != null);
+            Debug.Assert(assertion is { });
 
-                return $"Remove '{assertion.MethodName}()'";
-            }
+            return $"Remove '{assertion.MethodName}()'";
         }
+    }
 
-        public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        try
         {
-            var invocationExpression = provider.GetSelectedElement<IInvocationExpression>(true, false);
+            Debug.Assert(assertion is { });
 
-            assertion = invocationExpression != null ? InlineAssertion.TryFromInvocationExpression(invocationExpression) : null;
+            // changing the tree with the ModificationUtil does not re-trigger the analysis for the current statement => changing the text
+            // directly does re-trigger the analysis
 
-            return assertion != null;
+            var textRange = assertion.InvocationExpression.GetDocumentRange().TextRange;
+            var qualifierExpressionText = assertion.QualifierExpression.GetText();
+
+            return textControl => textControl.Document.ReplaceText(textRange, qualifierExpressionText);
         }
-
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        finally
         {
-            Debug.Assert(assertion != null);
-
-            try
-            {
-                // changing the tree with the ModificationUtil does not re-trigger the analysis for the current statement => changing the text
-                // directly does re-trigger the analysis
-
-                var textRange = assertion.InvocationExpression.GetDocumentRange().TextRange;
-                var qualifierExpressionText = assertion.QualifierExpression.GetText();
-
-                return textControl =>
-                {
-                    Debug.Assert(textControl != null);
-
-                    textControl.Document.ReplaceText(textRange, qualifierExpressionText);
-                };
-            }
-            finally
-            {
-                assertion = null;
-            }
+            assertion = null;
         }
     }
 }

@@ -1,0 +1,52 @@
+﻿using System;
+using System.Linq;
+
+namespace NonTargetTyped
+{
+    public class NonGenericClass
+    {
+        void Method(int a, int b, int c)
+        {
+            var var1 = |new int[] { }|(0);
+            var var2 = new int[] { a, b, c };
+            var var3 = |new int[0] { }|(1);
+            var var4 = new int[3] { a, b, c };
+            var var5 = |new int[0]|(2);
+            var var6 = new int[3];
+            var var7 = new[] { a, b, c };
+            var var8 = Array.Empty<int>();
+
+            IEnumerable<int> var9 = Array.Empty<int>().AsEnumerable();
+
+            IEnumerable<int> var10 = from i in new[] { a, b, c } select i;
+            IEnumerable<int> var11 = from i in new[] { 1, 2, 3 } from j in new[] { 4, 5, 6 } select i + j;
+        }
+    }
+
+    public class GenericClass<T>
+    {
+        void Method(T a, T b, T c)
+        {
+            var var1 = |new T[] { }|(3);
+            var var2 = new T[] { a, b, c };
+            var var3 = |new T[0] { }|(4);
+            var var4 = new T[3] { a, b, c };
+            var var5 = |new T[0]|(5);
+            var var6 = new T[3];
+            var var7 = new[] { a, b, c };
+            var var8 = Array.Empty<T>();
+
+            IEnumerable<T> var9 = Array.Empty<T>().AsEnumerable();
+
+            IEnumerable<T> var10 = from i in new[] { a, b, c } select i;
+            IEnumerable<T> var11 = from i in new[] { 1, 2, 3 } from j in new[] { 4, 5, 6 } select i + j;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Use 'Array.Empty<int>()'.
+(1): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(2): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(3): ReSharper Warning: Use 'Array.Empty<T>()'.
+(4): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(5): ReSharper Suggestion: Use 'Array<T>.Empty()'

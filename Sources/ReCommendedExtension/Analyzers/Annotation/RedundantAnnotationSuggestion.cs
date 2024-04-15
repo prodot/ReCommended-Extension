@@ -1,25 +1,19 @@
-using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace ReCommendedExtension.Analyzers.Annotation
-{
-    [RegisterConfigurableSeverity(
-        SeverityId,
-        null,
-        HighlightingGroupIds.DeclarationRedundancy,
-        "Redundant nullability annotation" + ZoneMarker.Suffix,
-        "",
-        Severity.SUGGESTION)]
-    [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class RedundantAnnotationSuggestion : AttributeHighlighting
-    {
-        const string SeverityId = "RedundantAnnotation";
+namespace ReCommendedExtension.Analyzers.Annotation;
 
-        internal RedundantAnnotationSuggestion(
-            [NotNull] IAttributesOwnerDeclaration attributesOwnerDeclaration,
-            [NotNull] IAttribute attribute,
-            [NotNull] string message) : base(attributesOwnerDeclaration, attribute, false, message) { }
-    }
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
+    HighlightingGroupIds.DeclarationRedundancy,
+    "Redundant annotation" + ZoneMarker.Suffix,
+    "",
+    Severity.SUGGESTION)]
+[ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
+public sealed class RedundantAnnotationSuggestion(IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute, string message)
+    : AttributeHighlighting(attributesOwnerDeclaration, attribute, false, message)
+{
+    const string SeverityId = "RedundantAnnotation";
 }

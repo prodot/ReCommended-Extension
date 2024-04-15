@@ -1,0 +1,15 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class Availability
+    {
+        /// <summary>
+        /// Wraps external <c>{selstart}one.two.three</c>{selend} function.
+        /// </summary>
+        /// <returns>true or false</returns>
+        public bool Method() => true;
+
+        // The above method returns true or false.
+    }
+}

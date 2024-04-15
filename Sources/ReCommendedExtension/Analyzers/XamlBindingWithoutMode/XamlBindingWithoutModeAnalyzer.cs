@@ -5,30 +5,29 @@ using JetBrains.ReSharper.Psi.Xaml.Tree;
 using JetBrains.ReSharper.Psi.Xaml.Tree.MarkupExtensions;
 using JetBrains.ReSharper.Psi.Xml.Tree;
 
-namespace ReCommendedExtension.Analyzers.XamlBindingWithoutMode
+namespace ReCommendedExtension.Analyzers.XamlBindingWithoutMode;
+
+[ElementProblemAnalyzer(typeof(IXmlTreeNode), HighlightingTypes = [typeof(XamlBindingWithoutModeWarning)])]
+public sealed class XamlBindingWithoutModeAnalyzer : ElementProblemAnalyzer<IXmlTreeNode>
 {
-    [ElementProblemAnalyzer(typeof(IXmlTreeNode), HighlightingTypes = new[] { typeof(XamlBindingWithoutModeWarning) })]
-    public sealed class XamlBindingWithoutModeAnalyzer : ElementProblemAnalyzer<IXmlTreeNode>
+    protected override void Run(IXmlTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        protected override void Run(IXmlTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+        switch (element)
         {
-            switch (element)
-            {
-                case IBindingMarkup bindingMarkup when bindingMarkup.ModeAttribute == null && bindingMarkup.NameNode != null:
-                    consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", bindingMarkup.NameNode));
-                    break;
+            case IBindingMarkup { ModeAttribute: not { }, NameNode: { } } bindingMarkup:
+                consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", bindingMarkup.NameNode));
+                break;
 
-                case IBindingElement bindingElement when ClrTypeNames.Binding.Equals((bindingElement.Type as IDeclaredType)?.GetClrName())
-                    && bindingElement.GetAttribute("Mode") == null:
-                    consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", bindingElement.Header.Name));
-                    break;
+            case IBindingElement bindingElement when ClrTypeNames.Binding.Equals((bindingElement.Type as IDeclaredType)?.GetClrName())
+                && bindingElement.GetAttribute("Mode") is not { }:
+                consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", bindingElement.Header.Name));
+                break;
 
-                case IXamlObjectElement objectElement when objectElement is ITypeOwnerDeclaration typeOwnerDeclaration
-                    && ClrTypeNames.MultiBinding.Equals((typeOwnerDeclaration.Type as IDeclaredType)?.GetClrName())
-                    && objectElement.GetAttribute("Mode") == null:
-                    consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", objectElement.Header.Name));
-                    break;
-            }
+            case IXamlObjectElement objectElement and ITypeOwnerDeclaration typeOwnerDeclaration
+                when ClrTypeNames.MultiBinding.Equals((typeOwnerDeclaration.Type as IDeclaredType)?.GetClrName())
+                && objectElement.GetAttribute("Mode") is not { }:
+                consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", objectElement.Header.Name));
+                break;
         }
     }
 }

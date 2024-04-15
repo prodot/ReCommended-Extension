@@ -1,0 +1,33 @@
+﻿using System;
+
+namespace Test
+{
+    public class SomeClass { }
+
+    public class |BaseAttribute|(0) : Attribute { }
+
+    public class |DerivedAttribute|(1) : BaseAttribute { }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class BaseAttribute2 : Attribute { }
+
+    public class DerivedAttribute2 : BaseAttribute2 { }
+
+    public class DerivedAttribute21 : DerivedAttribute2 { }
+
+    public abstract class BaseAttribute3 : Attribute { }
+
+    public class |DerivedAttribute3|(2) : BaseAttribute3 { }
+}
+
+namespace PartialClasses
+{
+    public partial class PartialClassAttribute { }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public partial class PartialClassAttribute : Attribute { }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotate the attribute with [AttributeUsage].
+(1): ReSharper Warning: Annotate the attribute with [AttributeUsage].
+(2): ReSharper Warning: Annotate the attribute with [AttributeUsage].

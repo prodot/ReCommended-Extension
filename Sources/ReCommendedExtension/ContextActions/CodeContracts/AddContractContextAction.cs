@@ -1,120 +1,104 @@
-﻿using System;
-using System.Diagnostics;
-using JetBrains.Annotations;
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts
+namespace ReCommendedExtension.ContextActions.CodeContracts;
+
+public abstract class AddContractContextAction(ICSharpContextActionDataProvider provider) : ContextActionBase
 {
-    public abstract class AddContractContextAction : ContextActionBase
+    ContractInfo? contractInfo;
+
+    void AddAnnotation()
     {
-        [CanBeNull]
-        ContractInfo contractInfo;
-
-        private protected AddContractContextAction([NotNull] ICSharpContextActionDataProvider provider) => Provider = provider;
-
-        void AddAnnotation()
+        if (TryGetAnnotationAttributeTypeName() is { } annotationAttributeTypeName
+            && Provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false) is { } attributesOwnerDeclaration)
         {
-            var annotationAttributeTypeName = TryGetAnnotationAttributeTypeName();
-            if (annotationAttributeTypeName != null)
+            var attributeType = attributesOwnerDeclaration.TryGetAnnotationAttributeType(annotationAttributeTypeName);
+            if (attributeType is { } && attributesOwnerDeclaration.Attributes.All(
+                attribute => attribute.GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
             {
-                var attributesOwnerDeclaration = Provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
+                var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 
-                var codeAnnotationsConfiguration = attributesOwnerDeclaration?.GetPsiServices().GetComponent<CodeAnnotationsConfiguration>();
+                var attribute = factory.CreateAttribute(attributeType);
 
-                var attributeType = codeAnnotationsConfiguration?.GetAttributeTypeForElement(attributesOwnerDeclaration, annotationAttributeTypeName);
+                attributesOwnerDeclaration.AddAttributeAfter(attribute, attributesOwnerDeclaration.Attributes.LastOrDefault());
+            }
+        }
+    }
 
-                if (attributeType != null
-                    && attributesOwnerDeclaration.Attributes.All(
-                        attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName != annotationAttributeTypeName))
+    protected ICSharpContextActionDataProvider Provider { get; } = provider;
+
+    [Pure]
+    protected virtual string? TryGetAnnotationAttributeTypeName() => null;
+
+    [Pure]
+    protected abstract bool IsAvailableForType(IType type);
+
+    [Pure]
+    protected abstract string GetContractTextForUI(string contractIdentifier);
+
+    [Pure]
+    protected abstract IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression);
+
+    [MemberNotNullWhen(true, nameof(contractInfo))]
+    public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
+    {
+        var declaration = Provider.GetSelectedElement<IDeclaration>(true, false);
+
+        if (declaration.IsNullableAnnotationsContextEnabled())
+        {
+            return false;
+        }
+
+        contractInfo = ContractInfo.TryCreate(declaration, Provider.SelectedTreeRange, IsAvailableForType);
+
+        return contractInfo is { };
+    }
+
+    public sealed override string Text
+    {
+        get
+        {
+            Debug.Assert(contractInfo is { });
+
+            return $"Add contract ({contractInfo.GetContractKindForUI()}): {GetContractTextForUI(contractInfo.GetContractIdentifierForUI())}";
+        }
+    }
+
+    protected sealed override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        Debug.Assert(contractInfo is { });
+
+        AddAnnotation();
+
+        contractInfo.AddContracts(
+            Provider,
+            expression => GetExpression(CSharpElementFactory.GetInstance(expression), expression),
+            out var firstNonContractStatements);
+
+        return textControl =>
+        {
+            if (firstNonContractStatements is { })
+            {
+                foreach (var firstNonContractStatement in firstNonContractStatements)
                 {
-                    var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
+                    var originalPosition = textControl.Caret.Position.Value;
 
-                    var attribute = factory.CreateAttribute(attributeType);
+                    var coordinates = textControl.Document.GetCoordsByOffset(firstNonContractStatement.GetDocumentRange().TextRange.StartOffset);
+                    textControl.Caret.MoveTo(coordinates, CaretVisualPlacement.DontScrollIfVisible);
 
-                    attributesOwnerDeclaration.AddAttributeAfter(attribute, attributesOwnerDeclaration.Attributes.LastOrDefault());
+                    textControl.EmulateEnter();
+
+                    textControl.Caret.MoveTo(originalPosition, CaretVisualPlacement.DontScrollIfVisible);
                 }
             }
-        }
-
-        [NotNull]
-        protected ICSharpContextActionDataProvider Provider { get; }
-
-        [CanBeNull]
-        protected virtual string TryGetAnnotationAttributeTypeName() => null;
-
-        protected abstract bool IsAvailableForType([NotNull] IType type);
-
-        [NotNull]
-        protected abstract string GetContractTextForUI([NotNull] string contractIdentifier);
-
-        [NotNull]
-        protected abstract IExpression GetExpression([NotNull] CSharpElementFactory factory, [NotNull] IExpression contractExpression);
-
-        public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
-        {
-            var declaration = Provider.GetSelectedElement<IDeclaration>(true, false);
-
-            if (declaration.IsNullableAnnotationsContextEnabled())
-            {
-                return false;
-            }
-
-            contractInfo = ContractInfo.TryCreate(declaration, Provider.SelectedTreeRange, IsAvailableForType);
-
-            return contractInfo != null;
-        }
-
-        public sealed override string Text
-        {
-            get
-            {
-                Debug.Assert(contractInfo != null);
-
-                return $"Add contract ({contractInfo.GetContractKindForUI()}): {GetContractTextForUI(contractInfo.GetContractIdentifierForUI())}";
-            }
-        }
-
-        protected sealed override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
-        {
-            AddAnnotation();
-
-            Debug.Assert(contractInfo != null);
-
-            contractInfo.AddContracts(
-                Provider,
-                expression => GetExpression(CSharpElementFactory.GetInstance(expression), expression),
-                out var firstNonContractStatements);
-
-            return textControl =>
-            {
-                Debug.Assert(textControl != null);
-
-                if (firstNonContractStatements != null)
-                {
-                    foreach (var firstNonContractStatement in firstNonContractStatements)
-                    {
-                        var originalPosition = textControl.Caret.Position.Value;
-
-                        var coordinates = textControl.Document.GetCoordsByOffset(firstNonContractStatement.GetDocumentRange().TextRange.StartOffset);
-                        textControl.Caret.MoveTo(coordinates, CaretVisualPlacement.DontScrollIfVisible);
-
-                        textControl.EmulateEnter();
-
-                        textControl.Caret.MoveTo(originalPosition, CaretVisualPlacement.DontScrollIfVisible);
-                    }
-                }
-            };
-        }
+        };
     }
 }

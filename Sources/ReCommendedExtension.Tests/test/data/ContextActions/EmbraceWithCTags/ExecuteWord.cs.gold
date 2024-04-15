@@ -1,0 +1,15 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class Availability
+    {
+        /// <summary>
+        /// Wraps external one.two.three function.
+        /// </summary>
+        /// <returns><c>tr{caret}ue</c> or false</returns>
+        public bool Method() => true;
+
+        // The above method returns true or false.
+    }
+}

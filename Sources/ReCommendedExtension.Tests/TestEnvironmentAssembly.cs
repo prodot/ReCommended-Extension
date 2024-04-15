@@ -1,11 +1,9 @@
-﻿using System.Threading;
-using JetBrains.TestFramework;
+﻿using JetBrains.TestFramework;
 using NUnit.Framework;
 
 [assembly: Apartment(ApartmentState.STA)]
 
-namespace ReCommendedExtension.Tests
-{
-    [SetUpFixture]
-    public sealed class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IReCommendedExtensionTestZone> { }
-}
+namespace ReCommendedExtension.Tests;
+
+[SetUpFixture]
+public sealed class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IReCommendedExtensionTestZone>;

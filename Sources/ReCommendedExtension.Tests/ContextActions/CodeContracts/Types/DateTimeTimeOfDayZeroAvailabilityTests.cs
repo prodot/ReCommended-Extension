@@ -3,17 +3,16 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions.CodeContracts;
 
-namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types
+namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types;
+
+[TestNetFramework4]
+[TestFixture]
+public sealed class DateTimeTimeOfDayZeroAvailabilityTests : CSharpContextActionAvailabilityTestBase<DateTimeTimeOfDayZero>
 {
-    [TestNetFramework4]
-    [TestFixture]
-    public sealed class DateTimeTimeOfDayZeroAvailabilityTests : CSharpContextActionAvailabilityTestBase<DateTimeTimeOfDayZero>
-    {
-        protected override string ExtraPath => "";
+    protected override string ExtraPath => "";
 
-        protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\DateTimeTimeOfDayZero";
+    protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\DateTimeTimeOfDayZero";
 
-        [Test]
-        public void TestAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestAvailability() => DoNamedTest2();
 }

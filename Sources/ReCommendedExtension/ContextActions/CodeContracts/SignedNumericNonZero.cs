@@ -1,34 +1,27 @@
-using System;
-using System.Diagnostics;
-using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
-namespace ReCommendedExtension.ContextActions.CodeContracts
+namespace ReCommendedExtension.ContextActions.CodeContracts;
+
+[ContextAction(
+    GroupType = typeof(CSharpContextActions),
+    Name = "Add contract: number is not 0" + ZoneMarker.Suffix,
+    Description = "Adds a contract that a number (signed) is not 0.")]
+public sealed class SignedNumericNonZero(ICSharpContextActionDataProvider provider) : SignedNumeric(provider)
 {
-    [ContextAction(
-        GroupType = typeof(CSharpContextActions),
-        Name = "Add contract: number is not 0" + ZoneMarker.Suffix,
-        Description = "Adds a contract that a number (signed) is not 0.")]
-    public sealed class SignedNumericNonZero : SignedNumeric
+    protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != 0";
+
+    protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
     {
-        public SignedNumericNonZero([NotNull] ICSharpContextActionDataProvider provider) : base(provider) { }
+        Debug.Assert(NumericTypeInfo is { });
 
-        protected override string GetContractTextForUI(string contractIdentifier) => $"{contractIdentifier} != 0";
-
-        protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
-        {
-            Debug.Assert(NumericTypeInfo != null);
-
-            return NumericTypeInfo.EpsilonLiteral != null
-                ? factory.CreateExpression(
-                    $"$1.{nameof(Math.Abs)}($0 - 0{NumericTypeInfo.LiteralSuffix}) > {NumericTypeInfo.EpsilonLiteral}",
-                    contractExpression,
-                    TypeElementUtil.GetTypeElementByClrName(ClrTypeNames.Math, Provider.PsiModule))
-                : factory.CreateExpression($"$0 != 0{NumericTypeInfo.LiteralSuffix}", contractExpression);
-        }
+        return NumericTypeInfo.EpsilonLiteral is { }
+            ? factory.CreateExpression(
+                $"$1.{nameof(Math.Abs)}($0 - 0{NumericTypeInfo.LiteralSuffix}) > {NumericTypeInfo.EpsilonLiteral}",
+                contractExpression,
+                ClrTypeNames.Math.TryGetTypeElement(Provider.PsiModule))
+            : factory.CreateExpression($"$0 != 0{NumericTypeInfo.LiteralSuffix}", contractExpression);
     }
 }

@@ -1,83 +1,53 @@
-﻿using System;
-using System.Diagnostics;
-using JetBrains.Annotations;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReCommendedExtension.Analyzers.ControlFlow
+namespace ReCommendedExtension.Analyzers.ControlFlow;
+
+public sealed record InlineAssertion : Assertion
 {
-    internal sealed class InlineAssertion : Assertion
+    [Pure]
+    internal static InlineAssertion? TryFromInvocationExpression(IInvocationExpression invocationExpression)
     {
-        [CanBeNull]
-        public static InlineAssertion TryFromInvocationExpression([NotNull] IInvocationExpression invocationExpression)
+        if (invocationExpression.InvokedExpression is IReferenceExpression { QualifierExpression: { } qualifierExpression } referenceExpression
+            && referenceExpression.Reference.Resolve().DeclaredElement is IMethod { IsExtensionMethod: true, Parameters: [var parameter] } method
+            && method.ShortName.StartsWith("AssertNotNull", StringComparison.Ordinal)
+            && parameter.Type.Equals(method.ReturnType)
+            && method.GetSingleDeclaration<IMethodDeclaration>() is { } methodDeclaration
+            && methodDeclaration.Attributes.Any(
+                attribute => attribute.GetAttributeType().IsClrType(PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS))
+            && methodDeclaration.Attributes.Any(
+                attribute => attribute.GetAttributeType().GetClrName().ShortName == NullnessProvider.NotNullAttributeShortName))
         {
-            var referenceExpression = invocationExpression.InvokedExpression as IReferenceExpression;
-            var qualifierExpression = referenceExpression?.QualifierExpression;
-            if (qualifierExpression != null)
+            return new InlineAssertion
             {
-                if (referenceExpression.Reference.Resolve().DeclaredElement is IMethod method
-                    && method.ShortName.StartsWith("AssertNotNull", StringComparison.Ordinal)
-                    && method.IsExtensionMethod
-                    && method.Parameters.Count == 1)
-                {
-                    Debug.Assert(method.Parameters[0] != null);
-
-                    if (method.Parameters[0].Type.Equals(method.ReturnType))
-                    {
-                        var methodDeclaration = method.GetSingleDeclaration<IMethodDeclaration>();
-                        if (methodDeclaration != null
-                            && methodDeclaration.Attributes.Any(
-                                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().FullName
-                                    == PredefinedType.DEBUGGER_STEP_THROUGH_ATTRIBUTE_CLASS.FullName)
-                            && methodDeclaration.Attributes.Any(
-                                attribute => attribute.GetAttributeInstance().GetAttributeType().GetClrName().ShortName
-                                    == NullnessProvider.NotNullAttributeShortName))
-                        {
-                            return new InlineAssertion(invocationExpression, qualifierExpression, method.ShortName);
-                        }
-                    }
-                }
-            }
-
-            return null;
+                InvocationExpression = invocationExpression, QualifierExpression = qualifierExpression, MethodName = method.ShortName,
+            };
         }
 
-        InlineAssertion(
-            [NotNull] IInvocationExpression invocationExpression,
-            [NotNull] ICSharpExpression qualifierExpression,
-            [NotNull] string methodName)
-        {
-            InvocationExpression = invocationExpression;
-            QualifierExpression = qualifierExpression;
-            MethodName = methodName;
-        }
-
-        public override AssertionConditionType AssertionConditionType => AssertionConditionType.IS_NOT_NULL;
-
-        /// <remarks>
-        /// The complete expression including the qualifier (part before the "AssertNotNull") and the "AssertNotNull" invocation.
-        /// </remarks>
-        [NotNull]
-        public IInvocationExpression InvocationExpression { get; }
-
-        /// <remarks>
-        /// The expression part before the "AssertNotNull" method.
-        /// </remarks>
-        [NotNull]
-        public ICSharpExpression QualifierExpression { get; }
-
-        /// <remarks>
-        /// The exact "AssertNotNull" method name.
-        /// </remarks>
-        [NotNull]
-        public string MethodName { get; }
-
-        public override bool Equals(Assertion other)
-            => InvocationExpression.GetDocumentRange() == (other as InlineAssertion)?.InvocationExpression.GetDocumentRange();
-
-        public override int GetHashCode() => InvocationExpression.GetDocumentRange().GetHashCode();
+        return null;
     }
+
+    internal override AssertionConditionType AssertionConditionType => AssertionConditionType.IS_NOT_NULL;
+
+    /// <remarks>
+    /// The complete expression including the qualifier (part before the "AssertNotNull") and the "AssertNotNull" invocation.
+    /// </remarks>
+    public required IInvocationExpression InvocationExpression { get; init; }
+
+    /// <remarks>
+    /// The expression part before the "AssertNotNull" method.
+    /// </remarks>
+    public required ICSharpExpression QualifierExpression { get; init; }
+
+    /// <remarks>
+    /// The exact "AssertNotNull" method name.
+    /// </remarks>
+    public required string MethodName { get; init; }
+
+    public bool Equals([NotNullWhen(true)] InlineAssertion? other)
+        => other is { } && InvocationExpression.GetDocumentRange() == other.InvocationExpression.GetDocumentRange();
+
+    public override int GetHashCode() => InvocationExpression.GetDocumentRange().GetHashCode();
 }

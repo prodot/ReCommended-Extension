@@ -1,0 +1,116 @@
+﻿using System;
+
+namespace Test
+{
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
+    public class ArrayAttribute : Attribute
+    {
+        public ArrayAttribute(int[] array = null) => Array = array;
+
+        public int[] Array { get; set; }
+    }
+
+    public class NonGenericClass
+    {
+        int[] field = |{ }|(0);
+
+        int[] field_ = |{|(1) 1, 2, 3 };
+
+        [Array(|new int[]|(2) { })]
+        void Method()
+        {
+            var array1 = |new int[] { }|(3);
+            var array1_ = new[] { 1, 2, 3 };
+
+            var array2 = |new int[0]|(4);
+            var array2_ = new int[3];
+
+            var array3 = |new int[0x0] { }|(5);
+            var array3_ = new[3] { 1, 2, 3 };
+
+            int[] array4 = |{ }|(6);
+            int[] array4_ = |{|(7) 1, 2, 3 };
+            int[] array4__ = |new int[]|(8) { };
+            int[] array4___ = |Array.Empty<int>()|(9);
+
+            var array5_ = new int[2, 3];
+            var array6_ = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+
+            var array7_ = new int[][] { };
+            var array8_ = new int[][,] { };
+
+            var array9_ = new int[,][] { };
+
+            int[] array10 = |new int[0]|(10);
+            int[] array10_ = |new int[0]|(11) { };
+        }
+
+        [Array(Array = |new int[]|(12) { })]
+        int[] Property { get; } = |{ }|(13);
+
+        int[] Property_ { get; } = |{|(14) 1, 2, 3 };
+
+        int[] Property2 { get; set; } = |{ }|(15);
+
+        int[] Property2_ { get; set; } = |{|(16) 1, 2, 3 };
+    }
+
+    public class GenericClass<T> where T : new()
+    {
+        T[] field = |{ }|(17);
+
+        T[] field_ = |{|(18) new T() };
+
+        void Method()
+        {
+            var array1 = |new T[] { }|(19);
+            var array1_ = new[] { new T() };
+
+            var array2 = |new T[0b0]|(20);
+            var array2_ = new T[1];
+
+            var array3 = |new T[default] { }|(21);
+            var array3_ = new[1] { new T() };
+
+            T[] array4 = |{ }|(22);
+            T[] array4_ = |{|(23) new T() };
+        }
+
+        T[] Property { get; } = |{ }|(24);
+
+        T[] Property_ { get; } = |{|(25) new T() };
+
+        T[] Property2 { get; set; } = |{ }|(26);
+
+        T[] Property2_ { get; set; } = |{|(27) new T() };
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use collection expression
+(1): ReSharper Suggestion: Use collection expression
+(2): ReSharper Dead Code: Use collection expression
+(3): ReSharper Warning: Use 'Array.Empty<int>()'.
+(4): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(5): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(6): ReSharper Suggestion: Use collection expression
+(7): ReSharper Suggestion: Use collection expression
+(8): ReSharper Dead Code: Use collection expression
+(9): ReSharper Suggestion: Use collection expression.
+(10): ReSharper Suggestion: Use collection expression.
+(11): ReSharper Dead Code: Use collection expression
+(12): ReSharper Dead Code: Use collection expression
+(13): ReSharper Suggestion: Use collection expression
+(14): ReSharper Suggestion: Use collection expression
+(15): ReSharper Suggestion: Use collection expression
+(16): ReSharper Suggestion: Use collection expression
+(17): ReSharper Suggestion: Use collection expression
+(18): ReSharper Suggestion: Use collection expression
+(19): ReSharper Warning: Use 'Array.Empty<T>()'.
+(20): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(21): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(22): ReSharper Suggestion: Use collection expression
+(23): ReSharper Suggestion: Use collection expression
+(24): ReSharper Suggestion: Use collection expression
+(25): ReSharper Suggestion: Use collection expression
+(26): ReSharper Suggestion: Use collection expression
+(27): ReSharper Suggestion: Use collection expression

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using JetBrains.Annotations;
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
@@ -10,34 +7,28 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 
-namespace ReCommendedExtension.Analyzers.ControlFlow
+namespace ReCommendedExtension.Analyzers.ControlFlow;
+
+[QuickFix]
+public sealed class RemoveAssertionStatementFix(RedundantAssertionStatementSuggestion highlighting) : QuickFixBase
 {
-    [QuickFix]
-    public sealed class RemoveAssertionStatementFix : QuickFixBase
+    public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
+
+    public override string Text => "Remove assertion";
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
-        [NotNull]
-        readonly RedundantAssertionStatementSuggestion highlighting;
-
-        public RemoveAssertionStatementFix([NotNull] RedundantAssertionStatementSuggestion highlighting) => this.highlighting = highlighting;
-
-        public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
-
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        using (WriteLockCookie.Create())
         {
-            using (WriteLockCookie.Create())
-            {
-                var statement = ((AssertionStatement)highlighting.Assertion).Statement;
+            var statement = ((AssertionStatement)highlighting.Assertion).Statement;
 
-                var nextToken = statement.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
+            var nextToken = statement.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
 
-                ModificationUtil.DeleteChildRange(
-                    statement,
-                    nextToken != null && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON ? nextToken : (ITreeNode)statement);
-            }
-
-            return _ => { };
+            ModificationUtil.DeleteChildRange(
+                statement,
+                nextToken is { } && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON ? nextToken : statement);
         }
 
-        public override string Text => "Remove assertion";
+        return _ => { };
     }
 }

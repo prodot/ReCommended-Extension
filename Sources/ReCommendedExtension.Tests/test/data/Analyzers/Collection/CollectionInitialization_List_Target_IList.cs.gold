@@ -1,0 +1,106 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace TargetList
+{
+    public class NonGenericClass
+    {
+        IList<int> field01 = |new|(0) List<int>();
+        IList<int> field02 = |new|(1) List<int>() { 1, 2, 3 };
+        IList<int> field03 = new List<int>(8);
+        IList<int> field04 = new List<int>(8) { 1, 2, 3 };
+
+        void Method(int a, int b, int c, IEnumerable<int> seq)
+        {
+            IList<int> var01 = |new|(2) List<int>();
+            IList<int> var02 = |new|(3) List<int> { a, b, c };
+            IList<int> var03 = new List<int>(8);
+            IList<int> var04 = new List<int>(8) { a, b, c };
+            IList<int> var05 = |new|(4) List<int>(seq);
+            IList<int> var06 = |new|(5) List<int>(seq) { a, b, c };
+
+            Consumer(|new|(6) List<int>());
+            Consumer(|new|(7) List<int> { a, b, c });
+            Consumer(new List<int>(8));
+            Consumer(new List<int>(8) { a, b, c });
+            Consumer(|new|(8) List<int>(seq));
+            Consumer(|new|(9) List<int>(seq) { a, b, c });
+
+            ConsumerGeneric(|new|(10) List<int>());
+            ConsumerGeneric(|new|(11) List<int> { a, b, c });
+            ConsumerGeneric<int>(new List<int>(8));
+            ConsumerGeneric<int>(new List<int>(8) { a, b, c });
+            ConsumerGeneric(|new|(12) List<int>(seq));
+            ConsumerGeneric(|new|(13) List<int>(seq) { a, b, c });
+        }
+
+        void Consumer(IList<int> items) { }
+        void ConsumerGeneric<T>(IList<T> items) { }
+
+        IList<int> Property01 { get; } = |new|(14) List<int>();
+        IList<int> Property02 { get; } = |new|(15) List<int> { 1, 2, 3 };
+        IList<int> Property03 { get; set; } = new List<int>(8);
+        IList<int> Property04 { get; set; } = new List<int>(8) { 1, 2, 3 };
+    }
+
+    public class GenericClass<T> where T : new()
+    {
+        IList<T> field01 = |new|(16) List<T>();
+        IList<T> field02 = |new|(17) List<T> { default, default(T), new() };
+        IList<T> field03 = new List<T>(8);
+        IList<T> field04 = new List<T>(8) { default, default(T), new() };
+
+        void Method(T a, T b, T c, IEnumerable<T> seq)
+        {
+            IList<T> var01 = |new|(18) List<T>();
+            IList<T> var02 = |new|(19) List<T> { a, b, c };
+            IList<T> var03 = new List<T>(8);
+            IList<T> var04 = new List<T>(8) { a, b, c };
+            IList<T> var05 = |new|(20) List<T>(seq);
+            IList<T> var06 = |new|(21) List<T>(seq) { a, b, c };
+
+            Consumer(|new|(22) List<T>());
+            Consumer(|new|(23) List<T> { a, b, c });
+            Consumer(new List<T>(8));
+            Consumer(new List<T>(8) { a, b, c });
+            Consumer(|new|(24) List<T>(seq));
+            Consumer(|new|(25) List<T>(seq) { a, b, c });
+        }
+
+        void Consumer(IList<T> items) { }
+
+        IList<T> Property01 { get; } = |new|(26) List<T>();
+        IList<T> Property02 { get; } = |new|(27) List<T> { default, default(T), new() };
+        IList<T> Property03 { get; set; } = new List<T>(8);
+        IList<T> Property04 { get; set; } = new List<T>(8) { default, default(T), new() };
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use collection expression.
+(1): ReSharper Suggestion: Use collection expression.
+(2): ReSharper Suggestion: Use collection expression.
+(3): ReSharper Suggestion: Use collection expression.
+(4): ReSharper Suggestion: Use collection expression.
+(5): ReSharper Suggestion: Use collection expression.
+(6): ReSharper Suggestion: Use collection expression.
+(7): ReSharper Suggestion: Use collection expression.
+(8): ReSharper Suggestion: Use collection expression.
+(9): ReSharper Suggestion: Use collection expression.
+(10): ReSharper Suggestion: Use collection expression.
+(11): ReSharper Suggestion: Use collection expression.
+(12): ReSharper Suggestion: Use collection expression.
+(13): ReSharper Suggestion: Use collection expression.
+(14): ReSharper Suggestion: Use collection expression.
+(15): ReSharper Suggestion: Use collection expression.
+(16): ReSharper Suggestion: Use collection expression.
+(17): ReSharper Suggestion: Use collection expression.
+(18): ReSharper Suggestion: Use collection expression.
+(19): ReSharper Suggestion: Use collection expression.
+(20): ReSharper Suggestion: Use collection expression.
+(21): ReSharper Suggestion: Use collection expression.
+(22): ReSharper Suggestion: Use collection expression.
+(23): ReSharper Suggestion: Use collection expression.
+(24): ReSharper Suggestion: Use collection expression.
+(25): ReSharper Suggestion: Use collection expression.
+(26): ReSharper Suggestion: Use collection expression.
+(27): ReSharper Suggestion: Use collection expression.

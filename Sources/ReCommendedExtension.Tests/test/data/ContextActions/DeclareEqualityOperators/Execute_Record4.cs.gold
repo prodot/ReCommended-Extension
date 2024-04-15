@@ -1,0 +1,9 @@
+using System;
+using System.Numerics;
+
+namespace Test
+{
+    internal record ClassRecord3(int X, int Y);
+
+    internal record ClassRecord{caret}4(int X, int Y, int Z) : ClassRecord3(X, Y), IEqualityOperators<ClassRecord4, ClassRecord4, bool>;
+}

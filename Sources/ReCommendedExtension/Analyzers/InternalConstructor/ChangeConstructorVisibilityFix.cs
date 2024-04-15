@@ -1,6 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
@@ -8,41 +6,29 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.InternalConstructor
+namespace ReCommendedExtension.Analyzers.InternalConstructor;
+
+[QuickFix]
+public sealed class ChangeConstructorVisibilityFix(InternalConstructorVisibilitySuggestion highlighting) : QuickFixBase
 {
-    [QuickFix]
-    public sealed class ChangeConstructorVisibilityFix : QuickFixBase
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text
+        => highlighting.Visibility switch
+        {
+            AccessRights.PROTECTED => $"Make constructor '{highlighting.ConstructorDeclaration.DeclaredName}' protected.",
+            AccessRights.PROTECTED_AND_INTERNAL => $"Make constructor '{highlighting.ConstructorDeclaration.DeclaredName}' private protected.",
+
+            _ => throw new NotSupportedException(),
+        };
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
-        [NotNull]
-        readonly InternalConstructorVisibilitySuggestion highlighting;
-
-        public ChangeConstructorVisibilityFix([NotNull] InternalConstructorVisibilitySuggestion highlighting) => this.highlighting = highlighting;
-
-        public override bool IsAvailable(IUserDataHolder cache) => true;
-
-        public override string Text
+        using (WriteLockCookie.Create())
         {
-            get
-            {
-                switch (highlighting.Visibility)
-                {
-                    case AccessRights.PROTECTED: return $"Make constructor '{highlighting.ConstructorDeclaration.DeclaredName}' protected.";
-                    case AccessRights.PROTECTED_AND_INTERNAL:
-                        return $"Make constructor '{highlighting.ConstructorDeclaration.DeclaredName}' private protected.";
-
-                    default: throw new NotSupportedException();
-                }
-            }
+            highlighting.ConstructorDeclaration.SetAccessRights(highlighting.Visibility);
         }
 
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
-        {
-            using (WriteLockCookie.Create())
-            {
-                highlighting.ConstructorDeclaration.SetAccessRights(highlighting.Visibility);
-            }
-
-            return _ => { };
-        }
+        return _ => { };
     }
 }

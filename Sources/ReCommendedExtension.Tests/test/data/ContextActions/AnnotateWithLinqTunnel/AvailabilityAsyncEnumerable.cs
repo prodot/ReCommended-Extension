@@ -8,7 +8,7 @@ namespace Test
 
         void MethodWithLocalFunction()
         {
-            IAsyncEnumerable<string> Local{off}Function(IAsyncEnumerable<int> arg) => null;
+            IAsyncEnumerable<string> Local{on}Function(IAsyncEnumerable<int> arg) => null;
         }
 
         IAsyncEnumerable<string> Method{off}2() => null;

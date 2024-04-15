@@ -1,95 +1,94 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Modules;
+using JetBrains.ReSharper.Psi.Util;
 
-namespace ReCommendedExtension
+namespace ReCommendedExtension;
+
+[SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Original type names used.")]
+internal static class ClrTypeNames
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Original type names used.")]
-    internal static class ClrTypeNames
+    [JetBrains.Annotations.Pure]
+    static IClrTypeName GetClrTypeName(Type type)
     {
-        [NotNull]
-        public static readonly IClrTypeName Math = new ClrTypeName(typeof(Math).FullName.AssertNotNull());
+        var fullName = type.FullName;
+        Debug.Assert(fullName is { });
 
-        [NotNull]
-        public static readonly IClrTypeName ContractClassForAttribute = new ClrTypeName(typeof(ContractClassForAttribute).FullName.AssertNotNull());
+        return new ClrTypeName(fullName);
+    }
 
-        [NotNull]
-        public static readonly IClrTypeName ContractClassAttribute = new ClrTypeName(typeof(ContractClassAttribute).FullName.AssertNotNull());
+    [JetBrains.Annotations.Pure]
+    static IClrTypeName GetClrTypeName<T>() => GetClrTypeName(typeof(T));
 
-        [NotNull]
-        public static readonly IClrTypeName ContractInvariantMethodAttribute =
-            new ClrTypeName(typeof(ContractInvariantMethodAttribute).FullName.AssertNotNull());
+    public static readonly IClrTypeName Math = GetClrTypeName(typeof(Math));
 
-        [NotNull]
-        public static readonly IClrTypeName SuppressMessageAttribute = new ClrTypeName(typeof(SuppressMessageAttribute).FullName.AssertNotNull());
+    public static readonly IClrTypeName ContractClassForAttribute = GetClrTypeName<ContractClassForAttribute>();
 
-        [NotNull]
-        public static readonly IClrTypeName ExcludeFromCodeCoverageAttribute =
-            new ClrTypeName(typeof(ExcludeFromCodeCoverageAttribute).FullName.AssertNotNull());
+    public static readonly IClrTypeName ContractClassAttribute = GetClrTypeName<ContractClassAttribute>();
 
-        [NotNull]
-        public static readonly IClrTypeName NotSupportedException = new ClrTypeName(typeof(NotSupportedException).FullName.AssertNotNull());
+    public static readonly IClrTypeName ContractInvariantMethodAttribute = GetClrTypeName<ContractInvariantMethodAttribute>();
 
-        [NotNull]
-        public static readonly IClrTypeName KeyNotFoundException = new ClrTypeName(typeof(KeyNotFoundException).FullName.AssertNotNull());
+    public static readonly IClrTypeName SuppressMessageAttribute = GetClrTypeName<SuppressMessageAttribute>();
 
-        [NotNull]
-        public static readonly IClrTypeName IEqualityComparerGeneric = new ClrTypeName(typeof(IEqualityComparer<>).FullName.AssertNotNull());
+    public static readonly IClrTypeName ExcludeFromCodeCoverageAttribute = GetClrTypeName<ExcludeFromCodeCoverageAttribute>();
 
-        [NotNull]
-        public static readonly IClrTypeName IEqualityComparer = new ClrTypeName(typeof(IEqualityComparer).FullName.AssertNotNull());
+    public static readonly IClrTypeName NotSupportedException = GetClrTypeName<NotSupportedException>();
 
-        [NotNull]
-        public static readonly IClrTypeName MemberInfo = new ClrTypeName(typeof(System.Reflection.MemberInfo).FullName.AssertNotNull());
+    public static readonly IClrTypeName KeyNotFoundException = GetClrTypeName<KeyNotFoundException>();
 
-        [NotNull]
-        public static readonly IClrTypeName ParameterInfo = new ClrTypeName(typeof(ParameterInfo).FullName.AssertNotNull());
+    public static readonly IClrTypeName IEqualityComparerGeneric = GetClrTypeName(typeof(IEqualityComparer<>));
 
-        [NotNull]
-        public static readonly IClrTypeName OutOfMemoryException = new ClrTypeName(typeof(OutOfMemoryException).FullName.AssertNotNull());
+    public static readonly IClrTypeName IEqualityComparer = GetClrTypeName<IEqualityComparer>();
 
-        [NotNull]
-        public static readonly IClrTypeName StackOverflowException = new ClrTypeName(typeof(StackOverflowException).FullName.AssertNotNull());
+    public static readonly IClrTypeName MemberInfo = GetClrTypeName<System.Reflection.MemberInfo>();
 
-        [NotNull]
+    public static readonly IClrTypeName ParameterInfo = GetClrTypeName<ParameterInfo>();
+
+    public static readonly IClrTypeName OutOfMemoryException = GetClrTypeName<OutOfMemoryException>();
+
+    public static readonly IClrTypeName StackOverflowException = GetClrTypeName<StackOverflowException>();
+
 #pragma warning disable 618 // obsolete type
-        public static readonly IClrTypeName ExecutionEngineException = new ClrTypeName(typeof(ExecutionEngineException).FullName.AssertNotNull());
+    public static readonly IClrTypeName ExecutionEngineException = GetClrTypeName<ExecutionEngineException>();
 #pragma warning restore 618
 
-        [NotNull]
-        public static readonly IClrTypeName Binding = new ClrTypeName(typeof(Binding).FullName.AssertNotNull());
+    public static readonly IClrTypeName Binding = GetClrTypeName<Binding>();
 
-        [NotNull]
-        public static readonly IClrTypeName MultiBinding = new ClrTypeName(typeof(MultiBinding).FullName.AssertNotNull());
+    public static readonly IClrTypeName MultiBinding = GetClrTypeName<MultiBinding>();
 
-        [NotNull]
-        public static readonly IClrTypeName ValueTaskAwaiter = new ClrTypeName("System.Runtime.CompilerServices.ValueTaskAwaiter");
+    public static readonly IClrTypeName ValueTaskAwaiter = new ClrTypeName("System.Runtime.CompilerServices.ValueTaskAwaiter");
 
-        [NotNull]
-        public static readonly IClrTypeName GenericValueTaskAwaiter = new ClrTypeName("System.Runtime.CompilerServices.ValueTaskAwaiter`1");
+    public static readonly IClrTypeName GenericValueTaskAwaiter = new ClrTypeName("System.Runtime.CompilerServices.ValueTaskAwaiter`1");
 
-        [NotNull]
-        public static readonly IClrTypeName UnreachableException = new ClrTypeName("System.Diagnostics.UnreachableException");
+    public static readonly IClrTypeName UnreachableException = new ClrTypeName("System.Diagnostics.UnreachableException");
 
-        [JetBrains.Annotations.Pure]
-        [ContractAnnotation("typeElement:null => false", true)]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool IsPredefinedTypeElement([CanBeNull] ITypeElement typeElement, [NotNull] IClrTypeName clrName)
-            => typeElement != null && typeElement.GetClrName().Equals(clrName);
+    public static readonly IClrTypeName IEqualityOperators = new ClrTypeName("System.Numerics.IEqualityOperators`3");
 
-        [JetBrains.Annotations.Pure]
-        [ContractAnnotation("type:null => false", true)]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsClrType([CanBeNull] this IType type, [NotNull] IClrTypeName clrName)
-            => type is IDeclaredType declaredType && IsPredefinedTypeElement(declaredType.GetTypeElement(), clrName);
-    }
+    public static readonly IClrTypeName IComparisonOperators = new ClrTypeName("System.Numerics.IComparisonOperators`3");
+
+    public static readonly IClrTypeName ConfigureAwaitOptions = new ClrTypeName("System.Threading.Tasks.ConfigureAwaitOptions");
+
+    [JetBrains.Annotations.Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsClrType([NotNullWhen(true)] this ITypeElement? typeElement, IClrTypeName clrName)
+        => typeElement is { } && typeElement.GetClrName().Equals(clrName);
+
+    [JetBrains.Annotations.Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsClrType([NotNullWhen(true)] this IType? type, IClrTypeName clrName) => type.GetTypeElement().IsClrType(clrName);
+
+    [JetBrains.Annotations.Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ITypeElement? TryGetTypeElement(this IClrTypeName clrName, IPsiModule psiModule)
+        => TypeElementUtil.GetTypeElementByClrName(clrName, psiModule);
+
+    [JetBrains.Annotations.Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static IType GetType(this IClrTypeName clrName, IPsiModule psiModule) => TypeFactory.CreateTypeByCLRName(clrName, psiModule);
 }

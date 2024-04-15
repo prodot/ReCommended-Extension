@@ -3,17 +3,16 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions.CodeContracts;
 
-namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types
+namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types;
+
+[TestNetFramework4]
+[TestFixture]
+public sealed class NumericPositiveAvailabilityTests : CSharpContextActionAvailabilityTestBase<NumericPositive>
 {
-    [TestNetFramework4]
-    [TestFixture]
-    public sealed class NumericPositiveAvailabilityTests : CSharpContextActionAvailabilityTestBase<NumericPositive>
-    {
-        protected override string ExtraPath => "";
+    protected override string ExtraPath => "";
 
-        protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\NumericPositive";
+    protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\NumericPositive";
 
-        [Test]
-        public void TestAvailability() => DoNamedTest2();
-    }
+    [Test]
+    public void TestAvailability() => DoNamedTest2();
 }

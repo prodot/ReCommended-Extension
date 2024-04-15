@@ -3,20 +3,19 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions.CodeContracts;
 
-namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types
+namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types;
+
+[TestNetFramework4]
+[TestFixture]
+public sealed class IntPtrUIntPtrNonZeroExecuteTests : CSharpContextActionExecuteTestBase<IntPtrUIntPtrNonZero>
 {
-    [TestNetFramework4]
-    [TestFixture]
-    public sealed class IntPtrUIntPtrNonZeroExecuteTests : CSharpContextActionExecuteTestBase<IntPtrUIntPtrNonZero>
-    {
-        protected override string ExtraPath => "";
+    protected override string ExtraPath => "";
 
-        protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZero";
+    protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZero";
 
-        [Test]
-        public void TestExecuteIntPtr() => DoNamedTest2();
+    [Test]
+    public void TestExecuteIntPtr() => DoNamedTest2();
 
-        [Test]
-        public void TestExecuteUIntPtr() => DoNamedTest2();
-    }
+    [Test]
+    public void TestExecuteUIntPtr() => DoNamedTest2();
 }

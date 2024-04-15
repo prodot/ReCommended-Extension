@@ -1,30 +1,30 @@
-using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReCommendedExtension.Analyzers.Annotation
+namespace ReCommendedExtension.Analyzers.Annotation;
+
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
+    HighlightingGroupIds.ConstraintViolation,
+    "Missing annotation" + ZoneMarker.Suffix,
+    "",
+    Severity.WARNING)]
+[ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
+public sealed class MissingAnnotationWarning(IAttributesOwnerDeclaration declaration, string message) : Highlighting(message)
 {
-    [RegisterConfigurableSeverity(
-        SeverityId,
-        null,
-        HighlightingGroupIds.ConstraintViolation,
-        "Missing nullability annotation" + ZoneMarker.Suffix,
-        "",
-        Severity.WARNING)]
-    [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-    public sealed class MissingAnnotationWarning : Highlighting
+    const string SeverityId = "MissingAnnotation";
+
+    public override DocumentRange CalculateRange()
     {
-        const string SeverityId = "MissingAnnotation";
+        if (declaration is IPrimaryConstructorDeclaration primaryConstructor)
+        {
+            return primaryConstructor.GetDocumentRange();
+        }
 
-        [NotNull]
-        readonly IAttributesOwnerDeclaration declaration;
-
-        internal MissingAnnotationWarning([NotNull] string message, [NotNull] IAttributesOwnerDeclaration declaration) : base(message)
-            => this.declaration = declaration;
-
-        public override DocumentRange CalculateRange() => declaration.GetNameDocumentRange();
+        return declaration.GetNameDocumentRange();
     }
 }

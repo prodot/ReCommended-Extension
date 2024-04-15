@@ -1,0 +1,17 @@
+﻿using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class TestClass
+    {
+        [HandlesResourceDisposal]
+        IDisposable disposable;
+
+        [|HandlesResourceDisposal|(0)]
+        int nonDisposable;
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotation is not valid because the field is not disposable.

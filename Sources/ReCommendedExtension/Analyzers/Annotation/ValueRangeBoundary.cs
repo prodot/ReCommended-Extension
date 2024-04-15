@@ -1,8 +1,7 @@
-﻿namespace ReCommendedExtension.Analyzers.Annotation
+﻿namespace ReCommendedExtension.Analyzers.Annotation;
+
+public enum ValueRangeBoundary
 {
-    internal enum ValueRangeBoundary
-    {
-        Lower,
-        Higher,
-    }
+    Lower,
+    Higher,
 }

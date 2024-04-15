@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using JetBrains.Annotations;
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.Application.UI.Controls.BulbMenu.Anchors;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
@@ -23,175 +18,144 @@ using JetBrains.TextControl;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.ContextActions
+namespace ReCommendedExtension.ContextActions;
+
+[ContextAction(
+    GroupType = typeof(CSharpContextActions),
+    Name = "Set language injection for string literals" + ZoneMarker.Suffix,
+    Description = "Set language injection for string literals.")]
+public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provider) : IContextAction
 {
-    [ContextAction(
-        GroupType = typeof(CSharpContextActions),
-        Name = "Set language injection for string literals" + ZoneMarker.Suffix,
-        Description = "Set language injection for string literals.")]
-    public sealed class SetLanguageInjection : IContextAction
+    sealed class InjectLanguageActionItem(IInjectorProviderInLiterals injectorProvider, ITreeNode ownerNode) : BulbActionBase
     {
-        sealed class InjectLanguageActionItem : BulbActionBase
+        [Pure]
+        ICSharpCommentNode CreateCommentNode(CSharpElementFactory factory, CommentType commentType)
+            => commentType switch
+            {
+                CommentType.END_OF_LINE_COMMENT => factory.CreateComment($"// {InjectorProvider.LanguageEqualsCommentTexts[0]}"),
+                CommentType.MULTILINE_COMMENT => factory.CreateComment($"/* {InjectorProvider.LanguageEqualsCommentTexts[0]} */"),
+
+                _ => throw new NotSupportedException(),
+            };
+
+        public IInjectorProviderInLiterals InjectorProvider { get; } = injectorProvider;
+
+        public HashSet<string>? LanguageEqualsCommentTexts { get; set; }
+
+        public override string Text => InjectorProvider.InjectDescription;
+
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            [NotNull]
-            readonly ITreeNode injectorOwnerNode;
+            Debug.Assert(LanguageEqualsCommentTexts is { });
 
-            public InjectLanguageActionItem([NotNull] IInjectorProviderInLiterals injectorProvider, [NotNull] ITreeNode injectorOwnerNode)
+            using (WriteLockCookie.Create())
             {
-                InjectorProvider = injectorProvider;
-                this.injectorOwnerNode = injectorOwnerNode;
-            }
+                var node = ownerNode;
+                var commentType = CommentType.MULTILINE_COMMENT;
 
-            [NotNull]
-            ICSharpCommentNode CreateCommentNode([NotNull] CSharpElementFactory factory, CommentType commentType)
-            {
-                Debug.Assert(InjectorProvider.LanguageEqualsCommentTexts != null);
-
-                switch (commentType)
+                switch (node.Parent)
                 {
-                    case CommentType.END_OF_LINE_COMMENT: return factory.CreateComment("// " + InjectorProvider.LanguageEqualsCommentTexts[0]);
+                    case IExpressionInitializer { Parent: IMultipleDeclarationMember { MultipleDeclaration.Declarators: [_] } declarationMember }:
+                        node = declarationMember.MultipleDeclaration;
+                        commentType = CommentType.END_OF_LINE_COMMENT;
+                        break;
 
-                    case CommentType.MULTILINE_COMMENT: return factory.CreateComment("/* " + InjectorProvider.LanguageEqualsCommentTexts[0] + " */");
+                    case IMultipleDeclarationMember { MultipleDeclaration.Declarators: [_] } declarationMember:
+                        node = declarationMember.MultipleDeclaration;
+                        commentType = CommentType.END_OF_LINE_COMMENT;
+                        break;
 
-                    default: throw new NotSupportedException();
+                    case IAssignmentExpression assignmentExpression:
+                        node = assignmentExpression;
+                        commentType = CommentType.END_OF_LINE_COMMENT;
+                        break;
+                }
+
+                var factory = CSharpElementFactory.GetInstance(node);
+
+                var previousNonWhitespaceToken = node.PrevTokens().FirstOrDefault(t => t is not IWhitespaceNode);
+
+                if (previousNonWhitespaceToken is ICSharpCommentNode
+                    {
+                        CommentType: CommentType.END_OF_LINE_COMMENT or CommentType.MULTILINE_COMMENT,
+                    } currentCommentNode
+                    && LanguageEqualsCommentTexts.Contains(currentCommentNode.CommentText.Trim()))
+                {
+                    currentCommentNode.ReplaceBy(CreateCommentNode(factory, currentCommentNode.CommentType));
+                }
+                else
+                {
+                    ModificationUtil.AddChildBefore(node, CreateCommentNode(factory, commentType));
                 }
             }
 
-            [NotNull]
-            public IInjectorProviderInLiterals InjectorProvider { get; }
+            return _ => { };
+        }
+    }
 
-            [CanBeNull]
-            [ItemNotNull]
-            public HashSet<string> LanguageEqualsCommentTexts { get; set; }
+    static readonly IAnchor submenuAnchor = new SubmenuAnchor(
+        IntentionsAnchors.ContextActionsAnchor,
+        new RichText("Set language injection or reference"));
 
-            public override string Text => InjectorProvider.InjectDescription;
+    public bool IsAvailable(IUserDataHolder cache)
+    {
+        var injectorProviders = provider.Solution.GetComponent<InjectorProvidersInLiteralsViewer>().Providers;
+        if (injectorProviders is not { })
+        {
+            return false;
+        }
 
-            protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        var languageType = provider.PsiFile.Language;
+
+        return injectorProviders.Any(
+            injectorProvider =>
             {
-                using (WriteLockCookie.Create())
+                var node = injectorProvider.LocateInjectNodeByTreeOffset(
+                    provider.PsiFile,
+                    provider.Document,
+                    provider.DocumentSelection.StartOffset.Offset);
+
+                if (node is not { }
+                    || !injectorProvider.IsSupportedLiteralForInjection(node)
+                    || injectorProvider is ILanguageInjectorProviderInLiterals languageInjectorProviderInLiterals
+                    && languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
                 {
-                    var node = injectorOwnerNode;
-                    var commentType = CommentType.MULTILINE_COMMENT;
-
-                    switch (node.Parent)
-                    {
-                        case IExpressionInitializer expressionInitializer
-                            when expressionInitializer.Parent is IMultipleDeclarationMember declarationMember
-                            && declarationMember.MultipleDeclaration?.Declarators.Count == 1:
-                            node = declarationMember.MultipleDeclaration;
-                            commentType = CommentType.END_OF_LINE_COMMENT;
-                            break;
-
-                        case IMultipleDeclarationMember declarationMember when declarationMember.MultipleDeclaration?.Declarators.Count == 1:
-                            node = declarationMember.MultipleDeclaration;
-                            commentType = CommentType.END_OF_LINE_COMMENT;
-                            break;
-
-                        case IAssignmentExpression assignmentExpression:
-                            node = assignmentExpression;
-                            commentType = CommentType.END_OF_LINE_COMMENT;
-                            break;
-                    }
-
-                    Debug.Assert(LanguageEqualsCommentTexts != null);
-
-                    var factory = CSharpElementFactory.GetInstance(node);
-
-                    var previousNonWhitespaceToken = node.PrevTokens().FirstOrDefault(t => !(t is IWhitespaceNode));
-
-                    if (previousNonWhitespaceToken is ICSharpCommentNode currentCommentNode
-                        && (currentCommentNode.CommentType == CommentType.END_OF_LINE_COMMENT
-                            || currentCommentNode.CommentType == CommentType.MULTILINE_COMMENT)
-                        && LanguageEqualsCommentTexts.Contains(currentCommentNode.CommentText.Trim()))
-                    {
-                        currentCommentNode.ReplaceBy(CreateCommentNode(factory, currentCommentNode.CommentType));
-                    }
-                    else
-                    {
-                        ModificationUtil.AddChildBefore(node, CreateCommentNode(factory, commentType));
-                    }
+                    return false;
                 }
 
-                return _ => { };
-            }
-        }
+                return languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage);
+            });
+    }
 
-        [NotNull]
-        static readonly IAnchor submenuAnchor = new SubmenuAnchor(
-            IntentionsAnchors.ContextActionsAnchor,
-            new RichText("Set language injection or reference"));
+    public IEnumerable<IntentionAction> CreateBulbItems()
+    {
+        var viewer = provider.Solution.GetComponent<InjectorProvidersInLiteralsViewer>();
 
-        [NotNull]
-        readonly ICSharpContextActionDataProvider provider;
+        var languageType = provider.PsiFile.Language;
 
-        public SetLanguageInjection([NotNull] ICSharpContextActionDataProvider provider) => this.provider = provider;
+        var actionItems = (
+            from injectorProvider in viewer.Providers
+            where injectorProvider.SupportsInjectionComment
+            let node =
+                injectorProvider.LocateInjectNodeByTreeOffset(provider.PsiFile, provider.Document, provider.DocumentSelection.StartOffset.Offset)
+            where node is { } && injectorProvider.IsSupportedLiteralForInjection(node)
+            let languageInjectorProviderInLiterals = injectorProvider as ILanguageInjectorProviderInLiterals
+            where (languageInjectorProviderInLiterals is not { } || !languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
+                && languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage)
+            orderby injectorProvider.Priority
+            select new InjectLanguageActionItem(injectorProvider, node)).ToList();
 
-        public bool IsAvailable(IUserDataHolder cache)
+        var languageEqualsCommentTexts = new HashSet<string>(
+            from actionItem in actionItems select actionItem.InjectorProvider.LanguageEqualsCommentTexts[0],
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (var actionItem in actionItems)
         {
-            var injectorProviders = provider.Solution.GetComponent<InjectorProvidersInLiteralsViewer>().Providers;
-            if (injectorProviders == null)
-            {
-                return false;
-            }
+            actionItem.LanguageEqualsCommentTexts = languageEqualsCommentTexts;
 
-            var languageType = provider.PsiFile.Language;
-
-            return injectorProviders.Any(
-                injectorProvider =>
-                {
-                    Debug.Assert(injectorProvider != null);
-
-                    var node = injectorProvider.LocateInjectNodeByTreeOffset(
-                        provider.PsiFile,
-                        provider.Document,
-                        provider.DocumentSelection.StartOffset.Offset);
-
-                    if (node == null
-                        || !injectorProvider.IsSupportedLiteralForInjection(node)
-                        || injectorProvider is ILanguageInjectorProviderInLiterals languageInjectorProviderInLiterals
-                        && languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
-                    {
-                        return false;
-                    }
-
-                    return languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage);
-                });
-        }
-
-        public IEnumerable<IntentionAction> CreateBulbItems()
-        {
-            var viewer = provider.Solution.GetComponent<InjectorProvidersInLiteralsViewer>();
-
-            var languageType = provider.PsiFile.Language;
-
-            Debug.Assert(viewer.Providers != null);
-
-            var actionItems = (
-                from injectorProvider in viewer.Providers
-                where injectorProvider.SupportsInjectionComment
-                let node =
-                    injectorProvider.LocateInjectNodeByTreeOffset(provider.PsiFile, provider.Document, provider.DocumentSelection.StartOffset.Offset)
-                where node != null && injectorProvider.IsSupportedLiteralForInjection(node)
-                let languageInjectorProviderInLiterals = injectorProvider as ILanguageInjectorProviderInLiterals
-                where (languageInjectorProviderInLiterals == null || !languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
-                    && languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage)
-                orderby injectorProvider.Priority
-                select new InjectLanguageActionItem(injectorProvider, node)).ToList();
-
-            var languageEqualsCommentTexts = new HashSet<string>(
-                from actionItem in actionItems select actionItem.InjectorProvider.LanguageEqualsCommentTexts[0],
-                StringComparer.OrdinalIgnoreCase);
-
-            foreach (var actionItem in actionItems)
-            {
-                Debug.Assert(actionItem != null);
-
-                actionItem.LanguageEqualsCommentTexts = languageEqualsCommentTexts;
-
-                yield return actionItem.ToContextActionIntention(
-                    submenuAnchor,
-                    actionItem.InjectorProvider.Icon ?? PsiFeaturesUnsortedThemedIcons.LangInjection.Id);
-            }
+            yield return actionItem.ToContextActionIntention(
+                submenuAnchor,
+                actionItem.InjectorProvider.Icon ?? PsiFeaturesUnsortedThemedIcons.LangInjection.Id);
         }
     }
 }
