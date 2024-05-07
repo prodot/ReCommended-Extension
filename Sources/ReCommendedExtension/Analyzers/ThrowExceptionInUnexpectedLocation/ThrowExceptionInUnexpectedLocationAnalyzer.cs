@@ -10,7 +10,6 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve.Managed;
 using JetBrains.ReSharper.Psi.Modules;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
@@ -21,17 +20,16 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
     sealed class ControlFlowGraphInspectorWithValueAnalysis : CSharpControlFlowGraphInspector
     {
         /// <remarks>
-        /// The originally used
-        /// <see cref="CSharpControlFlowGraphInspector.Inspect(ICSharpControlFlowGraph,ValueAnalysisMode,Func{ITreeNode,ICSharpControlFlowGraph})"/>
-        /// method turns off the value analysis mode (it effectively replaces the provided <paramref name="analysisMode"/> with
-        /// <see cref="ValueAnalysisMode.OFF"/> when the nullable warning context is detected).
+        /// The originally used <see cref="CSharpControlFlowGraphInspector.Inspect()"/> method turns off the value analysis mode (it effectively
+        /// replaces the provided <paramref name="analysisMode"/> with <see cref="ValueAnalysisMode.OFF"/> when the nullable warning context is
+        /// detected).
         /// </remarks>
         [Pure]
         public static CSharpControlFlowGraphInspector Inspect(ICSharpControlFlowGraph graph, ValueAnalysisMode analysisMode)
         {
             var element = (ICSharpTreeNode?)graph.Declaration ?? graph.OwnerNode;
             var universalContext = new UniversalContext(element);
-            var factory = new CSharpControlFlowContextFactory(graph, universalContext, analysisMode, ExecutionBehavior.InstantExecution);
+            var factory = new CSharpControlFlowContextFactory(graph, universalContext, analysisMode, false, ExecutionBehavior.InstantExecution);
             var inspector = new ControlFlowGraphInspectorWithValueAnalysis(graph, factory);
 
             inspector.Inspect();

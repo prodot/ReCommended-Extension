@@ -126,7 +126,8 @@ public sealed class ControlFlowAnalyzer(
                 (CSharpCompilerNullableInspector?)referenceTypesDataFlowAnalysisRunSynchronizer.RunNullableAnalysisAndGetResults(
                     rootNode,
                     null!, // wrong [NotNull] annotation in R# code
-                    ValueAnalysisMode.OFF);
+                    ValueAnalysisMode.OFF,
+                    false);
             inspector = null;
             alwaysSuccessTryCastExpressions = null;
         }
@@ -391,7 +392,7 @@ public sealed class ControlFlowAnalyzer(
         {
             case IFunction function:
             {
-                var (annotationNullableValue, _) = nullnessProvider.GetInfo(function);
+                var (annotationNullableValue, _, _) = nullnessProvider.GetInfo(function);
                 if (annotationNullableValue == CodeAnnotationNullableValue.NOT_NULL)
                 {
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
@@ -403,7 +404,7 @@ public sealed class ControlFlowAnalyzer(
             case ITypeOwner typeOwner when !typeOwner.Type.IsDelegateType():
                 if (typeOwner is IAttributesOwner attributesOwner)
                 {
-                    var (annotationNullableValue, _) = nullnessProvider.GetInfo(attributesOwner);
+                    var (annotationNullableValue, _, _) = nullnessProvider.GetInfo(attributesOwner);
                     if (annotationNullableValue == CodeAnnotationNullableValue.NOT_NULL)
                     {
                         return CSharpControlFlowNullReferenceState.NOT_NULL;

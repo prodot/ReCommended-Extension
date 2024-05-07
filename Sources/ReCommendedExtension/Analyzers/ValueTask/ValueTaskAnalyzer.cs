@@ -23,7 +23,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     sealed class Inspector : CSharpControlFlowGraphInspector
     {
         [Pure]
-        public static Inspector Inspect(
+        public static new Inspector Inspect(
             ICSharpControlFlowGraph controlFlowGraph,
             ValueAnalysisMode analysisMode,
             bool shouldDisableValueAnalysisIfNullableWarningsEnabled = true,
@@ -52,6 +52,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 controlFlowGraph,
                 universalContext,
                 analysisMode,
+                false,
                 ExecutionBehavior.InstantExecution,
                 collectClosures: forceClosuresCollection);
 
