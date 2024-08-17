@@ -1,5 +1,4 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.Metadata.Reader.API;
+﻿using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -93,7 +92,7 @@ internal static class Extensions
     {
         if (declaredType.GetTypeElement() is { } typeElement)
         {
-            var elementTypes = new IType?[typeElement.TypeParameters.Count];
+            var elementTypes = new IType?[typeElement.TypeParametersCount];
 
             for (var i = 0; i < elementTypes.Length; i++)
             {

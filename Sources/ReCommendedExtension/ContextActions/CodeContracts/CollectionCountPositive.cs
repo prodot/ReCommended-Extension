@@ -19,9 +19,10 @@ public sealed class CollectionCountPositive(ICSharpContextActionDataProvider pro
     {
         if (!type.IsGenericIEnumerable())
         {
-            Debug.Assert(Provider.SelectedElement is { });
+            var context = Provider.GetSelectedElement<ITreeNode>();
+            Debug.Assert(context is { });
 
-            if (type.IsGenericArray(Provider.SelectedElement))
+            if (type.IsGenericArray(context))
             {
                 // type is T[...]
                 isArray = true;
