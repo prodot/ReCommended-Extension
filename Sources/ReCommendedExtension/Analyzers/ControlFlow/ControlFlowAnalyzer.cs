@@ -129,7 +129,7 @@ public sealed class ControlFlowAnalyzer(
         {
             nullabilityInspector = null;
             inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
-            alwaysSuccessTryCastExpressions = new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions);
+            alwaysSuccessTryCastExpressions = [..inspector.AlwaysSuccessTryCastExpressions];
         }
 
         foreach (var assertion in assertions)
