@@ -149,85 +149,85 @@ namespace TargetCollection
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(1): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(0): ReSharper Dead Code: Use collection expression
+(1): ReSharper Dead Code: Use collection expression
 (2): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(3): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(4): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(3): ReSharper Dead Code: Use collection expression
+(4): ReSharper Dead Code: Use collection expression
 (5): ReSharper Suggestion: Use 'Array<int>.Empty()'
 (6): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(7): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(7): ReSharper Dead Code: Use collection expression
 (8): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(9): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(10): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(9): ReSharper Dead Code: Use collection expression
+(10): ReSharper Dead Code: Use collection expression
 (11): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(12): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(13): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(12): ReSharper Dead Code: Use collection expression
+(13): ReSharper Dead Code: Use collection expression
 (14): ReSharper Suggestion: Use 'Array<int>.Empty()'
 (15): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(16): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(16): ReSharper Dead Code: Use collection expression
 (17): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(18): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(19): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(18): ReSharper Dead Code: Use collection expression
+(19): ReSharper Dead Code: Use collection expression
 (20): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(21): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(22): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(21): ReSharper Dead Code: Use collection expression
+(22): ReSharper Dead Code: Use collection expression
 (23): ReSharper Suggestion: Use 'Array<int>.Empty()'
 (24): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(25): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(25): ReSharper Dead Code: Use collection expression
 (26): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
 (27): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(28): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(28): ReSharper Dead Code: Use collection expression
 (29): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(30): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(31): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(30): ReSharper Dead Code: Use collection expression
+(31): ReSharper Dead Code: Use collection expression
 (32): ReSharper Suggestion: Use 'Array<int>.Empty()'
 (33): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(34): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(34): ReSharper Dead Code: Use collection expression
 (35): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
-(36): ReSharper Suggestion: Use collection expression ('List<string?>' will be used).
-(37): ReSharper Suggestion: Use collection expression ('List<string?>' will be used).
+(36): ReSharper Dead Code: Use collection expression
+(37): ReSharper Dead Code: Use collection expression
 (38): ReSharper Suggestion: Use 'Array<string?>.Empty()'
-(39): ReSharper Suggestion: Use collection expression ('List<string?>' will be used).
-(40): ReSharper Suggestion: Use collection expression ('List<string?>' will be used).
+(39): ReSharper Dead Code: Use collection expression
+(40): ReSharper Dead Code: Use collection expression
 (41): ReSharper Suggestion: Use 'Array<string?>.Empty()'
 (42): ReSharper Suggestion: Use collection expression ('List<string?>' will be used).
-(43): ReSharper Suggestion: Use collection expression ('List<string?>' will be used).
-(44): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(45): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(43): ReSharper Dead Code: Use collection expression
+(44): ReSharper Dead Code: Use collection expression
+(45): ReSharper Dead Code: Use collection expression
 (46): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(47): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(48): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(47): ReSharper Dead Code: Use collection expression
+(48): ReSharper Dead Code: Use collection expression
 (49): ReSharper Suggestion: Use 'Array<T>.Empty()'
 (50): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(51): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(51): ReSharper Dead Code: Use collection expression
 (52): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(53): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(54): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(53): ReSharper Dead Code: Use collection expression
+(54): ReSharper Dead Code: Use collection expression
 (55): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(56): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(57): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(56): ReSharper Dead Code: Use collection expression
+(57): ReSharper Dead Code: Use collection expression
 (58): ReSharper Suggestion: Use 'Array<T>.Empty()'
 (59): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(60): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(60): ReSharper Dead Code: Use collection expression
 (61): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(62): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(63): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(62): ReSharper Dead Code: Use collection expression
+(63): ReSharper Dead Code: Use collection expression
 (64): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(65): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(66): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(65): ReSharper Dead Code: Use collection expression
+(66): ReSharper Dead Code: Use collection expression
 (67): ReSharper Suggestion: Use 'Array<T>.Empty()'
 (68): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(69): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(69): ReSharper Dead Code: Use collection expression
 (70): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(71): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(72): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(71): ReSharper Dead Code: Use collection expression
+(72): ReSharper Dead Code: Use collection expression
 (73): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(74): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(75): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(74): ReSharper Dead Code: Use collection expression
+(75): ReSharper Dead Code: Use collection expression
 (76): ReSharper Suggestion: Use 'Array<T>.Empty()'
 (77): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(78): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(78): ReSharper Dead Code: Use collection expression
 (79): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (80): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (81): ReSharper Suggestion: Use 'Array<B>.Empty()'
@@ -235,7 +235,7 @@ namespace TargetCollection
 (83): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (84): ReSharper Suggestion: Use 'Array<B>.Empty()'
 (85): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(86): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(86): ReSharper Dead Code: Use collection expression
 (87): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (88): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (89): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
@@ -244,7 +244,7 @@ namespace TargetCollection
 (92): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (93): ReSharper Suggestion: Use 'Array<B>.Empty()'
 (94): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(95): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(95): ReSharper Dead Code: Use collection expression
 (96): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (97): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (98): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
@@ -253,7 +253,7 @@ namespace TargetCollection
 (101): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (102): ReSharper Suggestion: Use 'Array<B>.Empty()'
 (103): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(104): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(104): ReSharper Dead Code: Use collection expression
 (105): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (106): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (107): ReSharper Suggestion: Use 'Array<B>.Empty()'
@@ -261,5 +261,5 @@ namespace TargetCollection
 (109): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (110): ReSharper Suggestion: Use 'Array<B>.Empty()'
 (111): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(112): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(112): ReSharper Dead Code: Use collection expression
 (113): ReSharper Suggestion: Use collection expression ('List<A>' will be used).

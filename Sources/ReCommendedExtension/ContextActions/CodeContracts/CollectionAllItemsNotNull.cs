@@ -39,7 +39,7 @@ public sealed class CollectionAllItemsNotNull(ICSharpContextActionDataProvider p
 
     protected override bool IsAvailableForType(IType type)
     {
-        var context = Provider.SelectedElement;
+        var context = Provider.GetSelectedElement<ITreeNode>();
         Debug.Assert(context is { });
 
         if ((type.IsCollectionLike() || type.IsGenericArray(context))

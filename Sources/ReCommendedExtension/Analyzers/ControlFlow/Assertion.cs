@@ -1,11 +1,17 @@
 ﻿using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.ControlFlow;
 
 public abstract record Assertion
 {
+    /// <remarks>
+    /// Indicates that the expression has already been processed.
+    /// </remarks>
+    static readonly Key<object> key = new(typeof(Assertion).FullName);
+
     [Pure]
     internal static HashSet<Assertion> CollectAssertions(
         AssertionMethodAnnotationProvider assertionMethodAnnotationProvider,
@@ -26,7 +32,7 @@ public abstract record Assertion
                 continue;
             }
 
-            if (expression is IInvocationExpression invocationExpression)
+            if (expression is IInvocationExpression invocationExpression && !invocationExpression.UserData.HasKey(key))
             {
                 if (AssertionStatement.TryFromInvocationExpression(
                         invocationExpression,
@@ -40,6 +46,8 @@ public abstract record Assertion
                 {
                     assertions.Add(inlineAssertion);
                 }
+
+                invocationExpression.UserData.PutKey(key);
             }
         }
 

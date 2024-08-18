@@ -469,80 +469,98 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     (IType? arrayItemType, bool isCovariant)? TryGetIfTargetTypedToArray()
                         => TryGetIfTargetTypedToGenericArray(arrayCreationExpression, itemType, targetType);
 
-                    // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
-                    if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
-                            ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
-                            ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN)) is var (covariantCollectionItemType,
-                        isCollectionItemTypeCovariant))
+                    // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>: cases not covered by R#
+                    // - arrays passed to a method, which requires setting inferred type arguments
+                    // - empty arrays without items ('new T[0]')
+                    // - arrays of covariant types when type is specified
                     {
-                        string? covariantTypeName;
-                        if (isCollectionItemTypeCovariant)
+                        if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
+                                ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
+                                ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN)) is var (collectionItemType,
+                            isCollectionItemTypeCovariant)
+                            && (isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is { }
+                                || isEmptyArray
+                                && (arrayCreationExpression.ArrayInitializer is not { }
+                                    || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { }
+                                    || isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is not { })))
                         {
-                            Debug.Assert(covariantCollectionItemType is { });
-                            Debug.Assert(CSharpLanguage.Instance is { });
+                            string? covariantTypeName;
+                            if (isCollectionItemTypeCovariant)
+                            {
+                                Debug.Assert(collectionItemType is { });
+                                Debug.Assert(CSharpLanguage.Instance is { });
 
-                            covariantTypeName =
-                                TypeFactory.CreateArrayType(covariantCollectionItemType, 1).GetPresentableName(CSharpLanguage.Instance);
-                        }
-                        else
-                        {
-                            covariantTypeName = null;
-                        }
+                                covariantTypeName = TypeFactory.CreateArrayType(collectionItemType, 1).GetPresentableName(CSharpLanguage.Instance);
+                            }
+                            else
+                            {
+                                covariantTypeName = null;
+                            }
 
-                        consumer.AddHighlighting(
-                            new UseTargetTypedCollectionExpressionSuggestion(
-                                isEmptyArray
-                                    ? covariantTypeName is { }
-                                        ? $"Use collection expression ('{covariantTypeName}' will be used)."
-                                        : "Use collection expression."
-                                    : "Use collection expression (a compiler-synthesized read-only collection will be used).",
-                                isEmptyArray
-                                    ? covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null
-                                    : "a compiler-synthesized read-only collection will be used",
-                                arrayCreationExpression,
-                                null,
-                                arrayCreationExpression.ArrayInitializer?.InitializerElements,
-                                methodReferenceToSetInferredTypeArguments));
+                            consumer.AddHighlighting(
+                                new UseTargetTypedCollectionExpressionSuggestion(
+                                    isEmptyArray
+                                        ? covariantTypeName is { }
+                                            ? $"Use collection expression ('{covariantTypeName}' will be used)."
+                                            : "Use collection expression."
+                                        : "Use collection expression (a compiler-synthesized read-only collection will be used).",
+                                    isEmptyArray
+                                        ? covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null
+                                        : "a compiler-synthesized read-only collection will be used",
+                                    arrayCreationExpression,
+                                    null,
+                                    arrayCreationExpression.ArrayInitializer?.InitializerElements,
+                                    methodReferenceToSetInferredTypeArguments));
+                        }
                     }
 
-                    // target-typed to ICollection<T> or IList<T>
-                    if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN)) is
-                        var (collectionItemType, _))
+                    // target-typed to ICollection<T> or IList<T>: cases not covered by R#
+                    // - arrays passed to a method, which requires setting inferred type arguments
+                    // - empty arrays without items ('new T[0]')
+                    // - arrays of covariant types when type is specified
                     {
-                        Debug.Assert(collectionItemType is { });
-                        Debug.Assert(CSharpLanguage.Instance is { });
+                        if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN))
+                            is var (collectionItemType, isCollectionItemTypeCovariant)
+                            && (isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is { }
+                                || isEmptyArray
+                                && (arrayCreationExpression.ArrayInitializer is not { }
+                                    || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { })))
+                        {
+                            Debug.Assert(collectionItemType is { });
+                            Debug.Assert(CSharpLanguage.Instance is { });
 
-                        var typeName = TryConstructType(PredefinedType.GENERIC_LIST_FQN, [collectionItemType], psiModule)
-                            ?.GetPresentableName(CSharpLanguage.Instance);
-                        Debug.Assert(typeName is { });
+                            var typeName = TryConstructType(PredefinedType.GENERIC_LIST_FQN, [collectionItemType], psiModule)
+                                ?.GetPresentableName(CSharpLanguage.Instance);
+                            Debug.Assert(typeName is { });
 
-                        consumer.AddHighlighting(
-                            new UseTargetTypedCollectionExpressionSuggestion(
-                                $"Use collection expression ('{typeName}' will be used).",
-                                $"'{typeName}' will be used",
-                                arrayCreationExpression,
-                                null,
-                                arrayCreationExpression.ArrayInitializer?.InitializerElements,
-                                methodReferenceToSetInferredTypeArguments));
+                            consumer.AddHighlighting(
+                                new UseTargetTypedCollectionExpressionSuggestion(
+                                    $"Use collection expression ('{typeName}' will be used).",
+                                    $"'{typeName}' will be used",
+                                    arrayCreationExpression,
+                                    null,
+                                    arrayCreationExpression.ArrayInitializer?.InitializerElements,
+                                    methodReferenceToSetInferredTypeArguments));
+                        }
                     }
 
                     // target-typed to T[]: cases not covered by R#
                     // - empty arrays passed to a method, which requires setting inferred type arguments
                     // - empty arrays without items ('new T[0]')
                     // - arrays of covariant types when type is specified
-                    if (TryGetIfTargetTypedToArray() is var (covariantItemType, isCovariant)
-                        && (isCovariant && arrayCreationExpression.TypeName is { }
+                    if (TryGetIfTargetTypedToArray() is var (arrayItemType, isArrayItemTypeCovariant)
+                        && (isArrayItemTypeCovariant && arrayCreationExpression.TypeName is { }
                             || isEmptyArray
                             && (arrayCreationExpression.ArrayInitializer is not { }
                                 || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { })))
                     {
                         string? covariantTypeName;
-                        if (isCovariant)
+                        if (isArrayItemTypeCovariant)
                         {
-                            Debug.Assert(covariantItemType is { });
+                            Debug.Assert(arrayItemType is { });
                             Debug.Assert(CSharpLanguage.Instance is { });
 
-                            covariantTypeName = TypeFactory.CreateArrayType(covariantItemType, 1).GetPresentableName(CSharpLanguage.Instance);
+                            covariantTypeName = TypeFactory.CreateArrayType(arrayItemType, 1).GetPresentableName(CSharpLanguage.Instance);
                         }
                         else
                         {

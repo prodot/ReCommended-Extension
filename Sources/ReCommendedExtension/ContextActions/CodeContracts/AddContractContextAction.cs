@@ -91,7 +91,7 @@ public abstract class AddContractContextAction(ICSharpContextActionDataProvider 
                 {
                     var originalPosition = textControl.Caret.Position.Value;
 
-                    var coordinates = textControl.Document.GetCoordsByOffset(firstNonContractStatement.GetDocumentRange().TextRange.StartOffset);
+                    var coordinates = textControl.Document.GetCoordsByOffset(firstNonContractStatement.GetDocumentRange().TextRange.StartDocOffset());
                     textControl.Caret.MoveTo(coordinates, CaretVisualPlacement.DontScrollIfVisible);
 
                     textControl.EmulateEnter();

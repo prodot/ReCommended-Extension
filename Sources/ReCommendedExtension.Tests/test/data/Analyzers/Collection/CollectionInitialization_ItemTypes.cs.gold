@@ -142,12 +142,12 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(1): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(2): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(3): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(4): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(5): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(0): ReSharper Dead Code: Use collection expression
+(1): ReSharper Dead Code: Use collection expression
+(2): ReSharper Dead Code: Use collection expression
+(3): ReSharper Dead Code: Use collection expression
+(4): ReSharper Dead Code: Use collection expression
+(5): ReSharper Dead Code: Use collection expression
 (6): ReSharper Dead Code: Use collection expression
 (7): ReSharper Suggestion: Use collection expression ('object[]' will be used).
 (8): ReSharper Suggestion: Use collection expression ('A[]' will be used).

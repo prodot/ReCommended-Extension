@@ -7,7 +7,7 @@ namespace TargetEnumerable
     {
         void Method(int a, int b, int c)
         {
-            ConsumerGeneric(new{caret}[] { a, b, c });
+            ConsumerGeneric(new int{caret}[0]);
         }
 
         void ConsumerGeneric<T>(IEnumerable<T> items) { }

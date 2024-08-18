@@ -5,6 +5,6 @@ namespace TargetEnumerable
 {
     public class NonGenericClass
     {
-        IEnumerable<int> field7 = {caret}[1, 2, 3];
+        IEnumerable<int> field7 = {caret}[];
     }
 }

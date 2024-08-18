@@ -105,12 +105,6 @@ public sealed class ControlFlowAnalyzer(
     {
         var assertions = Assertion.CollectAssertions(assertionMethodAnnotationProvider, assertionConditionAnnotationProvider, rootNode);
 
-        assertions.ExceptWith(
-            from highlightingInfo in consumer.Highlightings
-            let redundantAssertionHighlighting = highlightingInfo.Highlighting as RedundantAssertionSuggestion
-            where redundantAssertionHighlighting is { }
-            select redundantAssertionHighlighting.Assertion);
-
         if (assertions.Count == 0)
         {
             return; // no (new) assertions found
@@ -135,7 +129,7 @@ public sealed class ControlFlowAnalyzer(
         {
             nullabilityInspector = null;
             inspector = CSharpControlFlowGraphInspector.Inspect(controlFlowGraph, data.GetValueAnalysisMode());
-            alwaysSuccessTryCastExpressions = new HashSet<IAsExpression>(inspector.AlwaysSuccessTryCastExpressions);
+            alwaysSuccessTryCastExpressions = [..inspector.AlwaysSuccessTryCastExpressions];
         }
 
         foreach (var assertion in assertions)
