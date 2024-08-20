@@ -39,6 +39,8 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
     protected virtual bool AllowsMultiple => false;
 
+    protected virtual bool AnnotateMethodReturnValue => false;
+
     [Pure]
     protected virtual AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => [];
 
@@ -109,14 +111,24 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
             using (WriteLockCookie.Create())
             {
-                var attributeTarget = AttributeTarget.None;
+                AttributeTarget attributeTarget;
 
-                if (attributesOwnerDeclaration is IPrimaryConstructorDeclaration primaryConstructorDeclaration)
+                switch (attributesOwnerDeclaration)
                 {
-                    attributesOwnerDeclaration = primaryConstructorDeclaration.GetContainingTypeDeclaration();
-                    Debug.Assert(attributesOwnerDeclaration is { });
+                    case IPrimaryConstructorDeclaration primaryConstructorDeclaration:
+                        attributesOwnerDeclaration = primaryConstructorDeclaration.GetContainingTypeDeclaration();
+                        Debug.Assert(attributesOwnerDeclaration is { });
 
-                    attributeTarget = AttributeTarget.Method;
+                        attributeTarget = AttributeTarget.Method;
+                        break;
+
+                    case IMethodDeclaration when AnnotateMethodReturnValue:
+                        attributeTarget = AttributeTarget.Return;
+                        break;
+
+                    default:
+                        attributeTarget = AttributeTarget.None;
+                        break;
                 }
 
                 var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
