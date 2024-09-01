@@ -1,0 +1,160 @@
+﻿using System;
+
+namespace Test
+{
+    internal interface ISomeInterface { }
+
+    // classes
+
+    internal class Class10 { }
+    internal class Class11 : ISomeInterface { }
+    internal class Class12 : Class10, ISomeInterface { }
+
+    internal class Class20 : |object|(0) { }
+    internal class Class21 : |Object|(1) { }
+
+    internal class Class30 : |object|(2), ISomeInterface { }
+    internal class Class31 : |Object|(3), ISomeInterface { }
+
+    internal class Class40(int x) : |object|(4), ISomeInterface { }
+    internal class Class41(int x) : |Object|(5), ISomeInterface { }
+
+    // records
+
+    internal record Record10 { }
+    internal record Record11 : ISomeInterface { }
+    internal record Record12 : Record10, ISomeInterface { }
+
+    internal record Record20 : |object|(6) { }
+    internal record Record21 : |Object|(7) { }
+
+    internal record Record30 : |object|(8), ISomeInterface { }
+    internal record Record31 : |Object|(9), ISomeInterface { }
+
+    internal record Record40(int X) : |object|(10), ISomeInterface { }
+    internal record Record41(int X) : |Object|(11), ISomeInterface { }
+
+    internal record class Record50 : |object|(12) { }
+
+    // other types
+
+    internal record struct Struct1 { }
+    internal struct Struct2 { }
+    internal ref struct Struct3 { }
+
+    // nested
+
+    internal class Parent
+    {
+        // classes
+
+        internal class Class10 { }
+        internal class Class11 : ISomeInterface { }
+        internal class Class12 : Class10, ISomeInterface { }
+
+        internal class Class20 : |object|(13) { }
+        internal class Class21 : |Object|(14) { }
+
+        internal class Class30 : |object|(15), ISomeInterface { }
+        internal class Class31 : |Object|(16), ISomeInterface { }
+
+        internal class Class40(int x) : |object|(17), ISomeInterface { }
+        internal class Class41(int x) : |Object|(18), ISomeInterface { }
+
+        // records
+
+        internal record Record10 { }
+        internal record Record11 : ISomeInterface { }
+        internal record Record12 : Record10, ISomeInterface { }
+
+        internal record Record20 : |object|(19) { }
+        internal record Record21 : |Object|(20) { }
+
+        internal record Record30 : |object|(21), ISomeInterface { }
+        internal record Record31 : |Object|(22), ISomeInterface { }
+
+        internal record Record40(int X) : |object|(23), ISomeInterface { }
+        internal record Record41(int X) : |Object|(24), ISomeInterface { }
+
+        internal record class Record50 : |object|(25) { }
+    }
+}
+------------------------------------------------
+0: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+1: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+2: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+3: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+4: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+5: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+6: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+7: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+8: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+9: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+10: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+11: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+12: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+13: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+14: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+15: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+16: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+17: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+18: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+19: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+20: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+21: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+22: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+23: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+24: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'
+25: 'object' is default base type.
+QUICKFIXES:
+Remove redundant 'object'

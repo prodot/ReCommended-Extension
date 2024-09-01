@@ -1,0 +1,11 @@
+﻿using System;
+
+namespace Test
+{
+    internal interface ISomeInterface { }
+
+    internal class Class{caret}
+    {
+        public void Method() { }
+    }
+}

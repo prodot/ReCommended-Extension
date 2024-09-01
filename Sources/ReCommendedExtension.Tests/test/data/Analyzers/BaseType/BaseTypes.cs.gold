@@ -1,0 +1,108 @@
+﻿using System;
+
+namespace Test
+{
+    internal interface ISomeInterface { }
+
+    // classes
+
+    internal class Class10 { }
+    internal class Class11 : ISomeInterface { }
+    internal class Class12 : Class10, ISomeInterface { }
+
+    internal class Class20 : |object|(0) { }
+    internal class Class21 : |Object|(1) { }
+
+    internal class Class30 : |object|(2), ISomeInterface { }
+    internal class Class31 : |Object|(3), ISomeInterface { }
+
+    internal class Class40(int x) : |object|(4), ISomeInterface { }
+    internal class Class41(int x) : |Object|(5), ISomeInterface { }
+
+    // records
+
+    internal record Record10 { }
+    internal record Record11 : ISomeInterface { }
+    internal record Record12 : Record10, ISomeInterface { }
+
+    internal record Record20 : |object|(6) { }
+    internal record Record21 : |Object|(7) { }
+
+    internal record Record30 : |object|(8), ISomeInterface { }
+    internal record Record31 : |Object|(9), ISomeInterface { }
+
+    internal record Record40(int X) : |object|(10), ISomeInterface { }
+    internal record Record41(int X) : |Object|(11), ISomeInterface { }
+
+    internal record class Record50 : |object|(12) { }
+
+    // other types
+
+    internal record struct Struct1 { }
+    internal struct Struct2 { }
+    internal ref struct Struct3 { }
+
+    // nested
+
+    internal class Parent
+    {
+        // classes
+
+        internal class Class10 { }
+        internal class Class11 : ISomeInterface { }
+        internal class Class12 : Class10, ISomeInterface { }
+
+        internal class Class20 : |object|(13) { }
+        internal class Class21 : |Object|(14) { }
+
+        internal class Class30 : |object|(15), ISomeInterface { }
+        internal class Class31 : |Object|(16), ISomeInterface { }
+
+        internal class Class40(int x) : |object|(17), ISomeInterface { }
+        internal class Class41(int x) : |Object|(18), ISomeInterface { }
+
+        // records
+
+        internal record Record10 { }
+        internal record Record11 : ISomeInterface { }
+        internal record Record12 : Record10, ISomeInterface { }
+
+        internal record Record20 : |object|(19) { }
+        internal record Record21 : |Object|(20) { }
+
+        internal record Record30 : |object|(21), ISomeInterface { }
+        internal record Record31 : |Object|(22), ISomeInterface { }
+
+        internal record Record40(int X) : |object|(23), ISomeInterface { }
+        internal record Record41(int X) : |Object|(24), ISomeInterface { }
+
+        internal record class Record50 : |object|(25) { }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: 'object' is default base type.
+(1): ReSharper Dead Code: 'object' is default base type.
+(2): ReSharper Dead Code: 'object' is default base type.
+(3): ReSharper Dead Code: 'object' is default base type.
+(4): ReSharper Dead Code: 'object' is default base type.
+(5): ReSharper Dead Code: 'object' is default base type.
+(6): ReSharper Dead Code: 'object' is default base type.
+(7): ReSharper Dead Code: 'object' is default base type.
+(8): ReSharper Dead Code: 'object' is default base type.
+(9): ReSharper Dead Code: 'object' is default base type.
+(10): ReSharper Dead Code: 'object' is default base type.
+(11): ReSharper Dead Code: 'object' is default base type.
+(12): ReSharper Dead Code: 'object' is default base type.
+(13): ReSharper Dead Code: 'object' is default base type.
+(14): ReSharper Dead Code: 'object' is default base type.
+(15): ReSharper Dead Code: 'object' is default base type.
+(16): ReSharper Dead Code: 'object' is default base type.
+(17): ReSharper Dead Code: 'object' is default base type.
+(18): ReSharper Dead Code: 'object' is default base type.
+(19): ReSharper Dead Code: 'object' is default base type.
+(20): ReSharper Dead Code: 'object' is default base type.
+(21): ReSharper Dead Code: 'object' is default base type.
+(22): ReSharper Dead Code: 'object' is default base type.
+(23): ReSharper Dead Code: 'object' is default base type.
+(24): ReSharper Dead Code: 'object' is default base type.
+(25): ReSharper Dead Code: 'object' is default base type.
