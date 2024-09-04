@@ -1,4 +1,5 @@
-﻿using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.Metadata.Reader.API;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.ControlFlow;
@@ -17,9 +18,15 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     typeof(IAttributesOwnerDeclaration),
     HighlightingTypes =
     [
-        typeof(RedundantAnnotationSuggestion), typeof(NotAllowedAnnotationWarning), typeof(MissingAnnotationWarning),
-        typeof(MissingSuppressionJustificationWarning), typeof(ConflictingAnnotationWarning), typeof(ConditionalAnnotationHint),
-        typeof(InvalidValueRangeBoundaryWarning), typeof(RedundantAnnotationArgumentSuggestion),
+        typeof(RedundantNullableAnnotationSuggestion),
+        typeof(RedundantAnnotationSuggestion),
+        typeof(NotAllowedAnnotationWarning),
+        typeof(MissingAnnotationWarning),
+        typeof(MissingSuppressionJustificationWarning),
+        typeof(ConflictingAnnotationWarning),
+        typeof(ConditionalAnnotationHint),
+        typeof(InvalidValueRangeBoundaryWarning),
+        typeof(RedundantAnnotationArgumentSuggestion),
     ])]
 public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache) : ElementProblemAnalyzer<IAttributesOwnerDeclaration>
 {
@@ -228,6 +235,23 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
     static bool ExcludeFromCodeCoverageJustificationPropertyExists(IPsiModule psiModule)
         => ClrTypeNames.ExcludeFromCodeCoverageAttribute.TryGetTypeElement(psiModule) is { } attributeType
             && attributeType.Properties.Any(property => property is { IsStatic: false, ShortName: "Justification" }); // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
+
+    static void AnalyzeNullableAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
+    {
+        Debug.Assert(attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
+
+        if (attributesOwnerDeclaration is IMethodDeclaration
+            {
+                IsIterator: true,
+                DeclaredElement.ReturnType: { Classify: TypeClassification.REFERENCE_TYPE, NullableAnnotation: NullableAnnotation.Annotated },
+                TypeUsage: INullableTypeUsage nullableTypeUsage,
+                NameIdentifier.Name: var methodName,
+            })
+        {
+            consumer.AddHighlighting(
+                new RedundantNullableAnnotationSuggestion(nullableTypeUsage, $"Return type of '{methodName}' can be non-nullable."));
+        }
+    }
 
     static void AnalyzePurityAndDisposability(IHighlightingConsumer consumer, IAttributesOwnerDeclaration element)
     {
@@ -1552,7 +1576,12 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
     protected override void Run(IAttributesOwnerDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (!element.IsNullableAnnotationsContextEnabled())
+        if (element.IsNullableAnnotationsContextEnabled())
+        {
+            // ? annotations
+            AnalyzeNullableAnnotations(consumer, element);
+        }
+        else
         {
             // [NotNull], [CanBeNull] annotations
             switch (TryGetNullabilityAnnotationCase(element))

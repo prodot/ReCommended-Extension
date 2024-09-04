@@ -5,8 +5,9 @@ using ReCommendedExtension.Analyzers.Annotation;
 
 namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
-[TestNetFramework45]
 [TestFixture]
+[TestNetFramework45]
+[TestPackages(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotationQuickFixTests : QuickFixTestBase<RemoveAttributeFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";

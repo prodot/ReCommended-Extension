@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Enumerables
+    {
+        public IEnumerable<int>|?|(0) IteratorNullable()
+        {
+            yield return 1;
+        }
+    }
+
+    internal class AsyncEnumerables
+    {
+        public async IAsyncEnumerable<int>|?|(1) IteratorNullable()
+        {
+            await Task.Yield();
+            yield return 1;
+        }
+    }
+}
+------------------------------------------------
+0: Return type of 'IteratorNullable' can be non-nullable.
+QUICKFIXES:
+Make method return type not nullable
+1: Return type of 'IteratorNullable' can be non-nullable.
+QUICKFIXES:
+Make method return type not nullable
