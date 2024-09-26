@@ -1613,7 +1613,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         // [Pure], [MustUseReturnValue], [MustDisposeResource], and [MustDisposeResource(false)] annotations
         AnalyzePurityAndDisposability(consumer, element);
 
-        // [MustDisposeResource] annotations
+        // [HandlesResourceDisposal] annotations
         AnalyzeDisposalHandling(consumer, element);
 
         // [NonNegativeValue] and [ValueRange(...)] annotations
