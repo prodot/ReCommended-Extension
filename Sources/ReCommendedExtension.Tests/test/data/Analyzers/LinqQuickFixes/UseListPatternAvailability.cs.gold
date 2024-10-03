@@ -1,0 +1,35 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Class
+    {
+        public void Method(IList<int> list, int fallback)
+        {
+            var first1 = list.|FirstOrDefault()|(0);
+            var first2 = list.|FirstOrDefault(fallback)|(1);
+
+            var last1 = list.|LastOrDefault()|(2);
+            var last2 = list.|LastOrDefault(1)|(3);
+
+            var single = list.|Single()|(4);
+        }
+    }
+}
+------------------------------------------------
+0: Use list pattern
+QUICKFIXES:
+Replace with 'is [var first, ..] ? first : default'
+1: Use list pattern
+QUICKFIXES:
+Replace with 'is [var first, ..] ? first : fallback'
+2: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., var last] ? last : default'
+3: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., var last] ? last : 1'
+4: Use list pattern
+QUICKFIXES:
+Replace with 'is [var item] ? item : throw new InvalidOperationException(...)'

@@ -1,0 +1,34 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Class
+    {
+        public void Method(IList<int> list)
+        {
+            var first = list.|First()|(0);
+            var last = list.|Last()|(1);
+
+            var firstByIndex = list.|ElementAt(0)|(2);
+            var lastByIndex = list.|ElementAt(^1)|(3);
+        }
+    }
+}
+------------------------------------------------
+0: Use indexer
+QUICKFIXES:
+Replace with '[0]' (other exception could be thrown)
+Replace with 'is [var first, ..] ? first : throw new InvalidOperationException(...)'
+1: Use indexer
+QUICKFIXES:
+Replace with '[^1]' (other exception could be thrown)
+Replace with 'is [.., var last] ? last : throw new InvalidOperationException(...)'
+2: Use indexer
+QUICKFIXES:
+Replace with '[0]' (other exception could be thrown)
+Replace with 'is [var first, ..] ? first : throw new InvalidOperationException(...)'
+3: Use indexer
+QUICKFIXES:
+Replace with '[^1]' (other exception could be thrown)
+Replace with 'is [.., var last] ? last : throw new InvalidOperationException(...)'

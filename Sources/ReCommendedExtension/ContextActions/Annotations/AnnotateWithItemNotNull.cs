@@ -17,7 +17,7 @@ public sealed class AnnotateWithItemNotNull(ICSharpContextActionDataProvider pro
     [Pure]
     static bool IsAvailableForType(IType type, ITreeNode context)
     {
-        if ((type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(context))
+        if ((type.IsGenericEnumerableOrDescendant() || type.IsGenericArrayOfAnyRank(context))
             && CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { Classify: TypeClassification.REFERENCE_TYPE })
         {
             return true;

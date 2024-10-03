@@ -1,0 +1,121 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    class CustomList<T> : IList<T>
+    {
+        public int IndexOf(T item) => throw new NotImplementedException();
+    
+        public void Insert(int index, T item) => throw new NotImplementedException();
+    
+        public void RemoveAt(int index) => throw new NotImplementedException();
+    
+        public T this[int index]
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+    
+        public void Add(T item) => throw new NotImplementedException();
+    
+        public void Clear() => throw new NotImplementedException();
+    
+        public bool Contains(T item) => throw new NotImplementedException();
+    
+        public void CopyTo(T[] array, int arrayIndex) => throw new NotImplementedException();
+    
+        public bool Remove(T item) => throw new NotImplementedException();
+    
+        public int Count => throw new NotImplementedException();
+    
+        public bool IsReadOnly => throw new NotImplementedException();
+    
+        public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
+    
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    public class IndexableCollections
+    {
+        public void NonGenericMethod(IList<int> list)
+        {
+            var single1 = list.|SingleOrDefault()|(0);
+            var single2 = list.|SingleOrDefault(1)|(1);
+        }
+        
+        public void GenericMethod<T>(IList<T> list2, T fallback)
+        {
+            var single1 = list2.|SingleOrDefault()|(2);
+            var single2 = list2.|SingleOrDefault(fallback)|(3);
+        }
+        
+        public void ConstrainedGenericMethod<L>(L list3) where L : IList<int>
+        {
+            var single1 = list3.|SingleOrDefault()|(4);
+            var single2 = list3.|SingleOrDefault(1)|(5);
+        }
+        
+        public void Method(object list4)
+        {
+            var single1 = ((IList<int>)list4).|SingleOrDefault()|(6);
+            var single2 = ((IList<int>)list4).|SingleOrDefault(1)|(7);
+        }
+        
+        public void NonGenericMethod(List<int> list5)
+        {
+            var single1 = list5.|SingleOrDefault()|(8);
+            var single2 = list5.|SingleOrDefault(1)|(9);
+        }
+
+        public void NonGenericMethod(int[] list6)
+        {
+            var single1 = list6.|SingleOrDefault()|(10);
+            var single2 = list6.|SingleOrDefault(1)|(11);
+        }
+
+        public void NonGenericMethod(int[][] list7, int[] fallback)
+        {
+            var single1 = list7.|SingleOrDefault()|(12);
+            var single2 = list7.|SingleOrDefault(fallback)|(13);
+        }
+
+        public void GenericMethod<T>(CustomList<T> list8, T fallback)
+        {
+            var single1 = list8.|SingleOrDefault()|(14);
+            var single2 = list8.|SingleOrDefault(fallback)|(15);
+        }
+
+        public void NonGenericMethod(IReadOnlyList<int> list9)
+        {
+            var single1 = list9.|SingleOrDefault()|(16);
+            var single2 = list9.|SingleOrDefault(1)|(17);
+        }
+
+        public void NonMatch(IList<int> list)
+        {
+            var single1 = list.SingleOrDefault(x => x > 0);
+            var single2 = list.SingleOrDefault(x => x > 0, 1);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use switch expression
+(1): ReSharper Suggestion: Use switch expression
+(2): ReSharper Suggestion: Use switch expression
+(3): ReSharper Suggestion: Use switch expression
+(4): ReSharper Suggestion: Use switch expression
+(5): ReSharper Suggestion: Use switch expression
+(6): ReSharper Suggestion: Use switch expression
+(7): ReSharper Suggestion: Use switch expression
+(8): ReSharper Suggestion: Use switch expression
+(9): ReSharper Suggestion: Use switch expression
+(10): ReSharper Suggestion: Use switch expression
+(11): ReSharper Suggestion: Use switch expression
+(12): ReSharper Suggestion: Use switch expression
+(13): ReSharper Suggestion: Use switch expression
+(14): ReSharper Suggestion: Use switch expression
+(15): ReSharper Suggestion: Use switch expression
+(16): ReSharper Suggestion: Use switch expression
+(17): ReSharper Suggestion: Use switch expression

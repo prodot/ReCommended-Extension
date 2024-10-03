@@ -1,0 +1,33 @@
+﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.TestFramework;
+using NUnit.Framework;
+using ReCommendedExtension.Analyzers.Linq;
+
+namespace ReCommendedExtension.Tests.Analyzers.Linq;
+
+[TestFixture]
+public sealed class UseIndexerQuickFixTests : QuickFixTestBase<UseIndexerFix>
+{
+    protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
+
+    [Test]
+    [TestNet50]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+    public void TestUseIndexer_First() => DoNamedTest2();
+
+    [Test]
+    [TestNet50]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+    public void TestUseIndexer_Last() => DoNamedTest2();
+
+    [Test]
+    [TestNet50]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+    public void TestUseIndexer_ElementAt_Int32() => DoNamedTest2();
+
+    [Test]
+    [TestNet60]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    public void TestUseIndexer_ElementAt_Index() => DoNamedTest2();
+}

@@ -1522,7 +1522,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             if (type is { })
             {
-                if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(attributesOwnerDeclaration))
+                if (type.IsGenericEnumerableOrDescendant() || type.IsGenericArrayOfAnyRank(attributesOwnerDeclaration))
                 {
                     var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, attributesOwnerDeclaration, false);
                     if (elementType is { Classify: not TypeClassification.REFERENCE_TYPE })

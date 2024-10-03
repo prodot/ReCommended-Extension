@@ -46,6 +46,12 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName IEqualityComparer = GetClrTypeName<IEqualityComparer>();
 
+    public static readonly IClrTypeName IReadOnlyList = GetClrTypeName(typeof(IReadOnlyList<>));
+
+    public static readonly IClrTypeName IReadOnlySet = GetClrTypeName(typeof(IReadOnlySet<>));
+
+    public static readonly IClrTypeName DictionaryKeyCollection = GetClrTypeName(typeof(Dictionary<,>.KeyCollection));
+
     public static readonly IClrTypeName MemberInfo = GetClrTypeName<System.Reflection.MemberInfo>();
 
     public static readonly IClrTypeName ParameterInfo = GetClrTypeName<ParameterInfo>();

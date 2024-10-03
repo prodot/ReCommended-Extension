@@ -56,7 +56,23 @@ internal static class Extensions
     {
         if (CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType)
         {
-            for (var i = 1; i < 16; i++)
+            if (type.IsImplicitlyConvertibleTo(
+                TypeFactory.CreateArrayType(elementType, 1, NullableAnnotation.Unknown),
+                context.GetTypeConversionRule()))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    [Pure]
+    public static bool IsGenericArrayOfAnyRank(this IType type, ITreeNode context)
+    {
+        if (CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType)
+        {
+            for (var i = 1; i <= 16; i++)
             {
                 if (type.IsImplicitlyConvertibleTo(
                     TypeFactory.CreateArrayType(elementType, i, NullableAnnotation.Unknown),

@@ -15,7 +15,8 @@ namespace ReCommendedExtension.Analyzers.Collection;
     typeof(ICSharpTreeNode),
     HighlightingTypes =
     [
-        typeof(UseEmptyForArrayInitializationWarning), typeof(UseTargetTypedCollectionExpressionSuggestion),
+        typeof(UseEmptyForArrayInitializationWarning),
+        typeof(UseTargetTypedCollectionExpressionSuggestion),
         typeof(ArrayWithDefaultValuesInitializationSuggestion),
     ])]
 public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
@@ -132,7 +133,9 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         Debug.Assert(
             constructors is
             [
-                { Parameters: [] }, { Parameters: [{ Type: var intParameter1 }] }, { Parameters: [{ Type: var enumerableParameter1 }] },
+                { Parameters: [] },
+                { Parameters: [{ Type: var intParameter1 }] },
+                { Parameters: [{ Type: var enumerableParameter1 }] },
                 { Parameters: [{ Type: var comparerParameter1 }] },
                 { Parameters: [{ Type: var intParameter2 }, { Type: var comparerParameter2 }] },
                 { Parameters: [{ Type: var enumerableParameter2 }, { Type: var comparerParameter3 }] },

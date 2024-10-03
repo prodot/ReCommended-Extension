@@ -1,0 +1,21 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Class
+    {
+        public void Method(IList<int> list, int fallback)
+        {
+            var single1 = list.|SingleOrDefault()|(0);
+            var single2 = list.|SingleOrDefault(fallback)|(1);
+        }
+    }
+}
+------------------------------------------------
+0: Use switch expression
+QUICKFIXES:
+Replace with 'switch { [] => default, [var item] => item, _ => throw new InvalidOperationException(...) }'
+1: Use switch expression
+QUICKFIXES:
+Replace with 'switch { [] => fallback, [var item] => item, _ => throw new InvalidOperationException(...) }'

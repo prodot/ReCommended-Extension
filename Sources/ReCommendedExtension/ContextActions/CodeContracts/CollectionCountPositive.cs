@@ -22,7 +22,7 @@ public sealed class CollectionCountPositive(ICSharpContextActionDataProvider pro
             var context = Provider.GetSelectedElement<ITreeNode>();
             Debug.Assert(context is { });
 
-            if (type.IsGenericArray(context))
+            if (type.IsGenericArrayOfAnyRank(context))
             {
                 // type is T[...]
                 isArray = true;
