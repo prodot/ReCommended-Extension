@@ -26,7 +26,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
     {
         if (provider.GetSelectedElement<IClassLikeDeclaration>(true, false) is { } declaration
             && declaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-            && ClrTypeNames.IComparisonOperators.TryGetTypeElement(declaration.GetPsiModule()) is { } comparisonOperatorsInterface
+            && ClrTypeNames.IComparisonOperators.TryGetTypeElement(provider.PsiModule) is { } comparisonOperatorsInterface
             && declaration.DeclaredElement is { })
         {
             var (_, _, declaresComparable, declaresComparisonOperators) = InterfaceImplementationAnalyzer.GetInterfaces(
@@ -34,7 +34,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
                 TypeFactory.CreateType(declaration.DeclaredElement),
                 null,
                 comparisonOperatorsInterface,
-                PredefinedType.GENERIC_ICOMPARABLE_FQN.TryGetTypeElement(declaration.GetPsiModule()));
+                PredefinedType.GENERIC_ICOMPARABLE_FQN.TryGetTypeElement(provider.PsiModule));
 
             this.declaration =
                 declaration is IClassDeclaration or IStructDeclaration or IRecordDeclaration && declaresComparable && !declaresComparisonOperators
@@ -72,12 +72,10 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
             Debug.Assert(declaration is { DeclaredElement: { } });
             Debug.Assert(comparisonOperatorsInterface is { });
 
-            var psiModule = declaration.GetPsiModule();
-
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
 
             declaration.AddSuperInterface(
-                TypeFactory.CreateType(comparisonOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(psiModule)]),
+                TypeFactory.CreateType(comparisonOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(provider.PsiModule)]),
                 false);
 
             return _ => { };

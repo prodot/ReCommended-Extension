@@ -2,7 +2,6 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
@@ -21,7 +20,7 @@ public sealed class AnnotateWithValueRange(ICSharpContextActionDataProvider prov
 
     protected override string AnnotationAttributeTypeName => nameof(ValueRangeAttribute);
 
-    protected override AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => [new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT)];
+    protected override AttributeValue[] GetAnnotationArguments() => [new(ConstantValue.NOT_COMPILE_TIME_CONSTANT)];
 
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
         => declaredElement switch

@@ -2,7 +2,6 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Modules;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
 
@@ -15,7 +14,7 @@ public sealed class AnnotateWithMustDisposeResourceFalse(ICSharpContextActionDat
     protected override bool IsAttribute(IAttribute attribute)
         => base.IsAttribute(attribute) && attribute.Arguments is [{ Value.ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: false } }];
 
-    protected override AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => [new AttributeValue(ConstantValue.Bool(false, psiModule))];
+    protected override AttributeValue[] GetAnnotationArguments() => [new(ConstantValue.Bool(false, PsiModule))];
 
     protected override bool IsTypeAnnotated(ITypeElement type) => false;
 

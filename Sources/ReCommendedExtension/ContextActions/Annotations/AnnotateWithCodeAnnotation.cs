@@ -2,7 +2,6 @@ using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
@@ -13,7 +12,6 @@ public abstract class AnnotateWithCodeAnnotation(ICSharpContextActionDataProvide
 
     protected sealed override Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,
-        IPsiModule psiModule,
         out IAttribute[] attributesToReplace)
     {
         var attributeType = attributesOwnerDeclaration.TryGetAnnotationAttributeType(AnnotationAttributeTypeName);
@@ -21,7 +19,7 @@ public abstract class AnnotateWithCodeAnnotation(ICSharpContextActionDataProvide
         {
             attributesToReplace = GetAttributesToReplace(attributesOwnerDeclaration);
 
-            return factory => factory.CreateAttribute(attributeType, GetAnnotationArguments(psiModule), []);
+            return factory => factory.CreateAttribute(attributeType, GetAnnotationArguments(), []);
         }
 
         attributesToReplace = [];

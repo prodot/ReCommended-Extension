@@ -22,6 +22,8 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
     IAttribute[] attributesToReplace = [];
 
+    protected IPsiModule PsiModule => provider.PsiModule;
+
     protected abstract string AnnotationAttributeTypeName { get; }
 
     [Pure]
@@ -30,7 +32,6 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
     [Pure]
     protected abstract Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,
-        IPsiModule psiModule,
         out IAttribute[] attributeToReplace);
 
     protected virtual string TextSuffix => "";
@@ -42,7 +43,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
     protected virtual bool AnnotateMethodReturnValue => false;
 
     [Pure]
-    protected virtual AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => [];
+    protected virtual AttributeValue[] GetAnnotationArguments() => [];
 
     [MemberNotNullWhen(true, nameof(createAttributeFactory))]
     [MemberNotNullWhen(true, nameof(attributesOwnerDeclaration))]
@@ -58,7 +59,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
             && !attributesOwnerDeclaration.IsOnAnonymousMethodWithUnsupportedAttributes()
             && (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
         {
-            createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, provider.PsiModule, out attributesToReplace);
+            createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, out attributesToReplace);
 
             if (createAttributeFactory is { })
             {
@@ -83,7 +84,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
                 ? typeName[..^nameof(Attribute).Length]
                 : typeName;
 
-            var annotationArguments = GetAnnotationArguments(provider.PsiModule);
+            var annotationArguments = GetAnnotationArguments();
 
             var arguments = annotationArguments is [] or [{ ConstantValue.Kind: ConstantValueKind.NonCompileTimeConstant }]
                 ? ""
@@ -166,7 +167,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
             return textControl =>
             {
-                if (GetAnnotationArguments(provider.PsiModule) is [{ ConstantValue.Kind: ConstantValueKind.NonCompileTimeConstant }])
+                if (GetAnnotationArguments() is [{ ConstantValue.Kind: ConstantValueKind.NonCompileTimeConstant }])
                 {
                     textControl.Caret.MoveTo(attribute.Arguments[0].GetDocumentRange().EndOffset, CaretVisualPlacement.DontScrollIfVisible);
                     textControl.EmulateAction("TextControl.Backspace");

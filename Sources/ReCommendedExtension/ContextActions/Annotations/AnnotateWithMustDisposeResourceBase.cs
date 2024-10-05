@@ -27,10 +27,10 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
 
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context) => declaredElement switch
     {
-        IClass type => type.IsDisposable(context.GetPsiModule()) && !IsAnyBaseTypeAnnotated(type),
+        IClass type => type.IsDisposable(PsiModule) && !IsAnyBaseTypeAnnotated(type),
 
         IConstructor { ContainingType: IClass or IStruct { IsByRefLike: false } } constructor =>
-            constructor.ContainingType.IsDisposable(context.GetPsiModule())
+            constructor.ContainingType.IsDisposable(PsiModule)
             && !IsTypeAnnotated(constructor.ContainingType)
             && !IsAnyBaseTypeAnnotated(constructor.ContainingType),
 
