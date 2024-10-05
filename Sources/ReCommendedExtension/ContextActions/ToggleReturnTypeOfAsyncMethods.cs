@@ -60,7 +60,8 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
         switch (provider.GetSelectedElement<IUserTypeUsage>(true, false))
         {
             case { Parent: IMethodDeclaration { DeclaredElement: { IsAsync: true, ReturnType: IDeclaredType returnType } } methodDeclaration }
-                when TryGetReplacementType(returnType, taskType, genericTaskType, valueTaskType, genericValueTaskType) is { } replacementType:
+                when !methodDeclaration.OverridesInheritedMember()
+                && TryGetReplacementType(returnType, taskType, genericTaskType, valueTaskType, genericValueTaskType) is { } replacementType:
 
                 declaration = methodDeclaration;
                 replacementReturnType = replacementType;

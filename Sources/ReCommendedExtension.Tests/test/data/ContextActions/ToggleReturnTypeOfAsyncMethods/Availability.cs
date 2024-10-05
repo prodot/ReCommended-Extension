@@ -97,4 +97,30 @@ namespace Test
             }
         }
     }
+
+    public class BaseClass
+    {
+        public abstract Ta{off}sk TaskMethod();
+    }
+
+    public class DerivedClass : BaseClass
+    {
+        public override async Ta{off}sk TaskMethod()
+        {
+            await Task.Yield();
+        }
+    }
+
+    public interface IBase
+    {
+        Ta{off}sk TaskMethod();
+    }
+
+    public class DerivedClass2 : IBase
+    {
+        public async Ta{off}sk TaskMethod()
+        {
+            await Task.Yield();
+        }
+    }
 }
