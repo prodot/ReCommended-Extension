@@ -91,7 +91,7 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
             Debug.Assert(replacementReturnType is { });
             Debug.Assert(CSharpLanguage.Instance is { });
 
-            return $"Replace with {replacementReturnType.GetPresentableName(CSharpLanguage.Instance)}";
+            return $"Replace with '{replacementReturnType.GetPresentableName(CSharpLanguage.Instance)}'";
         }
     }
 
