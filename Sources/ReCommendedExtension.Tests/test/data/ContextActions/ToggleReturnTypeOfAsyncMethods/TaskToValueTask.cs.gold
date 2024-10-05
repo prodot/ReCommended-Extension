@@ -1,0 +1,12 @@
+﻿using System.Threading.Tasks;
+
+namespace Test
+{
+    public class AsyncMethod
+    {
+        public async ValueTa{caret}sk Method()
+        {
+            await Task.Yield();
+        }
+    }
+}

@@ -1,0 +1,12 @@
+﻿using System.Threading.Tasks;
+
+namespace Test
+{
+    public class AsyncMethod
+    {
+        public async {caret}Task Method()
+        {
+            await Task.Yield();
+        }
+    }
+}
