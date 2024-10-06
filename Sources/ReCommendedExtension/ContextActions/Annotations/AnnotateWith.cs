@@ -1,6 +1,5 @@
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Intentions.Util;
 using JetBrains.ReSharper.Psi;
@@ -8,21 +7,18 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
 
-public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : ContextActionBase
+public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : ContextAction<IAttributesOwnerDeclaration>(provider)
 {
     IAttributesOwnerDeclaration? attributesOwnerDeclaration;
 
     Func<CSharpElementFactory, IAttribute>? createAttributeFactory;
 
     IAttribute[] attributesToReplace = [];
-
-    protected IPsiModule PsiModule => provider.PsiModule;
 
     protected abstract string AnnotationAttributeTypeName { get; }
 
@@ -47,22 +43,20 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
     [MemberNotNullWhen(true, nameof(createAttributeFactory))]
     [MemberNotNullWhen(true, nameof(attributesOwnerDeclaration))]
-    public sealed override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
+    protected sealed override bool IsAvailable(IAttributesOwnerDeclaration selectedElement)
     {
-        attributesOwnerDeclaration = provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
-
-        if (attributesOwnerDeclaration is { }
-            && attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange)
-            && (AllowsInheritedMethods || !attributesOwnerDeclaration.OverridesInheritedMember())
-            && !attributesOwnerDeclaration.IsOnLocalFunctionWithUnsupportedAttributes()
-            && !attributesOwnerDeclaration.IsOnLambdaExpressionWithUnsupportedAttributes()
-            && !attributesOwnerDeclaration.IsOnAnonymousMethodWithUnsupportedAttributes()
-            && (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
+        if (selectedElement.GetNameRange().Contains(SelectedTreeRange)
+            && (AllowsInheritedMethods || !selectedElement.OverridesInheritedMember())
+            && !selectedElement.IsOnLocalFunctionWithUnsupportedAttributes()
+            && !selectedElement.IsOnLambdaExpressionWithUnsupportedAttributes()
+            && !selectedElement.IsOnAnonymousMethodWithUnsupportedAttributes()
+            && (AllowsMultiple || !selectedElement.Attributes.Any(IsAttribute)))
         {
-            createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, out attributesToReplace);
+            createAttributeFactory = CreateAttributeFactoryIfAvailable(selectedElement, out attributesToReplace);
 
             if (createAttributeFactory is { })
             {
+                attributesOwnerDeclaration = selectedElement;
                 return true;
             }
         }

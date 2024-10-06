@@ -1,14 +1,18 @@
 ﻿using System.Linq.Expressions;
 using System.Text;
 using JetBrains.Application.Settings;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
+using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Xml.CodeStyle;
 using JetBrains.ReSharper.Psi.Xml.Tree;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions.DocComments;
 
-public abstract class XmlDocCommentContextAction : ContextActionBase
+public abstract class XmlDocCommentContextAction<N>(ICSharpContextActionDataProvider provider) : ContextActionBase where N : class, ITreeNode
 {
     protected sealed record Settings
     {
@@ -17,9 +21,9 @@ public abstract class XmlDocCommentContextAction : ContextActionBase
             => store.GetValue(lambdaExpression);
 
         [Pure]
-        public static Settings Load(ICSharpContextActionDataProvider provider)
+        public static Settings Load(IPsiServices psiServices)
         {
-            var store = provider.PsiServices.SettingsStore.BindToContextTransient(ContextRange.ApplicationWide);
+            var store = psiServices.SettingsStore.BindToContextTransient(ContextRange.ApplicationWide);
 
             return new Settings
             {
@@ -166,4 +170,15 @@ public abstract class XmlDocCommentContextAction : ContextActionBase
     [Pure]
     protected static string BuildTag(string tagName, string? interior, TagOption option, Settings settings)
         => BuildTag(tagName, null as (string, string)?, interior, option, settings);
+
+    internal IPsiServices PsiServices => provider.PsiServices;
+
+    public sealed override bool IsAvailable(IUserDataHolder cache)
+    {
+        var selectedElement = provider.GetSelectedElement<N>();
+
+        return selectedElement is { } && IsAvailable(selectedElement, provider.DocumentSelection);
+    }
+
+    protected abstract bool IsAvailable(N selectedElement, DocumentRange documentSelection);
 }

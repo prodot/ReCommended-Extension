@@ -1,4 +1,5 @@
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions.DocComments;
@@ -6,7 +7,7 @@ using ReCommendedExtension.ContextActions.DocComments;
 namespace ReCommendedExtension.Tests.ContextActions.DocComments;
 
 [TestFixture]
-public sealed class ReflowDocCommentsExecuteTests : DocCommentsExecuteTests<ReflowDocComments>
+public sealed class ReflowDocCommentsExecuteTests : DocCommentsExecuteTests<ReflowDocComments, ICSharpDocCommentBlock>
 {
     protected override string ExtraPath => "";
 

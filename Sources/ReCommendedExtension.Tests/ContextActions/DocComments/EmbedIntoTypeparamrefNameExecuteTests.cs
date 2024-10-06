@@ -1,10 +1,11 @@
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions.DocComments;
 
 namespace ReCommendedExtension.Tests.ContextActions.DocComments;
 
 [TestFixture]
-public sealed class EmbedIntoTypeparamrefNameExecuteTests : DocCommentsExecuteTests<EmbedIntoTypeparamrefName>
+public sealed class EmbedIntoTypeparamrefNameExecuteTests : DocCommentsExecuteTests<EmbedIntoTypeparamrefName, IDocCommentNode>
 {
     protected override string ExtraPath => "";
 

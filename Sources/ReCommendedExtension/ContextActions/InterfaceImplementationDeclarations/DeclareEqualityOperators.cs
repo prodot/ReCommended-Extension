@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl;
-using JetBrains.Util;
 using ReCommendedExtension.Analyzers.InterfaceImplementation;
 
 namespace ReCommendedExtension.ContextActions.InterfaceImplementationDeclarations;
@@ -15,32 +14,31 @@ namespace ReCommendedExtension.ContextActions.InterfaceImplementationDeclaration
     GroupType = typeof(CSharpContextActions),
     Name = "Declare IEqualityOperators<T, T, bool>" + ZoneMarker.Suffix,
     Description = "Declare IEqualityOperators<T, T, bool>.")]
-public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider provider) : ContextActionBase
+public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider provider) : ContextAction<IClassLikeDeclaration>(provider)
 {
     IClassLikeDeclaration? declaration;
     ITypeElement? equalityOperatorsInterface;
 
     [MemberNotNullWhen(true, nameof(declaration))]
     [MemberNotNullWhen(true, nameof(equalityOperatorsInterface))]
-    public override bool IsAvailable(IUserDataHolder cache)
+    protected override bool IsAvailable(IClassLikeDeclaration selectedElement)
     {
-        if (provider.GetSelectedElement<IClassLikeDeclaration>(true, false) is { } declaration
-            && declaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-            && ClrTypeNames.IEqualityOperators.TryGetTypeElement(provider.PsiModule) is { } equalityOperatorsInterface
-            && declaration.DeclaredElement is { })
+        if (selectedElement.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+            && ClrTypeNames.IEqualityOperators.TryGetTypeElement(PsiModule) is { } equalityOperatorsInterface
+            && selectedElement.DeclaredElement is { })
         {
             var (declaresEquatable, declaresEqualityOperators, _, _) = InterfaceImplementationAnalyzer.GetInterfaces(
-                declaration.DeclaredElement,
-                TypeFactory.CreateType(declaration.DeclaredElement),
+                selectedElement.DeclaredElement,
+                TypeFactory.CreateType(selectedElement.DeclaredElement),
                 equalityOperatorsInterface,
                 null,
                 null);
 
-            this.declaration = declaration switch
+            declaration = selectedElement switch
             {
-                IClassDeclaration or IStructDeclaration when declaresEquatable && !declaresEqualityOperators => declaration,
+                IClassDeclaration or IStructDeclaration when declaresEquatable && !declaresEqualityOperators => selectedElement,
 
-                IRecordDeclaration when !declaresEqualityOperators => declaration,
+                IRecordDeclaration when !declaresEqualityOperators => selectedElement,
 
                 _ => null,
             };
@@ -49,11 +47,11 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
         }
         else
         {
-            this.declaration = null;
+            declaration = null;
             this.equalityOperatorsInterface = null;
         }
 
-        return this.declaration is { };
+        return declaration is { };
     }
 
     public override string Text
@@ -79,7 +77,7 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
 
             declaration.AddSuperInterface(
-                TypeFactory.CreateType(equalityOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(provider.PsiModule)]),
+                TypeFactory.CreateType(equalityOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(PsiModule)]),
                 false);
 
             return _ => { };

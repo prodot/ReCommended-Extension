@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl;
-using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions;
 
@@ -14,7 +13,7 @@ namespace ReCommendedExtension.ContextActions;
     GroupType = typeof(CSharpContextActions),
     Name = $"Replace '{nameof(Task)}' return type with 'ValueTask'" + ZoneMarker.Suffix, // todo: use nameof(ValueTask)
     Description = $"Replaces '{nameof(Task)}' return type with 'ValueTask' (or vice versa) of async methods.")] // todo: use nameof(ValueTask)
-public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvider provider) : ContextActionBase
+public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvider provider) : ContextAction<IUserTypeUsage>(provider)
 {
     ICSharpDeclaration? declaration;
     IType? replacementReturnType;
@@ -50,14 +49,16 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
         return null;
     }
 
-    public override bool IsAvailable(IUserDataHolder cache)
+    [MemberNotNullWhen(true, nameof(declaration))]
+    [MemberNotNullWhen(true, nameof(replacementReturnType))]
+    protected override bool IsAvailable(IUserTypeUsage selectedElement)
     {
-        var taskType = PredefinedType.TASK_FQN.TryGetTypeElement(provider.PsiModule);
-        var genericTaskType = PredefinedType.GENERIC_TASK_FQN.TryGetTypeElement(provider.PsiModule);
-        var valueTaskType = PredefinedType.VALUE_TASK_FQN.TryGetTypeElement(provider.PsiModule);
-        var genericValueTaskType = PredefinedType.GENERIC_VALUE_TASK_FQN.TryGetTypeElement(provider.PsiModule);
+        var taskType = PredefinedType.TASK_FQN.TryGetTypeElement(PsiModule);
+        var genericTaskType = PredefinedType.GENERIC_TASK_FQN.TryGetTypeElement(PsiModule);
+        var valueTaskType = PredefinedType.VALUE_TASK_FQN.TryGetTypeElement(PsiModule);
+        var genericValueTaskType = PredefinedType.GENERIC_VALUE_TASK_FQN.TryGetTypeElement(PsiModule);
 
-        switch (provider.GetSelectedElement<IUserTypeUsage>(true, false))
+        switch (selectedElement)
         {
             case { Parent: IMethodDeclaration { DeclaredElement: { IsAsync: true, ReturnType: IDeclaredType returnType } } methodDeclaration }
                 when !methodDeclaration.OverridesInheritedMember()
@@ -120,6 +121,7 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
         finally
         {
             declaration = null;
+            replacementReturnType = null;
         }
     }
 }

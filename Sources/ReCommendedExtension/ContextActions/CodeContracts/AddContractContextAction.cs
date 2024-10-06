@@ -1,6 +1,5 @@
 ﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -11,7 +10,7 @@ using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
-public abstract class AddContractContextAction(ICSharpContextActionDataProvider provider) : ContextActionBase
+public abstract class AddContractContextAction(ICSharpContextActionDataProvider provider) : ContextAction<IDeclaration>(provider)
 {
     ContractInfo? contractInfo;
 
@@ -48,16 +47,14 @@ public abstract class AddContractContextAction(ICSharpContextActionDataProvider 
     protected abstract IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression);
 
     [MemberNotNullWhen(true, nameof(contractInfo))]
-    public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
+    protected sealed override bool IsAvailable(IDeclaration selectedElement)
     {
-        var declaration = Provider.GetSelectedElement<IDeclaration>(true, false);
-
-        if (declaration.IsNullableAnnotationsContextEnabled())
+        if (selectedElement.IsNullableAnnotationsContextEnabled())
         {
             return false;
         }
 
-        contractInfo = ContractInfo.TryCreate(declaration, Provider.SelectedTreeRange, IsAvailableForType);
+        contractInfo = ContractInfo.TryCreate(selectedElement, Provider.SelectedTreeRange, IsAvailableForType);
 
         return contractInfo is { };
     }
