@@ -304,7 +304,11 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
+        if (element is
+            {
+                Parent: { } and not (IExpressionStatement or IForInitializer or IForIterator),
+                InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression,
+            }
             && reference.Resolve().DeclaredElement is IMethod method
             && method.ContainingType.IsClrType(PredefinedType.ENUMERABLE_CLASS)
             && method is { IsExtensionMethod: true, AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC })

@@ -19,7 +19,17 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseListPatter
     [Test]
     [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_First_Parenthesized() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     public void TestUseListPattern_Last() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_Last_Parenthesized() => DoNamedTest2();
 
     [Test]
     [TestNet70]
@@ -29,7 +39,17 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseListPatter
     [Test]
     [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_FirstOrDefault_Parenthesized() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     public void TestUseListPattern_LastOrDefault() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_LastOrDefault_Parenthesized() => DoNamedTest2();
 
     [Test]
     [TestNet70]
@@ -39,7 +59,17 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseListPatter
     [Test]
     [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_FirstOrDefault_DefaultValue_Parenthesized() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     public void TestUseListPattern_LastOrDefault_DefaultValue() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_LastOrDefault_DefaultValue_Parenthesized() => DoNamedTest2();
 
     [Test]
     [TestNet70]
@@ -49,10 +79,25 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseListPatter
     [Test]
     [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_Single_Parenthesized() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     public void TestUseListPattern_ElementAt_First() => DoNamedTest2();
 
     [Test]
     [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_ElementAt_First_Parenthesized() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     public void TestUseListPattern_ElementAt_Last() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseListPattern_ElementAt_Last_Parenthesized() => DoNamedTest2();
 }

@@ -19,5 +19,10 @@ public sealed class UseSwitchExpressionQuickFixTests : QuickFixTestBase<UseSwitc
     [Test]
     [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestUseSwitchExpression_SingleOrDefault_Parenthesized() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     public void TestUseSwitchExpression_SingleOrDefault_DefaultValue() => DoNamedTest2();
 }

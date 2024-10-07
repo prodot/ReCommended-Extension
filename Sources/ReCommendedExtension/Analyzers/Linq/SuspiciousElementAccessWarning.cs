@@ -12,10 +12,8 @@ namespace ReCommendedExtension.Analyzers.Linq;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class SuspiciousElementAccessWarning(
-    string message,
-    IInvocationExpression invocationExpression,
-    IReferenceExpression invokedExpression) : LinqHighlighting(message, invocationExpression, invokedExpression)
+public sealed class SuspiciousElementAccessWarning(string message, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
+    : LinqHighlighting(message, invocationExpression, invokedExpression)
 {
     const string SeverityId = "SuspiciousElementAccess";
 }
