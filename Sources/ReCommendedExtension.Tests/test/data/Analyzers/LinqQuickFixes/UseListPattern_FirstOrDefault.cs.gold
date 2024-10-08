@@ -7,7 +7,7 @@ namespace Test
     {
         public void Method(IList<int> list)
         {
-            var f = list is [var fir{caret}st, ..] ? first : default;
+            var f = list is [var fir{caret}st, ..] ? first : 0;
         }
     }
 }

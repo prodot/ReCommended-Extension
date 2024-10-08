@@ -1,4 +1,5 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -58,6 +59,19 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             || type.GetTypeElement() is { } typeElement
             && (typeElement.IsDescendantOf(PredefinedType.ISET_FQN.TryGetTypeElement(psiModule))
                 || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlySet.TryGetTypeElement(psiModule)));
+    }
+
+    [Pure]
+    static IExpression? TryGetItemDefaultValue(IType collectionType, ITreeNode context)
+    {
+        if (collectionType is IDeclaredType declaredType && declaredType.TryGetGenericParameterTypes() is [{ } itemType])
+        {
+            Debug.Assert(CSharpLanguage.Instance is { });
+
+            return DefaultValueUtil.GetClrDefaultValue(itemType, CSharpLanguage.Instance, context);
+        }
+
+        return null;
     }
 
     static void AnalyzeElementAt(
@@ -162,7 +176,8 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         invocationExpression,
                         invokedExpression,
                         ListPatternSuggestionKind.FirstOrDefault,
-                        defaultValueArgument?.GetText()));
+                        defaultValueArgument?.GetText()
+                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)?.GetText()));
             }
 
             return;
@@ -229,7 +244,8 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         invocationExpression,
                         invokedExpression,
                         ListPatternSuggestionKind.LastOrDefault,
-                        defaultValueArgument?.GetText()));
+                        defaultValueArgument?.GetText()
+                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)?.GetText()));
             }
 
             return;
@@ -298,7 +314,12 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             && IsIndexableCollection(invokedExpression.QualifierExpression.Type(), invokedExpression))
         {
             consumer.AddHighlighting(
-                new UseSwitchExpressionSuggestion("Use switch expression", invocationExpression, invokedExpression, defaultValueArgument?.GetText()));
+                new UseSwitchExpressionSuggestion(
+                    "Use switch expression",
+                    invocationExpression,
+                    invokedExpression,
+                    defaultValueArgument?.GetText()
+                    ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)?.GetText()));
         }
     }
 

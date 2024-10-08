@@ -7,7 +7,7 @@ namespace Test
     {
         public void Method(IList<string> list)
         {
-            var f = (list is [.., var la{caret}st] ? last : default) ?? "one";
+            var f = (list is [.., var la{caret}st] ? last : null) ?? "one";
         }
     }
 }

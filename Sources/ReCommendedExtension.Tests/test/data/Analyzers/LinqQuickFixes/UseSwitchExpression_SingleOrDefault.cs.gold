@@ -9,9 +9,9 @@ namespace Test
         {
             var f = list switch
             {
-              [] => defau{caret}lt,
+              [] => 0,
               [var item] => item,
-              _ => throw new InvalidOperationException("List contains more than one element.")
+              _ => throw n{caret}ew InvalidOperationException("List contains more than one element.")
             };
         }
     }
