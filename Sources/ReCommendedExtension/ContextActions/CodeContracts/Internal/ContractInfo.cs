@@ -146,11 +146,14 @@ internal abstract record ContractInfo
 
         var contractClassDeclaration = null as IClassDeclaration;
 
-        var attributeInstance = typeDeclaration.DeclaredElement?.GetAttributeInstances(ClrTypeNames.ContractClassAttribute, false).FirstOrDefault();
-        if (attributeInstance is { PositionParameterCount: > 0 }
-            && attributeInstance.PositionParameter(0).TypeValue.GetTypeElement<IClass>() is { } typeElement)
+        if (typeDeclaration.DeclaredElement?.GetAttributeInstances(ClrTypeNames.ContractClassAttribute, false) is
+            [
+                { PositionParameterCount: > 0 } attributeInstance, ..,
+            ]
+            && attributeInstance.PositionParameter(0).TypeValue.GetTypeElement<IClass>() is { } typeElement
+            && typeElement.GetDeclarations() is [IClassDeclaration classDeclaration, ..])
         {
-            contractClassDeclaration = typeElement.GetDeclarations().FirstOrDefault() as IClassDeclaration;
+            contractClassDeclaration = classDeclaration;
         }
 
         if (contractClassDeclaration is { })

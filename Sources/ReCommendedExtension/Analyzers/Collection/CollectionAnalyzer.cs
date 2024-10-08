@@ -93,11 +93,21 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         var listType = PredefinedType.GENERIC_LIST_FQN.TryGetTypeElement(psiModule);
         Debug.Assert(listType is { });
 
+        [Pure]
+        static int GetOrder(IType? parameterType)
+            => parameterType switch
+            {
+                _ when parameterType.IsInt() => 0,
+                _ when parameterType.IsGenericIEnumerable() => 1,
+
+                _ => -1,
+            };
+
         var constructors =
         (
             from c in listType.Constructors
             where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
-            orderby c.Parameters.Count, c.Parameters.FirstOrDefault()?.Type.IsGenericIEnumerable()
+            orderby c.Parameters.Count, GetOrder(c.Parameters is [var parameter, ..] ? parameter.Type : null)
             select c).ToList();
 
         Debug.Assert(
@@ -127,7 +137,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         (
             from c in hashSetType.Constructors
             where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
-            orderby c.Parameters.Count, GetOrder(c.Parameters.FirstOrDefault()?.Type)
+            orderby c.Parameters.Count, GetOrder(c.Parameters is [var parameter, ..] ? parameter.Type : null)
             select c).ToList();
 
         Debug.Assert(
@@ -172,14 +182,17 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         (
             from c in dictionaryType.Constructors
             where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
-            orderby c.Parameters.Count, GetOrder(c.Parameters.FirstOrDefault()?.Type)
+            orderby c.Parameters.Count, GetOrder(c.Parameters is [var parameter, ..] ? parameter.Type : null)
             select c).ToList();
 
         Debug.Assert(
             constructors is
             [
-                { Parameters: [] }, { Parameters: [{ Type: var intParameter1 }] }, { Parameters: [{ Type: var dictionaryParameter1 }] },
-                { Parameters: [{ Type: var enumerableParameter1 }] }, { Parameters: [{ Type: var comparerParameter }] },
+                { Parameters: [] },
+                { Parameters: [{ Type: var intParameter1 }] },
+                { Parameters: [{ Type: var dictionaryParameter1 }] },
+                { Parameters: [{ Type: var enumerableParameter1 }] },
+                { Parameters: [{ Type: var comparerParameter }] },
                 { Parameters: [{ Type: var intParameter2 }, { Type: var comparerParameter2 }] },
                 { Parameters: [{ Type: var dictionaryParameter2 }, { Type: var comparerParameter3 }] },
                 { Parameters: [{ Type: var enumerableParameter2 }, { Type: var comparerParameter4 }] },
