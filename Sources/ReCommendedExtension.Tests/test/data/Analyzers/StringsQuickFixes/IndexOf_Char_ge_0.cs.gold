@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Comparison(string text, char c)
+        {
+            var result33 = text.Contains{caret}(c);
+        }
+    }
+}

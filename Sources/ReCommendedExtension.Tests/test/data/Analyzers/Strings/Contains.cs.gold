@@ -1,0 +1,46 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Empty(string text)
+        {
+            var result1 = |text.Contains("")|(0);
+            var result2 = |text.Contains(value: "")|(1);
+
+            var result3 = |text.Contains("", StringComparison.Ordinal)|(2);
+            var result4 = |text.Contains(value: "", StringComparison.CurrentCulture)|(3);
+        }
+
+        public void SingleCharacter(string text)
+        {
+            var result1 = text.Contains(|"a"|(4));
+            var result2 = text.Contains(value: |"a"|(5));
+
+            var result3 = text.Contains(|"a"|(6), StringComparison.Ordinal);
+            var result4 = text.Contains(value: |"a"|(7), StringComparison.CurrentCulture);
+        }
+
+        public void NoDetection(string text, string value)
+        {
+            text.Contains("");
+            text.Contains("", StringComparison.Ordinal);
+
+            var result1 = text.Contains("abc");
+            var result2 = text.Contains(value);
+
+            var result3 = text.Contains("abc", StringComparison.CurrentCulture);
+            var result4 = text.Contains(value, StringComparison.CurrentCulture);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always true
+(1): ReSharper Suggestion: The expression is always true
+(2): ReSharper Suggestion: The expression is always true
+(3): ReSharper Suggestion: The expression is always true
+(4): ReSharper Suggestion: Use as character
+(5): ReSharper Suggestion: Use as character
+(6): ReSharper Suggestion: Use as character
+(7): ReSharper Suggestion: Use as character

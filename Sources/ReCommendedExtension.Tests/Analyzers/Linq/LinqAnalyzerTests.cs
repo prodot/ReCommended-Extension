@@ -17,7 +17,7 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseIndexerSuggestion
-            or UseListPatternSuggestion
+            or UseLinqListPatternSuggestion
             or UseSwitchExpressionSuggestion
             or UsePropertySuggestion
             or SuspiciousElementAccessWarning

@@ -7,7 +7,7 @@ using ReCommendedExtension.Analyzers.Linq;
 namespace ReCommendedExtension.Tests.Analyzers.Linq;
 
 [TestFixture]
-public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseListPatternFix>
+public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseLinqListPatternFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
 

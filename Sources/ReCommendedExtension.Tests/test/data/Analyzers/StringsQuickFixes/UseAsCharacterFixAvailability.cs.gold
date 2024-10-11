@@ -1,0 +1,29 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Contains(string text)
+        {
+            var result1 = text.Contains(|"a"|(0));
+            var result2 = text.Contains(value: |"a"|(1));
+
+            var result3 = text.Contains(|"a"|(2), StringComparison.OrdinalIgnoreCase);
+            var result4 = text.Contains(value: |"a"|(3), StringComparison.OrdinalIgnoreCase);
+        }
+    }
+}
+------------------------------------------------
+0: Use as character
+QUICKFIXES:
+Replace with 'a'
+1: Use as character
+QUICKFIXES:
+Replace with 'a'
+2: Use as character
+QUICKFIXES:
+Replace with 'a'
+3: Use as character
+QUICKFIXES:
+Replace with 'a'

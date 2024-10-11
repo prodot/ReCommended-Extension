@@ -1,0 +1,42 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Contains(string text, object someObject)
+        {
+            var result1 = |text.Contains("")|(0);
+            var result2 = |text.Contains("", StringComparison.OrdinalIgnoreCase)|(1);
+
+            var result3 = |someObject.ToString().Contains(value: "", StringComparison.OrdinalIgnoreCase)|(2);
+        }
+
+        public void EndsWith(string text, object someObject)
+        {
+            var result1 = |text.EndsWith("")|(3);
+            var result2 = |text.EndsWith("", StringComparison.OrdinalIgnoreCase)|(4);
+
+            var result3 = |someObject.ToString().EndsWith(value: "", StringComparison.OrdinalIgnoreCase)|(5);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always true
+QUICKFIXES:
+Replace with 'true'
+1: The expression is always true
+QUICKFIXES:
+Replace with 'true'
+2: The expression is always true
+QUICKFIXES:
+Replace with 'true'
+3: The expression is always true
+QUICKFIXES:
+Replace with 'true'
+4: The expression is always true
+QUICKFIXES:
+Replace with 'true'
+5: The expression is always true
+QUICKFIXES:
+Replace with 'true'

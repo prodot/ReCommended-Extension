@@ -365,4 +365,8 @@ internal static class Extensions
 
         return $"{value[0].ToUpperFast().ToString()}{value[1..]}";
     }
+
+    [Pure]
+    public static bool IsUsedAsStatement(this IInvocationExpression invocationExpression)
+        => invocationExpression.Parent is IExpressionStatement or IForInitializer or IForIterator;
 }

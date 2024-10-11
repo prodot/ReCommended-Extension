@@ -1,0 +1,63 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void EndsWith(string text, char c)
+        {
+            var result1 = text.|EndsWith('a')|(0);
+            var result2 = text.|EndsWith(value: 'a')|(1);
+
+            var result3 = text.|EndsWith(c)|(2);
+            var result4 = text.|EndsWith(value: c)|(3);
+
+            var result5 = text.|EndsWith("a", StringComparison.Ordinal)|(4);
+            var result6 = text.|EndsWith("a", StringComparison.OrdinalIgnoreCase)|(5);
+            var result7 = text.|EndsWith("ß", StringComparison.OrdinalIgnoreCase)|(6);
+        }
+
+        public void IndexOf(string text, char c)
+        {
+            var result11 = text.|IndexOf(c) == 0|(7);
+            var result12 = text.|IndexOf('a') == 0|(8);
+
+            var result21 = text.|IndexOf(c) != 0|(9);
+            var result22 = text.|IndexOf('a') != 0|(10);
+        }
+    }
+}
+------------------------------------------------
+0: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., 'a']'
+1: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., 'a']'
+2: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., var lastCharacter] && lastCharacter == c'
+3: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., var lastCharacter] && lastCharacter == c'
+4: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., 'a']'
+5: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., 'a' or 'A']'
+6: Use list pattern
+QUICKFIXES:
+Replace with 'is [.., 'ß']'
+7: Use list pattern
+QUICKFIXES:
+Replace with 'is [var firstCharacter, ..] && firstCharacter == c'
+8: Use list pattern
+QUICKFIXES:
+Replace with 'is ['a', ..]'
+9: Use list pattern
+QUICKFIXES:
+Replace with 'is not [var firstCharacter, ..] || firstCharacter != c'
+10: Use list pattern
+QUICKFIXES:
+Replace with 'is not ['a', ..]'

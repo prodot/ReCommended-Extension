@@ -1,0 +1,38 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Comparison(string text, char c)
+        {
+            var result11 = text.|IndexOf(c) == 0|(0);
+            var result12 = text.|IndexOf('a') == 0|(1);
+
+            var result21 = text.|IndexOf(c) != 0|(2);
+            var result22 = text.|IndexOf('a') != 0|(3);
+
+            var result31 = text.|IndexOf(c) > -1|(4);
+            var result32 = text.|IndexOf(c) != -1|(5);
+            var result33 = text.|IndexOf(c) >= 0|(6);
+
+            var result41 = text.|IndexOf(c) == -1|(7);
+            var result42 = text.|IndexOf(c) < 0|(8);
+        }
+
+        public void NoDetection(string text, string value)
+        {
+            
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use list pattern
+(1): ReSharper Suggestion: Use list pattern
+(2): ReSharper Suggestion: Use list pattern
+(3): ReSharper Suggestion: Use list pattern
+(4): ReSharper Suggestion: Use the 'Contains' method
+(5): ReSharper Suggestion: Use the 'Contains' method
+(6): ReSharper Suggestion: Use the 'Contains' method
+(7): ReSharper Suggestion: Use the 'Contains' method
+(8): ReSharper Suggestion: Use the 'Contains' method

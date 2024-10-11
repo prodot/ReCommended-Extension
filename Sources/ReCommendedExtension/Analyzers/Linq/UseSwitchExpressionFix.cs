@@ -16,21 +16,19 @@ namespace ReCommendedExtension.Analyzers.Linq;
 [QuickFix]
 public sealed class UseSwitchExpressionFix(UseSwitchExpressionSuggestion highlighting) : QuickFixBase
 {
+    string GetReplacement(string? multipleItemsMessage = null)
+    {
+        var throwThatHasMoreItems =
+            $"throw new {nameof(InvalidOperationException)}({(multipleItemsMessage is { } ? $"\"{multipleItemsMessage}\"" : "...")})";
+
+        return highlighting.DefaultValueArgument is { } defaultValueArgument
+            ? $$"""switch { [] => {{defaultValueArgument}}, [var item] => item, _ => {{throwThatHasMoreItems}} }"""
+            : $$"""switch { [] => default, [var item] => item, _ => {{throwThatHasMoreItems}} }""";
+    }
+
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text
-    {
-        get
-        {
-            const string throwException = $"throw new {nameof(InvalidOperationException)}(...)";
-
-            var replacement = highlighting.DefaultValueArgument is { } defaultValueArgument
-                ? $$"""switch { [] => {{defaultValueArgument}}, [var item] => item, _ => {{throwException}} }"""
-                : $$"""switch { [] => default, [var item] => item, _ => {{throwException}} }""";
-
-            return $"Replace with '{replacement}'";
-        }
-    }
+    public override string Text => $"Replace with '{GetReplacement()}'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
@@ -38,15 +36,11 @@ public sealed class UseSwitchExpressionFix(UseSwitchExpressionSuggestion highlig
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            const string throwThatHasMoreItems = $"""throw new {nameof(InvalidOperationException)}("List contains more than one element.")""";
+            var replacement = GetReplacement("List contains more than one element.");
 
             var expression = ModificationUtil.ReplaceChild(
                 highlighting.InvocationExpression,
-                factory.CreateExpression(
-                    highlighting.DefaultValueArgument is { } defaultValueArgument
-                        ? $$"""($0 switch { [] => {{defaultValueArgument}}, [var item] => item, _ => {{throwThatHasMoreItems}} })"""
-                        : $$"""($0 switch { [] => default, [var item] => item, _ => {{throwThatHasMoreItems}} })""",
-                    highlighting.InvokedExpression.QualifierExpression));
+                factory.CreateExpression($"($0 {replacement})", highlighting.InvokedExpression.QualifierExpression));
 
             if (expression is IParenthesizedExpression parenthesizedExpression
                 && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is

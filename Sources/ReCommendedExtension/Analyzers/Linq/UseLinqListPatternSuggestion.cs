@@ -6,14 +6,14 @@ namespace ReCommendedExtension.Analyzers.Linq;
 
 [RegisterConfigurableSeverity(SeverityId, null, HighlightingGroupIds.LanguageUsage, "Use list pattern" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UseListPatternSuggestion(
+public sealed class UseLinqListPatternSuggestion(
     string message,
     IInvocationExpression invocationExpression,
     IReferenceExpression invokedExpression,
     ListPatternSuggestionKind kind,
     string? defaultValueArgument = null) : LinqHighlighting(message, invocationExpression, invokedExpression)
 {
-    const string SeverityId = "UseListPattern";
+    const string SeverityId = "UseLinqListPattern";
 
     internal ListPatternSuggestionKind Kind { get; } = kind;
 
