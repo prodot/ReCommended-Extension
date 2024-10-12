@@ -19,6 +19,11 @@ namespace Test
 
             var result3 = |someObject.ToString().EndsWith(value: "", StringComparison.OrdinalIgnoreCase)|(5);
         }
+
+        public void IndexOf(string text, object someObject)
+        {
+            var result = |text.IndexOf("")|(6);
+        }
     }
 }
 ------------------------------------------------
@@ -40,3 +45,6 @@ Replace with 'true'
 5: The expression is always true
 QUICKFIXES:
 Replace with 'true'
+6: The expression is always 0
+QUICKFIXES:
+Replace with '0'

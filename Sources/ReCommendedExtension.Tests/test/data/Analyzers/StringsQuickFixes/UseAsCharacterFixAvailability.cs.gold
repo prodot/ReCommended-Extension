@@ -12,6 +12,12 @@ namespace Test
             var result3 = text.Contains(|"a"|(2), StringComparison.OrdinalIgnoreCase);
             var result4 = text.Contains(value: |"a"|(3), StringComparison.OrdinalIgnoreCase);
         }
+
+        public void IndexOf(string text)
+        {
+            var result1 = text.IndexOf(|"a"|(4));
+            var result2 = text.IndexOf(value: |"a"|(5));
+        }
     }
 }
 ------------------------------------------------
@@ -25,5 +31,11 @@ Replace with 'a'
 QUICKFIXES:
 Replace with 'a'
 3: Use as character
+QUICKFIXES:
+Replace with 'a'
+4: Use as character
+QUICKFIXES:
+Replace with 'a'
+5: Use as character
 QUICKFIXES:
 Replace with 'a'

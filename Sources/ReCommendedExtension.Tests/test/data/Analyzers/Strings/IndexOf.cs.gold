@@ -4,32 +4,58 @@ namespace Test
 {
     public class Strings
     {
-        public void Comparison(string text, char c)
+        public void Comparison(string text, char c, string s)
         {
             var result11 = text.|IndexOf(c) == 0|(0);
             var result12 = text.|IndexOf('a') == 0|(1);
 
             var result21 = text.|IndexOf(c) != 0|(2);
             var result22 = text.|IndexOf('a') != 0|(3);
+            var result23 = text.|IndexOf(c) > -1|(4);
+            var result24 = text.|IndexOf(c) != -1|(5);
+            var result25 = text.|IndexOf(c) >= 0|(6);
 
-            var result31 = text.|IndexOf(c) > -1|(4);
-            var result32 = text.|IndexOf(c) != -1|(5);
-            var result33 = text.|IndexOf(c) >= 0|(6);
+            var result31 = text.|IndexOf(c) == -1|(7);
+            var result32 = text.|IndexOf(c) < 0|(8);
 
-            var result41 = text.|IndexOf(c) == -1|(7);
-            var result42 = text.|IndexOf(c) < 0|(8);
+            var result41 = text.|IndexOf(c, StringComparison.CurrentCulture) > -1|(9);
+            var result42 = text.|IndexOf(c, StringComparison.CurrentCulture) != -1|(10);
+            var result43 = text.|IndexOf(c, StringComparison.CurrentCulture) >= 0|(11);
+            var result44 = text.|IndexOf(c, StringComparison.OrdinalIgnoreCase) == -1|(12);
+            var result45 = text.|IndexOf(c, StringComparison.OrdinalIgnoreCase) < 0|(13);
+
+            var result51 = text.|IndexOf(s) == 0|(14);
+            var result52 = text.|IndexOf(s) != 0|(15);
+
+            var result61 = text.|IndexOf(s) > -1|(16);
+            var result62 = text.|IndexOf(s) != -1|(17);
+            var result63 = text.|IndexOf(s) >= 0|(18);
+            var result64 = text.|IndexOf(s) == -1|(19);
+            var result65 = text.|IndexOf(s) < 0|(20);
         }
 
         public void RedundantArguments(string text, char c)
         {
-            var result1 = text.IndexOf(c, |0|(9));
-            var result2 = text.IndexOf(c, |startIndex: 0|(10));
+            var result1 = text.IndexOf(c, |0|(21));
+            var result2 = text.IndexOf(c, |startIndex: 0|(22));
+        }
+
+        public void ExpressionResult(string text)
+        {
+            var result = |text.IndexOf("")|(23);
+        }
+
+        public void AsCharacter(string text)
+        {
+            var result = text.IndexOf(|"a"|(24));
         }
 
         public void NoDetection(string text, int startIndex)
         {
             var result1 = text.IndexOf(c, 1);
             var result2 = text.IndexOf(c, startIndex);
+
+            text.IndexOf("");
         }
     }
 }
@@ -43,5 +69,19 @@ namespace Test
 (6): ReSharper Suggestion: Use the 'Contains' method
 (7): ReSharper Suggestion: Use the 'Contains' method
 (8): ReSharper Suggestion: Use the 'Contains' method
-(9): ReSharper Dead Code: Argument 0 is redundant
-(10): ReSharper Dead Code: Argument 0 is redundant
+(9): ReSharper Suggestion: Use the 'Contains' method
+(10): ReSharper Suggestion: Use the 'Contains' method
+(11): ReSharper Suggestion: Use the 'Contains' method
+(12): ReSharper Suggestion: Use the 'Contains' method
+(13): ReSharper Suggestion: Use the 'Contains' method
+(14): ReSharper Suggestion: Use the 'StartsWith' method
+(15): ReSharper Suggestion: Use the 'StartsWith' method
+(16): ReSharper Suggestion: Use the 'Contains' method
+(17): ReSharper Suggestion: Use the 'Contains' method
+(18): ReSharper Suggestion: Use the 'Contains' method
+(19): ReSharper Suggestion: Use the 'Contains' method
+(20): ReSharper Suggestion: Use the 'Contains' method
+(21): ReSharper Dead Code: Argument 0 is redundant
+(22): ReSharper Dead Code: Argument 0 is redundant
+(23): ReSharper Suggestion: The expression is always 0
+(24): ReSharper Suggestion: Use as character

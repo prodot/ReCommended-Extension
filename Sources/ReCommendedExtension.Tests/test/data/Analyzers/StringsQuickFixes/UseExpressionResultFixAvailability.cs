@@ -19,5 +19,10 @@ namespace Test
 
             var result3 = someObject.ToString().EndsWith(value: "", StringComparison.OrdinalIgnoreCase);
         }
+
+        public void IndexOf(string text, object someObject)
+        {
+            var result = text.IndexOf("");
+        }
     }
 }

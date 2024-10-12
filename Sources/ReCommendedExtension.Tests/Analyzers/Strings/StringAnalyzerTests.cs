@@ -103,6 +103,9 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestEndsWith_Empty_StringComparison() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOf_Empty() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -129,6 +132,16 @@ public sealed class UseAsCharacterQuickFixTests : QuickFixTestBase<UseAsCharacte
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestContains_StringComparison_ParameterName() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_StringAsChar() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_StringAsChar_ParameterName() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -216,6 +229,66 @@ public sealed class UseOtherMethodQuickFixTests : QuickFixTestBase<UseOtherMetho
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestIndexOf_Char_lt_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_Char_StringComparison_gt_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_Char_StringComparison_ne_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_Char_StringComparison_ge_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_Char_StringComparison_eq_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_Char_StringComparison_lt_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_eq_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_ne_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_gt_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_ne_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_ge_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_eq_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_lt_0() => DoNamedTest2();
 }
 
 [TestFixture]

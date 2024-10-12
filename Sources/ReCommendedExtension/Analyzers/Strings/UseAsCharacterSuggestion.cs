@@ -13,6 +13,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.PsiGen.Util;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.UI.Controls.TreeGrid;
@@ -22,7 +23,12 @@ namespace ReCommendedExtension.Analyzers.Strings;
 
 [RegisterConfigurableSeverity(SeverityId, null, HighlightingGroupIds.BestPractice, "Use character" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UseAsCharacterSuggestion(string message, ICSharpArgument argument, string? parameterName, char character) : Highlighting(message)
+public sealed class UseAsCharacterSuggestion(
+    string message,
+    ICSharpArgument argument,
+    string? parameterName,
+    char character,
+    string? additionalArgument = null) : Highlighting(message)
 {
     const string SeverityId = "UseAsCharacter";
 
@@ -31,6 +37,8 @@ public sealed class UseAsCharacterSuggestion(string message, ICSharpArgument arg
     internal string? ParameterName { get; } = parameterName;
 
     internal char Character { get; } = character;
+
+    internal string? AdditionalArgument { get; } = additionalArgument;
 
     public override DocumentRange CalculateRange() => Argument.Value.GetDocumentRange();
 }
@@ -128,7 +136,7 @@ public sealed class UseOtherMethodSuggestion(
     IReferenceExpression invokedExpression,
     string otherMethodName,
     bool isNegated,
-    string valueArgument,
+    string[] arguments,
     IBinaryExpression? binaryExpression = null) : Highlighting(message) // todo: move to a separate file
 {
     const string SeverityId = "UseOtherMethod";
@@ -141,7 +149,7 @@ public sealed class UseOtherMethodSuggestion(
 
     internal bool IsNegated { get; } = isNegated;
 
-    internal string ValueArgument { get; } = valueArgument;
+    internal string[] Arguments { get; } = arguments;
 
     internal IBinaryExpression? BinaryExpression { get; } = binaryExpression;
 
@@ -187,9 +195,17 @@ public sealed class UseAsCharacterFix(UseAsCharacterSuggestion highlighting) : Q
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.Argument);
 
-            ModificationUtil.ReplaceChild(
+            var argument = ModificationUtil.ReplaceChild(
                 highlighting.Argument,
                 factory.CreateArgument(ParameterKind.UNKNOWN, highlighting.ParameterName, factory.CreateExpression($"'{highlighting.Character}'")));
+
+            if (highlighting.AdditionalArgument is { })
+            {
+                var comma = ModificationUtil.AddChildAfter(argument, CSharpTokenType.COMMA.CreateTreeElement());
+                ModificationUtil.AddChildAfter(
+                    comma,
+                    factory.CreateArgument(ParameterKind.UNKNOWN, factory.CreateExpression(highlighting.AdditionalArgument)));
+            }
         }
 
         return _ => { };
@@ -292,8 +308,9 @@ public sealed class UseOtherMethodFix(UseOtherMethodSuggestion highlighting) : Q
         get
         {
             var negation = highlighting.IsNegated ? "!" : "";
+            var arguments = string.Join(", ", highlighting.Arguments);
 
-            return $"Replace with '{negation}{highlighting.OtherMethodName}({highlighting.ValueArgument})'";
+            return $"Replace with '{negation}{highlighting.OtherMethodName}({arguments})'";
         }
     }
 
@@ -304,11 +321,12 @@ public sealed class UseOtherMethodFix(UseOtherMethodSuggestion highlighting) : Q
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
             var negation = highlighting.IsNegated ? "!" : "";
+            var arguments = string.Join(", ", highlighting.Arguments);
 
             var expression = ModificationUtil.ReplaceChild(
                 highlighting.BinaryExpression as ITreeNode ?? highlighting.InvocationExpression,
                 factory.CreateExpression(
-                    $"({negation}$0.{highlighting.OtherMethodName}({highlighting.ValueArgument}))",
+                    $"({negation}$0.{highlighting.OtherMethodName}({arguments}))",
                     highlighting.InvokedExpression.QualifierExpression));
 
             if (expression is IParenthesizedExpression parenthesizedExpression
