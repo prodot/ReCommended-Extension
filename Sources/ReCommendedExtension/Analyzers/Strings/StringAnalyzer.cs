@@ -22,6 +22,7 @@ namespace ReCommendedExtension.Analyzers.Strings;
         typeof(UseAsCharacterSuggestion),
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
+        typeof(RedundantArgumentSuggestion),
     ])]
 public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
@@ -73,7 +74,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Char, CharValue: var value } } ? value : null;
 
     [Pure]
-    static int? TryGetInt32Constant(ICSharpExpression expression)
+    static int? TryGetInt32Constant(ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Int, IntValue: var value } } ? value : null;
 
     /// <remarks>
@@ -406,12 +407,13 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <remarks>
     /// <c>text.IndexOf(char, 0)</c> → <c>text.IndexOf(char)</c>
     /// </remarks>
-    static void AnalyzeIndexOf_Char_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument startIndexArgument) { }
+    static void AnalyzeIndexOf_Char_Int32(IHighlightingConsumer consumer, ICSharpArgument startIndexArgument)
+    {
+        if (TryGetInt32Constant(startIndexArgument.Value) == 0)
+        {
+            consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument 0 is redundant", startIndexArgument));
+        }
+    }
 
     /// <remarks>
     /// <c>text.IndexOf("")</c> → 0<para/>
@@ -522,8 +524,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     break;
 
                 case { ShortName: nameof(string.IndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }, { Type: var startIndexType }] }
-                    when valueType.IsChar() && startIndexType.IsInt() && element.Arguments is [var valueArgument, var startIndexArgument]:
-                    AnalyzeIndexOf_Char_Int32(consumer, element, invokedExpression, valueArgument, startIndexArgument);
+                    when valueType.IsChar() && startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
+                    AnalyzeIndexOf_Char_Int32(consumer, startIndexArgument);
                     break;
 
                 case { ShortName: nameof(string.IndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }] }

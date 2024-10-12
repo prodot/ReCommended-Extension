@@ -20,9 +20,16 @@ namespace Test
             var result42 = text.|IndexOf(c) < 0|(8);
         }
 
-        public void NoDetection(string text, string value)
+        public void RedundantArguments(string text, char c)
         {
-            
+            var result1 = text.IndexOf(c, |0|(9));
+            var result2 = text.IndexOf(c, |startIndex: 0|(10));
+        }
+
+        public void NoDetection(string text, int startIndex)
+        {
+            var result1 = text.IndexOf(c, 1);
+            var result2 = text.IndexOf(c, startIndex);
         }
     }
 }
@@ -36,3 +43,5 @@ namespace Test
 (6): ReSharper Suggestion: Use the 'Contains' method
 (7): ReSharper Suggestion: Use the 'Contains' method
 (8): ReSharper Suggestion: Use the 'Contains' method
+(9): ReSharper Dead Code: Argument 0 is redundant
+(10): ReSharper Dead Code: Argument 0 is redundant

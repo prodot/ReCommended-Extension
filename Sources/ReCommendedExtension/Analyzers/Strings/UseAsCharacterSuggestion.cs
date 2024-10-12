@@ -2,11 +2,13 @@
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.CodeStyle.Suggestions;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -149,6 +151,27 @@ public sealed class UseOtherMethodSuggestion(
 
         return (BinaryExpression as ITreeNode ?? InvocationExpression).GetDocumentRange().SetStartTo(startOffset);
     }
+}
+
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
+    HighlightingGroupIds.CodeRedundancy,
+    "Argument is redundant" + ZoneMarker.Suffix,
+    "",
+    Severity.SUGGESTION)]
+[ConfigurableSeverityHighlighting(
+    SeverityId,
+    CSharpLanguage.Name,
+    AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
+    OverlapResolve = OverlapResolveKind.DEADCODE)]
+public sealed class RedundantArgumentSuggestion(string message, ICSharpArgument argument) : Highlighting(message) // todo: move to a separate file
+{
+    const string SeverityId = "RedundantArgument";
+
+    internal ICSharpArgument Argument { get; } = argument;
+
+    public override DocumentRange CalculateRange() => Argument.GetDocumentRange();
 }
 
 [QuickFix]
@@ -295,6 +318,34 @@ public sealed class UseOtherMethodFix(UseOtherMethodSuggestion highlighting) : Q
                 })
             {
                 ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+            }
+        }
+
+        return _ => { };
+    }
+}
+
+[QuickFix]
+public sealed class RemoveArgumentFix(RedundantArgumentSuggestion highlighting) : QuickFixBase // todo: move to a separate file
+{
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text => "Remove argument";
+
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
+        {
+            if (highlighting
+                    .Argument.PrevTokens()
+                    .TakeWhile(t => t.Parent == highlighting.Argument.Parent)
+                    .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+            {
+                ModificationUtil.DeleteChildRange(commaToken, highlighting.Argument);
+            }
+            else
+            {
+                ModificationUtil.DeleteChild(highlighting.Argument);
             }
         }
 

@@ -20,9 +20,16 @@ namespace Test
             var result42 = text.IndexOf(c) < 0;
         }
 
-        public void NoDetection(string text, string value)
+        public void RedundantArguments(string text, char c)
         {
-            
+            var result1 = text.IndexOf(c, 0);
+            var result2 = text.IndexOf(c, startIndex: 0);
+        }
+
+        public void NoDetection(string text, int startIndex)
+        {
+            var result1 = text.IndexOf(c, 1);
+            var result2 = text.IndexOf(c, startIndex);
         }
     }
 }

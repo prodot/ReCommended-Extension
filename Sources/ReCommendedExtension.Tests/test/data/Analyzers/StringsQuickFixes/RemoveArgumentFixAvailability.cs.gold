@@ -1,0 +1,20 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void IndexOf(string text, char c)
+        {
+            var result1 = text.IndexOf(c, |0|(0));
+            var result2 = text.IndexOf(c, |startIndex: 0|(1));
+        }
+    }
+}
+------------------------------------------------
+0: Argument 0 is redundant
+QUICKFIXES:
+Remove argument
+1: Argument 0 is redundant
+QUICKFIXES:
+Remove argument

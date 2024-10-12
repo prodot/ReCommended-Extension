@@ -16,7 +16,11 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Strings";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseAsCharacterSuggestion or UseStringListPatternSuggestion or UseOtherMethodSuggestion;
+        => highlighting is UseExpressionResultSuggestion
+            or UseAsCharacterSuggestion
+            or UseStringListPatternSuggestion
+            or UseOtherMethodSuggestion
+            or RedundantArgumentSuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
@@ -40,7 +44,11 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
     protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseAsCharacterSuggestion or UseStringListPatternSuggestion or UseOtherMethodSuggestion;
+        => highlighting is UseExpressionResultSuggestion
+            or UseAsCharacterSuggestion
+            or UseStringListPatternSuggestion
+            or UseOtherMethodSuggestion
+            or RedundantArgumentSuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
@@ -61,6 +69,9 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet70]
     public void TestUseOtherMethodFixAvailability() => DoNamedTest2();
+
+    [Test]
+    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -205,4 +216,16 @@ public sealed class UseOtherMethodQuickFixTests : QuickFixTestBase<UseOtherMetho
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestIndexOf_Char_lt_0() => DoNamedTest2();
+}
+
+[TestFixture]
+public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumentFix> // todo: move to a separate file
+{
+    protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
+
+    [Test]
+    public void TestIndexOf_Char_Int32() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOf_Char_Int32_ParameterName() => DoNamedTest2();
 }
