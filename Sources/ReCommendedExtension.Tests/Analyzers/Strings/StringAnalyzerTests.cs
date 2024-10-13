@@ -301,4 +301,10 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestIndexOf_Char_Int32_ParameterName() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOf_String_Int32() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOf_String_Int32_ParameterName() => DoNamedTest2();
 }

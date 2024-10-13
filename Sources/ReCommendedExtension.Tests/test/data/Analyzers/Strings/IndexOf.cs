@@ -34,10 +34,13 @@ namespace Test
             var result65 = text.IndexOf(s) < 0;
         }
 
-        public void RedundantArguments(string text, char c)
+        public void RedundantArguments(string text, char c, string s)
         {
             var result1 = text.IndexOf(c, 0);
             var result2 = text.IndexOf(c, startIndex: 0);
+
+            var result3 = text.IndexOf(s, 0);
+            var result4 = text.IndexOf(s, startIndex: 0);
         }
 
         public void ExpressionResult(string text)

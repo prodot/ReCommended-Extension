@@ -674,12 +674,13 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <remarks>
     /// <c>text.IndexOf(string, 0)</c> → <c>text.IndexOf(string)</c>
     /// </remarks>
-    static void AnalyzeIndexOf_String_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument startIndexArgument) { }
+    static void AnalyzeIndexOf_String_Int32(IHighlightingConsumer consumer, ICSharpArgument startIndexArgument)
+    {
+        if (TryGetInt32Constant(startIndexArgument.Value) == 0)
+        {
+            consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument 0 is redundant", startIndexArgument));
+        }
+    }
 
     /// <remarks>
     /// <c>text.IndexOf("", StringComparison)</c> → <c>0</c><para/>
@@ -784,8 +785,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     break;
 
                 case { ShortName: nameof(string.IndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }, { Type: var startIndexType }] }
-                    when valueType.IsString() && startIndexType.IsInt() && element.Arguments is [var valueArgument, var startIndexArgument]:
-                    AnalyzeIndexOf_String_Int32(consumer, element, invokedExpression, valueArgument, startIndexArgument);
+                    when valueType.IsString() && startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
+                    AnalyzeIndexOf_String_Int32(consumer, startIndexArgument);
                     break;
 
                 case

@@ -34,20 +34,23 @@ namespace Test
             var result65 = text.|IndexOf(s) < 0|(20);
         }
 
-        public void RedundantArguments(string text, char c)
+        public void RedundantArguments(string text, char c, string s)
         {
             var result1 = text.IndexOf(c, |0|(21));
             var result2 = text.IndexOf(c, |startIndex: 0|(22));
+
+            var result3 = text.IndexOf(s, |0|(23));
+            var result4 = text.IndexOf(s, |startIndex: 0|(24));
         }
 
         public void ExpressionResult(string text)
         {
-            var result = |text.IndexOf("")|(23);
+            var result = |text.IndexOf("")|(25);
         }
 
         public void AsCharacter(string text)
         {
-            var result = text.IndexOf(|"a"|(24));
+            var result = text.IndexOf(|"a"|(26));
         }
 
         public void NoDetection(string text, int startIndex)
@@ -83,5 +86,7 @@ namespace Test
 (20): ReSharper Suggestion: Use the 'Contains' method
 (21): ReSharper Dead Code: Argument 0 is redundant
 (22): ReSharper Dead Code: Argument 0 is redundant
-(23): ReSharper Suggestion: The expression is always 0
-(24): ReSharper Suggestion: Use as character
+(23): ReSharper Dead Code: Argument 0 is redundant
+(24): ReSharper Dead Code: Argument 0 is redundant
+(25): ReSharper Suggestion: The expression is always 0
+(26): ReSharper Suggestion: Use as character

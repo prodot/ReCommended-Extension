@@ -4,10 +4,13 @@ namespace Test
 {
     public class Strings
     {
-        public void IndexOf(string text, char c)
+        public void IndexOf(string text, char c, string s)
         {
             var result1 = text.IndexOf(c, |0|(0));
             var result2 = text.IndexOf(c, |startIndex: 0|(1));
+
+            var result3 = text.IndexOf(s, |0|(2));
+            var result4 = text.IndexOf(s, |startIndex: 0|(3));
         }
     }
 }
@@ -16,5 +19,11 @@ namespace Test
 QUICKFIXES:
 Remove argument
 1: Argument 0 is redundant
+QUICKFIXES:
+Remove argument
+2: Argument 0 is redundant
+QUICKFIXES:
+Remove argument
+3: Argument 0 is redundant
 QUICKFIXES:
 Remove argument
