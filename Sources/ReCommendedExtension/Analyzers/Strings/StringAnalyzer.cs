@@ -854,13 +854,13 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <remarks>
     /// <c>text.IndexOf(string, 0, StringComparison)</c> → <c>text.IndexOf(string, StringComparison)</c>
     /// </remarks>
-    static void AnalyzeIndexOf_String_Int32_StringComparison(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument startIndexArgument,
-        ICSharpArgument comparisonTypeArgument) { }
+    static void AnalyzeIndexOf_String_Int32_StringComparison(IHighlightingConsumer consumer, ICSharpArgument startIndexArgument)
+    {
+        if (TryGetInt32Constant(startIndexArgument.Value) == 0)
+        {
+            consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument 0 is redundant", startIndexArgument));
+        }
+    }
 
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
@@ -959,14 +959,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     } when valueType.IsString()
                     && startIndexType.IsInt()
                     && IsStringComparison(stringComparisonType)
-                    && element.Arguments is [var valueArgument, var startIndexArgument, var comparisonTypeArgument]:
-                    AnalyzeIndexOf_String_Int32_StringComparison(
-                        consumer,
-                        element,
-                        invokedExpression,
-                        valueArgument,
-                        startIndexArgument,
-                        comparisonTypeArgument);
+                    && element.Arguments is [_, var startIndexArgument, _]:
+                    AnalyzeIndexOf_String_Int32_StringComparison(consumer, startIndexArgument);
                     break;
             }
         }

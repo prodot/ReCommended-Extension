@@ -50,6 +50,9 @@ namespace Test
 
             var result3 = text.IndexOf(s, 0);
             var result4 = text.IndexOf(s, startIndex: 0);
+
+            var result5 = text.IndexOf(s, 0, StringComparison.CurrentCulture);
+            var result6 = text.IndexOf(s, startIndex: 0, StringComparison.CurrentCulture);
         }
 
         public void ExpressionResult(string text)

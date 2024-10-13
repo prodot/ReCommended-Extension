@@ -50,18 +50,21 @@ namespace Test
 
             var result3 = text.IndexOf(s, |0|(30));
             var result4 = text.IndexOf(s, |startIndex: 0|(31));
+
+            var result5 = text.IndexOf(s, |0|(32), StringComparison.CurrentCulture);
+            var result6 = text.IndexOf(s, |startIndex: 0|(33), StringComparison.CurrentCulture);
         }
 
         public void ExpressionResult(string text)
         {
-            var result1 = |text.IndexOf("")|(32);
-            var result2 = |text.IndexOf("", StringComparison.CurrentCulture)|(33);
+            var result1 = |text.IndexOf("")|(34);
+            var result2 = |text.IndexOf("", StringComparison.CurrentCulture)|(35);
         }
 
         public void AsCharacter(string text)
         {
-            var result1 = text.IndexOf(|"a"|(34));
-            var result1 = text.IndexOf(|"a"|(35), StringComparison.OrdinalIgnoreCase);
+            var result1 = text.IndexOf(|"a"|(36));
+            var result1 = text.IndexOf(|"a"|(37), StringComparison.OrdinalIgnoreCase);
         }
 
         public void NoDetection(string text, int startIndex)
@@ -107,7 +110,9 @@ namespace Test
 (29): ReSharper Dead Code: Argument 0 is redundant
 (30): ReSharper Dead Code: Argument 0 is redundant
 (31): ReSharper Dead Code: Argument 0 is redundant
-(32): ReSharper Suggestion: The expression is always 0
-(33): ReSharper Suggestion: The expression is always 0
-(34): ReSharper Suggestion: Use as character
-(35): ReSharper Suggestion: Use as character
+(32): ReSharper Dead Code: Argument 0 is redundant
+(33): ReSharper Dead Code: Argument 0 is redundant
+(34): ReSharper Suggestion: The expression is always 0
+(35): ReSharper Suggestion: The expression is always 0
+(36): ReSharper Suggestion: Use as character
+(37): ReSharper Suggestion: Use as character

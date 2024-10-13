@@ -303,8 +303,6 @@ public sealed class UseOtherMethodQuickFixTests : QuickFixTestBase<UseOtherMetho
     [TestNetCore21]
     public void TestIndexOf_String_lt_0() => DoNamedTest2();
 
-    //////
-
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
@@ -357,4 +355,10 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestIndexOf_String_Int32_ParameterName() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOf_String_Int32_StringComparison() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOf_String_Int32_ParameterName_StringComparison() => DoNamedTest2();
 }
