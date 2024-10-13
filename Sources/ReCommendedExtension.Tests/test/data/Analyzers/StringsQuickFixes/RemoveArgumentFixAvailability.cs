@@ -15,5 +15,11 @@ namespace Test
             var result5 = text.IndexOf(s, 0, StringComparison.CurrentCulture);
             var result6 = text.IndexOf(s, startIndex: 0, StringComparison.CurrentCulture);
         }
+
+        public void IndexOfAny(string text, char[] c)
+        {
+            var result1 = text.IndexOfAny(c, 0);
+            var result2 = text.IndexOfAny(c, startIndex: 0);
+        }
     }
 }

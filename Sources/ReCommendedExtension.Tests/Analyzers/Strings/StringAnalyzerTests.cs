@@ -36,6 +36,9 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet70]
     public void TestIndexOf() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOfAny() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -361,4 +364,10 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestIndexOf_String_Int32_ParameterName_StringComparison() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOfAny() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOfAny_ParameterName() => DoNamedTest2();
 }

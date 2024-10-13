@@ -67,7 +67,7 @@ namespace Test
             var result1 = text.IndexOf("a", StringComparison.OrdinalIgnoreCase);
         }
 
-        public void NoDetection(string text, int startIndex)
+        public void NoDetection(string text, char c, int startIndex)
         {
             var result1 = text.IndexOf(c, 1);
             var result2 = text.IndexOf(c, startIndex);

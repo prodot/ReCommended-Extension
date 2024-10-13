@@ -314,7 +314,7 @@ public sealed class UseOtherMethodFix(UseOtherMethodSuggestion highlighting) : Q
         }
     }
 
-    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -350,7 +350,7 @@ public sealed class RemoveArgumentFix(RedundantArgumentSuggestion highlighting) 
 
     public override string Text => "Remove argument";
 
-    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {

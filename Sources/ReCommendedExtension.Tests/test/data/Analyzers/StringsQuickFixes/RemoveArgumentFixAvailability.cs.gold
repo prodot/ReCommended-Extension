@@ -15,6 +15,12 @@ namespace Test
             var result5 = text.IndexOf(s, |0|(4), StringComparison.CurrentCulture);
             var result6 = text.IndexOf(s, |startIndex: 0|(5), StringComparison.CurrentCulture);
         }
+
+        public void IndexOfAny(string text, char[] c)
+        {
+            var result1 = text.IndexOfAny(c, |0|(6));
+            var result2 = text.IndexOfAny(c, |startIndex: 0|(7));
+        }
     }
 }
 ------------------------------------------------
@@ -34,5 +40,11 @@ Remove argument
 QUICKFIXES:
 Remove argument
 5: Argument 0 is redundant
+QUICKFIXES:
+Remove argument
+6: Argument 0 is redundant
+QUICKFIXES:
+Remove argument
+7: Argument 0 is redundant
 QUICKFIXES:
 Remove argument

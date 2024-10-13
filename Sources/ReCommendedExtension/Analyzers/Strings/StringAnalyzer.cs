@@ -862,6 +862,17 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
+    /// <remarks>
+    /// <c>text.IndexOfAny(char[], 0)</c> → <c>text.IndexOfAny(char[])</c>
+    /// </remarks>
+    static void AnalyzeIndexOfAny(IHighlightingConsumer consumer, ICSharpArgument startIndexArgument)
+    {
+        if (TryGetInt32Constant(startIndexArgument.Value) == 0)
+        {
+            consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument 0 is redundant", startIndexArgument));
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
@@ -961,6 +972,12 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     && IsStringComparison(stringComparisonType)
                     && element.Arguments is [_, var startIndexArgument, _]:
                     AnalyzeIndexOf_String_Int32_StringComparison(consumer, startIndexArgument);
+                    break;
+
+                // IndexOfAny
+                case { ShortName: nameof(string.IndexOfAny), TypeParameters: [], Parameters: [_, { Type: var startIndexType }] }
+                    when startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
+                    AnalyzeIndexOfAny(consumer, startIndexArgument);
                     break;
             }
         }
