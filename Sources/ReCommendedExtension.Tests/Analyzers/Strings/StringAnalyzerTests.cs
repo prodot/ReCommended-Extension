@@ -106,6 +106,9 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 
     [Test]
     public void TestIndexOf_Empty() => DoNamedTest2();
+
+    [Test]
+    public void TestIndexOf_Empty_StringComparison() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -142,6 +145,16 @@ public sealed class UseAsCharacterQuickFixTests : QuickFixTestBase<UseAsCharacte
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestIndexOf_StringAsChar_ParameterName() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_StringAsChar_StringComparison() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_StringAsChar_ParameterName_StringComparison() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -289,6 +302,43 @@ public sealed class UseOtherMethodQuickFixTests : QuickFixTestBase<UseOtherMetho
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestIndexOf_String_lt_0() => DoNamedTest2();
+
+    //////
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_StringComparison_eq_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_StringComparison_ne_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_StringComparison_gt_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_StringComparison_ne_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_StringComparison_ge_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_StringComparison_eq_m1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestIndexOf_String_StringComparison_lt_0() => DoNamedTest2();
 }
 
 [TestFixture]

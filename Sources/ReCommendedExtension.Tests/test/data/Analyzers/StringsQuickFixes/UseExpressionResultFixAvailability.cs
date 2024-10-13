@@ -22,7 +22,8 @@ namespace Test
 
         public void IndexOf(string text, object someObject)
         {
-            var result = text.IndexOf("");
+            var result1 = text.IndexOf("");
+            var result2 = text.IndexOf("", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

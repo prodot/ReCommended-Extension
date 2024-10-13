@@ -18,11 +18,23 @@ namespace Test
             var result24 = text.|IndexOf(c, StringComparison.OrdinalIgnoreCase) == -1|(8);
             var result25 = text.|IndexOf(c, StringComparison.OrdinalIgnoreCase) < 0|(9);
 
-            var result31 = text.|IndexOf(s) > -1|(10);
-            var result32 = text.|IndexOf(s) != -1|(11);
-            var result33 = text.|IndexOf(s) >= 0|(12);
-            var result34 = text.|IndexOf(s) == -1|(13);
-            var result35 = text.|IndexOf(s) < 0|(14);
+            var result31 = text.|IndexOf(s) == 0|(10);
+            var result32 = text.|IndexOf(s) != 0|(11);
+
+            var result41 = text.|IndexOf(s) > -1|(12);
+            var result42 = text.|IndexOf(s) != -1|(13);
+            var result43 = text.|IndexOf(s) >= 0|(14);
+            var result44 = text.|IndexOf(s) == -1|(15);
+            var result45 = text.|IndexOf(s) < 0|(16);
+
+            var result51 = text.|IndexOf(s, StringComparison.CurrentCulture) == 0|(17);
+            var result52 = text.|IndexOf(s, StringComparison.CurrentCulture) != 0|(18);
+
+            var result61 = text.|IndexOf(s, StringComparison.CurrentCulture) > -1|(19);
+            var result62 = text.|IndexOf(s, StringComparison.CurrentCulture) != -1|(20);
+            var result63 = text.|IndexOf(s, StringComparison.CurrentCulture) >= 0|(21);
+            var result64 = text.|IndexOf(s, StringComparison.OrdinalIgnoreCase) == -1|(22);
+            var result65 = text.|IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0|(23);
         }
     }
 }
@@ -57,18 +69,45 @@ Replace with '!Contains(c, StringComparison.OrdinalIgnoreCase)'
 9: Use the 'Contains' method
 QUICKFIXES:
 Replace with '!Contains(c, StringComparison.OrdinalIgnoreCase)'
-10: Use the 'Contains' method
+10: Use the 'StartsWith' method
 QUICKFIXES:
-Replace with 'Contains(s, StringComparison.CurrentCulture)'
-11: Use the 'Contains' method
+Replace with 'StartsWith(s)'
+11: Use the 'StartsWith' method
 QUICKFIXES:
-Replace with 'Contains(s, StringComparison.CurrentCulture)'
+Replace with '!StartsWith(s)'
 12: Use the 'Contains' method
 QUICKFIXES:
 Replace with 'Contains(s, StringComparison.CurrentCulture)'
 13: Use the 'Contains' method
 QUICKFIXES:
-Replace with '!Contains(s, StringComparison.CurrentCulture)'
+Replace with 'Contains(s, StringComparison.CurrentCulture)'
 14: Use the 'Contains' method
 QUICKFIXES:
+Replace with 'Contains(s, StringComparison.CurrentCulture)'
+15: Use the 'Contains' method
+QUICKFIXES:
 Replace with '!Contains(s, StringComparison.CurrentCulture)'
+16: Use the 'Contains' method
+QUICKFIXES:
+Replace with '!Contains(s, StringComparison.CurrentCulture)'
+17: Use the 'StartsWith' method
+QUICKFIXES:
+Replace with 'StartsWith(s, StringComparison.CurrentCulture)'
+18: Use the 'StartsWith' method
+QUICKFIXES:
+Replace with '!StartsWith(s, StringComparison.CurrentCulture)'
+19: Use the 'Contains' method
+QUICKFIXES:
+Replace with 'Contains(s, StringComparison.CurrentCulture)'
+20: Use the 'Contains' method
+QUICKFIXES:
+Replace with 'Contains(s, StringComparison.CurrentCulture)'
+21: Use the 'Contains' method
+QUICKFIXES:
+Replace with 'Contains(s, StringComparison.CurrentCulture)'
+22: Use the 'Contains' method
+QUICKFIXES:
+Replace with '!Contains(s, StringComparison.OrdinalIgnoreCase)'
+23: Use the 'Contains' method
+QUICKFIXES:
+Replace with '!Contains(s, StringComparison.OrdinalIgnoreCase)'

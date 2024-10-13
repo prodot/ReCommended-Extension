@@ -520,7 +520,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
     /// <remarks>
     /// <c>text.IndexOf("")</c> → 0<para/>
-    /// <c>text.IndexOf(string)</c> → <c>text.IndexOf(char, CurrentCulture)</c><para/>
+    /// <c>text.IndexOf(string)</c> → <c>text.IndexOf(char, CurrentCulture)</c> (.NET Core 2.1)<para/>
     /// <c>text.IndexOf(string) == 0</c> → <c>text.StartsWith(string)</c><para/>
     /// <c>text.IndexOf(string) != 0</c> → <c>!text.StartsWith(string)</c><para/>
     /// <c>text.IndexOf(string) > -1</c> → <c>text.Contains(string, CurrentCulture)</c> (.NET Core 2.1)<para/>
@@ -545,6 +545,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 nameof(string.IndexOf),
                 [PredefinedType.CHAR_FQN, PredefinedType.STRING_COMPARISON_CLASS],
                 invocationExpression.PsiModule) is [var valueParameterName, _]:
+
                 consumer.AddHighlighting(
                     new UseAsCharacterSuggestion(
                         "Use as character",
@@ -698,7 +699,157 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument,
-        ICSharpArgument comparisonTypeArgument) { }
+        ICSharpArgument comparisonTypeArgument)
+    {
+        switch (TryGetStringConstant(valueArgument.Value))
+        {
+            case "" when !invocationExpression.IsUsedAsStatement():
+                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0", invocationExpression, "0"));
+                break;
+
+            case [var character] when TryGetParameterNamesIfMethodExists(
+                nameof(string.IndexOf),
+                [PredefinedType.CHAR_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                invocationExpression.PsiModule) is [var valueParameterName, _]:
+
+                consumer.AddHighlighting(
+                    new UseAsCharacterSuggestion(
+                        "Use as character",
+                        valueArgument,
+                        valueArgument.NameIdentifier is { } ? valueParameterName : null,
+                        character));
+                break;
+
+            default:
+                switch (invocationExpression.Parent)
+                {
+                    case IEqualityExpression equalityExpression when equalityExpression.LeftOperand == invocationExpression
+                        && valueArgument.Value is { }
+                        && comparisonTypeArgument.Value is { }:
+
+                        switch (equalityExpression.EqualityType, TryGetInt32Constant(equalityExpression.RightOperand))
+                        {
+                            case (EqualityExpressionType.EQEQ, 0):
+                                if (TryGetParameterNamesIfMethodExists(
+                                        nameof(string.StartsWith),
+                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                        invocationExpression.PsiModule) is [_, _])
+                                {
+                                    consumer.AddHighlighting(
+                                        new UseOtherMethodSuggestion(
+                                            $"Use the '{nameof(string.StartsWith)}' method",
+                                            invocationExpression,
+                                            invokedExpression,
+                                            nameof(string.StartsWith),
+                                            false,
+                                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                            equalityExpression));
+                                }
+                                break;
+
+                            case (EqualityExpressionType.NE, 0):
+                                if (TryGetParameterNamesIfMethodExists(
+                                        nameof(string.StartsWith),
+                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                        invocationExpression.PsiModule) is [_, _])
+                                {
+                                    consumer.AddHighlighting(
+                                        new UseOtherMethodSuggestion(
+                                            $"Use the '{nameof(string.StartsWith)}' method",
+                                            invocationExpression,
+                                            invokedExpression,
+                                            nameof(string.StartsWith),
+                                            true,
+                                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                            equalityExpression));
+                                }
+                                break;
+
+                            case (EqualityExpressionType.NE, -1):
+                                if (TryGetParameterNamesIfMethodExists(
+                                        nameof(string.Contains),
+                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                        invocationExpression.PsiModule) is [_, _])
+                                {
+                                    consumer.AddHighlighting(
+                                        new UseOtherMethodSuggestion(
+                                            $"Use the '{nameof(string.Contains)}' method",
+                                            invocationExpression,
+                                            invokedExpression,
+                                            nameof(string.Contains),
+                                            false,
+                                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                            equalityExpression));
+                                }
+                                break;
+
+                            case (EqualityExpressionType.EQEQ, -1):
+                                if (TryGetParameterNamesIfMethodExists(
+                                        nameof(string.Contains),
+                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                        invocationExpression.PsiModule) is [_, _])
+                                {
+                                    consumer.AddHighlighting(
+                                        new UseOtherMethodSuggestion(
+                                            $"Use the '{nameof(string.Contains)}' method",
+                                            invocationExpression,
+                                            invokedExpression,
+                                            nameof(string.Contains),
+                                            true,
+                                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                            equalityExpression));
+                                }
+                                break;
+                        }
+                        break;
+
+                    case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
+                        && TryGetInt32Constant(relationalExpression.RightOperand) is { } value
+                        && valueArgument.Value is { }
+                        && comparisonTypeArgument.Value is { }:
+
+                        var tokenType = relationalExpression.OperatorSign.GetTokenType();
+
+                        if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
+                            && TryGetParameterNamesIfMethodExists(
+                                nameof(string.Contains),
+                                [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                invocationExpression.PsiModule) is [_, _])
+                        {
+                            consumer.AddHighlighting(
+                                new UseOtherMethodSuggestion(
+                                    $"Use the '{nameof(string.Contains)}' method",
+                                    invocationExpression,
+                                    invokedExpression,
+                                    nameof(string.Contains),
+                                    false,
+                                    [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                    relationalExpression));
+                        }
+
+                        if (tokenType == CSharpTokenType.LT
+                            && value == 0
+                            && TryGetParameterNamesIfMethodExists(
+                                nameof(string.Contains),
+                                [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                invocationExpression.PsiModule) is [_, _])
+                        {
+                            consumer.AddHighlighting(
+                                new UseOtherMethodSuggestion(
+                                    $"Use the '{nameof(string.Contains)}' method",
+                                    invocationExpression,
+                                    invokedExpression,
+                                    nameof(string.Contains),
+                                    true,
+                                    [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                    relationalExpression));
+                        }
+
+                        break;
+                }
+                break;
+        }
+    }
 
     /// <remarks>
     /// <c>text.IndexOf(string, 0, StringComparison)</c> → <c>text.IndexOf(string, StringComparison)</c>

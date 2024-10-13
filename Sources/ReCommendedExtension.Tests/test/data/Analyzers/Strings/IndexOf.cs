@@ -32,6 +32,15 @@ namespace Test
             var result63 = text.IndexOf(s) >= 0;
             var result64 = text.IndexOf(s) == -1;
             var result65 = text.IndexOf(s) < 0;
+
+            var result71 = text.IndexOf(s, StringComparison.CurrentCulture) == 0;
+            var result72 = text.IndexOf(s, StringComparison.OrdinalIgnoreCase) != 0;
+
+            var result81 = text.IndexOf(s, StringComparison.CurrentCulture) > -1;
+            var result82 = text.IndexOf(s, StringComparison.CurrentCulture) != -1;
+            var result83 = text.IndexOf(s, StringComparison.CurrentCulture) >= 0;
+            var result84 = text.IndexOf(s, StringComparison.OrdinalIgnoreCase) == -1;
+            var result85 = text.IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0;
         }
 
         public void RedundantArguments(string text, char c, string s)
@@ -45,12 +54,14 @@ namespace Test
 
         public void ExpressionResult(string text)
         {
-            var result = text.IndexOf("");
+            var result1 = text.IndexOf("");
+            var result2 = text.IndexOf("", StringComparison.CurrentCulture);
         }
 
         public void AsCharacter(string text)
         {
-            var result = text.IndexOf("a");
+            var result1 = text.IndexOf("a");
+            var result1 = text.IndexOf("a", StringComparison.OrdinalIgnoreCase);
         }
 
         public void NoDetection(string text, int startIndex)
@@ -59,6 +70,7 @@ namespace Test
             var result2 = text.IndexOf(c, startIndex);
 
             text.IndexOf("");
+            text.IndexOf("", StringComparison.CurrentCulture);
         }
     }
 }

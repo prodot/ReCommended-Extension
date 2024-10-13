@@ -22,7 +22,8 @@ namespace Test
 
         public void IndexOf(string text, object someObject)
         {
-            var result = |text.IndexOf("")|(6);
+            var result1 = |text.IndexOf("")|(6);
+            var result2 = |text.IndexOf("", StringComparison.OrdinalIgnoreCase)|(7);
         }
     }
 }
@@ -46,5 +47,8 @@ Replace with 'true'
 QUICKFIXES:
 Replace with 'true'
 6: The expression is always 0
+QUICKFIXES:
+Replace with '0'
+7: The expression is always 0
 QUICKFIXES:
 Replace with '0'

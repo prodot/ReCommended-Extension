@@ -17,6 +17,9 @@ namespace Test
         {
             var result1 = text.IndexOf("a");
             var result2 = text.IndexOf(value: "a");
+
+            var result3 = text.IndexOf("a", StringComparison.OrdinalIgnoreCase);
+            var result4 = text.IndexOf(value: "a", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

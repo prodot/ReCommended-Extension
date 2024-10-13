@@ -18,11 +18,23 @@ namespace Test
             var result24 = text.IndexOf(c, StringComparison.OrdinalIgnoreCase) == -1;
             var result25 = text.IndexOf(c, StringComparison.OrdinalIgnoreCase) < 0;
 
-            var result31 = text.IndexOf(s) > -1;
-            var result32 = text.IndexOf(s) != -1;
-            var result33 = text.IndexOf(s) >= 0;
-            var result34 = text.IndexOf(s) == -1;
-            var result35 = text.IndexOf(s) < 0;
+            var result31 = text.IndexOf(s) == 0;
+            var result32 = text.IndexOf(s) != 0;
+
+            var result41 = text.IndexOf(s) > -1;
+            var result42 = text.IndexOf(s) != -1;
+            var result43 = text.IndexOf(s) >= 0;
+            var result44 = text.IndexOf(s) == -1;
+            var result45 = text.IndexOf(s) < 0;
+
+            var result51 = text.IndexOf(s, StringComparison.CurrentCulture) == 0;
+            var result52 = text.IndexOf(s, StringComparison.CurrentCulture) != 0;
+
+            var result61 = text.IndexOf(s, StringComparison.CurrentCulture) > -1;
+            var result62 = text.IndexOf(s, StringComparison.CurrentCulture) != -1;
+            var result63 = text.IndexOf(s, StringComparison.CurrentCulture) >= 0;
+            var result64 = text.IndexOf(s, StringComparison.OrdinalIgnoreCase) == -1;
+            var result65 = text.IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0;
         }
     }
 }
