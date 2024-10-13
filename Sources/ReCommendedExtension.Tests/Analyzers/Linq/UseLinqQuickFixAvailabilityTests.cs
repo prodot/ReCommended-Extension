@@ -15,7 +15,7 @@ public sealed class UseLinqQuickFixAvailabilityTests : QuickFixAvailabilityTestB
     protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseIndexerSuggestion or UseLinqListPatternSuggestion or UseSwitchExpressionSuggestion or UsePropertySuggestion;
+        => highlighting is UseIndexerSuggestion or UseLinqListPatternSuggestion or UseSwitchExpressionSuggestion or UseCollectionPropertySuggestion;
 
     [Test]
     [TestNet60]

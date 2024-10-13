@@ -20,7 +20,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or UseAsCharacterSuggestion
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
-            or RedundantArgumentSuggestion;
+            or RedundantArgumentSuggestion
+            or UseStringPropertySuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
@@ -39,6 +40,9 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     public void TestIndexOfAny() => DoNamedTest2();
+
+    [Test]
+    public void TestLastIndexOf() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -51,7 +55,8 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
             or UseAsCharacterSuggestion
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
-            or RedundantArgumentSuggestion;
+            or RedundantArgumentSuggestion
+            or UseStringPropertySuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
@@ -75,6 +80,9 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
 
     [Test]
     public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
+
+    [Test]
+    public void TestUseStringPropertyAvailability() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -112,6 +120,9 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 
     [Test]
     public void TestIndexOf_Empty_StringComparison() => DoNamedTest2();
+
+    [Test]
+    public void TestLastIndexOf_Char_0() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -158,6 +169,12 @@ public sealed class UseAsCharacterQuickFixTests : QuickFixTestBase<UseAsCharacte
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestIndexOf_StringAsChar_ParameterName_StringComparison() => DoNamedTest2();
+
+    [Test]
+    public void TestLastIndexOf_StringAsChar_Ordinal() => DoNamedTest2();
+
+    [Test]
+    public void TestLastIndexOf_StringAsChar_ParameterName_Ordinal() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -370,4 +387,16 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestIndexOfAny_ParameterName() => DoNamedTest2();
+}
+
+[TestFixture]
+public sealed class UseStringPropertyQuickFixTests : QuickFixTestBase<UseStringPropertyFix> // todo: move to a separate file
+{
+    protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
+
+    [Test]
+    public void TestLastIndexOf_Empty() => DoNamedTest2();
+
+    [Test]
+    public void TestLastIndexOf_Empty_StringComparison() => DoNamedTest2();
 }

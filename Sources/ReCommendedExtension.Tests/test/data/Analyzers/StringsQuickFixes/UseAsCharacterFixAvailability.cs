@@ -21,5 +21,10 @@ namespace Test
             var result3 = text.IndexOf("a", StringComparison.OrdinalIgnoreCase);
             var result4 = text.IndexOf(value: "a", StringComparison.OrdinalIgnoreCase);
         }
+
+        public void LastIndexOf(string text)
+        {
+            var result = text.IndexOf("a", StringComparison.Ordinal);
+        }
     }
 }

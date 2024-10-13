@@ -6,7 +6,7 @@ using ReCommendedExtension.Analyzers.Linq;
 
 namespace ReCommendedExtension.Tests.Analyzers.Linq;
 
-public sealed class UsePropertyQuickFixTests : QuickFixTestBase<UsePropertyFix>
+public sealed class UsePropertyQuickFixTests : QuickFixTestBase<UseCollectionPropertyFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
 

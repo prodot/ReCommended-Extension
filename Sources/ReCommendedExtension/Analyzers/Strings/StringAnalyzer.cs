@@ -23,6 +23,7 @@ namespace ReCommendedExtension.Analyzers.Strings;
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
         typeof(RedundantArgumentSuggestion),
+        typeof(UseStringPropertySuggestion),
     ])]
 public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
@@ -873,6 +874,81 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
+    /// <remarks>
+    /// <c>text.LastIndexOf(char, 0)</c> → <c>-1</c>
+    /// </remarks>
+    static void AnalyzeLastIndexOf_Char_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument startIndexArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(startIndexArgument.Value) == 0)
+        {
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1", invocationExpression, "-1"));
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.LastIndexOf("")</c> → <c>text.Length</c>
+    /// </remarks>
+    static void AnalyzeLastIndexOf_String(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valueArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && TryGetStringConstant(valueArgument.Value) == "")
+        {
+            consumer.AddHighlighting(
+                new UseStringPropertySuggestion(
+                    $"Use the '{nameof(string.Length)}' property",
+                    invocationExpression,
+                    invokedExpression,
+                    nameof(string.Length)));
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.LastIndexOf("", StringComparison)</c> → <c>text.Length</c><para/>
+    /// <c>text.LastIndexOf(string, Ordinal)</c> → <c>text.LastIndexOf(char)</c>
+    /// </remarks>
+    static void AnalyzeLastIndexOf_String_StringComparison(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valueArgument,
+        ICSharpArgument comparisonTypeArgument)
+    {
+        switch (TryGetStringConstant(valueArgument.Value))
+        {
+            case "" when !invocationExpression.IsUsedAsStatement():
+                consumer.AddHighlighting(
+                    new UseStringPropertySuggestion(
+                        $"Use the '{nameof(string.Length)}' property",
+                        invocationExpression,
+                        invokedExpression,
+                        nameof(string.Length)));
+                break;
+
+            case [var character] when comparisonTypeArgument.Value is IReferenceExpression { Reference: var reference }
+                && reference.Resolve() is { DeclaredElement: IField { ContainingType: var enumType, ShortName: nameof(StringComparison.Ordinal) } }
+                && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
+                && TryGetParameterNamesIfMethodExists(nameof(string.LastIndexOf), [PredefinedType.CHAR_FQN], invocationExpression.PsiModule) is
+                [
+                    var valueParameterName,
+                ]:
+
+                consumer.AddHighlighting(
+                    new UseAsCharacterSuggestion(
+                        "Use as character",
+                        valueArgument,
+                        valueArgument.NameIdentifier is { } ? valueParameterName : null,
+                        character,
+                        redundantArgument: comparisonTypeArgument));
+                break;
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
@@ -978,6 +1054,30 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 case { ShortName: nameof(string.IndexOfAny), TypeParameters: [], Parameters: [_, { Type: var startIndexType }] }
                     when startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
                     AnalyzeIndexOfAny(consumer, startIndexArgument);
+                    break;
+
+                // LastIndexOf
+                case
+                {
+                    ShortName: nameof(string.LastIndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }, { Type: var startIndexType }],
+                } when valueType.IsChar() && startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
+                    AnalyzeLastIndexOf_Char_Int32(consumer, element, startIndexArgument);
+                    break;
+
+                case { ShortName: nameof(string.LastIndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }] }
+                    when valueType.IsString() && element.Arguments is [var valueArgument]:
+                    AnalyzeLastIndexOf_String(consumer, element, invokedExpression, valueArgument);
+                    break;
+
+                case
+                    {
+                        ShortName: nameof(string.LastIndexOf),
+                        TypeParameters: [],
+                        Parameters: [{ Type: var valueType }, { Type: var stringComparisonType }],
+                    } when valueType.IsString()
+                    && IsStringComparison(stringComparisonType)
+                    && element.Arguments is [var valueArgument, var comparisonTypeArgument]:
+                    AnalyzeLastIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                     break;
             }
         }

@@ -21,6 +21,11 @@ namespace Test
             var result3 = text.IndexOf(|"a"|(6), StringComparison.OrdinalIgnoreCase);
             var result4 = text.IndexOf(value: |"a"|(7), StringComparison.OrdinalIgnoreCase);
         }
+
+        public void LastIndexOf(string text)
+        {
+            var result = text.IndexOf(|"a"|(8), StringComparison.Ordinal);
+        }
     }
 }
 ------------------------------------------------
@@ -46,5 +51,8 @@ Replace with 'a'
 QUICKFIXES:
 Replace with 'a'
 7: Use as character
+QUICKFIXES:
+Replace with 'a'
+8: Use as character
 QUICKFIXES:
 Replace with 'a'

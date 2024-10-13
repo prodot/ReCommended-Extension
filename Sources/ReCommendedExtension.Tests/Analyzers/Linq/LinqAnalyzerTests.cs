@@ -19,7 +19,7 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
         => highlighting is UseIndexerSuggestion
             or UseLinqListPatternSuggestion
             or UseSwitchExpressionSuggestion
-            or UsePropertySuggestion
+            or UseCollectionPropertySuggestion
             or SuspiciousElementAccessWarning
             or UseCollectionCountPropertyWarning; // to figure out which cases are supported by R#
 

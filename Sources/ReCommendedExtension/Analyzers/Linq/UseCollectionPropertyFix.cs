@@ -10,7 +10,7 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.Linq;
 
 [QuickFix]
-public sealed class UsePropertyFix(UsePropertySuggestion highlighting) : QuickFixBase
+public sealed class UseCollectionPropertyFix(UseCollectionPropertySuggestion highlighting) : QuickFixBase
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 

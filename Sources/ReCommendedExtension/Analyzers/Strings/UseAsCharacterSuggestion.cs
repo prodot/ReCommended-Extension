@@ -28,7 +28,8 @@ public sealed class UseAsCharacterSuggestion(
     ICSharpArgument argument,
     string? parameterName,
     char character,
-    string? additionalArgument = null) : Highlighting(message)
+    string? additionalArgument = null,
+    ICSharpArgument? redundantArgument = null) : Highlighting(message)
 {
     const string SeverityId = "UseAsCharacter";
 
@@ -39,6 +40,8 @@ public sealed class UseAsCharacterSuggestion(
     internal char Character { get; } = character;
 
     internal string? AdditionalArgument { get; } = additionalArgument;
+    
+    internal ICSharpArgument? RedundantArgument { get; } = redundantArgument;
 
     public override DocumentRange CalculateRange() => Argument.Value.GetDocumentRange();
 }
@@ -182,6 +185,32 @@ public sealed class RedundantArgumentSuggestion(string message, ICSharpArgument 
     public override DocumentRange CalculateRange() => Argument.GetDocumentRange();
 }
 
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
+    HighlightingGroupIds.LanguageUsage,
+    "Use string property" + ZoneMarker.Suffix,
+    "",
+    Severity.SUGGESTION)]
+[ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
+public sealed class UseStringPropertySuggestion(
+    string message,
+    IInvocationExpression invocationExpression,
+    IReferenceExpression invokedExpression,
+    string propertyName) : Highlighting(message) // todo: move to a separate file
+{
+    const string SeverityId = "UseStringProperty";
+
+    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+
+    internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
+
+    internal string PropertyName { get; } = propertyName;
+
+    public override DocumentRange CalculateRange()
+        => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);
+}
+
 [QuickFix]
 public sealed class UseAsCharacterFix(UseAsCharacterSuggestion highlighting) : QuickFixBase // todo: move to a separate file
 {
@@ -205,6 +234,21 @@ public sealed class UseAsCharacterFix(UseAsCharacterSuggestion highlighting) : Q
                 ModificationUtil.AddChildAfter(
                     comma,
                     factory.CreateArgument(ParameterKind.UNKNOWN, factory.CreateExpression(highlighting.AdditionalArgument)));
+            }
+
+            if (highlighting.RedundantArgument is { })
+            {
+                if (highlighting
+                        .RedundantArgument.PrevTokens()
+                        .TakeWhile(t => t.Parent == highlighting.RedundantArgument.Parent)
+                        .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+                {
+                    ModificationUtil.DeleteChildRange(commaToken, highlighting.RedundantArgument);
+                }
+                else
+                {
+                    ModificationUtil.DeleteChild(highlighting.RedundantArgument);
+                }
             }
         }
 
@@ -365,6 +409,28 @@ public sealed class RemoveArgumentFix(RedundantArgumentSuggestion highlighting) 
             {
                 ModificationUtil.DeleteChild(highlighting.Argument);
             }
+        }
+
+        return _ => { };
+    }
+}
+
+[QuickFix]
+public sealed class UseStringPropertyFix(UseStringPropertySuggestion highlighting) : QuickFixBase // todo: move to a separate file
+{
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text => $"Replace with '{highlighting.PropertyName}'";
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
+        {
+            var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
+
+            ModificationUtil.ReplaceChild(
+                highlighting.InvocationExpression,
+                factory.CreateExpression($"$0.{highlighting.PropertyName}", highlighting.InvokedExpression.QualifierExpression));
         }
 
         return _ => { };

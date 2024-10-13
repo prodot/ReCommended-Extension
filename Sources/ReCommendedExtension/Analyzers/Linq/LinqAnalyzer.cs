@@ -18,7 +18,7 @@ namespace ReCommendedExtension.Analyzers.Linq;
         typeof(UseIndexerSuggestion),
         typeof(UseLinqListPatternSuggestion),
         typeof(UseSwitchExpressionSuggestion),
-        typeof(UsePropertySuggestion),
+        typeof(UseCollectionPropertySuggestion),
         typeof(SuspiciousElementAccessWarning),
     ])]
 public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
@@ -317,7 +317,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         if (type.IsString() || type.IsGenericArray(invokedExpression))
         {
             consumer.AddHighlighting(
-                new UsePropertySuggestion(
+                new UseCollectionPropertySuggestion(
                     $"Use the '{nameof(string.Length)}' property",
                     invocationExpression,
                     invokedExpression,
@@ -329,7 +329,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         if (IsCollection(type, invokedExpression))
         {
             consumer.AddHighlighting(
-                new UsePropertySuggestion(
+                new UseCollectionPropertySuggestion(
                     $"Use the '{nameof(ICollection<int>.Count)}' property",
                     invocationExpression,
                     invokedExpression,

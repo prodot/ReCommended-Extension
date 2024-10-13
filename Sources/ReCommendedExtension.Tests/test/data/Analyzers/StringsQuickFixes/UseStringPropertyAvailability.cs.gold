@@ -1,0 +1,25 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void LastIndexOf(string text, object someObject)
+        {
+            var result1 = text.|LastIndexOf("")|(0);
+            var result2 = text.|LastIndexOf("", StringComparison.OrdinalIgnoreCase)|(1);
+
+            var result3 = someObject.ToString().|LastIndexOf("", StringComparison.OrdinalIgnoreCase)|(2);
+        }
+    }
+}
+------------------------------------------------
+0: Use the 'Length' property
+QUICKFIXES:
+Replace with 'Length'
+1: Use the 'Length' property
+QUICKFIXES:
+Replace with 'Length'
+2: Use the 'Length' property
+QUICKFIXES:
+Replace with 'Length'
