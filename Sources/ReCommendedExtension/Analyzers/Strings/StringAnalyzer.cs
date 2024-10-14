@@ -1,12 +1,10 @@
 ﻿using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.Strings;

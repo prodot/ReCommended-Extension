@@ -1,11 +1,7 @@
 ﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.CodeStyle.Suggestions;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -67,18 +63,11 @@ public sealed class UseLinqListPatternFix : QuickFixBase
 
             var replacement = GetReplacement("List is empty.", "List is either empty or contains more than one element.");
 
-            var expression = ModificationUtil.ReplaceChild(
-                highlighting.InvocationExpression,
-                factory.CreateExpression($"($0 {replacement})", highlighting.InvokedExpression.QualifierExpression));
-
-            if (expression is IParenthesizedExpression parenthesizedExpression
-                && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
-                {
-                    NeedsToRemove: true,
-                })
-            {
-                ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
-            }
+            ModificationUtil
+                .ReplaceChild(
+                    highlighting.InvocationExpression,
+                    factory.CreateExpression($"($0 {replacement})", highlighting.InvokedExpression.QualifierExpression))
+                .TryRemoveParentheses(factory);
         }
 
         return _ => { };

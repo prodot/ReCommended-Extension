@@ -5,12 +5,15 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.LinqTools;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
+using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.CodeStyle.Suggestions;
 using JetBrains.ReSharper.Psi.CSharp.Conversions;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
@@ -369,4 +372,16 @@ internal static class Extensions
     [Pure]
     public static bool IsUsedAsStatement(this IInvocationExpression invocationExpression)
         => invocationExpression.Parent is IExpressionStatement or IForInitializer or IForIterator;
+
+    public static void TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
+    {
+        if (expression is IParenthesizedExpression parenthesizedExpression
+            && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
+            {
+                NeedsToRemove: true,
+            })
+        {
+            ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+        }
+    }
 }

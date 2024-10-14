@@ -5,18 +5,14 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.CodeStyle.Suggestions;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.PsiGen.Util;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
-using JetBrains.UI.Controls.TreeGrid;
 using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.Strings;
@@ -355,18 +351,11 @@ public sealed class UseStringListPatternFix(UseStringListPatternSuggestion highl
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            var expression = ModificationUtil.ReplaceChild(
-                highlighting.BinaryExpression as ITreeNode ?? highlighting.InvocationExpression,
-                factory.CreateExpression($"($0 {Replacement})", highlighting.InvokedExpression.QualifierExpression));
-
-            if (expression is IParenthesizedExpression parenthesizedExpression
-                && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
-                {
-                    NeedsToRemove: true,
-                })
-            {
-                ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
-            }
+            ModificationUtil
+                .ReplaceChild(
+                    highlighting.BinaryExpression as ITreeNode ?? highlighting.InvocationExpression,
+                    factory.CreateExpression($"($0 {Replacement})", highlighting.InvokedExpression.QualifierExpression))
+                .TryRemoveParentheses(factory);
         }
 
         return _ => { };
@@ -398,20 +387,13 @@ public sealed class UseOtherMethodFix(UseOtherMethodSuggestion highlighting) : Q
             var negation = highlighting.IsNegated ? "!" : "";
             var arguments = string.Join(", ", highlighting.Arguments);
 
-            var expression = ModificationUtil.ReplaceChild(
-                highlighting.BinaryExpression as ITreeNode ?? highlighting.InvocationExpression,
-                factory.CreateExpression(
-                    $"({negation}$0.{highlighting.OtherMethodName}({arguments}))",
-                    highlighting.InvokedExpression.QualifierExpression));
-
-            if (expression is IParenthesizedExpression parenthesizedExpression
-                && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
-                {
-                    NeedsToRemove: true,
-                })
-            {
-                ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
-            }
+            ModificationUtil
+                .ReplaceChild(
+                    highlighting.BinaryExpression as ITreeNode ?? highlighting.InvocationExpression,
+                    factory.CreateExpression(
+                        $"({negation}$0.{highlighting.OtherMethodName}({arguments}))",
+                        highlighting.InvokedExpression.QualifierExpression))
+                .TryRemoveParentheses(factory);
         }
 
         return _ => { };
@@ -481,18 +463,9 @@ public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationSuggestio
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            var expression = ModificationUtil.ReplaceChild(
-                highlighting.InvocationExpression,
-                factory.CreateExpression("($0)", highlighting.InvokedExpression.QualifierExpression));
-
-            if (expression is IParenthesizedExpression parenthesizedExpression
-                && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
-                {
-                    NeedsToRemove: true,
-                }) // todo: use shared method to check if parentheses are redundant
-            {
-                ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
-            }
+            ModificationUtil
+                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression("($0)", highlighting.InvokedExpression.QualifierExpression))
+                .TryRemoveParentheses(factory);
         }
 
         return _ => { };
