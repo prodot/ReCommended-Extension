@@ -21,7 +21,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
             or RedundantArgumentSuggestion
-            or UseStringPropertySuggestion;
+            or UseStringPropertySuggestion
+            or RedundantMethodInvocationSuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
@@ -43,6 +44,9 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     public void TestLastIndexOf() => DoNamedTest2();
+
+    [Test]
+    public void TestPadLeft() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -56,7 +60,8 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
             or RedundantArgumentSuggestion
-            or UseStringPropertySuggestion;
+            or UseStringPropertySuggestion
+            or RedundantMethodInvocationSuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
@@ -83,6 +88,9 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
 
     [Test]
     public void TestUseStringPropertyAvailability() => DoNamedTest2();
+
+    [Test]
+    public void TestRemoveMethodInvocationAvailability() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -387,6 +395,9 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestIndexOfAny_ParameterName() => DoNamedTest2();
+
+    [Test]
+    public void TestPadLeft_Int32_Space() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -399,4 +410,16 @@ public sealed class UseStringPropertyQuickFixTests : QuickFixTestBase<UseStringP
 
     [Test]
     public void TestLastIndexOf_Empty_StringComparison() => DoNamedTest2();
+}
+
+[TestFixture]
+public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMethodInvocationFix> // todo: move to a separate file
+{
+    protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
+
+    [Test]
+    public void TestPadLeft_0() => DoNamedTest2();
+
+    [Test]
+    public void TestPadLeft_0_Char() => DoNamedTest2();
 }

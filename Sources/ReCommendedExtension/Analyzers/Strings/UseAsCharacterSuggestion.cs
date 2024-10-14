@@ -188,6 +188,37 @@ public sealed class RedundantArgumentSuggestion(string message, ICSharpArgument 
 [RegisterConfigurableSeverity(
     SeverityId,
     null,
+    HighlightingGroupIds.CodeRedundancy,
+    "Method invocation is redundant" + ZoneMarker.Suffix,
+    "",
+    Severity.SUGGESTION)]
+[ConfigurableSeverityHighlighting(
+    SeverityId,
+    CSharpLanguage.Name,
+    AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
+    OverlapResolve = OverlapResolveKind.DEADCODE)]
+public sealed class RedundantMethodInvocationSuggestion(
+    string message,
+    IInvocationExpression invocationExpression,
+    IReferenceExpression invokedExpression) : Highlighting(message) // todo: move to a separate file
+{
+    const string SeverityId = "RedundantMethodInvocation";
+
+    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+
+    internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
+
+    public override DocumentRange CalculateRange()
+    {
+        var startOffset = InvokedExpression.Reference.GetDocumentRange().StartOffset;
+
+        return InvocationExpression.GetDocumentRange().SetStartTo(startOffset);
+    }
+}
+
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
     HighlightingGroupIds.LanguageUsage,
     "Use string property" + ZoneMarker.Suffix,
     "",
@@ -431,6 +462,37 @@ public sealed class UseStringPropertyFix(UseStringPropertySuggestion highlightin
             ModificationUtil.ReplaceChild(
                 highlighting.InvocationExpression,
                 factory.CreateExpression($"$0.{highlighting.PropertyName}", highlighting.InvokedExpression.QualifierExpression));
+        }
+
+        return _ => { };
+    }
+}
+
+[QuickFix]
+public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationSuggestion highlighting) : QuickFixBase // todo: move to a separate file
+{
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text => "Remove method invocation";
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
+        {
+            var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
+
+            var expression = ModificationUtil.ReplaceChild(
+                highlighting.InvocationExpression,
+                factory.CreateExpression("($0)", highlighting.InvokedExpression.QualifierExpression));
+
+            if (expression is IParenthesizedExpression parenthesizedExpression
+                && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
+                {
+                    NeedsToRemove: true,
+                }) // todo: use shared method to check if parentheses are redundant
+            {
+                ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+            }
         }
 
         return _ => { };

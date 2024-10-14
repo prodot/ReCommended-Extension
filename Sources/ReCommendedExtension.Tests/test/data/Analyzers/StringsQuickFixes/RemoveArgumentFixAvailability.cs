@@ -21,5 +21,10 @@ namespace Test
             var result1 = text.IndexOfAny(c, 0);
             var result2 = text.IndexOfAny(c, startIndex: 0);
         }
+
+        public void PadLeft(string text, int totalWidth)
+        {
+            var result3 = text.PadLeft(totalWidth, ' ');
+        }
     }
 }
