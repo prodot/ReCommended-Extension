@@ -997,6 +997,55 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
+    /// <remarks>
+    /// <c>text.PadRight(0)</c> → <c>text</c>
+    /// </remarks>
+    static void AnalyzePadRight_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument totalWidthArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(totalWidthArgument.Value) == 0)
+        {
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationSuggestion(
+                    $"Invocation of '{nameof(string.PadRight)}' with 0 is redundant",
+                    invocationExpression,
+                    invokedExpression));
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.PadRight(0, char)</c> → <c>text</c><para/>
+    /// <c>text.PadRight(int, ' ')</c> → <c>text.PadRight(int)</c>
+    /// </remarks>
+    static void AnalyzePadRight_Int32_Char(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument totalWidthArgument,
+        ICSharpArgument paddingCharArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement())
+        {
+            if (TryGetInt32Constant(totalWidthArgument.Value) == 0)
+            {
+                consumer.AddHighlighting(
+                    new RedundantMethodInvocationSuggestion(
+                        $"Invocation of '{nameof(string.PadRight)}' with 0 is redundant",
+                        invocationExpression,
+                        invokedExpression));
+                return;
+            }
+
+            if (TryGetCharConstant(paddingCharArgument.Value) == ' ')
+            {
+                consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument ' ' is redundant", paddingCharArgument));
+            }
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
@@ -1143,6 +1192,23 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     && paddingCharType.IsChar()
                     && element.Arguments is [var totalWidthArgument, var paddingCharArgument]:
                     AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
+                    break;
+
+                // PadRight:
+                case { ShortName: nameof(string.PadRight), TypeParameters: [], Parameters: [{ Type: var totalWidthType }] }
+                    when totalWidthType.IsInt() && element.Arguments is [var totalWidthArgument]:
+                    AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
+                    break;
+
+                case
+                    {
+                        ShortName: nameof(string.PadRight),
+                        TypeParameters: [],
+                        Parameters: [{ Type: var totalWidthType }, { Type: var paddingCharType }],
+                    } when totalWidthType.IsInt()
+                    && paddingCharType.IsChar()
+                    && element.Arguments is [var totalWidthArgument, var paddingCharArgument]:
+                    AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
                     break;
             }
         }

@@ -26,5 +26,10 @@ namespace Test
         {
             var result3 = text.PadLeft(totalWidth, ' ');
         }
+
+        public void PadRight(string text, int totalWidth)
+        {
+            var result3 = text.PadRight(totalWidth, ' ');
+        }
     }
 }

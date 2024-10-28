@@ -9,6 +9,12 @@ namespace Test
             var result1 = text.|PadLeft(0)|(0);
             var result2 = text.|PadLeft(0, c)|(1);
         }
+
+        public void PadRight(string text, char c, string s)
+        {
+            var result1 = text.|PadRight(0)|(2);
+            var result2 = text.|PadRight(0, c)|(3);
+        }
     }
 }
 ------------------------------------------------
@@ -16,5 +22,11 @@ namespace Test
 QUICKFIXES:
 Remove method invocation
 1: Invocation of 'PadLeft' with 0 is redundant
+QUICKFIXES:
+Remove method invocation
+2: Invocation of 'PadRight' with 0 is redundant
+QUICKFIXES:
+Remove method invocation
+3: Invocation of 'PadRight' with 0 is redundant
 QUICKFIXES:
 Remove method invocation

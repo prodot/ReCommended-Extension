@@ -26,6 +26,11 @@ namespace Test
         {
             var result3 = text.PadLeft(totalWidth, |' '|(8));
         }
+
+        public void PadRight(string text, int totalWidth)
+        {
+            var result3 = text.PadRight(totalWidth, |' '|(9));
+        }
     }
 }
 ------------------------------------------------
@@ -54,5 +59,8 @@ Remove argument
 QUICKFIXES:
 Remove argument
 8: Argument ' ' is redundant
+QUICKFIXES:
+Remove argument
+9: Argument ' ' is redundant
 QUICKFIXES:
 Remove argument

@@ -47,6 +47,9 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     public void TestPadLeft() => DoNamedTest2();
+
+    [Test]
+    public void TestPadRight() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -398,6 +401,9 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestPadLeft_Int32_Space() => DoNamedTest2();
+
+    [Test]
+    public void TestPadRight_Int32_Space() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -422,4 +428,10 @@ public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMeth
 
     [Test]
     public void TestPadLeft_0_Char() => DoNamedTest2();
+
+    [Test]
+    public void TestPadRight_0() => DoNamedTest2();
+
+    [Test]
+    public void TestPadRight_0_Char() => DoNamedTest2();
 }
