@@ -32,5 +32,10 @@ namespace Test
         {
             var result = text.LastIndexOf(c, 0);
         }
+
+        public void Remove(string text)
+        {
+            var result = text.Remove(0);
+        }
     }
 }

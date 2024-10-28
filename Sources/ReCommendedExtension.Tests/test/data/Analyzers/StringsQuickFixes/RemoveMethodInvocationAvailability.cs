@@ -15,5 +15,10 @@ namespace Test
             var result1 = text.PadRight(0);
             var result2 = text.PadRight(0, c);
         }
+
+        public void Remove(string text, int startIndex)
+        {
+            var result1 = text.Remove(startIndex, 0);
+        }
     }
 }

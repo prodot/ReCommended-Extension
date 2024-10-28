@@ -15,6 +15,11 @@ namespace Test
             var result1 = text.|PadRight(0)|(2);
             var result2 = text.|PadRight(0, c)|(3);
         }
+
+        public void Remove(string text, int startIndex)
+        {
+            var result1 = text.|Remove(startIndex, 0)|(4);
+        }
     }
 }
 ------------------------------------------------
@@ -28,5 +33,8 @@ Remove method invocation
 QUICKFIXES:
 Remove method invocation
 3: Invocation of 'PadRight' with 0 is redundant
+QUICKFIXES:
+Remove method invocation
+4: Invocation of 'Remove' with the count 0 is redundant
 QUICKFIXES:
 Remove method invocation

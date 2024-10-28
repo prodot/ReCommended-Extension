@@ -23,6 +23,7 @@ namespace ReCommendedExtension.Analyzers.Strings;
         typeof(RedundantArgumentSuggestion),
         typeof(UseStringPropertySuggestion),
         typeof(RedundantMethodInvocationSuggestion),
+        typeof(UseRangeIndexerSuggestion),
     ])]
 public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
@@ -1046,6 +1047,71 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
+    /// <remarks>
+    /// <c>text.Remove(0)</c> → <c>""</c><para/>
+    /// <c>text.Remove(int)</c> → <c>text[..startIndex]</c> (C# 8)
+    /// </remarks>
+    static void AnalyzeRemove_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument startIndexArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement())
+        {
+            if (TryGetInt32Constant(startIndexArgument.Value) == 0)
+            {
+                consumer.AddHighlighting(
+                    new UseExpressionResultSuggestion("The expression is always the empty string", invocationExpression, "\"\""));
+                return;
+            }
+
+            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80 && startIndexArgument.Value is { })
+            {
+                consumer.AddHighlighting(
+                    new UseRangeIndexerSuggestion(
+                        "Use range indexer",
+                        invocationExpression,
+                        invokedExpression,
+                        "",
+                        startIndexArgument.Value.GetText()));
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Remove(int, 0)</c> → <c>text</c><para/>
+    /// <c>text.Remove(0, int)</c> → <c>text[count..]</c> (C# 8)
+    /// </remarks>
+    static void AnalyzeRemove_Int32_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument startIndexArgument,
+        ICSharpArgument countArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement())
+        {
+            if (TryGetInt32Constant(countArgument.Value) == 0)
+            {
+                consumer.AddHighlighting(
+                    new RedundantMethodInvocationSuggestion(
+                        $"Invocation of '{nameof(string.Remove)}' with the count 0 is redundant",
+                        invocationExpression,
+                        invokedExpression));
+                return;
+            }
+
+            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80
+                && TryGetInt32Constant(startIndexArgument.Value) == 0
+                && countArgument.Value is { })
+            {
+                consumer.AddHighlighting(
+                    new UseRangeIndexerSuggestion("Use range indexer", invocationExpression, invokedExpression, countArgument.Value.GetText(), ""));
+            }
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
@@ -1209,6 +1275,17 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     && paddingCharType.IsChar()
                     && element.Arguments is [var totalWidthArgument, var paddingCharArgument]:
                     AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
+                    break;
+
+                // Remove:
+                case { ShortName: nameof(string.Remove), TypeParameters: [], Parameters: [{ Type: var startIndexType }] }
+                    when startIndexType.IsInt() && element.Arguments is [var startIndexArgument]:
+                    AnalyzeRemove_Int32(consumer, element, invokedExpression, startIndexArgument);
+                    break;
+
+                case { ShortName: nameof(string.Remove), TypeParameters: [], Parameters: [{ Type: var startIndexType }, { Type: var countType }] }
+                    when startIndexType.IsInt() && countType.IsInt() && element.Arguments is [var startIndexArgument, var countArgument]:
+                    AnalyzeRemove_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, countArgument);
                     break;
             }
         }

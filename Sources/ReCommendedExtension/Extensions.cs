@@ -384,4 +384,13 @@ internal static class Extensions
             ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
         }
     }
+
+    public static void TryRemoveRangeIndexParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
+    {
+        if (expression is IElementAccessExpression { Arguments: [{ Value: IRangeExpression rangeExpression }] })
+        {
+            rangeExpression.LeftOperand?.TryRemoveParentheses(factory);
+            rangeExpression.RightOperand?.TryRemoveParentheses(factory);
+        }
+    }
 }

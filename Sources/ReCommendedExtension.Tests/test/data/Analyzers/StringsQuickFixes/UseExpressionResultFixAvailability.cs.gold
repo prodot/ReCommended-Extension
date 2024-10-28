@@ -32,6 +32,11 @@ namespace Test
         {
             var result = |text.LastIndexOf(c, 0)|(9);
         }
+
+        public void Remove(string text)
+        {
+            var result = |text.Remove(0)|(10);
+        }
     }
 }
 ------------------------------------------------
@@ -65,3 +70,6 @@ Replace with '0'
 9: The expression is always -1
 QUICKFIXES:
 Replace with '-1'
+10: The expression is always the empty string
+QUICKFIXES:
+Replace with '""'

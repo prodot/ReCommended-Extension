@@ -22,7 +22,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or UseOtherMethodSuggestion
             or RedundantArgumentSuggestion
             or UseStringPropertySuggestion
-            or RedundantMethodInvocationSuggestion;
+            or RedundantMethodInvocationSuggestion
+            or UseRangeIndexerSuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
@@ -50,6 +51,11 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     public void TestPadRight() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
+    public void TestRemove() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -64,7 +70,8 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
             or UseOtherMethodSuggestion
             or RedundantArgumentSuggestion
             or UseStringPropertySuggestion
-            or RedundantMethodInvocationSuggestion;
+            or RedundantMethodInvocationSuggestion
+            or UseRangeIndexerSuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
@@ -94,6 +101,11 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
 
     [Test]
     public void TestRemoveMethodInvocationAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
+    public void TestUseRangeIndexerAvailability() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -134,6 +146,9 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 
     [Test]
     public void TestLastIndexOf_Char_0() => DoNamedTest2();
+
+    [Test]
+    public void TestRemove_0() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -189,38 +204,28 @@ public sealed class UseAsCharacterQuickFixTests : QuickFixTestBase<UseAsCharacte
 }
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+[TestNet70]
 public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseStringListPatternFix> // todo: move to a separate file
 {
     protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestEndsWith_Char() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestEndsWith_Char_ParameterName() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestEndsWith_Argument() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestEndsWith_Argument_ParameterName() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestEndsWith_String_Ordinal() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestEndsWith_String_OrdinalIgnoreCase() => DoNamedTest2();
 
     [Test]
@@ -229,18 +234,12 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseStringList
     public void TestIndexOf_Char_eq_0() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestIndexOf_CharConst_eq_0() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestIndexOf_Char_ne_0() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestIndexOf_CharConst_ne_0() => DoNamedTest2();
 }
 
@@ -434,4 +433,27 @@ public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMeth
 
     [Test]
     public void TestPadRight_0_Char() => DoNamedTest2();
+
+    [Test]
+    public void TestRemove_Int32_0() => DoNamedTest2();
+}
+
+[TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+[TestNetCore30]
+public sealed class UseRangeIndexerFixTests : QuickFixTestBase<UseRangeIndexerFix> // todo: move to a separate file
+{
+    protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
+
+    [Test]
+    public void TestRemove_Int32() => DoNamedTest2();
+
+    [Test]
+    public void TestRemove_Int32_Parenthesized() => DoNamedTest2();
+
+    [Test]
+    public void TestRemove_0_Int32() => DoNamedTest2();
+
+    [Test]
+    public void TestRemove_0_Int32_Parenthesized() => DoNamedTest2();
 }

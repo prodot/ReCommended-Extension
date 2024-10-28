@@ -36,7 +36,7 @@ public sealed class UseAsCharacterSuggestion(
     internal char Character { get; } = character;
 
     internal string? AdditionalArgument { get; } = additionalArgument;
-    
+
     internal ICSharpArgument? RedundantArgument { get; } = redundantArgument;
 
     public override DocumentRange CalculateRange() => Argument.Value.GetDocumentRange();
@@ -233,6 +233,29 @@ public sealed class UseStringPropertySuggestion(
     internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
 
     internal string PropertyName { get; } = propertyName;
+
+    public override DocumentRange CalculateRange()
+        => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);
+}
+
+[RegisterConfigurableSeverity(SeverityId, null, HighlightingGroupIds.LanguageUsage, "Use range indexer" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
+[ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
+public sealed class UseRangeIndexerSuggestion(
+    string message,
+    IInvocationExpression invocationExpression,
+    IReferenceExpression invokedExpression,
+    string startIndexArgument,
+    string endIndexArgument) : Highlighting(message) // todo: move to a separate file
+{
+    const string SeverityId = "UseRangeIndexer";
+
+    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+
+    internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
+
+    internal string StartIndexArgument { get; } = startIndexArgument;
+
+    internal string EndIndexArgument { get; } = endIndexArgument;
 
     public override DocumentRange CalculateRange()
         => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);
@@ -466,6 +489,33 @@ public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationSuggestio
             ModificationUtil
                 .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression("($0)", highlighting.InvokedExpression.QualifierExpression))
                 .TryRemoveParentheses(factory);
+        }
+
+        return _ => { };
+    }
+}
+
+[QuickFix]
+public sealed class UseRangeIndexerFix(UseRangeIndexerSuggestion highlighting) : QuickFixBase // todo: move to a separate file
+{
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text => $"Replace with '[{highlighting.StartIndexArgument}..{highlighting.EndIndexArgument}]'";
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
+        {
+            var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
+
+            var startIndex = highlighting.StartIndexArgument != "" ? $"({highlighting.StartIndexArgument})" : "";
+            var endIndex = highlighting.EndIndexArgument != "" ? $"({highlighting.EndIndexArgument})" : "";
+
+            ModificationUtil
+                .ReplaceChild(
+                    highlighting.InvocationExpression,
+                    factory.CreateExpression($"$0[{startIndex}..{endIndex}]", highlighting.InvokedExpression.QualifierExpression))
+                .TryRemoveRangeIndexParentheses(factory);
         }
 
         return _ => { };
