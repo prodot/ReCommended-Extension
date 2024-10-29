@@ -18,6 +18,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
             or PassSingleCharacterSuggestion
+            or PassSingleCharactersSuggestion
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
             or RedundantArgumentHint
@@ -56,6 +57,11 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     [TestNetCore30]
     public void TestRemove() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore20]
+    public void TestReplace() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -66,6 +72,7 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
             or PassSingleCharacterSuggestion
+            or PassSingleCharactersSuggestion
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
             or RedundantArgumentHint
@@ -84,6 +91,11 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
     public void TestPassSingleCharacterFixAvailability() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestPassSingleCharactersFixAvailability() => DoNamedTest2();
+
+    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet70]
     public void TestUseListPatternFixAvailability() => DoNamedTest2();
@@ -100,6 +112,8 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
     public void TestUseStringPropertyAvailability() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
     public void TestRemoveMethodInvocationAvailability() => DoNamedTest2();
 
     [Test]
@@ -201,6 +215,44 @@ public sealed class PassSingleCharacterQuickFixTests : QuickFixTestBase<PassSing
 
     [Test]
     public void TestLastIndexOf_StringAsChar_ParameterName_Ordinal() => DoNamedTest2();
+}
+
+[TestFixture]
+public sealed class PassSingleCharactersQuickFixTests : QuickFixTestBase<PassSingleCharactersFix> // todo: move to a separate file
+{
+    protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestReplace_String_String_Ordinal() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestReplace_String_String_Ordinal_ParameterName1() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestReplace_String_String_Ordinal_ParameterName2() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestReplace_String_String_Ordinal_ParameterNames() => DoNamedTest2();
+
+    [Test]
+    public void TestReplace_String_String() => DoNamedTest2();
+
+    [Test]
+    public void TestReplace_String_String_ParameterName1() => DoNamedTest2();
+
+    [Test]
+    public void TestReplace_String_String_ParameterName2() => DoNamedTest2();
+
+    [Test]
+    public void TestReplace_String_String_ParameterNames() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -436,6 +488,17 @@ public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMeth
 
     [Test]
     public void TestRemove_Int32_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestReplace_String_String_Ordinal_Identical() => DoNamedTest2();
+
+    [Test]
+    public void TestReplace_String_String_Identical() => DoNamedTest2();
+
+    [Test]
+    public void TestReplace_Char_Char_Identical() => DoNamedTest2();
 }
 
 [TestFixture]

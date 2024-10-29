@@ -20,5 +20,16 @@ namespace Test
         {
             var result1 = text.Remove(startIndex, 0);
         }
+
+        public void Replace(string text)
+        {
+            var result11 = text.Replace("a", "a", StringComparison.Ordinal);
+            var result11 = text.Replace("aa", "aa", StringComparison.Ordinal);
+
+            var result21 = text.Replace("a", "a");
+            var result22 = text.Replace("aa", "aa");
+
+            var result31 = text.Replace('a', 'a');
+        }
     }
 }

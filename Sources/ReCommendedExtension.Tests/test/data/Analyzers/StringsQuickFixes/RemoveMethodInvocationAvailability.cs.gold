@@ -20,6 +20,17 @@ namespace Test
         {
             var result1 = text.|Remove(startIndex, 0)|(4);
         }
+
+        public void Replace(string text)
+        {
+            var result11 = text.|Replace("a", "a", StringComparison.Ordinal)|(5);
+            var result11 = text.|Replace("aa", "aa", StringComparison.Ordinal)|(6);
+
+            var result21 = text.|Replace("a", "a")|(7);
+            var result22 = text.|Replace("aa", "aa")|(8);
+
+            var result31 = text.|Replace('a', 'a')|(9);
+        }
     }
 }
 ------------------------------------------------
@@ -36,5 +47,20 @@ Remove method invocation
 QUICKFIXES:
 Remove method invocation
 4: Invoking 'Remove' with the count 0 is redundant.
+QUICKFIXES:
+Remove method invocation
+5: Invoking 'Replace' with identical values is redundant.
+QUICKFIXES:
+Remove method invocation
+6: Invoking 'Replace' with identical values is redundant.
+QUICKFIXES:
+Remove method invocation
+7: Invoking 'Replace' with identical values is redundant.
+QUICKFIXES:
+Remove method invocation
+8: Invoking 'Replace' with identical values is redundant.
+QUICKFIXES:
+Remove method invocation
+9: Invoking 'Replace' with identical characters is redundant.
 QUICKFIXES:
 Remove method invocation

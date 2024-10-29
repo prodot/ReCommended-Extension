@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.Strings;
@@ -18,6 +19,7 @@ namespace ReCommendedExtension.Analyzers.Strings;
     [
         typeof(UseExpressionResultSuggestion),
         typeof(PassSingleCharacterSuggestion),
+        typeof(PassSingleCharactersSuggestion),
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
         typeof(RedundantArgumentHint),
@@ -77,6 +79,29 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     [Pure]
     static int? TryGetInt32Constant(ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Int, IntValue: var value } } ? value : null;
+
+    [Pure]
+    static StringComparison? TryGetStringComparisonConstant(ICSharpExpression? expression)
+    {
+        if (expression is IReferenceExpression { Reference: var reference }
+            && reference.Resolve() is { DeclaredElement: IField { ContainingType: var enumType, ShortName: var enumMemberName } }
+            && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS))
+        {
+            return enumMemberName switch
+            {
+                nameof(StringComparison.Ordinal) => StringComparison.Ordinal,
+                nameof(StringComparison.OrdinalIgnoreCase) => StringComparison.OrdinalIgnoreCase,
+                nameof(StringComparison.CurrentCulture) => StringComparison.CurrentCulture,
+                nameof(StringComparison.CurrentCultureIgnoreCase) => StringComparison.CurrentCultureIgnoreCase,
+                nameof(StringComparison.InvariantCulture) => StringComparison.InvariantCulture,
+                nameof(StringComparison.InvariantCultureIgnoreCase) => StringComparison.InvariantCultureIgnoreCase,
+
+                _ => null,
+            };
+        }
+
+        return null;
+    }
 
     /// <remarks>
     /// <c>text.Contains("")</c> → <c>true</c><para/>
@@ -202,14 +227,11 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
         if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
             && !invocationExpression.IsUsedAsStatement()
-            && TryGetStringConstant(valueArgument.Value) is [var character]
-            && comparisonTypeArgument.Value is IReferenceExpression { Reference: var reference }
-            && reference.Resolve() is { DeclaredElement: IField { ContainingType: var enumType, ShortName: var enumMemberName } }
-            && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS))
+            && TryGetStringConstant(valueArgument.Value) is [var character])
         {
-            switch (enumMemberName)
+            switch (TryGetStringComparisonConstant(comparisonTypeArgument.Value))
             {
-                case nameof(StringComparison.Ordinal):
+                case StringComparison.Ordinal:
                     consumer.AddHighlighting(
                         new UseStringListPatternSuggestion(
                             "Use list pattern.",
@@ -219,7 +241,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             [character]));
                     break;
 
-                case nameof(StringComparison.OrdinalIgnoreCase):
+                case StringComparison.OrdinalIgnoreCase:
                     var lowerCaseCharacter = char.ToLowerInvariant(character);
                     var upperCaseCharacter = char.ToUpperInvariant(character);
 
@@ -930,9 +952,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         nameof(string.Length)));
                 break;
 
-            case [var character] when comparisonTypeArgument.Value is IReferenceExpression { Reference: var reference }
-                && reference.Resolve() is { DeclaredElement: IField { ContainingType: var enumType, ShortName: nameof(StringComparison.Ordinal) } }
-                && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
+            case [var character] when TryGetStringComparisonConstant(comparisonTypeArgument.Value) == StringComparison.Ordinal
                 && TryGetParameterNamesIfMethodExists(nameof(string.LastIndexOf), [PredefinedType.CHAR_FQN], invocationExpression.PsiModule) is
                 [
                     var valueParameterName,
@@ -1117,6 +1137,123 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
+    /// <remarks>
+    /// <c>text.Replace(string, string, Ordinal)</c> → <c>text</c><para/>
+    /// <c>text.Replace(string, string, Ordinal)</c> → <c>text.Replace(char, char)</c>
+    /// </remarks>
+    static void AnalyzeReplace_String_String_StringComparison(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument oldValueArgument,
+        ICSharpArgument newValueArgument,
+        ICSharpArgument comparisonTypeArgument)
+    {
+        if (TryGetStringConstant(oldValueArgument.Value) is { } oldValue and not ""
+            && TryGetStringConstant(newValueArgument.Value) is { } newValue
+            && TryGetStringComparisonConstant(comparisonTypeArgument.Value) == StringComparison.Ordinal)
+        {
+            if (!invocationExpression.IsUsedAsStatement() && oldValue == newValue)
+            {
+                consumer.AddHighlighting(
+                    new RedundantMethodInvocationHint(
+                        $"Invoking '{nameof(string.Replace)}' with identical values is redundant.",
+                        invocationExpression,
+                        invokedExpression));
+                return;
+            }
+
+            if (oldValue is [var oldCharacter]
+                && newValue is [var newCharacter]
+                && TryGetParameterNamesIfMethodExists(
+                    nameof(string.Replace),
+                    [PredefinedType.CHAR_FQN, PredefinedType.CHAR_FQN],
+                    invocationExpression.PsiModule) is [var oldCharParameterName, var newCharParameterName])
+            {
+                var highlighting = new PassSingleCharactersSuggestion(
+                    "Pass the single character.",
+                    [oldValueArgument, newValueArgument],
+                    [
+                        oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
+                        newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
+                    ],
+                    [oldCharacter, newCharacter],
+                    comparisonTypeArgument);
+
+                consumer.AddHighlighting(highlighting, oldValueArgument.Value.GetDocumentRange());
+                consumer.AddHighlighting(highlighting, newValueArgument.Value.GetDocumentRange());
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Replace(char, char)</c> → <c>text</c>
+    /// </remarks>
+    static void AnalyzeReplace_Char_Char(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument oldCharArgument,
+        ICSharpArgument newCharArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement()
+            && TryGetCharConstant(oldCharArgument.Value) is { } oldCharacter
+            && TryGetCharConstant(newCharArgument.Value) is { } newCharacter
+            && oldCharacter == newCharacter)
+        {
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Invoking '{nameof(string.Replace)}' with identical characters is redundant.",
+                    invocationExpression,
+                    invokedExpression));
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Replace(string, string)</c> → <c>text</c><para/>
+    /// <c>text.Replace(string, string)</c> → <c>text.Replace(char, char)</c>
+    /// </remarks>
+    static void AnalyzeReplace_String_String(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument oldValueArgument,
+        ICSharpArgument newValueArgument)
+    {
+        if (TryGetStringConstant(oldValueArgument.Value) is { } oldValue and not "" && TryGetStringConstant(newValueArgument.Value) is { } newValue)
+        {
+            if (!invocationExpression.IsUsedAsStatement() && oldValue == newValue)
+            {
+                consumer.AddHighlighting(
+                    new RedundantMethodInvocationHint(
+                        $"Invoking '{nameof(string.Replace)}' with identical values is redundant.",
+                        invocationExpression,
+                        invokedExpression));
+                return;
+            }
+
+            if (oldValue is [var oldCharacter]
+                && newValue is [var newCharacter]
+                && TryGetParameterNamesIfMethodExists(
+                    nameof(string.Replace),
+                    [PredefinedType.CHAR_FQN, PredefinedType.CHAR_FQN],
+                    invocationExpression.PsiModule) is [var oldCharParameterName, var newCharParameterName])
+            {
+                var highlighting = new PassSingleCharactersSuggestion(
+                    "Pass the single character.",
+                    [oldValueArgument, newValueArgument],
+                    [
+                        oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
+                        newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
+                    ],
+                    [oldCharacter, newCharacter]);
+
+                consumer.AddHighlighting(highlighting, oldValueArgument.Value.GetDocumentRange());
+                consumer.AddHighlighting(highlighting, newValueArgument.Value.GetDocumentRange());
+            }
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
@@ -1291,6 +1428,35 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 case { ShortName: nameof(string.Remove), TypeParameters: [], Parameters: [{ Type: var startIndexType }, { Type: var countType }] }
                     when startIndexType.IsInt() && countType.IsInt() && element.Arguments is [var startIndexArgument, var countArgument]:
                     AnalyzeRemove_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, countArgument);
+                    break;
+
+                // Replace
+                case
+                    {
+                        ShortName: nameof(string.Replace),
+                        TypeParameters: [],
+                        Parameters: [{ Type: var oldValueType }, { Type: var newValueType }, { Type: var stringComparisonType }],
+                    } when oldValueType.IsString()
+                    && newValueType.IsString()
+                    && IsStringComparison(stringComparisonType)
+                    && element.Arguments is [var oldValueArgument, var newValueArgument, var comparisonTypeArgument]:
+                    AnalyzeReplace_String_String_StringComparison(
+                        consumer,
+                        element,
+                        invokedExpression,
+                        oldValueArgument,
+                        newValueArgument,
+                        comparisonTypeArgument);
+                    break;
+
+                case { ShortName: nameof(string.Replace), TypeParameters: [], Parameters: [{ Type: var oldCharType }, { Type: var newCharType }] }
+                    when oldCharType.IsChar() && newCharType.IsChar() && element.Arguments is [var oldCharArgument, var newCharArgument]:
+                    AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
+                    break;
+
+                case { ShortName: nameof(string.Replace), TypeParameters: [], Parameters: [{ Type: var oldValueType }, { Type: var newValueType }] }
+                    when oldValueType.IsString() && newValueType.IsString() && element.Arguments is [var oldValueArgument, var newValueArgument]:
+                    AnalyzeReplace_String_String(consumer, element, invokedExpression, oldValueArgument, newValueArgument);
                     break;
             }
         }

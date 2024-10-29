@@ -33,7 +33,7 @@ public sealed class PassSingleCharacterSuggestion(
     string? additionalArgument = null,
     ICSharpArgument? redundantArgument = null) : Highlighting(message)
 {
-    const string SeverityId = "UseAsCharacter";
+    const string SeverityId = "PassSingleCharacter";
 
     internal ICSharpArgument Argument => argument;
 
@@ -46,6 +46,32 @@ public sealed class PassSingleCharacterSuggestion(
     internal ICSharpArgument? RedundantArgument => redundantArgument;
 
     public override DocumentRange CalculateRange() => Argument.Value.GetDocumentRange();
+}
+
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
+    HighlightingGroupIds.BestPractice,
+    "Pass the single characters" + ZoneMarker.Suffix,
+    "",
+    Severity.SUGGESTION)]
+[ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
+public sealed class PassSingleCharactersSuggestion(
+    string message,
+    ICSharpArgument[] arguments,
+    string?[] parameterNames,
+    char[] characters,
+    ICSharpArgument? redundantArgument = null) : MultipleHighlightings(message) // todo: move to a separate file
+{
+    const string SeverityId = "PassSingleCharacters";
+
+    internal ICSharpArgument[] Arguments => arguments;
+
+    internal string?[] ParameterNames => parameterNames;
+
+    internal char[] Characters => characters;
+
+    internal ICSharpArgument? RedundantArgument => redundantArgument;
 }
 
 [RegisterConfigurableSeverity(
@@ -296,6 +322,53 @@ public sealed class PassSingleCharacterFix(PassSingleCharacterSuggestion highlig
                 ModificationUtil.AddChildAfter(
                     comma,
                     factory.CreateArgument(ParameterKind.UNKNOWN, factory.CreateExpression(highlighting.AdditionalArgument)));
+            }
+
+            if (highlighting.RedundantArgument is { })
+            {
+                if (highlighting
+                        .RedundantArgument.PrevTokens()
+                        .TakeWhile(t => t.Parent == highlighting.RedundantArgument.Parent)
+                        .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+                {
+                    ModificationUtil.DeleteChildRange(commaToken, highlighting.RedundantArgument);
+                }
+                else
+                {
+                    ModificationUtil.DeleteChild(highlighting.RedundantArgument);
+                }
+            }
+        }
+
+        return _ => { };
+    }
+}
+
+[QuickFix]
+public sealed class PassSingleCharactersFix(PassSingleCharactersSuggestion highlighting) : QuickFixBase // todo: move to a separate file
+{
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text => $"Replace with {string.Join(", ", from c in highlighting.Characters select $"'{c}'")}, respectively";
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
+        {
+            Debug.Assert(highlighting.Arguments is [_, _, ..]);
+            Debug.Assert(highlighting.Arguments.Length == highlighting.ParameterNames.Length);
+            Debug.Assert(highlighting.Arguments.Length == highlighting.Characters.Length);
+
+            var factory = CSharpElementFactory.GetInstance(highlighting.Arguments[0]);
+
+            for (var i = 0; i < highlighting.Arguments.Length; i++)
+            {
+                ModificationUtil.ReplaceChild(
+                    highlighting.Arguments[i],
+                    factory.CreateArgument(
+                        ParameterKind.UNKNOWN,
+                        highlighting.ParameterNames[i],
+                        factory.CreateExpression($"'{highlighting.Characters[i]}'")));
             }
 
             if (highlighting.RedundantArgument is { })

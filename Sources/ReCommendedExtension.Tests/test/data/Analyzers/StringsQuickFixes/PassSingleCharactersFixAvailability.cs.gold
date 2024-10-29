@@ -1,0 +1,69 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Replace(string text)
+        {
+            var result11 = text.Replace(|"a"|(0), |"b"|(1), StringComparison.Ordinal);
+            var result12 = text.Replace(oldValue: |"a"|(2), |"b"|(3), StringComparison.Ordinal);
+            var result13 = text.Replace(|"a"|(4), newValue: |"b"|(5), StringComparison.Ordinal);
+            var result14 = text.Replace(oldValue: |"a"|(6), newValue: |"b"|(7), StringComparison.Ordinal);
+
+            var result21 = text.Replace(|"a"|(8), |"b"|(9));
+            var result22 = text.Replace(oldValue: |"a"|(10), |"b"|(11));
+            var result23 = text.Replace(|"a"|(12), newValue: |"b"|(13));
+            var result24 = text.Replace(oldValue: |"a"|(14), newValue: |"b"|(15));
+        }
+    }
+}
+------------------------------------------------
+0: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+1: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+2: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+3: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+4: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+5: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+6: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+7: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+8: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+9: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+10: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+11: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+12: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+13: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+14: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
+15: Pass the single character.
+QUICKFIXES:
+Replace with 'a', 'b', respectively
