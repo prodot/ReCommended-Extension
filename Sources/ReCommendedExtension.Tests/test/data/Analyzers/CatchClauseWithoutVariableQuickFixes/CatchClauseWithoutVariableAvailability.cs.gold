@@ -24,9 +24,9 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Redundant declaration without exception variable.
+0: Redundant declaration without an exception variable.
 QUICKFIXES:
 Remove exception type
-1: Redundant declaration without exception variable.
+1: Redundant declaration without an exception variable.
 QUICKFIXES:
 Remove exception type

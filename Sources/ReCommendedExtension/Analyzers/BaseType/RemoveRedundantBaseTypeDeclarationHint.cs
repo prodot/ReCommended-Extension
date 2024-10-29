@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Analyzers.BaseType;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RemoveRedundantBaseTypeDeclarationSuggestion(string message, IExtendsList baseTypes) : Highlighting(message)
+public sealed class RemoveRedundantBaseTypeDeclarationHint(string message, IExtendsList baseTypes) : Highlighting(message)
 {
     const string SeverityId = "RemoveRedundantBaseTypeDeclaration";
 

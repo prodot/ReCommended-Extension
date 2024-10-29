@@ -28,36 +28,36 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Use list pattern
+0: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., 'a']'
-1: Use list pattern
+1: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., 'a']'
-2: Use list pattern
+2: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var lastCharacter] && lastCharacter == c'
-3: Use list pattern
+3: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var lastCharacter] && lastCharacter == c'
-4: Use list pattern
+4: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., 'a']'
-5: Use list pattern
+5: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., 'a' or 'A']'
-6: Use list pattern
+6: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., 'ß']'
-7: Use list pattern
+7: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var firstCharacter, ..] && firstCharacter == c'
-8: Use list pattern
+8: Use list pattern.
 QUICKFIXES:
 Replace with 'is ['a', ..]'
-9: Use list pattern
+9: Use list pattern.
 QUICKFIXES:
 Replace with 'is not [var firstCharacter, ..] || firstCharacter != c'
-10: Use list pattern
+10: Use list pattern.
 QUICKFIXES:
 Replace with 'is not ['a', ..]'

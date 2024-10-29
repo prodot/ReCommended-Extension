@@ -15,7 +15,7 @@ public sealed class UseLinqListPatternSuggestion(
 {
     const string SeverityId = "UseLinqListPattern";
 
-    internal ListPatternSuggestionKind Kind { get; } = kind;
+    internal ListPatternSuggestionKind Kind => kind;
 
-    internal string? DefaultValueArgument { get; } = defaultValueArgument;
+    internal string? DefaultValueArgument => defaultValueArgument;
 }

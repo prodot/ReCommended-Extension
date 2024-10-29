@@ -19,7 +19,7 @@ namespace ReCommendedExtension.Analyzers.DelegateInvoke;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantDelegateInvokeSuggestion(string message, IReferenceExpression referenceExpression) : Highlighting(message)
+public sealed class RedundantDelegateInvokeHint(string message, IReferenceExpression referenceExpression) : Highlighting(message)
 {
     const string SeverityId = "RedundantDelegateInvoke";
 

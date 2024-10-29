@@ -23,18 +23,18 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Invocation of 'PadLeft' with 0 is redundant
+0: Invoking 'PadLeft' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-1: Invocation of 'PadLeft' with 0 is redundant
+1: Invoking 'PadLeft' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-2: Invocation of 'PadRight' with 0 is redundant
+2: Invoking 'PadRight' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-3: Invocation of 'PadRight' with 0 is redundant
+3: Invoking 'PadRight' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-4: Invocation of 'Remove' with the count 0 is redundant
+4: Invoking 'Remove' with the count 0 is redundant.
 QUICKFIXES:
 Remove method invocation

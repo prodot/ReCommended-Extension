@@ -20,5 +20,5 @@ public sealed class UseCollectionPropertySuggestion(
 {
     const string SeverityId = "UseCollectionProperty";
 
-    internal string PropertyName { get; } = propertyName;
+    internal string PropertyName => propertyName;
 }

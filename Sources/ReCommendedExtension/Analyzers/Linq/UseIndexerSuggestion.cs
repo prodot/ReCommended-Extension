@@ -14,5 +14,5 @@ public sealed class UseIndexerSuggestion(
 {
     const string SeverityId = "UseIndexer";
 
-    internal string IndexArgument { get; } = indexArgument;
+    internal string IndexArgument => indexArgument;
 }

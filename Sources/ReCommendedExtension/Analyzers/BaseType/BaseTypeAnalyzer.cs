@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.BaseType;
 
-[ElementProblemAnalyzer(typeof(IClassLikeDeclaration), HighlightingTypes = [typeof(RemoveRedundantBaseTypeDeclarationSuggestion)])]
+[ElementProblemAnalyzer(typeof(IClassLikeDeclaration), HighlightingTypes = [typeof(RemoveRedundantBaseTypeDeclarationHint)])]
 public sealed class BaseTypeAnalyzer : ElementProblemAnalyzer<IClassLikeDeclaration>
 {
     protected override void Run(IClassLikeDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
@@ -17,8 +17,7 @@ public sealed class BaseTypeAnalyzer : ElementProblemAnalyzer<IClassLikeDeclarat
                 var baseTypes = element.ExtendsList;
                 Debug.Assert(baseTypes is { ExtendedTypes: [_, ..] });
 
-                consumer.AddHighlighting(
-                    new RemoveRedundantBaseTypeDeclarationSuggestion("'object' is default base type.", baseTypes));
+                consumer.AddHighlighting(new RemoveRedundantBaseTypeDeclarationHint("'object' is the default base type.", baseTypes));
             }
         }
     }

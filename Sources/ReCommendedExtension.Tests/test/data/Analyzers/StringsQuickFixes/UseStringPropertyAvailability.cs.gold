@@ -14,12 +14,12 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Use the 'Length' property
+0: Use the 'Length' property.
 QUICKFIXES:
 Replace with 'Length'
-1: Use the 'Length' property
+1: Use the 'Length' property.
 QUICKFIXES:
 Replace with 'Length'
-2: Use the 'Length' property
+2: Use the 'Length' property.
 QUICKFIXES:
 Replace with 'Length'

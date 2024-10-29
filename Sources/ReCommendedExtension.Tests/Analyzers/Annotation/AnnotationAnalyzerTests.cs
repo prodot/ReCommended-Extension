@@ -18,7 +18,7 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantNullableAnnotationSuggestion
+        => highlighting is RedundantNullableAnnotationHint
             or RedundantAnnotationSuggestion
             or NotAllowedAnnotationWarning
             or MissingAnnotationWarning

@@ -17,12 +17,12 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-            or UseAsCharacterSuggestion
+            or PassSingleCharacterSuggestion
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
-            or RedundantArgumentSuggestion
+            or RedundantArgumentHint
             or UseStringPropertySuggestion
-            or RedundantMethodInvocationSuggestion
+            or RedundantMethodInvocationHint
             or UseRangeIndexerSuggestion;
 
     [Test]
@@ -65,12 +65,12 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-            or UseAsCharacterSuggestion
+            or PassSingleCharacterSuggestion
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
-            or RedundantArgumentSuggestion
+            or RedundantArgumentHint
             or UseStringPropertySuggestion
-            or RedundantMethodInvocationSuggestion
+            or RedundantMethodInvocationHint
             or UseRangeIndexerSuggestion;
 
     [Test]
@@ -81,7 +81,7 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
-    public void TestUseAsCharacterFixAvailability() => DoNamedTest2();
+    public void TestPassSingleCharacterFixAvailability() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
@@ -152,7 +152,7 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 }
 
 [TestFixture]
-public sealed class UseAsCharacterQuickFixTests : QuickFixTestBase<UseAsCharacterFix> // todo: move to a separate file
+public sealed class PassSingleCharacterQuickFixTests : QuickFixTestBase<PassSingleCharacterFix> // todo: move to a separate file
 {
     protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
 

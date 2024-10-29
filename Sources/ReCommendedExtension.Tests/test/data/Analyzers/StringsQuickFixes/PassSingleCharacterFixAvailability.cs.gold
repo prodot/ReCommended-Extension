@@ -29,30 +29,30 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Use as character
+0: Pass the single character.
 QUICKFIXES:
 Replace with 'a'
-1: Use as character
+1: Pass the single character.
 QUICKFIXES:
 Replace with 'a'
-2: Use as character
+2: Pass the single character.
 QUICKFIXES:
 Replace with 'a'
-3: Use as character
+3: Pass the single character.
 QUICKFIXES:
 Replace with 'a'
-4: Use as character
+4: Pass the single character.
 QUICKFIXES:
 Replace with 'a'
-5: Use as character
+5: Pass the single character.
 QUICKFIXES:
 Replace with 'a'
-6: Use as character
+6: Pass the single character.
 QUICKFIXES:
 Replace with 'a'
-7: Use as character
+7: Pass the single character.
 QUICKFIXES:
 Replace with 'a'
-8: Use as character
+8: Pass the single character.
 QUICKFIXES:
 Replace with 'a'

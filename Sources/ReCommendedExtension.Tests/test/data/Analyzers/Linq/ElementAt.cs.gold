@@ -168,26 +168,26 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Use indexer
-(1): ReSharper Suggestion: Use indexer
-(2): ReSharper Suggestion: Use indexer
-(3): ReSharper Suggestion: Use indexer
-(4): ReSharper Suggestion: Use indexer
-(5): ReSharper Suggestion: Use indexer
-(6): ReSharper Suggestion: Use indexer
-(7): ReSharper Suggestion: Use indexer
-(8): ReSharper Suggestion: Use indexer
-(9): ReSharper Suggestion: Use indexer
-(10): ReSharper Suggestion: Use indexer
-(11): ReSharper Suggestion: Use indexer
-(12): ReSharper Suggestion: Use indexer
-(13): ReSharper Suggestion: Use indexer
-(14): ReSharper Suggestion: Use indexer
-(15): ReSharper Suggestion: Use indexer
-(16): ReSharper Suggestion: Use indexer
-(17): ReSharper Suggestion: Use indexer
-(18): ReSharper Suggestion: Use indexer
-(19): ReSharper Suggestion: Use indexer
+(0): ReSharper Suggestion: Use the indexer.
+(1): ReSharper Suggestion: Use the indexer.
+(2): ReSharper Suggestion: Use the indexer.
+(3): ReSharper Suggestion: Use the indexer.
+(4): ReSharper Suggestion: Use the indexer.
+(5): ReSharper Suggestion: Use the indexer.
+(6): ReSharper Suggestion: Use the indexer.
+(7): ReSharper Suggestion: Use the indexer.
+(8): ReSharper Suggestion: Use the indexer.
+(9): ReSharper Suggestion: Use the indexer.
+(10): ReSharper Suggestion: Use the indexer.
+(11): ReSharper Suggestion: Use the indexer.
+(12): ReSharper Suggestion: Use the indexer.
+(13): ReSharper Suggestion: Use the indexer.
+(14): ReSharper Suggestion: Use the indexer.
+(15): ReSharper Suggestion: Use the indexer.
+(16): ReSharper Suggestion: Use the indexer.
+(17): ReSharper Suggestion: Use the indexer.
+(18): ReSharper Suggestion: Use the indexer.
+(19): ReSharper Suggestion: Use the indexer.
 (20): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
 (21): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
 (22): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.

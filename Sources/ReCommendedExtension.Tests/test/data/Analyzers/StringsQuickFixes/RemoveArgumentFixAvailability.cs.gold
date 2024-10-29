@@ -34,33 +34,33 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Argument 0 is redundant
+0: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-1: Argument 0 is redundant
+1: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-2: Argument 0 is redundant
+2: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-3: Argument 0 is redundant
+3: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-4: Argument 0 is redundant
+4: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-5: Argument 0 is redundant
+5: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-6: Argument 0 is redundant
+6: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-7: Argument 0 is redundant
+7: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-8: Argument ' ' is redundant
+8: Passing ' ' is redundant.
 QUICKFIXES:
 Remove argument
-9: Argument ' ' is redundant
+9: Passing ' ' is redundant.
 QUICKFIXES:
 Remove argument

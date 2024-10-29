@@ -34,7 +34,7 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: The expression is always the empty string
-(1): ReSharper Suggestion: Use range indexer
-(2): ReSharper Suggestion: Use range indexer
-(3): ReSharper Dead Code: Invocation of 'Remove' with the count 0 is redundant
+(0): ReSharper Suggestion: The expression is always the empty string.
+(1): ReSharper Suggestion: Use the range indexer.
+(2): ReSharper Suggestion: Use the range indexer.
+(3): ReSharper Dead Code: Invoking 'Remove' with the count 0 is redundant.

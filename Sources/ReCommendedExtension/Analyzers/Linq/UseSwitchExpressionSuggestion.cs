@@ -14,5 +14,5 @@ public sealed class UseSwitchExpressionSuggestion(
 {
     const string SeverityId = "UseSwitchExpression";
 
-    internal string? DefaultValueArgument { get; } = defaultValueArgument;
+    internal string? DefaultValueArgument => defaultValueArgument;
 }

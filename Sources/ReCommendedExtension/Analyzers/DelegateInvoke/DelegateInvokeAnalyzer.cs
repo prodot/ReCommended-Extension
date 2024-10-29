@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.DelegateInvoke;
 
-[ElementProblemAnalyzer(typeof(IReferenceExpression), HighlightingTypes = [typeof(RedundantDelegateInvokeSuggestion)])]
+[ElementProblemAnalyzer(typeof(IReferenceExpression), HighlightingTypes = [typeof(RedundantDelegateInvokeHint)])]
 public sealed class DelegateInvokeAnalyzer : ElementProblemAnalyzer<IReferenceExpression>
 {
     protected override void Run(IReferenceExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
@@ -17,7 +17,7 @@ public sealed class DelegateInvokeAnalyzer : ElementProblemAnalyzer<IReferenceEx
             && element.GetNextMeaningfulSibling() is CSharpTokenBase token
             && token.GetTokenType() == CSharpTokenType.LPARENTH)
         {
-            consumer.AddHighlighting(new RedundantDelegateInvokeSuggestion($"Redundant '{nameof(Action.Invoke)}' expression.", element));
+            consumer.AddHighlighting(new RedundantDelegateInvokeHint($"Redundant '{nameof(Action.Invoke)}' expression.", element));
         }
     }
 }

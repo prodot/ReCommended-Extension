@@ -18,5 +18,5 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Argument 0 is redundant
-(1): ReSharper Dead Code: Argument 0 is redundant
+(0): ReSharper Dead Code: Passing 0 is redundant.
+(1): ReSharper Dead Code: Passing 0 is redundant.

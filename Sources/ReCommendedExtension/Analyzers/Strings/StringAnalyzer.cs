@@ -17,12 +17,12 @@ namespace ReCommendedExtension.Analyzers.Strings;
     HighlightingTypes =
     [
         typeof(UseExpressionResultSuggestion),
-        typeof(UseAsCharacterSuggestion),
+        typeof(PassSingleCharacterSuggestion),
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
-        typeof(RedundantArgumentSuggestion),
+        typeof(RedundantArgumentHint),
         typeof(UseStringPropertySuggestion),
-        typeof(RedundantMethodInvocationSuggestion),
+        typeof(RedundantMethodInvocationHint),
         typeof(UseRangeIndexerSuggestion),
     ])]
 public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
@@ -87,7 +87,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         switch (TryGetStringConstant(valueArgument.Value))
         {
             case "" when !invocationExpression.IsUsedAsStatement():
-                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true", invocationExpression, "true"));
+                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                 break;
 
             case [var character] when TryGetParameterNamesIfMethodExists(
@@ -96,8 +96,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 invocationExpression.PsiModule) is [var valueParameterName]:
 
                 consumer.AddHighlighting(
-                    new UseAsCharacterSuggestion(
-                        "Use as character",
+                    new PassSingleCharacterSuggestion(
+                        "Pass the single character.",
                         valueArgument,
                         valueArgument.NameIdentifier is { } ? valueParameterName : null,
                         character));
@@ -117,7 +117,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         switch (TryGetStringConstant(valueArgument.Value))
         {
             case "" when !invocationExpression.IsUsedAsStatement():
-                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true", invocationExpression, "true"));
+                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                 break;
 
             case [var character] when TryGetParameterNamesIfMethodExists(
@@ -126,8 +126,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 invocationExpression.PsiModule) is [var valueParameterName, _]:
 
                 consumer.AddHighlighting(
-                    new UseAsCharacterSuggestion(
-                        "Use as character",
+                    new PassSingleCharacterSuggestion(
+                        "Pass the single character.",
                         valueArgument,
                         valueArgument.NameIdentifier is { } ? valueParameterName : null,
                         character));
@@ -153,7 +153,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             {
                 consumer.AddHighlighting(
                     new UseStringListPatternSuggestion(
-                        "Use list pattern",
+                        "Use list pattern.",
                         invocationExpression,
                         invokedExpression,
                         ListPatternSuggestionKind.LastCharacter,
@@ -163,7 +163,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             {
                 consumer.AddHighlighting(
                     new UseStringListPatternSuggestion(
-                        "Use list pattern",
+                        "Use list pattern.",
                         invocationExpression,
                         invokedExpression,
                         ListPatternSuggestionKind.LastCharacter,
@@ -179,7 +179,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (!invocationExpression.IsUsedAsStatement() && TryGetStringConstant(valueArgument.Value) == "")
         {
-            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true", invocationExpression, "true"));
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
         }
     }
 
@@ -197,7 +197,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (!invocationExpression.IsUsedAsStatement() && TryGetStringConstant(valueArgument.Value) == "")
         {
-            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true", invocationExpression, "true"));
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
         }
 
         if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
@@ -212,7 +212,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 case nameof(StringComparison.Ordinal):
                     consumer.AddHighlighting(
                         new UseStringListPatternSuggestion(
-                            "Use list pattern",
+                            "Use list pattern.",
                             invocationExpression,
                             invokedExpression,
                             ListPatternSuggestionKind.LastCharacter,
@@ -227,7 +227,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     {
                         consumer.AddHighlighting(
                             new UseStringListPatternSuggestion(
-                                "Use list pattern",
+                                "Use list pattern.",
                                 invocationExpression,
                                 invokedExpression,
                                 ListPatternSuggestionKind.LastCharacter,
@@ -237,7 +237,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     {
                         consumer.AddHighlighting(
                             new UseStringListPatternSuggestion(
-                                "Use list pattern",
+                                "Use list pattern.",
                                 invocationExpression,
                                 invokedExpression,
                                 ListPatternSuggestionKind.LastCharacter,
@@ -277,7 +277,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             {
                                 consumer.AddHighlighting(
                                     new UseStringListPatternSuggestion(
-                                        "Use list pattern",
+                                        "Use list pattern.",
                                         invocationExpression,
                                         invokedExpression,
                                         ListPatternSuggestionKind.FirstCharacter,
@@ -288,7 +288,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             {
                                 consumer.AddHighlighting(
                                     new UseStringListPatternSuggestion(
-                                        "Use list pattern",
+                                        "Use list pattern.",
                                         invocationExpression,
                                         invokedExpression,
                                         ListPatternSuggestionKind.FirstCharacter,
@@ -305,7 +305,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             {
                                 consumer.AddHighlighting(
                                     new UseStringListPatternSuggestion(
-                                        "Use list pattern",
+                                        "Use list pattern.",
                                         invocationExpression,
                                         invokedExpression,
                                         ListPatternSuggestionKind.NotFirstCharacter,
@@ -316,7 +316,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             {
                                 consumer.AddHighlighting(
                                     new UseStringListPatternSuggestion(
-                                        "Use list pattern",
+                                        "Use list pattern.",
                                         invocationExpression,
                                         invokedExpression,
                                         ListPatternSuggestionKind.NotFirstCharacter,
@@ -334,7 +334,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method",
+                                    $"Use the '{nameof(string.Contains)}' method.",
                                     invocationExpression,
                                     invokedExpression,
                                     nameof(string.Contains),
@@ -352,7 +352,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method",
+                                    $"Use the '{nameof(string.Contains)}' method.",
                                     invocationExpression,
                                     invokedExpression,
                                     nameof(string.Contains),
@@ -375,7 +375,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 {
                     consumer.AddHighlighting(
                         new UseOtherMethodSuggestion(
-                            $"Use the '{nameof(string.Contains)}' method",
+                            $"Use the '{nameof(string.Contains)}' method.",
                             invocationExpression,
                             invokedExpression,
                             nameof(string.Contains),
@@ -390,7 +390,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 {
                     consumer.AddHighlighting(
                         new UseOtherMethodSuggestion(
-                            $"Use the '{nameof(string.Contains)}' method",
+                            $"Use the '{nameof(string.Contains)}' method.",
                             invocationExpression,
                             invokedExpression,
                             nameof(string.Contains),
@@ -409,7 +409,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (TryGetInt32Constant(startIndexArgument.Value) == 0)
         {
-            consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument 0 is redundant", startIndexArgument));
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
         }
     }
 
@@ -443,7 +443,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method",
+                                    $"Use the '{nameof(string.Contains)}' method.",
                                     invocationExpression,
                                     invokedExpression,
                                     nameof(string.Contains),
@@ -461,7 +461,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method",
+                                    $"Use the '{nameof(string.Contains)}' method.",
                                     invocationExpression,
                                     invokedExpression,
                                     nameof(string.Contains),
@@ -488,7 +488,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 {
                     consumer.AddHighlighting(
                         new UseOtherMethodSuggestion(
-                            $"Use the '{nameof(string.Contains)}' method",
+                            $"Use the '{nameof(string.Contains)}' method.",
                             invocationExpression,
                             invokedExpression,
                             nameof(string.Contains),
@@ -506,7 +506,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 {
                     consumer.AddHighlighting(
                         new UseOtherMethodSuggestion(
-                            $"Use the '{nameof(string.Contains)}' method",
+                            $"Use the '{nameof(string.Contains)}' method.",
                             invocationExpression,
                             invokedExpression,
                             nameof(string.Contains),
@@ -539,7 +539,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         switch (TryGetStringConstant(valueArgument.Value))
         {
             case "" when !invocationExpression.IsUsedAsStatement():
-                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0", invocationExpression, "0"));
+                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
                 break;
 
             case [var character] when TryGetParameterNamesIfMethodExists(
@@ -548,8 +548,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 invocationExpression.PsiModule) is [var valueParameterName, _]:
 
                 consumer.AddHighlighting(
-                    new UseAsCharacterSuggestion(
-                        "Use as character",
+                    new PassSingleCharacterSuggestion(
+                        "Pass the single character.",
                         valueArgument,
                         valueArgument.NameIdentifier is { } ? valueParameterName : null,
                         character,
@@ -567,7 +567,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             case (EqualityExpressionType.EQEQ, 0):
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(string.StartsWith)}' method",
+                                        $"Use the '{nameof(string.StartsWith)}' method.",
                                         invocationExpression,
                                         invokedExpression,
                                         nameof(string.StartsWith),
@@ -579,7 +579,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             case (EqualityExpressionType.NE, 0):
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(string.StartsWith)}' method",
+                                        $"Use the '{nameof(string.StartsWith)}' method.",
                                         invocationExpression,
                                         invokedExpression,
                                         nameof(string.StartsWith),
@@ -596,7 +596,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                 {
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.Contains)}' method",
+                                            $"Use the '{nameof(string.Contains)}' method.",
                                             invocationExpression,
                                             invokedExpression,
                                             nameof(string.Contains),
@@ -614,7 +614,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                 {
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.Contains)}' method",
+                                            $"Use the '{nameof(string.Contains)}' method.",
                                             invocationExpression,
                                             invokedExpression,
                                             nameof(string.Contains),
@@ -640,7 +640,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method",
+                                    $"Use the '{nameof(string.Contains)}' method.",
                                     invocationExpression,
                                     invokedExpression,
                                     nameof(string.Contains),
@@ -658,7 +658,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method",
+                                    $"Use the '{nameof(string.Contains)}' method.",
                                     invocationExpression,
                                     invokedExpression,
                                     nameof(string.Contains),
@@ -680,7 +680,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (TryGetInt32Constant(startIndexArgument.Value) == 0)
         {
-            consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument 0 is redundant", startIndexArgument));
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
         }
     }
 
@@ -705,7 +705,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         switch (TryGetStringConstant(valueArgument.Value))
         {
             case "" when !invocationExpression.IsUsedAsStatement():
-                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0", invocationExpression, "0"));
+                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
                 break;
 
             case [var character] when TryGetParameterNamesIfMethodExists(
@@ -714,8 +714,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 invocationExpression.PsiModule) is [var valueParameterName, _]:
 
                 consumer.AddHighlighting(
-                    new UseAsCharacterSuggestion(
-                        "Use as character",
+                    new PassSingleCharacterSuggestion(
+                        "Pass the single character.",
                         valueArgument,
                         valueArgument.NameIdentifier is { } ? valueParameterName : null,
                         character));
@@ -738,7 +738,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                 {
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.StartsWith)}' method",
+                                            $"Use the '{nameof(string.StartsWith)}' method.",
                                             invocationExpression,
                                             invokedExpression,
                                             nameof(string.StartsWith),
@@ -756,7 +756,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                 {
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.StartsWith)}' method",
+                                            $"Use the '{nameof(string.StartsWith)}' method.",
                                             invocationExpression,
                                             invokedExpression,
                                             nameof(string.StartsWith),
@@ -774,7 +774,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                 {
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.Contains)}' method",
+                                            $"Use the '{nameof(string.Contains)}' method.",
                                             invocationExpression,
                                             invokedExpression,
                                             nameof(string.Contains),
@@ -792,7 +792,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                 {
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.Contains)}' method",
+                                            $"Use the '{nameof(string.Contains)}' method.",
                                             invocationExpression,
                                             invokedExpression,
                                             nameof(string.Contains),
@@ -819,7 +819,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method",
+                                    $"Use the '{nameof(string.Contains)}' method.",
                                     invocationExpression,
                                     invokedExpression,
                                     nameof(string.Contains),
@@ -837,7 +837,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method",
+                                    $"Use the '{nameof(string.Contains)}' method.",
                                     invocationExpression,
                                     invokedExpression,
                                     nameof(string.Contains),
@@ -859,7 +859,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (TryGetInt32Constant(startIndexArgument.Value) == 0)
         {
-            consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument 0 is redundant", startIndexArgument));
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
         }
     }
 
@@ -870,7 +870,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (TryGetInt32Constant(startIndexArgument.Value) == 0)
         {
-            consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument 0 is redundant", startIndexArgument));
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
         }
     }
 
@@ -884,7 +884,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(startIndexArgument.Value) == 0)
         {
-            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1", invocationExpression, "-1"));
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1.", invocationExpression, "-1"));
         }
     }
 
@@ -901,7 +901,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         {
             consumer.AddHighlighting(
                 new UseStringPropertySuggestion(
-                    $"Use the '{nameof(string.Length)}' property",
+                    $"Use the '{nameof(string.Length)}' property.",
                     invocationExpression,
                     invokedExpression,
                     nameof(string.Length)));
@@ -924,7 +924,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             case "" when !invocationExpression.IsUsedAsStatement():
                 consumer.AddHighlighting(
                     new UseStringPropertySuggestion(
-                        $"Use the '{nameof(string.Length)}' property",
+                        $"Use the '{nameof(string.Length)}' property.",
                         invocationExpression,
                         invokedExpression,
                         nameof(string.Length)));
@@ -939,8 +939,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 ]:
 
                 consumer.AddHighlighting(
-                    new UseAsCharacterSuggestion(
-                        "Use as character",
+                    new PassSingleCharacterSuggestion(
+                        "Pass the single character.",
                         valueArgument,
                         valueArgument.NameIdentifier is { } ? valueParameterName : null,
                         character,
@@ -961,8 +961,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(totalWidthArgument.Value) == 0)
         {
             consumer.AddHighlighting(
-                new RedundantMethodInvocationSuggestion(
-                    $"Invocation of '{nameof(string.PadLeft)}' with 0 is redundant",
+                new RedundantMethodInvocationHint(
+                    $"Invoking '{nameof(string.PadLeft)}' with 0 is redundant.",
                     invocationExpression,
                     invokedExpression));
         }
@@ -984,8 +984,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             if (TryGetInt32Constant(totalWidthArgument.Value) == 0)
             {
                 consumer.AddHighlighting(
-                    new RedundantMethodInvocationSuggestion(
-                        $"Invocation of '{nameof(string.PadLeft)}' with 0 is redundant",
+                    new RedundantMethodInvocationHint(
+                        $"Invoking '{nameof(string.PadLeft)}' with 0 is redundant.",
                         invocationExpression,
                         invokedExpression));
                 return;
@@ -993,7 +993,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
             if (TryGetCharConstant(paddingCharArgument.Value) == ' ')
             {
-                consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument ' ' is redundant", paddingCharArgument));
+                consumer.AddHighlighting(new RedundantArgumentHint("Passing ' ' is redundant.", paddingCharArgument));
             }
         }
     }
@@ -1010,8 +1010,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(totalWidthArgument.Value) == 0)
         {
             consumer.AddHighlighting(
-                new RedundantMethodInvocationSuggestion(
-                    $"Invocation of '{nameof(string.PadRight)}' with 0 is redundant",
+                new RedundantMethodInvocationHint(
+                    $"Invoking '{nameof(string.PadRight)}' with 0 is redundant.",
                     invocationExpression,
                     invokedExpression));
         }
@@ -1033,8 +1033,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             if (TryGetInt32Constant(totalWidthArgument.Value) == 0)
             {
                 consumer.AddHighlighting(
-                    new RedundantMethodInvocationSuggestion(
-                        $"Invocation of '{nameof(string.PadRight)}' with 0 is redundant",
+                    new RedundantMethodInvocationHint(
+                        $"Invoking '{nameof(string.PadRight)}' with 0 is redundant.",
                         invocationExpression,
                         invokedExpression));
                 return;
@@ -1042,7 +1042,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
             if (TryGetCharConstant(paddingCharArgument.Value) == ' ')
             {
-                consumer.AddHighlighting(new RedundantArgumentSuggestion("Argument ' ' is redundant", paddingCharArgument));
+                consumer.AddHighlighting(new RedundantArgumentHint("Passing ' ' is redundant.", paddingCharArgument));
             }
         }
     }
@@ -1062,7 +1062,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             if (TryGetInt32Constant(startIndexArgument.Value) == 0)
             {
                 consumer.AddHighlighting(
-                    new UseExpressionResultSuggestion("The expression is always the empty string", invocationExpression, "\"\""));
+                    new UseExpressionResultSuggestion("The expression is always the empty string.", invocationExpression, "\"\""));
                 return;
             }
 
@@ -1070,7 +1070,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             {
                 consumer.AddHighlighting(
                     new UseRangeIndexerSuggestion(
-                        "Use range indexer",
+                        "Use the range indexer.",
                         invocationExpression,
                         invokedExpression,
                         "",
@@ -1095,8 +1095,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             if (TryGetInt32Constant(countArgument.Value) == 0)
             {
                 consumer.AddHighlighting(
-                    new RedundantMethodInvocationSuggestion(
-                        $"Invocation of '{nameof(string.Remove)}' with the count 0 is redundant",
+                    new RedundantMethodInvocationHint(
+                        $"Invoking '{nameof(string.Remove)}' with the count 0 is redundant.",
                         invocationExpression,
                         invokedExpression));
                 return;
@@ -1107,7 +1107,12 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 && countArgument.Value is { })
             {
                 consumer.AddHighlighting(
-                    new UseRangeIndexerSuggestion("Use range indexer", invocationExpression, invokedExpression, countArgument.Value.GetText(), ""));
+                    new UseRangeIndexerSuggestion(
+                        "Use the range indexer.",
+                        invocationExpression,
+                        invokedExpression,
+                        countArgument.Value.GetText(),
+                        ""));
             }
         }
     }
@@ -1243,7 +1248,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     AnalyzeLastIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                     break;
 
-                // PadLeft:
+                // PadLeft
                 case { ShortName: nameof(string.PadLeft), TypeParameters: [], Parameters: [{ Type: var totalWidthType }] }
                     when totalWidthType.IsInt() && element.Arguments is [var totalWidthArgument]:
                     AnalyzePadLeft_Int32(consumer, element, invokedExpression, totalWidthArgument);
@@ -1260,7 +1265,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
                     break;
 
-                // PadRight:
+                // PadRight
                 case { ShortName: nameof(string.PadRight), TypeParameters: [], Parameters: [{ Type: var totalWidthType }] }
                     when totalWidthType.IsInt() && element.Arguments is [var totalWidthArgument]:
                     AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
@@ -1277,7 +1282,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
                     break;
 
-                // Remove:
+                // Remove
                 case { ShortName: nameof(string.Remove), TypeParameters: [], Parameters: [{ Type: var startIndexType }] }
                     when startIndexType.IsInt() && element.Arguments is [var startIndexArgument]:
                     AnalyzeRemove_Int32(consumer, element, invokedExpression, startIndexArgument);

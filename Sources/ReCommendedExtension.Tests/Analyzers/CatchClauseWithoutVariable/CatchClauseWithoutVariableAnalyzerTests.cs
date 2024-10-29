@@ -13,7 +13,7 @@ public sealed class CatchClauseWithoutVariableAnalyzerTests : CSharpHighlighting
     protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariable";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is CatchClauseWithoutVariableSuggestion;
+        => highlighting is CatchClauseWithoutVariableHint;
 
     [Test]
     public void TestCatchClauseWithoutVariable() => DoNamedTest2();

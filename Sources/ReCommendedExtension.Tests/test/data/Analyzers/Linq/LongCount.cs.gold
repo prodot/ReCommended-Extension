@@ -105,14 +105,14 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Use the 'Length' property
-(1): ReSharper Suggestion: Use the 'Length' property
-(2): ReSharper Suggestion: Use the 'Length' property
-(3): ReSharper Suggestion: Use the 'Count' property
-(4): ReSharper Suggestion: Use the 'Count' property
-(5): ReSharper Suggestion: Use the 'Count' property
-(6): ReSharper Suggestion: Use the 'Count' property
-(7): ReSharper Suggestion: Use the 'Count' property
-(8): ReSharper Suggestion: Use the 'Count' property
-(9): ReSharper Suggestion: Use the 'Count' property
-(10): ReSharper Suggestion: Use the 'Count' property
+(0): ReSharper Suggestion: Use the 'Length' property.
+(1): ReSharper Suggestion: Use the 'Length' property.
+(2): ReSharper Suggestion: Use the 'Length' property.
+(3): ReSharper Suggestion: Use the 'Count' property.
+(4): ReSharper Suggestion: Use the 'Count' property.
+(5): ReSharper Suggestion: Use the 'Count' property.
+(6): ReSharper Suggestion: Use the 'Count' property.
+(7): ReSharper Suggestion: Use the 'Count' property.
+(8): ReSharper Suggestion: Use the 'Count' property.
+(9): ReSharper Suggestion: Use the 'Count' property.
+(10): ReSharper Suggestion: Use the 'Count' property.

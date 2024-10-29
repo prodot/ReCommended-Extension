@@ -17,9 +17,15 @@ using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.Strings;
 
-[RegisterConfigurableSeverity(SeverityId, null, HighlightingGroupIds.BestPractice, "Use character" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
+    HighlightingGroupIds.BestPractice,
+    "Pass the single character" + ZoneMarker.Suffix,
+    "",
+    Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UseAsCharacterSuggestion(
+public sealed class PassSingleCharacterSuggestion(
     string message,
     ICSharpArgument argument,
     string? parameterName,
@@ -29,15 +35,15 @@ public sealed class UseAsCharacterSuggestion(
 {
     const string SeverityId = "UseAsCharacter";
 
-    internal ICSharpArgument Argument { get; } = argument;
+    internal ICSharpArgument Argument => argument;
 
-    internal string? ParameterName { get; } = parameterName;
+    internal string? ParameterName => parameterName;
 
-    internal char Character { get; } = character;
+    internal char Character => character;
 
-    internal string? AdditionalArgument { get; } = additionalArgument;
+    internal string? AdditionalArgument => additionalArgument;
 
-    internal ICSharpArgument? RedundantArgument { get; } = redundantArgument;
+    internal ICSharpArgument? RedundantArgument => redundantArgument;
 
     public override DocumentRange CalculateRange() => Argument.Value.GetDocumentRange();
 }
@@ -55,9 +61,9 @@ public sealed class UseExpressionResultSuggestion(string message, IInvocationExp
 {
     const string SeverityId = "UseExpressionResult";
 
-    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+    internal IInvocationExpression InvocationExpression => invocationExpression;
 
-    internal string Replacement { get; } = replacement;
+    internal string Replacement => replacement;
 
     public override DocumentRange CalculateRange() => InvocationExpression.GetDocumentRange();
 }
@@ -140,17 +146,17 @@ public sealed class UseOtherMethodSuggestion(
 {
     const string SeverityId = "UseOtherMethod";
 
-    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+    internal IInvocationExpression InvocationExpression => invocationExpression;
 
-    internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
+    internal IReferenceExpression InvokedExpression => invokedExpression;
 
-    internal string OtherMethodName { get; } = otherMethodName;
+    internal string OtherMethodName => otherMethodName;
 
-    internal bool IsNegated { get; } = isNegated;
+    internal bool IsNegated => isNegated;
 
-    internal string[] Arguments { get; } = arguments;
+    internal string[] Arguments => arguments;
 
-    internal IBinaryExpression? BinaryExpression { get; } = binaryExpression;
+    internal IBinaryExpression? BinaryExpression => binaryExpression;
 
     public override DocumentRange CalculateRange()
     {
@@ -164,7 +170,7 @@ public sealed class UseOtherMethodSuggestion(
     SeverityId,
     null,
     HighlightingGroupIds.CodeRedundancy,
-    "Argument is redundant" + ZoneMarker.Suffix,
+    "The argument is redundant" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(
@@ -172,11 +178,11 @@ public sealed class UseOtherMethodSuggestion(
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantArgumentSuggestion(string message, ICSharpArgument argument) : Highlighting(message) // todo: move to a separate file
+public sealed class RedundantArgumentHint(string message, ICSharpArgument argument) : Highlighting(message) // todo: move to a separate file
 {
     const string SeverityId = "RedundantArgument";
 
-    internal ICSharpArgument Argument { get; } = argument;
+    internal ICSharpArgument Argument => argument;
 
     public override DocumentRange CalculateRange() => Argument.GetDocumentRange();
 }
@@ -193,16 +199,16 @@ public sealed class RedundantArgumentSuggestion(string message, ICSharpArgument 
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantMethodInvocationSuggestion(
+public sealed class RedundantMethodInvocationHint(
     string message,
     IInvocationExpression invocationExpression,
     IReferenceExpression invokedExpression) : Highlighting(message) // todo: move to a separate file
 {
     const string SeverityId = "RedundantMethodInvocation";
 
-    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+    internal IInvocationExpression InvocationExpression => invocationExpression;
 
-    internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
+    internal IReferenceExpression InvokedExpression => invokedExpression;
 
     public override DocumentRange CalculateRange()
     {
@@ -216,7 +222,7 @@ public sealed class RedundantMethodInvocationSuggestion(
     SeverityId,
     null,
     HighlightingGroupIds.LanguageUsage,
-    "Use string property" + ZoneMarker.Suffix,
+    "Use the string property" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
@@ -228,17 +234,23 @@ public sealed class UseStringPropertySuggestion(
 {
     const string SeverityId = "UseStringProperty";
 
-    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+    internal IInvocationExpression InvocationExpression => invocationExpression;
 
-    internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
+    internal IReferenceExpression InvokedExpression => invokedExpression;
 
-    internal string PropertyName { get; } = propertyName;
+    internal string PropertyName => propertyName;
 
     public override DocumentRange CalculateRange()
         => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);
 }
 
-[RegisterConfigurableSeverity(SeverityId, null, HighlightingGroupIds.LanguageUsage, "Use range indexer" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
+    HighlightingGroupIds.LanguageUsage,
+    "Use the range indexer" + ZoneMarker.Suffix,
+    "",
+    Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
 public sealed class UseRangeIndexerSuggestion(
     string message,
@@ -249,20 +261,20 @@ public sealed class UseRangeIndexerSuggestion(
 {
     const string SeverityId = "UseRangeIndexer";
 
-    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+    internal IInvocationExpression InvocationExpression => invocationExpression;
 
-    internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
+    internal IReferenceExpression InvokedExpression => invokedExpression;
 
-    internal string StartIndexArgument { get; } = startIndexArgument;
+    internal string StartIndexArgument => startIndexArgument;
 
-    internal string EndIndexArgument { get; } = endIndexArgument;
+    internal string EndIndexArgument => endIndexArgument;
 
     public override DocumentRange CalculateRange()
         => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);
 }
 
 [QuickFix]
-public sealed class UseAsCharacterFix(UseAsCharacterSuggestion highlighting) : QuickFixBase // todo: move to a separate file
+public sealed class PassSingleCharacterFix(PassSingleCharacterSuggestion highlighting) : QuickFixBase // todo: move to a separate file
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
@@ -424,7 +436,7 @@ public sealed class UseOtherMethodFix(UseOtherMethodSuggestion highlighting) : Q
 }
 
 [QuickFix]
-public sealed class RemoveArgumentFix(RedundantArgumentSuggestion highlighting) : QuickFixBase // todo: move to a separate file
+public sealed class RemoveArgumentFix(RedundantArgumentHint highlighting) : QuickFixBase // todo: move to a separate file
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
@@ -474,7 +486,7 @@ public sealed class UseStringPropertyFix(UseStringPropertySuggestion highlightin
 }
 
 [QuickFix]
-public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationSuggestion highlighting) : QuickFixBase // todo: move to a separate file
+public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationHint highlighting) : QuickFixBase // todo: move to a separate file
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 

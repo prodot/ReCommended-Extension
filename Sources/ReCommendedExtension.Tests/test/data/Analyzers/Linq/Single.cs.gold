@@ -91,12 +91,12 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Use list pattern
-(1): ReSharper Suggestion: Use list pattern
-(2): ReSharper Suggestion: Use list pattern
-(3): ReSharper Suggestion: Use list pattern
-(4): ReSharper Suggestion: Use list pattern
-(5): ReSharper Suggestion: Use list pattern
-(6): ReSharper Suggestion: Use list pattern
-(7): ReSharper Suggestion: Use list pattern
-(8): ReSharper Suggestion: Use list pattern
+(0): ReSharper Suggestion: Use list pattern.
+(1): ReSharper Suggestion: Use list pattern.
+(2): ReSharper Suggestion: Use list pattern.
+(3): ReSharper Suggestion: Use list pattern.
+(4): ReSharper Suggestion: Use list pattern.
+(5): ReSharper Suggestion: Use list pattern.
+(6): ReSharper Suggestion: Use list pattern.
+(7): ReSharper Suggestion: Use list pattern.
+(8): ReSharper Suggestion: Use list pattern.

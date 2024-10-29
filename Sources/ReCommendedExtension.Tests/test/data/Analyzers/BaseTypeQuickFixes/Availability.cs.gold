@@ -80,81 +80,81 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: 'object' is default base type.
+0: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-1: 'object' is default base type.
+1: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-2: 'object' is default base type.
+2: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-3: 'object' is default base type.
+3: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-4: 'object' is default base type.
+4: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-5: 'object' is default base type.
+5: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-6: 'object' is default base type.
+6: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-7: 'object' is default base type.
+7: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-8: 'object' is default base type.
+8: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-9: 'object' is default base type.
+9: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-10: 'object' is default base type.
+10: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-11: 'object' is default base type.
+11: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-12: 'object' is default base type.
+12: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-13: 'object' is default base type.
+13: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-14: 'object' is default base type.
+14: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-15: 'object' is default base type.
+15: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-16: 'object' is default base type.
+16: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-17: 'object' is default base type.
+17: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-18: 'object' is default base type.
+18: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-19: 'object' is default base type.
+19: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-20: 'object' is default base type.
+20: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-21: 'object' is default base type.
+21: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-22: 'object' is default base type.
+22: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-23: 'object' is default base type.
+23: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-24: 'object' is default base type.
+24: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'
-25: 'object' is default base type.
+25: 'object' is the default base type.
 QUICKFIXES:
 Remove redundant 'object'

@@ -19,9 +19,9 @@ public sealed class ArrayWithDefaultValuesInitializationSuggestion(string messag
 {
     const string SeverityId = "ArrayWithDefaultValuesInitialization";
 
-    internal string? SuggestedCode { get; } = suggestedCode;
+    internal string? SuggestedCode => suggestedCode;
 
-    internal ICSharpTreeNode TreeNode { get; } = treeNode;
+    internal ICSharpTreeNode TreeNode => treeNode;
 
     public override DocumentRange CalculateRange() => TreeNode.GetDocumentRange();
 }

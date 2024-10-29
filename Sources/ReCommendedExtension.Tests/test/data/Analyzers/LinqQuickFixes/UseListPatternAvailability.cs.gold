@@ -67,63 +67,63 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Use list pattern
+0: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : 0'
-1: Use list pattern
+1: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : fallback'
-2: Use list pattern
+2: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : 0'
-3: Use list pattern
+3: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : 1'
-4: Use list pattern
+4: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var item] ? item : throw new InvalidOperationException(...)'
-5: Use list pattern
+5: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : false'
-6: Use list pattern
+6: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : 0'
-7: Use list pattern
+7: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : 0'
-8: Use list pattern
+8: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : 0'
-9: Use list pattern
+9: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : 0'
-10: Use list pattern
+10: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : 0'
-11: Use list pattern
+11: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : '\0''
-12: Use list pattern
+12: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : new CancellationToken()'
-13: Use list pattern
+13: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : default(DayOfWeek)'
-14: Use list pattern
+14: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : null'
-15: Use list pattern
+15: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : null'
-16: Use list pattern
+16: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : default(T)'
-17: Use list pattern
+17: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : null'
-18: Use list pattern
+18: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : null'
-19: Use list pattern
+19: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : default(T)'

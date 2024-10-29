@@ -163,16 +163,16 @@ namespace Test
         }
     }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Use indexer
-(1): ReSharper Suggestion: Use indexer
-(2): ReSharper Suggestion: Use indexer
-(3): ReSharper Suggestion: Use indexer
-(4): ReSharper Suggestion: Use indexer
-(5): ReSharper Suggestion: Use indexer
-(6): ReSharper Suggestion: Use indexer
-(7): ReSharper Suggestion: Use indexer
-(8): ReSharper Suggestion: Use indexer
-(9): ReSharper Suggestion: Use indexer
+(0): ReSharper Suggestion: Use the indexer.
+(1): ReSharper Suggestion: Use the indexer.
+(2): ReSharper Suggestion: Use the indexer.
+(3): ReSharper Suggestion: Use the indexer.
+(4): ReSharper Suggestion: Use the indexer.
+(5): ReSharper Suggestion: Use the indexer.
+(6): ReSharper Suggestion: Use the indexer.
+(7): ReSharper Suggestion: Use the indexer.
+(8): ReSharper Suggestion: Use the indexer.
+(9): ReSharper Suggestion: Use the indexer.
 (10): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
 (11): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
 (12): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.

@@ -20,11 +20,11 @@ namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class CatchClauseWithoutVariableSuggestion(string message, ISpecificCatchClause catchClause) : Highlighting(message)
+public sealed class CatchClauseWithoutVariableHint(string message, ISpecificCatchClause catchClause) : Highlighting(message)
 {
     const string SeverityId = "CatchClauseWithoutVariable";
 
-    internal ISpecificCatchClause CatchClause { get; } = catchClause;
+    internal ISpecificCatchClause CatchClause => catchClause;
 
     public override DocumentRange CalculateRange()
         => new(

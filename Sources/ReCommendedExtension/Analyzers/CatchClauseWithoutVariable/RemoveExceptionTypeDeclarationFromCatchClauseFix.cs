@@ -8,7 +8,7 @@ using JetBrains.TextControl;
 namespace ReCommendedExtension.Analyzers.CatchClauseWithoutVariable;
 
 [QuickFix]
-public sealed class RemoveExceptionTypeDeclarationFromCatchClauseFix(CatchClauseWithoutVariableSuggestion highlighting) : QuickFixBase
+public sealed class RemoveExceptionTypeDeclarationFromCatchClauseFix(CatchClauseWithoutVariableHint highlighting) : QuickFixBase
 {
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

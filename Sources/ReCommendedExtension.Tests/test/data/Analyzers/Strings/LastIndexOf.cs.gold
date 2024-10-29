@@ -38,7 +38,7 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: The expression is always -1
-(1): ReSharper Suggestion: Use the 'Length' property
-(2): ReSharper Suggestion: Use the 'Length' property
-(3): ReSharper Suggestion: Use as character
+(0): ReSharper Suggestion: The expression is always -1.
+(1): ReSharper Suggestion: Use the 'Length' property.
+(2): ReSharper Suggestion: Use the 'Length' property.
+(3): ReSharper Suggestion: Pass the single character.

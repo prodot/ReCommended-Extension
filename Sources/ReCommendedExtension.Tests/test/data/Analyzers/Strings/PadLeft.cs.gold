@@ -26,7 +26,7 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Invocation of 'PadLeft' with 0 is redundant
-(1): ReSharper Dead Code: Invocation of 'PadLeft' with 0 is redundant
-(2): ReSharper Dead Code: Argument ' ' is redundant
-(3): ReSharper Dead Code: Invocation of 'PadLeft' with 0 is redundant
+(0): ReSharper Dead Code: Invoking 'PadLeft' with 0 is redundant.
+(1): ReSharper Dead Code: Invoking 'PadLeft' with 0 is redundant.
+(2): ReSharper Dead Code: Passing ' ' is redundant.
+(3): ReSharper Dead Code: Invoking 'PadLeft' with 0 is redundant.

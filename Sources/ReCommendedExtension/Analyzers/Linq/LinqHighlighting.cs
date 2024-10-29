@@ -10,9 +10,9 @@ public abstract class LinqHighlighting(
     IInvocationExpression invocationExpression,
     IReferenceExpression invokedExpression) : Highlighting(message)
 {
-    internal IInvocationExpression InvocationExpression { get; } = invocationExpression;
+    internal IInvocationExpression InvocationExpression => invocationExpression;
 
-    internal IReferenceExpression InvokedExpression { get; } = invokedExpression;
+    internal IReferenceExpression InvokedExpression => invokedExpression;
 
     public sealed override DocumentRange CalculateRange()
         => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);

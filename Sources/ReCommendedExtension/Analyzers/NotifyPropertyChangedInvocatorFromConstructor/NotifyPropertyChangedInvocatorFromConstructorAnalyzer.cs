@@ -57,8 +57,8 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzer : Elem
 
             consumer.AddHighlighting(
                 new NotifyPropertyChangedInvocatorFromConstructorWarning(
-                    element,
-                    $"Invocation of a method annotated with [{name}] from a constructor is redundant."));
+                    $"Invocation of a method annotated with [{name}] from a constructor is redundant.",
+                    element));
         }
     }
 }

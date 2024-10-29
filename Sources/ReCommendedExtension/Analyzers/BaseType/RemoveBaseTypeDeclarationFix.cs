@@ -8,7 +8,7 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.BaseType;
 
 [QuickFix]
-public sealed class RemoveBaseTypeDeclarationFix(RemoveRedundantBaseTypeDeclarationSuggestion highlighting) : QuickFixBase
+public sealed class RemoveBaseTypeDeclarationFix(RemoveRedundantBaseTypeDeclarationHint highlighting) : QuickFixBase
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 

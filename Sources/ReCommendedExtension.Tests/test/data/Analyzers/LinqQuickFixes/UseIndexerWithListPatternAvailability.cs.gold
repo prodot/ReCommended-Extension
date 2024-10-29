@@ -16,19 +16,19 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Use indexer
+0: Use the indexer.
 QUICKFIXES:
 Replace with '[0]' (other exception could be thrown)
 Replace with 'is [var first, ..] ? first : throw new InvalidOperationException(...)'
-1: Use indexer
+1: Use the indexer.
 QUICKFIXES:
 Replace with '[^1]' (other exception could be thrown)
 Replace with 'is [.., var last] ? last : throw new InvalidOperationException(...)'
-2: Use indexer
+2: Use the indexer.
 QUICKFIXES:
 Replace with '[0]' (other exception could be thrown)
 Replace with 'is [var first, ..] ? first : throw new InvalidOperationException(...)'
-3: Use indexer
+3: Use the indexer.
 QUICKFIXES:
 Replace with '[^1]' (other exception could be thrown)
 Replace with 'is [.., var last] ? last : throw new InvalidOperationException(...)'

@@ -80,29 +80,29 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: 'object' is default base type.
-(1): ReSharper Dead Code: 'object' is default base type.
-(2): ReSharper Dead Code: 'object' is default base type.
-(3): ReSharper Dead Code: 'object' is default base type.
-(4): ReSharper Dead Code: 'object' is default base type.
-(5): ReSharper Dead Code: 'object' is default base type.
-(6): ReSharper Dead Code: 'object' is default base type.
-(7): ReSharper Dead Code: 'object' is default base type.
-(8): ReSharper Dead Code: 'object' is default base type.
-(9): ReSharper Dead Code: 'object' is default base type.
-(10): ReSharper Dead Code: 'object' is default base type.
-(11): ReSharper Dead Code: 'object' is default base type.
-(12): ReSharper Dead Code: 'object' is default base type.
-(13): ReSharper Dead Code: 'object' is default base type.
-(14): ReSharper Dead Code: 'object' is default base type.
-(15): ReSharper Dead Code: 'object' is default base type.
-(16): ReSharper Dead Code: 'object' is default base type.
-(17): ReSharper Dead Code: 'object' is default base type.
-(18): ReSharper Dead Code: 'object' is default base type.
-(19): ReSharper Dead Code: 'object' is default base type.
-(20): ReSharper Dead Code: 'object' is default base type.
-(21): ReSharper Dead Code: 'object' is default base type.
-(22): ReSharper Dead Code: 'object' is default base type.
-(23): ReSharper Dead Code: 'object' is default base type.
-(24): ReSharper Dead Code: 'object' is default base type.
-(25): ReSharper Dead Code: 'object' is default base type.
+(0): ReSharper Dead Code: 'object' is the default base type.
+(1): ReSharper Dead Code: 'object' is the default base type.
+(2): ReSharper Dead Code: 'object' is the default base type.
+(3): ReSharper Dead Code: 'object' is the default base type.
+(4): ReSharper Dead Code: 'object' is the default base type.
+(5): ReSharper Dead Code: 'object' is the default base type.
+(6): ReSharper Dead Code: 'object' is the default base type.
+(7): ReSharper Dead Code: 'object' is the default base type.
+(8): ReSharper Dead Code: 'object' is the default base type.
+(9): ReSharper Dead Code: 'object' is the default base type.
+(10): ReSharper Dead Code: 'object' is the default base type.
+(11): ReSharper Dead Code: 'object' is the default base type.
+(12): ReSharper Dead Code: 'object' is the default base type.
+(13): ReSharper Dead Code: 'object' is the default base type.
+(14): ReSharper Dead Code: 'object' is the default base type.
+(15): ReSharper Dead Code: 'object' is the default base type.
+(16): ReSharper Dead Code: 'object' is the default base type.
+(17): ReSharper Dead Code: 'object' is the default base type.
+(18): ReSharper Dead Code: 'object' is the default base type.
+(19): ReSharper Dead Code: 'object' is the default base type.
+(20): ReSharper Dead Code: 'object' is the default base type.
+(21): ReSharper Dead Code: 'object' is the default base type.
+(22): ReSharper Dead Code: 'object' is the default base type.
+(23): ReSharper Dead Code: 'object' is the default base type.
+(24): ReSharper Dead Code: 'object' is the default base type.
+(25): ReSharper Dead Code: 'object' is the default base type.

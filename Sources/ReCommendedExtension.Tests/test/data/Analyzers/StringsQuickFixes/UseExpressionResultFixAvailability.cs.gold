@@ -40,36 +40,36 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: The expression is always true
+0: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-1: The expression is always true
+1: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-2: The expression is always true
+2: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-3: The expression is always true
+3: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-4: The expression is always true
+4: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-5: The expression is always true
+5: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-6: The expression is always 0
+6: The expression is always 0.
 QUICKFIXES:
 Replace with '0'
-7: The expression is always 0
+7: The expression is always 0.
 QUICKFIXES:
 Replace with '0'
-8: The expression is always 0
+8: The expression is always 0.
 QUICKFIXES:
 Replace with '0'
-9: The expression is always -1
+9: The expression is always -1.
 QUICKFIXES:
 Replace with '-1'
-10: The expression is always the empty string
+10: The expression is always the empty string.
 QUICKFIXES:
 Replace with '""'

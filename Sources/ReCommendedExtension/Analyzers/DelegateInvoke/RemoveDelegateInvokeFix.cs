@@ -10,7 +10,7 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.DelegateInvoke;
 
 [QuickFix]
-public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeSuggestion highlighting) : QuickFixBase
+public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeHint highlighting) : QuickFixBase
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 

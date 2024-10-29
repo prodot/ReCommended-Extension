@@ -277,7 +277,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                     consumer.AddHighlighting(
                         new IntentionalBlockingAttemptWarning(
-                            $"Blocking on {valueTaskType.GetPresentableName(CSharpLanguage.Instance)} with 'GetAwaiter().GetResult()' might not block.",
+                            $"Blocking on {valueTaskType.GetPresentableName(CSharpLanguage.Instance)} with 'GetAwaiter().GetResult()' might not block.", // todo: use nameof(...)
                             invocationExpression.InvokedExpression,
                             valueTaskExpression,
                             qualifierInvokedExpression,

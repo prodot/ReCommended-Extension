@@ -188,26 +188,26 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Use list pattern
-(1): ReSharper Suggestion: Use list pattern
-(2): ReSharper Suggestion: Use list pattern
-(3): ReSharper Suggestion: Use list pattern
-(4): ReSharper Suggestion: Use list pattern
-(5): ReSharper Suggestion: Use list pattern
-(6): ReSharper Suggestion: Use list pattern
-(7): ReSharper Suggestion: Use list pattern
-(8): ReSharper Suggestion: Use list pattern
-(9): ReSharper Suggestion: Use list pattern
-(10): ReSharper Suggestion: Use list pattern
-(11): ReSharper Suggestion: Use list pattern
-(12): ReSharper Suggestion: Use list pattern
-(13): ReSharper Suggestion: Use list pattern
-(14): ReSharper Suggestion: Use list pattern
-(15): ReSharper Suggestion: Use list pattern
-(16): ReSharper Suggestion: Use list pattern
-(17): ReSharper Suggestion: Use list pattern
-(18): ReSharper Suggestion: Use list pattern
-(19): ReSharper Suggestion: Use list pattern
+(0): ReSharper Suggestion: Use list pattern.
+(1): ReSharper Suggestion: Use list pattern.
+(2): ReSharper Suggestion: Use list pattern.
+(3): ReSharper Suggestion: Use list pattern.
+(4): ReSharper Suggestion: Use list pattern.
+(5): ReSharper Suggestion: Use list pattern.
+(6): ReSharper Suggestion: Use list pattern.
+(7): ReSharper Suggestion: Use list pattern.
+(8): ReSharper Suggestion: Use list pattern.
+(9): ReSharper Suggestion: Use list pattern.
+(10): ReSharper Suggestion: Use list pattern.
+(11): ReSharper Suggestion: Use list pattern.
+(12): ReSharper Suggestion: Use list pattern.
+(13): ReSharper Suggestion: Use list pattern.
+(14): ReSharper Suggestion: Use list pattern.
+(15): ReSharper Suggestion: Use list pattern.
+(16): ReSharper Suggestion: Use list pattern.
+(17): ReSharper Suggestion: Use list pattern.
+(18): ReSharper Suggestion: Use list pattern.
+(19): ReSharper Suggestion: Use list pattern.
 (20): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
 (21): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
 (22): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.

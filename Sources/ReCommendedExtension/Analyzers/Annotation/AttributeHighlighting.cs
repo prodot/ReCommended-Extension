@@ -7,14 +7,14 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.Annotation;
 
 public abstract class AttributeHighlighting(
+    string message,
     IAttributesOwnerDeclaration attributesOwnerDeclaration,
     IAttribute attribute,
-    bool includeAttributeBracketsInRange,
-    string message) : Highlighting(message)
+    bool includeAttributeBracketsInRange) : Highlighting(message)
 {
-    internal IAttributesOwnerDeclaration AttributesOwnerDeclaration { get; } = attributesOwnerDeclaration;
+    internal IAttributesOwnerDeclaration AttributesOwnerDeclaration => attributesOwnerDeclaration;
 
-    internal IAttribute Attribute { get; } = attribute;
+    internal IAttribute Attribute => attribute;
 
     public override DocumentRange CalculateRange()
     {

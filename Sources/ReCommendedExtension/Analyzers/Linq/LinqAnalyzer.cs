@@ -94,7 +94,8 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
         if (IsIndexableCollection(type, invokedExpression))
         {
-            consumer.AddHighlighting(new UseIndexerSuggestion("Use indexer", invocationExpression, invokedExpression, indexArgument.Value.GetText()));
+            consumer.AddHighlighting(
+                new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, indexArgument.Value.GetText()));
 
             return;
         }
@@ -157,7 +158,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             if (!hasPredicateArgument)
             {
-                consumer.AddHighlighting(new UseIndexerSuggestion("Use indexer", invocationExpression, invokedExpression, "0"));
+                consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "0"));
             }
 
             return;
@@ -199,7 +200,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             {
                 consumer.AddHighlighting(
                     new UseLinqListPatternSuggestion(
-                        "Use list pattern",
+                        "Use list pattern.",
                         invocationExpression,
                         invokedExpression,
                         ListPatternSuggestionKind.FirstOrDefault,
@@ -240,7 +241,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             if (!hasPredicateArgument && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80)
             {
-                consumer.AddHighlighting(new UseIndexerSuggestion("Use indexer", invocationExpression, invokedExpression, "^1"));
+                consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "^1"));
             }
 
             return;
@@ -282,7 +283,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             {
                 consumer.AddHighlighting(
                     new UseLinqListPatternSuggestion(
-                        "Use list pattern",
+                        "Use list pattern.",
                         invocationExpression,
                         invokedExpression,
                         ListPatternSuggestionKind.LastOrDefault,
@@ -318,7 +319,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseCollectionPropertySuggestion(
-                    $"Use the '{nameof(string.Length)}' property",
+                    $"Use the '{nameof(string.Length)}' property.",
                     invocationExpression,
                     invokedExpression,
                     nameof(string.Length)));
@@ -330,7 +331,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseCollectionPropertySuggestion(
-                    $"Use the '{nameof(ICollection<int>.Count)}' property",
+                    $"Use the '{nameof(ICollection<int>.Count)}' property.",
                     invocationExpression,
                     invokedExpression,
                     nameof(ICollection<int>.Count)));
@@ -348,7 +349,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             && IsIndexableCollection(invokedExpression.QualifierExpression.Type(), invokedExpression))
         {
             consumer.AddHighlighting(
-                new UseLinqListPatternSuggestion("Use list pattern", invocationExpression, invokedExpression, ListPatternSuggestionKind.Single));
+                new UseLinqListPatternSuggestion("Use list pattern.", invocationExpression, invokedExpression, ListPatternSuggestionKind.Single));
         }
     }
 
@@ -370,7 +371,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseSwitchExpressionSuggestion(
-                    "Use switch expression",
+                    "Use switch expression.",
                     invocationExpression,
                     invokedExpression,
                     defaultValueArgument?.Value.GetText()

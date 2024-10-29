@@ -39,75 +39,75 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Use the 'Contains' method
+0: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(c)'
-1: Use the 'Contains' method
+1: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(c)'
-2: Use the 'Contains' method
+2: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(c)'
-3: Use the 'Contains' method
+3: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(c)'
-4: Use the 'Contains' method
+4: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(c)'
-5: Use the 'Contains' method
+5: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(c, StringComparison.CurrentCulture)'
-6: Use the 'Contains' method
+6: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(c, StringComparison.CurrentCulture)'
-7: Use the 'Contains' method
+7: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(c, StringComparison.CurrentCulture)'
-8: Use the 'Contains' method
+8: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(c, StringComparison.OrdinalIgnoreCase)'
-9: Use the 'Contains' method
+9: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(c, StringComparison.OrdinalIgnoreCase)'
-10: Use the 'StartsWith' method
+10: Use the 'StartsWith' method.
 QUICKFIXES:
 Replace with 'StartsWith(s)'
-11: Use the 'StartsWith' method
+11: Use the 'StartsWith' method.
 QUICKFIXES:
 Replace with '!StartsWith(s)'
-12: Use the 'Contains' method
+12: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(s, StringComparison.CurrentCulture)'
-13: Use the 'Contains' method
+13: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(s, StringComparison.CurrentCulture)'
-14: Use the 'Contains' method
+14: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(s, StringComparison.CurrentCulture)'
-15: Use the 'Contains' method
+15: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(s, StringComparison.CurrentCulture)'
-16: Use the 'Contains' method
+16: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(s, StringComparison.CurrentCulture)'
-17: Use the 'StartsWith' method
+17: Use the 'StartsWith' method.
 QUICKFIXES:
 Replace with 'StartsWith(s, StringComparison.CurrentCulture)'
-18: Use the 'StartsWith' method
+18: Use the 'StartsWith' method.
 QUICKFIXES:
 Replace with '!StartsWith(s, StringComparison.CurrentCulture)'
-19: Use the 'Contains' method
+19: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(s, StringComparison.CurrentCulture)'
-20: Use the 'Contains' method
+20: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(s, StringComparison.CurrentCulture)'
-21: Use the 'Contains' method
+21: Use the 'Contains' method.
 QUICKFIXES:
 Replace with 'Contains(s, StringComparison.CurrentCulture)'
-22: Use the 'Contains' method
+22: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(s, StringComparison.OrdinalIgnoreCase)'
-23: Use the 'Contains' method
+23: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(s, StringComparison.OrdinalIgnoreCase)'

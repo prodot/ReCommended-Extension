@@ -20,7 +20,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
 
-public sealed class RedundantNullableAnnotationSuggestion(INullableTypeUsage nullableTypeUsage, string message) : Highlighting(message)
+public sealed class RedundantNullableAnnotationHint(string message, INullableTypeUsage nullableTypeUsage) : Highlighting(message)
 {
     const string SeverityId = "RedundantNullableAnnotation";
 

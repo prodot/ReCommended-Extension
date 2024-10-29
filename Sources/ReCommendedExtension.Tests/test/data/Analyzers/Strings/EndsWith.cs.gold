@@ -39,9 +39,9 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: The expression is always true
-(1): ReSharper Suggestion: The expression is always true
-(2): ReSharper Suggestion: Use list pattern
-(3): ReSharper Suggestion: Use list pattern
-(4): ReSharper Suggestion: Use list pattern
-(5): ReSharper Suggestion: Use list pattern
+(0): ReSharper Suggestion: The expression is always true.
+(1): ReSharper Suggestion: The expression is always true.
+(2): ReSharper Suggestion: Use list pattern.
+(3): ReSharper Suggestion: Use list pattern.
+(4): ReSharper Suggestion: Use list pattern.
+(5): ReSharper Suggestion: Use list pattern.

@@ -36,11 +36,11 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: The expression is always true
-(1): ReSharper Suggestion: The expression is always true
-(2): ReSharper Suggestion: The expression is always true
-(3): ReSharper Suggestion: The expression is always true
-(4): ReSharper Suggestion: Use as character
-(5): ReSharper Suggestion: Use as character
-(6): ReSharper Suggestion: Use as character
-(7): ReSharper Suggestion: Use as character
+(0): ReSharper Suggestion: The expression is always true.
+(1): ReSharper Suggestion: The expression is always true.
+(2): ReSharper Suggestion: The expression is always true.
+(3): ReSharper Suggestion: The expression is always true.
+(4): ReSharper Suggestion: Pass the single character.
+(5): ReSharper Suggestion: Pass the single character.
+(6): ReSharper Suggestion: Pass the single character.
+(7): ReSharper Suggestion: Pass the single character.

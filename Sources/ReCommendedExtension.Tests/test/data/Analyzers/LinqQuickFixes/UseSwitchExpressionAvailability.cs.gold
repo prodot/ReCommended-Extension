@@ -62,54 +62,54 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Use switch expression
+0: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => 0, [var item] => item, _ => throw new InvalidOperationException(...) }'
-1: Use switch expression
+1: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => fallback, [var item] => item, _ => throw new InvalidOperationException(...) }'
-2: Use switch expression
+2: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => false, [var item] => item, _ => throw new InvalidOperationException(...) }'
-3: Use switch expression
+3: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => 0, [var item] => item, _ => throw new InvalidOperationException(...) }'
-4: Use switch expression
+4: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => 0, [var item] => item, _ => throw new InvalidOperationException(...) }'
-5: Use switch expression
+5: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => 0, [var item] => item, _ => throw new InvalidOperationException(...) }'
-6: Use switch expression
+6: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => 0, [var item] => item, _ => throw new InvalidOperationException(...) }'
-7: Use switch expression
+7: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => 0, [var item] => item, _ => throw new InvalidOperationException(...) }'
-8: Use switch expression
+8: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => '\0', [var item] => item, _ => throw new InvalidOperationException(...) }'
-9: Use switch expression
+9: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => new CancellationToken(), [var item] => item, _ => throw new InvalidOperationException(...) }'
-10: Use switch expression
+10: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => default(DayOfWeek), [var item] => item, _ => throw new InvalidOperationException(...) }'
-11: Use switch expression
+11: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => null, [var item] => item, _ => throw new InvalidOperationException(...) }'
-12: Use switch expression
+12: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => null, [var item] => item, _ => throw new InvalidOperationException(...) }'
-13: Use switch expression
+13: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => default(T), [var item] => item, _ => throw new InvalidOperationException(...) }'
-14: Use switch expression
+14: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => null, [var item] => item, _ => throw new InvalidOperationException(...) }'
-15: Use switch expression
+15: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => null, [var item] => item, _ => throw new InvalidOperationException(...) }'
-16: Use switch expression
+16: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => default(T), [var item] => item, _ => throw new InvalidOperationException(...) }'

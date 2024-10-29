@@ -8,7 +8,7 @@ using JetBrains.TextControl;
 namespace ReCommendedExtension.Analyzers.Annotation;
 
 [QuickFix]
-public sealed class RemoveNullableAnnotationFix(RedundantNullableAnnotationSuggestion highlighting) : QuickFixBase
+public sealed class RemoveNullableAnnotationFix(RedundantNullableAnnotationHint highlighting) : QuickFixBase
 {
     public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
 

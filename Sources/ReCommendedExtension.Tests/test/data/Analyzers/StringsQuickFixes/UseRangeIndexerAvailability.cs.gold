@@ -12,9 +12,9 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Use range indexer
+0: Use the range indexer.
 QUICKFIXES:
 Replace with '[..startIndex]'
-1: Use range indexer
+1: Use the range indexer.
 QUICKFIXES:
 Replace with '[count..]'

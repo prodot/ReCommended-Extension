@@ -15,7 +15,7 @@ public sealed class BaseTypeQuickFixAvailabilityTests : QuickFixAvailabilityTest
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypeQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RemoveRedundantBaseTypeDeclarationSuggestion;
+        => highlighting is RemoveRedundantBaseTypeDeclarationHint;
 
     [Test]
     [TestNet80]

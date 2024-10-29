@@ -17,7 +17,7 @@ public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTe
     protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantNullableAnnotationSuggestion
+        => highlighting is RedundantNullableAnnotationHint
             or NotAllowedAnnotationWarning
             or ConflictingAnnotationWarning
             or RedundantAnnotationSuggestion
