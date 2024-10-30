@@ -82,26 +82,10 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
     [Pure]
     static StringComparison? TryGetStringComparisonConstant(ICSharpExpression? expression)
-    {
-        if (expression is IReferenceExpression { Reference: var reference }
-            && reference.Resolve() is { DeclaredElement: IField { ContainingType: var enumType, ShortName: var enumMemberName } }
-            && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS))
-        {
-            return enumMemberName switch
-            {
-                nameof(StringComparison.Ordinal) => StringComparison.Ordinal,
-                nameof(StringComparison.OrdinalIgnoreCase) => StringComparison.OrdinalIgnoreCase,
-                nameof(StringComparison.CurrentCulture) => StringComparison.CurrentCulture,
-                nameof(StringComparison.CurrentCultureIgnoreCase) => StringComparison.CurrentCultureIgnoreCase,
-                nameof(StringComparison.InvariantCulture) => StringComparison.InvariantCulture,
-                nameof(StringComparison.InvariantCultureIgnoreCase) => StringComparison.InvariantCultureIgnoreCase,
-
-                _ => null,
-            };
-        }
-
-        return null;
-    }
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
+                ? (StringComparison)constantValue.IntValue
+                : null;
 
     /// <remarks>
     /// <c>text.Contains("")</c> → <c>true</c><para/>
