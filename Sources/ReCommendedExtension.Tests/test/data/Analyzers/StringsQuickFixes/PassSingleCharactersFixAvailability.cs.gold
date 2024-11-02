@@ -16,6 +16,15 @@ namespace Test
             var result23 = text.Replace(|"a"|(12), newValue: |"b"|(13));
             var result24 = text.Replace(oldValue: |"a"|(14), newValue: |"b"|(15));
         }
+
+        public void Split(string text, int count, StringSplitOptions options)
+        {
+            var result31 = text.Split([|"a"|(16), |"a"|(17)], options);
+            var result32 = text.Split(new[] { |"a"|(18), |"a"|(19) }, options);
+
+            var result41 = text.Split([|"a"|(20), |"a"|(21)], count, options);
+            var result42 = text.Split(new[] { |"a"|(22), |"a"|(23) }, count, options);
+        }
     }
 }
 ------------------------------------------------
@@ -67,3 +76,27 @@ Replace with 'a', 'b', respectively
 15: Pass the single character.
 QUICKFIXES:
 Replace with 'a', 'b', respectively
+16: Pass the single Character
+QUICKFIXES:
+Replace with 'a', 'a', respectively
+17: Pass the single Character
+QUICKFIXES:
+Replace with 'a', 'a', respectively
+18: Pass the single Character
+QUICKFIXES:
+Replace with 'a', 'a', respectively
+19: Pass the single Character
+QUICKFIXES:
+Replace with 'a', 'a', respectively
+20: Pass the single Character
+QUICKFIXES:
+Replace with 'a', 'a', respectively
+21: Pass the single Character
+QUICKFIXES:
+Replace with 'a', 'a', respectively
+22: Pass the single Character
+QUICKFIXES:
+Replace with 'a', 'a', respectively
+23: Pass the single Character
+QUICKFIXES:
+Replace with 'a', 'a', respectively

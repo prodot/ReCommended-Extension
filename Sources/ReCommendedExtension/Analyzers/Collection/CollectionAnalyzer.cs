@@ -211,26 +211,6 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     }
 
     [Pure]
-    static IType? TryGetTargetType(IExpression expression)
-    {
-        var targetType = expression.GetImplicitlyConvertedTo();
-
-        if (targetType.IsUnknown)
-        {
-            return null;
-        }
-
-        switch (expression.Parent)
-        {
-            case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
-            case IQueryFirstFrom or IQueryParameterPlatform:
-                return null;
-        }
-
-        return targetType;
-    }
-
-    [Pure]
     static IReferenceExpression? TryGetMethodReferenceToSetInferredTypeArguments(ICSharpExpression treeNode)
         => treeNode is
             {
@@ -461,7 +441,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 var itemType = arrayCreationExpression.GetElementType();
 
-                if (TryGetTargetType(arrayCreationExpression) is { } targetType)
+                if (arrayCreationExpression.TryGetTargetType() is { } targetType)
                 {
                     // new T[] { }      ->  []
                     // new T[] { ... }  ->  [...]
@@ -638,7 +618,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     static void AnalyzeObjectCreationExpression(IHighlightingConsumer consumer, IObjectCreationExpression objectCreationExpression)
     {
         if (objectCreationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120
-            && TryGetTargetType(objectCreationExpression) is { } targetType)
+            && objectCreationExpression.TryGetTargetType() is { } targetType)
         {
             switch (objectCreationExpression.Type())
             {
@@ -979,7 +959,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         Debug.Assert(arrayEmptyInvocationExpression.TypeArguments is [_]);
 
         if (arrayEmptyInvocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120
-            && TryGetTargetType(arrayEmptyInvocationExpression) is { } targetType)
+            && arrayEmptyInvocationExpression.TryGetTargetType() is { } targetType)
         {
             var psiModule = arrayEmptyInvocationExpression.GetPsiModule();
 

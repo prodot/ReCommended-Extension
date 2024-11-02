@@ -26,6 +26,15 @@ namespace Test
         {
             var result = text.IndexOf(|"a"|(8), StringComparison.Ordinal);
         }
+
+        public void Split(string text, int count, StringSplitOptions options)
+        {
+            var result11 = text.Split(|"a"|(9));
+            var result12 = text.Split(|"a"|(10), options);
+
+            var result21 = text.Split(|"a"|(11), count);
+            var result22 = text.Split(|"a"|(12), count, options);
+        }
     }
 }
 ------------------------------------------------
@@ -54,5 +63,17 @@ Replace with 'a'
 QUICKFIXES:
 Replace with 'a'
 8: Pass the single character.
+QUICKFIXES:
+Replace with 'a'
+9: Pass the single character
+QUICKFIXES:
+Replace with 'a'
+10: Pass the single character
+QUICKFIXES:
+Replace with 'a'
+11: Pass the single character
+QUICKFIXES:
+Replace with 'a'
+12: Pass the single character
 QUICKFIXES:
 Replace with 'a'

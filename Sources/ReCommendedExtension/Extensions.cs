@@ -55,20 +55,31 @@ internal static class Extensions
         => from field in fields where !field.HasAttributeInstance(PredefinedType.OBSOLETE_ATTRIBUTE_CLASS, false) select field;
 
     [Pure]
-    public static bool IsGenericArray(this IType type, ITreeNode context)
+    public static IType? TryGetTargetType(this IExpression expression)
     {
-        if (CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType)
+        var targetType = expression.GetImplicitlyConvertedTo();
+
+        if (targetType.IsUnknown)
         {
-            if (type.IsImplicitlyConvertibleTo(
-                TypeFactory.CreateArrayType(elementType, 1, NullableAnnotation.Unknown),
-                context.GetTypeConversionRule()))
-            {
-                return true;
-            }
+            return null;
         }
 
-        return false;
+        switch (expression.Parent)
+        {
+            case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
+            case IQueryFirstFrom or IQueryParameterPlatform:
+                return null;
+        }
+
+        return targetType;
     }
+
+    [Pure]
+    public static bool IsGenericArray(this IType type, ITreeNode context)
+        => CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType
+            && type.IsImplicitlyConvertibleTo(
+                TypeFactory.CreateArrayType(elementType, 1, NullableAnnotation.Unknown),
+                context.GetTypeConversionRule());
 
     [Pure]
     public static bool IsGenericArrayOfAnyRank(this IType type, ITreeNode context)
@@ -88,6 +99,14 @@ internal static class Extensions
 
         return false;
     }
+
+    [Pure]
+    public static bool IsGenericArrayOf(this IType type, IClrTypeName elementTypeName, ITreeNode context)
+        => CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType
+            && elementType.IsClrType(elementTypeName)
+            && type.IsImplicitlyConvertibleTo(
+                TypeFactory.CreateArrayType(elementType, 1, NullableAnnotation.Unknown),
+                context.GetTypeConversionRule());
 
     [Pure]
     public static bool IsGenericEnumerableOrDescendant(this IType type)
@@ -393,4 +412,7 @@ internal static class Extensions
             rangeExpression.RightOperand?.TryRemoveParentheses(factory);
         }
     }
+
+    [Pure]
+    public static bool IsPrintable(this char c) => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c) || char.IsSymbol(c) || char.IsPunctuation(c);
 }

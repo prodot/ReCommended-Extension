@@ -26,5 +26,14 @@ namespace Test
         {
             var result = text.IndexOf("a", StringComparison.Ordinal);
         }
+
+        public void Split(string text, int count, StringSplitOptions options)
+        {
+            var result11 = text.Split("a");
+            var result12 = text.Split("a", options);
+
+            var result21 = text.Split("a", count);
+            var result22 = text.Split("a", count, options);
+        }
     }
 }

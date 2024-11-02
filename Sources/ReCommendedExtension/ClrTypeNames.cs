@@ -80,6 +80,8 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName ConfigureAwaitOptions = new ClrTypeName("System.Threading.Tasks.ConfigureAwaitOptions");
 
+    public static readonly IClrTypeName StringSplitOptions = new ClrTypeName("System.StringSplitOptions");
+
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsClrType([NotNullWhen(true)] this ITypeElement? typeElement, IClrTypeName clrName)

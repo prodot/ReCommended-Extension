@@ -45,7 +45,7 @@ public sealed class PassSingleCharacterSuggestion(
 
     internal ICSharpArgument? RedundantArgument => redundantArgument;
 
-    public override DocumentRange CalculateRange() => Argument.Value.GetDocumentRange();
+    public override DocumentRange CalculateRange() => argument.Value.GetDocumentRange();
 }
 
 [RegisterConfigurableSeverity(
@@ -56,22 +56,45 @@ public sealed class PassSingleCharacterSuggestion(
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class PassSingleCharactersSuggestion(
-    string message,
-    ICSharpArgument[] arguments,
-    string?[] parameterNames,
-    char[] characters,
-    ICSharpArgument? redundantArgument = null) : MultipleHighlightings(message) // todo: move to a separate file
+public sealed class PassSingleCharactersSuggestion : MultipleHighlightings // todo: move to a separate file
 {
     const string SeverityId = "PassSingleCharacters";
 
-    internal ICSharpArgument[] Arguments => arguments;
+    PassSingleCharactersSuggestion(string message, char[] characters) : base(message) => Characters = characters;
 
-    internal string?[] ParameterNames => parameterNames;
+    public PassSingleCharactersSuggestion(
+        string message,
+        ICSharpArgument[] arguments,
+        string?[] parameterNames,
+        char[] characters,
+        ICSharpArgument? redundantArgument = null) : this(message, characters)
+    {
+        Arguments = arguments;
+        ParameterNames = parameterNames;
+        RedundantArgument = redundantArgument;
+    }
 
-    internal char[] Characters => characters;
+    public PassSingleCharactersSuggestion(string message, ICollectionExpressionElement[] collectionExpressionElements, char[] characters) : this(
+        message,
+        characters)
+        => CollectionExpressionElements = collectionExpressionElements;
 
-    internal ICSharpArgument? RedundantArgument => redundantArgument;
+    public PassSingleCharactersSuggestion(string message, IArrayCreationExpression arrayCreationExpression, char[] characters) : this(
+        message,
+        characters)
+        => ArrayCreationExpression = arrayCreationExpression;
+
+    internal ICSharpArgument[]? Arguments { get; }
+
+    internal string?[]? ParameterNames { get; }
+
+    internal ICollectionExpressionElement[]? CollectionExpressionElements { get; }
+
+    internal IArrayCreationExpression? ArrayCreationExpression { get; }
+
+    internal char[] Characters { get; }
+
+    internal ICSharpArgument? RedundantArgument { get; }
 }
 
 [RegisterConfigurableSeverity(
@@ -91,7 +114,7 @@ public sealed class UseExpressionResultSuggestion(string message, IInvocationExp
 
     internal string Replacement => replacement;
 
-    public override DocumentRange CalculateRange() => InvocationExpression.GetDocumentRange();
+    public override DocumentRange CalculateRange() => invocationExpression.GetDocumentRange();
 }
 
 public enum ListPatternSuggestionKind // todo: move to a separate file
@@ -186,9 +209,9 @@ public sealed class UseOtherMethodSuggestion(
 
     public override DocumentRange CalculateRange()
     {
-        var startOffset = InvokedExpression.Reference.GetDocumentRange().StartOffset;
+        var startOffset = invokedExpression.Reference.GetDocumentRange().StartOffset;
 
-        return (BinaryExpression as ITreeNode ?? InvocationExpression).GetDocumentRange().SetStartTo(startOffset);
+        return (BinaryExpression as ITreeNode ?? invocationExpression).GetDocumentRange().SetStartTo(startOffset);
     }
 }
 
@@ -210,7 +233,28 @@ public sealed class RedundantArgumentHint(string message, ICSharpArgument argume
 
     internal ICSharpArgument Argument => argument;
 
-    public override DocumentRange CalculateRange() => Argument.GetDocumentRange();
+    public override DocumentRange CalculateRange() => argument.GetDocumentRange();
+}
+
+[RegisterConfigurableSeverity(
+    SeverityId,
+    null,
+    HighlightingGroupIds.CodeRedundancy,
+    "The element is redundant" + ZoneMarker.Suffix,
+    "",
+    Severity.SUGGESTION)]
+[ConfigurableSeverityHighlighting(
+    SeverityId,
+    CSharpLanguage.Name,
+    AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
+    OverlapResolve = OverlapResolveKind.DEADCODE)]
+public sealed class RedundantElementHint(string message, IInitializerElement element) : Highlighting(message) // todo: move to a separate file
+{
+    const string SeverityId = "RedundantElement";
+
+    internal IInitializerElement Element => element;
+
+    public override DocumentRange CalculateRange() => element.GetDocumentRange();
 }
 
 [RegisterConfigurableSeverity(
@@ -238,9 +282,9 @@ public sealed class RedundantMethodInvocationHint(
 
     public override DocumentRange CalculateRange()
     {
-        var startOffset = InvokedExpression.Reference.GetDocumentRange().StartOffset;
+        var startOffset = invokedExpression.Reference.GetDocumentRange().StartOffset;
 
-        return InvocationExpression.GetDocumentRange().SetStartTo(startOffset);
+        return invocationExpression.GetDocumentRange().SetStartTo(startOffset);
     }
 }
 
@@ -267,7 +311,7 @@ public sealed class UseStringPropertySuggestion(
     internal string PropertyName => propertyName;
 
     public override DocumentRange CalculateRange()
-        => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);
+        => invocationExpression.GetDocumentRange().SetStartTo(invokedExpression.Reference.GetDocumentRange().StartOffset);
 }
 
 [RegisterConfigurableSeverity(
@@ -296,7 +340,7 @@ public sealed class UseRangeIndexerSuggestion(
     internal string EndIndexArgument => endIndexArgument;
 
     public override DocumentRange CalculateRange()
-        => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);
+        => invocationExpression.GetDocumentRange().SetStartTo(invokedExpression.Reference.GetDocumentRange().StartOffset);
 }
 
 [QuickFix]
@@ -304,7 +348,8 @@ public sealed class PassSingleCharacterFix(PassSingleCharacterSuggestion highlig
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '{highlighting.Character}'";
+    public override string Text
+        => highlighting.Character.IsPrintable() ? $"Replace with '{highlighting.Character}'" : "Replace with the single character'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
@@ -349,40 +394,80 @@ public sealed class PassSingleCharactersFix(PassSingleCharactersSuggestion highl
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with {string.Join(", ", from c in highlighting.Characters select $"'{c}'")}, respectively";
+    public override string Text
+        => highlighting.Characters.All(c => c.IsPrintable())
+            ? $"Replace with {string.Join(", ", from c in highlighting.Characters select $"'{c}'").TrimToSingleLineWithMaxLength(120)}, respectively"
+            : "Replace with the single characters";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
-            Debug.Assert(highlighting.Arguments is [_, _, ..]);
-            Debug.Assert(highlighting.Arguments.Length == highlighting.ParameterNames.Length);
-            Debug.Assert(highlighting.Arguments.Length == highlighting.Characters.Length);
-
-            var factory = CSharpElementFactory.GetInstance(highlighting.Arguments[0]);
-
-            for (var i = 0; i < highlighting.Arguments.Length; i++)
+            switch (highlighting)
             {
-                ModificationUtil.ReplaceChild(
-                    highlighting.Arguments[i],
-                    factory.CreateArgument(
-                        ParameterKind.UNKNOWN,
-                        highlighting.ParameterNames[i],
-                        factory.CreateExpression($"'{highlighting.Characters[i]}'")));
-            }
-
-            if (highlighting.RedundantArgument is { })
-            {
-                if (highlighting
-                        .RedundantArgument.PrevTokens()
-                        .TakeWhile(t => t.Parent == highlighting.RedundantArgument.Parent)
-                        .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+                case { Arguments: { } arguments, ParameterNames: { } parameterNames }:
                 {
-                    ModificationUtil.DeleteChildRange(commaToken, highlighting.RedundantArgument);
+                    Debug.Assert(arguments is [_, _, ..]);
+                    Debug.Assert(arguments.Length == parameterNames.Length);
+                    Debug.Assert(arguments.Length == highlighting.Characters.Length);
+
+                    var factory = CSharpElementFactory.GetInstance(arguments[0]);
+
+                    for (var i = 0; i < arguments.Length; i++)
+                    {
+                        ModificationUtil.ReplaceChild(
+                            arguments[i],
+                            factory.CreateArgument(
+                                ParameterKind.UNKNOWN,
+                                parameterNames[i],
+                                factory.CreateExpression($"'{highlighting.Characters[i]}'")));
+                    }
+
+                    if (highlighting.RedundantArgument is { })
+                    {
+                        if (highlighting
+                                .RedundantArgument.PrevTokens()
+                                .TakeWhile(t => t.Parent == highlighting.RedundantArgument.Parent)
+                                .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+                        {
+                            ModificationUtil.DeleteChildRange(commaToken, highlighting.RedundantArgument);
+                        }
+                        else
+                        {
+                            ModificationUtil.DeleteChild(highlighting.RedundantArgument);
+                        }
+                    }
+
+                    break;
                 }
-                else
+
+                case { CollectionExpressionElements: { } collectionExpressionElements }:
                 {
-                    ModificationUtil.DeleteChild(highlighting.RedundantArgument);
+                    Debug.Assert(collectionExpressionElements.Length == highlighting.Characters.Length);
+
+                    var factory = CSharpElementFactory.GetInstance(collectionExpressionElements[0]);
+
+                    for (var i = 0; i < collectionExpressionElements.Length; i++)
+                    {
+                        ModificationUtil.ReplaceChild(
+                            collectionExpressionElements[i],
+                            factory.CreateCollectionExpressionElement(factory.CreateExpression($"'{highlighting.Characters[i]}'")));
+                    }
+
+                    break;
+                }
+
+                case { ArrayCreationExpression: { } arrayCreationExpression }:
+                {
+                    Debug.Assert(arrayCreationExpression.ArrayInitializer is { ElementInitializers: [_, ..] });
+
+                    var factory = CSharpElementFactory.GetInstance(arrayCreationExpression);
+
+                    var items = string.Join(", ", from c in highlighting.Characters select $"'{c}'");
+
+                    ModificationUtil.ReplaceChild(arrayCreationExpression, factory.CreateExpression($$"""new[] { {{items}} }"""));
+
+                    break;
                 }
             }
         }
@@ -396,7 +481,7 @@ public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlig
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '{highlighting.Replacement}'";
+    public override string Text => $"Replace with '{highlighting.Replacement.TrimToSingleLineWithMaxLength(120)}'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
@@ -414,44 +499,48 @@ public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlig
 [QuickFix]
 public sealed class UseStringListPatternFix(UseStringListPatternSuggestion highlighting) : QuickFixBase // todo: move to a separate file
 {
-    string Replacement
+    string GetReplacement(bool forUI = false)
     {
-        get
+        switch (highlighting)
         {
-            switch (highlighting)
-            {
-                case { Characters: { } characters }:
-                    var pattern = string.Join(" or ", from c in characters select $"'{c}'");
+            case { Characters: { } characters }:
+                var pattern = !forUI || characters.All(c => c.IsPrintable())
+                    ? string.Join(" or ", from c in characters select $"'{c}'")
+                    : "<pattern>";
 
-                    return highlighting.Kind switch
-                    {
-                        ListPatternSuggestionKind.FirstCharacter => $"is [{pattern}, ..]",
-                        ListPatternSuggestionKind.NotFirstCharacter => $"is not [{pattern}, ..]",
-                        ListPatternSuggestionKind.LastCharacter => $"is [.., {pattern}]",
-                        ListPatternSuggestionKind.NotLastCharacter => $"is not [.., {pattern}]",
+                return highlighting.Kind switch
+                {
+                    ListPatternSuggestionKind.FirstCharacter => $"is [{pattern}, ..]",
+                    ListPatternSuggestionKind.NotFirstCharacter => $"is not [{pattern}, ..]",
+                    ListPatternSuggestionKind.LastCharacter => $"is [.., {pattern}]",
+                    ListPatternSuggestionKind.NotLastCharacter => $"is not [.., {pattern}]",
 
-                        _ => throw new NotSupportedException(),
-                    };
+                    _ => throw new NotSupportedException(),
+                };
 
-                case { ValueArgument: { } valueArgument }:
-                    return highlighting.Kind switch
-                    {
-                        ListPatternSuggestionKind.FirstCharacter => $"is [var firstCharacter, ..] && firstCharacter == {valueArgument}",
-                        ListPatternSuggestionKind.NotFirstCharacter => $"is not [var firstCharacter, ..] || firstCharacter != {valueArgument}",
-                        ListPatternSuggestionKind.LastCharacter => $"is [.., var lastCharacter] && lastCharacter == {valueArgument}",
-                        ListPatternSuggestionKind.NotLastCharacter => $"is not [.., var lastCharacter] || lastCharacter != {valueArgument}",
+            case { ValueArgument: { } valueArgument }:
+                if (forUI)
+                {
+                    valueArgument = valueArgument.TrimToSingleLineWithMaxLength(120);
+                }
 
-                        _ => throw new NotSupportedException(),
-                    };
+                return highlighting.Kind switch
+                {
+                    ListPatternSuggestionKind.FirstCharacter => $"is [var firstCharacter, ..] && firstCharacter == {valueArgument}",
+                    ListPatternSuggestionKind.NotFirstCharacter => $"is not [var firstCharacter, ..] || firstCharacter != {valueArgument}",
+                    ListPatternSuggestionKind.LastCharacter => $"is [.., var lastCharacter] && lastCharacter == {valueArgument}",
+                    ListPatternSuggestionKind.NotLastCharacter => $"is not [.., var lastCharacter] || lastCharacter != {valueArgument}",
 
-                default: throw new NotSupportedException();
-            }
+                    _ => throw new NotSupportedException(),
+                };
+
+            default: throw new NotSupportedException();
         }
     }
 
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '{Replacement}'";
+    public override string Text => $"Replace with '{GetReplacement(true)}'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
@@ -462,7 +551,7 @@ public sealed class UseStringListPatternFix(UseStringListPatternSuggestion highl
             ModificationUtil
                 .ReplaceChild(
                     highlighting.BinaryExpression as ITreeNode ?? highlighting.InvocationExpression,
-                    factory.CreateExpression($"($0 {Replacement})", highlighting.InvokedExpression.QualifierExpression))
+                    factory.CreateExpression($"($0 {GetReplacement()})", highlighting.InvokedExpression.QualifierExpression))
                 .TryRemoveParentheses(factory);
         }
 
@@ -482,7 +571,7 @@ public sealed class UseOtherMethodFix(UseOtherMethodSuggestion highlighting) : Q
             var negation = highlighting.IsNegated ? "!" : "";
             var arguments = string.Join(", ", highlighting.Arguments);
 
-            return $"Replace with '{negation}{highlighting.OtherMethodName}({arguments})'";
+            return $"Replace with '{negation}{highlighting.OtherMethodName}({arguments.TrimToSingleLineWithMaxLength(120)})'";
         }
     }
 
@@ -529,6 +618,34 @@ public sealed class RemoveArgumentFix(RedundantArgumentHint highlighting) : Quic
             else
             {
                 ModificationUtil.DeleteChild(highlighting.Argument);
+            }
+        }
+
+        return _ => { };
+    }
+}
+
+[QuickFix]
+public sealed class RemoveElementFix(RedundantElementHint highlighting) : QuickFixBase // todo: move to a separate file
+{
+    public override bool IsAvailable(IUserDataHolder cache) => true;
+
+    public override string Text => "Remove element";
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    {
+        using (WriteLockCookie.Create())
+        {
+            if (highlighting
+                    .Element.PrevTokens()
+                    .TakeWhile(t => t.Parent == highlighting.Element.Parent)
+                    .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+            {
+                ModificationUtil.DeleteChildRange(commaToken, highlighting.Element);
+            }
+            else
+            {
+                ModificationUtil.DeleteChild(highlighting.Element);
             }
         }
 
@@ -585,7 +702,8 @@ public sealed class UseRangeIndexerFix(UseRangeIndexerSuggestion highlighting) :
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '[{highlighting.StartIndexArgument}..{highlighting.EndIndexArgument}]'";
+    public override string Text
+        => $"Replace with '[{highlighting.StartIndexArgument.TrimToSingleLineWithMaxLength(120)}..{highlighting.EndIndexArgument.TrimToSingleLineWithMaxLength(120)}]'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {

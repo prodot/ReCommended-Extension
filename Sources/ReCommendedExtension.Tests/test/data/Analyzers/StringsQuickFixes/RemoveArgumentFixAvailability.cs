@@ -31,5 +31,10 @@ namespace Test
         {
             var result3 = text.PadRight(totalWidth, ' ');
         }
+
+        public void Split(string text)
+        {
+            var result11 = text.Split('a', 'b', 'a');
+        }
     }
 }

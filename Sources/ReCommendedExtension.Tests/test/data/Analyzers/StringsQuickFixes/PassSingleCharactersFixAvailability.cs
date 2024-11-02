@@ -16,5 +16,14 @@ namespace Test
             var result23 = text.Replace("a", newValue: "b");
             var result24 = text.Replace(oldValue: "a", newValue: "b");
         }
+
+        public void Split(string text, int count, StringSplitOptions options)
+        {
+            var result31 = text.Split(["a", "a"], options);
+            var result32 = text.Split(new[] { "a", "a" }, options);
+
+            var result41 = text.Split(["a", "a"], count, options);
+            var result42 = text.Split(new[] { "a", "a" }, count, options);
+        }
     }
 }

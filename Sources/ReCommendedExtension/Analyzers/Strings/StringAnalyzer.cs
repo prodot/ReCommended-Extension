@@ -23,14 +23,157 @@ namespace ReCommendedExtension.Analyzers.Strings;
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
         typeof(RedundantArgumentHint),
+        typeof(RedundantElementHint),
         typeof(UseStringPropertySuggestion),
         typeof(RedundantMethodInvocationHint),
         typeof(UseRangeIndexerSuggestion),
     ])]
 public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
+    abstract class Collection
+    {
+        [Pure]
+        public static Collection? TryFrom(ICSharpExpression? expression)
+            => expression switch
+            {
+                ICollectionExpression collectionExpression => new CollectionExpressionCollection(collectionExpression),
+
+                IArrayCreationExpression { ArrayInitializer: { } } arrayCreationExpression => new ArrayCreationExpressionCollection(
+                    arrayCreationExpression),
+
+                _ => null,
+            };
+
+        IReadOnlyList<string?>? stringConstants;
+
+        protected abstract IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions { get; }
+
+        public abstract ICSharpExpression Expression { get; }
+
+        [NonNegativeValue]
+        public abstract int Count { get; }
+
+        public abstract IEnumerable<IInitializerElement> Elements { get; }
+
+        public IEnumerable<(IInitializerElement, char)> ElementsWithCharConstants
+        {
+            get
+            {
+                foreach (var (element, expression) in ElementsWithExpressions)
+                {
+                    if (TryGetCharConstant(expression) is { } charConstant)
+                    {
+                        yield return (element, charConstant);
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<(IInitializerElement, string)> ElementsWithStringConstants
+        {
+            get
+            {
+                foreach (var (element, expression) in ElementsWithExpressions)
+                {
+                    if (TryGetStringConstant(expression) is { } stringConstant)
+                    {
+                        yield return (element, stringConstant);
+                    }
+                }
+            }
+        }
+
+        public IReadOnlyList<string?> StringConstants
+        {
+            get
+            {
+                if (stringConstants is not { })
+                {
+                    var array = new string?[Count];
+
+                    var i = 0;
+                    foreach (var (_, expression) in ElementsWithExpressions)
+                    {
+                        if (TryGetStringConstant(expression) is { } stringConstant)
+                        {
+                            array[i++] = stringConstant;
+                        }
+                    }
+
+                    stringConstants = [..array];
+
+                    Debug.Assert(StringConstants.Count == Count);
+                }
+
+                return stringConstants;
+            }
+        }
+    }
+
+    sealed class CollectionExpressionCollection : Collection
+    {
+        readonly ICollectionExpression collectionExpression;
+
+        internal CollectionExpressionCollection(ICollectionExpression collectionExpression) => this.collectionExpression = collectionExpression;
+
+        protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
+        {
+            get
+            {
+                foreach (var element in collectionExpression.CollectionElements)
+                {
+                    if (element is IExpressionElement expressionElement)
+                    {
+                        yield return (element, expressionElement.Expression);
+                    }
+                }
+            }
+        }
+
+        public override ICSharpExpression Expression => collectionExpression;
+
+        public override int Count => collectionExpression.CollectionElements.Count;
+
+        public override IEnumerable<IInitializerElement> Elements => collectionExpression.CollectionElements;
+    }
+
+    sealed class ArrayCreationExpressionCollection : Collection
+    {
+        readonly IArrayCreationExpression arrayCreationExpression;
+
+        internal ArrayCreationExpressionCollection(IArrayCreationExpression arrayCreationExpression)
+        {
+            Debug.Assert(arrayCreationExpression.ArrayInitializer is { });
+
+            this.arrayCreationExpression = arrayCreationExpression;
+        }
+
+        protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
+        {
+            get
+            {
+                foreach (var element in arrayCreationExpression.ArrayInitializer.ElementInitializers)
+                {
+                    if (element is IExpressionInitializer elementInitializer)
+                    {
+                        yield return (element, elementInitializer.Value);
+                    }
+                }
+            }
+        }
+
+        public override ICSharpExpression Expression => arrayCreationExpression;
+
+        public override int Count => arrayCreationExpression.ArrayInitializer.ElementInitializers.Count;
+
+        public override IEnumerable<IInitializerElement> Elements => arrayCreationExpression.ArrayInitializer.ElementInitializers;
+    }
+
     [Pure]
     static bool IsStringComparison(IType type) => type.IsClrType(PredefinedType.STRING_COMPARISON_CLASS);
+
+    [Pure]
+    static bool IsStringSplitOptions(IType type) => type.IsClrType(ClrTypeNames.StringSplitOptions);
 
     [Pure]
     static string[]? TryGetParameterNamesIfMethodExists(string methodName, IClrTypeName[] parameterTypes, IPsiModule psiModule)
@@ -69,6 +212,9 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     }
 
     [Pure]
+    static bool IsDefaultValue(ICSharpExpression? expression) => expression is { } && expression.IsDefaultValueOf(expression.Type());
+
+    [Pure]
     static string? TryGetStringConstant(ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } ? value : null;
 
@@ -86,6 +232,47 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
                 ? (StringComparison)constantValue.IntValue
                 : null;
+
+    [Pure]
+    static StringSplitOptions? TryGetStringSplitOptionsConstant(ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(ClrTypeNames.StringSplitOptions)
+                ? (StringSplitOptions)constantValue.IntValue
+                : null;
+
+    [Pure]
+    static bool ArrayEmptyMethodExists(IPsiModule psiModule)
+        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType
+            && arrayType.Methods.Any(
+                method => method is
+                {
+                    ShortName: nameof(Array.Empty),
+                    IsStatic: true,
+                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                    TypeParameters: [_],
+                    Parameters: [],
+                });
+
+    [Pure]
+    static string CreateStringArray(string[] items, ICSharpExpression context)
+    {
+        if (context.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120 && context.TryGetTargetType() is { })
+        {
+            return $"[{string.Join(", ", items)}]";
+        }
+
+        if (items is [])
+        {
+            if (ArrayEmptyMethodExists(context.GetPsiModule()))
+            {
+                return $"{nameof(Array)}.{nameof(Array.Empty)}<string>()";
+            }
+
+            return "new string[0]";
+        }
+
+        return $$"""new[] { {{string.Join(", ", items)}} }""";
+    }
 
     /// <remarks>
     /// <c>text.Contains("")</c> → <c>true</c><para/>
@@ -1066,7 +1253,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
             if (TryGetInt32Constant(startIndexArgument.Value) == 0)
             {
                 consumer.AddHighlighting(
-                    new UseExpressionResultSuggestion("The expression is always the empty string.", invocationExpression, "\"\""));
+                    new UseExpressionResultSuggestion("The expression is always an empty string.", invocationExpression, "\"\""));
                 return;
             }
 
@@ -1238,209 +1425,786 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
+    /// <remarks>
+    /// <c>text.Split(char, 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(char, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(char, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)
+    /// </remarks>
+    static void AnalyzeSplit_Char_Int32_StringSplitOptions(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument countArgument,
+        ICSharpArgument? optionsArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement())
+        {
+            switch (TryGetInt32Constant(countArgument.Value))
+            {
+                case 0:
+                    consumer.AddHighlighting(
+                        new UseExpressionResultSuggestion(
+                            "The expression is always an empty array.",
+                            invocationExpression,
+                            CreateStringArray([], invocationExpression)));
+                    break;
+
+                case 1:
+                    Debug.Assert(invokedExpression.QualifierExpression is { });
+
+                    switch (optionsArgument is { } ? TryGetStringSplitOptionsConstant(optionsArgument.Value) : StringSplitOptions.None)
+                    {
+                        case StringSplitOptions.None:
+                            consumer.AddHighlighting(
+                                new UseExpressionResultSuggestion(
+                                    "The expression is always an array with a single element.",
+                                    invocationExpression,
+                                    CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                            break;
+
+                        case (StringSplitOptions)2: // todo: use StringSplitOptions.TrimEntries
+                            consumer.AddHighlighting(
+                                new UseExpressionResultSuggestion(
+                                    "The expression is always an array with a single trimmed element.",
+                                    invocationExpression,
+                                    CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Split(char[])</c> → <c>text.Split(char[])</c>
+    /// </remarks>
+    static void AnalyzeSplit_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument> arguments)
+    {
+        switch (arguments)
+        {
+            case [_, _, ..]:
+            {
+                var set = new HashSet<char>(arguments.Count);
+
+                foreach (var argument in arguments)
+                {
+                    if (TryGetCharConstant(argument.Value) is { } character && !set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
+                    }
+                }
+
+                break;
+            }
+
+            case [{ Value: var argumentExpression }] when Collection.TryFrom(argumentExpression) is { } collection:
+            {
+                var set = new HashSet<char>(collection.Count);
+
+                foreach (var (element, character) in collection.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+
+                break;
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Split(char[], 0)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(char[], 1)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(char[], int)</c> → <c>text.Split(char[], int)</c><para/>
+    /// </remarks>
+    static void AnalyzeSplit_CharArray_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument separatorArgument,
+        ICSharpArgument countArgument)
+    {
+        switch (separatorArgument.Value, TryGetInt32Constant(countArgument.Value))
+        {
+            case (_, 0) when !invocationExpression.IsUsedAsStatement():
+                consumer.AddHighlighting(
+                    new UseExpressionResultSuggestion(
+                        "The expression is always an empty array.",
+                        invocationExpression,
+                        CreateStringArray([], invocationExpression)));
+                break;
+
+            case (_, 1) when !invocationExpression.IsUsedAsStatement():
+                Debug.Assert(invokedExpression.QualifierExpression is { });
+
+                consumer.AddHighlighting(
+                    new UseExpressionResultSuggestion(
+                        "The expression is always an array with a single element.",
+                        invocationExpression,
+                        CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                break;
+
+            case (_, _) when Collection.TryFrom(separatorArgument.Value) is { } collection:
+            {
+                var set = new HashSet<char>(collection.Count);
+
+                foreach (var (element, character) in collection.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+
+                break;
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Split(char[], StringSplitOptions)</c> → <c>text.Split(char[], StringSplitOptions)</c><para/>
+    /// </remarks>
+    static void AnalyzeSplit_CharArray_StringSplitOptions(IHighlightingConsumer consumer, ICSharpArgument separatorArgument)
+    {
+        if (Collection.TryFrom(separatorArgument.Value) is { } collection)
+        {
+            var set = new HashSet<char>(collection.Count);
+
+            foreach (var (element, character) in collection.ElementsWithCharConstants)
+            {
+                if (!set.Add(character))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                }
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Split(char[], 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(char[], 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(char[], 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(char[], int, StringSplitOptions)</c> → <c>text.Split(char[], int, StringSplitOptions)</c><para/>
+    /// </remarks>
+    static void AnalyzeSplit_CharArray_Int32_StringSplitOptions(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument separatorArgument,
+        ICSharpArgument countArgument,
+        ICSharpArgument optionsArgument)
+    {
+        switch (separatorArgument.Value, TryGetInt32Constant(countArgument.Value))
+        {
+            case (_, 0) when !invocationExpression.IsUsedAsStatement():
+                consumer.AddHighlighting(
+                    new UseExpressionResultSuggestion(
+                        "The expression is always an empty array.",
+                        invocationExpression,
+                        CreateStringArray([], invocationExpression)));
+                break;
+
+            case (_, 1) when !invocationExpression.IsUsedAsStatement():
+                Debug.Assert(invokedExpression.QualifierExpression is { });
+
+                switch (TryGetStringSplitOptionsConstant(optionsArgument.Value))
+                {
+                    case StringSplitOptions.None:
+                        consumer.AddHighlighting(
+                            new UseExpressionResultSuggestion(
+                                "The expression is always an array with a single element.",
+                                invocationExpression,
+                                CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                        break;
+
+                    case (StringSplitOptions)2: // todo: use StringSplitOptions.TrimEntries
+                        consumer.AddHighlighting(
+                            new UseExpressionResultSuggestion(
+                                "The expression is always an array with a single trimmed element.",
+                                invocationExpression,
+                                CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
+                        break;
+                }
+                break;
+
+            case (_, _) when Collection.TryFrom(separatorArgument.Value) is { } collection:
+            {
+                var set = new HashSet<char>(collection.Count);
+
+                foreach (var (element, character) in collection.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+
+                break;
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Split(null, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split("", None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(null, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split("", TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(string, StringSplitOptions)</c> → <c>text.Split(char, StringSplitOptions)</c>
+    /// </remarks>
+    static void AnalyzeSplit_String_StringSplitOptions(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument separatorArgument,
+        ICSharpArgument? optionsArgument)
+    {
+        var separator = IsDefaultValue(separatorArgument.Value) ? "" : TryGetStringConstant(separatorArgument.Value);
+
+        switch (separator)
+        {
+            case "":
+                if (!invocationExpression.IsUsedAsStatement())
+                {
+                    Debug.Assert(invokedExpression.QualifierExpression is { });
+
+                    switch (optionsArgument is { } ? TryGetStringSplitOptionsConstant(optionsArgument.Value) : StringSplitOptions.None)
+                    {
+                        case StringSplitOptions.None:
+                            consumer.AddHighlighting(
+                                new UseExpressionResultSuggestion(
+                                    "The expression is always an array with a single element.",
+                                    invocationExpression,
+                                    CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                            break;
+
+                        case (StringSplitOptions)2: // todo: use StringSplitOptions.TrimEntries
+                            consumer.AddHighlighting(
+                                new UseExpressionResultSuggestion(
+                                    "The expression is always an array with a single trimmed element.",
+                                    invocationExpression,
+                                    CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
+                            break;
+                    }
+                }
+                break;
+
+            case [var character]:
+                if (TryGetParameterNamesIfMethodExists(
+                        nameof(string.Split),
+                        [PredefinedType.CHAR_FQN, ClrTypeNames.StringSplitOptions],
+                        invocationExpression.PsiModule) is [var separatorParameterName, _])
+                {
+                    consumer.AddHighlighting(
+                        new PassSingleCharacterSuggestion(
+                            "Pass the single character",
+                            separatorArgument,
+                            separatorArgument.NameIdentifier is { } ? separatorParameterName : null,
+                            character));
+                }
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Split(string, 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(string, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(string, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(null, int, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split("", int, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(null, int, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split("", int, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(string, int, StringSplitOptions)</c> → <c>text.Split(char, int, StringSplitOptions)</c>
+    /// </remarks>
+    static void AnalyzeSplit_String_Int32_StringSplitOptions(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument separatorArgument,
+        ICSharpArgument countArgument,
+        ICSharpArgument? optionsArgument)
+    {
+        var separator = IsDefaultValue(separatorArgument.Value) ? "" : TryGetStringConstant(separatorArgument.Value);
+
+        switch (separator, TryGetInt32Constant(countArgument.Value))
+        {
+            case (_, 0) when !invocationExpression.IsUsedAsStatement():
+                consumer.AddHighlighting(
+                    new UseExpressionResultSuggestion(
+                        "The expression is always an empty array.",
+                        invocationExpression,
+                        CreateStringArray([], invocationExpression)));
+                break;
+
+            case (_, 1) or ("", _) when !invocationExpression.IsUsedAsStatement():
+                Debug.Assert(invokedExpression.QualifierExpression is { });
+
+                switch (optionsArgument is { } ? TryGetStringSplitOptionsConstant(optionsArgument.Value) : StringSplitOptions.None)
+                {
+                    case StringSplitOptions.None:
+                        consumer.AddHighlighting(
+                            new UseExpressionResultSuggestion(
+                                "The expression is always an array with a single element.",
+                                invocationExpression,
+                                CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                        break;
+
+                    case (StringSplitOptions)2: // todo: use StringSplitOptions.TrimEntries
+                        consumer.AddHighlighting(
+                            new UseExpressionResultSuggestion(
+                                "The expression is always an array with a single trimmed element.",
+                                invocationExpression,
+                                CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
+                        break;
+                }
+                break;
+
+            case ([var character], _):
+                if (TryGetParameterNamesIfMethodExists(
+                        nameof(string.Split),
+                        [PredefinedType.CHAR_FQN, PredefinedType.INT_FQN, ClrTypeNames.StringSplitOptions],
+                        invocationExpression.PsiModule) is [var separatorParameterName, _, _])
+                {
+                    consumer.AddHighlighting(
+                        new PassSingleCharacterSuggestion(
+                            "Pass the single character",
+                            separatorArgument,
+                            separatorArgument.NameIdentifier is { } ? separatorParameterName : null,
+                            character));
+                }
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Split([""], None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split([""], TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(string[], StringSplitOptions)</c> → <c>text.Split(char[], StringSplitOptions)</c><para/>
+    /// <c>text.Split(string[], StringSplitOptions)</c> → <c>text.Split(string[], StringSplitOptions)</c>
+    /// </remarks>
+    static void AnalyzeSplit_StringArray_StringSplitOptions(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument separatorArgument,
+        ICSharpArgument optionsArgument)
+    {
+        if (Collection.TryFrom(separatorArgument.Value) is { } collection)
+        {
+            if (collection.StringConstants is [""])
+            {
+                if (!invocationExpression.IsUsedAsStatement())
+                {
+                    Debug.Assert(invokedExpression.QualifierExpression is { });
+
+                    switch (TryGetStringSplitOptionsConstant(optionsArgument.Value))
+                    {
+                        case StringSplitOptions.None:
+                            consumer.AddHighlighting(
+                                new UseExpressionResultSuggestion(
+                                    "The expression is always an array with a single element.",
+                                    invocationExpression,
+                                    CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                            break;
+
+                        case (StringSplitOptions)2: // todo: use StringSplitOptions.TrimEntries
+                            consumer.AddHighlighting(
+                                new UseExpressionResultSuggestion(
+                                    "The expression is always an array with a single trimmed element.",
+                                    invocationExpression,
+                                    CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                if (collection.StringConstants.All(s => s is [_]))
+                {
+                    var highlighting = collection.Expression switch
+                    {
+                        ICollectionExpression collectionExpression => new PassSingleCharactersSuggestion(
+                            "Pass the single Character",
+                            [..collectionExpression.CollectionElements],
+                            [..from s in collection.StringConstants select s[0]]), // todo: check if a string consists of a unicode character
+
+                        IArrayCreationExpression arrayCreationExpression => new PassSingleCharactersSuggestion(
+                            "Pass the single Character",
+                            arrayCreationExpression,
+                            [..from s in collection.StringConstants select s[0]]),
+
+                        _ => throw new NotSupportedException(),
+                    };
+
+                    foreach (var element in collection.Elements)
+                    {
+                        consumer.AddHighlighting(highlighting, element.GetDocumentRange());
+                    }
+                }
+                else
+                {
+                    var set = new HashSet<string>(collection.Count, StringComparer.Ordinal);
+
+                    foreach (var (element, s) in collection.ElementsWithStringConstants)
+                    {
+                        if (!set.Add(s))
+                        {
+                            consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Split(string[], 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(string[], 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(string[], 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split([""], int, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split([""], int, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(string[], int, StringSplitOptions)</c> → <c>text.Split(char[], int, StringSplitOptions)</c><para/>
+    /// <c>text.Split(string[], int, StringSplitOptions)</c> → <c>text.Split(string[], int, StringSplitOptions)</c>
+    /// </remarks>
+    static void AnalyzeSplit_StringArray_Int32_StringSplitOptions(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument separatorArgument,
+        ICSharpArgument countArgument,
+        ICSharpArgument optionsArgument)
+    {
+        switch (Collection.TryFrom(separatorArgument.Value), TryGetInt32Constant(countArgument.Value))
+        {
+            case (_, 0) when !invocationExpression.IsUsedAsStatement():
+                consumer.AddHighlighting(
+                    new UseExpressionResultSuggestion(
+                        "The expression is always an empty array.",
+                        invocationExpression,
+                        CreateStringArray([], invocationExpression)));
+                break;
+
+            case (_, 1) or ({ StringConstants: [""] }, _) when !invocationExpression.IsUsedAsStatement():
+                Debug.Assert(invokedExpression.QualifierExpression is { });
+
+                switch (TryGetStringSplitOptionsConstant(optionsArgument.Value))
+                {
+                    case StringSplitOptions.None:
+                        consumer.AddHighlighting(
+                            new UseExpressionResultSuggestion(
+                                "The expression is always an array with a single element.",
+                                invocationExpression,
+                                CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                        break;
+
+                    case (StringSplitOptions)2: // todo: use StringSplitOptions.TrimEntries
+                        consumer.AddHighlighting(
+                            new UseExpressionResultSuggestion(
+                                "The expression is always an array with a single trimmed element.",
+                                invocationExpression,
+                                CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
+                        break;
+                }
+                break;
+
+            case ({ } collection, _):
+                if (collection.StringConstants.All(s => s is [_]))
+                {
+                    var highlighting = collection.Expression switch
+                    {
+                        ICollectionExpression collectionExpression => new PassSingleCharactersSuggestion(
+                            "Pass the single Character",
+                            [..collectionExpression.CollectionElements],
+                            [..from s in collection.StringConstants select s[0]]),
+
+                        IArrayCreationExpression arrayCreationExpression => new PassSingleCharactersSuggestion(
+                            "Pass the single Character",
+                            arrayCreationExpression,
+                            [.. from s in collection.StringConstants select s[0]]),
+
+                        _ => throw new NotSupportedException(),
+                    };
+
+                    foreach (var element in collection.Elements)
+                    {
+                        consumer.AddHighlighting(highlighting, element.GetDocumentRange());
+                    }
+                }
+                else
+                {
+                    var set = new HashSet<string>(collection.Count, StringComparer.Ordinal);
+
+                    foreach (var (element, s) in collection.ElementsWithStringConstants)
+                    {
+                        if (!set.Add(s))
+                        {
+                            consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
             && reference.Resolve().DeclaredElement is IMethod method
             && method.ContainingType.IsSystemString()
-            && method is { IsStatic: false, AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC })
+            && method is { IsStatic: false, TypeParameters: [], AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC })
         {
-            switch (method)
+            switch (method.ShortName)
             {
-                // Contains
-                case { ShortName: nameof(string.Contains), TypeParameters: [], Parameters: [{ Type: var valueType }] }
-                    when valueType.IsString() && element.Arguments is [var valueArgument]:
-                    AnalyzeContains_String(consumer, element, valueArgument);
-                    break;
-
-                case
-                {
-                    ShortName: nameof(string.Contains),
-                    TypeParameters: [],
-                    Parameters: [{ Type: var valueType }, { Type: var stringComparisonType }],
-                } when valueType.IsString() && IsStringComparison(stringComparisonType) && element.Arguments is [var valueArgument, _]:
-                    AnalyzeContains_String_StringComparison(consumer, element, valueArgument);
-                    break;
-
-                // EndsWith
-                case { ShortName: nameof(string.EndsWith), TypeParameters: [], Parameters: [{ Type: var valueType }] }
-                    when valueType.IsChar() && element.Arguments is [var valueArgument]:
-                    AnalyzeEndsWith_Char(consumer, element, invokedExpression, valueArgument);
-                    break;
-
-                case { ShortName: nameof(string.EndsWith), TypeParameters: [], Parameters: [{ Type: var valueType }] }
-                    when valueType.IsString() && element.Arguments is [var valueArgument]:
-                    AnalyzeEndsWith_String(consumer, element, valueArgument);
-                    break;
-
-                case
+                case nameof(string.Contains):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        ShortName: nameof(string.EndsWith),
-                        TypeParameters: [],
-                        Parameters: [{ Type: var valueType }, { Type: var stringComparisonType }],
-                    } when valueType.IsString()
-                    && IsStringComparison(stringComparisonType)
-                    && element.Arguments is [var valueArgument, var comparisonTypeArgument]:
-                    AnalyzeEndsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                            AnalyzeContains_String(consumer, element, valueArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, _])
+                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+                            AnalyzeContains_String_StringComparison(consumer, element, valueArgument);
+                            break;
+                    }
                     break;
 
-                // IndexOf
-                case { ShortName: nameof(string.IndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }] }
-                    when valueType.IsChar() && element.Arguments is [var valueArgument]:
-                    AnalyzeIndexOf_Char(consumer, element, invokedExpression, valueArgument);
-                    break;
-
-                case { ShortName: nameof(string.IndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }, { Type: var startIndexType }] }
-                    when valueType.IsChar() && startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
-                    AnalyzeIndexOf_Char_Int32(consumer, startIndexArgument);
-                    break;
-
-                case
+                case nameof(string.EndsWith):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        ShortName: nameof(string.IndexOf),
-                        TypeParameters: [],
-                        Parameters: [{ Type: var valueType }, { Type: var stringComparisonType }],
-                    } when valueType.IsChar()
-                    && IsStringComparison(stringComparisonType)
-                    && element.Arguments is [var valueArgument, var comparisonTypeArgument]:
-                    AnalyzeIndexOf_Char_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsChar():
+                            AnalyzeEndsWith_Char(consumer, element, invokedExpression, valueArgument);
+                            break;
+
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                            AnalyzeEndsWith_String(consumer, element, valueArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+                            AnalyzeEndsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                            break;
+                    }
                     break;
 
-                case { ShortName: nameof(string.IndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }] }
-                    when valueType.IsString() && element.Arguments is [var valueArgument]:
-                    AnalyzeIndexOf_String(consumer, element, invokedExpression, valueArgument);
-                    break;
-
-                case { ShortName: nameof(string.IndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }, { Type: var startIndexType }] }
-                    when valueType.IsString() && startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
-                    AnalyzeIndexOf_String_Int32(consumer, startIndexArgument);
-                    break;
-
-                case
+                case nameof(string.IndexOf):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        ShortName: nameof(string.IndexOf),
-                        TypeParameters: [],
-                        Parameters: [{ Type: var valueType }, { Type: var stringComparisonType }],
-                    } when valueType.IsString()
-                    && IsStringComparison(stringComparisonType)
-                    && element.Arguments is [var valueArgument, var comparisonTypeArgument]:
-                    AnalyzeIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsChar():
+                            AnalyzeIndexOf_Char(consumer, element, invokedExpression, valueArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument])
+                            when valueType.IsChar() && startIndexType.IsInt():
+                            AnalyzeIndexOf_Char_Int32(consumer, startIndexArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                            when valueType.IsChar() && IsStringComparison(stringComparisonType):
+                            AnalyzeIndexOf_Char_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                            break;
+
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                            AnalyzeIndexOf_String(consumer, element, invokedExpression, valueArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument])
+                            when valueType.IsString() && startIndexType.IsInt():
+                            AnalyzeIndexOf_String_Int32(consumer, startIndexArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+                            AnalyzeIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var stringComparisonType }], [
+                            _, var startIndexArgument, _,
+                        ]) when valueType.IsString() && startIndexType.IsInt() && IsStringComparison(stringComparisonType):
+                            AnalyzeIndexOf_String_Int32_StringComparison(consumer, startIndexArgument);
+                            break;
+                    }
                     break;
 
-                case
+                case nameof(string.IndexOfAny):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        ShortName: nameof(string.IndexOf),
-                        TypeParameters: [],
-                        Parameters: [{ Type: var valueType }, { Type: var startIndexType }, { Type: var stringComparisonType }],
-                    } when valueType.IsString()
-                    && startIndexType.IsInt()
-                    && IsStringComparison(stringComparisonType)
-                    && element.Arguments is [_, var startIndexArgument, _]:
-                    AnalyzeIndexOf_String_Int32_StringComparison(consumer, startIndexArgument);
+                        case ([_, { Type: var startIndexType }], [_, var startIndexArgument]) when startIndexType.IsInt():
+                            AnalyzeIndexOfAny(consumer, startIndexArgument);
+                            break;
+                    }
                     break;
 
-                // IndexOfAny
-                case { ShortName: nameof(string.IndexOfAny), TypeParameters: [], Parameters: [_, { Type: var startIndexType }] }
-                    when startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
-                    AnalyzeIndexOfAny(consumer, startIndexArgument);
-                    break;
-
-                // LastIndexOf
-                case
-                {
-                    ShortName: nameof(string.LastIndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }, { Type: var startIndexType }],
-                } when valueType.IsChar() && startIndexType.IsInt() && element.Arguments is [_, var startIndexArgument]:
-                    AnalyzeLastIndexOf_Char_Int32(consumer, element, startIndexArgument);
-                    break;
-
-                case { ShortName: nameof(string.LastIndexOf), TypeParameters: [], Parameters: [{ Type: var valueType }] }
-                    when valueType.IsString() && element.Arguments is [var valueArgument]:
-                    AnalyzeLastIndexOf_String(consumer, element, invokedExpression, valueArgument);
-                    break;
-
-                case
+                case nameof(string.LastIndexOf):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        ShortName: nameof(string.LastIndexOf),
-                        TypeParameters: [],
-                        Parameters: [{ Type: var valueType }, { Type: var stringComparisonType }],
-                    } when valueType.IsString()
-                    && IsStringComparison(stringComparisonType)
-                    && element.Arguments is [var valueArgument, var comparisonTypeArgument]:
-                    AnalyzeLastIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                        case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument])
+                            when valueType.IsChar() && startIndexType.IsInt():
+                            AnalyzeLastIndexOf_Char_Int32(consumer, element, startIndexArgument);
+                            break;
+
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                            AnalyzeLastIndexOf_String(consumer, element, invokedExpression, valueArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+                            AnalyzeLastIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                            break;
+                    }
                     break;
 
-                // PadLeft
-                case { ShortName: nameof(string.PadLeft), TypeParameters: [], Parameters: [{ Type: var totalWidthType }] }
-                    when totalWidthType.IsInt() && element.Arguments is [var totalWidthArgument]:
-                    AnalyzePadLeft_Int32(consumer, element, invokedExpression, totalWidthArgument);
-                    break;
-
-                case
+                case nameof(string.PadLeft):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        ShortName: nameof(string.PadLeft),
-                        TypeParameters: [],
-                        Parameters: [{ Type: var totalWidthType }, { Type: var paddingCharType }],
-                    } when totalWidthType.IsInt()
-                    && paddingCharType.IsChar()
-                    && element.Arguments is [var totalWidthArgument, var paddingCharArgument]:
-                    AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
+                        case ([{ Type: var totalWidthType }], [var totalWidthArgument]) when totalWidthType.IsInt():
+                            AnalyzePadLeft_Int32(consumer, element, invokedExpression, totalWidthArgument);
+                            break;
+
+                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument])
+                            when totalWidthType.IsInt() && paddingCharType.IsChar():
+                            AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
+                            break;
+                    }
                     break;
 
-                // PadRight
-                case { ShortName: nameof(string.PadRight), TypeParameters: [], Parameters: [{ Type: var totalWidthType }] }
-                    when totalWidthType.IsInt() && element.Arguments is [var totalWidthArgument]:
-                    AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
-                    break;
-
-                case
+                case nameof(string.PadRight):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        ShortName: nameof(string.PadRight),
-                        TypeParameters: [],
-                        Parameters: [{ Type: var totalWidthType }, { Type: var paddingCharType }],
-                    } when totalWidthType.IsInt()
-                    && paddingCharType.IsChar()
-                    && element.Arguments is [var totalWidthArgument, var paddingCharArgument]:
-                    AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
+                        case ([{ Type: var totalWidthType }], [var totalWidthArgument]) when totalWidthType.IsInt():
+                            AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
+                            break;
+
+                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument])
+                            when totalWidthType.IsInt() && paddingCharType.IsChar():
+                            AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
+                            break;
+                    }
                     break;
 
-                // Remove
-                case { ShortName: nameof(string.Remove), TypeParameters: [], Parameters: [{ Type: var startIndexType }] }
-                    when startIndexType.IsInt() && element.Arguments is [var startIndexArgument]:
-                    AnalyzeRemove_Int32(consumer, element, invokedExpression, startIndexArgument);
-                    break;
-
-                case { ShortName: nameof(string.Remove), TypeParameters: [], Parameters: [{ Type: var startIndexType }, { Type: var countType }] }
-                    when startIndexType.IsInt() && countType.IsInt() && element.Arguments is [var startIndexArgument, var countArgument]:
-                    AnalyzeRemove_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, countArgument);
-                    break;
-
-                // Replace
-                case
+                case nameof(string.Remove):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        ShortName: nameof(string.Replace),
-                        TypeParameters: [],
-                        Parameters: [{ Type: var oldValueType }, { Type: var newValueType }, { Type: var stringComparisonType }],
-                    } when oldValueType.IsString()
-                    && newValueType.IsString()
-                    && IsStringComparison(stringComparisonType)
-                    && element.Arguments is [var oldValueArgument, var newValueArgument, var comparisonTypeArgument]:
-                    AnalyzeReplace_String_String_StringComparison(
-                        consumer,
-                        element,
-                        invokedExpression,
-                        oldValueArgument,
-                        newValueArgument,
-                        comparisonTypeArgument);
+                        case ([{ Type: var startIndexType }], [var startIndexArgument]) when startIndexType.IsInt():
+                            AnalyzeRemove_Int32(consumer, element, invokedExpression, startIndexArgument);
+                            break;
+
+                        case ([{ Type: var startIndexType }, { Type: var countType }], [var startIndexArgument, var countArgument])
+                            when startIndexType.IsInt() && countType.IsInt():
+                            AnalyzeRemove_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, countArgument);
+                            break;
+                    }
                     break;
 
-                case { ShortName: nameof(string.Replace), TypeParameters: [], Parameters: [{ Type: var oldCharType }, { Type: var newCharType }] }
-                    when oldCharType.IsChar() && newCharType.IsChar() && element.Arguments is [var oldCharArgument, var newCharArgument]:
-                    AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
+                case nameof(string.Replace):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var oldValueType }, { Type: var newValueType }, { Type: var stringComparisonType }], [
+                            var oldValueArgument, var newValueArgument, var comparisonTypeArgument,
+                        ]) when oldValueType.IsString() && newValueType.IsString() && IsStringComparison(stringComparisonType):
+                            AnalyzeReplace_String_String_StringComparison(
+                                consumer,
+                                element,
+                                invokedExpression,
+                                oldValueArgument,
+                                newValueArgument,
+                                comparisonTypeArgument);
+                            break;
+
+                        case ([{ Type: var oldCharType }, { Type: var newCharType }], [var oldCharArgument, var newCharArgument])
+                            when oldCharType.IsChar() && newCharType.IsChar():
+                            AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
+                            break;
+
+                        case ([{ Type: var oldValueType }, { Type: var newValueType }], [var oldValueArgument, var newValueArgument])
+                            when oldValueType.IsString() && newValueType.IsString():
+                            AnalyzeReplace_String_String(consumer, element, invokedExpression, oldValueArgument, newValueArgument);
+                            break;
+                    }
                     break;
 
-                case { ShortName: nameof(string.Replace), TypeParameters: [], Parameters: [{ Type: var oldValueType }, { Type: var newValueType }] }
-                    when oldValueType.IsString() && newValueType.IsString() && element.Arguments is [var oldValueArgument, var newValueArgument]:
-                    AnalyzeReplace_String_String(consumer, element, invokedExpression, oldValueArgument, newValueArgument);
+                case nameof(string.Split):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], { Count: 2 or 3 } arguments)
+                            when separatorType.IsChar() && countType.IsInt() && IsStringSplitOptions(optionsType):
+                            AnalyzeSplit_Char_Int32_StringSplitOptions(
+                                consumer,
+                                element,
+                                invokedExpression,
+                                arguments[1],
+                                arguments.Count == 3 ? arguments[^1] : null);
+                            break;
+
+                        case ([{ Type: var separatorType }], var arguments) when separatorType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
+                            AnalyzeSplit_CharArray(consumer, arguments);
+                            break;
+
+                        case ([{ Type: var separatorType }, { Type: var countType }], [var separatorArgument, var countArgument])
+                            when separatorType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && countType.IsInt():
+                            AnalyzeSplit_CharArray_Int32(consumer, element, invokedExpression, separatorArgument, countArgument);
+                            break;
+
+                        case ([{ Type: var separatorType }, { Type: var optionsType }], [var separatorArgument, _])
+                            when separatorType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && IsStringSplitOptions(optionsType):
+                            AnalyzeSplit_CharArray_StringSplitOptions(consumer, separatorArgument);
+                            break;
+
+                        case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], [
+                                var separatorArgument, var countArgument, var optionsArgument,
+                            ]) when separatorType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element)
+                            && countType.IsInt()
+                            && IsStringSplitOptions(optionsType):
+                            AnalyzeSplit_CharArray_Int32_StringSplitOptions(
+                                consumer,
+                                element,
+                                invokedExpression,
+                                separatorArgument,
+                                countArgument,
+                                optionsArgument);
+                            break;
+
+                        case ([{ Type: var separatorType }, { Type: var optionsType }], { Count: 1 or 2 } arguments)
+                            when separatorType.IsString() && IsStringSplitOptions(optionsType):
+                            AnalyzeSplit_String_StringSplitOptions(
+                                consumer,
+                                element,
+                                invokedExpression,
+                                arguments[0],
+                                arguments.Count == 2 ? arguments[^1] : null);
+                            break;
+
+                        case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], { Count: 2 or 3 } arguments)
+                            when separatorType.IsString() && countType.IsInt() && IsStringSplitOptions(optionsType):
+                            AnalyzeSplit_String_Int32_StringSplitOptions(
+                                consumer,
+                                element,
+                                invokedExpression,
+                                arguments[0],
+                                arguments[1],
+                                arguments.Count == 3 ? arguments[^1] : null);
+                            break;
+
+                        case ([{ Type: var separatorType }, { Type: var optionsType }], [var separatorArgument, var optionsArgument])
+                            when separatorType.IsGenericArrayOf(PredefinedType.STRING_FQN, element) && IsStringSplitOptions(optionsType):
+                            AnalyzeSplit_StringArray_StringSplitOptions(consumer, element, invokedExpression, separatorArgument, optionsArgument);
+                            break;
+
+                        case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], [
+                                var separatorArgument, var countArgument, var optionsArgument,
+                            ]) when separatorType.IsGenericArrayOf(PredefinedType.STRING_FQN, element)
+                            && countType.IsInt()
+                            && IsStringSplitOptions(optionsType):
+                            AnalyzeSplit_StringArray_Int32_StringSplitOptions(
+                                consumer,
+                                element,
+                                invokedExpression,
+                                separatorArgument,
+                                countArgument,
+                                optionsArgument);
+                            break;
+                    }
                     break;
             }
         }

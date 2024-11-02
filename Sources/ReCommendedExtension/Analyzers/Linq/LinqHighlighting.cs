@@ -15,5 +15,5 @@ public abstract class LinqHighlighting(
     internal IReferenceExpression InvokedExpression => invokedExpression;
 
     public sealed override DocumentRange CalculateRange()
-        => InvocationExpression.GetDocumentRange().SetStartTo(InvokedExpression.Reference.GetDocumentRange().StartOffset);
+        => invocationExpression.GetDocumentRange().SetStartTo(invokedExpression.Reference.GetDocumentRange().StartOffset);
 }

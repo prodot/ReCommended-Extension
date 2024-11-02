@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
@@ -22,6 +23,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
             or RedundantArgumentHint
+            or RedundantElementHint
             or UseStringPropertySuggestion
             or RedundantMethodInvocationHint
             or UseRangeIndexerSuggestion;
@@ -62,6 +64,12 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore20]
     public void TestReplace() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestSplit() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -76,13 +84,14 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
             or UseStringListPatternSuggestion
             or UseOtherMethodSuggestion
             or RedundantArgumentHint
+            or RedundantElementHint
             or UseStringPropertySuggestion
             or RedundantMethodInvocationHint
             or UseRangeIndexerSuggestion;
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
 
     [Test]
@@ -107,6 +116,11 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
 
     [Test]
     public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestRemoveElementFixAvailability() => DoNamedTest2();
 
     [Test]
     public void TestUseStringPropertyAvailability() => DoNamedTest2();
@@ -163,6 +177,36 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 
     [Test]
     public void TestRemove_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestSplit_EmptyArray() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestSplit_EmptyArray_CollectionExpression() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestSplit_ArrayWithOneItem() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestSplit_ArrayWithOneItem_CollectionExpression() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestSplit_ArrayWithOneTrimmedItem() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestSplit_ArrayWithOneTrimmedItem_CollectionExpression() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -215,6 +259,11 @@ public sealed class PassSingleCharacterQuickFixTests : QuickFixTestBase<PassSing
 
     [Test]
     public void TestLastIndexOf_StringAsChar_ParameterName_Ordinal() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestSplit_SingleCharacter() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -253,6 +302,14 @@ public sealed class PassSingleCharactersQuickFixTests : QuickFixTestBase<PassSin
 
     [Test]
     public void TestReplace_String_String_ParameterNames() => DoNamedTest2();
+
+    [Test]
+    public void TestSplit_SingleCharacters() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestSplit_SingleCharacters_CollectionExpression() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -455,6 +512,23 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestPadRight_Int32_Space() => DoNamedTest2();
+
+    [Test]
+    public void TestSplit_DuplicateArgument() => DoNamedTest2();
+}
+
+[TestFixture]
+public sealed class RemoveElementQuickFixTests : QuickFixTestBase<RemoveElementFix> // todo: move to a separate file
+{
+    protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
+
+    [Test]
+    public void TestSplit_DuplicateElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestSplit_DuplicateElement_CollectionExpression() => DoNamedTest2();
 }
 
 [TestFixture]
