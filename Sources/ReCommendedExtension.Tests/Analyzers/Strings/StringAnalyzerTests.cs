@@ -81,6 +81,9 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     public void TestSubstring() => DoNamedTest2();
+
+    [Test]
+    public void TestToString() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -618,6 +621,9 @@ public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMeth
 
     [Test]
     public void TestSubstring_0() => DoNamedTest2();
+
+    [Test]
+    public void TestToString_IFormatProvider() => DoNamedTest2();
 }
 
 [TestFixture]

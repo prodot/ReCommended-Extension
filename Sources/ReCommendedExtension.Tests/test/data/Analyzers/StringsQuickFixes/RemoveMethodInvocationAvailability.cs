@@ -36,5 +36,11 @@ namespace Test
         {
             var result = text.Substring(0);
         }
+
+        public void ToString(string text, IFormatProvider provider)
+        {
+            var result1 = text.ToString(provider);
+            var result2 = text.ToString(null);
+        }
     }
 }
