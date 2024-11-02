@@ -1,5 +1,6 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
@@ -26,7 +27,9 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or RedundantElementHint
             or UseStringPropertySuggestion
             or RedundantMethodInvocationHint
-            or UseRangeIndexerSuggestion;
+            or UseRangeIndexerSuggestion
+            or RedundantToStringCallWarning // to figure out which cases are supported by R#
+            or ReplaceSubstringWithRangeIndexerWarning; // to figure out which cases are supported by R#
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
