@@ -2061,6 +2061,41 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
+    /// <remarks>
+    /// <c>text.Substring(0)</c> → <c>text</c>
+    /// </remarks>
+    static void AnalyzeSubstring_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument startIndexArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(startIndexArgument.Value) == 0)
+        {
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Invoking '{nameof(string.Substring)}' with 0 is redundant.",
+                    invocationExpression,
+                    invokedExpression));
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.Substring(int, 0)</c> → <c>""</c>
+    /// </remarks>
+    static void AnalyzeSubstring_Int32_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument startIndexArgument,
+        ICSharpArgument lengthArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(lengthArgument.Value) == 0)
+        {
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always an empty string.", invocationExpression, "\"\""));
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
@@ -2335,6 +2370,20 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
                             when valueType.IsString() && IsStringComparison(stringComparisonType):
                             AnalyzeStartsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                            break;
+                    }
+                    break;
+
+                case nameof(string.Substring):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var startIndexType }], [var startIndexArgument]) when startIndexType.IsInt():
+                            AnalyzeSubstring_Int32(consumer, element, invokedExpression, startIndexArgument);
+                            break;
+
+                        case ([{ Type: var startIndexType }, { Type: var lengthType }], [var startIndexArgument, var lengthArgument])
+                            when startIndexType.IsInt() && lengthType.IsInt():
+                            AnalyzeSubstring_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, lengthArgument);
                             break;
                     }
                     break;

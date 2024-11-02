@@ -75,6 +75,9 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet70]
     public void TestStartsWith() => DoNamedTest2();
+
+    [Test]
+    public void TestSubstring() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -222,6 +225,9 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestStartsWith_Empty_StringComparison() => DoNamedTest2();
+
+    [Test]
+    public void TestSubstring_Int32_0() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -606,6 +612,9 @@ public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMeth
 
     [Test]
     public void TestReplace_Char_Char_Identical() => DoNamedTest2();
+
+    [Test]
+    public void TestSubstring_0() => DoNamedTest2();
 }
 
 [TestFixture]

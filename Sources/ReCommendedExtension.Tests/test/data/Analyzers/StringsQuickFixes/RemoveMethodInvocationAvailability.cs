@@ -31,5 +31,10 @@ namespace Test
 
             var result31 = text.Replace('a', 'a');
         }
+
+        public void Substring(string text)
+        {
+            var result = text.Substring(0);
+        }
     }
 }

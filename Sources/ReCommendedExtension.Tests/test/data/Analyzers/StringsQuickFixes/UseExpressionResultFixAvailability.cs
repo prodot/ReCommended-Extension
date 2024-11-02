@@ -96,5 +96,10 @@ namespace Test
 
             var result3 = someObject.ToString().StartsWith(value: "", StringComparison.OrdinalIgnoreCase);
         }
+
+        public void Substring(string text, int startIndex)
+        {
+            var result = text.Substring(startIndex, 0);
+        }
     }
 }
