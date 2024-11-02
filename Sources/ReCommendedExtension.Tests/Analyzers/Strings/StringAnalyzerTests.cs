@@ -70,6 +70,11 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
     public void TestSplit() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [TestNet70]
+    public void TestStartsWith() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -207,6 +212,16 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
     public void TestSplit_ArrayWithOneTrimmedItem_CollectionExpression() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestStartsWith_Empty() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestStartsWith_Empty_StringComparison() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -350,6 +365,24 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseStringList
 
     [Test]
     public void TestIndexOf_CharConst_ne_0() => DoNamedTest2();
+
+    [Test]
+    public void TestStartsWith_Char() => DoNamedTest2();
+
+    [Test]
+    public void TestStartsWith_Char_ParameterName() => DoNamedTest2();
+
+    [Test]
+    public void TestStartsWith_Argument() => DoNamedTest2();
+
+    [Test]
+    public void TestStartsWith_Argument_ParameterName() => DoNamedTest2();
+
+    [Test]
+    public void TestStartsWith_String_Ordinal() => DoNamedTest2();
+
+    [Test]
+    public void TestStartsWith_String_OrdinalIgnoreCase() => DoNamedTest2();
 }
 
 [TestFixture]

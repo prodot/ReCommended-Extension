@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Strings
+    {
+        public void StartsWith(string text, char c)
+        {
+            var result = text is [var firstCharacter, ..] && f{caret}irstCharacter == c;
+        }
+    }
+}

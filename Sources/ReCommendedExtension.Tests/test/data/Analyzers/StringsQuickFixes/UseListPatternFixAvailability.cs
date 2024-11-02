@@ -25,5 +25,18 @@ namespace Test
             var result21 = text.IndexOf(c) != 0;
             var result22 = text.IndexOf('a') != 0;
         }
+
+        public void StartsWith(string text, char c)
+        {
+            var result1 = text.StartsWith('a');
+            var result2 = text.StartsWith(value: 'a');
+
+            var result3 = text.StartsWith(c);
+            var result4 = text.StartsWith(value: c);
+
+            var result5 = text.StartsWith("a", StringComparison.Ordinal);
+            var result6 = text.StartsWith("a", StringComparison.OrdinalIgnoreCase);
+            var result7 = text.StartsWith("ß", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

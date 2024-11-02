@@ -391,50 +391,52 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement() && TryGetStringConstant(valueArgument.Value) == "")
+        if (!invocationExpression.IsUsedAsStatement())
         {
-            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
-        }
-
-        if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-            && !invocationExpression.IsUsedAsStatement()
-            && TryGetStringConstant(valueArgument.Value) is [var character])
-        {
-            switch (TryGetStringComparisonConstant(comparisonTypeArgument.Value))
+            switch (TryGetStringConstant(valueArgument.Value))
             {
-                case StringComparison.Ordinal:
-                    consumer.AddHighlighting(
-                        new UseStringListPatternSuggestion(
-                            "Use list pattern.",
-                            invocationExpression,
-                            invokedExpression,
-                            ListPatternSuggestionKind.LastCharacter,
-                            [character]));
+                case "":
+                    consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                     break;
 
-                case StringComparison.OrdinalIgnoreCase:
-                    var lowerCaseCharacter = char.ToLowerInvariant(character);
-                    var upperCaseCharacter = char.ToUpperInvariant(character);
+                case [var character] when invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110:
+                    switch (TryGetStringComparisonConstant(comparisonTypeArgument.Value))
+                    {
+                        case StringComparison.Ordinal:
+                            consumer.AddHighlighting(
+                                new UseStringListPatternSuggestion(
+                                    "Use list pattern.",
+                                    invocationExpression,
+                                    invokedExpression,
+                                    ListPatternSuggestionKind.LastCharacter,
+                                    [character]));
+                            break;
 
-                    if (lowerCaseCharacter == upperCaseCharacter)
-                    {
-                        consumer.AddHighlighting(
-                            new UseStringListPatternSuggestion(
-                                "Use list pattern.",
-                                invocationExpression,
-                                invokedExpression,
-                                ListPatternSuggestionKind.LastCharacter,
-                                [lowerCaseCharacter]));
-                    }
-                    else
-                    {
-                        consumer.AddHighlighting(
-                            new UseStringListPatternSuggestion(
-                                "Use list pattern.",
-                                invocationExpression,
-                                invokedExpression,
-                                ListPatternSuggestionKind.LastCharacter,
-                                [lowerCaseCharacter, upperCaseCharacter]));
+                        case StringComparison.OrdinalIgnoreCase:
+                            var lowerCaseCharacter = char.ToLowerInvariant(character);
+                            var upperCaseCharacter = char.ToUpperInvariant(character);
+
+                            if (lowerCaseCharacter == upperCaseCharacter)
+                            {
+                                consumer.AddHighlighting(
+                                    new UseStringListPatternSuggestion(
+                                        "Use list pattern.",
+                                        invocationExpression,
+                                        invokedExpression,
+                                        ListPatternSuggestionKind.LastCharacter,
+                                        [lowerCaseCharacter]));
+                            }
+                            else
+                            {
+                                consumer.AddHighlighting(
+                                    new UseStringListPatternSuggestion(
+                                        "Use list pattern.",
+                                        invocationExpression,
+                                        invokedExpression,
+                                        ListPatternSuggestionKind.LastCharacter,
+                                        [lowerCaseCharacter, upperCaseCharacter]));
+                            }
+                            break;
                     }
                     break;
             }
@@ -1827,7 +1829,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         ICollectionExpression collectionExpression => new PassSingleCharactersSuggestion(
                             "Pass the single Character",
                             [..collectionExpression.CollectionElements],
-                            [..from s in collection.StringConstants select s[0]]), // todo: check if a string consists of a unicode character
+                            [..from s in collection.StringConstants select s[0]]),
 
                         IArrayCreationExpression arrayCreationExpression => new PassSingleCharactersSuggestion(
                             "Pass the single Character",
@@ -1944,6 +1946,118 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     }
                 }
                 break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.StartsWith(char)</c> → <c>text is [var firstCharacter, ..] &amp;&amp; firstCharacter == value</c> (C# 11)<para/>
+    /// <c>text.StartsWith(char)</c> → <c>text is [value, ..]</c> (C# 11)
+    /// </remarks>
+    static void AnalyzeStartsWith_Char(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valueArgument)
+    {
+        if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+            && !invocationExpression.IsUsedAsStatement()
+            && valueArgument.Value is { })
+        {
+            if (TryGetCharConstant(valueArgument.Value) is { } character)
+            {
+                consumer.AddHighlighting(
+                    new UseStringListPatternSuggestion(
+                        "Use list pattern.",
+                        invocationExpression,
+                        invokedExpression,
+                        ListPatternSuggestionKind.FirstCharacter,
+                        [character]));
+            }
+            else
+            {
+                consumer.AddHighlighting(
+                    new UseStringListPatternSuggestion(
+                        "Use list pattern.",
+                        invocationExpression,
+                        invokedExpression,
+                        ListPatternSuggestionKind.FirstCharacter,
+                        valueArgument.Value.GetText()));
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.StartsWith("")</c> → <c>true</c>
+    /// </remarks>
+    static void AnalyzeStartsWith_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && TryGetStringConstant(valueArgument.Value) == "")
+        {
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.StartsWith("", StringComparison)</c> → <c>true</c><para/>
+    /// <c>text.StartsWith(string, Ordinal)</c> → <c>text is [c, ..]</c> (C# 11)<para/>
+    /// <c>text.StartsWith(string, OrdinalIgnoresCase)</c> → <c>text is [l or u, ..]</c> (C# 11)
+    /// </remarks>
+    static void AnalyzeStartsWith_String_StringComparison(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valueArgument,
+        ICSharpArgument comparisonTypeArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement())
+        {
+            switch (TryGetStringConstant(valueArgument.Value))
+            {
+                case "":
+                    consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
+                    break;
+
+                case [var character] when invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110:
+                    switch (TryGetStringComparisonConstant(comparisonTypeArgument.Value))
+                    {
+                        case StringComparison.Ordinal:
+                            consumer.AddHighlighting(
+                                new UseStringListPatternSuggestion(
+                                    "Use list pattern.",
+                                    invocationExpression,
+                                    invokedExpression,
+                                    ListPatternSuggestionKind.FirstCharacter,
+                                    [character]));
+                            break;
+
+                        case StringComparison.OrdinalIgnoreCase:
+                            var lowerCaseCharacter = char.ToLowerInvariant(character);
+                            var upperCaseCharacter = char.ToUpperInvariant(character);
+
+                            if (lowerCaseCharacter == upperCaseCharacter)
+                            {
+                                consumer.AddHighlighting(
+                                    new UseStringListPatternSuggestion(
+                                        "Use list pattern.",
+                                        invocationExpression,
+                                        invokedExpression,
+                                        ListPatternSuggestionKind.FirstCharacter,
+                                        [lowerCaseCharacter]));
+                            }
+                            else
+                            {
+                                consumer.AddHighlighting(
+                                    new UseStringListPatternSuggestion(
+                                        "Use list pattern.",
+                                        invocationExpression,
+                                        invokedExpression,
+                                        ListPatternSuggestionKind.FirstCharacter,
+                                        [lowerCaseCharacter, upperCaseCharacter]));
+                            }
+                            break;
+                    }
+                    break;
+            }
         }
     }
 
@@ -2203,6 +2317,24 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                 separatorArgument,
                                 countArgument,
                                 optionsArgument);
+                            break;
+                    }
+                    break;
+
+                case nameof(string.StartsWith):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsChar():
+                            AnalyzeStartsWith_Char(consumer, element, invokedExpression, valueArgument);
+                            break;
+
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                            AnalyzeStartsWith_String(consumer, element, valueArgument);
+                            break;
+
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+                            AnalyzeStartsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                             break;
                     }
                     break;

@@ -88,5 +88,13 @@ namespace Test
             var result76 = text.Split(new[] { "" }, count, StringSplitOptions.None);
             var result77 = text.Split(new[] { "" }, count, StringSplitOptions.TrimEntries);
         }
+
+        public void StartsWith(string text, object someObject)
+        {
+            var result1 = text.StartsWith("");
+            var result2 = text.StartsWith("", StringComparison.OrdinalIgnoreCase);
+
+            var result3 = someObject.ToString().StartsWith(value: "", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

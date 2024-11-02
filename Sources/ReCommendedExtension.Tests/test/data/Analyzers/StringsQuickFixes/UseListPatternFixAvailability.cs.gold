@@ -25,6 +25,19 @@ namespace Test
             var result21 = text.|IndexOf(c) != 0|(9);
             var result22 = text.|IndexOf('a') != 0|(10);
         }
+
+        public void StartsWith(string text, char c)
+        {
+            var result1 = text.|StartsWith('a')|(11);
+            var result2 = text.|StartsWith(value: 'a')|(12);
+
+            var result3 = text.|StartsWith(c)|(13);
+            var result4 = text.|StartsWith(value: c)|(14);
+
+            var result5 = text.|StartsWith("a", StringComparison.Ordinal)|(15);
+            var result6 = text.|StartsWith("a", StringComparison.OrdinalIgnoreCase)|(16);
+            var result7 = text.|StartsWith("ß", StringComparison.OrdinalIgnoreCase)|(17);
+        }
     }
 }
 ------------------------------------------------
@@ -61,3 +74,24 @@ Replace with 'is not [var firstCharacter, ..] || firstCharacter != c'
 10: Use list pattern.
 QUICKFIXES:
 Replace with 'is not ['a', ..]'
+11: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a', ..]'
+12: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a', ..]'
+13: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var firstCharacter, ..] && firstCharacter == c'
+14: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var firstCharacter, ..] && firstCharacter == c'
+15: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a', ..]'
+16: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a' or 'A', ..]'
+17: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['ß', ..]'
