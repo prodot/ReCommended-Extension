@@ -84,6 +84,21 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     public void TestToString() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrim() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrimEnd() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrimStart() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -560,6 +575,60 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestSplit_DuplicateArgument() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrim_Empty() => DoNamedTest2();
+
+    [Test]
+    public void TestTrim_EmptyArray() => DoNamedTest2();
+
+    [Test]
+    public void TestTrim_EmptyArray_2() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestTrim_EmptyArray_3() => DoNamedTest2();
+
+    [Test]
+    public void TestTrim_Null() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrimEnd_Empty() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestTrimEnd_EmptyArray_3() => DoNamedTest2();
+
+    [Test]
+    public void TestTrimEnd_Null() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrimStart_Empty() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestTrimStart_EmptyArray_3() => DoNamedTest2();
+
+    [Test]
+    public void TestTrimStart_Null() => DoNamedTest2();
+
+    [Test]
+    public void TestTrim_DuplicateArgument() => DoNamedTest2();
+
+    [Test]
+    public void TestTrimEnd_DuplicateArgument() => DoNamedTest2();
+
+    [Test]
+    public void TestTrimStart_DuplicateArgument() => DoNamedTest2();
 }
 
 [TestFixture]
@@ -574,6 +643,30 @@ public sealed class RemoveElementQuickFixTests : QuickFixTestBase<RemoveElementF
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
     public void TestSplit_DuplicateElement_CollectionExpression() => DoNamedTest2();
+
+    [Test]
+    public void TestTrim_DuplicateElement() => DoNamedTest2();
+
+    [Test]
+    public void TestTrimEnd_DuplicateElement() => DoNamedTest2();
+
+    [Test]
+    public void TestTrimStart_DuplicateElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrim_DuplicateElement_CollectionExpression() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrimEnd_DuplicateElement_CollectionExpression() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestTrimStart_DuplicateElement_CollectionExpression() => DoNamedTest2();
 }
 
 [TestFixture]

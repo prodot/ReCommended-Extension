@@ -10,7 +10,7 @@ namespace Test
             var result2 = text.ToString(null);
         }
 
-        public void NoDetection(string text, int startIndex, int length)
+        public void NoDetection(string text, IFormatProvider provider)
         {
             text.ToString(provider);
             text.ToString(null);

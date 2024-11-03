@@ -36,10 +36,30 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         public static Collection? TryFrom(ICSharpExpression? expression)
             => expression switch
             {
+                // [...]
                 ICollectionExpression collectionExpression => new CollectionExpressionCollection(collectionExpression),
 
-                IArrayCreationExpression { ArrayInitializer: { } } arrayCreationExpression => new ArrayCreationExpressionCollection(
+                // new T[] { ... }
+                IArrayCreationExpression { DimInits: [], ArrayInitializer: { } } arrayCreationExpression => new ArrayCreationExpressionCollection(
                     arrayCreationExpression),
+
+                // new T[0]
+                IArrayCreationExpression
+                {
+                    DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: not { },
+                } arrayCreationExpression => new EmptyArrayCreationExpressionCollection(arrayCreationExpression),
+
+                // Array.Empty<T>()
+                IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression when
+                    reference.Resolve().DeclaredElement is IMethod
+                    {
+                        ShortName: nameof(Array.Empty),
+                        IsStatic: true,
+                        AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                        TypeParameters: [_],
+                        Parameters: [],
+                    } method
+                    && method.ContainingType.IsSystemArray() => new EmptyArrayCreationExpressionCollection(invocationExpression),
 
                 _ => null,
             };
@@ -110,12 +130,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
-    sealed class CollectionExpressionCollection : Collection
+    sealed class CollectionExpressionCollection(ICollectionExpression collectionExpression) : Collection
     {
-        readonly ICollectionExpression collectionExpression;
-
-        internal CollectionExpressionCollection(ICollectionExpression collectionExpression) => this.collectionExpression = collectionExpression;
-
         protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
         {
             get
@@ -167,6 +183,29 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         public override int Count => arrayCreationExpression.ArrayInitializer.ElementInitializers.Count;
 
         public override IEnumerable<IInitializerElement> Elements => arrayCreationExpression.ArrayInitializer.ElementInitializers;
+    }
+
+    sealed class EmptyArrayCreationExpressionCollection(ICSharpExpression expression) : Collection
+    {
+        protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
+        {
+            get
+            {
+                yield break;
+            }
+        }
+
+        public override ICSharpExpression Expression => expression;
+
+        public override int Count => 0;
+
+        public override IEnumerable<IInitializerElement> Elements
+        {
+            get
+            {
+                yield break;
+            }
+        }
     }
 
     [Pure]
@@ -1499,7 +1538,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 break;
             }
 
-            case [{ Value: var argumentExpression }] when Collection.TryFrom(argumentExpression) is { } collection:
+            case [{ Value: var argumentExpression }] when Collection.TryFrom(argumentExpression) is { Count: > 0 } collection:
             {
                 var set = new HashSet<char>(collection.Count);
 
@@ -1548,7 +1587,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                 break;
 
-            case (_, _) when Collection.TryFrom(separatorArgument.Value) is { } collection:
+            case (_, _) when Collection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection:
             {
                 var set = new HashSet<char>(collection.Count);
 
@@ -1570,7 +1609,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// </remarks>
     static void AnalyzeSplit_CharArray_StringSplitOptions(IHighlightingConsumer consumer, ICSharpArgument separatorArgument)
     {
-        if (Collection.TryFrom(separatorArgument.Value) is { } collection)
+        if (Collection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
         {
             var set = new HashSet<char>(collection.Count);
 
@@ -1631,7 +1670,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 }
                 break;
 
-            case (_, _) when Collection.TryFrom(separatorArgument.Value) is { } collection:
+            case (_, _) when Collection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection:
             {
                 var set = new HashSet<char>(collection.Count);
 
@@ -1792,7 +1831,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         ICSharpArgument separatorArgument,
         ICSharpArgument optionsArgument)
     {
-        if (Collection.TryFrom(separatorArgument.Value) is { } collection)
+        if (Collection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
         {
             if (collection.StringConstants is [""])
             {
@@ -1910,7 +1949,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 }
                 break;
 
-            case ({ } collection, _):
+            case ({ Count: > 0 } collection, _):
                 if (collection.StringConstants.All(s => s is [_]))
                 {
                     var highlighting = collection.Expression switch
@@ -2112,12 +2151,75 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         }
     }
 
+    /// <remarks>
+    /// Also for <see cref="string.TrimEnd"/> and <see cref="string.TrimStart"/><para/>
+    /// <c>text.Trim(null)</c> → <c>text.Trim()</c><para/>
+    /// <c>text.Trim([])</c> → <c>text.Trim()</c><para/>
+    /// <c>text.Trim(new char[0])</c> → <c>text.Trim()</c><para/>
+    /// <c>text.Trim(new char[] { })</c> → <c>text.Trim()</c><para/>
+    /// <c>text.Trim(Array.Empty&lt;char&gt;())</c> → <c>text.Trim()</c><para/>
+    /// <c>text.Trim(c, c)</c> → <c>text.Trim(c)</c><para/>
+    /// <c>text.Trim(char[])</c> → <c>text.Trim(char[])</c><para/>
+    /// </remarks>
+    static void AnalyzeTrim_CharArray(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        TreeNodeCollection<ICSharpArgument> arguments)
+    {
+        switch (arguments)
+        {
+            case [_, _, ..]:
+            {
+                var set = new HashSet<char>(arguments.Count);
+
+                foreach (var argument in arguments)
+                {
+                    if (TryGetCharConstant(argument.Value) is { } character && !set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
+                    }
+                }
+
+                break;
+            }
+
+            case [{ } argument] when Collection.TryFrom(argument.Value) is { } collection:
+            {
+                if (collection.Count > 0)
+                {
+                    var set = new HashSet<char>(collection.Count);
+
+                    foreach (var (element, character) in collection.ElementsWithCharConstants)
+                    {
+                        if (!set.Add(character))
+                        {
+                            consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                        }
+                    }
+                }
+                else
+                {
+                    consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
+                }
+
+                break;
+            }
+
+            case [{ } argument] when IsDefaultValue(argument.Value):
+                consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
+                break;
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
-            && reference.Resolve().DeclaredElement is IMethod method
-            && method.ContainingType.IsSystemString()
-            && method is { IsStatic: false, TypeParameters: [], AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC })
+            && reference.Resolve().DeclaredElement is IMethod
+            {
+                IsStatic: false, TypeParameters: [], AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+            } method
+            && method.ContainingType.IsSystemString())
         {
             switch (method.ShortName)
             {
@@ -2409,6 +2511,17 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     {
                         case ([{ Type: var formatProviderType }], [_]) when formatProviderType.IsIFormatProvider():
                             AnalyzeToString_IFormatProvider(consumer, element, invokedExpression);
+                            break;
+                    }
+                    break;
+
+                case nameof(string.Trim):
+                case nameof(string.TrimEnd):
+                case nameof(string.TrimStart):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var trimCharsType }], var arguments) when trimCharsType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
+                            AnalyzeTrim_CharArray(consumer, element, invokedExpression, arguments);
                             break;
                     }
                     break;
