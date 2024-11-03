@@ -383,118 +383,135 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     {
         if (!element.IsUsedAsStatement()
             && element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
-            && reference.Resolve().DeclaredElement is IMethod method
-            && method.ContainingType.IsClrType(PredefinedType.ENUMERABLE_CLASS)
-            && method is { IsExtensionMethod: true, AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC })
-        {
-            switch (method)
+            && reference.Resolve().DeclaredElement is IMethod
             {
-                // ElementAt
-                case { ShortName: nameof(Enumerable.ElementAt), TypeParameters: [_], Parameters: [_, { Type: IDeclaredType indexType }] }
-                    when (indexType.IsInt() || indexType.IsSystemIndex()) && element.Arguments is [{ Value: { } } indexArgument]:
-                    AnalyzeElementAt(consumer, element, invokedExpression, indexArgument);
+                IsExtensionMethod: true, AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+            } method
+            && method.ContainingType.IsClrType(PredefinedType.ENUMERABLE_CLASS))
+        {
+            switch (method.ShortName)
+            {
+                case nameof(Enumerable.ElementAt):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_, { Type: IDeclaredType indexType }], [{ Value: { } } indexArgument])
+                            when indexType.IsInt() || indexType.IsSystemIndex():
+                            AnalyzeElementAt(consumer, element, invokedExpression, indexArgument);
+                            break;
+                    }
                     break;
 
-                case { ShortName: nameof(Enumerable.ElementAtOrDefault), TypeParameters: [_], Parameters: [_, { Type: IDeclaredType indexType }] }
-                    when indexType.IsInt() || indexType.IsSystemIndex():
-                    AnalyzeElementAtOrDefault(consumer, element, invokedExpression);
+                case nameof(Enumerable.ElementAtOrDefault):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_, { Type: IDeclaredType indexType }], _) when indexType.IsInt() || indexType.IsSystemIndex():
+                            AnalyzeElementAtOrDefault(consumer, element, invokedExpression);
+                            break;
+                    }
                     break;
 
-                // First
-                case { ShortName: nameof(Enumerable.First), TypeParameters: [_], Parameters: [_] }:
-                    AnalyzeFirst(consumer, element, invokedExpression, false);
+                case nameof(Enumerable.First):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_], []):
+                            AnalyzeFirst(consumer, element, invokedExpression, false);
+                            break;
+
+                        case ([_], [_, { Type: IDeclaredType predicateType }], [_]) when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
+                            AnalyzeFirst(consumer, element, invokedExpression, true);
+                            break;
+                    }
                     break;
 
-                case { ShortName: nameof(Enumerable.First), TypeParameters: [_], Parameters: [_, { Type: IDeclaredType predicateType }] }
-                    when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
-                    AnalyzeFirst(consumer, element, invokedExpression, true);
+                case nameof(Enumerable.FirstOrDefault):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_], []):
+                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, false);
+                            break;
+
+                        case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
+                            when typeParameter.Equals(defaultValueType.GetTypeElement()):
+                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, false, defaultValueArgument);
+                            break;
+
+                        case ([_], [_, { Type: IDeclaredType predicateType }], [_]) when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
+                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, true);
+                            break;
+
+                        case ([var typeParameter], [_, { Type: IDeclaredType predicateType }, { Type: IDeclaredType defaultValueType }], [_, _])
+                            when predicateType.IsClrType(PredefinedType.FUNC2_FQN) && typeParameter.Equals(defaultValueType.GetTypeElement()):
+                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, true);
+                            break;
+                    }
                     break;
 
-                // FirstOrDefault
-                case { ShortName: nameof(Enumerable.FirstOrDefault), TypeParameters: [_], Parameters: [_] }:
-                    AnalyzeFirstOrDefault(consumer, element, invokedExpression, false);
+                case nameof(Enumerable.Last):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_], []):
+                            AnalyzeLast(consumer, element, invokedExpression, false);
+                            break;
+
+                        case ([_], [_, { Type: IDeclaredType predicateType }], [_]) when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
+                            AnalyzeLast(consumer, element, invokedExpression, true);
+                            break;
+                    }
                     break;
 
-                case
-                {
-                    ShortName: nameof(Enumerable.FirstOrDefault),
-                    TypeParameters: [var typeParameter],
-                    Parameters: [_, { Type: IDeclaredType defaultValueType }],
-                } when typeParameter.Equals(defaultValueType.GetTypeElement()) && element.Arguments is [{ Value: { } } defaultValueArgument]:
-                    AnalyzeFirstOrDefault(consumer, element, invokedExpression, false, defaultValueArgument);
+                case nameof(Enumerable.LastOrDefault):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_], []):
+                            AnalyzeLastOrDefault(consumer, element, invokedExpression, false);
+                            break;
+
+                        case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
+                            when typeParameter.Equals(defaultValueType.GetTypeElement()):
+                            AnalyzeLastOrDefault(consumer, element, invokedExpression, false, defaultValueArgument);
+                            break;
+
+                        case ([_], [_, { Type: IDeclaredType predicateType }], [_]) when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
+                            AnalyzeLastOrDefault(consumer, element, invokedExpression, true);
+                            break;
+
+                        case ([var typeParameter], [_, { Type: IDeclaredType predicateType }, { Type: IDeclaredType defaultValueType }], [_, _])
+                            when predicateType.IsClrType(PredefinedType.FUNC2_FQN) && typeParameter.Equals(defaultValueType.GetTypeElement()):
+                            AnalyzeLastOrDefault(consumer, element, invokedExpression, true);
+                            break;
+                    }
                     break;
 
-                case { ShortName: nameof(Enumerable.FirstOrDefault), TypeParameters: [_], Parameters: [_, { Type: IDeclaredType predicateType }] }
-                    when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
-                    AnalyzeFirstOrDefault(consumer, element, invokedExpression, true);
+                case nameof(Enumerable.LongCount):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_], []):
+                            AnalyzeLongCount(consumer, element, invokedExpression);
+                            break;
+                    }
                     break;
 
-                case
-                {
-                    ShortName: nameof(Enumerable.FirstOrDefault),
-                    TypeParameters: [var typeParameter],
-                    Parameters: [_, { Type: IDeclaredType predicateType }, { Type: IDeclaredType defaultValueType }],
-                } when predicateType.IsClrType(PredefinedType.FUNC2_FQN) && typeParameter.Equals(defaultValueType.GetTypeElement()):
-                    AnalyzeFirstOrDefault(consumer, element, invokedExpression, true);
+                case nameof(Enumerable.Single):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_], []):
+                            AnalyzeSingle(consumer, element, invokedExpression);
+                            break;
+                    }
                     break;
 
-                // Last
-                case { ShortName: nameof(Enumerable.Last), TypeParameters: [_], Parameters: [_] }:
-                    AnalyzeLast(consumer, element, invokedExpression, false);
-                    break;
+                case nameof(Enumerable.SingleOrDefault):
+                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    {
+                        case ([_], [_], []):
+                            AnalyzeSingleOrDefault(consumer, element, invokedExpression);
+                            break;
 
-                case { ShortName: nameof(Enumerable.Last), TypeParameters: [_], Parameters: [_, { Type: IDeclaredType predicateType }] }
-                    when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
-                    AnalyzeLast(consumer, element, invokedExpression, true);
-                    break;
-
-                case { ShortName: nameof(Enumerable.LastOrDefault), TypeParameters: [_], Parameters: [_] }:
-                    AnalyzeLastOrDefault(consumer, element, invokedExpression, false);
-                    break;
-
-                // LastOrDefault
-                case
-                {
-                    ShortName: nameof(Enumerable.LastOrDefault),
-                    TypeParameters: [var typeParameter],
-                    Parameters: [_, { Type: IDeclaredType defaultValueType }],
-                } when typeParameter.Equals(defaultValueType.GetTypeElement()) && element.Arguments is [{ Value: { } } defaultValueArgument]:
-                    AnalyzeLastOrDefault(consumer, element, invokedExpression, false, defaultValueArgument);
-                    break;
-
-                case { ShortName: nameof(Enumerable.LastOrDefault), TypeParameters: [_], Parameters: [_, { Type: IDeclaredType predicateType }] }
-                    when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
-                    AnalyzeLastOrDefault(consumer, element, invokedExpression, true);
-                    break;
-
-                case
-                {
-                    ShortName: nameof(Enumerable.LastOrDefault),
-                    TypeParameters: [var typeParameter],
-                    Parameters: [_, { Type: IDeclaredType predicateType }, { Type: IDeclaredType defaultValueType }],
-                } when predicateType.IsClrType(PredefinedType.FUNC2_FQN) && typeParameter.Equals(defaultValueType.GetTypeElement()):
-                    AnalyzeLastOrDefault(consumer, element, invokedExpression, true);
-                    break;
-
-                // LongCount
-                case { ShortName: nameof(Enumerable.LongCount), TypeParameters: [_], Parameters: [_] }:
-                    AnalyzeLongCount(consumer, element, invokedExpression);
-                    break;
-
-                // Single
-                case { ShortName: nameof(Enumerable.Single), TypeParameters: [_], Parameters: [_] }:
-                    AnalyzeSingle(consumer, element, invokedExpression);
-                    break;
-
-                // SingleOrDefault
-                case { ShortName: nameof(Enumerable.SingleOrDefault), TypeParameters: [_], Parameters: [_] }:
-                    AnalyzeSingleOrDefault(consumer, element, invokedExpression);
-                    break;
-
-                case { ShortName: nameof(Enumerable.SingleOrDefault), TypeParameters: [_], Parameters: [_, { Type: IDeclaredType defaultValueType }] }
-                    when method.TypeParameters[0].Equals(defaultValueType.GetTypeElement())
-                    && element.Arguments is [{ Value: { } } defaultValueArgument]:
-                    AnalyzeSingleOrDefault(consumer, element, invokedExpression, defaultValueArgument);
+                        case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
+                            when typeParameter.Equals(defaultValueType.GetTypeElement()):
+                            AnalyzeSingleOrDefault(consumer, element, invokedExpression, defaultValueArgument);
+                            break;
+                    }
                     break;
             }
         }

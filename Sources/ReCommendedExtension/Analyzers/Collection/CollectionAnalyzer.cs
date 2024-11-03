@@ -1075,9 +1075,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 break;
 
             case IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression
-                when reference.Resolve().DeclaredElement is IMethod method
-                && method.ContainingType.IsClrType(PredefinedType.ARRAY_FQN)
-                && IsEmptyMethod(method):
+                when reference.Resolve().DeclaredElement is IMethod method && method.ContainingType.IsSystemArray() && IsEmptyMethod(method):
                 AnalyzeArrayEmptyInvocation(consumer, invocationExpression);
                 break;
         }
