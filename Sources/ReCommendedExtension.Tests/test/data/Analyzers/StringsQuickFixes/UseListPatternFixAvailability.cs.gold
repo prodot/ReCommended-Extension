@@ -49,10 +49,10 @@ QUICKFIXES:
 Replace with 'is [.., 'a']'
 2: Use list pattern.
 QUICKFIXES:
-Replace with 'is [.., var lastCharacter] && lastCharacter == c'
+Replace with 'is [.., var lastChar] && lastChar == c'
 3: Use list pattern.
 QUICKFIXES:
-Replace with 'is [.., var lastCharacter] && lastCharacter == c'
+Replace with 'is [.., var lastChar] && lastChar == c'
 4: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., 'a']'
@@ -64,13 +64,13 @@ QUICKFIXES:
 Replace with 'is [.., 'ß']'
 7: Use list pattern.
 QUICKFIXES:
-Replace with 'is [var firstCharacter, ..] && firstCharacter == c'
+Replace with 'is [var firstChar, ..] && firstChar == c'
 8: Use list pattern.
 QUICKFIXES:
 Replace with 'is ['a', ..]'
 9: Use list pattern.
 QUICKFIXES:
-Replace with 'is not [var firstCharacter, ..] || firstCharacter != c'
+Replace with 'is not [var firstChar, ..] || firstChar != c'
 10: Use list pattern.
 QUICKFIXES:
 Replace with 'is not ['a', ..]'
@@ -82,10 +82,10 @@ QUICKFIXES:
 Replace with 'is ['a', ..]'
 13: Use list pattern.
 QUICKFIXES:
-Replace with 'is [var firstCharacter, ..] && firstCharacter == c'
+Replace with 'is [var firstChar, ..] && firstChar == c'
 14: Use list pattern.
 QUICKFIXES:
-Replace with 'is [var firstCharacter, ..] && firstCharacter == c'
+Replace with 'is [var firstChar, ..] && firstChar == c'
 15: Use list pattern.
 QUICKFIXES:
 Replace with 'is ['a', ..]'

@@ -31,17 +31,20 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or ReplaceSubstringWithRangeIndexerWarning; // to figure out which cases are supported by R#
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNetCore30]
     public void TestContains() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestEndsWith() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestIndexOf() => DoNamedTest2();
 
@@ -49,6 +52,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     public void TestIndexOfAny() => DoNamedTest2();
 
     [Test]
+    [NullableContext(NullableContextKind.Enable)]
     public void TestLastIndexOf() => DoNamedTest2();
 
     [Test]
@@ -59,6 +63,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30]
     public void TestRemove() => DoNamedTest2();
 
@@ -75,10 +80,12 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestStartsWith() => DoNamedTest2();
 
     [Test]
+    [NullableContext(NullableContextKind.Enable)]
     public void TestSubstring() => DoNamedTest2();
 
     [Test]

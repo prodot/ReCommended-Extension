@@ -9,57 +9,30 @@ namespace ReCommendedExtension.Analyzers.Strings;
 
 [RegisterConfigurableSeverity(SeverityId, null, HighlightingGroupIds.LanguageUsage, "Use list pattern" + ZoneMarker.Suffix, "", Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UseStringListPatternSuggestion : Highlighting
+public sealed class UseStringListPatternSuggestion(
+    string message,
+    IInvocationExpression invocationExpression,
+    IReferenceExpression invokedExpression,
+    ListPatternSuggestionKind kind,
+    (string valueArgument, bool isConstant)[] arguments,
+    IBinaryExpression? binaryExpression = null) : Highlighting(message)
 {
     const string SeverityId = "UseStringListPattern";
 
-    UseStringListPatternSuggestion(
-        string message,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ListPatternSuggestionKind kind,
-        IBinaryExpression? binaryExpression) : base(message)
-    {
-        InvocationExpression = invocationExpression;
-        InvokedExpression = invokedExpression;
-        Kind = kind;
-        BinaryExpression = binaryExpression;
-    }
+    internal IInvocationExpression InvocationExpression => invocationExpression;
 
-    public UseStringListPatternSuggestion(
-        string message,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ListPatternSuggestionKind kind,
-        char[] characters,
-        IBinaryExpression? binaryExpression = null) : this(message, invocationExpression, invokedExpression, kind, binaryExpression)
-        => Characters = characters;
+    internal IReferenceExpression InvokedExpression => invokedExpression;
 
-    public UseStringListPatternSuggestion(
-        string message,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ListPatternSuggestionKind kind,
-        string valueArgument,
-        IBinaryExpression? binaryExpression = null) : this(message, invocationExpression, invokedExpression, kind, binaryExpression)
-        => ValueArgument = valueArgument;
+    internal IBinaryExpression? BinaryExpression => binaryExpression;
 
-    internal IInvocationExpression InvocationExpression { get; }
+    internal ListPatternSuggestionKind Kind => kind;
 
-    internal IReferenceExpression InvokedExpression { get; }
-
-    internal IBinaryExpression? BinaryExpression { get; }
-
-    internal char[]? Characters { get; }
-
-    internal ListPatternSuggestionKind Kind { get; }
-
-    internal string? ValueArgument { get; }
+    internal (string valueArgument, bool isConstant)[] Arguments => arguments;
 
     public override DocumentRange CalculateRange()
     {
-        var startOffset = InvokedExpression.Reference.GetDocumentRange().StartOffset;
+        var startOffset = invokedExpression.Reference.GetDocumentRange().StartOffset;
 
-        return (BinaryExpression as ITreeNode ?? InvocationExpression).GetDocumentRange().SetStartTo(startOffset);
+        return (binaryExpression as ITreeNode ?? invocationExpression).GetDocumentRange().SetStartTo(startOffset);
     }
 }

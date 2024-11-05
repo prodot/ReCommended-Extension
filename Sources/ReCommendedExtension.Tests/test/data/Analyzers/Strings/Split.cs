@@ -197,5 +197,56 @@ namespace Test
             text.Split(new[] { "" }, count, StringSplitOptions.None);
             text.Split(new[] { "" }, count, StringSplitOptions.TrimEntries);
         }
+
+        public void NoDetection(string? text, StringSplitOptions options, string s, char c)
+        {
+            var result11 = text?.Split(c, 0);
+            var result12 = text?.Split(c, 0, options);
+            var result13 = text?.Split(c, 1);
+            var result14 = text?.Split(c, 1, StringSplitOptions.None);
+            var result15 = text?.Split(c, 1, StringSplitOptions.TrimEntries);
+
+            var result21 = text?.Split(['a'], 0);
+            var result22 = text?.Split(['a'], 1);
+
+            var result31 = text?.Split(['a'], 0, options);
+            var result32 = text?.Split(['a'], 1, StringSplitOptions.None);
+            var result33 = text?.Split(['a'], 1, StringSplitOptions.TrimEntries);
+
+            var result41 = text?.Split(null as string);
+            var result42 = text?.Split((string?)null);
+            var result43 = text?.Split("");
+            var result44 = text?.Split(null as string, StringSplitOptions.None);
+            var result45 = text?.Split((string?)null, StringSplitOptions.None);
+            var result46 = text?.Split("", StringSplitOptions.None);
+            var result47 = text?.Split(null as string, StringSplitOptions.TrimEntries);
+            var result48 = text?.Split((string?)null, StringSplitOptions.TrimEntries);
+            var result49 = text?.Split("", StringSplitOptions.TrimEntries);
+
+            var result51 = text?.Split(s, 0);
+            var result52 = text?.Split(s, 0, options);
+            var result53 = text?.Split(s, 1);
+            var result54 = text?.Split(s, 1, StringSplitOptions.None);
+            var result55 = text?.Split(s, 1, StringSplitOptions.TrimEntries);
+            var result56 = text?.Split(null as string, count);
+            var result57 = text?.Split(null as string, count, StringSplitOptions.None);
+            var result58 = text?.Split(null as string, count, StringSplitOptions.TrimEntries);
+            var result59 = text?.Split("", count);
+            var result50 = text?.Split("", count, StringSplitOptions.None);
+            var result5A = text?.Split("", count, StringSplitOptions.TrimEntries);
+
+            var result61 = text?.Split([""], StringSplitOptions.None);
+            var result62 = text?.Split([""], StringSplitOptions.TrimEntries);
+            var result63 = text?.Split(new[] { "" }, StringSplitOptions.None);
+            var result64 = text?.Split(new[] { "" }, StringSplitOptions.TrimEntries);
+
+            var result71 = text?.Split([s], 0, options);
+            var result72 = text?.Split([s], 1, StringSplitOptions.None);
+            var result73 = text?.Split([s], 1, StringSplitOptions.TrimEntries);
+            var result74 = text?.Split([""], count, StringSplitOptions.None);
+            var result75 = text?.Split([""], count, StringSplitOptions.TrimEntries);
+            var result76 = text?.Split(new[] { "" }, count, StringSplitOptions.None);
+            var result77 = text?.Split(new[] { "" }, count, StringSplitOptions.TrimEntries);
+        }
     }
 }

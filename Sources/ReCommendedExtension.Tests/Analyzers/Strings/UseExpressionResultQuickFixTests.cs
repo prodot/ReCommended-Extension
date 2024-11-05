@@ -1,4 +1,5 @@
-﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -7,33 +8,34 @@ using ReCommendedExtension.Analyzers.Strings;
 namespace ReCommendedExtension.Tests.Analyzers.Strings;
 
 [TestFixture]
+[NullableContext(NullableContextKind.Enable)]
 public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestContains_Empty() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestContains_Empty_StringComparison() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestContains_Empty_Expression() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestEndsWith_Empty() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestEndsWith_Empty_StringComparison() => DoNamedTest2();
 
     [Test]
@@ -49,8 +51,8 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     public void TestRemove_0() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestSplit_EmptyArray() => DoNamedTest2();
 
     [Test]
@@ -59,8 +61,8 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     public void TestSplit_EmptyArray_CollectionExpression() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestSplit_ArrayWithOneItem() => DoNamedTest2();
 
     [Test]
@@ -79,13 +81,13 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     public void TestSplit_ArrayWithOneTrimmedItem_CollectionExpression() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestStartsWith_Empty() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [TestNetCore30]
     public void TestStartsWith_Empty_StringComparison() => DoNamedTest2();
 
     [Test]

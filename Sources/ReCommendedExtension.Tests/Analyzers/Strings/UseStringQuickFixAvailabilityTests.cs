@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -28,6 +29,7 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
 
@@ -43,11 +45,13 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestUseListPatternFixAvailability() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestUseOtherMethodFixAvailability() => DoNamedTest2();
 

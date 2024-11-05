@@ -23,13 +23,15 @@ public sealed class UseRangeIndexerFix(UseRangeIndexerSuggestion highlighting) :
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
+            var conditionalAccess = highlighting.InvokedExpression.HasConditionalAccessSign ? "?" : "";
+
             var startIndex = highlighting.StartIndexArgument != "" ? $"({highlighting.StartIndexArgument})" : "";
             var endIndex = highlighting.EndIndexArgument != "" ? $"({highlighting.EndIndexArgument})" : "";
 
             ModificationUtil
                 .ReplaceChild(
                     highlighting.InvocationExpression,
-                    factory.CreateExpression($"$0[{startIndex}..{endIndex}]", highlighting.InvokedExpression.QualifierExpression))
+                    factory.CreateExpression($"$0{conditionalAccess}[{startIndex}..{endIndex}]", highlighting.InvokedExpression.QualifierExpression))
                 .TryRemoveRangeIndexParentheses(factory);
         }
 

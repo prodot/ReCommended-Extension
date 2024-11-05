@@ -22,9 +22,11 @@ public sealed class UseStringPropertyFix(UseStringPropertySuggestion highlightin
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
+            var conditionalAccess = highlighting.InvokedExpression.HasConditionalAccessSign ? "?" : "";
+
             ModificationUtil.ReplaceChild(
                 highlighting.InvocationExpression,
-                factory.CreateExpression($"$0.{highlighting.PropertyName}", highlighting.InvokedExpression.QualifierExpression));
+                factory.CreateExpression($"$0{conditionalAccess}.{highlighting.PropertyName}", highlighting.InvokedExpression.QualifierExpression));
         }
 
         return _ => { };

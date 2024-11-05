@@ -1,4 +1,6 @@
-﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Strings;
 
@@ -13,5 +15,13 @@ public sealed class UseStringPropertyQuickFixTests : QuickFixTestBase<UseStringP
     public void TestLastIndexOf_Empty() => DoNamedTest2();
 
     [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    public void TestLastIndexOf_Empty_Nullable() => DoNamedTest2();
+
+    [Test]
     public void TestLastIndexOf_Empty_StringComparison() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    public void TestLastIndexOf_Empty_StringComparison_Nullable() => DoNamedTest2();
 }

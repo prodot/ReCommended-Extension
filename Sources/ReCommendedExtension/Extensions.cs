@@ -9,7 +9,10 @@ using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.CodeStyle.Suggestions;
+using JetBrains.ReSharper.Psi.CSharp.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Conversions;
+using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis;
+using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
@@ -415,4 +418,68 @@ internal static class Extensions
 
     [Pure]
     public static bool IsPrintable(this char c) => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c) || char.IsSymbol(c) || char.IsPunctuation(c);
+
+    [Pure]
+    public static CSharpCompilerNullableInspector? TryGetCSharpCompilerNullableInspector(
+        this NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer,
+        ICSharpTreeNode treeNode)
+        => (CSharpCompilerNullableInspector?)nullableReferenceTypesDataFlowAnalysisRunSynchronizer.RunNullableAnalysisAndGetResults(
+            treeNode,
+            null!, // wrong [NotNull] annotation in R# code
+            ValueAnalysisMode.OFF,
+            false);
+
+    [Pure]
+    public static CSharpControlFlowNullReferenceState GetExpressionNullReferenceStateByNullableContext(
+        this CSharpCompilerNullableInspector? nullabilityInspector,
+        ICSharpExpression expression)
+    {
+        var type = expression.Type();
+        if (expression.IsDefaultValueOf(type))
+        {
+            switch (type.Classify)
+            {
+                case TypeClassification.VALUE_TYPE:
+                    return type.IsNullable() ? CSharpControlFlowNullReferenceState.NULL : CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                case TypeClassification.REFERENCE_TYPE: return CSharpControlFlowNullReferenceState.NULL;
+
+                case TypeClassification.UNKNOWN: return CSharpControlFlowNullReferenceState.UNKNOWN; // unconstrained generic type
+
+                default: goto case TypeClassification.UNKNOWN;
+            }
+        }
+
+        if (expression.GetContainingNode<ICSharpClosure>() is { } closure)
+        {
+            nullabilityInspector = nullabilityInspector?.GetClosureAnalysisResult(closure) as CSharpCompilerNullableInspector;
+        }
+
+        if (nullabilityInspector?.ControlFlowGraph.GetLeafElementsFor(expression).LastOrDefault()?.Exits.FirstOrDefault() is { } edge)
+        {
+            var nullableContext = nullabilityInspector.GetContext(edge);
+
+            return nullableContext?.ExpressionAnnotation switch
+            {
+                NullableAnnotation.NotAnnotated or NullableAnnotation.NotNullable or NullableAnnotation.RuntimeNotNullable =>
+                    CSharpControlFlowNullReferenceState.NOT_NULL,
+
+                NullableAnnotation.Annotated or NullableAnnotation.Nullable =>
+                    CSharpControlFlowNullReferenceState.MAY_BE_NULL, // todo: distinguish if the expression is "null" or just "may be null" here
+
+                _ => CSharpControlFlowNullReferenceState.UNKNOWN,
+            };
+        }
+
+        return CSharpControlFlowNullReferenceState.UNKNOWN;
+    }
+
+    [Pure]
+    public static bool HasQualifierExpressionNotNull(
+        this IReferenceExpression referenceExpression,
+        NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+        => referenceExpression.IsNullableWarningsContextEnabled()
+            && referenceExpression.QualifierExpression is { } qualifierExpression
+            && nullableReferenceTypesDataFlowAnalysisRunSynchronizer.TryGetCSharpCompilerNullableInspector(qualifierExpression) is { } inspector
+            && inspector.GetExpressionNullReferenceStateByNullableContext(qualifierExpression) == CSharpControlFlowNullReferenceState.NOT_NULL;
 }

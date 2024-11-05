@@ -9,7 +9,7 @@ namespace Test
             var result1 = text.Contains("");
             var result2 = text.Contains("", StringComparison.OrdinalIgnoreCase);
 
-            var result3 = someObject.ToString().Contains(value: "", StringComparison.OrdinalIgnoreCase);
+            var result3 = $"{someObject}".Contains(value: "", StringComparison.OrdinalIgnoreCase);
         }
 
         public void EndsWith(string text, object someObject)
@@ -17,7 +17,7 @@ namespace Test
             var result1 = text.EndsWith("");
             var result2 = text.EndsWith("", StringComparison.OrdinalIgnoreCase);
 
-            var result3 = someObject.ToString().EndsWith(value: "", StringComparison.OrdinalIgnoreCase);
+            var result3 = $"{someObject}".EndsWith(value: "", StringComparison.OrdinalIgnoreCase);
         }
 
         public void IndexOf(string text, object someObject)
@@ -25,7 +25,7 @@ namespace Test
             var result1 = text.IndexOf("");
             var result2 = text.IndexOf("", StringComparison.OrdinalIgnoreCase);
 
-            var result3 = someObject.ToString().IndexOf("", StringComparison.OrdinalIgnoreCase);
+            var result3 = $"{someObject}".IndexOf("", StringComparison.OrdinalIgnoreCase);
         }
 
         public void LastIndexOf(string text, char c)
@@ -94,7 +94,7 @@ namespace Test
             var result1 = text.StartsWith("");
             var result2 = text.StartsWith("", StringComparison.OrdinalIgnoreCase);
 
-            var result3 = someObject.ToString().StartsWith(value: "", StringComparison.OrdinalIgnoreCase);
+            var result3 = $"{someObject}".StartsWith(value: "", StringComparison.OrdinalIgnoreCase);
         }
 
         public void Substring(string text, int startIndex)

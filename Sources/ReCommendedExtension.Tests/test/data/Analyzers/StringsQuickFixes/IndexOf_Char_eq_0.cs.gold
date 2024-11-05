@@ -6,7 +6,7 @@ namespace Test
     {
         public void Comparison(string text, char c)
         {
-            var result11 = text is [var firstCharacter, ..] && {caret}firstCharacter == c;
+            var result11 = text is [var firstChar, ..] && {caret}firstChar == c;
         }
     }
 }

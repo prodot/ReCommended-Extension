@@ -31,5 +31,10 @@ namespace Test
             text.Remove(startIndex, 0);
             text.Remove(0, count);
         }
+
+        public void NoDetection(string? text)
+        {
+            var result = text?.Remove(0);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
@@ -28,7 +29,8 @@ namespace ReCommendedExtension.Analyzers.Strings;
         typeof(RedundantMethodInvocationHint),
         typeof(UseRangeIndexerSuggestion),
     ])]
-public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
+public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+    : ElementProblemAnalyzer<IInvocationExpression>
 {
     abstract class Collection
     {
@@ -255,7 +257,21 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
     [Pure]
     static string? TryGetStringConstant(ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } ? value : null;
+        => expression switch
+        {
+            IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } => value,
+
+            IReferenceExpression { Reference: var reference } when reference.Resolve().DeclaredElement is IField
+                {
+                    ShortName: nameof(string.Empty),
+                    IsStatic: true,
+                    IsReadonly: true,
+                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                } field
+                && field.ContainingType.IsSystemString() => "",
+
+            _ => null,
+        };
 
     [Pure]
     static char? TryGetCharConstant(ICSharpExpression? expression)
@@ -317,11 +333,16 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Contains("")</c> → <c>true</c><para/>
     /// <c>text.Contains(string)</c> → <c>text.Contains(char)</c> (.NET Core 2.1)
     /// </remarks>
-    static void AnalyzeContains_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
+    void AnalyzeContains_String(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valueArgument)
     {
         switch (TryGetStringConstant(valueArgument.Value))
         {
-            case "" when !invocationExpression.IsUsedAsStatement():
+            case "" when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                 break;
 
@@ -344,14 +365,16 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Contains("", StringComparison)</c> → <c>true</c><para/>
     /// <c>text.Contains(string, StringComparison)</c> → <c>text.Contains(char, StringComparison)</c> (.NET Core 2.1)
     /// </remarks>
-    static void AnalyzeContains_String_StringComparison(
+    void AnalyzeContains_String_StringComparison(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
         switch (TryGetStringConstant(valueArgument.Value))
         {
-            case "" when !invocationExpression.IsUsedAsStatement():
+            case "" when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                 break;
 
@@ -371,10 +394,10 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     }
 
     /// <remarks>
-    /// <c>text.EndsWith(char)</c> → <c>text is [.., var lastCharacter] &amp;&amp; lastCharacter == value</c> (C# 11)<para/>
+    /// <c>text.EndsWith(char)</c> → <c>text is [.., var lastChar] &amp;&amp; lastChar == value</c> (C# 11)<para/>
     /// <c>text.EndsWith(char)</c> → <c>text is [.., value]</c> (C# 11)
     /// </remarks>
-    static void AnalyzeEndsWith_Char(
+    void AnalyzeEndsWith_Char(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -382,37 +405,31 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
             && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
             && valueArgument.Value is { })
         {
-            if (TryGetCharConstant(valueArgument.Value) is { } character)
-            {
-                consumer.AddHighlighting(
-                    new UseStringListPatternSuggestion(
-                        "Use list pattern.",
-                        invocationExpression,
-                        invokedExpression,
-                        ListPatternSuggestionKind.LastCharacter,
-                        [character]));
-            }
-            else
-            {
-                consumer.AddHighlighting(
-                    new UseStringListPatternSuggestion(
-                        "Use list pattern.",
-                        invocationExpression,
-                        invokedExpression,
-                        ListPatternSuggestionKind.LastCharacter,
-                        valueArgument.Value.GetText()));
-            }
+            consumer.AddHighlighting(
+                new UseStringListPatternSuggestion(
+                    "Use list pattern.",
+                    invocationExpression,
+                    invokedExpression,
+                    ListPatternSuggestionKind.LastCharacter,
+                    [(valueArgument.Value.GetText(), TryGetCharConstant(valueArgument.Value) is { })]));
         }
     }
 
     /// <remarks>
     /// <c>text.EndsWith("")</c> → <c>true</c>
     /// </remarks>
-    static void AnalyzeEndsWith_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
+    void AnalyzeEndsWith_String(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valueArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement() && TryGetStringConstant(valueArgument.Value) == "")
+        if (!invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && TryGetStringConstant(valueArgument.Value) == "")
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
         }
@@ -423,14 +440,15 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.EndsWith(string, Ordinal)</c> → <c>text is [.., c]</c> (C# 11)<para/>
     /// <c>text.EndsWith(string, OrdinalIgnoresCase)</c> → <c>text is [.., l or u]</c> (C# 11)
     /// </remarks>
-    static void AnalyzeEndsWith_String_StringComparison(
+    void AnalyzeEndsWith_String_StringComparison(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement())
+        if (!invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
             switch (TryGetStringConstant(valueArgument.Value))
             {
@@ -448,7 +466,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                     invocationExpression,
                                     invokedExpression,
                                     ListPatternSuggestionKind.LastCharacter,
-                                    [character]));
+                                    [($"'{character}'", true)]));
                             break;
 
                         case StringComparison.OrdinalIgnoreCase:
@@ -463,7 +481,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                         invocationExpression,
                                         invokedExpression,
                                         ListPatternSuggestionKind.LastCharacter,
-                                        [lowerCaseCharacter]));
+                                        [($"'{lowerCaseCharacter}'", true)]));
                             }
                             else
                             {
@@ -473,7 +491,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                         invocationExpression,
                                         invokedExpression,
                                         ListPatternSuggestionKind.LastCharacter,
-                                        [lowerCaseCharacter, upperCaseCharacter]));
+                                        [($"'{lowerCaseCharacter}'", true), ($"'{upperCaseCharacter}'", true)]));
                             }
                             break;
                     }
@@ -493,7 +511,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.IndexOf(char) == -1</c> → <c>!text.Contains(char) (.NET Core 2.1)</c><para/>
     /// <c>text.IndexOf(char) &lt; 0</c> → <c>!text.Contains(char) (.NET Core 2.1)</c>
     /// </remarks>
-    static void AnalyzeIndexOf_Char(
+    void AnalyzeIndexOf_Char(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -507,60 +525,33 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     case (EqualityExpressionType.EQEQ, 0):
                         if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110)
                         {
-                            if (TryGetCharConstant(valueArgument.Value) is { } character)
-                            {
-                                consumer.AddHighlighting(
-                                    new UseStringListPatternSuggestion(
-                                        "Use list pattern.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        ListPatternSuggestionKind.FirstCharacter,
-                                        [character],
-                                        equalityExpression));
-                            }
-                            else
-                            {
-                                consumer.AddHighlighting(
-                                    new UseStringListPatternSuggestion(
-                                        "Use list pattern.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        ListPatternSuggestionKind.FirstCharacter,
-                                        valueArgument.Value.GetText(),
-                                        equalityExpression));
-                            }
+                            consumer.AddHighlighting(
+                                new UseStringListPatternSuggestion(
+                                    "Use list pattern.",
+                                    invocationExpression,
+                                    invokedExpression,
+                                    ListPatternSuggestionKind.FirstCharacter,
+                                    [(valueArgument.Value.GetText(), TryGetCharConstant(valueArgument.Value) is { })],
+                                    equalityExpression));
                         }
                         break;
 
                     case (EqualityExpressionType.NE, 0):
                         if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110)
                         {
-                            if (TryGetCharConstant(valueArgument.Value) is { } character)
-                            {
-                                consumer.AddHighlighting(
-                                    new UseStringListPatternSuggestion(
-                                        "Use list pattern.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        ListPatternSuggestionKind.NotFirstCharacter,
-                                        [character],
-                                        equalityExpression));
-                            }
-                            else
-                            {
-                                consumer.AddHighlighting(
-                                    new UseStringListPatternSuggestion(
-                                        "Use list pattern.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        ListPatternSuggestionKind.NotFirstCharacter,
-                                        valueArgument.Value.GetText(),
-                                        equalityExpression));
-                            }
+                            consumer.AddHighlighting(
+                                new UseStringListPatternSuggestion(
+                                    "Use list pattern.",
+                                    invocationExpression,
+                                    invokedExpression,
+                                    ListPatternSuggestionKind.NotFirstCharacter,
+                                    [(valueArgument.Value.GetText(), TryGetCharConstant(valueArgument.Value) is { })],
+                                    equalityExpression));
                         }
                         break;
 
-                    case (EqualityExpressionType.NE, -1):
+                    case (EqualityExpressionType.NE, -1)
+                        when invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                         if (TryGetParameterNamesIfMethodExists(
                                 nameof(string.Contains),
                                 [PredefinedType.CHAR_FQN],
@@ -578,7 +569,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         }
                         break;
 
-                    case (EqualityExpressionType.EQEQ, -1):
+                    case (EqualityExpressionType.EQEQ, -1)
+                        when invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                         if (TryGetParameterNamesIfMethodExists(
                                 nameof(string.Contains),
                                 [PredefinedType.CHAR_FQN],
@@ -599,6 +591,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 break;
 
             case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
                 && TryGetInt32Constant(relationalExpression.RightOperand) is { } value
                 && valueArgument.Value is { }:
 
@@ -654,7 +647,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.IndexOf(char, StringComparison) == -1</c> → <c>!text.Contains(char, StringComparison)</c> (.NET Core 2.1)<para/>
     /// <c>text.IndexOf(char, StringComparison) &lt; 0</c> → <c>!text.Contains(char, StringComparison)</c> (.NET Core 2.1)
     /// </remarks>
-    static void AnalyzeIndexOf_Char_StringComparison(
+    void AnalyzeIndexOf_Char_StringComparison(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -669,7 +662,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
                 switch (equalityExpression.EqualityType, TryGetInt32Constant(equalityExpression.RightOperand))
                 {
-                    case (EqualityExpressionType.NE, -1):
+                    case (EqualityExpressionType.NE, -1)
+                        when invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                         if (TryGetParameterNamesIfMethodExists(
                                 nameof(string.Contains),
                                 [PredefinedType.CHAR_FQN, PredefinedType.STRING_COMPARISON_CLASS],
@@ -687,7 +681,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         }
                         break;
 
-                    case (EqualityExpressionType.EQEQ, -1):
+                    case (EqualityExpressionType.EQEQ, -1)
+                        when invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                         if (TryGetParameterNamesIfMethodExists(
                                 nameof(string.Contains),
                                 [PredefinedType.CHAR_FQN, PredefinedType.STRING_COMPARISON_CLASS],
@@ -708,6 +703,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 break;
 
             case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
                 && TryGetInt32Constant(relationalExpression.RightOperand) is { } value
                 && valueArgument.Value is { }
                 && comparisonTypeArgument.Value is { }:
@@ -764,7 +760,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.IndexOf(string) == -1</c> → <c>!text.Contains(string, CurrentCulture)</c> (.NET Core 2.1)<para/>
     /// <c>text.IndexOf(string) &lt; 0</c> → <c>!text.Contains(string, CurrentCulture)</c> (.NET Core 2.1)
     /// </remarks>
-    static void AnalyzeIndexOf_String(
+    void AnalyzeIndexOf_String(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -772,7 +768,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         switch (TryGetStringConstant(valueArgument.Value))
         {
-            case "" when !invocationExpression.IsUsedAsStatement():
+            case "" when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
                 break;
 
@@ -791,117 +788,126 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 break;
 
             default:
-                switch (invocationExpression.Parent)
+                if (invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 {
-                    case IEqualityExpression equalityExpression
-                        when equalityExpression.LeftOperand == invocationExpression && valueArgument.Value is { }:
+                    switch (invocationExpression.Parent)
+                    {
+                        case IEqualityExpression equalityExpression
+                            when equalityExpression.LeftOperand == invocationExpression && valueArgument.Value is { }:
 
-                        switch (equalityExpression.EqualityType, TryGetInt32Constant(equalityExpression.RightOperand))
-                        {
-                            case (EqualityExpressionType.EQEQ, 0):
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(string.StartsWith)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(string.StartsWith),
-                                        false,
-                                        [valueArgument.Value.GetText()],
-                                        equalityExpression));
-                                break;
-
-                            case (EqualityExpressionType.NE, 0):
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(string.StartsWith)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(string.StartsWith),
-                                        true,
-                                        [valueArgument.Value.GetText()],
-                                        equalityExpression));
-                                break;
-
-                            case (EqualityExpressionType.NE, -1):
-                                if (TryGetParameterNamesIfMethodExists(
-                                        nameof(string.Contains),
-                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                        invocationExpression.PsiModule) is [_, _])
-                                {
+                            switch (equalityExpression.EqualityType, TryGetInt32Constant(equalityExpression.RightOperand))
+                            {
+                                case (EqualityExpressionType.EQEQ, 0):
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.Contains)}' method.",
+                                            $"Use the '{nameof(string.StartsWith)}' method.",
                                             invocationExpression,
                                             invokedExpression,
-                                            nameof(string.Contains),
+                                            nameof(string.StartsWith),
                                             false,
-                                            [valueArgument.Value.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"],
+                                            [valueArgument.Value.GetText()],
                                             equalityExpression));
-                                }
-                                break;
+                                    break;
 
-                            case (EqualityExpressionType.EQEQ, -1):
-                                if (TryGetParameterNamesIfMethodExists(
-                                        nameof(string.Contains),
-                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                        invocationExpression.PsiModule) is [_, _])
-                                {
+                                case (EqualityExpressionType.NE, 0):
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.Contains)}' method.",
+                                            $"Use the '{nameof(string.StartsWith)}' method.",
                                             invocationExpression,
                                             invokedExpression,
-                                            nameof(string.Contains),
+                                            nameof(string.StartsWith),
                                             true,
-                                            [valueArgument.Value.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"],
+                                            [valueArgument.Value.GetText()],
                                             equalityExpression));
-                                }
-                                break;
-                        }
-                        break;
+                                    break;
 
-                    case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
-                        && TryGetInt32Constant(relationalExpression.RightOperand) is { } value
-                        && valueArgument.Value is { }:
+                                case (EqualityExpressionType.NE, -1):
+                                    if (TryGetParameterNamesIfMethodExists(
+                                            nameof(string.Contains),
+                                            [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                            invocationExpression.PsiModule) is [_, _])
+                                    {
+                                        consumer.AddHighlighting(
+                                            new UseOtherMethodSuggestion(
+                                                $"Use the '{nameof(string.Contains)}' method.",
+                                                invocationExpression,
+                                                invokedExpression,
+                                                nameof(string.Contains),
+                                                false,
+                                                [
+                                                    valueArgument.Value.GetText(),
+                                                    $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}",
+                                                ],
+                                                equalityExpression));
+                                    }
+                                    break;
 
-                        var tokenType = relationalExpression.OperatorSign.GetTokenType();
+                                case (EqualityExpressionType.EQEQ, -1):
+                                    if (TryGetParameterNamesIfMethodExists(
+                                            nameof(string.Contains),
+                                            [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                            invocationExpression.PsiModule) is [_, _])
+                                    {
+                                        consumer.AddHighlighting(
+                                            new UseOtherMethodSuggestion(
+                                                $"Use the '{nameof(string.Contains)}' method.",
+                                                invocationExpression,
+                                                invokedExpression,
+                                                nameof(string.Contains),
+                                                true,
+                                                [
+                                                    valueArgument.Value.GetText(),
+                                                    $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}",
+                                                ],
+                                                equalityExpression));
+                                    }
+                                    break;
+                            }
+                            break;
 
-                        if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
-                            && TryGetParameterNamesIfMethodExists(
-                                nameof(string.Contains),
-                                [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                invocationExpression.PsiModule) is [_, _])
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
+                        case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
+                            && TryGetInt32Constant(relationalExpression.RightOperand) is { } value
+                            && valueArgument.Value is { }:
+
+                            var tokenType = relationalExpression.OperatorSign.GetTokenType();
+
+                            if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
+                                && TryGetParameterNamesIfMethodExists(
                                     nameof(string.Contains),
-                                    false,
-                                    [valueArgument.Value.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"],
-                                    relationalExpression));
-                        }
+                                    [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                    invocationExpression.PsiModule) is [_, _])
+                            {
+                                consumer.AddHighlighting(
+                                    new UseOtherMethodSuggestion(
+                                        $"Use the '{nameof(string.Contains)}' method.",
+                                        invocationExpression,
+                                        invokedExpression,
+                                        nameof(string.Contains),
+                                        false,
+                                        [valueArgument.Value.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"],
+                                        relationalExpression));
+                            }
 
-                        if (tokenType == CSharpTokenType.LT
-                            && value == 0
-                            && TryGetParameterNamesIfMethodExists(
-                                nameof(string.Contains),
-                                [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                invocationExpression.PsiModule) is [_, _])
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
+                            if (tokenType == CSharpTokenType.LT
+                                && value == 0
+                                && TryGetParameterNamesIfMethodExists(
                                     nameof(string.Contains),
-                                    true,
-                                    [valueArgument.Value.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"],
-                                    relationalExpression));
-                        }
+                                    [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                    invocationExpression.PsiModule) is [_, _])
+                            {
+                                consumer.AddHighlighting(
+                                    new UseOtherMethodSuggestion(
+                                        $"Use the '{nameof(string.Contains)}' method.",
+                                        invocationExpression,
+                                        invokedExpression,
+                                        nameof(string.Contains),
+                                        true,
+                                        [valueArgument.Value.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"],
+                                        relationalExpression));
+                            }
 
-                        break;
+                            break;
+                    }
                 }
                 break;
         }
@@ -929,7 +935,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.IndexOf(string, StringComparison) == -1</c> → <c>!text.Contains(string, StringComparison)</c> (.NET Core 2.1)<para/>
     /// <c>text.IndexOf(string, StringComparison) &lt; 0</c> → <c>!text.Contains(string, StringComparison)</c> (.NET Core 2.1)
     /// </remarks>
-    static void AnalyzeIndexOf_String_StringComparison(
+    void AnalyzeIndexOf_String_StringComparison(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -938,7 +944,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         switch (TryGetStringConstant(valueArgument.Value))
         {
-            case "" when !invocationExpression.IsUsedAsStatement():
+            case "" when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
                 break;
 
@@ -956,131 +963,134 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 break;
 
             default:
-                switch (invocationExpression.Parent)
+                if (invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 {
-                    case IEqualityExpression equalityExpression when equalityExpression.LeftOperand == invocationExpression
-                        && valueArgument.Value is { }
-                        && comparisonTypeArgument.Value is { }:
+                    switch (invocationExpression.Parent)
+                    {
+                        case IEqualityExpression equalityExpression when equalityExpression.LeftOperand == invocationExpression
+                            && valueArgument.Value is { }
+                            && comparisonTypeArgument.Value is { }:
 
-                        switch (equalityExpression.EqualityType, TryGetInt32Constant(equalityExpression.RightOperand))
-                        {
-                            case (EqualityExpressionType.EQEQ, 0):
-                                if (TryGetParameterNamesIfMethodExists(
-                                        nameof(string.StartsWith),
-                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                        invocationExpression.PsiModule) is [_, _])
-                                {
-                                    consumer.AddHighlighting(
-                                        new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.StartsWith)}' method.",
-                                            invocationExpression,
-                                            invokedExpression,
+                            switch (equalityExpression.EqualityType, TryGetInt32Constant(equalityExpression.RightOperand))
+                            {
+                                case (EqualityExpressionType.EQEQ, 0):
+                                    if (TryGetParameterNamesIfMethodExists(
                                             nameof(string.StartsWith),
-                                            false,
-                                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                            equalityExpression));
-                                }
-                                break;
+                                            [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                            invocationExpression.PsiModule) is [_, _])
+                                    {
+                                        consumer.AddHighlighting(
+                                            new UseOtherMethodSuggestion(
+                                                $"Use the '{nameof(string.StartsWith)}' method.",
+                                                invocationExpression,
+                                                invokedExpression,
+                                                nameof(string.StartsWith),
+                                                false,
+                                                [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                                equalityExpression));
+                                    }
+                                    break;
 
-                            case (EqualityExpressionType.NE, 0):
-                                if (TryGetParameterNamesIfMethodExists(
-                                        nameof(string.StartsWith),
-                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                        invocationExpression.PsiModule) is [_, _])
-                                {
-                                    consumer.AddHighlighting(
-                                        new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.StartsWith)}' method.",
-                                            invocationExpression,
-                                            invokedExpression,
+                                case (EqualityExpressionType.NE, 0):
+                                    if (TryGetParameterNamesIfMethodExists(
                                             nameof(string.StartsWith),
-                                            true,
-                                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                            equalityExpression));
-                                }
-                                break;
+                                            [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                            invocationExpression.PsiModule) is [_, _])
+                                    {
+                                        consumer.AddHighlighting(
+                                            new UseOtherMethodSuggestion(
+                                                $"Use the '{nameof(string.StartsWith)}' method.",
+                                                invocationExpression,
+                                                invokedExpression,
+                                                nameof(string.StartsWith),
+                                                true,
+                                                [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                                equalityExpression));
+                                    }
+                                    break;
 
-                            case (EqualityExpressionType.NE, -1):
-                                if (TryGetParameterNamesIfMethodExists(
-                                        nameof(string.Contains),
-                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                        invocationExpression.PsiModule) is [_, _])
-                                {
-                                    consumer.AddHighlighting(
-                                        new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.Contains)}' method.",
-                                            invocationExpression,
-                                            invokedExpression,
+                                case (EqualityExpressionType.NE, -1):
+                                    if (TryGetParameterNamesIfMethodExists(
                                             nameof(string.Contains),
-                                            false,
-                                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                            equalityExpression));
-                                }
-                                break;
+                                            [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                            invocationExpression.PsiModule) is [_, _])
+                                    {
+                                        consumer.AddHighlighting(
+                                            new UseOtherMethodSuggestion(
+                                                $"Use the '{nameof(string.Contains)}' method.",
+                                                invocationExpression,
+                                                invokedExpression,
+                                                nameof(string.Contains),
+                                                false,
+                                                [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                                equalityExpression));
+                                    }
+                                    break;
 
-                            case (EqualityExpressionType.EQEQ, -1):
-                                if (TryGetParameterNamesIfMethodExists(
-                                        nameof(string.Contains),
-                                        [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                        invocationExpression.PsiModule) is [_, _])
-                                {
-                                    consumer.AddHighlighting(
-                                        new UseOtherMethodSuggestion(
-                                            $"Use the '{nameof(string.Contains)}' method.",
-                                            invocationExpression,
-                                            invokedExpression,
+                                case (EqualityExpressionType.EQEQ, -1):
+                                    if (TryGetParameterNamesIfMethodExists(
                                             nameof(string.Contains),
-                                            true,
-                                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                            equalityExpression));
-                                }
-                                break;
-                        }
-                        break;
+                                            [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                            invocationExpression.PsiModule) is [_, _])
+                                    {
+                                        consumer.AddHighlighting(
+                                            new UseOtherMethodSuggestion(
+                                                $"Use the '{nameof(string.Contains)}' method.",
+                                                invocationExpression,
+                                                invokedExpression,
+                                                nameof(string.Contains),
+                                                true,
+                                                [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                                equalityExpression));
+                                    }
+                                    break;
+                            }
+                            break;
 
-                    case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
-                        && TryGetInt32Constant(relationalExpression.RightOperand) is { } value
-                        && valueArgument.Value is { }
-                        && comparisonTypeArgument.Value is { }:
+                        case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
+                            && TryGetInt32Constant(relationalExpression.RightOperand) is { } value
+                            && valueArgument.Value is { }
+                            && comparisonTypeArgument.Value is { }:
 
-                        var tokenType = relationalExpression.OperatorSign.GetTokenType();
+                            var tokenType = relationalExpression.OperatorSign.GetTokenType();
 
-                        if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
-                            && TryGetParameterNamesIfMethodExists(
-                                nameof(string.Contains),
-                                [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                invocationExpression.PsiModule) is [_, _])
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
+                            if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
+                                && TryGetParameterNamesIfMethodExists(
                                     nameof(string.Contains),
-                                    false,
-                                    [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                    relationalExpression));
-                        }
+                                    [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                    invocationExpression.PsiModule) is [_, _])
+                            {
+                                consumer.AddHighlighting(
+                                    new UseOtherMethodSuggestion(
+                                        $"Use the '{nameof(string.Contains)}' method.",
+                                        invocationExpression,
+                                        invokedExpression,
+                                        nameof(string.Contains),
+                                        false,
+                                        [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                        relationalExpression));
+                            }
 
-                        if (tokenType == CSharpTokenType.LT
-                            && value == 0
-                            && TryGetParameterNamesIfMethodExists(
-                                nameof(string.Contains),
-                                [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
-                                invocationExpression.PsiModule) is [_, _])
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
+                            if (tokenType == CSharpTokenType.LT
+                                && value == 0
+                                && TryGetParameterNamesIfMethodExists(
                                     nameof(string.Contains),
-                                    true,
-                                    [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                    relationalExpression));
-                        }
+                                    [PredefinedType.STRING_FQN, PredefinedType.STRING_COMPARISON_CLASS],
+                                    invocationExpression.PsiModule) is [_, _])
+                            {
+                                consumer.AddHighlighting(
+                                    new UseOtherMethodSuggestion(
+                                        $"Use the '{nameof(string.Contains)}' method.",
+                                        invocationExpression,
+                                        invokedExpression,
+                                        nameof(string.Contains),
+                                        true,
+                                        [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                                        relationalExpression));
+                            }
 
-                        break;
+                            break;
+                    }
                 }
                 break;
         }
@@ -1111,12 +1121,15 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <remarks>
     /// <c>text.LastIndexOf(char, 0)</c> → <c>-1</c>
     /// </remarks>
-    static void AnalyzeLastIndexOf_Char_Int32(
+    void AnalyzeLastIndexOf_Char_Int32(
         IHighlightingConsumer consumer,
+        IReferenceExpression invokedExpression,
         IInvocationExpression invocationExpression,
         ICSharpArgument startIndexArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(startIndexArgument.Value) == 0)
+        if (!invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && TryGetInt32Constant(startIndexArgument.Value) == 0)
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1.", invocationExpression, "-1"));
         }
@@ -1283,7 +1296,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Remove(0)</c> → <c>""</c><para/>
     /// <c>text.Remove(int)</c> → <c>text[..startIndex]</c> (C# 8)
     /// </remarks>
-    static void AnalyzeRemove_Int32(
+    void AnalyzeRemove_Int32(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -1293,8 +1306,12 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         {
             if (TryGetInt32Constant(startIndexArgument.Value) == 0)
             {
-                consumer.AddHighlighting(
-                    new UseExpressionResultSuggestion("The expression is always an empty string.", invocationExpression, "\"\""));
+                if (invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                {
+                    consumer.AddHighlighting(
+                        new UseExpressionResultSuggestion("The expression is always an empty string.", invocationExpression, "\"\""));
+                }
+
                 return;
             }
 
@@ -1471,14 +1488,15 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Split(char, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
     /// <c>text.Split(char, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)
     /// </remarks>
-    static void AnalyzeSplit_Char_Int32_StringSplitOptions(
+    void AnalyzeSplit_Char_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
         ICSharpArgument countArgument,
         ICSharpArgument? optionsArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement())
+        if (!invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
             switch (TryGetInt32Constant(countArgument.Value))
             {
@@ -1560,7 +1578,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Split(char[], 1)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
     /// <c>text.Split(char[], int)</c> → <c>text.Split(char[], int)</c><para/>
     /// </remarks>
-    static void AnalyzeSplit_CharArray_Int32(
+    void AnalyzeSplit_CharArray_Int32(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -1569,7 +1587,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         switch (separatorArgument.Value, TryGetInt32Constant(countArgument.Value))
         {
-            case (_, 0) when !invocationExpression.IsUsedAsStatement():
+            case (_, 0) when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
                         "The expression is always an empty array.",
@@ -1577,7 +1596,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         CreateStringArray([], invocationExpression)));
                 break;
 
-            case (_, 1) when !invocationExpression.IsUsedAsStatement():
+            case (_, 1) when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
                 consumer.AddHighlighting(
@@ -1629,7 +1649,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Split(char[], 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
     /// <c>text.Split(char[], int, StringSplitOptions)</c> → <c>text.Split(char[], int, StringSplitOptions)</c><para/>
     /// </remarks>
-    static void AnalyzeSplit_CharArray_Int32_StringSplitOptions(
+    void AnalyzeSplit_CharArray_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -1639,7 +1659,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         switch (separatorArgument.Value, TryGetInt32Constant(countArgument.Value))
         {
-            case (_, 0) when !invocationExpression.IsUsedAsStatement():
+            case (_, 0) when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
                         "The expression is always an empty array.",
@@ -1647,7 +1668,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         CreateStringArray([], invocationExpression)));
                 break;
 
-            case (_, 1) when !invocationExpression.IsUsedAsStatement():
+            case (_, 1) when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
                 switch (TryGetStringSplitOptionsConstant(optionsArgument.Value))
@@ -1694,7 +1716,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Split("", TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
     /// <c>text.Split(string, StringSplitOptions)</c> → <c>text.Split(char, StringSplitOptions)</c>
     /// </remarks>
-    static void AnalyzeSplit_String_StringSplitOptions(
+    void AnalyzeSplit_String_StringSplitOptions(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -1705,29 +1727,27 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
         switch (separator)
         {
-            case "":
-                if (!invocationExpression.IsUsedAsStatement())
+            case "" when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                Debug.Assert(invokedExpression.QualifierExpression is { });
+
+                switch (optionsArgument is { } ? TryGetStringSplitOptionsConstant(optionsArgument.Value) : StringSplitOptions.None)
                 {
-                    Debug.Assert(invokedExpression.QualifierExpression is { });
+                    case StringSplitOptions.None:
+                        consumer.AddHighlighting(
+                            new UseExpressionResultSuggestion(
+                                "The expression is always an array with a single element.",
+                                invocationExpression,
+                                CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                        break;
 
-                    switch (optionsArgument is { } ? TryGetStringSplitOptionsConstant(optionsArgument.Value) : StringSplitOptions.None)
-                    {
-                        case StringSplitOptions.None:
-                            consumer.AddHighlighting(
-                                new UseExpressionResultSuggestion(
-                                    "The expression is always an array with a single element.",
-                                    invocationExpression,
-                                    CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
-                            break;
-
-                        case (StringSplitOptions)2: // todo: use StringSplitOptions.TrimEntries
-                            consumer.AddHighlighting(
-                                new UseExpressionResultSuggestion(
-                                    "The expression is always an array with a single trimmed element.",
-                                    invocationExpression,
-                                    CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
-                            break;
-                    }
+                    case (StringSplitOptions)2: // todo: use StringSplitOptions.TrimEntries
+                        consumer.AddHighlighting(
+                            new UseExpressionResultSuggestion(
+                                "The expression is always an array with a single trimmed element.",
+                                invocationExpression,
+                                CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
+                        break;
                 }
                 break;
 
@@ -1758,7 +1778,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Split("", int, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
     /// <c>text.Split(string, int, StringSplitOptions)</c> → <c>text.Split(char, int, StringSplitOptions)</c>
     /// </remarks>
-    static void AnalyzeSplit_String_Int32_StringSplitOptions(
+    void AnalyzeSplit_String_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -1770,7 +1790,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
 
         switch (separator, TryGetInt32Constant(countArgument.Value))
         {
-            case (_, 0) when !invocationExpression.IsUsedAsStatement():
+            case (_, 0) when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
                         "The expression is always an empty array.",
@@ -1778,7 +1799,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         CreateStringArray([], invocationExpression)));
                 break;
 
-            case (_, 1) or ("", _) when !invocationExpression.IsUsedAsStatement():
+            case (_, 1) or ("", _) when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
                 switch (optionsArgument is { } ? TryGetStringSplitOptionsConstant(optionsArgument.Value) : StringSplitOptions.None)
@@ -1824,7 +1846,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Split(string[], StringSplitOptions)</c> → <c>text.Split(char[], StringSplitOptions)</c><para/>
     /// <c>text.Split(string[], StringSplitOptions)</c> → <c>text.Split(string[], StringSplitOptions)</c>
     /// </remarks>
-    static void AnalyzeSplit_StringArray_StringSplitOptions(
+    void AnalyzeSplit_StringArray_StringSplitOptions(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -1835,7 +1857,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
         {
             if (collection.StringConstants is [""])
             {
-                if (!invocationExpression.IsUsedAsStatement())
+                if (!invocationExpression.IsUsedAsStatement()
+                    && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 {
                     Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -1908,7 +1931,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Split(string[], int, StringSplitOptions)</c> → <c>text.Split(char[], int, StringSplitOptions)</c><para/>
     /// <c>text.Split(string[], int, StringSplitOptions)</c> → <c>text.Split(string[], int, StringSplitOptions)</c>
     /// </remarks>
-    static void AnalyzeSplit_StringArray_Int32_StringSplitOptions(
+    void AnalyzeSplit_StringArray_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -1918,7 +1941,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         switch (Collection.TryFrom(separatorArgument.Value), TryGetInt32Constant(countArgument.Value))
         {
-            case (_, 0) when !invocationExpression.IsUsedAsStatement():
+            case (_, 0) when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
                         "The expression is always an empty array.",
@@ -1926,7 +1950,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                         CreateStringArray([], invocationExpression)));
                 break;
 
-            case (_, 1) or ({ StringConstants: [""] }, _) when !invocationExpression.IsUsedAsStatement():
+            case (_, 1) or ({ StringConstants: [""] }, _) when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
                 switch (TryGetStringSplitOptionsConstant(optionsArgument.Value))
@@ -1989,10 +2014,10 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     }
 
     /// <remarks>
-    /// <c>text.StartsWith(char)</c> → <c>text is [var firstCharacter, ..] &amp;&amp; firstCharacter == value</c> (C# 11)<para/>
+    /// <c>text.StartsWith(char)</c> → <c>text is [var firstChar, ..] &amp;&amp; firstChar == value</c> (C# 11)<para/>
     /// <c>text.StartsWith(char)</c> → <c>text is [value, ..]</c> (C# 11)
     /// </remarks>
-    static void AnalyzeStartsWith_Char(
+    void AnalyzeStartsWith_Char(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -2000,37 +2025,31 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     {
         if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
             && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
             && valueArgument.Value is { })
         {
-            if (TryGetCharConstant(valueArgument.Value) is { } character)
-            {
-                consumer.AddHighlighting(
-                    new UseStringListPatternSuggestion(
-                        "Use list pattern.",
-                        invocationExpression,
-                        invokedExpression,
-                        ListPatternSuggestionKind.FirstCharacter,
-                        [character]));
-            }
-            else
-            {
-                consumer.AddHighlighting(
-                    new UseStringListPatternSuggestion(
-                        "Use list pattern.",
-                        invocationExpression,
-                        invokedExpression,
-                        ListPatternSuggestionKind.FirstCharacter,
-                        valueArgument.Value.GetText()));
-            }
+            consumer.AddHighlighting(
+                new UseStringListPatternSuggestion(
+                    "Use list pattern.",
+                    invocationExpression,
+                    invokedExpression,
+                    ListPatternSuggestionKind.FirstCharacter,
+                    [(valueArgument.Value.GetText(), TryGetCharConstant(valueArgument.Value) is { })]));
         }
     }
 
     /// <remarks>
     /// <c>text.StartsWith("")</c> → <c>true</c>
     /// </remarks>
-    static void AnalyzeStartsWith_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
+    void AnalyzeStartsWith_String(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valueArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement() && TryGetStringConstant(valueArgument.Value) == "")
+        if (!invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && TryGetStringConstant(valueArgument.Value) == "")
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
         }
@@ -2041,14 +2060,15 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.StartsWith(string, Ordinal)</c> → <c>text is [c, ..]</c> (C# 11)<para/>
     /// <c>text.StartsWith(string, OrdinalIgnoresCase)</c> → <c>text is [l or u, ..]</c> (C# 11)
     /// </remarks>
-    static void AnalyzeStartsWith_String_StringComparison(
+    void AnalyzeStartsWith_String_StringComparison(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement())
+        if (!invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
             switch (TryGetStringConstant(valueArgument.Value))
             {
@@ -2066,7 +2086,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                     invocationExpression,
                                     invokedExpression,
                                     ListPatternSuggestionKind.FirstCharacter,
-                                    [character]));
+                                    [($"'{character}'", true)]));
                             break;
 
                         case StringComparison.OrdinalIgnoreCase:
@@ -2081,7 +2101,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                         invocationExpression,
                                         invokedExpression,
                                         ListPatternSuggestionKind.FirstCharacter,
-                                        [lowerCaseCharacter]));
+                                        [($"'{lowerCaseCharacter}'", true)]));
                             }
                             else
                             {
@@ -2091,7 +2111,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                                         invocationExpression,
                                         invokedExpression,
                                         ListPatternSuggestionKind.FirstCharacter,
-                                        [lowerCaseCharacter, upperCaseCharacter]));
+                                        [($"'{lowerCaseCharacter}'", true), ($"'{upperCaseCharacter}'", true)]));
                             }
                             break;
                     }
@@ -2122,12 +2142,15 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <remarks>
     /// <c>text.Substring(int, 0)</c> → <c>""</c>
     /// </remarks>
-    static void AnalyzeSubstring_Int32_Int32(
+    void AnalyzeSubstring_Int32_Int32(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
         ICSharpArgument lengthArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement() && TryGetInt32Constant(lengthArgument.Value) == 0)
+        if (!invocationExpression.IsUsedAsStatement()
+            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && TryGetInt32Constant(lengthArgument.Value) == 0)
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always an empty string.", invocationExpression, "\"\""));
         }
@@ -2161,11 +2184,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
     /// <c>text.Trim(c, c)</c> → <c>text.Trim(c)</c><para/>
     /// <c>text.Trim(char[])</c> → <c>text.Trim(char[])</c><para/>
     /// </remarks>
-    static void AnalyzeTrim_CharArray(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+    static void AnalyzeTrim_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument> arguments)
     {
         switch (arguments)
         {
@@ -2227,12 +2246,12 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
-                            AnalyzeContains_String(consumer, element, valueArgument);
+                            AnalyzeContains_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
                         case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, _])
                             when valueType.IsString() && IsStringComparison(stringComparisonType):
-                            AnalyzeContains_String_StringComparison(consumer, element, valueArgument);
+                            AnalyzeContains_String_StringComparison(consumer, element, invokedExpression, valueArgument);
                             break;
                     }
                     break;
@@ -2245,11 +2264,10 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             break;
 
                         case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
-                            AnalyzeEndsWith_String(consumer, element, valueArgument);
+                            AnalyzeEndsWith_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
-                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument]) when valueType.IsString() && IsStringComparison(stringComparisonType):
                             AnalyzeEndsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                             break;
                     }
@@ -2306,17 +2324,15 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                 case nameof(string.LastIndexOf):
                     switch (method.Parameters, element.Arguments)
                     {
-                        case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument])
-                            when valueType.IsChar() && startIndexType.IsInt():
-                            AnalyzeLastIndexOf_Char_Int32(consumer, element, startIndexArgument);
+                        case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument]) when valueType.IsChar() && startIndexType.IsInt():
+                            AnalyzeLastIndexOf_Char_Int32(consumer, invokedExpression, element, startIndexArgument);
                             break;
 
                         case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
                             AnalyzeLastIndexOf_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
-                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument]) when valueType.IsString() && IsStringComparison(stringComparisonType):
                             AnalyzeLastIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                             break;
                     }
@@ -2329,8 +2345,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             AnalyzePadLeft_Int32(consumer, element, invokedExpression, totalWidthArgument);
                             break;
 
-                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument])
-                            when totalWidthType.IsInt() && paddingCharType.IsChar():
+                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument]) when totalWidthType.IsInt() && paddingCharType.IsChar():
                             AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
                             break;
                     }
@@ -2343,8 +2358,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
                             break;
 
-                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument])
-                            when totalWidthType.IsInt() && paddingCharType.IsChar():
+                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument]) when totalWidthType.IsInt() && paddingCharType.IsChar():
                             AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
                             break;
                     }
@@ -2357,8 +2371,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             AnalyzeRemove_Int32(consumer, element, invokedExpression, startIndexArgument);
                             break;
 
-                        case ([{ Type: var startIndexType }, { Type: var countType }], [var startIndexArgument, var countArgument])
-                            when startIndexType.IsInt() && countType.IsInt():
+                        case ([{ Type: var startIndexType }, { Type: var countType }], [var startIndexArgument, var countArgument]) when startIndexType.IsInt() && countType.IsInt():
                             AnalyzeRemove_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, countArgument);
                             break;
                     }
@@ -2482,11 +2495,10 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             break;
 
                         case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
-                            AnalyzeStartsWith_String(consumer, element, valueArgument);
+                            AnalyzeStartsWith_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
-                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument]) when valueType.IsString() && IsStringComparison(stringComparisonType):
                             AnalyzeStartsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                             break;
                     }
@@ -2499,9 +2511,8 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                             AnalyzeSubstring_Int32(consumer, element, invokedExpression, startIndexArgument);
                             break;
 
-                        case ([{ Type: var startIndexType }, { Type: var lengthType }], [_, var lengthArgument])
-                            when startIndexType.IsInt() && lengthType.IsInt():
-                            AnalyzeSubstring_Int32_Int32(consumer, element, lengthArgument);
+                        case ([{ Type: var startIndexType }, { Type: var lengthType }], [_, var lengthArgument]) when startIndexType.IsInt() && lengthType.IsInt():
+                            AnalyzeSubstring_Int32_Int32(consumer, element, invokedExpression, lengthArgument);
                             break;
                     }
                     break;
@@ -2521,7 +2532,7 @@ public sealed class StringAnalyzer : ElementProblemAnalyzer<IInvocationExpressio
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var trimCharsType }], var arguments) when trimCharsType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
-                            AnalyzeTrim_CharArray(consumer, element, invokedExpression, arguments);
+                            AnalyzeTrim_CharArray(consumer, arguments);
                             break;
                     }
                     break;

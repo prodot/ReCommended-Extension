@@ -13,14 +13,15 @@ namespace ReCommendedExtension.Analyzers.Strings;
 [QuickFix]
 public sealed class UseStringListPatternFix(UseStringListPatternSuggestion highlighting) : QuickFixBase
 {
-    string GetReplacement(bool forUI = false)
+    string Replacement
     {
-        switch (highlighting)
+        get
         {
-            case { Characters: { } characters }:
-                var pattern = !forUI || characters.All(c => c.IsPrintable())
-                    ? string.Join(" or ", from c in characters select $"'{c}'")
-                    : "<pattern>";
+            Debug.Assert(highlighting.Arguments is [_, ..]);
+
+            if (highlighting.Arguments.All(a => a.isConstant))
+            {
+                var pattern = string.Join(" or ", from a in highlighting.Arguments select a.valueArgument);
 
                 return highlighting.Kind switch
                 {
@@ -31,30 +32,47 @@ public sealed class UseStringListPatternFix(UseStringListPatternSuggestion highl
 
                     _ => throw new NotSupportedException(),
                 };
+            }
 
-            case { ValueArgument: { } valueArgument }:
-                if (forUI)
-                {
-                    valueArgument = valueArgument.TrimToSingleLineWithMaxLength(120);
-                }
-
+            if (highlighting.Arguments is [var (value, _)])
+            {
                 return highlighting.Kind switch
                 {
-                    ListPatternSuggestionKind.FirstCharacter => $"is [var firstCharacter, ..] && firstCharacter == {valueArgument}",
-                    ListPatternSuggestionKind.NotFirstCharacter => $"is not [var firstCharacter, ..] || firstCharacter != {valueArgument}",
-                    ListPatternSuggestionKind.LastCharacter => $"is [.., var lastCharacter] && lastCharacter == {valueArgument}",
-                    ListPatternSuggestionKind.NotLastCharacter => $"is not [.., var lastCharacter] || lastCharacter != {valueArgument}",
+                    ListPatternSuggestionKind.FirstCharacter => $"is [var firstChar, ..] && firstChar == {value}",
+                    ListPatternSuggestionKind.NotFirstCharacter => $"is not [var firstChar, ..] || firstChar != {value}",
+                    ListPatternSuggestionKind.LastCharacter => $"is [.., var lastChar] && lastChar == {value}",
+                    ListPatternSuggestionKind.NotLastCharacter => $"is not [.., var lastChar] || lastChar != {value}",
 
                     _ => throw new NotSupportedException(),
                 };
+            }
 
-            default: throw new NotSupportedException();
+            return highlighting.Kind switch
+            {
+                ListPatternSuggestionKind.FirstCharacter => $"is [var firstChar, ..] && ({
+                    string.Join(" || ", from a in highlighting.Arguments select $"firstChar == {a.valueArgument}")
+                })",
+
+                ListPatternSuggestionKind.NotFirstCharacter => $"is not [var firstChar, ..] || {
+                    string.Join(" && ", from a in highlighting.Arguments select $"firstChar != {a.valueArgument}")
+                }",
+
+                ListPatternSuggestionKind.LastCharacter => $"is [.., var lastChar] && ({
+                    string.Join(" || ", from a in highlighting.Arguments select $"firstChar == {a.valueArgument}")
+                })",
+
+                ListPatternSuggestionKind.NotLastCharacter => $"is not [.., var lastChar] || {
+                    string.Join(" && ", from a in highlighting.Arguments select $"lastChar != {a.valueArgument}")
+                }",
+
+                _ => throw new NotSupportedException(),
+            };
         }
     }
 
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '{GetReplacement(true)}'";
+    public override string Text => $"Replace with '{Replacement.TrimToSingleLineWithMaxLength(120)}'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
@@ -65,7 +83,7 @@ public sealed class UseStringListPatternFix(UseStringListPatternSuggestion highl
             ModificationUtil
                 .ReplaceChild(
                     highlighting.BinaryExpression as ITreeNode ?? highlighting.InvocationExpression,
-                    factory.CreateExpression($"($0 {GetReplacement()})", highlighting.InvokedExpression.QualifierExpression))
+                    factory.CreateExpression($"($0 {Replacement})", highlighting.InvokedExpression.QualifierExpression))
                 .TryRemoveParentheses(factory);
         }
 

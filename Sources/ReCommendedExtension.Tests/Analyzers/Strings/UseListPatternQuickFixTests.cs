@@ -1,4 +1,5 @@
-﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -8,6 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Strings;
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+[NullableContext(NullableContextKind.Enable)]
 [TestNet70]
 public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseStringListPatternFix>
 {
@@ -15,6 +17,9 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseStringList
 
     [Test]
     public void TestEndsWith_Char() => DoNamedTest2();
+
+    [Test]
+    public void TestEndsWith_Char_Constant() => DoNamedTest2();
 
     [Test]
     public void TestEndsWith_Char_ParameterName() => DoNamedTest2();

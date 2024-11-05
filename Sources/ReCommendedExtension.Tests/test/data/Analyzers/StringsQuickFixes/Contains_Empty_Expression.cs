@@ -6,7 +6,7 @@ namespace Test
     {
         public void Contains(object someObject)
         {
-            var result = some{caret}Object.ToString().Contains("", StringComparison.OrdinalIgnoreCase);
+            var result = $"{some{caret}Object}".Contains("", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

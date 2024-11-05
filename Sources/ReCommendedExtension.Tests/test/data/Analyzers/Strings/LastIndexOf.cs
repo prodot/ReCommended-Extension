@@ -35,5 +35,10 @@ namespace Test
             text.LastIndexOf("");
             text.LastIndexOf("", StringComparison.OrdinalIgnoreCase)
         }
+
+        public void NoDetection(string? text, char c)
+        {
+            var result = text?.LastIndexOf(c, 0);
+        }
     }
 }

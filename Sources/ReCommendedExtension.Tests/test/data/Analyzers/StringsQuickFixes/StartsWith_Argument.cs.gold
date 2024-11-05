@@ -4,7 +4,7 @@
     {
         public void StartsWith(string text, char c)
         {
-            var result = text is [var firstCharacter, ..] && f{caret}irstCharacter == c;
+            var result = text is [var firstChar, ..] && f{caret}irstChar == c;
         }
     }
 }
