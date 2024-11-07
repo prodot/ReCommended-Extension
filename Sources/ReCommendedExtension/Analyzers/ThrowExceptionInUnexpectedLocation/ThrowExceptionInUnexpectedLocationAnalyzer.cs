@@ -27,10 +27,14 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
         [Pure]
         public static CSharpControlFlowGraphInspector Inspect(ICSharpControlFlowGraph graph, ValueAnalysisMode analysisMode)
         {
-            var element = (ICSharpTreeNode?)graph.Declaration ?? graph.OwnerNode;
-            var universalContext = new UniversalContext(element);
-            var factory = new CSharpControlFlowContextFactory(graph, universalContext, analysisMode, false, ExecutionBehavior.InstantExecution);
-            var inspector = new ControlFlowGraphInspectorWithValueAnalysis(graph, factory);
+            var inspector = new ControlFlowGraphInspectorWithValueAnalysis(
+                graph,
+                new CSharpControlFlowContextFactory(
+                    graph,
+                    new UniversalContext((ICSharpTreeNode?)graph.Declaration ?? graph.OwnerNode),
+                    analysisMode,
+                    false,
+                    ExecutionBehavior.InstantExecution));
 
             inspector.Inspect();
 
@@ -178,13 +182,11 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     {
                         var inspector = ControlFlowGraphInspectorWithValueAnalysis.Inspect(controlFlowGraph, ValueAnalysisMode.OPTIMISTIC);
 
-                        if (inspector.FindVariableInfo(parameter) is { } variableInfo)
+                        if (inspector.FindVariableInfo(parameter) is { } variableInfo
+                            && inspector.GetContext(controlFlowEdge)?.GetVariableDefiniteState(variableInfo) is not { }
+                                or CSharpControlFlowVariableValue.FALSE)
                         {
-                            var variableValue = inspector.GetContext(controlFlowEdge)?.GetVariableDefiniteState(variableInfo);
-                            if (variableValue is not { } or CSharpControlFlowVariableValue.FALSE)
-                            {
-                                return Location.DisposeMethodWithParameterFalseCodePath;
-                            }
+                            return Location.DisposeMethodWithParameterFalseCodePath;
                         }
                     }
                 }

@@ -109,6 +109,11 @@ namespace Test
             var first = list9.|First()|(8);
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var first = text.|First()|(9);
+        }
+
         public void NonMatch(IList<int> list)
         {
             var first = list.First(x => x > 0);
@@ -119,7 +124,7 @@ namespace Test
     {
         public void Method(CustomListUniqueItems<int> list)
         {
-            var first1 = list.|First()|(9);
+            var first1 = list.|First()|(10);
             var first2 = list.First(x => x > 0);
         }
     }
@@ -128,38 +133,38 @@ namespace Test
     {
         public void NonGenericMethod(ISet<int> collection)
         {
-            var first1 = collection.|First()|(10);
-            var first2 = collection.|First(x => x > 0)|(11);
+            var first1 = collection.|First()|(11);
+            var first2 = collection.|First(x => x > 0)|(12);
         }
 
         public void NonGenericMethod(IReadOnlySet<int> collection)
         {
-            var first1 = collection.|First()|(12);
-            var first2 = collection.|First(x => x > 0)|(13);
+            var first1 = collection.|First()|(13);
+            var first2 = collection.|First(x => x > 0)|(14);
         }
 
         public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
         {
-            var first1 = collection.|First()|(14);
-            var first2 = collection.|First(x => x > 0)|(15);
+            var first1 = collection.|First()|(15);
+            var first2 = collection.|First(x => x > 0)|(16);
         }
 
         public void NonGenericMethod(HashSet<int> collection)
         {
-            var first1 = collection.|First()|(16);
-            var first2 = collection.|First(x => x > 0)|(17);
+            var first1 = collection.|First()|(17);
+            var first2 = collection.|First(x => x > 0)|(18);
         }
 
         public void GenericMethod<T>(HashSet<T> collection)
         {
-            var first1 = collection.|First()|(18);
-            var first2 = collection.|First(x => x.ToString() != "")|(19);
+            var first1 = collection.|First()|(19);
+            var first2 = collection.|First(x => x.ToString() != "")|(20);
         }
 
         public void ConstrainedGenericMethod<L>(L collection) where L : IReadOnlySet<int>
         {
-            var first1 = collection.|First()|(20);
-            var first2 = collection.|First(x => x > 0)|(21);
+            var first1 = collection.|First()|(21);
+            var first2 = collection.|First(x => x > 0)|(22);
         }
     }
 }
@@ -174,7 +179,7 @@ namespace Test
 (7): ReSharper Suggestion: Use the indexer.
 (8): ReSharper Suggestion: Use the indexer.
 (9): ReSharper Suggestion: Use the indexer.
-(10): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(10): ReSharper Suggestion: Use the indexer.
 (11): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
 (12): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
 (13): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
@@ -186,3 +191,4 @@ namespace Test
 (19): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
 (20): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
 (21): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(22): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.

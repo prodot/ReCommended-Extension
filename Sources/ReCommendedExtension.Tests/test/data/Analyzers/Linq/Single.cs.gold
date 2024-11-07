@@ -84,9 +84,19 @@ namespace Test
             var first = list9.|Single()|(8);
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var first = text.|Single()|(9);
+        }
+
         public void NonMatch(IList<int> list)
         {
             var first = list.Single(x => x > 0);
+        }
+
+        public void NonMatch2(IList<int>? list)
+        {
+            var first = list?.Single();
         }
     }
 }
@@ -100,3 +110,4 @@ namespace Test
 (6): ReSharper Suggestion: Use list pattern.
 (7): ReSharper Suggestion: Use list pattern.
 (8): ReSharper Suggestion: Use list pattern.
+(9): ReSharper Suggestion: Use list pattern.

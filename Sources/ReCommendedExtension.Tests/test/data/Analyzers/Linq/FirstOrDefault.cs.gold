@@ -118,10 +118,22 @@ namespace Test
             var first2 = list9.|FirstOrDefault(1)|(17);
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var first1 = text.|FirstOrDefault()|(18);
+            var first2 = text.|FirstOrDefault('a')|(19);
+        }
+
         public void NonMatch(IList<int> list)
         {
             var first1 = list.FirstOrDefault(x => x > 0);
             var first2 = list.FirstOrDefault(x => x > 0, 1);
+        }
+
+        public void NonMatch2(IList<int>? list)
+        {
+            var first1 = list?.FirstOrDefault();
+            var first2 = list?.FirstOrDefault(1);
         }
     }
 
@@ -129,8 +141,8 @@ namespace Test
     {
         public void Method(CustomListUniqueItems<int> list)
         {
-            var first1 = list.|FirstOrDefault()|(18);
-            var first2 = list.|FirstOrDefault(1)|(19);
+            var first1 = list.|FirstOrDefault()|(20);
+            var first2 = list.|FirstOrDefault(1)|(21);
             var first3 = list.FirstOrDefault(x => x > 0);
             var first4 = list.FirstOrDefault(x => x > 0, 1);
         }
@@ -140,50 +152,50 @@ namespace Test
     {
         public void NonGenericMethod(ISet<int> collection)
         {
-            var first1 = collection.|FirstOrDefault()|(20);
-            var first2 = collection.|FirstOrDefault(1)|(21);
-            var first3 = collection.|FirstOrDefault(x => x > 0)|(22);
-            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(23);
+            var first1 = collection.|FirstOrDefault()|(22);
+            var first2 = collection.|FirstOrDefault(1)|(23);
+            var first3 = collection.|FirstOrDefault(x => x > 0)|(24);
+            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(25);
         }
 
         public void NonGenericMethod(IReadOnlySet<int> collection)
         {
-            var first1 = collection.|FirstOrDefault()|(24);
-            var first2 = collection.|FirstOrDefault(1)|(25);
-            var first3 = collection.|FirstOrDefault(x => x > 0)|(26);
-            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(27);
+            var first1 = collection.|FirstOrDefault()|(26);
+            var first2 = collection.|FirstOrDefault(1)|(27);
+            var first3 = collection.|FirstOrDefault(x => x > 0)|(28);
+            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(29);
         }
 
         public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
         {
-            var first1 = collection.|FirstOrDefault()|(28);
-            var first2 = collection.|FirstOrDefault(1)|(29);
-            var first3 = collection.|FirstOrDefault(x => x > 0)|(30);
-            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(31);
+            var first1 = collection.|FirstOrDefault()|(30);
+            var first2 = collection.|FirstOrDefault(1)|(31);
+            var first3 = collection.|FirstOrDefault(x => x > 0)|(32);
+            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(33);
         }
 
         public void NonGenericMethod(HashSet<int> collection)
         {
-            var first1 = collection.|FirstOrDefault()|(32);
-            var first2 = collection.|FirstOrDefault(1)|(33);
-            var first3 = collection.|FirstOrDefault(x => x > 0)|(34);
-            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(35);
+            var first1 = collection.|FirstOrDefault()|(34);
+            var first2 = collection.|FirstOrDefault(1)|(35);
+            var first3 = collection.|FirstOrDefault(x => x > 0)|(36);
+            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(37);
         }
 
         public void GenericMethod<T>(HashSet<T> collection, T fallback)
         {
-            var first1 = collection.|FirstOrDefault()|(36);
-            var first2 = collection.|FirstOrDefault(fallback)|(37);
-            var first3 = collection.|FirstOrDefault(x => x.ToString() != "")|(38);
-            var first4 = collection.|FirstOrDefault(x => x.ToString() != "", fallback)|(39);
+            var first1 = collection.|FirstOrDefault()|(38);
+            var first2 = collection.|FirstOrDefault(fallback)|(39);
+            var first3 = collection.|FirstOrDefault(x => x.ToString() != "")|(40);
+            var first4 = collection.|FirstOrDefault(x => x.ToString() != "", fallback)|(41);
         }
 
         public void ConstrainedGenericMethod<L>(L collection) where L : IReadOnlySet<int>
         {
-            var first1 = collection.|FirstOrDefault()|(40);
-            var first2 = collection.|FirstOrDefault(1)|(41);
-            var first3 = collection.|FirstOrDefault(x => x > 0)|(42);
-            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(43);
+            var first1 = collection.|FirstOrDefault()|(42);
+            var first2 = collection.|FirstOrDefault(1)|(43);
+            var first3 = collection.|FirstOrDefault(x => x > 0)|(44);
+            var first4 = collection.|FirstOrDefault(x => x > 0, 1)|(45);
         }
     }
 }
@@ -208,8 +220,8 @@ namespace Test
 (17): ReSharper Suggestion: Use list pattern.
 (18): ReSharper Suggestion: Use list pattern.
 (19): ReSharper Suggestion: Use list pattern.
-(20): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
-(21): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
+(20): ReSharper Suggestion: Use list pattern.
+(21): ReSharper Suggestion: Use list pattern.
 (22): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
 (23): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
 (24): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
@@ -232,3 +244,5 @@ namespace Test
 (41): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
 (42): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
 (43): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
+(44): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.
+(45): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "first" item could result in unpredictable behavior.

@@ -28,6 +28,7 @@ namespace Test
             IList<CancellationToken> structs,
             IList<DayOfWeek> enums,
             IList<string> strings,
+            IList<(int first, bool second)> tuples,
             IList<int?> nullableStructs)
         {
             var bool_ = booleans.|FirstOrDefault()|(5);
@@ -40,29 +41,30 @@ namespace Test
             var struct_ = structs.|LastOrDefault()|(12);
             var enum_ = enums.|LastOrDefault()|(13);
             var string_ = strings.|LastOrDefault()|(14);
-            var nullableStruct_ = nullableStructs.|LastOrDefault()|(15);
+            var tuple_ = tuples.|LastOrDefault()|(15);
+            var nullableStruct_ = nullableStructs.|LastOrDefault()|(16);
         }
 
         public void DefaultValues_Unconstrained<T>(IList<T> items)
         {
-            var first = items.|FirstOrDefault()|(16);
+            var first = items.|FirstOrDefault()|(17);
         }
 
         public void DefaultValues_ReferenceType<T>(IList<T> items) where T : class
         {
-            var first = items.|FirstOrDefault()|(17);
+            var first = items.|FirstOrDefault()|(18);
         }
 
         class SomeClass { }
 
         public void DefaultValues_KnownReferenceType<T>(IList<T> items) where T : SomeClass
         {
-            var first = items.|FirstOrDefault()|(18);
+            var first = items.|FirstOrDefault()|(19);
         }
 
         public void DefaultValues_ValueType<T>(IList<T> items) where T : struct
         {
-            var first = items.|FirstOrDefault()|(19);
+            var first = items.|FirstOrDefault()|(20);
         }
     }
 }
@@ -114,16 +116,19 @@ QUICKFIXES:
 Replace with 'is [.., var last] ? last : null'
 15: Use list pattern.
 QUICKFIXES:
-Replace with 'is [.., var last] ? last : null'
+Replace with 'is [.., var last] ? last : (0, false)'
 16: Use list pattern.
 QUICKFIXES:
-Replace with 'is [var first, ..] ? first : default(T)'
+Replace with 'is [.., var last] ? last : null'
 17: Use list pattern.
 QUICKFIXES:
-Replace with 'is [var first, ..] ? first : null'
+Replace with 'is [var first, ..] ? first : default(T)'
 18: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : null'
 19: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var first, ..] ? first : null'
+20: Use list pattern.
 QUICKFIXES:
 Replace with 'is [var first, ..] ? first : default(T)'

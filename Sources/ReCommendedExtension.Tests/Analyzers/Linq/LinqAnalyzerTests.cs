@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
@@ -40,6 +41,7 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestFirstOrDefault() => DoNamedTest2();
 
@@ -50,6 +52,7 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestLastOrDefault() => DoNamedTest2();
 
@@ -60,11 +63,13 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestSingle() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
     public void TestSingleOrDefault() => DoNamedTest2();
 }

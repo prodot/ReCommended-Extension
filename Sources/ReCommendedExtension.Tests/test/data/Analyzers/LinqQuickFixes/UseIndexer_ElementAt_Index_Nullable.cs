@@ -5,9 +5,9 @@ namespace Test
 {
     public class Class
     {
-        public void Method(IList<string> list)
+        public void Method(IList<int>? list)
         {
-            var f = list.La{caret}st().Length;
+            var secondFromEnd = list?.Element{caret}At(^2);
         }
     }
 }

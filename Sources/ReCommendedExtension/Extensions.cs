@@ -461,11 +461,13 @@ internal static class Extensions
 
             return nullableContext?.ExpressionAnnotation switch
             {
-                NullableAnnotation.NotAnnotated or NullableAnnotation.NotNullable or NullableAnnotation.RuntimeNotNullable =>
-                    CSharpControlFlowNullReferenceState.NOT_NULL,
+                NullableAnnotation.NotAnnotated or NullableAnnotation.NotNullable => CSharpControlFlowNullReferenceState.NOT_NULL,
 
-                NullableAnnotation.Annotated or NullableAnnotation.Nullable =>
-                    CSharpControlFlowNullReferenceState.MAY_BE_NULL, // todo: distinguish if the expression is "null" or just "may be null" here
+                NullableAnnotation.RuntimeNotNullable when expression is IObjectCreationExpression
+                    || expression.Parent is not IReferenceExpression { Reference: var reference } // the nullability detection doesn't work well for extension method invocations
+                    || reference.Resolve().DeclaredElement is not IMethod { IsExtensionMethod: true } => CSharpControlFlowNullReferenceState.NOT_NULL,
+
+                NullableAnnotation.Annotated or NullableAnnotation.Nullable => CSharpControlFlowNullReferenceState.MAY_BE_NULL, // todo: distinguish if the expression is "null" or just "may be null" here
 
                 _ => CSharpControlFlowNullReferenceState.UNKNOWN,
             };

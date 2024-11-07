@@ -109,6 +109,11 @@ namespace Test
             var last = list9.Last();
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var last = text.Last();
+        }
+
         public void NonMatch(IList<int> list)
         {
             var last = list.Last(x => x > 0);

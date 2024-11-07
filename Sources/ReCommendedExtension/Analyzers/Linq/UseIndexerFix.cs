@@ -14,7 +14,15 @@ public sealed class UseIndexerFix(UseIndexerSuggestion highlighting) : QuickFixB
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '[{highlighting.IndexArgument}]' (other exception could be thrown)";
+    public override string Text
+    {
+        get
+        {
+            var otherException = highlighting.CanThrowOtherException ? " (other exception could be thrown)" : "";
+
+            return $"Replace with '[{highlighting.IndexArgument.TrimToSingleLineWithMaxLength(120)}]'{otherException}";
+        }
+    }
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
@@ -22,9 +30,11 @@ public sealed class UseIndexerFix(UseIndexerSuggestion highlighting) : QuickFixB
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
+            var conditionalAccess = highlighting.InvokedExpression.HasConditionalAccessSign ? "?" : "";
+
             ModificationUtil.ReplaceChild(
                 highlighting.InvocationExpression,
-                factory.CreateExpression($"$0[{highlighting.IndexArgument}]", highlighting.InvokedExpression.QualifierExpression));
+                factory.CreateExpression($"$0{conditionalAccess}[{highlighting.IndexArgument}]", highlighting.InvokedExpression.QualifierExpression));
         }
 
         return _ => { };

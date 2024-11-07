@@ -117,6 +117,12 @@ namespace Test
             var third = list9.ElementAtOrDefault(2);
             var secondFromEnd = list9.ElementAtOrDefault(^2);
         }
+
+        public void NonGenericMethod(string text)
+        {
+            var third = text.ElementAtOrDefault(2);
+            var secondFromEnd = text.ElementAtOrDefault(^2);
+        }
     }
 
     public class MixedBehaviorCollections

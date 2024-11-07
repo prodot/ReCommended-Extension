@@ -109,6 +109,11 @@ namespace Test
             var first = list9.First();
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var first = text.First();
+        }
+
         public void NonMatch(IList<int> list)
         {
             var first = list.First(x => x > 0);

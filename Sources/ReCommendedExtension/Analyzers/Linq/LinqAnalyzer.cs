@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
@@ -21,7 +22,8 @@ namespace ReCommendedExtension.Analyzers.Linq;
         typeof(UseCollectionPropertySuggestion),
         typeof(SuspiciousElementAccessWarning),
     ])]
-public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
+public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+    : ElementProblemAnalyzer<IInvocationExpression>
 {
     [Pure]
     static bool IsCollection(IType type, ITreeNode context)
@@ -77,8 +79,6 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     /// <remarks>
     /// <c>list.ElementAt(int)</c> → <c>list[int]</c><para/>
     /// <c>list.ElementAt(Index)</c> → <c>list[Index]</c><para/>
-    /// <c>list.ElementAt(0)</c> → <c>list is [var first, ..] ? first : throw new InvalidOperationException(...)</c> (C# 11)<para/>
-    /// <c>list.ElementAt(^1)</c> → <c>list is [.., var last] ? last : throw new InvalidOperationException(...)</c> (C# 11)<para/>
     /// <c>set.ElementAt(int)</c> → ⚠️
     /// </remarks>
     static void AnalyzeElementAt(
@@ -92,10 +92,15 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression))
+        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
             consumer.AddHighlighting(
-                new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, indexArgument.Value.GetText()));
+                new UseIndexerSuggestion(
+                    "Use the indexer.",
+                    invocationExpression,
+                    invokedExpression,
+                    indexArgument.Value.GetText(),
+                    type.IsGenericArray(invocationExpression) || type.IsString()));
 
             return;
         }
@@ -123,7 +128,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression))
+        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
             return;
         }
@@ -140,7 +145,6 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
     /// <remarks>
     /// <c>list.First()</c> → <c>list[0]</c><para/>
-    /// <c>list.First()</c> → <c>list is [var first, ..] ? first : throw new InvalidOperationException(...)</c> (C# 11)<para/>
     /// <c>set.First()</c> → ⚠️<para/>
     /// <c>set.First(Func&lt;T, bool&gt;)</c> → ⚠️
     /// </remarks>
@@ -154,11 +158,11 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression))
+        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
             if (!hasPredicateArgument)
             {
-                consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "0"));
+                consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "0", true));
             }
 
             return;
@@ -182,7 +186,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     /// <c>set.FirstOrDefault(Func&lt;T, bool&gt;)</c> → ⚠️<para/>
     /// <c>set.FirstOrDefault(Func&lt;T, bool&gt;, T)</c> → ⚠️
     /// </remarks>
-    static void AnalyzeFirstOrDefault(
+    void AnalyzeFirstOrDefault(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -194,9 +198,11 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression))
+        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
-            if (!hasPredicateArgument && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110)
+            if (!hasPredicateArgument
+                && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
                     new UseLinqListPatternSuggestion(
@@ -223,7 +229,6 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
     /// <remarks>
     /// <c>list.Last()</c> → <c>list[^1]</c> (C# 8)<para/>
-    /// <c>list.Last()</c> → <c>list is [.., var last] ? last : throw new InvalidOperationException(...)</c> (C# 11)<para/>
     /// <c>set.Last()</c> → ⚠️<para/>
     /// <c>set.Last(Func&lt;T, bool&gt;)</c> → ⚠️
     /// </remarks>
@@ -237,11 +242,11 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression))
+        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
             if (!hasPredicateArgument && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80)
             {
-                consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "^1"));
+                consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "^1", true));
             }
 
             return;
@@ -265,7 +270,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     /// <c>set.LastOrDefault(Func&lt;T, bool&gt;)</c> → ⚠️<para/>
     /// <c>set.LastOrDefault(Func&lt;T, bool&gt;, T)</c> → ⚠️
     /// </remarks>
-    static void AnalyzeLastOrDefault(
+    void AnalyzeLastOrDefault(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -277,9 +282,11 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression))
+        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
-            if (!hasPredicateArgument && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110)
+            if (!hasPredicateArgument
+                && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
                     new UseLinqListPatternSuggestion(
@@ -341,15 +348,20 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     /// <remarks>
     /// <c>list.Single()</c> → <c>list is [var item] ? item : throw new InvalidOperationException(...)</c> (C# 11)
     /// </remarks>
-    static void AnalyzeSingle(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
+    void AnalyzeSingle(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-            && IsIndexableCollection(invokedExpression.QualifierExpression.Type(), invokedExpression))
+        if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110)
         {
-            consumer.AddHighlighting(
-                new UseLinqListPatternSuggestion("Use list pattern.", invocationExpression, invokedExpression, ListPatternSuggestionKind.Single));
+            var type = invokedExpression.QualifierExpression.Type();
+
+            if ((IsIndexableCollection(type, invokedExpression) || type.IsString())
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+            {
+                consumer.AddHighlighting(
+                    new UseLinqListPatternSuggestion("Use list pattern.", invocationExpression, invokedExpression, ListPatternSuggestionKind.Single));
+            }
         }
     }
 
@@ -357,7 +369,7 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     /// <c>list.SingleOrDefault()</c> → <c>list switch { [] => default, [var item] => item, _ => throw new InvalidOperationException(...) }</c> (C# 11)<para/>
     /// <c>list.SingleOrDefault(T)</c> → <c>list switch { [] => defaultValue, [var item] => item, _ => throw new InvalidOperationException(...) }</c> (C# 11)
     /// </remarks>
-    static void AnalyzeSingleOrDefault(
+    void AnalyzeSingleOrDefault(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -366,16 +378,21 @@ public sealed class LinqAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         Debug.Assert(invokedExpression.QualifierExpression is { });
         Debug.Assert(defaultValueArgument is null or { Value: { } });
 
-        if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110 // introduced list patterns
-            && IsIndexableCollection(invokedExpression.QualifierExpression.Type(), invokedExpression))
+        if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110) // introduced list patterns
         {
-            consumer.AddHighlighting(
-                new UseSwitchExpressionSuggestion(
-                    "Use switch expression.",
-                    invocationExpression,
-                    invokedExpression,
-                    defaultValueArgument?.Value.GetText()
-                    ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)?.GetText()));
+            var type = invokedExpression.QualifierExpression.Type();
+
+            if ((IsIndexableCollection(type, invokedExpression) || type.IsString())
+                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+            {
+                consumer.AddHighlighting(
+                    new UseSwitchExpressionSuggestion(
+                        "Use switch expression.",
+                        invocationExpression,
+                        invokedExpression,
+                        defaultValueArgument?.Value.GetText()
+                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)?.GetText()));
+            }
         }
     }
 

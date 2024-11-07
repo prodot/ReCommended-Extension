@@ -93,10 +93,22 @@ namespace Test
             var single2 = list9.|SingleOrDefault(1)|(17);
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var single1 = text.|SingleOrDefault()|(18);
+            var single2 = text.|SingleOrDefault('a')|(19);
+        }
+
         public void NonMatch(IList<int> list)
         {
             var single1 = list.SingleOrDefault(x => x > 0);
             var single2 = list.SingleOrDefault(x => x > 0, 1);
+        }
+
+        public void NonMatch2(IList<int>? list)
+        {
+            var single1 = list?.SingleOrDefault();
+            var single2 = list?.SingleOrDefault(1);
         }
     }
 }
@@ -119,3 +131,5 @@ namespace Test
 (15): ReSharper Suggestion: Use switch expression.
 (16): ReSharper Suggestion: Use switch expression.
 (17): ReSharper Suggestion: Use switch expression.
+(18): ReSharper Suggestion: Use switch expression.
+(19): ReSharper Suggestion: Use switch expression.

@@ -28,6 +28,7 @@ namespace Test
             IList<CancellationToken> structs,
             IList<DayOfWeek> enums,
             IList<string> strings,
+            IList<(int first, bool second)> tuples,
             IList<int?> nullableStructs)
         {
             var bool_ = booleans.FirstOrDefault();
@@ -40,6 +41,7 @@ namespace Test
             var struct_ = structs.LastOrDefault();
             var enum_ = enums.LastOrDefault();
             var string_ = strings.LastOrDefault();
+            var tuple_ = tuples.LastOrDefault();
             var nullableStruct_ = nullableStructs.LastOrDefault();
         }
 

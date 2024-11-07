@@ -10,9 +10,9 @@ public sealed class UseSwitchExpressionSuggestion(
     string message,
     IInvocationExpression invocationExpression,
     IReferenceExpression invokedExpression,
-    string? defaultValueArgument = null) : LinqHighlighting(message, invocationExpression, invokedExpression)
+    string? defaultValueExpression = null) : LinqHighlighting(message, invocationExpression, invokedExpression)
 {
     const string SeverityId = "UseSwitchExpression";
 
-    internal string? DefaultValueArgument => defaultValueArgument;
+    internal string? DefaultValueExpression => defaultValueExpression;
 }

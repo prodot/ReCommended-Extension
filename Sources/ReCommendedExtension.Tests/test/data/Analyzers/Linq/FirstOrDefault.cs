@@ -118,10 +118,22 @@ namespace Test
             var first2 = list9.FirstOrDefault(1);
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var first1 = text.FirstOrDefault();
+            var first2 = text.FirstOrDefault('a');
+        }
+
         public void NonMatch(IList<int> list)
         {
             var first1 = list.FirstOrDefault(x => x > 0);
             var first2 = list.FirstOrDefault(x => x > 0, 1);
+        }
+
+        public void NonMatch2(IList<int>? list)
+        {
+            var first1 = list?.FirstOrDefault();
+            var first2 = list?.FirstOrDefault(1);
         }
     }
 

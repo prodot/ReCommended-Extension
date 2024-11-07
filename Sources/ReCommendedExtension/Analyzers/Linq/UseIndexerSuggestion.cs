@@ -10,9 +10,12 @@ public sealed class UseIndexerSuggestion(
     string message,
     IInvocationExpression invocationExpression,
     IReferenceExpression invokedExpression,
-    string indexArgument) : LinqHighlighting(message, invocationExpression, invokedExpression)
+    string indexArgument,
+    bool canThrowOtherException) : LinqHighlighting(message, invocationExpression, invokedExpression)
 {
     const string SeverityId = "UseIndexer";
 
     internal string IndexArgument => indexArgument;
+
+    internal bool CanThrowOtherException => canThrowOtherException;
 }

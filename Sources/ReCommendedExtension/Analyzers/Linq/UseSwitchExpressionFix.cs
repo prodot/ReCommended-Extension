@@ -1,6 +1,7 @@
 ﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
@@ -12,14 +13,14 @@ namespace ReCommendedExtension.Analyzers.Linq;
 [QuickFix]
 public sealed class UseSwitchExpressionFix(UseSwitchExpressionSuggestion highlighting) : QuickFixBase
 {
-    string GetReplacement(string? multipleItemsMessage = null)
+    string GetReplacement(string? exceptionMessage = null)
     {
-        var throwThatHasMoreItems =
-            $"throw new {nameof(InvalidOperationException)}({(multipleItemsMessage is { } ? $"\"{multipleItemsMessage}\"" : "...")})";
+        var throwExpression =
+            $"throw new {nameof(InvalidOperationException)}({(exceptionMessage is { } ? $"\"{exceptionMessage}\"" : "...")})";
 
-        return highlighting.DefaultValueArgument is { } defaultValueArgument
-            ? $$"""switch { [] => {{defaultValueArgument}}, [var item] => item, _ => {{throwThatHasMoreItems}} }"""
-            : $$"""switch { [] => default, [var item] => item, _ => {{throwThatHasMoreItems}} }""";
+        return highlighting.DefaultValueExpression is { }
+            ? $$"""switch { [] => {{highlighting.DefaultValueExpression}}, [var item] => item, _ => {{throwExpression}} }"""
+            : $$"""switch { [] => default, [var item] => item, _ => {{throwExpression}} }""";
     }
 
     public override bool IsAvailable(IUserDataHolder cache) => true;
@@ -30,9 +31,13 @@ public sealed class UseSwitchExpressionFix(UseSwitchExpressionSuggestion highlig
     {
         using (WriteLockCookie.Create())
         {
+            Debug.Assert(highlighting.InvokedExpression.QualifierExpression is { });
+
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            var replacement = GetReplacement("List contains more than one element.");
+            var replacement = highlighting.InvokedExpression.QualifierExpression.Type().IsString()
+                ? GetReplacement("String contains more than one character.")
+                : GetReplacement("List contains more than one element.");
 
             ModificationUtil
                 .ReplaceChild(

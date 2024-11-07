@@ -93,10 +93,22 @@ namespace Test
             var single2 = list9.SingleOrDefault(1);
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var single1 = text.SingleOrDefault();
+            var single2 = text.SingleOrDefault('a');
+        }
+
         public void NonMatch(IList<int> list)
         {
             var single1 = list.SingleOrDefault(x => x > 0);
             var single2 = list.SingleOrDefault(x => x > 0, 1);
+        }
+
+        public void NonMatch2(IList<int>? list)
+        {
+            var single1 = list?.SingleOrDefault();
+            var single2 = list?.SingleOrDefault(1);
         }
     }
 }

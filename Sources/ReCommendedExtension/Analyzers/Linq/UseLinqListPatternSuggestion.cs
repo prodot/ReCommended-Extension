@@ -11,11 +11,11 @@ public sealed class UseLinqListPatternSuggestion(
     IInvocationExpression invocationExpression,
     IReferenceExpression invokedExpression,
     ListPatternSuggestionKind kind,
-    string? defaultValueArgument = null) : LinqHighlighting(message, invocationExpression, invokedExpression)
+    string? defaultValueExpression = null) : LinqHighlighting(message, invocationExpression, invokedExpression)
 {
     const string SeverityId = "UseLinqListPattern";
 
     internal ListPatternSuggestionKind Kind => kind;
 
-    internal string? DefaultValueArgument => defaultValueArgument;
+    internal string? DefaultValueExpression => defaultValueExpression;
 }

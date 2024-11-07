@@ -5,9 +5,9 @@ namespace Test
 {
     public class Class
     {
-        public void Method(IList<int> list)
+        public void Method(int[]? collection)
         {
-            var f = list.Element{caret}At(^1);
+            var count = collection?.Long{caret}Count();
         }
     }
 }

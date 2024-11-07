@@ -84,9 +84,19 @@ namespace Test
             var first = list9.Single();
         }
 
+        public void NonGenericMethod(string text)
+        {
+            var first = text.Single();
+        }
+
         public void NonMatch(IList<int> list)
         {
             var first = list.Single(x => x > 0);
+        }
+
+        public void NonMatch2(IList<int>? list)
+        {
+            var first = list?.Single();
         }
     }
 }

@@ -24,7 +24,7 @@ QUICKFIXES:
 Replace with '[^1]' (other exception could be thrown)
 2: Use the indexer.
 QUICKFIXES:
-Replace with '[2]' (other exception could be thrown)
+Replace with '[2]'
 3: Use the indexer.
 QUICKFIXES:
-Replace with '[^2]' (other exception could be thrown)
+Replace with '[^2]'
