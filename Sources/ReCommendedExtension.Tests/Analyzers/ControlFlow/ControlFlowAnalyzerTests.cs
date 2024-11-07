@@ -20,9 +20,9 @@ public sealed class ControlFlowAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestControlFlow() => DoNamedTest2();
 
+    [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
     [TestCompilationSymbols("DEBUG")]
-    [Test]
     public void TestControlFlow_NullableContext() => DoNamedTest2();
 }

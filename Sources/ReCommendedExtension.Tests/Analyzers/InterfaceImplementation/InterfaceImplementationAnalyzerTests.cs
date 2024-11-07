@@ -20,33 +20,33 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTes
         => highlighting is ImplementOperatorsHighlighting;
 
     [Test]
-    [TestNet60]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [TestNet60]
     public void TestEquatableTypes_NET_6() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    [TestNet70]
     public void TestEquatableTypes_CS10() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [TestNet70]
     public void TestEquatableTypes() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [TestNet70]
     public void TestComparableTypes() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    [TestNet70]
     public void TestComparableTypes_CS10() => DoNamedTest2();
 
     [Test]
-    [TestNet60]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [TestNet60]
     public void TestComparableTypes_NET_6() => DoNamedTest2();
 
     [Test]
@@ -56,7 +56,7 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTes
     public void TestImplementedEquals() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [TestNet70]
     public void TestPartialTypes() => DoNamedTest2();
 }

@@ -9,6 +9,7 @@ using ReCommendedExtension.Analyzers.AsyncVoid;
 namespace ReCommendedExtension.Tests.Analyzers.AsyncVoid;
 
 [TestFixture]
+[TestNetFramework45]
 public sealed class AsyncVoidAnalyzerTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid";
@@ -17,15 +18,12 @@ public sealed class AsyncVoidAnalyzerTests : CSharpHighlightingTestBase
         => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning;
 
     [Test]
-    [TestNetFramework45]
     public void TestAnonymousMethod() => DoNamedTest2();
 
     [Test]
-    [TestNetFramework45]
     public void TestLambdaExpression() => DoNamedTest2();
 
     [Test]
-    [TestNetFramework45]
     public void TestAsyncVoidMethod() => DoNamedTest2();
 
     // [Test]

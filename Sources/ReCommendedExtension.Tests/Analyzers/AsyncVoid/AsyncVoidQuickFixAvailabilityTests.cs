@@ -8,8 +8,8 @@ using ReCommendedExtension.Analyzers.AsyncVoid;
 
 namespace ReCommendedExtension.Tests.Analyzers.AsyncVoid;
 
-[TestNetFramework45]
 [TestFixture]
+[TestNetFramework45]
 public sealed class AsyncVoidQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";

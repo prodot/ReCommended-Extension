@@ -10,6 +10,8 @@ using ReCommendedExtension.Analyzers.BaseType;
 namespace ReCommendedExtension.Tests.Analyzers.BaseType;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+[TestNet80]
 public sealed class BaseTypeQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypeQuickFixes";
@@ -18,7 +20,5 @@ public sealed class BaseTypeQuickFixAvailabilityTests : QuickFixAvailabilityTest
         => highlighting is RemoveRedundantBaseTypeDeclarationHint;
 
     [Test]
-    [TestNet80]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     public void TestAvailability() => DoNamedTest2();
 }

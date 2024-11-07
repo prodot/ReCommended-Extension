@@ -6,6 +6,7 @@ using ReCommendedExtension.ContextActions.Annotations;
 namespace ReCommendedExtension.Tests.ContextActions.Annotations;
 
 [TestFixture]
+[TestNet80(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotateWithDefaultEqualityUsageAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithDefaultEqualityUsage>
 {
     protected override string ExtraPath => "";
@@ -13,6 +14,5 @@ public sealed class AnnotateWithDefaultEqualityUsageAvailabilityTests : CSharpCo
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithDefaultEqualityUsage";
 
     [Test]
-    [TestNet80(ANNOTATIONS_PACKAGE)]
     public void TestAvailability() => DoNamedTest2();
 }

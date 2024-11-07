@@ -12,6 +12,8 @@ using ReCommendedExtension.Analyzers.Linq;
 namespace ReCommendedExtension.Tests.Analyzers.Linq;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+[TestNet50]
 public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\Linq";
@@ -35,8 +37,6 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     public void TestElementAtOrDefault() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet50]
     public void TestFirst() => DoNamedTest2();
 
     [Test]
@@ -46,8 +46,6 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     public void TestFirstOrDefault() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet50]
     public void TestLast() => DoNamedTest2();
 
     [Test]
@@ -57,8 +55,6 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     public void TestLastOrDefault() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet50]
     public void TestLongCount() => DoNamedTest2();
 
     [Test]

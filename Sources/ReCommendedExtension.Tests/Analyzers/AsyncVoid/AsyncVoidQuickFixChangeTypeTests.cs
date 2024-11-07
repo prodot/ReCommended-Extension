@@ -5,8 +5,8 @@ using ReCommendedExtension.Analyzers.AsyncVoid;
 
 namespace ReCommendedExtension.Tests.Analyzers.AsyncVoid;
 
-[TestNetFramework45]
 [TestFixture]
+[TestNetFramework45]
 public sealed class AsyncVoidQuickFixChangeTypeTests : QuickFixTestBase<ChangeToAsyncTaskFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";

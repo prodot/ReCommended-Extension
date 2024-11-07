@@ -5,8 +5,8 @@ using ReCommendedExtension.Analyzers.ValueTask;
 
 namespace ReCommendedExtension.Tests.Analyzers.ValueTask;
 
-[TestNetCore30]
 [TestFixture]
+[TestNetCore30]
 public sealed class ValueTaskQuickFixTests : QuickFixTestBase<InsertAsTaskFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\ValueTaskQuickFixes";

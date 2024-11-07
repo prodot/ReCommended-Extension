@@ -10,6 +10,8 @@ using ReCommendedExtension.Analyzers.BaseType;
 namespace ReCommendedExtension.Tests.Analyzers.BaseType;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+[TestNet80]
 public sealed class BaseTypeAnalyzerTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseType";
@@ -18,7 +20,5 @@ public sealed class BaseTypeAnalyzerTests : CSharpHighlightingTestBase
         => highlighting is RemoveRedundantBaseTypeDeclarationHint;
 
     [Test]
-    [TestNet80]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     public void TestBaseTypes() => DoNamedTest2();
 }

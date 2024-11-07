@@ -9,9 +9,9 @@ using ReCommendedExtension.Analyzers.Collection;
 
 namespace ReCommendedExtension.Tests.Analyzers.Collection;
 
+[TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
 [TestNetFramework46]
-[TestFixture]
 public sealed class ReplaceWithArrayEmptyQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";

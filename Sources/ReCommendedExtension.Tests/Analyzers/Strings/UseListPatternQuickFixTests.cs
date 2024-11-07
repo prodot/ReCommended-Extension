@@ -37,8 +37,6 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseStringList
     public void TestEndsWith_String_OrdinalIgnoreCase() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [TestNet70]
     public void TestIndexOf_Char_eq_0() => DoNamedTest2();
 
     [Test]

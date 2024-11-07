@@ -8,13 +8,13 @@ using ReCommendedExtension.Analyzers.Annotation;
 namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+[NullableContext(NullableContextKind.Enable)]
+[TestNetCore30]
 public sealed class NullableAnnotationQuickFixTests : QuickFixTestBase<RemoveNullableAnnotationFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNetCore30]
     public void TestRedundantNullableAnnotation() => DoNamedTest2();
 }

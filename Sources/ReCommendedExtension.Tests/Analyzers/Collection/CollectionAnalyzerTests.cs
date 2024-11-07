@@ -85,26 +85,26 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     public void TestCollectionInitialization_Array_Target_IReadOnlyList() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_Array_Target_ICollection() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_Array_Target_IList() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_List_NonTargetTyped() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_List_Target_List() => DoNamedTest2();
 
@@ -124,26 +124,26 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     public void TestCollectionInitialization_List_Target_IReadOnlyList() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_List_Target_ICollection() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_List_Target_IList() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_HashSet_NonTargetTyped() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_HashSet_Target_HashSet() => DoNamedTest2();
 
@@ -154,20 +154,20 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     public void TestCollectionInitialization_HashSet_Target_IEnumerable() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_HashSet_Target_IReadOnlyCollection() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_Dictionary_NonTargetTyped() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionInitialization_Dictionary_Target_Dictionary() => DoNamedTest2();
 
@@ -209,8 +209,8 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     public void TestArrayWithDefaultValuesInitialization_ParameterlessCtor() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionExpressionWithDefaultValuesInitialization() => DoNamedTest2();
 }

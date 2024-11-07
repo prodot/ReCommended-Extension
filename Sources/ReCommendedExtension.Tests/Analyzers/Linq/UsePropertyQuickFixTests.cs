@@ -7,6 +7,7 @@ using ReCommendedExtension.Analyzers.Linq;
 
 namespace ReCommendedExtension.Tests.Analyzers.Linq;
 
+[TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
 [TestNet50]
 public sealed class UsePropertyQuickFixTests : QuickFixTestBase<UseCollectionPropertyFix>

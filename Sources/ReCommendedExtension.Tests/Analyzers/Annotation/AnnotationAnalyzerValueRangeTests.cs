@@ -10,6 +10,8 @@ using ReCommendedExtension.Analyzers.Annotation;
 namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
 [TestFixture]
+[NullableContext(NullableContextKind.Enable)]
+[TestNetCore30(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotationAnalyzerValueRangeTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
@@ -18,7 +20,5 @@ public sealed class AnnotationAnalyzerValueRangeTests : CSharpHighlightingTestBa
         => highlighting is RedundantAnnotationSuggestion or NotAllowedAnnotationWarning or InvalidValueRangeBoundaryWarning;
 
     [Test]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    [NullableContext(NullableContextKind.Enable)]
     public void TestValueRange() => DoNamedTest2();
 }

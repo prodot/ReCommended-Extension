@@ -10,6 +10,8 @@ using ReCommendedExtension.Analyzers.Annotation;
 namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+[TestNet80(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotationArgumentQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
@@ -18,7 +20,5 @@ public sealed class AnnotationArgumentQuickFixAvailabilityTests : QuickFixAvaila
         => highlighting is RedundantAnnotationArgumentSuggestion;
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80(ANNOTATIONS_PACKAGE)]
     public void TestRedundantAnnotationArgumentAvailability() => DoNamedTest2();
 }

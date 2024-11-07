@@ -7,6 +7,8 @@ using ReCommendedExtension.ContextActions.Annotations;
 namespace ReCommendedExtension.Tests.ContextActions.Annotations;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+[TestNetCore30(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotateWithValueRangeAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithValueRange>
 {
     protected override string ExtraPath => "";
@@ -14,8 +16,6 @@ public sealed class AnnotateWithValueRangeAvailabilityTests : CSharpContextActio
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithValueRange";
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestAvailability() => DoNamedTest2();
 
     [Test]

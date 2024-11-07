@@ -5,9 +5,9 @@ using ReCommendedExtension.ContextActions.Annotations;
 
 namespace ReCommendedExtension.Tests.ContextActions.Annotations;
 
+[TestFixture]
 [TestNetFramework45]
 [TestPackagesWithAnnotations("System.Threading.Tasks.Extensions")]
-[TestFixture]
 public sealed class AnnotateWithItemNotNullExecuteTests : CSharpContextActionExecuteTestBase<AnnotateWithItemNotNull>
 {
     protected override string ExtraPath => "";

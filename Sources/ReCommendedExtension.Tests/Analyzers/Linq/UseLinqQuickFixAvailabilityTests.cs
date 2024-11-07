@@ -11,6 +11,8 @@ using ReCommendedExtension.Analyzers.Linq;
 namespace ReCommendedExtension.Tests.Analyzers.Linq;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+[TestNet50]
 public sealed class UseLinqQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
@@ -19,24 +21,22 @@ public sealed class UseLinqQuickFixAvailabilityTests : QuickFixAvailabilityTestB
         => highlighting is UseIndexerSuggestion or UseLinqListPatternSuggestion or UseSwitchExpressionSuggestion or UseCollectionPropertySuggestion;
 
     [Test]
-    [TestNet60]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    [TestNet60]
     public void TestUseIndexerAvailability() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
+    [TestNet70]
     public void TestUseListPatternAvailability() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
+    [TestNet70]
     public void TestUseSwitchExpressionAvailability() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet50]
     public void TestUsePropertyAvailability() => DoNamedTest2();
 }

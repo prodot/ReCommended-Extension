@@ -9,6 +9,7 @@ using ReCommendedExtension.Analyzers.Annotation;
 namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
 [TestFixture]
+[TestNetCore31("MSTest.TestFramework")]
 public sealed class AnnotationAnalyzerTestsForMsTestProjects : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
@@ -17,7 +18,6 @@ public sealed class AnnotationAnalyzerTestsForMsTestProjects : CSharpHighlightin
         => highlighting is MissingSuppressionJustificationWarning;
 
     [Test]
-    [TestNetCore31("MSTest.TestFramework")]
     public void TestSuppressMessage_TestProject() => DoNamedTest2();
 
     [Test]

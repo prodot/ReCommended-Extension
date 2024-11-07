@@ -8,9 +8,9 @@ using ReCommendedExtension.Analyzers.Linq;
 namespace ReCommendedExtension.Tests.Analyzers.Linq;
 
 [TestFixture]
-[TestNet70]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
 [NullableContext(NullableContextKind.Enable)]
+[TestNet70]
 public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseLinqListPatternFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";

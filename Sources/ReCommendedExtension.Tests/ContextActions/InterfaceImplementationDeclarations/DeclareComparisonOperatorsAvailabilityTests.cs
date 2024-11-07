@@ -8,7 +8,9 @@ using ReCommendedExtension.ContextActions.InterfaceImplementationDeclarations;
 namespace ReCommendedExtension.Tests.ContextActions.InterfaceImplementationDeclarations;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
 [NullableContext(NullableContextKind.Enable)]
+[TestNet60]
 public sealed class DeclareComparisonOperatorsAvailabilityTests : CSharpContextActionAvailabilityTestBase<DeclareComparisonOperators>
 {
     protected override string ExtraPath => "";
@@ -16,17 +18,15 @@ public sealed class DeclareComparisonOperatorsAvailabilityTests : CSharpContextA
     protected override string RelativeTestDataPath => @"ContextActions\DeclareComparisonOperators";
 
     [Test]
-    [TestNet70]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [TestNet70]
     public void TestAvailability() => DoNamedTest2();
 
     [Test]
     [TestNet70]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     public void TestAvailability_CS10() => DoNamedTest2();
 
     [Test]
-    [TestNet60]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     public void TestAvailability_NET_6() => DoNamedTest2();
 }
