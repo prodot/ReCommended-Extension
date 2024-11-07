@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>Prodot.{{AssemblyProduct}}</id>
-        <version>{{AssemblyFileVersion}}-rc8</version>
+        <version>{{AssemblyFileVersion}}-rc9</version>
         <title>{{AssemblyTitle}}</title>
         <authors>{{AssemblyCompany}}</authors>
         <owners>{{AssemblyCompany}}</owners>
