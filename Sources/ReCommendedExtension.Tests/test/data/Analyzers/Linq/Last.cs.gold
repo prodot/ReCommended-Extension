@@ -134,37 +134,37 @@ namespace Test
         public void NonGenericMethod(ISet<int> collection)
         {
             var last1 = collection.|Last()|(11);
-            var last2 = collection.|Last(x => x > 0)|(12);
+            var last2 = collection.Last(x => x > 0);
         }
 
         public void NonGenericMethod(IReadOnlySet<int> collection)
         {
-            var last1 = collection.|Last()|(13);
-            var last2 = collection.|Last(x => x > 0)|(14);
+            var last1 = collection.|Last()|(12);
+            var last2 = collection.Last(x => x > 0);
         }
 
         public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
         {
-            var last1 = collection.|Last()|(15);
-            var last2 = collection.|Last(x => x > 0)|(16);
+            var last1 = collection.|Last()|(13);
+            var last2 = collection.Last(x => x > 0);
         }
 
         public void NonGenericMethod(HashSet<int> collection)
         {
-            var last1 = collection.|Last()|(17);
-            var last2 = collection.|Last(x => x > 0)|(18);
+            var last1 = collection.|Last()|(14);
+            var last2 = collection.Last(x => x > 0);
         }
 
         public void GenericMethod<T>(HashSet<T> collection)
         {
-            var last1 = collection.|Last()|(19);
-            var last2 = collection.|Last(x => x.ToString() != "")|(20);
+            var last1 = collection.|Last()|(15);
+            var last2 = collection.Last(x => x.ToString() != "");
         }
 
         public void ConstrainedGenericMethod<L>(L collection) where L : IReadOnlySet<int>
         {
-            var last1 = collection.|Last()|(21);
-            var last2 = collection.|Last(x => x > 0)|(22);
+            var last1 = collection.|Last()|(16);
+            var last2 = collection.Last(x => x > 0);
         }
     }
 ---------------------------------------------------------
@@ -185,9 +185,3 @@ namespace Test
 (14): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
 (15): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
 (16): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
-(17): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
-(18): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
-(19): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
-(20): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
-(21): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
-(22): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.

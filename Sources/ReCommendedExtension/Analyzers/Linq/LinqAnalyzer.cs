@@ -145,14 +145,9 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
     /// <remarks>
     /// <c>list.First()</c> → <c>list[0]</c><para/>
-    /// <c>set.First()</c> → ⚠️<para/>
-    /// <c>set.First(Func&lt;T, bool&gt;)</c> → ⚠️
+    /// <c>set.First()</c> → ⚠️
     /// </remarks>
-    static void AnalyzeFirst(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        bool hasPredicateArgument)
+    static void AnalyzeFirst(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -160,10 +155,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
-            if (!hasPredicateArgument)
-            {
-                consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "0", true));
-            }
+            consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "0", true));
 
             return;
         }
@@ -182,15 +174,12 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     /// <c>list.FirstOrDefault()</c> → <c>list is [var first, ..] ? first : default</c> (C# 11)<para/>
     /// <c>list.FirstOrDefault(T)</c> → <c>list is [var first, ..] ? first : defaultValue</c> (C# 11)<para/>
     /// <c>set.FirstOrDefault()</c> → ⚠️<para/>
-    /// <c>set.FirstOrDefault(T)</c> → ⚠️<para/>
-    /// <c>set.FirstOrDefault(Func&lt;T, bool&gt;)</c> → ⚠️<para/>
-    /// <c>set.FirstOrDefault(Func&lt;T, bool&gt;, T)</c> → ⚠️
+    /// <c>set.FirstOrDefault(T)</c> → ⚠️
     /// </remarks>
     void AnalyzeFirstOrDefault(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        bool hasPredicateArgument,
         ICSharpArgument? defaultValueArgument = null)
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
@@ -200,8 +189,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
-            if (!hasPredicateArgument
-                && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
                 && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
@@ -229,14 +217,9 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
     /// <remarks>
     /// <c>list.Last()</c> → <c>list[^1]</c> (C# 8)<para/>
-    /// <c>set.Last()</c> → ⚠️<para/>
-    /// <c>set.Last(Func&lt;T, bool&gt;)</c> → ⚠️
+    /// <c>set.Last()</c> → ⚠️
     /// </remarks>
-    static void AnalyzeLast(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        bool hasPredicateArgument)
+    static void AnalyzeLast(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -244,7 +227,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
-            if (!hasPredicateArgument && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80)
+            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80)
             {
                 consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "^1", true));
             }
@@ -266,15 +249,12 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     /// <c>list.LastOrDefault()</c> → <c>list is [.., var last] ? last : default</c> (C# 11)<para/>
     /// <c>list.LastOrDefault(T)</c> → <c>list is [.., var last] ? last : defaultValue</c> (C# 11)<para/>
     /// <c>set.LastOrDefault()</c> → ⚠️<para/>
-    /// <c>set.LastOrDefault(T)</c> → ⚠️<para/>
-    /// <c>set.LastOrDefault(Func&lt;T, bool&gt;)</c> → ⚠️<para/>
-    /// <c>set.LastOrDefault(Func&lt;T, bool&gt;, T)</c> → ⚠️
+    /// <c>set.LastOrDefault(T)</c> → ⚠️
     /// </remarks>
     void AnalyzeLastOrDefault(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        bool hasPredicateArgument,
         ICSharpArgument? defaultValueArgument = null)
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
@@ -284,8 +264,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
-            if (!hasPredicateArgument
-                && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
                 && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
@@ -431,11 +410,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     switch (method.TypeParameters, method.Parameters, element.Arguments)
                     {
                         case ([_], [_], []):
-                            AnalyzeFirst(consumer, element, invokedExpression, false);
-                            break;
-
-                        case ([_], [_, { Type: IDeclaredType predicateType }], [_]) when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
-                            AnalyzeFirst(consumer, element, invokedExpression, true);
+                            AnalyzeFirst(consumer, element, invokedExpression);
                             break;
                     }
                     break;
@@ -444,21 +419,12 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     switch (method.TypeParameters, method.Parameters, element.Arguments)
                     {
                         case ([_], [_], []):
-                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, false);
+                            AnalyzeFirstOrDefault(consumer, element, invokedExpression);
                             break;
 
                         case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
                             when typeParameter.Equals(defaultValueType.GetTypeElement()):
-                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, false, defaultValueArgument);
-                            break;
-
-                        case ([_], [_, { Type: IDeclaredType predicateType }], [_]) when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
-                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, true);
-                            break;
-
-                        case ([var typeParameter], [_, { Type: IDeclaredType predicateType }, { Type: IDeclaredType defaultValueType }], [_, _])
-                            when predicateType.IsClrType(PredefinedType.FUNC2_FQN) && typeParameter.Equals(defaultValueType.GetTypeElement()):
-                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, true);
+                            AnalyzeFirstOrDefault(consumer, element, invokedExpression, defaultValueArgument);
                             break;
                     }
                     break;
@@ -467,11 +433,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     switch (method.TypeParameters, method.Parameters, element.Arguments)
                     {
                         case ([_], [_], []):
-                            AnalyzeLast(consumer, element, invokedExpression, false);
-                            break;
-
-                        case ([_], [_, { Type: IDeclaredType predicateType }], [_]) when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
-                            AnalyzeLast(consumer, element, invokedExpression, true);
+                            AnalyzeLast(consumer, element, invokedExpression);
                             break;
                     }
                     break;
@@ -480,21 +442,12 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     switch (method.TypeParameters, method.Parameters, element.Arguments)
                     {
                         case ([_], [_], []):
-                            AnalyzeLastOrDefault(consumer, element, invokedExpression, false);
+                            AnalyzeLastOrDefault(consumer, element, invokedExpression);
                             break;
 
                         case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
                             when typeParameter.Equals(defaultValueType.GetTypeElement()):
-                            AnalyzeLastOrDefault(consumer, element, invokedExpression, false, defaultValueArgument);
-                            break;
-
-                        case ([_], [_, { Type: IDeclaredType predicateType }], [_]) when predicateType.IsClrType(PredefinedType.FUNC2_FQN):
-                            AnalyzeLastOrDefault(consumer, element, invokedExpression, true);
-                            break;
-
-                        case ([var typeParameter], [_, { Type: IDeclaredType predicateType }, { Type: IDeclaredType defaultValueType }], [_, _])
-                            when predicateType.IsClrType(PredefinedType.FUNC2_FQN) && typeParameter.Equals(defaultValueType.GetTypeElement()):
-                            AnalyzeLastOrDefault(consumer, element, invokedExpression, true);
+                            AnalyzeLastOrDefault(consumer, element, invokedExpression, defaultValueArgument);
                             break;
                     }
                     break;
