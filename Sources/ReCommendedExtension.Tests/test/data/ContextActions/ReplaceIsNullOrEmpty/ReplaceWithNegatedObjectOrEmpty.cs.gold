@@ -1,0 +1,9 @@
+﻿namespace Test
+{
+    public class Strings
+    {
+        public void Replace(object? obj)
+        {
+            var result = !{caret}(obj?.ToString() is not { } or "");
+        }
+    }

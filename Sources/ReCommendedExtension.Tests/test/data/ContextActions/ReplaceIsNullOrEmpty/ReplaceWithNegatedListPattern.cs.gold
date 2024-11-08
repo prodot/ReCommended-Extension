@@ -1,0 +1,9 @@
+﻿namespace Test
+{
+    public class Strings
+    {
+        public void Replace(object? obj, int? number)
+        {
+            var result = {caret}$"{object}{number:G}" is not [_, ..];
+        }
+    }
