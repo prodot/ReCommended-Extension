@@ -392,6 +392,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     {
                         case ([_], [_, { Type: IDeclaredType indexType }], [{ Value: { } } indexArgument])
                             when indexType.IsInt() || indexType.IsSystemIndex():
+
                             AnalyzeElementAt(consumer, element, invokedExpression, indexArgument);
                             break;
                     }
@@ -424,6 +425,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
                         case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
                             when typeParameter.Equals(defaultValueType.GetTypeElement()):
+
                             AnalyzeFirstOrDefault(consumer, element, invokedExpression, defaultValueArgument);
                             break;
                     }
@@ -447,6 +449,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
                         case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
                             when typeParameter.Equals(defaultValueType.GetTypeElement()):
+
                             AnalyzeLastOrDefault(consumer, element, invokedExpression, defaultValueArgument);
                             break;
                     }
@@ -479,6 +482,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
                         case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
                             when typeParameter.Equals(defaultValueType.GetTypeElement()):
+
                             AnalyzeSingleOrDefault(consumer, element, invokedExpression, defaultValueArgument);
                             break;
                     }

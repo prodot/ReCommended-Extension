@@ -74,6 +74,8 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
     public void TestTrimEnd_EmptyArray_3() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
     public void TestTrimEnd_Null() => DoNamedTest2();
 
     [Test]
@@ -87,6 +89,8 @@ public sealed class RemoveArgumentQuickFixTests : QuickFixTestBase<RemoveArgumen
     public void TestTrimStart_EmptyArray_3() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
     public void TestTrimStart_Null() => DoNamedTest2();
 
     [Test]
