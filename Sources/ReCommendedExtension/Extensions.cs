@@ -395,6 +395,50 @@ internal static class Extensions
     public static bool IsUsedAsStatement(this IInvocationExpression invocationExpression)
         => invocationExpression.Parent is IExpressionStatement or IForInitializer or IForIterator;
 
+    [Pure]
+    public static bool IsDefaultValue([NotNullWhen(true)] this ICSharpExpression? expression)
+        => expression is { } && expression.IsDefaultValueOf(expression.Type());
+
+    [Pure]
+    public static string? TryGetStringConstant(this ICSharpExpression? expression)
+        => expression switch
+        {
+            IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } => value,
+
+            IReferenceExpression { Reference: var reference } when reference.Resolve().DeclaredElement is IField
+                {
+                    ShortName: nameof(string.Empty),
+                    IsStatic: true,
+                    IsReadonly: true,
+                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                } field
+                && field.ContainingType.IsSystemString() => "",
+
+            _ => null,
+        };
+
+    [Pure]
+    public static char? TryGetCharConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Char, CharValue: var value } } ? value : null;
+
+    [Pure]
+    public static int? TryGetInt32Constant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Int, IntValue: var value } } ? value : null;
+
+    [Pure]
+    public static StringComparison? TryGetStringComparisonConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
+                ? (StringComparison)constantValue.IntValue
+                : null;
+
+    [Pure]
+    public static StringSplitOptions? TryGetStringSplitOptionsConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(ClrTypeNames.StringSplitOptions)
+                ? (StringSplitOptions)constantValue.IntValue
+                : null;
+
     public static void TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
     {
         if (expression is IParenthesizedExpression parenthesizedExpression
