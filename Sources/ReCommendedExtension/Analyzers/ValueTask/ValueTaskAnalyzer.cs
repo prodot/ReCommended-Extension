@@ -108,7 +108,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         when method.IsOverridesObjectGetHashCode()
                         || method.IsOverridesObjectEquals()
                         || method.IsOverridesObjectToString()
-                        || method.IsIEquatableEqualsMethod()
+                        || method.IsImplementsIEquatableEqualsMethod()
                         || method.ShortName == nameof(GetType) && method.ContainingType.IsObjectClass():
                         return false; // is well-known pure method or property
                 }
@@ -117,7 +117,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             if (InvocationExpressionNavigator.GetByArgument(CSharpArgumentNavigator.GetByValue(parenthesizedExpression)) is { } byArgument)
             {
                 var method = byArgument.InvocationExpressionReference.Resolve(ResolveContext).DeclaredElement as IMethod;
-                if (method.IsObjectEqualsMethod() || method.IsObjectReferenceEqualsMethod() || method.IsIEquatableEqualsMethod())
+                if (method.IsObjectEqualsMethod() || method.IsObjectReferenceEqualsMethod() || method.IsImplementsIEquatableEqualsMethod())
                 {
                     return false; // is an argument of the well-known pure method
                 }
