@@ -20,11 +20,12 @@ public sealed class RemoveNotifyPropertyChangedInvocatorFix(NotifyPropertyChange
     {
         using (WriteLockCookie.Create())
         {
-            var nextToken = highlighting.InvocationExpression.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
-
             ModificationUtil.DeleteChildRange(
                 highlighting.InvocationExpression,
-                nextToken is { } && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON ? nextToken : highlighting.InvocationExpression);
+                highlighting.InvocationExpression.GetNextNonWhitespaceToken() is { } nextToken
+                && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON
+                    ? nextToken
+                    : highlighting.InvocationExpression);
         }
 
         return _ => { };

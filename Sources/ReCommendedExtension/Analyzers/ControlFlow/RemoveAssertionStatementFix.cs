@@ -22,11 +22,11 @@ public sealed class RemoveAssertionStatementFix(RedundantAssertionStatementSugge
         {
             var statement = ((AssertionStatement)highlighting.Assertion).Statement;
 
-            var nextToken = statement.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
-
             ModificationUtil.DeleteChildRange(
                 statement,
-                nextToken is { } && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON ? nextToken : statement);
+                statement.GetNextNonWhitespaceToken() is { } nextToken && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON
+                    ? nextToken
+                    : statement);
         }
 
         return _ => { };

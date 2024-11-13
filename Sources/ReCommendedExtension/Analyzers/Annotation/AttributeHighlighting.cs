@@ -20,20 +20,15 @@ public abstract class AttributeHighlighting(
     {
         var range = Attribute.GetDocumentRange();
 
-        if (includeAttributeBracketsInRange)
+        if (includeAttributeBracketsInRange
+            && attribute.GetPreviousNonWhitespaceToken() is { } previousToken
+            && Attribute.GetNextNonWhitespaceToken() is { } nextToken
+            && previousToken.GetTokenType() == CSharpTokenType.LBRACKET
+            && nextToken.GetTokenType() == CSharpTokenType.RBRACKET)
         {
-            var previousToken = Attribute.PrevTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
-            var nextToken = Attribute.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
-
-            if (previousToken is { }
-                && nextToken is { }
-                && previousToken.GetTokenType() == CSharpTokenType.LBRACKET
-                && nextToken.GetTokenType() == CSharpTokenType.RBRACKET)
-            {
-                range = new DocumentRange(
-                    range.Document,
-                    new TextRange(previousToken.GetDocumentRange().TextRange.StartOffset, nextToken.GetDocumentRange().TextRange.EndOffset));
-            }
+            range = new DocumentRange(
+                range.Document,
+                new TextRange(previousToken.GetDocumentRange().TextRange.StartOffset, nextToken.GetDocumentRange().TextRange.EndOffset));
         }
 
         return range;
