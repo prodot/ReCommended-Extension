@@ -9,6 +9,7 @@
     <AssemblyOriginatorKeyFile>Properties\ReCommendedExtension.public.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
+    <NoWarn>$(NoWarn);NU1903</NoWarn> <!-- transitive package has a known high severity vulnerability -->
   </PropertyGroup>
 
   <ItemGroup>
