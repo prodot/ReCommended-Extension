@@ -804,15 +804,10 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
             switch (token)
             {
-                case InstructionToken { Kind: InstructionTokenKind.ForceLineBreak }:
-                    pendingLineBreak = true;
-                    break;
-
-                case InstructionToken { Kind: InstructionTokenKind.BeginMultiline }:
-                    pendingLineBreak = true;
-                    break;
-
-                case InstructionToken { Kind: InstructionTokenKind.EndMultiline }:
+                case InstructionToken
+                {
+                    Kind: InstructionTokenKind.ForceLineBreak or InstructionTokenKind.BeginMultiline or InstructionTokenKind.EndMultiline,
+                }:
                     pendingLineBreak = true;
                     break;
 

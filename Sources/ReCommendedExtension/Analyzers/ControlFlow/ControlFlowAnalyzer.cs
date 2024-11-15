@@ -362,9 +362,8 @@ public sealed class ControlFlowAnalyzer(
                     return nullReferenceState;
 
                 case IAsExpression asExpression when alwaysSuccessTryCastExpressions.Contains(asExpression):
+                case IObjectCreationExpression:
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                case IObjectCreationExpression: return CSharpControlFlowNullReferenceState.NOT_NULL;
 
                 case IInvocationExpression invocationExpression:
                     if (invocationExpression.InvokedExpression is IReferenceExpression invokedExpression)
