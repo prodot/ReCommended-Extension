@@ -101,7 +101,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
         var psiServices = method.GetPsiServices();
 
         var solutionSearchDomain = SearchDomainFactory.Instance.CreateSearchDomain(psiServices.Solution, false);
-        var references = psiServices.Finder.FindReferences(method, solutionSearchDomain, NullProgressIndicator.Create());
+        var references = psiServices.SingleThreadedFinder.FindReferences(method, solutionSearchDomain, NullProgressIndicator.Create());
 
         if (IsPublicSurfaceArea(method))
         {
@@ -146,7 +146,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
         var psiServices = localFunctionDeclaration.GetPsiServices();
 
         var solutionSearchDomain = SearchDomainFactory.Instance.CreateSearchDomain(psiServices.Solution, false);
-        var references = psiServices.Finder.FindReferences(
+        var references = psiServices.SingleThreadedFinder.FindReferences(
             localFunctionDeclaration.DeclaredElement,
             solutionSearchDomain,
             NullProgressIndicator.Create());
