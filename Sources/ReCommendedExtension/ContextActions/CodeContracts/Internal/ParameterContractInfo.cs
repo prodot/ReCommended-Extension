@@ -128,7 +128,8 @@ internal sealed record ParameterContractInfo : ContractInfo
                 IBlock body;
 
                 if (functionDeclaration is IMethodDeclaration methodDeclaration
-                    && (methodDeclaration.IsAbstract || methodDeclaration.GetContainingTypeDeclaration() is { IsAbstract: true }))
+                    && (methodDeclaration.IsAbstract
+                        || methodDeclaration.GetContainingTypeDeclaration() is { IsAbstract: true } or IInterfaceDeclaration))
                 {
                     var containingTypeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
                     Debug.Assert(containingTypeDeclaration is { });
@@ -166,7 +167,7 @@ internal sealed record ParameterContractInfo : ContractInfo
                 var containingTypeDeclaration = indexerDeclaration.GetContainingTypeDeclaration();
                 Debug.Assert(containingTypeDeclaration is { });
 
-                if (indexerDeclaration.IsAbstract || containingTypeDeclaration.IsAbstract)
+                if (indexerDeclaration.IsAbstract || containingTypeDeclaration.IsAbstract || containingTypeDeclaration is IInterfaceDeclaration)
                 {
                     var contractClassDeclaration = EnsureContractClass(containingTypeDeclaration, provider.PsiModule);
 

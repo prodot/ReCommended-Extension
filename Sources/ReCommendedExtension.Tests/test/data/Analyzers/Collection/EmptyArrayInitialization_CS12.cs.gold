@@ -88,17 +88,17 @@ namespace Test
 ---------------------------------------------------------
 (0): ReSharper Suggestion: Use collection expression
 (1): ReSharper Suggestion: Use collection expression
-(2): ReSharper Dead Code: Use collection expression
+(2): ReSharper Suggestion: Use collection expression
 (3): ReSharper Warning: Use 'Array.Empty<int>()'.
-(4): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(5): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(4): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
+(5): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (6): ReSharper Suggestion: Use collection expression
 (7): ReSharper Suggestion: Use collection expression
-(8): ReSharper Dead Code: Use collection expression
+(8): ReSharper Suggestion: Use collection expression
 (9): ReSharper Suggestion: Use collection expression.
 (10): ReSharper Suggestion: Use collection expression.
-(11): ReSharper Dead Code: Use collection expression
-(12): ReSharper Dead Code: Use collection expression
+(11): ReSharper Suggestion: Use collection expression
+(12): ReSharper Suggestion: Use collection expression
 (13): ReSharper Suggestion: Use collection expression
 (14): ReSharper Suggestion: Use collection expression
 (15): ReSharper Suggestion: Use collection expression
@@ -106,8 +106,8 @@ namespace Test
 (17): ReSharper Suggestion: Use collection expression
 (18): ReSharper Suggestion: Use collection expression
 (19): ReSharper Warning: Use 'Array.Empty<T>()'.
-(20): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(21): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(20): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(21): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (22): ReSharper Suggestion: Use collection expression
 (23): ReSharper Suggestion: Use collection expression
 (24): ReSharper Suggestion: Use collection expression

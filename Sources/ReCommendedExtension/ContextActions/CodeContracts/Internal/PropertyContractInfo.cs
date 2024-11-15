@@ -124,7 +124,7 @@ internal sealed record PropertyContractInfo : ContractInfo
         var containingTypeDeclaration = declaration.GetContainingTypeDeclaration();
         Debug.Assert(containingTypeDeclaration is { });
 
-        if (declaration.IsAbstract || containingTypeDeclaration.IsAbstract)
+        if (declaration.IsAbstract || containingTypeDeclaration.IsAbstract || containingTypeDeclaration is IInterfaceDeclaration)
         {
             var overriddenAccessorOwnerDeclaration = null as IAccessorOwnerDeclaration;
 
