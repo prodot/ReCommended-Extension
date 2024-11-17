@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);test\packages\**</DefaultItemExcludes>
+    <NoWarn>$(NoWarn);NU1903</NoWarn> <!-- transitive package has a known high severity vulnerability -->
   </PropertyGroup>
 
   <ItemGroup>
