@@ -250,6 +250,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         var checkDesiredTypeCovariance = expression is IObjectCreationExpression;
 
         if (TryConstructType(desiredClrTypeName, [itemType], psiModule) is { } desiredClrType
+            && targetType.IsGenericType()
             && TypesUtil.GetTypeArgumentValue(targetType, 0) is { } targetItemType)
         {
             if (itemType.Classify == TypeClassification.REFERENCE_TYPE

@@ -392,6 +392,9 @@ internal static class Extensions
     }
 
     [Pure]
+    public static bool IsGenericType(this IType type) => (type as IDeclaredType)?.GetTypeElement() is { TypeParameters: [_, ..] };
+
+    [Pure]
     public static bool IsUsedAsStatement(this IInvocationExpression invocationExpression)
         => invocationExpression.Parent is IExpressionStatement or IForInitializer or IForIterator;
 
