@@ -42,5 +42,6 @@ public sealed class AnnotateWithItemNotNullExecuteTests : CSharpContextActionExe
     public void TestExecuteLazyOnDelegate() => DoNamedTest2();
 
     [Test]
+    [TestNetCore21]
     public void TestExecuteGenericValueTaskOnMethod() => DoNamedTest2();
 }

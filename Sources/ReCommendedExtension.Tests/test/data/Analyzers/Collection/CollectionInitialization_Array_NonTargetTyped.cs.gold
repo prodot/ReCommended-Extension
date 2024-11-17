@@ -45,8 +45,8 @@ namespace NonTargetTyped
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: Use 'Array.Empty<int>()'.
-(1): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(2): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(1): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
+(2): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (3): ReSharper Warning: Use 'Array.Empty<T>()'.
-(4): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(5): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(4): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(5): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation

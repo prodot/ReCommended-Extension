@@ -149,118 +149,118 @@ namespace TargetReadOnlyCollection
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Use collection expression
-(1): ReSharper Dead Code: Use collection expression
-(2): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(3): ReSharper Dead Code: Use collection expression
-(4): ReSharper Dead Code: Use collection expression
-(5): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(0): ReSharper Suggestion: Use collection expression
+(1): ReSharper Suggestion: Use collection expression
+(2):<overlapped> ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
+(3): ReSharper Suggestion: Use collection expression
+(4): ReSharper Suggestion: Use collection expression
+(5): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (6): ReSharper Suggestion: Use collection expression.
-(7): ReSharper Dead Code: Use collection expression
+(7): ReSharper Suggestion: Use collection expression
 (8): ReSharper Suggestion: Use collection expression.
-(9): ReSharper Dead Code: Use collection expression
-(10): ReSharper Dead Code: Use collection expression
-(11): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(12): ReSharper Dead Code: Use collection expression
-(13): ReSharper Dead Code: Use collection expression
-(14): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(9): ReSharper Suggestion: Use collection expression
+(10): ReSharper Suggestion: Use collection expression
+(11):<overlapped> ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
+(12): ReSharper Suggestion: Use collection expression
+(13): ReSharper Suggestion: Use collection expression
+(14): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (15): ReSharper Suggestion: Use collection expression.
-(16): ReSharper Dead Code: Use collection expression
+(16): ReSharper Suggestion: Use collection expression
 (17): ReSharper Suggestion: Use collection expression.
-(18): ReSharper Dead Code: Use collection expression
-(19): ReSharper Dead Code: Use collection expression
-(20): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(21): ReSharper Dead Code: Use collection expression
-(22): ReSharper Dead Code: Use collection expression
-(23): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(18): ReSharper Suggestion: Use collection expression
+(19): ReSharper Suggestion: Use collection expression
+(20):<overlapped> ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
+(21): ReSharper Suggestion: Use collection expression
+(22): ReSharper Suggestion: Use collection expression
+(23): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (24): ReSharper Suggestion: Use collection expression.
-(25): ReSharper Dead Code: Use collection expression
+(25): ReSharper Suggestion: Use collection expression
 (26): ReSharper Suggestion: Use collection expression.
 (27): ReSharper Suggestion: Use collection expression.
-(28): ReSharper Dead Code: Use collection expression
-(29): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(30): ReSharper Dead Code: Use collection expression
-(31): ReSharper Dead Code: Use collection expression
-(32): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(28): ReSharper Suggestion: Use collection expression
+(29):<overlapped> ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
+(30): ReSharper Suggestion: Use collection expression
+(31): ReSharper Suggestion: Use collection expression
+(32): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (33): ReSharper Suggestion: Use collection expression.
-(34): ReSharper Dead Code: Use collection expression
+(34): ReSharper Suggestion: Use collection expression
 (35): ReSharper Suggestion: Use collection expression.
-(36): ReSharper Dead Code: Use collection expression
-(37): ReSharper Dead Code: Use collection expression
-(38): ReSharper Suggestion: Use 'Array<int>.Empty()'
-(39): ReSharper Dead Code: Use collection expression
-(40): ReSharper Dead Code: Use collection expression
-(41): ReSharper Suggestion: Use 'Array<int>.Empty()'
+(36): ReSharper Suggestion: Use collection expression
+(37): ReSharper Suggestion: Use collection expression
+(38):<overlapped> ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
+(39): ReSharper Suggestion: Use collection expression
+(40): ReSharper Suggestion: Use collection expression
+(41): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (42): ReSharper Suggestion: Use collection expression.
-(43): ReSharper Dead Code: Use collection expression
+(43): ReSharper Suggestion: Use collection expression
 (44): ReSharper Suggestion: Use collection expression.
-(45): ReSharper Dead Code: Use collection expression
-(46): ReSharper Dead Code: Use collection expression
-(47): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(48): ReSharper Dead Code: Use collection expression
-(49): ReSharper Dead Code: Use collection expression
-(50): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(45): ReSharper Suggestion: Use collection expression
+(46): ReSharper Suggestion: Use collection expression
+(47):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(48): ReSharper Suggestion: Use collection expression
+(49): ReSharper Suggestion: Use collection expression
+(50): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (51): ReSharper Suggestion: Use collection expression.
-(52): ReSharper Dead Code: Use collection expression
+(52): ReSharper Suggestion: Use collection expression
 (53): ReSharper Suggestion: Use collection expression.
-(54): ReSharper Dead Code: Use collection expression
-(55): ReSharper Dead Code: Use collection expression
-(56): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(57): ReSharper Dead Code: Use collection expression
-(58): ReSharper Dead Code: Use collection expression
-(59): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(54): ReSharper Suggestion: Use collection expression
+(55): ReSharper Suggestion: Use collection expression
+(56):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(57): ReSharper Suggestion: Use collection expression
+(58): ReSharper Suggestion: Use collection expression
+(59): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (60): ReSharper Suggestion: Use collection expression.
-(61): ReSharper Dead Code: Use collection expression
+(61): ReSharper Suggestion: Use collection expression
 (62): ReSharper Suggestion: Use collection expression.
-(63): ReSharper Dead Code: Use collection expression
-(64): ReSharper Dead Code: Use collection expression
-(65): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(66): ReSharper Dead Code: Use collection expression
-(67): ReSharper Dead Code: Use collection expression
-(68): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(63): ReSharper Suggestion: Use collection expression
+(64): ReSharper Suggestion: Use collection expression
+(65):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(66): ReSharper Suggestion: Use collection expression
+(67): ReSharper Suggestion: Use collection expression
+(68): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (69): ReSharper Suggestion: Use collection expression.
-(70): ReSharper Dead Code: Use collection expression
+(70): ReSharper Suggestion: Use collection expression
 (71): ReSharper Suggestion: Use collection expression.
-(72): ReSharper Dead Code: Use collection expression
-(73): ReSharper Dead Code: Use collection expression
-(74): ReSharper Suggestion: Use 'Array<T>.Empty()'
-(75): ReSharper Dead Code: Use collection expression
-(76): ReSharper Dead Code: Use collection expression
-(77): ReSharper Suggestion: Use 'Array<T>.Empty()'
+(72): ReSharper Suggestion: Use collection expression
+(73): ReSharper Suggestion: Use collection expression
+(74):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(75): ReSharper Suggestion: Use collection expression
+(76): ReSharper Suggestion: Use collection expression
+(77): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (78): ReSharper Suggestion: Use collection expression.
-(79): ReSharper Dead Code: Use collection expression
+(79): ReSharper Suggestion: Use collection expression
 (80): ReSharper Suggestion: Use collection expression.
 (81): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(82): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(82): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (83): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (84): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(85): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(85): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (86): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(87): ReSharper Dead Code: Use collection expression
+(87): ReSharper Suggestion: Use collection expression
 (88): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (89): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (90): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(91): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(91): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (92): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (93): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(94): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(94): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (95): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(96): ReSharper Dead Code: Use collection expression
+(96): ReSharper Suggestion: Use collection expression
 (97): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (98): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (99): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(100): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(100): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (101): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (102): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(103): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(103): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (104): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(105): ReSharper Dead Code: Use collection expression
+(105): ReSharper Suggestion: Use collection expression
 (106): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (107): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(108): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(108): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (109): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (110): ReSharper Suggestion: Use collection expression (a compiler-synthesized read-only collection will be used).
-(111): ReSharper Suggestion: Use 'Array<B>.Empty()'
+(111): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (112): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(113): ReSharper Dead Code: Use collection expression
+(113): ReSharper Suggestion: Use collection expression
 (114): ReSharper Suggestion: Use collection expression ('A[]' will be used).
