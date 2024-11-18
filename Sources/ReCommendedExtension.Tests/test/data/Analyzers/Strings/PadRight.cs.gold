@@ -19,14 +19,17 @@ namespace Test
             var result2 = text.PadRight(1, c);
             var result3 = text.PadRight(totalWidth, 'a');
 
-            text.PadRight(0);
-            text.PadRight(0, c);
-            text.PadRight(totalWidth, ' ');
+            text.|PadRight|(4)(0);
+            text.|PadRight|(5)(0, c);
+            text.|PadRight|(6)(totalWidth, ' ');
         }
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Invoking 'PadRight' with 0 is redundant.
-(1): ReSharper Dead Code: Invoking 'PadRight' with 0 is redundant.
+(0): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
+(1): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
 (2): ReSharper Dead Code: Passing ' ' is redundant.
-(3): ReSharper Dead Code: Invoking 'PadRight' with 0 is redundant.
+(3): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
+(4): ReSharper Warning: Return value of pure method is not used
+(5): ReSharper Warning: Return value of pure method is not used
+(6): ReSharper Warning: Return value of pure method is not used

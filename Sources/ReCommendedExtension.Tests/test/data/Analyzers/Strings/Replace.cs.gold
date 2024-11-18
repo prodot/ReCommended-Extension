@@ -45,8 +45,8 @@ namespace Test
             var result42 = text.Replace("aa", "aa", StringComparison.OrdinalIgnoreCase);
 
             text.Replace("aa", "aa", StringComparison.Ordinal);
-            text.Replace("aa", "aa");
-            text.Replace('a', 'a')
+            text.|Replace|(9)("aa", "aa");
+            text.|Replace|(10)('a', 'a')
         }
     }
 }
@@ -55,8 +55,10 @@ namespace Test
 (1): ReSharper Suggestion: Pass the single character.
 (2): ReSharper Suggestion: Pass the single character.
 (3): ReSharper Suggestion: Pass the single character.
-(4): ReSharper Dead Code: Invoking 'Replace' with identical values is redundant.
-(5): ReSharper Dead Code: Invoking 'Replace' with identical values is redundant.
-(6): ReSharper Dead Code: Invoking 'Replace' with identical values is redundant.
-(7): ReSharper Dead Code: Invoking 'Replace' with identical values is redundant.
-(8): ReSharper Dead Code: Invoking 'Replace' with identical characters is redundant.
+(4): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(5): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(6): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(7): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(8): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
+(9): ReSharper Warning: Return value of pure method is not used
+(10): ReSharper Warning: Return value of pure method is not used

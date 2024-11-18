@@ -28,7 +28,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or RedundantMethodInvocationHint
             or UseRangeIndexerSuggestion
             or RedundantToStringCallWarning // to figure out which cases are supported by R#
-            or ReplaceSubstringWithRangeIndexerWarning; // to figure out which cases are supported by R#
+            or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
+            or ReturnValueOfPureMethodIsNotUsedWarning; // to figure out which cases are supported by R#
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]

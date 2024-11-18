@@ -16,8 +16,8 @@ namespace Test
 
         public void NoDetection(string text, int startIndex, int length)
         {
-            text.Substring(0);
-            text.Substring(startIndex, 0);
+            text.|Substring|(2)(0);
+            text.|Substring|(3)(startIndex, 0);
 
             var result11 = text.Substring(1);
             var result12 = text.Substring(startIndex);
@@ -33,5 +33,7 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Invoking 'Substring' with 0 is redundant.
+(0): ReSharper Dead Code: Calling 'Substring' with 0 is redundant.
 (1): ReSharper Suggestion: The expression is always an empty string.
+(2): ReSharper Warning: Return value of pure method is not used
+(3): ReSharper Warning: Return value of pure method is not used

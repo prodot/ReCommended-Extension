@@ -12,11 +12,13 @@ namespace Test
 
         public void NoDetection(string text, IFormatProvider provider)
         {
-            text.ToString(provider);
-            text.ToString(null);
+            text.|ToString|(2)(provider);
+            text.|ToString|(3)(null);
         }
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Invoking 'ToString' with a format provider is redundant.
-(1): ReSharper Dead Code: Invoking 'ToString' with a format provider is redundant.
+(0): ReSharper Dead Code: Calling 'ToString' with a format provider is redundant.
+(1): ReSharper Dead Code: Calling 'ToString' with a format provider is redundant.
+(2): ReSharper Warning: Return value of pure method is not used
+(3): ReSharper Warning: Return value of pure method is not used

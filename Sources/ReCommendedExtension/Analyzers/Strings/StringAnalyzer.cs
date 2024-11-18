@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Analyzers.Strings.Collections;
 
 namespace ReCommendedExtension.Analyzers.Strings;
 
@@ -32,184 +33,6 @@ namespace ReCommendedExtension.Analyzers.Strings;
 public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
     : ElementProblemAnalyzer<IInvocationExpression>
 {
-    abstract class Collection
-    {
-        [Pure]
-        public static Collection? TryFrom(ICSharpExpression? expression)
-            => expression switch
-            {
-                // [...]
-                ICollectionExpression collectionExpression => new CollectionExpressionCollection(collectionExpression),
-
-                // new T[] { ... }
-                IArrayCreationExpression { DimInits: [], ArrayInitializer: { } } arrayCreationExpression => new ArrayCreationExpressionCollection(
-                    arrayCreationExpression),
-
-                // new T[0]
-                IArrayCreationExpression
-                {
-                    DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: not { },
-                } arrayCreationExpression => new EmptyArrayCreationExpressionCollection(arrayCreationExpression),
-
-                // Array.Empty<T>()
-                IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression when
-                    reference.Resolve().DeclaredElement is IMethod
-                    {
-                        ShortName: nameof(Array.Empty),
-                        IsStatic: true,
-                        AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                        TypeParameters: [_],
-                        Parameters: [],
-                    } method
-                    && method.ContainingType.IsSystemArray() => new EmptyArrayCreationExpressionCollection(invocationExpression),
-
-                _ => null,
-            };
-
-        IReadOnlyList<string?>? stringConstants;
-
-        protected abstract IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions { get; }
-
-        public abstract ICSharpExpression Expression { get; }
-
-        [NonNegativeValue]
-        public abstract int Count { get; }
-
-        public abstract IEnumerable<IInitializerElement> Elements { get; }
-
-        public IEnumerable<(IInitializerElement, char)> ElementsWithCharConstants
-        {
-            get
-            {
-                foreach (var (element, expression) in ElementsWithExpressions)
-                {
-                    if (expression.TryGetCharConstant() is { } charConstant)
-                    {
-                        yield return (element, charConstant);
-                    }
-                }
-            }
-        }
-
-        public IEnumerable<(IInitializerElement, string)> ElementsWithStringConstants
-        {
-            get
-            {
-                foreach (var (element, expression) in ElementsWithExpressions)
-                {
-                    if (expression.TryGetStringConstant() is { } stringConstant)
-                    {
-                        yield return (element, stringConstant);
-                    }
-                }
-            }
-        }
-
-        public IReadOnlyList<string?> StringConstants
-        {
-            get
-            {
-                if (stringConstants is not { })
-                {
-                    var array = new string?[Count];
-
-                    var i = 0;
-                    foreach (var (_, expression) in ElementsWithExpressions)
-                    {
-                        if (expression.TryGetStringConstant() is { } stringConstant)
-                        {
-                            array[i++] = stringConstant;
-                        }
-                    }
-
-                    stringConstants = [..array];
-
-                    Debug.Assert(StringConstants.Count == Count);
-                }
-
-                return stringConstants;
-            }
-        }
-    }
-
-    sealed class CollectionExpressionCollection(ICollectionExpression collectionExpression) : Collection
-    {
-        protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
-        {
-            get
-            {
-                foreach (var element in collectionExpression.CollectionElements)
-                {
-                    if (element is IExpressionElement expressionElement)
-                    {
-                        yield return (element, expressionElement.Expression);
-                    }
-                }
-            }
-        }
-
-        public override ICSharpExpression Expression => collectionExpression;
-
-        public override int Count => collectionExpression.CollectionElements.Count;
-
-        public override IEnumerable<IInitializerElement> Elements => collectionExpression.CollectionElements;
-    }
-
-    sealed class ArrayCreationExpressionCollection : Collection
-    {
-        readonly IArrayCreationExpression arrayCreationExpression;
-
-        internal ArrayCreationExpressionCollection(IArrayCreationExpression arrayCreationExpression)
-        {
-            Debug.Assert(arrayCreationExpression.ArrayInitializer is { });
-
-            this.arrayCreationExpression = arrayCreationExpression;
-        }
-
-        protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
-        {
-            get
-            {
-                foreach (var element in arrayCreationExpression.ArrayInitializer.ElementInitializers)
-                {
-                    if (element is IExpressionInitializer elementInitializer)
-                    {
-                        yield return (element, elementInitializer.Value);
-                    }
-                }
-            }
-        }
-
-        public override ICSharpExpression Expression => arrayCreationExpression;
-
-        public override int Count => arrayCreationExpression.ArrayInitializer.ElementInitializers.Count;
-
-        public override IEnumerable<IInitializerElement> Elements => arrayCreationExpression.ArrayInitializer.ElementInitializers;
-    }
-
-    sealed class EmptyArrayCreationExpressionCollection(ICSharpExpression expression) : Collection
-    {
-        protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
-        {
-            get
-            {
-                yield break;
-            }
-        }
-
-        public override ICSharpExpression Expression => expression;
-
-        public override int Count => 0;
-
-        public override IEnumerable<IInitializerElement> Elements
-        {
-            get
-            {
-                yield break;
-            }
-        }
-    }
-
     [Pure]
     static bool IsStringComparison(IType type) => type.IsClrType(PredefinedType.STRING_COMPARISON_CLASS);
 
@@ -270,7 +93,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             foreach (var method in stringType.Methods)
             {
-                if (method.TypeParameters is [] && method.ShortName == methodName && method.Parameters.Count == parameterTypes.Count)
+                if (method is { IsStatic: false, TypeParameters: [] }
+                    && method.ShortName == methodName
+                    && method.Parameters.Count == parameterTypes.Count)
                 {
                     if (parameterTypes is [])
                     {
@@ -323,7 +148,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             foreach (var method in stringType.Methods)
             {
-                if (method.TypeParameters is [] && method.ShortName == methodName && method.Parameters.Count == parameterTypes.Count)
+                if (method is { IsStatic: false, TypeParameters: [] }
+                    && method.ShortName == methodName
+                    && method.Parameters.Count == parameterTypes.Count)
                 {
                     var parameterNames = new string[parameterTypes.Count];
 
@@ -1226,7 +1053,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             consumer.AddHighlighting(
                 new RedundantMethodInvocationHint(
-                    $"Invoking '{nameof(string.PadLeft)}' with 0 is redundant.",
+                    $"Calling '{nameof(string.PadLeft)}' with 0 is redundant.",
                     invocationExpression,
                     invokedExpression));
         }
@@ -1249,7 +1076,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             {
                 consumer.AddHighlighting(
                     new RedundantMethodInvocationHint(
-                        $"Invoking '{nameof(string.PadLeft)}' with 0 is redundant.",
+                        $"Calling '{nameof(string.PadLeft)}' with 0 is redundant.",
                         invocationExpression,
                         invokedExpression));
                 return;
@@ -1276,7 +1103,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             consumer.AddHighlighting(
                 new RedundantMethodInvocationHint(
-                    $"Invoking '{nameof(string.PadRight)}' with 0 is redundant.",
+                    $"Calling '{nameof(string.PadRight)}' with 0 is redundant.",
                     invocationExpression,
                     invokedExpression));
         }
@@ -1299,7 +1126,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             {
                 consumer.AddHighlighting(
                     new RedundantMethodInvocationHint(
-                        $"Invoking '{nameof(string.PadRight)}' with 0 is redundant.",
+                        $"Calling '{nameof(string.PadRight)}' with 0 is redundant.",
                         invocationExpression,
                         invokedExpression));
                 return;
@@ -1366,7 +1193,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             {
                 consumer.AddHighlighting(
                     new RedundantMethodInvocationHint(
-                        $"Invoking '{nameof(string.Remove)}' with the count 0 is redundant.",
+                        $"Calling '{nameof(string.Remove)}' with the count 0 is redundant.",
                         invocationExpression,
                         invokedExpression));
                 return;
@@ -1407,7 +1234,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             {
                 consumer.AddHighlighting(
                     new RedundantMethodInvocationHint(
-                        $"Invoking '{nameof(string.Replace)}' with identical values is redundant.",
+                        $"Calling '{nameof(string.Replace)}' with identical values is redundant.",
                         invocationExpression,
                         invokedExpression));
                 return;
@@ -1453,7 +1280,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             consumer.AddHighlighting(
                 new RedundantMethodInvocationHint(
-                    $"Invoking '{nameof(string.Replace)}' with identical characters is redundant.",
+                    $"Calling '{nameof(string.Replace)}' with identical characters is redundant.",
                     invocationExpression,
                     invokedExpression));
         }
@@ -1476,7 +1303,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             {
                 consumer.AddHighlighting(
                     new RedundantMethodInvocationHint(
-                        $"Invoking '{nameof(string.Replace)}' with identical values is redundant.",
+                        $"Calling '{nameof(string.Replace)}' with identical values is redundant.",
                         invocationExpression,
                         invokedExpression));
                 return;
@@ -1577,7 +1404,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
             }
 
-            case [{ Value: var argumentExpression }] when Collection.TryFrom(argumentExpression) is { Count: > 0 } collection:
+            case [{ Value: var argumentExpression }] when DetectedCollection.TryFrom(argumentExpression) is { Count: > 0 } collection:
             {
                 var set = new HashSet<char>(collection.Count);
 
@@ -1630,7 +1457,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                 break;
 
-            case (_, _) when Collection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection:
+            case (_, _) when DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection:
             {
                 var set = new HashSet<char>(collection.Count);
 
@@ -1652,7 +1479,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// </remarks>
     static void AnalyzeSplit_CharArray_StringSplitOptions(IHighlightingConsumer consumer, ICSharpArgument separatorArgument)
     {
-        if (Collection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
+        if (DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
         {
             var set = new HashSet<char>(collection.Count);
 
@@ -1717,7 +1544,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 break;
 
-            case (_, _) when Collection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection:
+            case (_, _) when DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection:
             {
                 var set = new HashSet<char>(collection.Count);
 
@@ -1877,7 +1704,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument separatorArgument,
         ICSharpArgument optionsArgument)
     {
-        if (Collection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
+        if (DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
         {
             if (collection.StringConstants is [""])
             {
@@ -1966,7 +1793,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument countArgument,
         ICSharpArgument optionsArgument)
     {
-        switch (Collection.TryFrom(separatorArgument.Value), countArgument.Value.TryGetInt32Constant())
+        switch (DetectedCollection.TryFrom(separatorArgument.Value), countArgument.Value.TryGetInt32Constant())
         {
             case (_, 0) when !invocationExpression.IsUsedAsStatement()
                 && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
@@ -2165,7 +1992,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             consumer.AddHighlighting(
                 new RedundantMethodInvocationHint(
-                    $"Invoking '{nameof(string.Substring)}' with 0 is redundant.",
+                    $"Calling '{nameof(string.Substring)}' with 0 is redundant.",
                     invocationExpression,
                     invokedExpression));
         }
@@ -2200,7 +2027,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             consumer.AddHighlighting(
                 new RedundantMethodInvocationHint(
-                    $"Invoking '{nameof(string.ToString)}' with a format provider is redundant.",
+                    $"Calling '{nameof(string.ToString)}' with a format provider is redundant.",
                     invocationExpression,
                     invokedExpression));
         }
@@ -2237,7 +2064,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
             }
 
-            case [{ } argument] when Collection.TryFrom(argument.Value) is { } collection:
+            case [{ } argument] when DetectedCollection.TryFrom(argument.Value) is { } collection:
             {
                 if (collection.Count > 0)
                 {
@@ -2299,7 +2126,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
                 }
 
-            case [{ } argument] when Collection.TryFrom(argument.Value) is { } collection:
+            case [{ } argument] when DetectedCollection.TryFrom(argument.Value) is { } collection:
                 {
                     if (collection.Count > 0)
                     {
@@ -2361,7 +2188,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
                 }
 
-            case [{ } argument] when Collection.TryFrom(argument.Value) is { } collection:
+            case [{ } argument] when DetectedCollection.TryFrom(argument.Value) is { } collection:
                 {
                     if (collection.Count > 0)
                     {

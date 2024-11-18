@@ -25,7 +25,7 @@ namespace Test
 
         public void NoDetection(string text, string value, StringComparison comparison)
         {
-            text.Contains("");
+            text.|Contains|(9)("");
             text.Contains("", comparison);
 
             var result1 = text.Contains("abc");
@@ -52,3 +52,4 @@ namespace Test
 (6): ReSharper Suggestion: Pass the single character.
 (7): ReSharper Suggestion: Pass the single character.
 (8): ReSharper Suggestion: Pass the single character.
+(9): ReSharper Warning: Return value of pure method is not used

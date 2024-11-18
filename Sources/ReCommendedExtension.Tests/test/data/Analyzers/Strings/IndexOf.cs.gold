@@ -72,8 +72,8 @@ namespace Test
             var result1 = text.IndexOf(c, 1);
             var result2 = text.IndexOf(c, startIndex);
 
-            text.IndexOf("");
-            text.IndexOf("", StringComparison.CurrentCulture);
+            text.|IndexOf|(38)("");
+            text.|IndexOf|(39)("", StringComparison.CurrentCulture);
         }
 
         public void NoDetection(string? text, StringComparison comparisonType, char c, string s)
@@ -152,3 +152,5 @@ namespace Test
 (35): ReSharper Suggestion: The expression is always 0.
 (36): ReSharper Suggestion: Pass the single character.
 (37): ReSharper Suggestion: Pass the single character.
+(38): ReSharper Warning: Return value of pure method is not used
+(39): ReSharper Warning: Return value of pure method is not used

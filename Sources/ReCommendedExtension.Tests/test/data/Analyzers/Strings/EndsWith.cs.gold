@@ -24,12 +24,12 @@ namespace Test
 
         public void NoDetection(string text, string value, StringComparison comparisonType)
         {
-            text.EndsWith("");
-            text.EndsWith("", StringComparison.OrdinalIgnoreCase)
+            text.|EndsWith|(6)("");
+            text.|EndsWith|(7)("", StringComparison.OrdinalIgnoreCase)
 
             text.EndsWith('a');
-            text.EndsWith("a", StringComparison.Ordinal);
-            text.EndsWith("a", StringComparison.OrdinalIgnoreCase);
+            text.|EndsWith|(8)("a", StringComparison.Ordinal);
+            text.|EndsWith|(9)("a", StringComparison.OrdinalIgnoreCase);
 
             var result1 = text.EndsWith("abc", StringComparison.Ordinal);
             var result2 = text.EndsWith(value, StringComparison.Ordinal);
@@ -55,3 +55,7 @@ namespace Test
 (3): ReSharper Suggestion: Use list pattern.
 (4): ReSharper Suggestion: Use list pattern.
 (5): ReSharper Suggestion: Use list pattern.
+(6): ReSharper Warning: Return value of pure method is not used
+(7): ReSharper Warning: Return value of pure method is not used
+(8): ReSharper Warning: Return value of pure method is not used
+(9): ReSharper Warning: Return value of pure method is not used

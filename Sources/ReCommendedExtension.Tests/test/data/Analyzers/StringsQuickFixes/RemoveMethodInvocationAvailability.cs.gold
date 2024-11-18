@@ -45,42 +45,42 @@ namespace Test
     }
 }
 ------------------------------------------------
-0: Invoking 'PadLeft' with 0 is redundant.
+0: Calling 'PadLeft' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-1: Invoking 'PadLeft' with 0 is redundant.
+1: Calling 'PadLeft' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-2: Invoking 'PadRight' with 0 is redundant.
+2: Calling 'PadRight' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-3: Invoking 'PadRight' with 0 is redundant.
+3: Calling 'PadRight' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-4: Invoking 'Remove' with the count 0 is redundant.
+4: Calling 'Remove' with the count 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-5: Invoking 'Replace' with identical values is redundant.
+5: Calling 'Replace' with identical values is redundant.
 QUICKFIXES:
 Remove method invocation
-6: Invoking 'Replace' with identical values is redundant.
+6: Calling 'Replace' with identical values is redundant.
 QUICKFIXES:
 Remove method invocation
-7: Invoking 'Replace' with identical values is redundant.
+7: Calling 'Replace' with identical values is redundant.
 QUICKFIXES:
 Remove method invocation
-8: Invoking 'Replace' with identical values is redundant.
+8: Calling 'Replace' with identical values is redundant.
 QUICKFIXES:
 Remove method invocation
-9: Invoking 'Replace' with identical characters is redundant.
+9: Calling 'Replace' with identical characters is redundant.
 QUICKFIXES:
 Remove method invocation
-10: Invoking 'Substring' with 0 is redundant.
+10: Calling 'Substring' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-11: Invoking 'ToString' with a format provider is redundant.
+11: Calling 'ToString' with a format provider is redundant.
 QUICKFIXES:
 Remove method invocation
-12: Invoking 'ToString' with a format provider is redundant.
+12: Calling 'ToString' with a format provider is redundant.
 QUICKFIXES:
 Remove method invocation

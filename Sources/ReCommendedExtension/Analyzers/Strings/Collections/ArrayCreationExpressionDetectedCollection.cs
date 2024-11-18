@@ -1,0 +1,35 @@
+﻿using JetBrains.ReSharper.Psi.CSharp.Tree;
+
+namespace ReCommendedExtension.Analyzers.Strings.Collections;
+
+internal sealed class ArrayCreationExpressionDetectedCollection : DetectedCollection
+{
+    readonly IArrayCreationExpression arrayCreationExpression;
+
+    internal ArrayCreationExpressionDetectedCollection(IArrayCreationExpression arrayCreationExpression)
+    {
+        Debug.Assert(arrayCreationExpression.ArrayInitializer is { });
+
+        this.arrayCreationExpression = arrayCreationExpression;
+    }
+
+    protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
+    {
+        get
+        {
+            foreach (var element in arrayCreationExpression.ArrayInitializer.ElementInitializers)
+            {
+                if (element is IExpressionInitializer elementInitializer)
+                {
+                    yield return (element, elementInitializer.Value);
+                }
+            }
+        }
+    }
+
+    public override ICSharpExpression Expression => arrayCreationExpression;
+
+    public override int Count => arrayCreationExpression.ArrayInitializer.ElementInitializers.Count;
+
+    public override IEnumerable<IInitializerElement> Elements => arrayCreationExpression.ArrayInitializer.ElementInitializers;
+}
