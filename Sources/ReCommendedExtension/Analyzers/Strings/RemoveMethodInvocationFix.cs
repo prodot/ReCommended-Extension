@@ -2,7 +2,9 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
@@ -20,11 +22,25 @@ public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationHint high
     {
         using (WriteLockCookie.Create())
         {
-            var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
+            if (highlighting.RemoveEntireInvocationExpression())
+            {
+                ModificationUtil.DeleteChildRange(
+                    highlighting.InvocationExpression,
+                    highlighting.InvocationExpression.GetNextNonWhitespaceToken() is { } nextToken
+                    && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON
+                        ? nextToken
+                        : highlighting.InvocationExpression);
+            }
+            else
+            {
+                var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            ModificationUtil
-                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression("($0)", highlighting.InvokedExpression.QualifierExpression))
-                .TryRemoveParentheses(factory);
+                ModificationUtil
+                    .ReplaceChild(
+                        highlighting.InvocationExpression,
+                        factory.CreateExpression("($0)", highlighting.InvokedExpression.QualifierExpression))
+                    .TryRemoveParentheses(factory);
+            }
         }
 
         return _ => { };

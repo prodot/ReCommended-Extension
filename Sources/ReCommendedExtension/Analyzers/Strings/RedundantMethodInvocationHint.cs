@@ -31,8 +31,17 @@ public sealed class RedundantMethodInvocationHint(
 
     internal IReferenceExpression InvokedExpression => invokedExpression;
 
+    [Pure]
+    internal bool RemoveEntireInvocationExpression()
+        => invocationExpression.IsUsedAsStatement() && invokedExpression.QualifierExpression is IReferenceExpression;
+
     public override DocumentRange CalculateRange()
     {
+        if (RemoveEntireInvocationExpression())
+        {
+            return invocationExpression.GetDocumentRange();
+        }
+
         var startOffset = invokedExpression.Reference.GetDocumentRange().StartOffset;
 
         return invocationExpression.GetDocumentRange().SetStartTo(startOffset);
