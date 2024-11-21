@@ -24,9 +24,6 @@ public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMeth
     public void TestPadRight_0_Char() => DoNamedTest2();
 
     [Test]
-    public void TestRemove_Int32_0() => DoNamedTest2();
-
-    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore21]
     public void TestReplace_String_String_Ordinal_Identical() => DoNamedTest2();

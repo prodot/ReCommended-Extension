@@ -64,6 +64,8 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
     public void TestRemoveElementFixAvailability() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+    [TestNet50]
     public void TestUseStringPropertyAvailability() => DoNamedTest2();
 
     [Test]

@@ -982,7 +982,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.LastIndexOf("")</c> → <c>text.Length</c>
+    /// <c>text.LastIndexOf("")</c> → <c>text.Length</c> (.NET 5)
     /// </remarks>
     static void AnalyzeLastIndexOf_String(
         IHighlightingConsumer consumer,
@@ -990,7 +990,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value.TryGetStringConstant() == "")
+        if (invocationExpression.PsiModule.TargetFrameworkId.Version.Major >= 5
+            && !invocationExpression.IsUsedAsStatement()
+            && valueArgument.Value.TryGetStringConstant() == "")
         {
             consumer.AddHighlighting(
                 new UseStringPropertySuggestion(
@@ -1002,7 +1004,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.LastIndexOf("", StringComparison)</c> → <c>text.Length</c><para/>
+    /// <c>text.LastIndexOf("", StringComparison)</c> → <c>text.Length</c><para/> (.NET 5)
     /// <c>text.LastIndexOf(string, Ordinal)</c> → <c>text.LastIndexOf(char)</c>
     /// </remarks>
     static void AnalyzeLastIndexOf_String_StringComparison(
@@ -1014,7 +1016,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         switch (valueArgument.Value.TryGetStringConstant())
         {
-            case "" when !invocationExpression.IsUsedAsStatement():
+            case "" when invocationExpression.PsiModule.TargetFrameworkId.Version.Major >= 5 && !invocationExpression.IsUsedAsStatement():
                 consumer.AddHighlighting(
                     new UseStringPropertySuggestion(
                         $"Use the '{nameof(string.Length)}' property.",
@@ -1141,7 +1143,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Remove(0)</c> → <c>""</c><para/>
+    /// <c>text.Remove(0)</c> → <c>""</c> (.NET 6)<para/>
     /// <c>text.Remove(int)</c> → <c>text[..startIndex]</c> (C# 8)
     /// </remarks>
     void AnalyzeRemove_Int32(
@@ -1154,7 +1156,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             if (startIndexArgument.Value.TryGetInt32Constant() == 0)
             {
-                if (invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                if (invocationExpression.PsiModule.TargetFrameworkId.Version.Major >= 6
+                    && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 {
                     consumer.AddHighlighting(
                         new UseExpressionResultSuggestion("The expression is always an empty string.", invocationExpression, "\"\""));
@@ -1177,7 +1180,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Remove(int, 0)</c> → <c>text</c><para/>
     /// <c>text.Remove(0, int)</c> → <c>text[count..]</c> (C# 8)
     /// </remarks>
     static void AnalyzeRemove_Int32_Int32(
@@ -1187,30 +1189,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument startIndexArgument,
         ICSharpArgument countArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement())
+        if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80
+            && !invocationExpression.IsUsedAsStatement()
+            && startIndexArgument.Value.TryGetInt32Constant() == 0
+            && countArgument.Value is { })
         {
-            if (countArgument.Value.TryGetInt32Constant() == 0)
-            {
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(string.Remove)}' with the count 0 is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                return;
-            }
-
-            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80
-                && startIndexArgument.Value.TryGetInt32Constant() == 0
-                && countArgument.Value is { })
-            {
-                consumer.AddHighlighting(
-                    new UseRangeIndexerSuggestion(
-                        "Use the range indexer.",
-                        invocationExpression,
-                        invokedExpression,
-                        countArgument.Value.GetText(),
-                        ""));
-            }
+            consumer.AddHighlighting(
+                new UseRangeIndexerSuggestion(
+                    "Use the range indexer.",
+                    invocationExpression,
+                    invokedExpression,
+                    countArgument.Value.GetText(),
+                    ""));
         }
     }
 
@@ -1999,23 +1989,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Substring(int, 0)</c> → <c>""</c>
-    /// </remarks>
-    void AnalyzeSubstring_Int32_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument lengthArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-            && lengthArgument.Value.TryGetInt32Constant() == 0)
-        {
-            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always an empty string.", invocationExpression, "\"\""));
-        }
-    }
-
-    /// <remarks>
     /// <c>text.ToString(IFormatProvider)</c> → <c>text</c>
     /// </remarks>
     static void AnalyzeToString_IFormatProvider(
@@ -2512,10 +2485,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     {
                         case ([{ Type: var startIndexType }], [var startIndexArgument]) when startIndexType.IsInt():
                             AnalyzeSubstring_Int32(consumer, element, invokedExpression, startIndexArgument);
-                            break;
-
-                        case ([{ Type: var startIndexType }, { Type: var lengthType }], [_, var lengthArgument]) when startIndexType.IsInt() && lengthType.IsInt():
-                            AnalyzeSubstring_Int32_Int32(consumer, element, invokedExpression, lengthArgument);
                             break;
                     }
                     break;

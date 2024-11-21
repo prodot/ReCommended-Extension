@@ -16,31 +16,26 @@ namespace Test
             var result2 = text.|PadRight(0, c)|(3);
         }
 
-        public void Remove(string text, int startIndex)
-        {
-            var result1 = text.|Remove(startIndex, 0)|(4);
-        }
-
         public void Replace(string text)
         {
-            var result11 = text.|Replace("a", "a", StringComparison.Ordinal)|(5);
-            var result11 = text.|Replace("aa", "aa", StringComparison.Ordinal)|(6);
+            var result11 = text.|Replace("a", "a", StringComparison.Ordinal)|(4);
+            var result11 = text.|Replace("aa", "aa", StringComparison.Ordinal)|(5);
 
-            var result21 = text.|Replace("a", "a")|(7);
-            var result22 = text.|Replace("aa", "aa")|(8);
+            var result21 = text.|Replace("a", "a")|(6);
+            var result22 = text.|Replace("aa", "aa")|(7);
 
-            var result31 = text.|Replace('a', 'a')|(9);
+            var result31 = text.|Replace('a', 'a')|(8);
         }
 
         public void Substring(string text)
         {
-            var result = text.|Substring(0)|(10);
+            var result = text.|Substring(0)|(9);
         }
 
         public void ToString(string text, IFormatProvider provider)
         {
-            var result1 = text.|ToString(provider)|(11);
-            var result2 = text.|ToString(null)|(12);
+            var result1 = text.|ToString(provider)|(10);
+            var result2 = text.|ToString(null)|(11);
         }
     }
 }
@@ -57,7 +52,7 @@ Remove method invocation
 3: Calling 'PadRight' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-4: Calling 'Remove' with the count 0 is redundant.
+4: Calling 'Replace' with identical values is redundant.
 QUICKFIXES:
 Remove method invocation
 5: Calling 'Replace' with identical values is redundant.
@@ -69,18 +64,15 @@ Remove method invocation
 7: Calling 'Replace' with identical values is redundant.
 QUICKFIXES:
 Remove method invocation
-8: Calling 'Replace' with identical values is redundant.
+8: Calling 'Replace' with identical characters is redundant.
 QUICKFIXES:
 Remove method invocation
-9: Calling 'Replace' with identical characters is redundant.
+9: Calling 'Substring' with 0 is redundant.
 QUICKFIXES:
 Remove method invocation
-10: Calling 'Substring' with 0 is redundant.
+10: Calling 'ToString' with a format provider is redundant.
 QUICKFIXES:
 Remove method invocation
 11: Calling 'ToString' with a format provider is redundant.
-QUICKFIXES:
-Remove method invocation
-12: Calling 'ToString' with a format provider is redundant.
 QUICKFIXES:
 Remove method invocation

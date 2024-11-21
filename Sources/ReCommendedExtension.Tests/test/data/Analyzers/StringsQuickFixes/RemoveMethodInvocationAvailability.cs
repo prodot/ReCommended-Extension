@@ -16,11 +16,6 @@ namespace Test
             var result2 = text.PadRight(0, c);
         }
 
-        public void Remove(string text, int startIndex)
-        {
-            var result1 = text.Remove(startIndex, 0);
-        }
-
         public void Replace(string text)
         {
             var result11 = text.Replace("a", "a", StringComparison.Ordinal);

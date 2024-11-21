@@ -15,11 +15,6 @@ namespace Test
             var result2 = text.|Remove(0, count)|(2);
         }
 
-        public void RedundantInvocation(string text, int startIndex)
-        {
-            var result1 = text.|Remove(startIndex, 0)|(3);
-        }
-
         public void NoDetection(string text, int startIndex, int count)
         {
             var result1 = text.Remove(1, count);
@@ -28,8 +23,8 @@ namespace Test
 
             text.Remove(0);
             text.Remove(startIndex);
-            text.|Remove|(4)(startIndex, 0);
-            text.|Remove|(5)(0, count);
+            text.|Remove|(3)(startIndex, 0);
+            text.|Remove|(4)(0, count);
         }
 
         public void NoDetection(string? text)
@@ -42,6 +37,5 @@ namespace Test
 (0): ReSharper Suggestion: The expression is always an empty string.
 (1): ReSharper Suggestion: Use the range indexer.
 (2): ReSharper Suggestion: Use the range indexer.
-(3): ReSharper Dead Code: Calling 'Remove' with the count 0 is redundant.
+(3): ReSharper Warning: Return value of pure method is not used
 (4): ReSharper Warning: Return value of pure method is not used
-(5): ReSharper Warning: Return value of pure method is not used

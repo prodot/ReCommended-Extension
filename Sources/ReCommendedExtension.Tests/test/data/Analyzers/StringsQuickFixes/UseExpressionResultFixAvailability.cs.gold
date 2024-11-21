@@ -96,11 +96,6 @@ namespace Test
 
             var result3 = |$"{someObject}".StartsWith(value: "", StringComparison.OrdinalIgnoreCase)|(54);
         }
-
-        public void Substring(string text, int startIndex)
-        {
-            var result = |text.Substring(startIndex, 0)|(55);
-        }
     }
 }
 ------------------------------------------------
@@ -269,6 +264,3 @@ Replace with 'true'
 54: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-55: The expression is always an empty string.
-QUICKFIXES:
-Replace with '""'

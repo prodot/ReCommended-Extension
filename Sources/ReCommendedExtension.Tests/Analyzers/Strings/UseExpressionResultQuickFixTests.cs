@@ -48,6 +48,8 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     public void TestLastIndexOf_Char_0() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    [TestNet60]
     public void TestRemove_0() => DoNamedTest2();
 
     [Test]
@@ -89,7 +91,4 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     [TestNetCore30]
     public void TestStartsWith_Empty_StringComparison() => DoNamedTest2();
-
-    [Test]
-    public void TestSubstring_Int32_0() => DoNamedTest2();
 }

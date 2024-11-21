@@ -9,11 +9,6 @@ namespace Test
             var result = text.Substring(0);
         }
 
-        public void Empty(string text, int startIndex)
-        {
-            var result = text.Substring(startIndex, 0);
-        }
-
         public void NoDetection(string text, int startIndex, int length)
         {
             text.Substring(0);

@@ -1,5 +1,6 @@
 ﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Strings;
@@ -7,6 +8,8 @@ using ReCommendedExtension.Analyzers.Strings;
 namespace ReCommendedExtension.Tests.Analyzers.Strings;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+[TestNet50]
 public sealed class UseStringPropertyQuickFixTests : QuickFixTestBase<UseStringPropertyFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";

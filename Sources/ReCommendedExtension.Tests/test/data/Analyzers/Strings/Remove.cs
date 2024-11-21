@@ -15,11 +15,6 @@ namespace Test
             var result2 = text.Remove(0, count);
         }
 
-        public void RedundantInvocation(string text, int startIndex)
-        {
-            var result1 = text.Remove(startIndex, 0);
-        }
-
         public void NoDetection(string text, int startIndex, int count)
         {
             var result1 = text.Remove(1, count);
