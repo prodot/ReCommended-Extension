@@ -524,11 +524,10 @@ internal static class Extensions
     }
 
     [Pure]
-    public static bool HasQualifierExpressionNotNull(
-        this IReferenceExpression referenceExpression,
+    public static bool IsNotNullHere(
+        this ICSharpExpression expression,
         NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-        => referenceExpression.IsNullableWarningsContextEnabled()
-            && referenceExpression.QualifierExpression is { } qualifierExpression
-            && nullableReferenceTypesDataFlowAnalysisRunSynchronizer.TryGetCSharpCompilerNullableInspector(qualifierExpression) is { } inspector
-            && inspector.GetExpressionNullReferenceStateByNullableContext(qualifierExpression) == CSharpControlFlowNullReferenceState.NOT_NULL;
+        => expression.IsNullableWarningsContextEnabled()
+            && nullableReferenceTypesDataFlowAnalysisRunSynchronizer.TryGetCSharpCompilerNullableInspector(expression) is { } inspector
+            && inspector.GetExpressionNullReferenceStateByNullableContext(expression) == CSharpControlFlowNullReferenceState.NOT_NULL;
 }

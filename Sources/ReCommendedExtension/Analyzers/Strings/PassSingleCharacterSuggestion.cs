@@ -20,7 +20,7 @@ public sealed class PassSingleCharacterSuggestion(
     string? parameterName,
     char character,
     string? additionalArgument = null,
-    ICSharpArgument? redundantArgument = null) : Highlighting(message)
+    ICSharpArgument[]? redundantArguments = null) : Highlighting(message)
 {
     const string SeverityId = "PassSingleCharacter";
 
@@ -32,7 +32,7 @@ public sealed class PassSingleCharacterSuggestion(
 
     internal string? AdditionalArgument => additionalArgument;
 
-    internal ICSharpArgument? RedundantArgument => redundantArgument;
+    internal ICSharpArgument[]? RedundantArguments => redundantArguments;
 
     public override DocumentRange CalculateRange() => argument.Value.GetDocumentRange();
 }

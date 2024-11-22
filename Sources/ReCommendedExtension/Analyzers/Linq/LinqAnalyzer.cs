@@ -190,7 +190,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
         if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
             if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
                     new UseLinqListPatternSuggestion(
@@ -265,7 +265,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
         if (IsIndexableCollection(type, invokedExpression) || type.IsString())
         {
             if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
                     new UseLinqListPatternSuggestion(
@@ -336,7 +336,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
             var type = invokedExpression.QualifierExpression.Type();
 
             if ((IsIndexableCollection(type, invokedExpression) || type.IsString())
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
                     new UseLinqListPatternSuggestion("Use list pattern.", invocationExpression, invokedExpression, ListPatternSuggestionKind.Single));
@@ -362,7 +362,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
             var type = invokedExpression.QualifierExpression.Type();
 
             if ((IsIndexableCollection(type, invokedExpression) || type.IsString())
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
                     new UseSwitchExpressionSuggestion(

@@ -228,10 +228,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         switch (valueArgument.Value.TryGetStringConstant())
         {
             case "" when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                 break;
@@ -262,10 +264,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         switch (valueArgument.Value.TryGetStringConstant())
         {
             case "" when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                 break;
@@ -295,9 +299,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
             && !invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
             && valueArgument.Value is { })
         {
             consumer.AddHighlighting(
@@ -319,8 +325,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (!invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
             && valueArgument.Value.TryGetStringConstant() == "")
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
@@ -339,8 +347,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (!invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
             switch (valueArgument.Value.TryGetStringConstant())
             {
@@ -409,6 +419,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         switch (invocationExpression.Parent)
         {
             case IEqualityExpression equalityExpression when equalityExpression.LeftOperand == invocationExpression && valueArgument.Value is { }:
@@ -437,7 +449,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
 
                     case (EqualityExpressionType.NE, -1)
-                        when invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+                        when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
                         && MethodExists(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
 
                         consumer.AddHighlighting(
@@ -452,7 +464,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
 
                     case (EqualityExpressionType.EQEQ, -1)
-                        when invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+                        when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
                         && MethodExists(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
 
                         consumer.AddHighlighting(
@@ -469,7 +481,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
                 && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
                 && valueArgument.Value is { }
                 && MethodExists(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
@@ -531,6 +543,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (MethodExists(nameof(string.Contains), ParameterTypes.Char_StringComparison, invocationExpression.PsiModule))
         {
             switch (invocationExpression.Parent)
@@ -542,7 +556,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     switch (equalityExpression.EqualityType, equalityExpression.RightOperand.TryGetInt32Constant())
                     {
                         case (EqualityExpressionType.NE, -1)
-                            when invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                            when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                             consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
@@ -556,7 +570,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             break;
 
                         case (EqualityExpressionType.EQEQ, -1)
-                            when invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                            when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -572,7 +586,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
 
                 case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
-                    && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+                    && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
                     && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
                     && valueArgument.Value is { }
                     && comparisonTypeArgument.Value is { }:
@@ -627,10 +641,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         switch (valueArgument.Value.TryGetStringConstant())
         {
             case "" when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
                 break;
@@ -650,7 +666,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             default:
-                if (invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                if (invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 {
                     switch (invocationExpression.Parent)
                     {
@@ -798,10 +814,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         switch (valueArgument.Value.TryGetStringConstant())
         {
             case "" when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
                 break;
@@ -820,7 +838,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             default:
-                if (invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                if (invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 {
                     switch (invocationExpression.Parent)
                     {
@@ -973,8 +991,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument startIndexArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (!invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
             && startIndexArgument.Value.TryGetInt32Constant() == 0)
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1.", invocationExpression, "-1"));
@@ -1037,7 +1057,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         valueArgument,
                         valueArgument.NameIdentifier is { } ? valueParameterName : null,
                         character,
-                        redundantArgument: comparisonTypeArgument));
+                        redundantArguments: [comparisonTypeArgument]));
                 break;
         }
     }
@@ -1152,12 +1172,14 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument startIndexArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (!invocationExpression.IsUsedAsStatement())
         {
             if (startIndexArgument.Value.TryGetInt32Constant() == 0)
             {
                 if (invocationExpression.PsiModule.TargetFrameworkId.Version.Major >= 6
-                    && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                    && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 {
                     consumer.AddHighlighting(
                         new UseExpressionResultSuggestion("The expression is always an empty string.", invocationExpression, "\"\""));
@@ -1333,8 +1355,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument countArgument,
         ICSharpArgument? optionsArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (!invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
             switch (countArgument.Value.TryGetInt32Constant())
             {
@@ -1423,10 +1447,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument separatorArgument,
         ICSharpArgument countArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         switch (separatorArgument.Value, countArgument.Value.TryGetInt32Constant())
         {
             case (_, 0) when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
@@ -1436,7 +1462,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case (_, 1) when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -1497,10 +1523,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument countArgument,
         ICSharpArgument optionsArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         switch (separatorArgument.Value, countArgument.Value.TryGetInt32Constant())
         {
             case (_, 0) when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
@@ -1510,7 +1538,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case (_, 1) when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -1565,12 +1593,14 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument separatorArgument,
         ICSharpArgument? optionsArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         var separator = separatorArgument.Value.IsDefaultValue() ? "" : separatorArgument.Value.TryGetStringConstant();
 
         switch (separator)
         {
             case "" when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -1627,12 +1657,14 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument countArgument,
         ICSharpArgument? optionsArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         var separator = separatorArgument.Value.IsDefaultValue() ? "" : separatorArgument.Value.TryGetStringConstant();
 
         switch (separator, countArgument.Value.TryGetInt32Constant())
         {
             case (_, 0) when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
@@ -1642,7 +1674,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case (_, 1) or ("", _) when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -1694,12 +1726,14 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument separatorArgument,
         ICSharpArgument optionsArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
         {
             if (collection.StringConstants is [""])
             {
                 if (!invocationExpression.IsUsedAsStatement()
-                    && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+                    && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 {
                     Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -1783,10 +1817,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument countArgument,
         ICSharpArgument optionsArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         switch (DetectedCollection.TryFrom(separatorArgument.Value), countArgument.Value.TryGetInt32Constant())
         {
             case (_, 0) when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
@@ -1796,7 +1832,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case (_, 1) or ({ StringConstants: [""] }, _) when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 Debug.Assert(invokedExpression.QualifierExpression is { });
 
@@ -1872,9 +1908,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
             && !invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
             && valueArgument.Value is { })
         {
             consumer.AddHighlighting(
@@ -1896,8 +1934,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (!invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
             && valueArgument.Value.TryGetStringConstant() == "")
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
@@ -1916,8 +1956,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
         if (!invocationExpression.IsUsedAsStatement()
-            && invokedExpression.HasQualifierExpressionNotNull(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
             switch (valueArgument.Value.TryGetStringConstant())
             {

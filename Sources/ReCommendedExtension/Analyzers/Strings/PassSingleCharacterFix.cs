@@ -38,18 +38,23 @@ public sealed class PassSingleCharacterFix(PassSingleCharacterSuggestion highlig
                     factory.CreateArgument(ParameterKind.UNKNOWN, factory.CreateExpression(highlighting.AdditionalArgument)));
             }
 
-            if (highlighting.RedundantArgument is { })
+            if (highlighting.RedundantArguments is [_, ..])
             {
-                if (highlighting
-                        .RedundantArgument.PrevTokens()
-                        .TakeWhile(t => t.Parent == highlighting.RedundantArgument.Parent)
-                        .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+                for (var i = highlighting.RedundantArguments.Length - 1; i >= 0; i--)
                 {
-                    ModificationUtil.DeleteChildRange(commaToken, highlighting.RedundantArgument);
-                }
-                else
-                {
-                    ModificationUtil.DeleteChild(highlighting.RedundantArgument);
+                    var redundantArgument = highlighting.RedundantArguments[i];
+
+                    if (redundantArgument
+                            .PrevTokens()
+                            .TakeWhile(t => t.Parent == redundantArgument.Parent)
+                            .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+                    {
+                        ModificationUtil.DeleteChildRange(commaToken, redundantArgument);
+                    }
+                    else
+                    {
+                        ModificationUtil.DeleteChild(redundantArgument);
+                    }
                 }
             }
         }
