@@ -28,7 +28,31 @@ internal abstract class CollectionCreation
             IArrayCreationExpression
             {
                 DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: not { },
-            } arrayCreationExpression => new EmptyArrayCreationExpressionCollectionCreation(arrayCreationExpression),
+            } arrayCreationExpression => new EmptyCollectionCreation(arrayCreationExpression),
+
+            // default(ReadOnlySpan<T>)
+            IDefaultExpression
+                {
+                    TypeName: IUserTypeUsage { ScalarTypeName: { Reference: var reference, TypeArgumentList.TypeArguments: [_] } },
+                } defaultExpression when (reference.Resolve().DeclaredElement as ITypeElement).IsClrType(PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN) =>
+                new EmptyCollectionCreation(defaultExpression),
+
+            // new ReadOnlySpan<T>() or new ReadOnlySpan<T> { }
+            IObjectCreationExpression
+            {
+                TypeName: { Reference: var reference, TypeArgumentList.TypeArguments: [_] },
+                Arguments: [],
+                Initializer: not { } or { InitializerElements: [] },
+            } objectCreationExpression when (reference.Resolve().DeclaredElement as ITypeElement).IsClrType(
+                PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN) => new EmptyCollectionCreation(objectCreationExpression),
+
+            // (ReadOnlySpan<T>)[...]
+            ICastExpression
+                {
+                    TargetType: IUserTypeUsage { ScalarTypeName: { Reference: var reference, TypeArgumentList.TypeArguments: [_] } },
+                    Op: ICollectionExpression collectionExpression,
+                } when (reference.Resolve().DeclaredElement as ITypeElement).IsClrType(PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN) =>
+                new CollectionExpressionCollectionCreation(collectionExpression),
 
             // Array.Empty<T>()
             IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression when
@@ -40,7 +64,7 @@ internal abstract class CollectionCreation
                     TypeParameters: [_],
                     Parameters: [],
                 } method
-                && method.ContainingType.IsSystemArray() => new EmptyArrayCreationExpressionCollectionCreation(invocationExpression),
+                && method.ContainingType.IsSystemArray() => new EmptyCollectionCreation(invocationExpression),
 
             _ => null,
         };

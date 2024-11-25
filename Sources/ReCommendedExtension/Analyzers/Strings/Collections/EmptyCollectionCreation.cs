@@ -2,7 +2,7 @@
 
 namespace ReCommendedExtension.Analyzers.Strings.Collections;
 
-internal sealed class EmptyArrayCreationExpressionCollectionCreation(ICSharpExpression expression) : CollectionCreation
+internal sealed class EmptyCollectionCreation(ICSharpExpression expression) : CollectionCreation
 {
     protected override IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions
     {

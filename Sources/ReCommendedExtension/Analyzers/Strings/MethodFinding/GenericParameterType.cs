@@ -12,6 +12,11 @@ internal sealed record GenericParameterType : ParameterType
             return true;
         }
 
+        if (TryGetType(psiModule).IsReadOnlySpan() && otherType.IsReadOnlySpan())
+        {
+            return true; // span type argument intentionally ignored (sufficient for now)
+        }
+
         return false;
     }
 }
