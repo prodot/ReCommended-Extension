@@ -4,31 +4,31 @@ using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.Analyzers.Strings.Collections;
 
-internal abstract class DetectedCollection
+internal abstract class CollectionCreation
 {
     [Pure]
-    public static DetectedCollection? TryFrom(ICSharpExpression? expression)
+    public static CollectionCreation? TryFrom(ICSharpExpression? expression)
         => expression switch
         {
             // [...]
-            ICollectionExpression collectionExpression => new CollectionExpressionDetectedCollection(collectionExpression),
+            ICollectionExpression collectionExpression => new CollectionExpressionCollectionCreation(collectionExpression),
 
             // (T[])[...] or (T[]?)[...]
             ICastExpression
             {
                 TargetType: IArrayTypeUsage { ArrayRanks: [_] } or INullableTypeUsage { UnderlyingType: IArrayTypeUsage { ArrayRanks: [_] } },
                 Op: ICollectionExpression collectionExpression,
-            } => new CollectionExpressionDetectedCollection(collectionExpression),
+            } => new CollectionExpressionCollectionCreation(collectionExpression),
 
             // new T[] { ... }
-            IArrayCreationExpression { DimInits: [], ArrayInitializer: { } } arrayCreationExpression => new ArrayCreationExpressionDetectedCollection(
+            IArrayCreationExpression { DimInits: [], ArrayInitializer: { } } arrayCreationExpression => new ArrayCreationExpressionCollectionCreation(
                 arrayCreationExpression),
 
             // new T[0]
             IArrayCreationExpression
             {
                 DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: not { },
-            } arrayCreationExpression => new EmptyArrayCreationExpressionDetectedCollection(arrayCreationExpression),
+            } arrayCreationExpression => new EmptyArrayCreationExpressionCollectionCreation(arrayCreationExpression),
 
             // Array.Empty<T>()
             IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression when
@@ -40,7 +40,7 @@ internal abstract class DetectedCollection
                     TypeParameters: [_],
                     Parameters: [],
                 } method
-                && method.ContainingType.IsSystemArray() => new EmptyArrayCreationExpressionDetectedCollection(invocationExpression),
+                && method.ContainingType.IsSystemArray() => new EmptyArrayCreationExpressionCollectionCreation(invocationExpression),
 
             _ => null,
         };
@@ -101,9 +101,7 @@ internal abstract class DetectedCollection
                     }
                 }
 
-                stringConstants = [.. array];
-
-                Debug.Assert(StringConstants.Count == Count);
+                stringConstants = [..array];
             }
 
             return stringConstants;

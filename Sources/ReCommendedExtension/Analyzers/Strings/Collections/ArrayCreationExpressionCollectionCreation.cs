@@ -2,11 +2,11 @@
 
 namespace ReCommendedExtension.Analyzers.Strings.Collections;
 
-internal sealed class ArrayCreationExpressionDetectedCollection : DetectedCollection
+internal sealed class ArrayCreationExpressionCollectionCreation : CollectionCreation
 {
     readonly IArrayCreationExpression arrayCreationExpression;
 
-    internal ArrayCreationExpressionDetectedCollection(IArrayCreationExpression arrayCreationExpression)
+    internal ArrayCreationExpressionCollectionCreation(IArrayCreationExpression arrayCreationExpression)
     {
         Debug.Assert(arrayCreationExpression.ArrayInitializer is { });
 

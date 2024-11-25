@@ -1,5 +1,4 @@
-﻿using JetBrains.Metadata.Reader.API;
-using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
@@ -9,6 +8,7 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Analyzers.Strings.Collections;
+using ReCommendedExtension.Analyzers.Strings.MethodFinding;
 
 namespace ReCommendedExtension.Analyzers.Strings;
 
@@ -42,146 +42,52 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> Char { get; } = [(PredefinedType.CHAR_FQN, false)];
+        public static IReadOnlyList<ParameterType> Char { get; } = [new() { ClrTypeName = PredefinedType.CHAR_FQN }];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> CharArray { get; } = [(PredefinedType.CHAR_FQN, true)];
+        public static IReadOnlyList<ParameterType> CharArray { get; } = [new ArrayParameterType { ClrTypeName = PredefinedType.CHAR_FQN }];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> Char_Char { get; } =
+        public static IReadOnlyList<ParameterType> Char_Char { get; } =
         [
-            (PredefinedType.CHAR_FQN, false), (PredefinedType.CHAR_FQN, false),
+            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = PredefinedType.CHAR_FQN },
         ];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> Char_StringComparison { get; } =
+        public static IReadOnlyList<ParameterType> Char_StringComparison { get; } =
         [
-            (PredefinedType.CHAR_FQN, false), (PredefinedType.STRING_COMPARISON_CLASS, false),
+            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = PredefinedType.STRING_COMPARISON_CLASS },
         ];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> Char_StringSplitOptions { get; } =
+        public static IReadOnlyList<ParameterType> Char_StringSplitOptions { get; } =
         [
-            (PredefinedType.CHAR_FQN, false), (ClrTypeNames.StringSplitOptions, false),
+            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
         ];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> Char_Int32_StringSplitOptions { get; } =
+        public static IReadOnlyList<ParameterType> Char_Int32_StringSplitOptions { get; } =
         [
-            (PredefinedType.CHAR_FQN, false), (PredefinedType.INT_FQN, false), (ClrTypeNames.StringSplitOptions, false),
+            new() { ClrTypeName = PredefinedType.CHAR_FQN },
+            new() { ClrTypeName = PredefinedType.INT_FQN },
+            new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
         ];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> CharArray_StringSplitOptions { get; } =
+        public static IReadOnlyList<ParameterType> CharArray_StringSplitOptions { get; } =
         [
-            (PredefinedType.CHAR_FQN, true), (ClrTypeNames.StringSplitOptions, false),
+            new ArrayParameterType { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
         ];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> CharArray_Int32_StringSplitOptions { get; } =
+        public static IReadOnlyList<ParameterType> CharArray_Int32_StringSplitOptions { get; } =
         [
-            (PredefinedType.CHAR_FQN, true), (PredefinedType.INT_FQN, false), (ClrTypeNames.StringSplitOptions, false),
+            new ArrayParameterType { ClrTypeName = PredefinedType.CHAR_FQN },
+            new() { ClrTypeName = PredefinedType.INT_FQN },
+            new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
         ];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> String { get; } = [(PredefinedType.STRING_FQN, false)];
+        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> String_StringComparison { get; } =
+        public static IReadOnlyList<ParameterType> String_StringComparison { get; } =
         [
-            (PredefinedType.STRING_FQN, false), (PredefinedType.STRING_COMPARISON_CLASS, false),
+            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.STRING_COMPARISON_CLASS },
         ];
 
-        public static IReadOnlyList<(IClrTypeName, bool isArray)> Int32 { get; } = [(PredefinedType.INT_FQN, false)];
-    }
-
-    [Pure]
-    static bool MethodExists(string methodName, IReadOnlyList<(IClrTypeName, bool isArray)> parameterTypes, IPsiModule psiModule)
-    {
-        if (PredefinedType.STRING_FQN.TryGetTypeElement(psiModule) is { } stringType)
-        {
-            foreach (var method in stringType.Methods)
-            {
-                if (method is { IsStatic: false, TypeParameters: [] }
-                    && method.ShortName == methodName
-                    && method.Parameters.Count == parameterTypes.Count)
-                {
-                    if (parameterTypes is [])
-                    {
-                        return true;
-                    }
-
-                    var continueWithNextMethod = false;
-
-                    for (var i = 0; i < parameterTypes.Count; i++)
-                    {
-                        var (clrTypeName, isArray) = parameterTypes[i];
-
-                        if (clrTypeName.TryGetTypeElement(psiModule) is not { } expectedType)
-                        {
-                            continueWithNextMethod = true;
-                            break;
-                        }
-
-                        var type = TypeFactory.CreateType(expectedType);
-
-                        if (!TypeEqualityComparer.Default.Equals(isArray ? TypeFactory.CreateArrayType(type, 1) : type, method.Parameters[i].Type))
-                        {
-                            continueWithNextMethod = true;
-                            break;
-                        }
-                    }
-
-                    if (continueWithNextMethod)
-                    {
-                        continue;
-                    }
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    [Pure]
-    static string[]? TryGetParameterNamesIfMethodExists(
-        string methodName,
-        IReadOnlyList<(IClrTypeName, bool isArray)> parameterTypes,
-        IPsiModule psiModule)
-    {
-        Debug.Assert(parameterTypes is [_, ..]);
-
-        if (PredefinedType.STRING_FQN.TryGetTypeElement(psiModule) is { } stringType)
-        {
-            foreach (var method in stringType.Methods)
-            {
-                if (method is { IsStatic: false, TypeParameters: [] }
-                    && method.ShortName == methodName
-                    && method.Parameters.Count == parameterTypes.Count)
-                {
-                    var parameterNames = new string[parameterTypes.Count];
-
-                    for (var i = 0; i < parameterTypes.Count; i++)
-                    {
-                        var (clrTypeName, isArray) = parameterTypes[i];
-
-                        if (clrTypeName.TryGetTypeElement(psiModule) is { } expectedType)
-                        {
-                            var type = TypeFactory.CreateType(expectedType);
-
-                            if (TypeEqualityComparer.Default.Equals(isArray ? TypeFactory.CreateArrayType(type, 1) : type, method.Parameters[i].Type))
-                            {
-                                parameterNames[i] = method.Parameters[i].ShortName;
-                                continue;
-                            }
-                        }
-
-                        parameterNames = null;
-                        break;
-                    }
-
-                    if (parameterNames is { })
-                    {
-                        return parameterNames;
-                    }
-                }
-            }
-        }
-
-        return null;
+        public static IReadOnlyList<ParameterType> Int32 { get; } = [new() { ClrTypeName = PredefinedType.INT_FQN }];
     }
 
     [Pure]
@@ -238,17 +144,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                 break;
 
-            case [var character]
-                when TryGetParameterNamesIfMethodExists(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule) is
-                [
-                    var valueParameterName,
-                ]:
+            case [var character] when PredefinedType.STRING_FQN.HasMethod(
+                nameof(string.Contains),
+                ParameterTypes.Char,
+                valueArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character.",
                         valueArgument,
-                        valueArgument.NameIdentifier is { } ? valueParameterName : null,
+                        parameterNames is [var valueParameterName] ? valueParameterName : null,
                         character));
                 break;
         }
@@ -274,16 +181,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always true.", invocationExpression, "true"));
                 break;
 
-            case [var character] when TryGetParameterNamesIfMethodExists(
+            case [var character] when PredefinedType.STRING_FQN.HasMethod(
                 nameof(string.Contains),
                 ParameterTypes.Char_StringComparison,
-                invocationExpression.PsiModule) is [var valueParameterName, _]:
+                valueArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character.",
                         valueArgument,
-                        valueArgument.NameIdentifier is { } ? valueParameterName : null,
+                        parameterNames is [var valueParameterName, _] ? valueParameterName : null,
                         character));
                 break;
         }
@@ -450,7 +359,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                     case (EqualityExpressionType.NE, -1)
                         when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-                        && MethodExists(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
+                        && PredefinedType.STRING_FQN.HasMethod(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
 
                         consumer.AddHighlighting(
                             new UseOtherMethodSuggestion(
@@ -465,7 +374,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                     case (EqualityExpressionType.EQEQ, -1)
                         when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-                        && MethodExists(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
+                        && PredefinedType.STRING_FQN.HasMethod(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
 
                         consumer.AddHighlighting(
                             new UseOtherMethodSuggestion(
@@ -484,7 +393,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
                 && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
                 && valueArgument.Value is { }
-                && MethodExists(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.Contains), ParameterTypes.Char, invocationExpression.PsiModule):
 
                 var tokenType = relationalExpression.OperatorSign.GetTokenType();
 
@@ -523,7 +432,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeIndexOf_Char_Int32(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument startIndexArgument)
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
-            && MethodExists(nameof(string.IndexOf), ParameterTypes.Char, invocationExpression.PsiModule))
+            && PredefinedType.STRING_FQN.HasMethod(nameof(string.IndexOf), ParameterTypes.Char, invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
         }
@@ -545,7 +454,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        if (MethodExists(nameof(string.Contains), ParameterTypes.Char_StringComparison, invocationExpression.PsiModule))
+        if (PredefinedType.STRING_FQN.HasMethod(nameof(string.Contains), ParameterTypes.Char_StringComparison, invocationExpression.PsiModule))
         {
             switch (invocationExpression.Parent)
             {
@@ -651,16 +560,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
                 break;
 
-            case [var character] when TryGetParameterNamesIfMethodExists(
+            case [var character] when PredefinedType.STRING_FQN.HasMethod(
                 nameof(string.IndexOf),
                 ParameterTypes.Char_StringComparison,
-                invocationExpression.PsiModule) is [var valueParameterName, _]:
+                valueArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character.",
                         valueArgument,
-                        valueArgument.NameIdentifier is { } ? valueParameterName : null,
+                        parameterNames is [var valueParameterName, _] ? valueParameterName : null,
                         character,
                         $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"));
                 break;
@@ -675,7 +586,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                             switch (equalityExpression.EqualityType, equalityExpression.RightOperand.TryGetInt32Constant())
                             {
-                                case (EqualityExpressionType.EQEQ, 0) when MethodExists(
+                                case (EqualityExpressionType.EQEQ, 0) when PredefinedType.STRING_FQN.HasMethod(
                                     nameof(string.StartsWith),
                                     ParameterTypes.String,
                                     invocationExpression.PsiModule):
@@ -691,7 +602,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.NE, 0) when MethodExists(
+                                case (EqualityExpressionType.NE, 0) when PredefinedType.STRING_FQN.HasMethod(
                                     nameof(string.StartsWith),
                                     ParameterTypes.String,
                                     invocationExpression.PsiModule):
@@ -707,7 +618,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.NE, -1) when MethodExists(
+                                case (EqualityExpressionType.NE, -1) when PredefinedType.STRING_FQN.HasMethod(
                                     nameof(string.Contains),
                                     ParameterTypes.String_StringComparison,
                                     invocationExpression.PsiModule):
@@ -723,7 +634,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.EQEQ, -1) when MethodExists(
+                                case (EqualityExpressionType.EQEQ, -1) when PredefinedType.STRING_FQN.HasMethod(
                                     nameof(string.Contains),
                                     ParameterTypes.String_StringComparison,
                                     invocationExpression.PsiModule):
@@ -744,7 +655,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
                             && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
                             && valueArgument.Value is { }
-                            && MethodExists(nameof(string.Contains), ParameterTypes.String_StringComparison, invocationExpression.PsiModule):
+                            && PredefinedType.STRING_FQN.HasMethod(
+                                nameof(string.Contains),
+                                ParameterTypes.String_StringComparison,
+                                invocationExpression.PsiModule):
 
                             var tokenType = relationalExpression.OperatorSign.GetTokenType();
 
@@ -790,7 +704,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument startIndexArgument)
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
-            && MethodExists(nameof(string.IndexOf), ParameterTypes.String, invocationExpression.PsiModule))
+            && PredefinedType.STRING_FQN.HasMethod(nameof(string.IndexOf), ParameterTypes.String, invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
         }
@@ -824,16 +738,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
                 break;
 
-            case [var character] when TryGetParameterNamesIfMethodExists(
+            case [var character] when PredefinedType.STRING_FQN.HasMethod(
                 nameof(string.IndexOf),
                 ParameterTypes.Char_StringComparison,
-                invocationExpression.PsiModule) is [var valueParameterName, _]:
+                valueArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character.",
                         valueArgument,
-                        valueArgument.NameIdentifier is { } ? valueParameterName : null,
+                        parameterNames is [var valueParameterName, _] ? valueParameterName : null,
                         character));
                 break;
 
@@ -848,7 +764,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                             switch (equalityExpression.EqualityType, equalityExpression.RightOperand.TryGetInt32Constant())
                             {
-                                case (EqualityExpressionType.EQEQ, 0) when MethodExists(
+                                case (EqualityExpressionType.EQEQ, 0) when PredefinedType.STRING_FQN.HasMethod(
                                     nameof(string.StartsWith),
                                     ParameterTypes.String_StringComparison,
                                     invocationExpression.PsiModule):
@@ -864,7 +780,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.NE, 0) when MethodExists(
+                                case (EqualityExpressionType.NE, 0) when PredefinedType.STRING_FQN.HasMethod(
                                     nameof(string.StartsWith),
                                     ParameterTypes.String_StringComparison,
                                     invocationExpression.PsiModule):
@@ -880,7 +796,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.NE, -1) when MethodExists(
+                                case (EqualityExpressionType.NE, -1) when PredefinedType.STRING_FQN.HasMethod(
                                     nameof(string.Contains),
                                     ParameterTypes.String_StringComparison,
                                     invocationExpression.PsiModule):
@@ -896,7 +812,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.EQEQ, -1) when MethodExists(
+                                case (EqualityExpressionType.EQEQ, -1) when PredefinedType.STRING_FQN.HasMethod(
                                     nameof(string.Contains),
                                     ParameterTypes.String_StringComparison,
                                     invocationExpression.PsiModule):
@@ -918,7 +834,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
                             && valueArgument.Value is { }
                             && comparisonTypeArgument.Value is { }
-                            && MethodExists(nameof(string.Contains), ParameterTypes.String_StringComparison, invocationExpression.PsiModule):
+                            && PredefinedType.STRING_FQN.HasMethod(
+                                nameof(string.Contains),
+                                ParameterTypes.String_StringComparison,
+                                invocationExpression.PsiModule):
 
                             var tokenType = relationalExpression.OperatorSign.GetTokenType();
 
@@ -964,7 +883,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument startIndexArgument)
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
-            && MethodExists(nameof(string.IndexOf), ParameterTypes.String_StringComparison, invocationExpression.PsiModule))
+            && PredefinedType.STRING_FQN.HasMethod(nameof(string.IndexOf), ParameterTypes.String_StringComparison, invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
         }
@@ -976,7 +895,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeIndexOfAny(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument startIndexArgument)
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
-            && MethodExists(nameof(string.IndexOfAny), ParameterTypes.CharArray, invocationExpression.PsiModule))
+            && PredefinedType.STRING_FQN.HasMethod(nameof(string.IndexOfAny), ParameterTypes.CharArray, invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
         }
@@ -1046,16 +965,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case [var character] when comparisonTypeArgument.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal
-                && TryGetParameterNamesIfMethodExists(nameof(string.LastIndexOf), ParameterTypes.Char, invocationExpression.PsiModule) is
-                [
-                    var valueParameterName,
-                ]:
+                && PredefinedType.STRING_FQN.HasMethod(
+                    nameof(string.LastIndexOf),
+                    ParameterTypes.Char,
+                    valueArgument.NameIdentifier is { },
+                    out var parameterNames,
+                    invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character.",
                         valueArgument,
-                        valueArgument.NameIdentifier is { } ? valueParameterName : null,
+                        parameterNames is [var valueParameterName] ? valueParameterName : null,
                         character,
                         redundantArguments: [comparisonTypeArgument]));
                 break;
@@ -1105,7 +1026,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             }
 
             if (paddingCharArgument.Value.TryGetCharConstant() == ' '
-                && MethodExists(nameof(string.PadLeft), ParameterTypes.Int32, invokedExpression.GetPsiModule()))
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.PadLeft), ParameterTypes.Int32, invokedExpression.GetPsiModule()))
             {
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing ' ' is redundant.", paddingCharArgument));
             }
@@ -1155,7 +1076,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             }
 
             if (paddingCharArgument.Value.TryGetCharConstant() == ' '
-                && MethodExists(nameof(string.PadRight), ParameterTypes.Int32, invokedExpression.GetPsiModule()))
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.PadRight), ParameterTypes.Int32, invokedExpression.GetPsiModule()))
             {
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing ' ' is redundant.", paddingCharArgument));
             }
@@ -1254,18 +1175,23 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             if (oldValue is [var oldCharacter]
                 && newValue is [var newCharacter]
-                && TryGetParameterNamesIfMethodExists(nameof(string.Replace), ParameterTypes.Char_Char, invocationExpression.PsiModule) is
-                [
-                    var oldCharParameterName, var newCharParameterName,
-                ])
+                && PredefinedType.STRING_FQN.HasMethod(
+                    nameof(string.Replace),
+                    ParameterTypes.Char_Char,
+                    oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
+                    out var parameterNames,
+                    invocationExpression.PsiModule))
             {
                 var highlighting = new PassSingleCharactersSuggestion(
                     "Pass the single character.",
                     [oldValueArgument, newValueArgument],
-                    [
-                        oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
-                        newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
-                    ],
+                    parameterNames is [var oldCharParameterName, var newCharParameterName]
+                        ?
+                        [
+                            oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
+                            newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
+                        ]
+                        : new string?[2],
                     [oldCharacter, newCharacter],
                     comparisonTypeArgument);
 
@@ -1323,18 +1249,23 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             if (oldValue is [var oldCharacter]
                 && newValue is [var newCharacter]
-                && TryGetParameterNamesIfMethodExists(nameof(string.Replace), ParameterTypes.Char_Char, invocationExpression.PsiModule) is
-                [
-                    var oldCharParameterName, var newCharParameterName,
-                ])
+                && PredefinedType.STRING_FQN.HasMethod(
+                    nameof(string.Replace),
+                    ParameterTypes.Char_Char,
+                    oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
+                    out var parameterNames,
+                    invocationExpression.PsiModule))
             {
                 var highlighting = new PassSingleCharactersSuggestion(
                     "Pass the single character.",
                     [oldValueArgument, newValueArgument],
-                    [
-                        oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
-                        newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
-                    ],
+                    parameterNames is [var oldCharParameterName, var newCharParameterName]
+                        ?
+                        [
+                            oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
+                            newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
+                        ]
+                        : new string?[2],
                     [oldCharacter, newCharacter]);
 
                 consumer.AddHighlighting(highlighting, oldValueArgument.Value.GetDocumentRange());
@@ -1383,7 +1314,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                             break;
 
-                        case (StringSplitOptions)2 when MethodExists(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
+                        case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
                             consumer.AddHighlighting(
                                 new UseExpressionResultSuggestion(
                                     "The expression is always an array with a single trimmed element.",
@@ -1418,11 +1349,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
             }
 
-            case [{ Value: var argumentExpression }] when DetectedCollection.TryFrom(argumentExpression) is { Count: > 0 } collection:
+            case [{ Value: var argumentExpression }] when CollectionCreation.TryFrom(argumentExpression) is { Count: > 0 } collectionCreation:
             {
-                var set = new HashSet<char>(collection.Count);
+                var set = new HashSet<char>(collectionCreation.Count);
 
-                foreach (var (element, character) in collection.ElementsWithCharConstants)
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
                 {
                     if (!set.Add(character))
                     {
@@ -1473,11 +1404,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                 break;
 
-            case (_, _) when DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection:
+            case (_, _) when CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0 } collectionCreation:
             {
-                var set = new HashSet<char>(collection.Count);
+                var set = new HashSet<char>(collectionCreation.Count);
 
-                foreach (var (element, character) in collection.ElementsWithCharConstants)
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
                 {
                     if (!set.Add(character))
                     {
@@ -1495,11 +1426,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// </remarks>
     static void AnalyzeSplit_CharArray_StringSplitOptions(IHighlightingConsumer consumer, ICSharpArgument separatorArgument)
     {
-        if (DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
+        if (CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0 } collectionCreation)
         {
-            var set = new HashSet<char>(collection.Count);
+            var set = new HashSet<char>(collectionCreation.Count);
 
-            foreach (var (element, character) in collection.ElementsWithCharConstants)
+            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
             {
                 if (!set.Add(character))
                 {
@@ -1552,7 +1483,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                 CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                         break;
 
-                    case (StringSplitOptions)2 when MethodExists(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
+                    case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
                         consumer.AddHighlighting(
                             new UseExpressionResultSuggestion(
                                 "The expression is always an array with a single trimmed element.",
@@ -1562,11 +1493,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 break;
 
-            case (_, _) when DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection:
+            case (_, _) when CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0 } collectionCreation:
             {
-                var set = new HashSet<char>(collection.Count);
+                var set = new HashSet<char>(collectionCreation.Count);
 
-                foreach (var (element, character) in collection.ElementsWithCharConstants)
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
                 {
                     if (!set.Add(character))
                     {
@@ -1614,7 +1545,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                 CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                         break;
 
-                    case (StringSplitOptions)2 when MethodExists(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
+                    case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
                         consumer.AddHighlighting(
                             new UseExpressionResultSuggestion(
                                 "The expression is always an array with a single trimmed element.",
@@ -1624,16 +1555,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 break;
 
-            case [var character] when TryGetParameterNamesIfMethodExists(
+            case [var character] when PredefinedType.STRING_FQN.HasMethod(
                 nameof(string.Split),
                 ParameterTypes.Char_StringSplitOptions,
-                invocationExpression.PsiModule) is [var separatorParameterName, _]:
+                separatorArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character",
                         separatorArgument,
-                        separatorArgument.NameIdentifier is { } ? separatorParameterName : null,
+                        parameterNames is [var separatorParameterName, _] ? separatorParameterName : null,
                         character));
                 break;
         }
@@ -1688,7 +1621,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                 CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                         break;
 
-                    case (StringSplitOptions)2 when MethodExists(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
+                    case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
                         consumer.AddHighlighting(
                             new UseExpressionResultSuggestion(
                                 "The expression is always an array with a single trimmed element.",
@@ -1698,16 +1631,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 break;
 
-            case ([var character], _) when TryGetParameterNamesIfMethodExists(
+            case ([var character], _) when PredefinedType.STRING_FQN.HasMethod(
                 nameof(string.Split),
                 ParameterTypes.Char_Int32_StringSplitOptions,
-                invocationExpression.PsiModule) is [var separatorParameterName, _, _]:
+                separatorArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character",
                         separatorArgument,
-                        separatorArgument.NameIdentifier is { } ? separatorParameterName : null,
+                        parameterNames is [var separatorParameterName, _, _] ? separatorParameterName : null,
                         character));
                 break;
         }
@@ -1728,9 +1663,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        if (DetectedCollection.TryFrom(separatorArgument.Value) is { Count: > 0 } collection)
+        if (CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0 } collectionCreation)
         {
-            if (collection.StringConstants is [""])
+            if (collectionCreation.StringConstants is [""])
             {
                 if (!invocationExpression.IsUsedAsStatement()
                     && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
@@ -1747,7 +1682,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                             break;
 
-                        case (StringSplitOptions)2 when MethodExists(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
+                        case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(nameof(string.Trim), [], invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
                             consumer.AddHighlighting(
                                 new UseExpressionResultSuggestion(
                                     "The expression is always an array with a single trimmed element.",
@@ -1759,26 +1694,29 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             }
             else
             {
-                if (collection.StringConstants.All(s => s is [_]))
+                if (collectionCreation.StringConstants.All(s => s is [_]))
                 {
-                    if (MethodExists(nameof(string.Split), ParameterTypes.CharArray_StringSplitOptions, invocationExpression.PsiModule))
+                    if (PredefinedType.STRING_FQN.HasMethod(
+                        nameof(string.Split),
+                        ParameterTypes.CharArray_StringSplitOptions,
+                        invocationExpression.PsiModule))
                     {
-                        var highlighting = collection.Expression switch
+                        var highlighting = collectionCreation.Expression switch
                         {
                             ICollectionExpression collectionExpression => new PassSingleCharactersSuggestion(
                                 "Pass the single character",
                                 [..collectionExpression.CollectionElements],
-                                [..from s in collection.StringConstants select s[0]]),
+                                [..from s in collectionCreation.StringConstants select s[0]]),
 
                             IArrayCreationExpression arrayCreationExpression => new PassSingleCharactersSuggestion(
                                 "Pass the single character",
                                 arrayCreationExpression,
-                                [..from s in collection.StringConstants select s[0]]),
+                                [..from s in collectionCreation.StringConstants select s[0]]),
 
                             _ => throw new NotSupportedException(),
                         };
 
-                        foreach (var element in collection.Elements)
+                        foreach (var element in collectionCreation.Elements)
                         {
                             consumer.AddHighlighting(highlighting, element.GetDocumentRange());
                         }
@@ -1786,9 +1724,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 else
                 {
-                    var set = new HashSet<string>(collection.Count, StringComparer.Ordinal);
+                    var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-                    foreach (var (element, s) in collection.ElementsWithStringConstants)
+                    foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
                     {
                         if (!set.Add(s))
                         {
@@ -1819,7 +1757,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        switch (DetectedCollection.TryFrom(separatorArgument.Value), countArgument.Value.TryGetInt32Constant())
+        switch (CollectionCreation.TryFrom(separatorArgument.Value), countArgument.Value.TryGetInt32Constant())
         {
             case (_, 0) when !invocationExpression.IsUsedAsStatement()
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
@@ -1856,27 +1794,30 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 break;
 
-            case ({ Count: > 0 } collection, _):
-                if (collection.StringConstants.All(s => s is [_]))
+            case ({ Count: > 0 } collectionCreation, _):
+                if (collectionCreation.StringConstants.All(s => s is [_]))
                 {
-                    if (MethodExists(nameof(string.Split), ParameterTypes.CharArray_Int32_StringSplitOptions, invocationExpression.PsiModule))
+                    if (PredefinedType.STRING_FQN.HasMethod(
+                        nameof(string.Split),
+                        ParameterTypes.CharArray_Int32_StringSplitOptions,
+                        invocationExpression.PsiModule))
                     {
-                        var highlighting = collection.Expression switch
+                        var highlighting = collectionCreation.Expression switch
                         {
                             ICollectionExpression collectionExpression => new PassSingleCharactersSuggestion(
                                 "Pass the single character",
                                 [..collectionExpression.CollectionElements],
-                                [..from s in collection.StringConstants select s[0]]),
+                                [..from s in collectionCreation.StringConstants select s[0]]),
 
                             IArrayCreationExpression arrayCreationExpression => new PassSingleCharactersSuggestion(
                                 "Pass the single character",
                                 arrayCreationExpression,
-                                [..from s in collection.StringConstants select s[0]]),
+                                [..from s in collectionCreation.StringConstants select s[0]]),
 
                             _ => throw new NotSupportedException(),
                         };
 
-                        foreach (var element in collection.Elements)
+                        foreach (var element in collectionCreation.Elements)
                         {
                             consumer.AddHighlighting(highlighting, element.GetDocumentRange());
                         }
@@ -1884,9 +1825,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 else
                 {
-                    var set = new HashSet<string>(collection.Count, StringComparer.Ordinal);
+                    var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-                    foreach (var (element, s) in collection.ElementsWithStringConstants)
+                    foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
                     {
                         if (!set.Add(s))
                         {
@@ -2079,13 +2020,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
             }
 
-            case [{ } argument] when DetectedCollection.TryFrom(argument.Value) is { } collection:
+            case [{ } argument] when CollectionCreation.TryFrom(argument.Value) is { } collectionCreation:
             {
-                if (collection.Count > 0)
+                if (collectionCreation.Count > 0)
                 {
-                    var set = new HashSet<char>(collection.Count);
+                    var set = new HashSet<char>(collectionCreation.Count);
 
-                    foreach (var (element, character) in collection.ElementsWithCharConstants)
+                    foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
                     {
                         if (!set.Add(character))
                         {
@@ -2095,7 +2036,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 else
                 {
-                    if (MethodExists(nameof(string.Trim), [], invocationExpression.PsiModule))
+                    if (PredefinedType.STRING_FQN.HasMethod(nameof(string.Trim), [], invocationExpression.PsiModule))
                     {
                         consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
                     }
@@ -2104,7 +2045,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
             }
 
-            case [{ } argument] when argument.Value.IsDefaultValue() && MethodExists(nameof(string.Trim), [], invocationExpression.PsiModule):
+            case [{ } argument] when argument.Value.IsDefaultValue()
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.Trim), [], invocationExpression.PsiModule):
+
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
                 break;
         }
@@ -2141,13 +2084,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
                 }
 
-            case [{ } argument] when DetectedCollection.TryFrom(argument.Value) is { } collection:
+            case [{ } argument] when CollectionCreation.TryFrom(argument.Value) is { } collectionCreation:
                 {
-                    if (collection.Count > 0)
+                    if (collectionCreation.Count > 0)
                     {
-                        var set = new HashSet<char>(collection.Count);
+                        var set = new HashSet<char>(collectionCreation.Count);
 
-                        foreach (var (element, character) in collection.ElementsWithCharConstants)
+                        foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
                         {
                             if (!set.Add(character))
                             {
@@ -2157,7 +2100,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     }
                     else
                     {
-                        if (MethodExists(nameof(string.TrimEnd), [], invocationExpression.PsiModule))
+                        if (PredefinedType.STRING_FQN.HasMethod(nameof(string.TrimEnd), [], invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
                         }
@@ -2166,7 +2109,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
                 }
 
-            case [{ } argument] when argument.Value.IsDefaultValue() && MethodExists(nameof(string.TrimEnd), [], invocationExpression.PsiModule):
+            case [{ } argument] when argument.Value.IsDefaultValue()
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.TrimEnd), [], invocationExpression.PsiModule):
+
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
                 break;
         }
@@ -2203,13 +2148,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
                 }
 
-            case [{ } argument] when DetectedCollection.TryFrom(argument.Value) is { } collection:
+            case [{ } argument] when CollectionCreation.TryFrom(argument.Value) is { } collectionCreation:
                 {
-                    if (collection.Count > 0)
+                    if (collectionCreation.Count > 0)
                     {
-                        var set = new HashSet<char>(collection.Count);
+                        var set = new HashSet<char>(collectionCreation.Count);
 
-                        foreach (var (element, character) in collection.ElementsWithCharConstants)
+                        foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
                         {
                             if (!set.Add(character))
                             {
@@ -2219,7 +2164,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     }
                     else
                     {
-                        if (MethodExists(nameof(string.TrimStart), [], invocationExpression.PsiModule))
+                        if (PredefinedType.STRING_FQN.HasMethod(nameof(string.TrimStart), [], invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
                         }
@@ -2228,7 +2173,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
                 }
 
-            case [{ } argument] when argument.Value.IsDefaultValue() && MethodExists(nameof(string.TrimStart), [], invocationExpression.PsiModule):
+            case [{ } argument] when argument.Value.IsDefaultValue()
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.TrimStart), [], invocationExpression.PsiModule):
+
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
                 break;
         }
