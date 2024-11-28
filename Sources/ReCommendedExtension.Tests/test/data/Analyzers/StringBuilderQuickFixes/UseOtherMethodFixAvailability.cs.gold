@@ -1,0 +1,192 @@
+﻿using System;
+using System.Text;
+
+namespace Test
+{
+    public class StringBuilders
+    {
+        public void OtherMethod(StringBuilder builder, string s, char c, object objectItem, int intItem, string stringItem)
+        {
+            var result11 = builder.|AppendJoin(s, (object?[])[objectItem])|(0);
+            var result12 = builder.|AppendJoin(s, new[] { objectItem })|(1);
+
+            var result21 = builder.|AppendJoin(s, (int[])[intItem])|(2);
+            var result22 = builder.|AppendJoin(s, new[] { intItem })|(3);
+
+            var result31 = builder.|AppendJoin(s, (string?[])[stringItem])|(4);
+            var result32 = builder.|AppendJoin(s, new[] { stringItem })|(5);
+
+            var result41 = builder.|AppendJoin(c, (object?[])[objectItem])|(6);
+            var result43 = builder.|AppendJoin(c, new[] { objectItem })|(7);
+
+            var result51 = builder.|AppendJoin(c, (int[])[intItem])|(8);
+            var result52 = builder.|AppendJoin(c, new[] { intItem })|(9);
+
+            var result61 = builder.|AppendJoin(c, (string?[])[stringItem])|(10);
+            var result62 = builder.|AppendJoin(c, new[] { stringItem })|(11);
+
+            var result71 = builder.|AppendJoin(s, [(object)"item"])|(12);
+            var result72 = builder.|AppendJoin(s, (object)"item")|(13);
+
+            var result81 = builder.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(14);
+            var result82 = builder.|AppendJoin(s, "item")|(15);
+
+            var result91 = builder.|AppendJoin(c, [(object)"item"])|(16);
+            var result92 = builder.|AppendJoin(c, (object)"item")|(17);
+
+            var resultA1 = builder.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(18);
+            var resultA2 = builder.|AppendJoin(c, "item")|(19);
+
+            builder.|AppendJoin(s, (object?[])[objectItem])|(20);
+            builder.|AppendJoin(s, new[] { objectItem })|(21);
+
+            builder.|AppendJoin(s, (int[])[intItem])|(22);
+            builder.|AppendJoin(s, new[] { intItem })|(23);
+
+            builder.|AppendJoin(s, (string?[])[stringItem])|(24);
+            builder.|AppendJoin(s, new[] { stringItem })|(25);
+
+            builder.|AppendJoin(c, (object?[])[objectItem])|(26);
+            builder.|AppendJoin(c, new[] { objectItem })|(27);
+
+            builder.|AppendJoin(c, (int[])[intItem])|(28);
+            builder.|AppendJoin(c, new[] { intItem })|(29);
+
+            builder.|AppendJoin(c, (string?[])[stringItem])|(30);
+            builder.|AppendJoin(c, new[] { stringItem })|(31);
+
+            builder.|AppendJoin(s, [(object)"item"])|(32);
+            builder.|AppendJoin(s, (object)"item")|(33);
+
+            builder.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(34);
+            builder.|AppendJoin(s, "item")|(35);
+
+            builder.|AppendJoin(c, [(object)"item"])|(36);
+            builder.|AppendJoin(c, (object)"item")|(37);
+
+            builder.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(38);
+            builder.|AppendJoin(c, "item")|(39);
+        }
+    }
+}
+------------------------------------------------
+0: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(objectItem)'
+1: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(objectItem)'
+2: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(intItem)'
+3: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(intItem)'
+4: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(stringItem)'
+5: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(stringItem)'
+6: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(objectItem)'
+7: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(objectItem)'
+8: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(intItem)'
+9: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(intItem)'
+10: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(stringItem)'
+11: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(stringItem)'
+12: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append((object)"item")'
+13: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append((object)"item")'
+14: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append("item")'
+15: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append("item")'
+16: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append((object)"item")'
+17: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append((object)"item")'
+18: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append("item")'
+19: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append("item")'
+20: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(objectItem)'
+21: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(objectItem)'
+22: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(intItem)'
+23: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(intItem)'
+24: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(stringItem)'
+25: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(stringItem)'
+26: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(objectItem)'
+27: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(objectItem)'
+28: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(intItem)'
+29: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(intItem)'
+30: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(stringItem)'
+31: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append(stringItem)'
+32: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append((object)"item")'
+33: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append((object)"item")'
+34: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append("item")'
+35: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append("item")'
+36: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append((object)"item")'
+37: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append((object)"item")'
+38: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append("item")'
+39: Use the 'Append' method.
+QUICKFIXES:
+Replace with 'Append("item")'
