@@ -22,7 +22,10 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
             or ArrayWithDefaultValuesInitializationSuggestion
             or UseArrayEmptyMethodWarning // to figure out which cases are supported by R#
             or UseCollectionExpressionWarning // to figure out which cases are supported by R#
-            or UseCollectionExpressionForArrayInitializerWarning; // to figure out which cases are supported by R#
+            or UseCollectionExpressionForArrayInitializerWarning // to figure out which cases are supported by R#
+            or ReplaceInvocationWithCollectionExpressionWarning // to figure out which cases are supported by R#
+            or ReplaceInvocationWithSingleSpreadCollectionExpressionWarning // to figure out which cases are supported by R#
+            or ReplaceWithEmptyCollectionExpressionWarning; // to figure out which cases are supported by R#
 
     [Test]
     [TestNet60]

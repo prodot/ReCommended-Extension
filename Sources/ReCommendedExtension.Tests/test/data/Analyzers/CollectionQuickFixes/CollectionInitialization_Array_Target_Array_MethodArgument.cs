@@ -2,13 +2,13 @@
 
 namespace TargetArray
 {
-    public class GenericClass<T> where T : new()
+    public class Class
     {
-        void Method(T a, T b, T c)
+        void Method()
         {
-            Consumer(new T{caret}[0]);
+            Consumer(new string{caret}[0]);
         }
 
-        void Consumer(T[] items) { }
+        void Consumer(object[] items) { }
     }
 }

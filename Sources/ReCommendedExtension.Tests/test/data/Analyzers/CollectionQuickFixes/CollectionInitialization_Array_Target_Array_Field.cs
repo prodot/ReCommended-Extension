@@ -4,6 +4,6 @@ namespace TargetArray
 {
     public class NonGenericClass
     {
-        int[] field5 = new int{caret}[0];
+        object[] field5 = new string{caret}[0];
     }
 }

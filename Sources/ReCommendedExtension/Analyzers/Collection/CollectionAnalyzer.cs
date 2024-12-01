@@ -543,12 +543,12 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                     // target-typed to T[]: cases not covered by R#
                     // - empty arrays passed to a method, which requires setting inferred type arguments
-                    // - empty arrays without items ('new T[0]')
+                    // - empty covariant arrays without items ('new T[0]')
                     // - arrays of covariant types when type is specified
                     if (TryGetIfTargetTypedToArray() is var (arrayItemType, isArrayItemTypeCovariant)
                         && (isArrayItemTypeCovariant && arrayCreationExpression.TypeName is { }
                             || isEmptyArray
-                            && (arrayCreationExpression.ArrayInitializer is not { }
+                            && (arrayCreationExpression.ArrayInitializer is not { } && isArrayItemTypeCovariant
                                 || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { })))
                     {
                         string? covariantTypeName;
@@ -1027,8 +1027,9 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         methodReferenceToSetInferredTypeArguments));
             }
 
-            // target-typed to T[]
-            if (TryGetIfTargetTypedToArray() is var (covariantItemType, isCovariant))
+            // target-typed to T[] - either covariant or inferred
+            if (TryGetIfTargetTypedToArray() is var (covariantItemType, isCovariant)
+                && (isCovariant || arrayEmptyInvocationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { }))
             {
                 string? covariantTypeName;
                 if (isCovariant)
@@ -1077,6 +1078,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
             case IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression
                 when reference.Resolve().DeclaredElement is IMethod method && method.ContainingType.IsSystemArray() && IsEmptyMethod(method):
+
                 AnalyzeArrayEmptyInvocation(consumer, invocationExpression);
                 break;
         }
