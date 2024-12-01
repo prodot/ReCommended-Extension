@@ -28,6 +28,11 @@ namespace Test
             var result3 = $"{someObject}".IndexOf("", StringComparison.OrdinalIgnoreCase);
         }
 
+        public void IndexOfAny(string text)
+        {
+            var result = text.IndexOfAny([]);
+        }
+
         public void LastIndexOf(string text, char c)
         {
             var result = text.LastIndexOf(c, 0);

@@ -36,6 +36,13 @@ namespace Test
             var result64 = text.|IndexOf(s, StringComparison.OrdinalIgnoreCase) == -1|(22);
             var result65 = text.|IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0|(23);
         }
+
+        public void IndexOfAny(string text, int startIndex, int count)
+        {
+            var result1 = text.|IndexOfAny([c])|(24);
+            var result2 = text.|IndexOfAny([c], startIndex)|(25);
+            var result3 = text.|IndexOfAny([c], startIndex, count)|(26);
+        }
     }
 }
 ------------------------------------------------
@@ -111,3 +118,12 @@ Replace with '!Contains(s, StringComparison.OrdinalIgnoreCase)'
 23: Use the 'Contains' method.
 QUICKFIXES:
 Replace with '!Contains(s, StringComparison.OrdinalIgnoreCase)'
+24: Use the 'IndexOf' method.
+QUICKFIXES:
+Replace with 'IndexOf(c)'
+25: Use the 'IndexOf' method.
+QUICKFIXES:
+Replace with 'IndexOf(c, startIndex)'
+26: Use the 'IndexOf' method.
+QUICKFIXES:
+Replace with 'IndexOf(c, startIndex, count)'

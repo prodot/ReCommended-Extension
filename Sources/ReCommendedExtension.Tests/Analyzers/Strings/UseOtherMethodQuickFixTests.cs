@@ -86,4 +86,19 @@ public sealed class UseOtherMethodQuickFixTests : QuickFixTestBase<UseOtherMetho
 
     [Test]
     public void TestIndexOf_String_StringComparison_lt_0() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestIndexOfAny_CharArray_SingleElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestIndexOfAny_CharArray_Int32_SingleElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestIndexOfAny_CharArray_Int32_Int32_SingleElement() => DoNamedTest2();
 }

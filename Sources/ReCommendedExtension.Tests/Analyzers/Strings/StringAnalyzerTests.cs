@@ -302,11 +302,29 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestIndexOfAny()
     {
+        Test("abcde", text => text.IndexOfAny([]), _ => -1);
+        Test("abcde", text => text.IndexOfAny(['c']), text => text.IndexOf('c'));
+        TestNullable("abcde", text => text?.IndexOfAny(['c']), text => text?.IndexOf('c'));
+        Test("abcde", text => text.IndexOfAny(['b', 'c', 'c']), text => text.IndexOfAny(['b', 'c']));
+        TestNullable("abcde", text => text?.IndexOfAny(['b', 'c', 'c']), text => text?.IndexOfAny(['b', 'c']));
+
         Test("abcde", text => text.IndexOfAny(['b', 'c'], 0), text => text.IndexOfAny(['b', 'c']));
         TestNullable("abcde", text => text?.IndexOfAny(['b', 'c'], 0), text => text?.IndexOfAny(['b', 'c']));
+        Test("abcde", text => text.IndexOfAny(['c'], 1), text => text.IndexOf('c', 1), true);
+        TestNullable("abcde", text => text?.IndexOfAny(['c'], 1), text => text?.IndexOf('c', 1), true);
+        Test("abcde", text => text.IndexOfAny(['b', 'c', 'c'], 1), text => text.IndexOfAny(['b', 'c'], 1), true);
+        TestNullable("abcde", text => text?.IndexOfAny(['b', 'c', 'c'], 1), text => text?.IndexOfAny(['b', 'c'], 1), true);
+
+        Test("abcde", text => text.IndexOfAny(['c'], 1, 3), text => text.IndexOf('c', 1, 3), true);
+        TestNullable("abcde", text => text?.IndexOfAny(['c'], 1, 3), text => text?.IndexOf('c', 1, 3), true);
+        Test("abcde", text => text.IndexOfAny(['b', 'c', 'c'], 1, 3), text => text.IndexOfAny(['b', 'c'], 1, 3), true);
+        TestNullable("abcde", text => text?.IndexOfAny(['b', 'c', 'c'], 1, 3), text => text?.IndexOfAny(['b', 'c'], 1, 3), true);
 
         DoNamedTest2();
     }

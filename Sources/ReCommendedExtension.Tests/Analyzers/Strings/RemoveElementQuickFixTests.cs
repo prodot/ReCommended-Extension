@@ -12,6 +12,21 @@ public sealed class RemoveElementQuickFixTests : QuickFixTestBase<RemoveElementF
     protected override string RelativeTestDataPath => @"Analyzers\StringsQuickFixes";
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestIndexOfAny_CharArray_DuplicateElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestIndexOfAny_CharArray_Int32_DuplicateElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestIndexOfAny_CharArray_Int32_Int32_DuplicateElement() => DoNamedTest2();
+
+    [Test]
     public void TestSplit_DuplicateElement() => DoNamedTest2();
 
     [Test]

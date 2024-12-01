@@ -4,6 +4,13 @@ namespace Test
 {
     public class Strings
     {
+        public void IndexOfAny(string text, int startIndex, int count)
+        {
+            var result1 = text.IndexOfAny(['a', 'a']);
+            var result2 = text.IndexOfAny(['a', 'a'], startIndex);
+            var result3 = text.IndexOfAny(['a', 'a'], startIndex, count);
+        }
+
         public void Split(string text, int count, StringSplitOptions options)
         {
             var result12 = text.Split(['a', 'b', 'a']);

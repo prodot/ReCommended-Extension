@@ -23,4 +23,6 @@ internal sealed class EmptyCollectionCreation(ICSharpExpression expression) : Co
             yield break;
         }
     }
+
+    public override IInitializerElement SingleElement => throw new NotSupportedException();
 }

@@ -51,6 +51,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = PredefinedType.CHAR_FQN },
         ];
 
+        public static IReadOnlyList<ParameterType> Char_Int32 { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = PredefinedType.INT_FQN },
+        ];
+
         public static IReadOnlyList<ParameterType> Char_StringComparison { get; } =
         [
             new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = PredefinedType.STRING_COMPARISON_CLASS },
@@ -59,6 +64,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         public static IReadOnlyList<ParameterType> Char_StringSplitOptions { get; } =
         [
             new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
+        ];
+
+        public static IReadOnlyList<ParameterType> Char_Int32_Int32 { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.CHAR_FQN },
+            new() { ClrTypeName = PredefinedType.INT_FQN },
+            new() { ClrTypeName = PredefinedType.INT_FQN },
         ];
 
         public static IReadOnlyList<ParameterType> Char_Int32_StringSplitOptions { get; } =
@@ -890,14 +902,140 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOfAny(char[], 0)</c> → <c>text.IndexOfAny(char[])</c>
+    /// <c>text.IndexOfAny([])</c> → <c>-1</c><para/>
+    /// <c>text.IndexOfAny([c])</c> → <c>text.IndexOf(c)</c><para/>
+    /// <c>text.IndexOfAny(char[])</c> → <c>text.IndexOfAny(char[])</c>
     /// </remarks>
-    static void AnalyzeIndexOfAny(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument startIndexArgument)
+    void AnalyzeIndexOfAny_CharArray(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument anyOfArgument)
+    {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
+        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        {
+            case { Count: 0 } when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+
+                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1.", invocationExpression, "-1"));
+                break;
+
+            case { Count: 1 } collectionCreation
+                when PredefinedType.STRING_FQN.HasMethod(nameof(string.IndexOf), ParameterTypes.Char, invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherMethodSuggestion(
+                        $"Use the '{nameof(string.IndexOf)}' method.",
+                        invocationExpression,
+                        invokedExpression,
+                        nameof(string.IndexOf),
+                        false,
+                        [collectionCreation.SingleElement.GetText()]));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<char>(collectionCreation.Count);
+
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.IndexOfAny(char[], 0)</c> → <c>text.IndexOfAny(char[])</c><para/>
+    /// <c>text.IndexOfAny([c], int)</c> → <c>text.IndexOf(c, int)</c><para/>
+    /// <c>text.IndexOfAny(char[], int)</c> → <c>text.IndexOfAny(char[], int)</c>
+    /// </remarks>
+    static void AnalyzeIndexOfAny_CharArray_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument anyOfArgument,
+        ICSharpArgument startIndexArgument)
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.STRING_FQN.HasMethod(nameof(string.IndexOfAny), ParameterTypes.CharArray, invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
+            return;
+        }
+
+        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.IndexOf), ParameterTypes.Char_Int32, invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherMethodSuggestion(
+                        $"Use the '{nameof(string.IndexOf)}' method.",
+                        invocationExpression,
+                        invokedExpression,
+                        nameof(string.IndexOf),
+                        false,
+                        [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText()]));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<char>(collectionCreation.Count);
+
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.IndexOfAny([c], int, int)</c> → <c>text.IndexOf(c, int)</c><para/>
+    /// <c>text.IndexOfAny(char[], int, int)</c> → <c>text.IndexOfAny(char[], int, int)</c>
+    /// </remarks>
+    static void AnalyzeIndexOfAny_CharArray_Int32_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument anyOfArgument,
+        ICSharpArgument startIndexArgument,
+        ICSharpArgument countArgument)
+    {
+        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
+                && countArgument.Value is { }
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.IndexOf), ParameterTypes.Char_Int32_Int32, invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherMethodSuggestion(
+                        $"Use the '{nameof(string.IndexOf)}' method.",
+                        invocationExpression,
+                        invokedExpression,
+                        nameof(string.IndexOf),
+                        false,
+                        [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText(), countArgument.Value.GetText()]));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<char>(collectionCreation.Count);
+
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+                break;
         }
     }
 
@@ -2218,7 +2356,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             AnalyzeEndsWith_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument]) when valueType.IsString() && IsStringComparison(stringComparisonType):
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+
                             AnalyzeEndsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                             break;
                     }
@@ -2270,8 +2410,27 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 case nameof(string.IndexOfAny):
                     switch (method.Parameters, element.Arguments)
                     {
-                        case ([_, { Type: var startIndexType }], [_, var startIndexArgument]) when startIndexType.IsInt():
-                            AnalyzeIndexOfAny(consumer, element, startIndexArgument);
+                        case ([{ Type: var anyOfType }], [var anyOfArgument]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
+                            AnalyzeIndexOfAny_CharArray(consumer, element, invokedExpression, anyOfArgument);
+                            break;
+
+                        case ([{ Type: var anyOfType }, { Type: var startIndexType }], [var anyOfArgument, var startIndexArgument])
+                            when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt():
+
+                            AnalyzeIndexOfAny_CharArray_Int32(consumer, element, invokedExpression, anyOfArgument, startIndexArgument);
+                            break;
+
+                        case ([{ Type: var anyOfType }, { Type: var startIndexType }, { Type: var countType }], [
+                            var anyOfArgument, var startIndexArgument, var valueArgument
+                        ]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && countType.IsInt():
+
+                            AnalyzeIndexOfAny_CharArray_Int32_Int32(
+                                consumer,
+                                element,
+                                invokedExpression,
+                                anyOfArgument,
+                                startIndexArgument,
+                                valueArgument);
                             break;
                     }
                     break;
@@ -2279,7 +2438,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 case nameof(string.LastIndexOf):
                     switch (method.Parameters, element.Arguments)
                     {
-                        case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument]) when valueType.IsChar() && startIndexType.IsInt():
+                        case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument])
+                            when valueType.IsChar() && startIndexType.IsInt():
+
                             AnalyzeLastIndexOf_Char_Int32(consumer, element, invokedExpression, startIndexArgument);
                             break;
 
@@ -2287,7 +2448,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             AnalyzeLastIndexOf_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument]) when valueType.IsString() && IsStringComparison(stringComparisonType):
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+
                             AnalyzeLastIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                             break;
                     }
@@ -2300,7 +2463,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             AnalyzePadLeft_Int32(consumer, element, invokedExpression, totalWidthArgument);
                             break;
 
-                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument]) when totalWidthType.IsInt() && paddingCharType.IsChar():
+                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument])
+                            when totalWidthType.IsInt() && paddingCharType.IsChar():
+
                             AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
                             break;
                     }
@@ -2313,7 +2478,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
                             break;
 
-                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument]) when totalWidthType.IsInt() && paddingCharType.IsChar():
+                        case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument])
+                            when totalWidthType.IsInt() && paddingCharType.IsChar():
+
                             AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
                             break;
                     }
@@ -2326,7 +2493,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             AnalyzeRemove_Int32(consumer, element, invokedExpression, startIndexArgument);
                             break;
 
-                        case ([{ Type: var startIndexType }, { Type: var countType }], [var startIndexArgument, var countArgument]) when startIndexType.IsInt() && countType.IsInt():
+                        case ([{ Type: var startIndexType }, { Type: var countType }], [var startIndexArgument, var countArgument])
+                            when startIndexType.IsInt() && countType.IsInt():
+
                             AnalyzeRemove_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, countArgument);
                             break;
                     }
@@ -2463,7 +2632,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             AnalyzeStartsWith_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument]) when valueType.IsString() && IsStringComparison(stringComparisonType):
+                        case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                            when valueType.IsString() && IsStringComparison(stringComparisonType):
+
                             AnalyzeStartsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                             break;
                     }

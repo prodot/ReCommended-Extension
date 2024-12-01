@@ -23,4 +23,14 @@ internal sealed class CollectionExpressionCollectionCreation(ICollectionExpressi
     public override int Count => collectionExpression.CollectionElements.Count;
 
     public override IEnumerable<IInitializerElement> Elements => collectionExpression.CollectionElements;
+
+    public override IInitializerElement SingleElement
+    {
+        get
+        {
+            Debug.Assert(collectionExpression.CollectionElements.Count == 1);
+
+            return collectionExpression.CollectionElements[0];
+        }
+    }
 }

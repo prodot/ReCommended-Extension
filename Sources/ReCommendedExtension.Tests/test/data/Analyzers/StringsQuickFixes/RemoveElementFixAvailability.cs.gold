@@ -4,25 +4,32 @@ namespace Test
 {
     public class Strings
     {
+        public void IndexOfAny(string text, int startIndex, int count)
+        {
+            var result1 = text.IndexOfAny(['a', |'a'|(0)]);
+            var result2 = text.IndexOfAny(['a', |'a'|(1)], startIndex);
+            var result3 = text.IndexOfAny(['a', |'a'|(2)], startIndex, count);
+        }
+
         public void Split(string text, int count, StringSplitOptions options)
         {
-            var result12 = text.Split(['a', 'b', |'a'|(0)]);
-            var result13 = text.Split(new[] { 'a', 'b', |'a'|(1) });
+            var result12 = text.Split(['a', 'b', |'a'|(3)]);
+            var result13 = text.Split(new[] { 'a', 'b', |'a'|(4) });
 
-            var result21 = text.Split(['a', 'b', |'a'|(2)], count);
-            var result22 = text.Split(new[] { 'a', 'b', |'a'|(3) }, count);
+            var result21 = text.Split(['a', 'b', |'a'|(5)], count);
+            var result22 = text.Split(new[] { 'a', 'b', |'a'|(6) }, count);
 
-            var result31 = text.Split(['a', 'b', |'a'|(4)], options);
-            var result32 = text.Split(new[] { 'a', 'b', |'a'|(5) }, options);
+            var result31 = text.Split(['a', 'b', |'a'|(7)], options);
+            var result32 = text.Split(new[] { 'a', 'b', |'a'|(8) }, options);
 
-            var result41 = text.Split(['a', 'b', |'a'|(6)], count, options);
-            var result42 = text.Split(new[] { 'a', 'b', |'a'|(7) }, count, options);
+            var result41 = text.Split(['a', 'b', |'a'|(9)], count, options);
+            var result42 = text.Split(new[] { 'a', 'b', |'a'|(10) }, count, options);
 
-            var result51 = text.Split(["aa", "bb", |"aa"|(8)], options);
-            var result52 = text.Split(new[] { "aa", "bb", |"aa"|(9) }, options);
+            var result51 = text.Split(["aa", "bb", |"aa"|(11)], options);
+            var result52 = text.Split(new[] { "aa", "bb", |"aa"|(12) }, options);
 
-            var result61 = text.Split(["aa", "bb", |"aa"|(10)], count, options);
-            var result62 = text.Split(new[] { "aa", "bb", |"aa"|(11) }, count, options);
+            var result61 = text.Split(["aa", "bb", |"aa"|(13)], count, options);
+            var result62 = text.Split(new[] { "aa", "bb", |"aa"|(14) }, count, options);
         }
     }
 }
@@ -51,15 +58,24 @@ Remove element
 7: The character is already passed.
 QUICKFIXES:
 Remove element
-8: The string is already passed.
+8: The character is already passed.
 QUICKFIXES:
 Remove element
-9: The string is already passed.
+9: The character is already passed.
 QUICKFIXES:
 Remove element
-10: The string is already passed.
+10: The character is already passed.
 QUICKFIXES:
 Remove element
 11: The string is already passed.
+QUICKFIXES:
+Remove element
+12: The string is already passed.
+QUICKFIXES:
+Remove element
+13: The string is already passed.
+QUICKFIXES:
+Remove element
+14: The string is already passed.
 QUICKFIXES:
 Remove element

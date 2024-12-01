@@ -80,6 +80,8 @@ internal abstract class CollectionCreation
 
     public abstract IEnumerable<IInitializerElement> Elements { get; }
 
+    public abstract IInitializerElement SingleElement { get; }
+
     public IEnumerable<(IInitializerElement, char)> ElementsWithCharConstants
     {
         get

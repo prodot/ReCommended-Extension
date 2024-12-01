@@ -36,5 +36,12 @@ namespace Test
             var result64 = text.IndexOf(s, StringComparison.OrdinalIgnoreCase) == -1;
             var result65 = text.IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0;
         }
+
+        public void IndexOfAny(string text, int startIndex, int count)
+        {
+            var result1 = text.IndexOfAny([c]);
+            var result2 = text.IndexOfAny([c], startIndex);
+            var result3 = text.IndexOfAny([c], startIndex, count);
+        }
     }
 }
