@@ -354,6 +354,34 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80]
+    public void TestLastIndexOfAny()
+    {
+        Test("abcde", text => text.LastIndexOfAny([]), _ => -1);
+        Test("abcde", text => text.LastIndexOfAny(['c']), text => text.LastIndexOf('c'));
+        TestNullable("abcde", text => text?.LastIndexOfAny(['c']), text => text?.LastIndexOf('c'));
+        Test("abcde", text => text.LastIndexOfAny(['b', 'c', 'c']), text => text.LastIndexOfAny(['b', 'c']));
+        TestNullable("abcde", text => text?.LastIndexOfAny(['b', 'c', 'c']), text => text?.LastIndexOfAny(['b', 'c']));
+
+        Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0), _ => -1);
+        Test("abcde", text => text.LastIndexOfAny(['c'], 4), text => text.LastIndexOf('c', 4));
+        TestNullable("abcde", text => text?.LastIndexOfAny(['c'], 4), text => text?.LastIndexOf('c', 4));
+        Test("abcde", text => text.LastIndexOfAny(['b', 'c', 'c'], 4), text => text.LastIndexOfAny(['b', 'c'], 4));
+        TestNullable("abcde", text => text?.LastIndexOfAny(['b', 'c', 'c'], 4), text => text?.LastIndexOfAny(['b', 'c'], 4));
+
+        Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0, 0), _ => -1);
+        Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0, 1), _ => -1);
+        Test("abcde", text => text.LastIndexOfAny(['c'], 4, 3), text => text.LastIndexOf('c', 4, 3));
+        TestNullable("abcde", text => text?.LastIndexOfAny(['c'], 4, 3), text => text?.LastIndexOf('c', 4, 3));
+        Test("abcde", text => text.LastIndexOfAny(['b', 'c', 'c'], 4, 3), text => text.LastIndexOfAny(['b', 'c'], 4, 3));
+        TestNullable("abcde", text => text?.LastIndexOfAny(['b', 'c', 'c'], 4, 3), text => text?.LastIndexOfAny(['b', 'c'], 4, 3));
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestPadLeft()

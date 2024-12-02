@@ -38,6 +38,14 @@ namespace Test
             var result = text.LastIndexOf(c, 0);
         }
 
+        public void LastIndexOfAny(string text, char[] c)
+        {
+            var result1 = text.LastIndexOfAny([]);
+            var result2 = text.LastIndexOfAny(c, 0);
+            var result3 = text.LastIndexOfAny(c, 0, 0);
+            var result4 = text.LastIndexOfAny(c, 0, 1);
+        }
+
         public void Remove(string text)
         {
             var result = text.Remove(0);

@@ -38,68 +38,76 @@ namespace Test
             var result = |text.LastIndexOf(c, 0)|(10);
         }
 
+        public void LastIndexOfAny(string text, char[] c)
+        {
+            var result1 = |text.LastIndexOfAny([])|(11);
+            var result2 = |text.LastIndexOfAny(c, 0)|(12);
+            var result3 = |text.LastIndexOfAny(c, 0, 0)|(13);
+            var result4 = |text.LastIndexOfAny(c, 0, 1)|(14);
+        }
+
         public void Remove(string text)
         {
-            var result = |text.Remove(0)|(11);
+            var result = |text.Remove(0)|(15);
         }
 
         public void Split(string text, string s, int count, StringSplitOptions options)
         {
-            var result11 = |text.Split('a', 0)|(12);
-            var result12 = |text.Split('a', 0, options)|(13);
-            var result13 = |text.Split('a', 1)|(14);
-            var result14 = |text.Split('a', 1, StringSplitOptions.None)|(15);
-            var result15 = |text.Split('a', 1, StringSplitOptions.TrimEntries)|(16);
+            var result11 = |text.Split('a', 0)|(16);
+            var result12 = |text.Split('a', 0, options)|(17);
+            var result13 = |text.Split('a', 1)|(18);
+            var result14 = |text.Split('a', 1, StringSplitOptions.None)|(19);
+            var result15 = |text.Split('a', 1, StringSplitOptions.TrimEntries)|(20);
 
-            var result21 = |text.Split(['a'], 0)|(17);
-            var result22 = |text.Split(['a'], 1)|(18);
+            var result21 = |text.Split(['a'], 0)|(21);
+            var result22 = |text.Split(['a'], 1)|(22);
 
-            var result31 = |text.Split(['a'], 0, options)|(19);
-            var result32 = |text.Split(['a'], 1, StringSplitOptions.None)|(20);
-            var result33 = |text.Split(['a'], 1, StringSplitOptions.TrimEntries)|(21);
+            var result31 = |text.Split(['a'], 0, options)|(23);
+            var result32 = |text.Split(['a'], 1, StringSplitOptions.None)|(24);
+            var result33 = |text.Split(['a'], 1, StringSplitOptions.TrimEntries)|(25);
 
-            var result41 = |text.Split(null as string)|(22);
-            var result42 = |text.Split((string?)null)|(23);
-            var result43 = |text.Split("")|(24);
-            var result44 = |text.Split(null as string, StringSplitOptions.None)|(25);
-            var result45 = |text.Split((string?)null, StringSplitOptions.None)|(26);
-            var result46 = |text.Split("", StringSplitOptions.None)|(27);
-            var result47 = |text.Split(null as string, StringSplitOptions.TrimEntries)|(28);
-            var result48 = |text.Split((string?)null, StringSplitOptions.TrimEntries)|(29);
-            var result49 = |text.Split("", StringSplitOptions.TrimEntries)|(30);
+            var result41 = |text.Split(null as string)|(26);
+            var result42 = |text.Split((string?)null)|(27);
+            var result43 = |text.Split("")|(28);
+            var result44 = |text.Split(null as string, StringSplitOptions.None)|(29);
+            var result45 = |text.Split((string?)null, StringSplitOptions.None)|(30);
+            var result46 = |text.Split("", StringSplitOptions.None)|(31);
+            var result47 = |text.Split(null as string, StringSplitOptions.TrimEntries)|(32);
+            var result48 = |text.Split((string?)null, StringSplitOptions.TrimEntries)|(33);
+            var result49 = |text.Split("", StringSplitOptions.TrimEntries)|(34);
 
-            var result51 = |text.Split(s, 0)|(31);
-            var result52 = |text.Split(s, 0, options)|(32);
-            var result53 = |text.Split(s, 1)|(33);
-            var result54 = |text.Split(s, 1, StringSplitOptions.None)|(34);
-            var result55 = |text.Split(s, 1, StringSplitOptions.TrimEntries)|(35);
-            var result56 = |text.Split(null as string, count)|(36);
-            var result57 = |text.Split(null as string, count, StringSplitOptions.None)|(37);
-            var result58 = |text.Split(null as string, count, StringSplitOptions.TrimEntries)|(38);
-            var result59 = |text.Split("", count)|(39);
-            var result50 = |text.Split("", count, StringSplitOptions.None)|(40);
-            var result5A = |text.Split("", count, StringSplitOptions.TrimEntries)|(41);
+            var result51 = |text.Split(s, 0)|(35);
+            var result52 = |text.Split(s, 0, options)|(36);
+            var result53 = |text.Split(s, 1)|(37);
+            var result54 = |text.Split(s, 1, StringSplitOptions.None)|(38);
+            var result55 = |text.Split(s, 1, StringSplitOptions.TrimEntries)|(39);
+            var result56 = |text.Split(null as string, count)|(40);
+            var result57 = |text.Split(null as string, count, StringSplitOptions.None)|(41);
+            var result58 = |text.Split(null as string, count, StringSplitOptions.TrimEntries)|(42);
+            var result59 = |text.Split("", count)|(43);
+            var result50 = |text.Split("", count, StringSplitOptions.None)|(44);
+            var result5A = |text.Split("", count, StringSplitOptions.TrimEntries)|(45);
 
-            var result61 = |text.Split([""], StringSplitOptions.None)|(42);
-            var result62 = |text.Split([""], StringSplitOptions.TrimEntries)|(43);
-            var result63 = |text.Split(new[] { "" }, StringSplitOptions.None)|(44);
-            var result64 = |text.Split(new[] { "" }, StringSplitOptions.TrimEntries)|(45);
+            var result61 = |text.Split([""], StringSplitOptions.None)|(46);
+            var result62 = |text.Split([""], StringSplitOptions.TrimEntries)|(47);
+            var result63 = |text.Split(new[] { "" }, StringSplitOptions.None)|(48);
+            var result64 = |text.Split(new[] { "" }, StringSplitOptions.TrimEntries)|(49);
 
-            var result71 = |text.Split([s], 0, options)|(46);
-            var result72 = |text.Split([s], 1, StringSplitOptions.None)|(47);
-            var result73 = |text.Split([s], 1, StringSplitOptions.TrimEntries)|(48);
-            var result74 = |text.Split([""], count, StringSplitOptions.None)|(49);
-            var result75 = |text.Split([""], count, StringSplitOptions.TrimEntries)|(50);
-            var result76 = |text.Split(new[] { "" }, count, StringSplitOptions.None)|(51);
-            var result77 = |text.Split(new[] { "" }, count, StringSplitOptions.TrimEntries)|(52);
+            var result71 = |text.Split([s], 0, options)|(50);
+            var result72 = |text.Split([s], 1, StringSplitOptions.None)|(51);
+            var result73 = |text.Split([s], 1, StringSplitOptions.TrimEntries)|(52);
+            var result74 = |text.Split([""], count, StringSplitOptions.None)|(53);
+            var result75 = |text.Split([""], count, StringSplitOptions.TrimEntries)|(54);
+            var result76 = |text.Split(new[] { "" }, count, StringSplitOptions.None)|(55);
+            var result77 = |text.Split(new[] { "" }, count, StringSplitOptions.TrimEntries)|(56);
         }
 
         public void StartsWith(string text, object someObject)
         {
-            var result1 = |text.StartsWith("")|(53);
-            var result2 = |text.StartsWith("", StringComparison.OrdinalIgnoreCase)|(54);
+            var result1 = |text.StartsWith("")|(57);
+            var result2 = |text.StartsWith("", StringComparison.OrdinalIgnoreCase)|(58);
 
-            var result3 = |$"{someObject}".StartsWith(value: "", StringComparison.OrdinalIgnoreCase)|(55);
+            var result3 = |$"{someObject}".StartsWith(value: "", StringComparison.OrdinalIgnoreCase)|(59);
         }
     }
 }
@@ -137,138 +145,150 @@ Replace with '-1'
 10: The expression is always -1.
 QUICKFIXES:
 Replace with '-1'
-11: The expression is always an empty string.
+11: The expression is always -1.
+QUICKFIXES:
+Replace with '-1'
+12: The expression is always -1.
+QUICKFIXES:
+Replace with '-1'
+13: The expression is always -1.
+QUICKFIXES:
+Replace with '-1'
+14: The expression is always -1.
+QUICKFIXES:
+Replace with '-1'
+15: The expression is always an empty string.
 QUICKFIXES:
 Replace with '""'
-12: The expression is always an empty array.
+16: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-13: The expression is always an empty array.
-QUICKFIXES:
-Replace with 'Array.Empty<string>()'
-14: The expression is always an array with a single element.
-QUICKFIXES:
-Replace with 'new[] { text }'
-15: The expression is always an array with a single element.
-QUICKFIXES:
-Replace with 'new[] { text }'
-16: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
 17: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
 18: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-19: The expression is always an empty array.
-QUICKFIXES:
-Replace with 'Array.Empty<string>()'
-20: The expression is always an array with a single element.
+19: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-21: The expression is always an array with a single trimmed element.
+20: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
+21: The expression is always an empty array.
+QUICKFIXES:
+Replace with 'Array.Empty<string>()'
 22: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-23: The expression is always an array with a single element.
+23: The expression is always an empty array.
 QUICKFIXES:
-Replace with 'new[] { text }'
+Replace with 'Array.Empty<string>()'
 24: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-25: The expression is always an array with a single element.
+25: The expression is always an array with a single trimmed element.
 QUICKFIXES:
-Replace with 'new[] { text }'
+Replace with 'new[] { text.Trim() }'
 26: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
 27: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-28: The expression is always an array with a single trimmed element.
+28: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+29: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+30: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+31: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+32: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-29: The expression is always an array with a single trimmed element.
+33: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-30: The expression is always an array with a single trimmed element.
+34: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-31: The expression is always an empty array.
+35: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-32: The expression is always an empty array.
+36: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-33: The expression is always an array with a single element.
-QUICKFIXES:
-Replace with 'new[] { text }'
-34: The expression is always an array with a single element.
-QUICKFIXES:
-Replace with 'new[] { text }'
-35: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
-36: The expression is always an array with a single element.
-QUICKFIXES:
-Replace with 'new[] { text }'
 37: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-38: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
-39: The expression is always an array with a single element.
+38: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
+39: The expression is always an array with a single trimmed element.
+QUICKFIXES:
+Replace with 'new[] { text.Trim() }'
 40: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-41: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
-42: The expression is always an array with a single element.
+41: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-43: The expression is always an array with a single trimmed element.
+42: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
+43: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
 44: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
 45: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-46: The expression is always an empty array.
+46: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+47: The expression is always an array with a single trimmed element.
+QUICKFIXES:
+Replace with 'new[] { text.Trim() }'
+48: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+49: The expression is always an array with a single trimmed element.
+QUICKFIXES:
+Replace with 'new[] { text.Trim() }'
+50: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-47: The expression is always an array with a single element.
-QUICKFIXES:
-Replace with 'new[] { text }'
-48: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
-49: The expression is always an array with a single element.
-QUICKFIXES:
-Replace with 'new[] { text }'
-50: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
 51: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
 52: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-53: The expression is always true.
+53: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+54: The expression is always an array with a single trimmed element.
+QUICKFIXES:
+Replace with 'new[] { text.Trim() }'
+55: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+56: The expression is always an array with a single trimmed element.
+QUICKFIXES:
+Replace with 'new[] { text.Trim() }'
+57: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-54: The expression is always true.
+58: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-55: The expression is always true.
+59: The expression is always true.
 QUICKFIXES:
 Replace with 'true'

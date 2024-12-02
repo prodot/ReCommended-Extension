@@ -11,6 +11,13 @@ namespace Test
             var result3 = text.IndexOfAny(['a', 'a'], startIndex, count);
         }
 
+        public void LastIndexOfAny(string text, int startIndex, int count)
+        {
+            var result1 = text.LastIndexOfAny(['a', 'a']);
+            var result2 = text.LastIndexOfAny(['a', 'a'], startIndex);
+            var result3 = text.LastIndexOfAny(['a', 'a'], startIndex, count);
+        }
+
         public void Split(string text, int count, StringSplitOptions options)
         {
             var result12 = text.Split(['a', 'b', 'a']);

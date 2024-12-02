@@ -43,5 +43,12 @@ namespace Test
             var result2 = text.IndexOfAny([c], startIndex);
             var result3 = text.IndexOfAny([c], startIndex, count);
         }
+
+        public void LastIndexOfAny(string text, int startIndex, int count)
+        {
+            var result1 = text.LastIndexOfAny([c]);
+            var result2 = text.LastIndexOfAny([c], startIndex);
+            var result3 = text.LastIndexOfAny([c], startIndex, count);
+        }
     }
 }

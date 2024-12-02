@@ -50,6 +50,20 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     public void TestIndexOfAny_CharArray_Empty() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestLastIndexOfAny_CharArray_Empty() => DoNamedTest2();
+
+    [Test]
+    public void TestLastIndexOfAny_CharArray_0() => DoNamedTest2();
+
+    [Test]
+    public void TestLastIndexOfAny_CharArray_0_0() => DoNamedTest2();
+
+    [Test]
+    public void TestLastIndexOfAny_CharArray_0_1() => DoNamedTest2();
+
+    [Test]
     public void TestLastIndexOf_Char_0() => DoNamedTest2();
 
     [Test]

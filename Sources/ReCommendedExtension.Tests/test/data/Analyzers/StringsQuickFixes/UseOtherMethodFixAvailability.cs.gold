@@ -43,6 +43,13 @@ namespace Test
             var result2 = text.|IndexOfAny([c], startIndex)|(25);
             var result3 = text.|IndexOfAny([c], startIndex, count)|(26);
         }
+
+        public void LastIndexOfAny(string text, int startIndex, int count)
+        {
+            var result1 = text.|LastIndexOfAny([c])|(27);
+            var result2 = text.|LastIndexOfAny([c], startIndex)|(28);
+            var result3 = text.|LastIndexOfAny([c], startIndex, count)|(29);
+        }
     }
 }
 ------------------------------------------------
@@ -127,3 +134,12 @@ Replace with 'IndexOf(c, startIndex)'
 26: Use the 'IndexOf' method.
 QUICKFIXES:
 Replace with 'IndexOf(c, startIndex, count)'
+27: Use the 'LastIndexOf' method.
+QUICKFIXES:
+Replace with 'LastIndexOf(c)'
+28: Use the 'LastIndexOf' method.
+QUICKFIXES:
+Replace with 'LastIndexOf(c, startIndex)'
+29: Use the 'LastIndexOf' method.
+QUICKFIXES:
+Replace with 'LastIndexOf(c, startIndex, count)'

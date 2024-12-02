@@ -1122,6 +1122,160 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
+    /// <c>text.LastIndexOfAny([])</c> → <c>-1</c><para/>
+    /// <c>text.LastIndexOfAny([c])</c> → <c>text.LastIndexOf(c)</c><para/>
+    /// <c>text.LastIndexOfAny(['a', 'a', 'b'])</c> → <c>text.LastIndexOfAny(['a', 'b'])</c>
+    /// </remarks>
+    void AnalyzeLastIndexOfAny_CharArray(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument anyOfArgument)
+    {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
+        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        {
+            case { Count: 0 } when !invocationExpression.IsUsedAsStatement()
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+
+                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1.", invocationExpression, "-1"));
+                break;
+
+            case { Count: 1 } collectionCreation
+                when PredefinedType.STRING_FQN.HasMethod(nameof(string.LastIndexOf), ParameterTypes.Char, invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherMethodSuggestion(
+                        $"Use the '{nameof(string.LastIndexOf)}' method.",
+                        invocationExpression,
+                        invokedExpression,
+                        nameof(string.LastIndexOf),
+                        false,
+                        [collectionCreation.SingleElement.GetText()]));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<char>(collectionCreation.Count);
+
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.LastIndexOfAny(chars, 0)</c> → <c>-1</c><para/>
+    /// <c>text.LastIndexOfAny([c], startIndex)</c> → <c>text.LastIndexOf(c, startIndex)</c><para/>
+    /// <c>text.LastIndexOfAny(['a', 'a', 'b'], startIndex)</c> → <c>text.LastIndexOfAny(['a', 'b'], startIndex)</c>
+    /// </remarks>
+    void AnalyzeLastIndexOfAny_CharArray_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument anyOfArgument,
+        ICSharpArgument startIndexArgument)
+    {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
+        if (startIndexArgument.Value.TryGetInt32Constant() == 0
+            && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+        {
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1.", invocationExpression, "-1"));
+            return;
+        }
+
+        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.LastIndexOf), ParameterTypes.Char_Int32, invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherMethodSuggestion(
+                        $"Use the '{nameof(string.LastIndexOf)}' method.",
+                        invocationExpression,
+                        invokedExpression,
+                        nameof(string.LastIndexOf),
+                        false,
+                        [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText()]));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<char>(collectionCreation.Count);
+
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.LastIndexOfAny([c], 0, 0)</c> → <c>-1</c><para/>
+    /// <c>text.LastIndexOfAny([c], 0, 1)</c> → <c>-1</c><para/>
+    /// <c>text.LastIndexOfAny([c], startIndex, count)</c> → <c>text.LastIndexOf(c, startIndex, count)</c><para/>
+    /// <c>text.LastIndexOfAny(['a', 'a', 'b'], startIndex, count)</c> → <c>text.LastIndexOfAny(['a', 'a'], startIndex, count)</c>
+    /// </remarks>
+    void AnalyzeLastIndexOfAny_CharArray_Int32_Int32(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument anyOfArgument,
+        ICSharpArgument startIndexArgument,
+        ICSharpArgument countArgument)
+    {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
+        if (startIndexArgument.Value.TryGetInt32Constant() == 0
+            && countArgument.Value.TryGetInt32Constant() is 0 or 1
+            && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+        {
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always -1.", invocationExpression, "-1"));
+            return;
+        }
+
+        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
+                && countArgument.Value is { }
+                && PredefinedType.STRING_FQN.HasMethod(nameof(string.LastIndexOf), ParameterTypes.Char_Int32_Int32, invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherMethodSuggestion(
+                        $"Use the '{nameof(string.LastIndexOf)}' method.",
+                        invocationExpression,
+                        invokedExpression,
+                        nameof(string.LastIndexOf),
+                        false,
+                        [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText(), countArgument.Value.GetText()]));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<char>(collectionCreation.Count);
+
+                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
+                {
+                    if (!set.Add(character))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                    }
+                }
+                break;
+        }
+    }
+
+    /// <remarks>
     /// <c>text.PadLeft(0)</c> → <c>text</c>
     /// </remarks>
     static void AnalyzePadLeft_Int32(
@@ -2440,6 +2594,34 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             when valueType.IsString() && IsStringComparison(stringComparisonType):
 
                             AnalyzeLastIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                            break;
+                    }
+                    break;
+
+                case nameof(string.LastIndexOfAny):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var anyOfType }], [var anyOfArgument]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
+                            AnalyzeLastIndexOfAny_CharArray(consumer, element, invokedExpression, anyOfArgument);
+                            break;
+
+                        case ([{ Type: var anyOfType }, { Type: var startIndexType }], [var anyOfArgument, var startIndexArgument])
+                            when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt():
+
+                            AnalyzeLastIndexOfAny_CharArray_Int32(consumer, element, invokedExpression, anyOfArgument, startIndexArgument);
+                            break;
+
+                        case ([{ Type: var anyOfType }, { Type: var startIndexType }, { Type: var countType }], [
+                            var anyOfArgument, var startIndexArgument, var valueArgument
+                        ]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && countType.IsInt():
+
+                            AnalyzeLastIndexOfAny_CharArray_Int32_Int32(
+                                consumer,
+                                element,
+                                invokedExpression,
+                                anyOfArgument,
+                                startIndexArgument,
+                                valueArgument);
                             break;
                     }
                     break;

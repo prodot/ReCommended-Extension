@@ -101,4 +101,19 @@ public sealed class UseOtherMethodQuickFixTests : QuickFixTestBase<UseOtherMetho
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
     public void TestIndexOfAny_CharArray_Int32_Int32_SingleElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestLastIndexOfAny_CharArray_SingleElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestLastIndexOfAny_CharArray_Int32_SingleElement() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void TestLastIndexOfAny_CharArray_Int32_Int32_SingleElement() => DoNamedTest2();
 }
