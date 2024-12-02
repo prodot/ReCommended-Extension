@@ -138,7 +138,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
     /// <remarks>
     /// <c>text.Contains("")</c> → <c>true</c><para/>
-    /// <c>text.Contains(string)</c> → <c>text.Contains(char)</c> (.NET Core 2.1)
+    /// <c>text.Contains("a")</c> → <c>text.Contains('a')</c> (.NET Core 2.1)
     /// </remarks>
     void AnalyzeContains_String(
         IHighlightingConsumer consumer,
@@ -175,7 +175,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
     /// <remarks>
     /// <c>text.Contains("", StringComparison)</c> → <c>true</c><para/>
-    /// <c>text.Contains(string, StringComparison)</c> → <c>text.Contains(char, StringComparison)</c> (.NET Core 2.1)
+    /// <c>text.Contains("a", StringComparison)</c> → <c>text.Contains('a', StringComparison)</c> (.NET Core 2.1)
     /// </remarks>
     void AnalyzeContains_String_StringComparison(
         IHighlightingConsumer consumer,
@@ -211,8 +211,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.EndsWith(char)</c> → <c>text is [.., var lastChar] &amp;&amp; lastChar == value</c> (C# 11)<para/>
-    /// <c>text.EndsWith(char)</c> → <c>text is [.., value]</c> (C# 11)
+    /// <c>text.EndsWith(c)</c> → <c>text is [.., var lastChar] &amp;&amp; lastChar == c</c> (C# 11)<para/>
+    /// <c>text.EndsWith('a')</c> → <c>text is [.., 'a']</c> (C# 11)
     /// </remarks>
     void AnalyzeEndsWith_Char(
         IHighlightingConsumer consumer,
@@ -257,9 +257,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.EndsWith("", StringComparison)</c> → <c>true</c><para/>
-    /// <c>text.EndsWith(string, Ordinal)</c> → <c>text is [.., c]</c> (C# 11)<para/>
-    /// <c>text.EndsWith(string, OrdinalIgnoresCase)</c> → <c>text is [.., l or u]</c> (C# 11)
+    /// <c>text.EndsWith("", comparisonType)</c> → <c>true</c><para/>
+    /// <c>text.EndsWith("a", Ordinal)</c> → <c>text is [.., 'a']</c> (C# 11)<para/>
+    /// <c>text.EndsWith("a", OrdinalIgnoresCase)</c> → <c>text is [.., 'a' or 'A']</c> (C# 11)
     /// </remarks>
     void AnalyzeEndsWith_String_StringComparison(
         IHighlightingConsumer consumer,
@@ -324,15 +324,15 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf(char) == 0</c> → <c>text is [var firstChar, ..] &amp;&amp; firstChar == value</c> (C# 11)<para/>
-    /// <c>text.IndexOf(char) == 0</c> → <c>text is [value, ..]</c> (C# 11)<para/>
-    /// <c>text.IndexOf(char) != 0</c> → <c>text is not [var firstChar, ..] || firstChar != value</c> (C# 11)<para/>
-    /// <c>text.IndexOf(char) != 0</c> → <c>text is not [value, ..]</c> (C# 11)<para/>
-    /// <c>text.IndexOf(char) > -1</c> → <c>text.Contains(char)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(char) != -1</c> → <c>text.Contains(char) (.NET Core 2.1)</c><para/>
-    /// <c>text.IndexOf(char) >= 0</c> → <c>text.Contains(char) (.NET Core 2.1)</c><para/>
-    /// <c>text.IndexOf(char) == -1</c> → <c>!text.Contains(char) (.NET Core 2.1)</c><para/>
-    /// <c>text.IndexOf(char) &lt; 0</c> → <c>!text.Contains(char) (.NET Core 2.1)</c>
+    /// <c>text.IndexOf(c) == 0</c> → <c>text is [var firstChar, ..] &amp;&amp; firstChar == c</c> (C# 11)<para/>
+    /// <c>text.IndexOf('a') == 0</c> → <c>text is ['a', ..]</c> (C# 11)<para/>
+    /// <c>text.IndexOf(c) != 0</c> → <c>text is not [var firstChar, ..] || firstChar != c</c> (C# 11)<para/>
+    /// <c>text.IndexOf('a') != 0</c> → <c>text is not ['a', ..]</c> (C# 11)<para/>
+    /// <c>text.IndexOf(c) > -1</c> → <c>text.Contains(c)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(c) != -1</c> → <c>text.Contains(c) (.NET Core 2.1)</c><para/>
+    /// <c>text.IndexOf(c) >= 0</c> → <c>text.Contains(c) (.NET Core 2.1)</c><para/>
+    /// <c>text.IndexOf(c) == -1</c> → <c>!text.Contains(c) (.NET Core 2.1)</c><para/>
+    /// <c>text.IndexOf(c) &lt; 0</c> → <c>!text.Contains(c) (.NET Core 2.1)</c>
     /// </remarks>
     void AnalyzeIndexOf_Char(
         IHighlightingConsumer consumer,
@@ -439,7 +439,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf(char, 0)</c> → <c>text.IndexOf(char)</c>
+    /// <c>text.IndexOf(c, 0)</c> → <c>text.IndexOf(c)</c>
     /// </remarks>
     static void AnalyzeIndexOf_Char_Int32(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument startIndexArgument)
     {
@@ -451,11 +451,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf(char, StringComparison) > -1</c> → <c>text.Contains(char, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(char, StringComparison) != -1</c> → <c>text.Contains(char, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(char, StringComparison) >= 0</c> → <c>text.Contains(char, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(char, StringComparison) == -1</c> → <c>!text.Contains(char, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(char, StringComparison) &lt; 0</c> → <c>!text.Contains(char, StringComparison)</c> (.NET Core 2.1)
+    /// <c>text.IndexOf(c, comparisonType) > -1</c> → <c>text.Contains(c, comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(c, comparisonType) != -1</c> → <c>text.Contains(c, comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(c, comparisonType) >= 0</c> → <c>text.Contains(c, comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(c, comparisonType) == -1</c> → <c>!text.Contains(c, comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(c, comparisonType) &lt; 0</c> → <c>!text.Contains(c, comparisonType)</c> (.NET Core 2.1)
     /// </remarks>
     void AnalyzeIndexOf_Char_StringComparison(
         IHighlightingConsumer consumer,
@@ -546,15 +546,15 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf("")</c> → 0<para/>
-    /// <c>text.IndexOf(string)</c> → <c>text.IndexOf(char, CurrentCulture)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string) == 0</c> → <c>text.StartsWith(string)</c><para/>
-    /// <c>text.IndexOf(string) != 0</c> → <c>!text.StartsWith(string)</c><para/>
-    /// <c>text.IndexOf(string) > -1</c> → <c>text.Contains(string, CurrentCulture)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string) != -1</c> → <c>text.Contains(string, CurrentCulture)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string) >= 0</c> → <c>text.Contains(string, CurrentCulture)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string) == -1</c> → <c>!text.Contains(string, CurrentCulture)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string) &lt; 0</c> → <c>!text.Contains(string, CurrentCulture)</c> (.NET Core 2.1)
+    /// <c>text.IndexOf("")</c> → <c>0</c><para/>
+    /// <c>text.IndexOf("a")</c> → <c>text.IndexOf('a', CurrentCulture)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s) == 0</c> → <c>text.StartsWith(s)</c><para/>
+    /// <c>text.IndexOf(s) != 0</c> → <c>!text.StartsWith(s)</c><para/>
+    /// <c>text.IndexOf(s) > -1</c> → <c>text.Contains(s, CurrentCulture)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s) != -1</c> → <c>text.Contains(s, CurrentCulture)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s) >= 0</c> → <c>text.Contains(s, CurrentCulture)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s) == -1</c> → <c>!text.Contains(s, CurrentCulture)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s) &lt; 0</c> → <c>!text.Contains(s, CurrentCulture)</c> (.NET Core 2.1)
     /// </remarks>
     void AnalyzeIndexOf_String(
         IHighlightingConsumer consumer,
@@ -708,7 +708,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf(string, 0)</c> → <c>text.IndexOf(string)</c>
+    /// <c>text.IndexOf(s, 0)</c> → <c>text.IndexOf(s)</c>
     /// </remarks>
     static void AnalyzeIndexOf_String_Int32(
         IHighlightingConsumer consumer,
@@ -724,14 +724,14 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
     /// <remarks>
     /// <c>text.IndexOf("", StringComparison)</c> → <c>0</c><para/>
-    /// <c>text.IndexOf(string, StringComparison)</c> → <c>text.IndexOf(char, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string, StringComparison) == 0</c> → <c>text.StartsWith(string, StringComparison)</c><para/>
-    /// <c>text.IndexOf(string, StringComparison) != 0</c> → <c>!text.StartsWith(string, StringComparison)</c><para/>
-    /// <c>text.IndexOf(string, StringComparison) > -1</c> → <c>text.Contains(string, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string, StringComparison) != -1</c> → <c>text.Contains(string, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string, StringComparison) >= 0</c> → <c>text.Contains(string, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string, StringComparison) == -1</c> → <c>!text.Contains(string, StringComparison)</c> (.NET Core 2.1)<para/>
-    /// <c>text.IndexOf(string, StringComparison) &lt; 0</c> → <c>!text.Contains(string, StringComparison)</c> (.NET Core 2.1)
+    /// <c>text.IndexOf("a", comparisonType)</c> → <c>text.IndexOf('a', comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s, comparisonType) == 0</c> → <c>text.StartsWith(s, comparisonType)</c><para/>
+    /// <c>text.IndexOf(s, comparisonType) != 0</c> → <c>!text.StartsWith(s, comparisonType)</c><para/>
+    /// <c>text.IndexOf(s, comparisonType) > -1</c> → <c>text.Contains(s, comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s, comparisonType) != -1</c> → <c>text.Contains(s, comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s, comparisonType) >= 0</c> → <c>text.Contains(s, comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s, comparisonType) == -1</c> → <c>!text.Contains(s, comparisonType)</c> (.NET Core 2.1)<para/>
+    /// <c>text.IndexOf(s, comparisonType) &lt; 0</c> → <c>!text.Contains(s, comparisonType)</c> (.NET Core 2.1)
     /// </remarks>
     void AnalyzeIndexOf_String_StringComparison(
         IHighlightingConsumer consumer,
@@ -887,7 +887,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf(string, 0, StringComparison)</c> → <c>text.IndexOf(string, StringComparison)</c>
+    /// <c>text.IndexOf(s, 0, comparisonType)</c> → <c>text.IndexOf(s, comparisonType)</c>
     /// </remarks>
     static void AnalyzeIndexOf_String_Int32_StringComparison(
         IHighlightingConsumer consumer,
@@ -904,7 +904,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <remarks>
     /// <c>text.IndexOfAny([])</c> → <c>-1</c><para/>
     /// <c>text.IndexOfAny([c])</c> → <c>text.IndexOf(c)</c><para/>
-    /// <c>text.IndexOfAny(char[])</c> → <c>text.IndexOfAny(char[])</c>
+    /// <c>text.IndexOfAny(['a', 'a', 'b'])</c> → <c>text.IndexOfAny(['a', 'b'])</c>
     /// </remarks>
     void AnalyzeIndexOfAny_CharArray(
         IHighlightingConsumer consumer,
@@ -950,9 +950,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOfAny(char[], 0)</c> → <c>text.IndexOfAny(char[])</c><para/>
-    /// <c>text.IndexOfAny([c], int)</c> → <c>text.IndexOf(c, int)</c><para/>
-    /// <c>text.IndexOfAny(char[], int)</c> → <c>text.IndexOfAny(char[], int)</c>
+    /// <c>text.IndexOfAny(chars, 0)</c> → <c>text.IndexOfAny(chars)</c><para/>
+    /// <c>text.IndexOfAny([c], startIndex)</c> → <c>text.IndexOf(c, startIndex)</c><para/>
+    /// <c>text.IndexOfAny(['a', 'a', 'b'], startIndex)</c> → <c>text.IndexOfAny(['a', 'b'], startIndex)</c>
     /// </remarks>
     static void AnalyzeIndexOfAny_CharArray_Int32(
         IHighlightingConsumer consumer,
@@ -998,8 +998,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOfAny([c], int, int)</c> → <c>text.IndexOf(c, int)</c><para/>
-    /// <c>text.IndexOfAny(char[], int, int)</c> → <c>text.IndexOfAny(char[], int, int)</c>
+    /// <c>text.IndexOfAny([c], startIndex, count)</c> → <c>text.IndexOf(c, startIndex, count)</c><para/>
+    /// <c>text.IndexOfAny(['a', 'a', 'b'], startIndex, count)</c> → <c>text.IndexOfAny(['a', 'a'], startIndex, count)</c>
     /// </remarks>
     static void AnalyzeIndexOfAny_CharArray_Int32_Int32(
         IHighlightingConsumer consumer,
@@ -1040,7 +1040,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.LastIndexOf(char, 0)</c> → <c>-1</c>
+    /// <c>text.LastIndexOf(c, 0)</c> → <c>-1</c>
     /// </remarks>
     void AnalyzeLastIndexOf_Char_Int32(
         IHighlightingConsumer consumer,
@@ -1081,8 +1081,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.LastIndexOf("", StringComparison)</c> → <c>text.Length</c><para/> (.NET 5)
-    /// <c>text.LastIndexOf(string, Ordinal)</c> → <c>text.LastIndexOf(char)</c>
+    /// <c>text.LastIndexOf("", comparisonType)</c> → <c>text.Length</c><para/> (.NET 5)
+    /// <c>text.LastIndexOf("a", Ordinal)</c> → <c>text.LastIndexOf('a')</c>
     /// </remarks>
     static void AnalyzeLastIndexOf_String_StringComparison(
         IHighlightingConsumer consumer,
@@ -1141,8 +1141,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.PadLeft(0, char)</c> → <c>text</c><para/>
-    /// <c>text.PadLeft(int, ' ')</c> → <c>text.PadLeft(int)</c>
+    /// <c>text.PadLeft(0, c)</c> → <c>text</c><para/>
+    /// <c>text.PadLeft(totalWidth, ' ')</c> → <c>text.PadLeft(totalWidth)</c>
     /// </remarks>
     static void AnalyzePadLeft_Int32_Char(
         IHighlightingConsumer consumer,
@@ -1191,8 +1191,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.PadRight(0, char)</c> → <c>text</c><para/>
-    /// <c>text.PadRight(int, ' ')</c> → <c>text.PadRight(int)</c>
+    /// <c>text.PadRight(0, c)</c> → <c>text</c><para/>
+    /// <c>text.PadRight(totalWidth, ' ')</c> → <c>text.PadRight(totalWidth)</c>
     /// </remarks>
     static void AnalyzePadRight_Int32_Char(
         IHighlightingConsumer consumer,
@@ -1223,7 +1223,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
     /// <remarks>
     /// <c>text.Remove(0)</c> → <c>""</c> (.NET 6)<para/>
-    /// <c>text.Remove(int)</c> → <c>text[..startIndex]</c> (C# 8)
+    /// <c>text.Remove(startIndex)</c> → <c>text[..startIndex]</c> (C# 8)
     /// </remarks>
     void AnalyzeRemove_Int32(
         IHighlightingConsumer consumer,
@@ -1261,7 +1261,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Remove(0, int)</c> → <c>text[count..]</c> (C# 8)
+    /// <c>text.Remove(0, count)</c> → <c>text[count..]</c> (C# 8)
     /// </remarks>
     static void AnalyzeRemove_Int32_Int32(
         IHighlightingConsumer consumer,
@@ -1286,8 +1286,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Replace(string, string, Ordinal)</c> → <c>text</c><para/>
-    /// <c>text.Replace(string, string, Ordinal)</c> → <c>text.Replace(char, char)</c>
+    /// <c>text.Replace("abc", "abc", Ordinal)</c> → <c>text</c><para/>
+    /// <c>text.Replace("a", "b", Ordinal)</c> → <c>text.Replace('a', 'b')</c>
     /// </remarks>
     static void AnalyzeReplace_String_String_StringComparison(
         IHighlightingConsumer consumer,
@@ -1340,7 +1340,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Replace(char, char)</c> → <c>text</c>
+    /// <c>text.Replace('a', 'a')</c> → <c>text</c>
     /// </remarks>
     static void AnalyzeReplace_Char_Char(
         IHighlightingConsumer consumer,
@@ -1363,8 +1363,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Replace(string, string)</c> → <c>text</c><para/>
-    /// <c>text.Replace(string, string)</c> → <c>text.Replace(char, char)</c>
+    /// <c>text.Replace("abc", "abc")</c> → <c>text</c><para/>
+    /// <c>text.Replace("a", "b")</c> → <c>text.Replace('a', 'b')</c>
     /// </remarks>
     static void AnalyzeReplace_String_String(
         IHighlightingConsumer consumer,
@@ -1413,9 +1413,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Split(char, 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
-    /// <c>text.Split(char, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split(char, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)
+    /// <c>text.Split(separator, 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)
     /// </remarks>
     void AnalyzeSplit_Char_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -1466,7 +1466,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Split(char[])</c> → <c>text.Split(char[])</c>
+    /// <c>text.Split('a', 'a', 'b')</c> → <c>text.Split('a', 'b')</c>
     /// </remarks>
     static void AnalyzeSplit_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument> arguments)
     {
@@ -1505,9 +1505,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Split(char[], 0)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
-    /// <c>text.Split(char[], 1)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split(char[], int)</c> → <c>text.Split(char[], int)</c><para/>
+    /// <c>text.Split(separator, 0)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(['a', 'a', 'b'], count)</c> → <c>text.Split(['a', 'b'], count)</c><para/>
     /// </remarks>
     void AnalyzeSplit_CharArray_Int32(
         IHighlightingConsumer consumer,
@@ -1560,7 +1560,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Split(char[], StringSplitOptions)</c> → <c>text.Split(char[], StringSplitOptions)</c><para/>
+    /// <c>text.Split(['a', 'a', 'b'], options)</c> → <c>text.Split(['a', 'b'], options)</c><para/>
     /// </remarks>
     static void AnalyzeSplit_CharArray_StringSplitOptions(IHighlightingConsumer consumer, ICSharpArgument separatorArgument)
     {
@@ -1579,10 +1579,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Split(char[], 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
-    /// <c>text.Split(char[], 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split(char[], 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(char[], int, StringSplitOptions)</c> → <c>text.Split(char[], int, StringSplitOptions)</c><para/>
+    /// <c>text.Split(separator, 0, options)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(['a', 'a', 'b'], int, options)</c> → <c>text.Split(['a', 'b'], int, options)</c><para/>
     /// </remarks>
     void AnalyzeSplit_CharArray_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -1653,7 +1653,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <c>text.Split("", None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
     /// <c>text.Split(null, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
     /// <c>text.Split("", TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(string, StringSplitOptions)</c> → <c>text.Split(char, StringSplitOptions)</c>
+    /// <c>text.Split("a", options)</c> → <c>text.Split('a', options)</c>
     /// </remarks>
     void AnalyzeSplit_String_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -1711,14 +1711,14 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Split(string, 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
-    /// <c>text.Split(string, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split(string, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(null, int, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split("", int, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split(null, int, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split("", int, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(string, int, StringSplitOptions)</c> → <c>text.Split(char, int, StringSplitOptions)</c>
+    /// <c>text.Split(separator, 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(null, count, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split("", count, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(null, count, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split("", count, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split("a", count, options)</c> → <c>text.Split('a', count, options)</c>
     /// </remarks>
     void AnalyzeSplit_String_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -1789,8 +1789,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <remarks>
     /// <c>text.Split([""], None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
     /// <c>text.Split([""], TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(string[], StringSplitOptions)</c> → <c>text.Split(char[], StringSplitOptions)</c><para/>
-    /// <c>text.Split(string[], StringSplitOptions)</c> → <c>text.Split(string[], StringSplitOptions)</c>
+    /// <c>text.Split(["a", "b"], options)</c> → <c>text.Split(['a', 'b'], options)</c><para/>
+    /// <c>text.Split(["abc", "abc", "xy"], options)</c> → <c>text.Split(["abc", "xy"], options)</c>
     /// </remarks>
     void AnalyzeSplit_StringArray_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -1877,13 +1877,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Split(string[], 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
-    /// <c>text.Split(string[], 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split(string[], 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split([""], int, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split([""], int, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(string[], int, StringSplitOptions)</c> → <c>text.Split(char[], int, StringSplitOptions)</c><para/>
-    /// <c>text.Split(string[], int, StringSplitOptions)</c> → <c>text.Split(string[], int, StringSplitOptions)</c>
+    /// <c>text.Split(separator, 0, StringSplitOptions)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split(separator, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split([""], count, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
+    /// <c>text.Split([""], count, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
+    /// <c>text.Split(["a", "b"], count, options)</c> → <c>text.Split(['a', 'b'], count, options)</c><para/>
+    /// <c>text.Split(["abc", "abc", "xy"], count, options)</c> → <c>text.Split(["abc", "xy"], count, options)</c>
     /// </remarks>
     void AnalyzeSplit_StringArray_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -1978,8 +1978,8 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.StartsWith(char)</c> → <c>text is [var firstChar, ..] &amp;&amp; firstChar == value</c> (C# 11)<para/>
-    /// <c>text.StartsWith(char)</c> → <c>text is [value, ..]</c> (C# 11)
+    /// <c>text.StartsWith(c)</c> → <c>text is [var firstChar, ..] &amp;&amp; firstChar == c</c> (C# 11)<para/>
+    /// <c>text.StartsWith('a')</c> → <c>text is ['a', ..]</c> (C# 11)
     /// </remarks>
     void AnalyzeStartsWith_Char(
         IHighlightingConsumer consumer,
@@ -2024,9 +2024,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.StartsWith("", StringComparison)</c> → <c>true</c><para/>
-    /// <c>text.StartsWith(string, Ordinal)</c> → <c>text is [c, ..]</c> (C# 11)<para/>
-    /// <c>text.StartsWith(string, OrdinalIgnoresCase)</c> → <c>text is [l or u, ..]</c> (C# 11)
+    /// <c>text.StartsWith("", comparisonType)</c> → <c>true</c><para/>
+    /// <c>text.StartsWith("a", Ordinal)</c> → <c>text is ['a', ..]</c> (C# 11)<para/>
+    /// <c>text.StartsWith("a", OrdinalIgnoresCase)</c> → <c>text is ['a' or 'A', ..]</c> (C# 11)
     /// </remarks>
     void AnalyzeStartsWith_String_StringComparison(
         IHighlightingConsumer consumer,
@@ -2110,7 +2110,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.ToString(IFormatProvider)</c> → <c>text</c>
+    /// <c>text.ToString(provider)</c> → <c>text</c>
     /// </remarks>
     static void AnalyzeToString_IFormatProvider(
         IHighlightingConsumer consumer,
@@ -2130,11 +2130,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <remarks>
     /// <c>text.Trim(null)</c> → <c>text.Trim()</c><para/>
     /// <c>text.Trim([])</c> → <c>text.Trim()</c><para/>
-    /// <c>text.Trim(new char[0])</c> → <c>text.Trim()</c><para/>
-    /// <c>text.Trim(new char[] { })</c> → <c>text.Trim()</c><para/>
-    /// <c>text.Trim(Array.Empty&lt;char&gt;())</c> → <c>text.Trim()</c><para/>
-    /// <c>text.Trim(c, c)</c> → <c>text.Trim(c)</c><para/>
-    /// <c>text.Trim(char[])</c> → <c>text.Trim(char[])</c><para/>
+    /// <c>text.Trim('a', 'a', 'b')</c> → <c>text.Trim('a', 'b')</c>
     /// </remarks>
     static void AnalyzeTrim_CharArray(
         IHighlightingConsumer consumer,
@@ -2194,11 +2190,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <remarks>
     /// <c>text.TrimEnd(null)</c> → <c>text.TrimEnd()</c><para/>
     /// <c>text.TrimEnd([])</c> → <c>text.TrimEnd()</c><para/>
-    /// <c>text.TrimEnd(new char[0])</c> → <c>text.TrimEnd()</c><para/>
-    /// <c>text.TrimEnd(new char[] { })</c> → <c>text.TrimEnd()</c><para/>
-    /// <c>text.TrimEnd(Array.Empty&lt;char&gt;())</c> → <c>text.TrimEnd()</c><para/>
-    /// <c>text.TrimEnd(c, c)</c> → <c>text.TrimEnd(c)</c><para/>
-    /// <c>text.TrimEnd(char[])</c> → <c>text.TrimEnd(char[])</c><para/>
+    /// <c>text.TrimEnd('a', 'a', 'b')</c> → <c>text.TrimEnd('a', 'b')</c>
     /// </remarks>
     static void AnalyzeTrimEnd_CharArray(
         IHighlightingConsumer consumer,
@@ -2258,11 +2250,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <remarks>
     /// <c>text.TrimStart(null)</c> → <c>text.TrimStart()</c><para/>
     /// <c>text.TrimStart([])</c> → <c>text.TrimStart()</c><para/>
-    /// <c>text.TrimStart(new char[0])</c> → <c>text.TrimStart()</c><para/>
-    /// <c>text.TrimStart(new char[] { })</c> → <c>text.TrimStart()</c><para/>
-    /// <c>text.TrimStart(Array.Empty&lt;char&gt;())</c> → <c>text.TrimStart()</c><para/>
-    /// <c>text.TrimStart(c, c)</c> → <c>text.TrimStart(c)</c><para/>
-    /// <c>text.TrimStart(char[])</c> → <c>text.TrimStart(char[])</c><para/>
+    /// <c>text.TrimStart('a', 'a', 'b')</c> → <c>text.TrimStart('a', 'b')</c>
     /// </remarks>
     static void AnalyzeTrimStart_CharArray(
         IHighlightingConsumer consumer,

@@ -74,8 +74,8 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Append(char, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append(char, 1)</c> → <c>builder.Append(char)</c>
+    /// <c>builder.Append(value, 0)</c> → <c>builder</c><para/>
+    /// <c>builder.Append(value, 1)</c> → <c>builder.Append(value)</c>
     /// </remarks>
     static void AnalyzeAppend_Char_Int32(
         IHighlightingConsumer consumer,
@@ -171,7 +171,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     /// <remarks>
     /// <c>builder.Append(null)</c> → <c>builder</c><para/>
     /// <c>builder.Append("")</c> → <c>builder</c><para/>
-    /// <c>builder.Append(string)</c> → <c>builder.Append(char)</c>
+    /// <c>builder.Append("a")</c> → <c>builder.Append('a')</c>
     /// </remarks>
     static void AnalyzeAppend_String(
         IHighlightingConsumer consumer,
@@ -218,8 +218,8 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
     /// <remarks>
     /// <c>builder.Append(null, 0, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append(string, int, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append(string, int, 1)</c> → <c>builder.Append(char)</c>
+    /// <c>builder.Append(value, startIndex, 0)</c> → <c>builder</c><para/>
+    /// <c>builder.Append("abc", 2, 1)</c> → <c>builder.Append('c')</c>
     /// </remarks>
     void AnalyzeAppend_String_Int32_Int32(
         IHighlightingConsumer consumer,
@@ -288,7 +288,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
     /// <remarks>
     /// <c>builder.Append(null, 0, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append(stringBuilder, int, 0)</c> → <c>builder</c>
+    /// <c>builder.Append(value, startIndex, 0)</c> → <c>builder</c>
     /// </remarks>
     void AnalyzeAppend_StringBuilder_Int32_Int32(
         IHighlightingConsumer consumer,
@@ -340,7 +340,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     /// <remarks>
     /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(string, values)</c> → <c>builder.AppendJoin(char, values)</c>
+    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_ObjectArray(
         IHighlightingConsumer consumer,
@@ -435,7 +435,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     /// <c>builder.AppendJoin(separator, new ReadOnlySpan&lt;object?&gt;())</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
     /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(string, values)</c> → <c>builder.AppendJoin(char, values)</c>
+    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_ReadOnlySpanOfObject(
         IHighlightingConsumer consumer,
@@ -528,7 +528,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     /// <remarks>
     /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(string, values)</c> → <c>builder.AppendJoin(char, values)</c>
+    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_IEnumerableOfT(
         IHighlightingConsumer consumer,
@@ -587,7 +587,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     /// <remarks>
     /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(string, values)</c> → <c>builder.AppendJoin(char, values)</c>
+    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_StringArray(
         IHighlightingConsumer consumer,
@@ -682,7 +682,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     /// <c>builder.AppendJoin(separator, new ReadOnlySpan&lt;string?&gt;())</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
     /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(string, values)</c> → <c>builder.AppendJoin(char, values)</c>
+    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_ReadOnlySpanOfString(
         IHighlightingConsumer consumer,
@@ -1117,8 +1117,8 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Insert(int, string, 1)</c> → <c>builder.Insert(int, string)</c><para/>
-    /// <c>builder.Insert(int, string, 1)</c> → <c>builder.Insert(int, char)</c>
+    /// <c>builder.Insert(index, value, 1)</c> → <c>builder.Insert(index, value)</c><para/>
+    /// <c>builder.Insert(index, "a", 1)</c> → <c>builder.Insert(index, 'a')</c>
     /// </remarks>
     static void AnalyzeInsert_Int32_String_Int32(
         IHighlightingConsumer consumer,
@@ -1151,7 +1151,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Insert(int, string)</c> → <c>builder.Insert(int, char)</c>
+    /// <c>builder.Insert(index, "a")</c> → <c>builder.Insert(int, 'a')</c>
     /// </remarks>
     static void AnalyzeInsert_Int32_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
     {
@@ -1173,7 +1173,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Insert(int, null)</c> → <c>builder</c>
+    /// <c>builder.Insert(index, null)</c> → <c>builder</c>
     /// </remarks>
     static void AnalyzeInsert_Int32_Object(
         IHighlightingConsumer consumer,
@@ -1192,8 +1192,8 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Replace(string, string)</c> → <c>text</c><para/>
-    /// <c>builder.Replace(string, string)</c> → <c>text.Replace(char, char)</c>
+    /// <c>builder.Replace("abc", "abc")</c> → <c>text</c><para/>
+    /// <c>builder.Replace("a", "b")</c> → <c>text.Replace('a', 'b')</c>
     /// </remarks>
     static void AnalyzeReplace_String_String(
         IHighlightingConsumer consumer,
@@ -1242,9 +1242,9 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Replace(char, char)</c> → <c>text</c>
+    /// <c>builder.Replace('a', 'a')</c> → <c>text</c>
     /// </remarks>
-    static void AnalyzeReplace_Char_String(
+    static void AnalyzeReplace_Char_Char(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -1264,7 +1264,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Replace(string, string, int, int)</c> → <c>text.Replace(char, char, int, int)</c>
+    /// <c>builder.Replace("a", "b", startIndex, count)</c> → <c>text.Replace('a', 'b', startIndex, count)</c>
     /// </remarks>
     static void AnalyzeReplace_String_String_Int32_Int32(
         IHighlightingConsumer consumer,
@@ -1467,7 +1467,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                         case ([], [{ Type: var oldCharType }, { Type: var newCharType }], [var oldCharArgument, var newCharArgument])
                             when oldCharType.IsChar() && newCharType.IsChar():
 
-                            AnalyzeReplace_Char_String(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
+                            AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
                             break;
 
                         case ([], [{ Type: var oldValueType }, { Type: var newValueType }, { Type: var startIndexType }, { Type: var countType }], [

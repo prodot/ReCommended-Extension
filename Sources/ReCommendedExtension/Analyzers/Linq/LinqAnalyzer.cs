@@ -172,9 +172,9 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
     /// <remarks>
     /// <c>list.FirstOrDefault()</c> → <c>list is [var first, ..] ? first : default</c> (C# 11)<para/>
-    /// <c>list.FirstOrDefault(T)</c> → <c>list is [var first, ..] ? first : defaultValue</c> (C# 11)<para/>
+    /// <c>list.FirstOrDefault(defaultValue)</c> → <c>list is [var first, ..] ? first : defaultValue</c> (C# 11)<para/>
     /// <c>set.FirstOrDefault()</c> → ⚠️<para/>
-    /// <c>set.FirstOrDefault(T)</c> → ⚠️
+    /// <c>set.FirstOrDefault(defaultValue)</c> → ⚠️
     /// </remarks>
     void AnalyzeFirstOrDefault(
         IHighlightingConsumer consumer,
@@ -247,9 +247,9 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
     /// <remarks>
     /// <c>list.LastOrDefault()</c> → <c>list is [.., var last] ? last : default</c> (C# 11)<para/>
-    /// <c>list.LastOrDefault(T)</c> → <c>list is [.., var last] ? last : defaultValue</c> (C# 11)<para/>
+    /// <c>list.LastOrDefault(defaultValue)</c> → <c>list is [.., var last] ? last : defaultValue</c> (C# 11)<para/>
     /// <c>set.LastOrDefault()</c> → ⚠️<para/>
-    /// <c>set.LastOrDefault(T)</c> → ⚠️
+    /// <c>set.LastOrDefault(defaultValue)</c> → ⚠️
     /// </remarks>
     void AnalyzeLastOrDefault(
         IHighlightingConsumer consumer,
@@ -346,7 +346,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
     /// <remarks>
     /// <c>list.SingleOrDefault()</c> → <c>list switch { [] => default, [var item] => item, _ => throw new InvalidOperationException(...) }</c> (C# 11)<para/>
-    /// <c>list.SingleOrDefault(T)</c> → <c>list switch { [] => defaultValue, [var item] => item, _ => throw new InvalidOperationException(...) }</c> (C# 11)
+    /// <c>list.SingleOrDefault(defaultValue)</c> → <c>list switch { [] => defaultValue, [var item] => item, _ => throw new InvalidOperationException(...) }</c> (C# 11)
     /// </remarks>
     void AnalyzeSingleOrDefault(
         IHighlightingConsumer consumer,
