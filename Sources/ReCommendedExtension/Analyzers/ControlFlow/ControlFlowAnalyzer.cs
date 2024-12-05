@@ -12,6 +12,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.ControlFlow;
 
@@ -71,7 +72,7 @@ public sealed class ControlFlowAnalyzer(
 
         if (rootNode.IsNullableWarningsContextEnabled())
         {
-            nullabilityInspector = nullableReferenceTypesDataFlowAnalysisRunSynchronizer.TryGetCSharpCompilerNullableInspector(rootNode);
+            nullabilityInspector = rootNode.TryGetNullableInspector(nullableReferenceTypesDataFlowAnalysisRunSynchronizer);
             inspector = null;
             alwaysSuccessTryCastExpressions = null;
         }
@@ -282,7 +283,7 @@ public sealed class ControlFlowAnalyzer(
     {
         if (nullabilityInspector is { })
         {
-            return nullabilityInspector.GetExpressionNullReferenceStateByNullableContext(expression);
+            return expression.GetNullReferenceStateByNullableContext(nullabilityInspector);
         }
 
         Debug.Assert(inspector is { });

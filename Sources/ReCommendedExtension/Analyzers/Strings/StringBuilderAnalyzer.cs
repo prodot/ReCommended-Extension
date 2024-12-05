@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.Strings.Collections;
 using ReCommendedExtension.Analyzers.Strings.MethodFinding;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.Strings;
 

@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.Collection;
 
@@ -390,7 +391,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         switch (arrayInitializer)
         {
             case { InitializerElements: [_, ..] } when TryGetArrayItemType(arrayInitializer) is { } arrayItemType
-                && arrayInitializer.InitializerElements.All(item => item is { FirstChild: { } treeNode } && treeNode.IsDefaultValueOf(arrayItemType)):
+                && arrayInitializer.InitializerElements.All(
+                    item => item is { FirstChild: ICSharpTreeNode treeNode } && treeNode.IsDefaultValueOf(arrayItemType)):
             {
                 // { d, default, default(T) }  ->  new T[n] // where d is the default value for the T
 

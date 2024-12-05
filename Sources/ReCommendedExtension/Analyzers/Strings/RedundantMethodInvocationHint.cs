@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.Strings;
 

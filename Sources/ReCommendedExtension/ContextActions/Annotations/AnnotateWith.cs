@@ -9,6 +9,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
 

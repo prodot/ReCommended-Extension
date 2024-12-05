@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve.Managed;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
 

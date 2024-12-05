@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
