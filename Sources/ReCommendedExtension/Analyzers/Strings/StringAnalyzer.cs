@@ -4,12 +4,11 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Analyzers.Strings.Collections;
-using ReCommendedExtension.Analyzers.Strings.MethodFinding;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.MethodFinding;
 
 namespace ReCommendedExtension.Analyzers.Strings;
 
@@ -132,19 +131,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     [Pure]
-    static bool ArrayEmptyMethodExists(IPsiModule psiModule)
-        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType
-            && arrayType.Methods.Any(
-                method => method is
-                {
-                    ShortName: nameof(Array.Empty),
-                    IsStatic: true,
-                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                    TypeParameters: [_],
-                    Parameters: [],
-                });
-
-    [Pure]
     static string CreateStringArray(string[] items, ICSharpExpression context)
     {
         if (context.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120 && context.TryGetTargetType() is { })
@@ -154,7 +140,9 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
         if (items is [])
         {
-            if (ArrayEmptyMethodExists(context.GetPsiModule()))
+            if (PredefinedType.ARRAY_FQN.HasMethod(
+                new MethodSignature { Name = nameof(Array.Empty), ParameterTypes = [], GenericParametersCount = 1, IsStatic = true },
+                context.GetPsiModule()))
             {
                 return $"{nameof(Array)}.{nameof(Array.Empty)}<string>()";
             }

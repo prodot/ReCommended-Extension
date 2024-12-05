@@ -9,6 +9,8 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.MethodFinding;
+using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSignature;
 
 namespace ReCommendedExtension.Analyzers.Collection;
 
@@ -47,19 +49,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     }
 
     [Pure]
-    static bool IsEmptyMethod(IMethod method)
-        => method is
-        {
-            ShortName: nameof(Array.Empty),
-            IsStatic: true,
-            AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-            TypeParameters: [_],
-            Parameters: [],
-        };
-
-    [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
-        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } arrayType && arrayType.Methods.Any(IsEmptyMethod);
+        => PredefinedType.ARRAY_FQN.HasMethod(
+            new MethodSignature { Name = nameof(Array.Empty), ParameterTypes = [], GenericParametersCount = 1, IsStatic = true },
+            psiModule);
 
     [Pure]
     static bool HasAccessibleAddMethod(IAccessContext accessContext, ITypeElement typeElement, bool checkBaseClasses = true)
@@ -1079,7 +1072,15 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 break;
 
             case IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression
-                when reference.Resolve().DeclaredElement is IMethod method && method.ContainingType.IsSystemArray() && IsEmptyMethod(method):
+                when reference.Resolve().DeclaredElement is IMethod
+                {
+                    ShortName: nameof(Array.Empty),
+                    IsStatic: true,
+                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                    TypeParameters: [_],
+                    Parameters: [],
+                } method
+                && method.ContainingType.IsSystemArray():
 
                 AnalyzeArrayEmptyInvocation(consumer, invocationExpression);
                 break;

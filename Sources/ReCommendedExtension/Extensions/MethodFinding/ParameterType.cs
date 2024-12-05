@@ -2,7 +2,7 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Modules;
 
-namespace ReCommendedExtension.Analyzers.Strings.MethodFinding;
+namespace ReCommendedExtension.Extensions.MethodFinding;
 
 internal record ParameterType
 {

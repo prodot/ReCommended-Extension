@@ -5,8 +5,8 @@ using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.Strings.Collections;
-using ReCommendedExtension.Analyzers.Strings.MethodFinding;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.MethodFinding;
 
 namespace ReCommendedExtension.Analyzers.Strings;
 
