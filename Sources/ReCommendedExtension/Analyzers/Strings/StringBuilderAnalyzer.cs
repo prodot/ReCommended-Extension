@@ -94,10 +94,8 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 break;
 
             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                nameof(StringBuilder.Append),
-                ParameterTypes.Char,
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Char },
                 invocationExpression.PsiModule):
-
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", repeatCountArgument));
                 break;
         }
@@ -200,8 +198,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 break;
 
             case [var character] when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                nameof(StringBuilder.Append),
-                ParameterTypes.Char,
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Char },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -242,8 +239,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             case (var value, >= 0 and var startIndex, 1) when value.TryGetStringConstant() is { } s
                 && startIndex < s.Length
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    nameof(StringBuilder.Append),
-                    ParameterTypes.Char,
+                    new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Char },
                     valueArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule):
@@ -374,8 +370,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 return;
 
                             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.Object,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                                 invocationExpression.PsiModule):
 
                                 consumer.AddHighlighting(
@@ -385,7 +380,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression,
                                         nameof(StringBuilder.Append),
                                         false,
-                                        [..from e in collectionCreation.Elements select e.GetText()]));
+                                        [collectionCreation.SingleElement.GetText()]));
                                 return;
                         }
                     }
@@ -394,8 +389,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, argument)
                             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.Object,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                                 invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(
@@ -414,8 +408,11 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    ParameterTypes.Char_ObjectArray,
+                    new MethodSignature
+                    {
+                        Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        ParameterTypes = ParameterTypes.Char_ObjectArray,
+                    },
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -469,8 +466,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 return;
 
                             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.Object,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                                 invocationExpression.PsiModule):
 
                                 consumer.AddHighlighting(
@@ -480,17 +476,16 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression,
                                         nameof(StringBuilder.Append),
                                         false,
-                                        [..from e in collectionCreation.Elements select e.GetText()]));
+                                        [collectionCreation.SingleElement.GetText()]));
                                 return;
                         }
                     }
                     else
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !(argumentType.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsObject())
+                            && !argumentType.IsReadOnlySpanOfObject()
                             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.Object,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                                 invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(
@@ -509,8 +504,11 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    ParameterTypes.Char_ReadOnlySpanOfT,
+                    new MethodSignature
+                    {
+                        Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfT,
+                    },
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -550,8 +548,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     return;
 
                 case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    nameof(StringBuilder.Append),
-                    ParameterTypes.Object,
+                    new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                     invocationExpression.PsiModule):
 
                     consumer.AddHighlighting(
@@ -561,16 +558,19 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             invokedExpression,
                             nameof(StringBuilder.Append),
                             false,
-                            [..from e in collectionCreation.Elements select e.GetText()]));
+                            [collectionCreation.SingleElement.GetText()]));
                     return;
             }
         }
 
         if (separatorArgument.Value.TryGetStringConstant() is [var character]
             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                1,
-                ParameterTypes.Char_IEnumerableOfT,
+                new MethodSignature
+                {
+                    Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                    ParameterTypes = ParameterTypes.Char_IEnumerableOfT,
+                    GenericParametersCount = 1,
+                },
                 separatorArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule))
@@ -621,8 +621,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 return;
 
                             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.String,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
                                 invocationExpression.PsiModule):
 
                                 consumer.AddHighlighting(
@@ -632,7 +631,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression,
                                         nameof(StringBuilder.Append),
                                         false,
-                                        [..from e in collectionCreation.Elements select e.GetText()]));
+                                        [collectionCreation.SingleElement.GetText()]));
                                 return;
                         }
                     }
@@ -641,8 +640,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsGenericArrayOf(PredefinedType.STRING_FQN, argument)
                             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.String,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
                                 invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(
@@ -661,8 +659,11 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    ParameterTypes.Char_StringArray,
+                    new MethodSignature
+                    {
+                        Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        ParameterTypes = ParameterTypes.Char_StringArray,
+                    },
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -716,8 +717,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 return;
 
                             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.String,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
                                 invocationExpression.PsiModule):
 
                                 consumer.AddHighlighting(
@@ -727,17 +727,16 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression,
                                         nameof(StringBuilder.Append),
                                         false,
-                                        [..from e in collectionCreation.Elements select e.GetText()]));
+                                        [collectionCreation.SingleElement.GetText()]));
                                 return;
                         }
                     }
                     else
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !(argumentType.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsString())
+                            && !argumentType.IsReadOnlySpanOfString()
                             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.String,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
                                 invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(
@@ -756,8 +755,11 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    ParameterTypes.Char_ReadOnlySpanOfT,
+                    new MethodSignature
+                    {
+                        Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfT,
+                    },
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -808,8 +810,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 break;
 
                             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.Object,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                                 invocationExpression.PsiModule):
 
                                 consumer.AddHighlighting(
@@ -819,7 +820,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression,
                                         nameof(StringBuilder.Append),
                                         false,
-                                        [..from e in collectionCreation.Elements select e.GetText()]));
+                                        [collectionCreation.SingleElement.GetText()]));
                                 break;
                         }
                     }
@@ -828,8 +829,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, argument)
                             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.Object,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                                 invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(
@@ -885,8 +885,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 break;
 
                             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.Object,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                                 invocationExpression.PsiModule):
 
                                 consumer.AddHighlighting(
@@ -896,17 +895,16 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression,
                                         nameof(StringBuilder.Append),
                                         false,
-                                        [.. from e in collectionCreation.Elements select e.GetText()]));
+                                        [collectionCreation.SingleElement.GetText()]));
                                 break;
                         }
                     }
                     else
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !(argumentType.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsObject())
+                            && !argumentType.IsReadOnlySpanOfObject()
                             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.Object,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                                 invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(
@@ -947,8 +945,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     return;
 
                 case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    nameof(StringBuilder.Append),
-                    ParameterTypes.Object,
+                    new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
                     invocationExpression.PsiModule):
 
                     consumer.AddHighlighting(
@@ -958,7 +955,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             invokedExpression,
                             nameof(StringBuilder.Append),
                             false,
-                            [..from e in collectionCreation.Elements select e.GetText()]));
+                            [collectionCreation.SingleElement.GetText()]));
                     return;
             }
         }
@@ -1000,8 +997,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 break;
 
                             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.String,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
                                 invocationExpression.PsiModule):
 
                                 consumer.AddHighlighting(
@@ -1011,7 +1007,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression,
                                         nameof(StringBuilder.Append),
                                         false,
-                                        [.. from e in collectionCreation.Elements select e.GetText()]));
+                                        [collectionCreation.SingleElement.GetText()]));
                                 break;
                         }
                     }
@@ -1020,8 +1016,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsGenericArrayOf(PredefinedType.STRING_FQN, argument)
                             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.String,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
                                 invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(
@@ -1077,8 +1072,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 break;
 
                             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.String,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
                                 invocationExpression.PsiModule):
 
                                 consumer.AddHighlighting(
@@ -1088,17 +1082,16 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression,
                                         nameof(StringBuilder.Append),
                                         false,
-                                        [.. from e in collectionCreation.Elements select e.GetText()]));
+                                        [collectionCreation.SingleElement.GetText()]));
                                 break;
                         }
                     }
                     else
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !(argumentType.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsString())
+                            && !argumentType.IsReadOnlySpanOfString()
                             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                nameof(StringBuilder.Append),
-                                ParameterTypes.String,
+                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
                                 invocationExpression.PsiModule))
                         {
                             consumer.AddHighlighting(
@@ -1133,12 +1126,10 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 break;
 
             case ([var character], 1) when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                nameof(StringBuilder.Insert),
-                ParameterTypes.Int32_Char,
+                new MethodSignature { Name = nameof(StringBuilder.Insert), ParameterTypes = ParameterTypes.Int32_Char },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
-
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character.",
@@ -1157,8 +1148,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     {
         if (valueArgument.Value.TryGetStringConstant() is [var character]
             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                nameof(StringBuilder.Insert),
-                ParameterTypes.Int32_Char,
+                new MethodSignature { Name = nameof(StringBuilder.Insert), ParameterTypes = ParameterTypes.Int32_Char },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule))
@@ -1217,8 +1207,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             if (oldValue is [var oldCharacter]
                 && newValue is [var newCharacter]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    nameof(StringBuilder.Replace),
-                    ParameterTypes.Char_Char,
+                    new MethodSignature { Name = nameof(StringBuilder.Replace), ParameterTypes = ParameterTypes.Char_Char },
                     oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -1275,8 +1264,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         if (oldValueArgument.Value.TryGetStringConstant() is [var oldCharacter]
             && newValueArgument.Value.TryGetStringConstant() is [var newCharacter]
             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                nameof(StringBuilder.Replace),
-                ParameterTypes.Char_Char_Int32_Int32,
+                new MethodSignature { Name = nameof(StringBuilder.Replace), ParameterTypes = ParameterTypes.Char_Char_Int32_Int32 },
                 oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule))
@@ -1307,22 +1295,22 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             } method
             && method.ContainingType.IsClrType(PredefinedType.STRING_BUILDER_FQN))
         {
-            switch (method.ShortName)
+            switch (method.ShortName, method.TypeParameters)
             {
-                case nameof(StringBuilder.Append):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                case (nameof(StringBuilder.Append), []):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([], [{ Type: var valueType }, { Type: var repeatCountType }], [_, var repeatCountArgument])
+                        case ([{ Type: var valueType }, { Type: var repeatCountType }], [_, var repeatCountArgument])
                             when valueType.IsChar() && repeatCountType.IsInt():
 
                             AnalyzeAppend_Char_Int32(consumer, element, invokedExpression, repeatCountArgument);
                             break;
 
-                        case ([], [{ Type: var valueType }], [var valueArgument]) when valueType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
                             AnalyzeAppend_CharArray(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([], [{ Type: var valueType }, { Type: var startIndexType }, { Type: var charCountType }], [
+                        case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var charCountType }], [
                             var valueArgument, var startIndexArgument, var charCountArgument,
                         ]) when valueType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && charCountType.IsInt():
                             AnalyzeAppend_CharArray_Int32_Int32(
@@ -1334,21 +1322,21 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 charCountArgument);
                             break;
 
-                        case ([], [{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
                             AnalyzeAppend_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([], [{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
+                        case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
                             var valueArgument, var startIndexArgument, var countArgument,
                         ]) when valueType.IsString() && startIndexType.IsInt() && countType.IsInt():
                             AnalyzeAppend_String_Int32_Int32(consumer, element, invokedExpression, valueArgument, startIndexArgument, countArgument);
                             break;
 
-                        case ([], [{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(PredefinedType.STRING_BUILDER_FQN):
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(PredefinedType.STRING_BUILDER_FQN):
                             AnalyzeAppend_StringBuilder(consumer, element, invokedExpression, valueArgument);
                             break;
 
-                        case ([], [{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
+                        case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
                             var valueArgument, var startIndexArgument, var countArgument,
                         ]) when valueType.IsClrType(PredefinedType.STRING_BUILDER_FQN) && startIndexType.IsInt() && countType.IsInt():
                             AnalyzeAppend_StringBuilder_Int32_Int32(
@@ -1360,13 +1348,13 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 countArgument);
                             break;
 
-                        case ([], [{ Type: var valueType }], [var valueArgument]) when valueType.IsObject():
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsObject():
                             AnalyzeAppend_Object(consumer, element, invokedExpression, valueArgument);
                             break;
                     }
                     break;
 
-                case "AppendJoin": // todo: use 'nameof(StringBuilder.AppendJoin)' when available
+                case ("AppendJoin", _): // todo: use 'nameof(StringBuilder.AppendJoin)' when available
                     switch (method.TypeParameters, method.Parameters, element.Arguments)
                     {
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
@@ -1376,7 +1364,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             break;
 
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
-                            when separatorType.IsString() && valuesType.IsReadOnlySpan(out var spanType) && spanType.IsObject():
+                            when separatorType.IsString() && valuesType.IsReadOnlySpanOfObject():
 
                             AnalyzeAppendJoin_String_ReadOnlySpanOfObject(consumer, element, invokedExpression, arguments);
                             break;
@@ -1395,7 +1383,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             break;
 
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
-                            when separatorType.IsString() && valuesType.IsReadOnlySpan(out var spanType) && spanType.IsString():
+                            when separatorType.IsString() && valuesType.IsReadOnlySpanOfString():
 
                             AnalyzeAppendJoin_String_ReadOnlySpanOfString(consumer, element, invokedExpression, arguments);
                             break;
@@ -1407,7 +1395,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             break;
 
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
-                            when separatorType.IsChar() && valuesType.IsReadOnlySpan(out var spanType) && spanType.IsObject():
+                            when separatorType.IsChar() && valuesType.IsReadOnlySpanOfObject():
 
                             AnalyzeAppendJoin_Char_ReadOnlySpanOfObject(consumer, element, invokedExpression, arguments);
                             break;
@@ -1425,29 +1413,29 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             break;
 
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
-                            when separatorType.IsChar() && valuesType.IsReadOnlySpan(out var spanType) && spanType.IsString():
+                            when separatorType.IsChar() && valuesType.IsReadOnlySpanOfString():
 
                             AnalyzeAppendJoin_Char_ReadOnlySpanOfString(consumer, element, invokedExpression, arguments);
                             break;
                     }
                     break;
 
-                case nameof(StringBuilder.Insert):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                case (nameof(StringBuilder.Insert), []):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([], [{ Type: var indexType }, { Type: var valueType }, { Type: var countType }], [
-                            _, var valueArgument, var countArgument,
-                        ]) when indexType.IsInt() && valueType.IsString() && countType.IsInt():
+                        case ([{ Type: var indexType }, { Type: var valueType }, { Type: var countType }], [_, var valueArgument, var countArgument])
+                            when indexType.IsInt() && valueType.IsString() && countType.IsInt():
+
                             AnalyzeInsert_Int32_String_Int32(consumer, element, valueArgument, countArgument);
                             break;
 
-                        case ([], [{ Type: var indexType }, { Type: var valueType }], [_, var valueArgument])
+                        case ([{ Type: var indexType }, { Type: var valueType }], [_, var valueArgument])
                             when indexType.IsInt() && valueType.IsString():
 
                             AnalyzeInsert_Int32_String(consumer, element, valueArgument);
                             break;
 
-                        case ([], [{ Type: var indexType }, { Type: var valueType }], [_, var valueArgument])
+                        case ([{ Type: var indexType }, { Type: var valueType }], [_, var valueArgument])
                             when indexType.IsInt() && valueType.IsObject():
 
                             AnalyzeInsert_Int32_Object(consumer, element, invokedExpression, valueArgument);
@@ -1455,22 +1443,22 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     }
                     break;
 
-                case nameof(StringBuilder.Replace):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                case (nameof(StringBuilder.Replace), []):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([], [{ Type: var oldValueType }, { Type: var newValueType }], [var oldValueArgument, var newValueArgument])
+                        case ([{ Type: var oldValueType }, { Type: var newValueType }], [var oldValueArgument, var newValueArgument])
                             when oldValueType.IsString() && newValueType.IsString():
 
                             AnalyzeReplace_String_String(consumer, element, invokedExpression, oldValueArgument, newValueArgument);
                             break;
 
-                        case ([], [{ Type: var oldCharType }, { Type: var newCharType }], [var oldCharArgument, var newCharArgument])
+                        case ([{ Type: var oldCharType }, { Type: var newCharType }], [var oldCharArgument, var newCharArgument])
                             when oldCharType.IsChar() && newCharType.IsChar():
 
                             AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
                             break;
 
-                        case ([], [{ Type: var oldValueType }, { Type: var newValueType }, { Type: var startIndexType }, { Type: var countType }], [
+                        case ([{ Type: var oldValueType }, { Type: var newValueType }, { Type: var startIndexType }, { Type: var countType }], [
                             var oldValueArgument, var newValueArgument, _, _,
                         ]) when oldValueType.IsString() && newValueType.IsString() && startIndexType.IsInt() && countType.IsInt():
                             AnalyzeReplace_String_String_Int32_Int32(consumer, element, oldValueArgument, newValueArgument);

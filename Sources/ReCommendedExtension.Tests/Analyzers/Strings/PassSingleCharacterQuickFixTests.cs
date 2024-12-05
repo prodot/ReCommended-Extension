@@ -52,6 +52,11 @@ public sealed class PassSingleCharacterQuickFixTests : QuickFixTestBase<PassSing
     public void TestIndexOf_StringAsChar_ParameterName_StringComparison() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetCore21]
+    public void TestJoin_SingleChar() => DoNamedTest2();
+
+    [Test]
     public void TestLastIndexOf_StringAsChar_Ordinal() => DoNamedTest2();
 
     [Test]

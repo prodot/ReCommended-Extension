@@ -163,12 +163,18 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
             builder => builder.AppendJoin(",", new object?[] { 1, 2, 3 }.AsSpan()),
             builder => builder.AppendJoin(',', new object?[] { 1, 2, 3 }.AsSpan()));
 
-        Test("abcde", builder => builder.AppendJoin(", ", (int[])[]), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(", ", (int[])[]), builder => builder);
-        Test("abcde", builder => builder.AppendJoin(", ", (int[])[3]), builder => builder.Append(3));
-        TestNullable("abcde", builder => builder?.AppendJoin(", ", (int[])[3]), builder => builder?.Append(3));
-        Test("abcde", builder => builder.AppendJoin(",", (int[])[1, 2, 3]), builder => builder.AppendJoin(',', (int[])[1, 2, 3]));
-        TestNullable("abcde", builder => builder?.AppendJoin(",", (int[])[1, 2, 3]), builder => builder?.AppendJoin(',', (int[])[1, 2, 3]));
+        Test("abcde", builder => builder.AppendJoin(", ", (IEnumerable<int>)[]), builder => builder);
+        TestNullable("abcde", builder => builder?.AppendJoin(", ", (IEnumerable<int>)[]), builder => builder);
+        Test("abcde", builder => builder.AppendJoin(", ", (IEnumerable<int>)[3]), builder => builder.Append(3));
+        TestNullable("abcde", builder => builder?.AppendJoin(", ", (IEnumerable<int>)[3]), builder => builder?.Append(3));
+        Test(
+            "abcde",
+            builder => builder.AppendJoin(",", (IEnumerable<int>)[1, 2, 3]),
+            builder => builder.AppendJoin(',', (IEnumerable<int>)[1, 2, 3]));
+        TestNullable(
+            "abcde",
+            builder => builder?.AppendJoin(",", (IEnumerable<int>)[1, 2, 3]),
+            builder => builder?.AppendJoin(',', (IEnumerable<int>)[1, 2, 3]));
 
         Test("abcde", builder => builder.AppendJoin(", ", (string?[])[]), builder => builder);
         TestNullable("abcde", builder => builder?.AppendJoin(", ", (string?[])[]), builder => builder);
@@ -210,10 +216,10 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", builder => builder.AppendJoin(',', (ReadOnlySpan<object?>)[1]), builder => builder.Append((object)1));
         TestNullable("abcde", builder => builder?.AppendJoin(',', (ReadOnlySpan<object?>)[1]), builder => builder?.Append((object)1));
 
-        Test("abcde", builder => builder.AppendJoin(',', (int[])[]), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(',', (int[])[]), builder => builder);
-        Test("abcde", builder => builder.AppendJoin(',', (int[])[3]), builder => builder.Append(3));
-        TestNullable("abcde", builder => builder?.AppendJoin(',', (int[])[3]), builder => builder?.Append(3));
+        Test("abcde", builder => builder.AppendJoin(',', (IEnumerable<int>)[]), builder => builder);
+        TestNullable("abcde", builder => builder?.AppendJoin(',', (IEnumerable<int>)[]), builder => builder);
+        Test("abcde", builder => builder.AppendJoin(',', (IEnumerable<int>)[3]), builder => builder.Append(3));
+        TestNullable("abcde", builder => builder?.AppendJoin(',', (IEnumerable<int>)[3]), builder => builder?.Append(3));
 
         Test("abcde", builder => builder.AppendJoin(',', (string?[])[]), builder => builder);
         TestNullable("abcde", builder => builder?.AppendJoin(',', (string?[])[]), builder => builder);

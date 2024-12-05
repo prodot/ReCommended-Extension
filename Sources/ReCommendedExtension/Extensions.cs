@@ -112,6 +112,12 @@ internal static class Extensions
                 context.GetTypeConversionRule());
 
     [Pure]
+    public static bool IsReadOnlySpanOfObject(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsObject();
+
+    [Pure]
+    public static bool IsReadOnlySpanOfString(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsString();
+
+    [Pure]
     public static bool IsGenericEnumerableOrDescendant(this IType type)
     {
         if (type.IsGenericIEnumerable())

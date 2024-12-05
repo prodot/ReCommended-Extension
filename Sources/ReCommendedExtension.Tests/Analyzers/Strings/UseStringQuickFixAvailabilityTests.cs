@@ -28,14 +28,14 @@ public sealed class UseStringQuickFixAvailabilityTests : QuickFixAvailabilityTes
             or UseRangeIndexerSuggestion;
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [NullableContext(NullableContextKind.Enable)]
-    [TestNet80]
+    [TestNet90]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
+    [TestNet90]
     public void TestPassSingleCharacterFixAvailability() => DoNamedTest2();
 
     [Test]

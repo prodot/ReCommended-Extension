@@ -35,6 +35,16 @@ namespace Test
             var result21 = text.Split(|"a"|(11), count);
             var result22 = text.Split(|"a"|(12), count, options);
         }
+
+        public void Join(object?[] objectItems, int[] intItems, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings, int startIndex, int count)
+        {
+            var result1 = string.Join(|","|(13), objectItems);
+            var result2 = string.Join(|","|(14), intItems);
+            var result3 = string.Join(|","|(15), stringItems);
+            var result4 = string.Join(|","|(16), spanOfObjects);
+            var result5 = string.Join(|","|(17), spanOfStrings);
+            var result6 = string.Join(|","|(18), stringItems, startIndex, count);
+        }
     }
 }
 ------------------------------------------------
@@ -77,3 +87,21 @@ Replace with 'a'
 12: Pass the single character
 QUICKFIXES:
 Replace with 'a'
+13: Pass the single character.
+QUICKFIXES:
+Replace with ','
+14: Pass the single character.
+QUICKFIXES:
+Replace with ','
+15: Pass the single character.
+QUICKFIXES:
+Replace with ','
+16: Pass the single character.
+QUICKFIXES:
+Replace with ','
+17: Pass the single character.
+QUICKFIXES:
+Replace with ','
+18: Pass the single character.
+QUICKFIXES:
+Replace with ','

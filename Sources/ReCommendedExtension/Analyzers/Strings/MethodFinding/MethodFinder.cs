@@ -9,25 +9,24 @@ internal static class MethodFinder
     [Pure]
     public static bool HasMethod(
         this IClrTypeName clrTypeName,
-        string methodName,
-        [NonNegativeValue] int genericParametersCount,
-        IReadOnlyList<ParameterType> parameterTypes,
+        MethodSignature signature,
         bool returnParameterNames,
         out string[] parameterNames,
         IPsiModule psiModule)
     {
         parameterNames = [];
 
-        if (clrTypeName.TryGetTypeElement(psiModule) is { } stringBuilderType)
+        if (clrTypeName.TryGetTypeElement(psiModule) is { } typeElement)
         {
-            foreach (var method in stringBuilderType.Methods)
+            foreach (var method in typeElement.Methods)
             {
-                if (method is { IsStatic: false, AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC }
-                    && method.ShortName == methodName
-                    && method.TypeParametersCount == genericParametersCount
-                    && method.Parameters.Count == parameterTypes.Count)
+                if (method is { AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC }
+                    && method.IsStatic == signature.IsStatic
+                    && method.ShortName == signature.Name
+                    && method.TypeParametersCount == signature.GenericParametersCount
+                    && method.Parameters.Count == signature.ParameterTypes.Count)
                 {
-                    if (parameterTypes is [])
+                    if (signature.ParameterTypes is [])
                     {
                         return true;
                     }
@@ -36,12 +35,12 @@ internal static class MethodFinder
 
                     if (returnParameterNames)
                     {
-                        parameterNames = new string[parameterTypes.Count];
+                        parameterNames = new string[signature.ParameterTypes.Count];
                     }
 
-                    for (var i = 0; i < parameterTypes.Count; i++)
+                    for (var i = 0; i < signature.ParameterTypes.Count; i++)
                     {
-                        if (parameterTypes[i].IsSameAs(method.Parameters[i].Type, psiModule))
+                        if (signature.ParameterTypes[i].IsSameAs(method.Parameters[i].Type, psiModule))
                         {
                             if (returnParameterNames)
                             {
@@ -69,25 +68,6 @@ internal static class MethodFinder
     }
 
     [Pure]
-    public static bool HasMethod(
-        this IClrTypeName clrTypeName,
-        string methodName,
-        IReadOnlyList<ParameterType> parameterTypes,
-        bool returnParameterNames,
-        out string[] parameterNames,
-        IPsiModule psiModule)
-        => clrTypeName.HasMethod(methodName, 0, parameterTypes, returnParameterNames, out parameterNames, psiModule);
-
-    [Pure]
-    public static bool HasMethod(
-        this IClrTypeName clrTypeName,
-        string methodName,
-        [NonNegativeValue] int genericParametersCount,
-        IReadOnlyList<ParameterType> parameterTypes,
-        IPsiModule psiModule)
-        => clrTypeName.HasMethod(methodName, genericParametersCount, parameterTypes, false, out _, psiModule);
-
-    [Pure]
-    public static bool HasMethod(this IClrTypeName clrTypeName, string methodName, IReadOnlyList<ParameterType> parameterTypes, IPsiModule psiModule)
-        => clrTypeName.HasMethod(methodName, 0, parameterTypes, false, out _, psiModule);
+    public static bool HasMethod(this IClrTypeName clrTypeName, MethodSignature signature, IPsiModule psiModule)
+        => clrTypeName.HasMethod(signature, false, out _, psiModule);
 }

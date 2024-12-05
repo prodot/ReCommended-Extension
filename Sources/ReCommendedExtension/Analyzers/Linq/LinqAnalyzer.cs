@@ -381,73 +381,65 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
             && element is { InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference } invokedExpression }
             && reference.Resolve().DeclaredElement is IMethod
             {
-                IsExtensionMethod: true, AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                TypeParameters: [var typeParameter],
+                IsExtensionMethod: true,
+                AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
             } method
             && method.ContainingType.IsClrType(PredefinedType.ENUMERABLE_CLASS))
         {
             switch (method.ShortName)
             {
                 case nameof(Enumerable.ElementAt):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_, { Type: IDeclaredType indexType }], [{ Value: { } } indexArgument])
+                        case ([_, { Type: IDeclaredType indexType }], [{ Value: { } } indexArgument])
                             when indexType.IsInt() || indexType.IsSystemIndex():
-
                             AnalyzeElementAt(consumer, element, invokedExpression, indexArgument);
                             break;
                     }
                     break;
 
                 case nameof(Enumerable.ElementAtOrDefault):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_, { Type: IDeclaredType indexType }], _) when indexType.IsInt() || indexType.IsSystemIndex():
+                        case ([_, { Type: IDeclaredType indexType }], _) when indexType.IsInt() || indexType.IsSystemIndex():
                             AnalyzeElementAtOrDefault(consumer, element, invokedExpression);
                             break;
                     }
                     break;
 
                 case nameof(Enumerable.First):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_], []):
-                            AnalyzeFirst(consumer, element, invokedExpression);
-                            break;
+                        case ([_], []): AnalyzeFirst(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.FirstOrDefault):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_], []):
-                            AnalyzeFirstOrDefault(consumer, element, invokedExpression);
-                            break;
+                        case ([_], []): AnalyzeFirstOrDefault(consumer, element, invokedExpression); break;
 
-                        case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
+                        case ([_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
                             when typeParameter.Equals(defaultValueType.GetTypeElement()):
-
                             AnalyzeFirstOrDefault(consumer, element, invokedExpression, defaultValueArgument);
                             break;
                     }
                     break;
 
                 case nameof(Enumerable.Last):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_], []):
-                            AnalyzeLast(consumer, element, invokedExpression);
-                            break;
+                        case ([_], []): AnalyzeLast(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.LastOrDefault):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_], []):
-                            AnalyzeLastOrDefault(consumer, element, invokedExpression);
-                            break;
+                        case ([_], []): AnalyzeLastOrDefault(consumer, element, invokedExpression); break;
 
-                        case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
+                        case ([_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
                             when typeParameter.Equals(defaultValueType.GetTypeElement()):
 
                             AnalyzeLastOrDefault(consumer, element, invokedExpression, defaultValueArgument);
@@ -456,31 +448,25 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     break;
 
                 case nameof(Enumerable.LongCount):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_], []):
-                            AnalyzeLongCount(consumer, element, invokedExpression);
-                            break;
+                        case ([_], []): AnalyzeLongCount(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.Single):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_], []):
-                            AnalyzeSingle(consumer, element, invokedExpression);
-                            break;
+                        case ([_], []): AnalyzeSingle(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.SingleOrDefault):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case ([_], [_], []):
-                            AnalyzeSingleOrDefault(consumer, element, invokedExpression);
-                            break;
+                        case ([_], []): AnalyzeSingleOrDefault(consumer, element, invokedExpression); break;
 
-                        case ([var typeParameter], [_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
+                        case ([_, { Type: IDeclaredType defaultValueType }], [{ Value: { } } defaultValueArgument])
                             when typeParameter.Equals(defaultValueType.GetTypeElement()):
 
                             AnalyzeSingleOrDefault(consumer, element, invokedExpression, defaultValueArgument);

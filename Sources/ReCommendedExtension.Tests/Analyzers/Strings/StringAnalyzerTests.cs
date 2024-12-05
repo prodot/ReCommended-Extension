@@ -33,6 +33,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
             or ReturnValueOfPureMethodIsNotUsedWarning; // to figure out which cases are supported by R#
 
+    static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
+
     static void Test<R>(string text, Func<string, R> expected, Func<string, R> actual, bool emptyThrows = false)
     {
         // empty
@@ -325,6 +327,71 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         TestNullable("abcde", text => text?.IndexOfAny(['c'], 1, 3), text => text?.IndexOf('c', 1, 3), true);
         Test("abcde", text => text.IndexOfAny(['b', 'c', 'c'], 1, 3), text => text.IndexOfAny(['b', 'c'], 1, 3), true);
         TestNullable("abcde", text => text?.IndexOfAny(['b', 'c', 'c'], 1, 3), text => text?.IndexOfAny(['b', 'c'], 1, 3), true);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet90]
+    public void TestJoin()
+    {
+        Test(() => string.Join(", ", (object?[])[]), () => "");
+        Test(() => string.Join(", ", (object?[])[100]), () => $"{100}");
+        Test(() => string.Join(",", (object?[])["item1", "item2"]), () => MissingStringMethods.Join(',', (object?[])["item1", "item2"]));
+
+        Test(() => MissingStringMethods.Join(", ", default(ReadOnlySpan<object?>)), () => "");
+        Test(() => MissingStringMethods.Join(", ", new ReadOnlySpan<object?>()), () => "");
+        Test(() => MissingStringMethods.Join(", ", (ReadOnlySpan<object?>)[]), () => "");
+        Test(() => MissingStringMethods.Join(", ", (ReadOnlySpan<object?>)[100]), () => $"{100}");
+        Test(
+            () => MissingStringMethods.Join(",", (ReadOnlySpan<object?>)["item1", "item2"]),
+            () => MissingStringMethods.Join(',', (ReadOnlySpan<object?>)["item1", "item2"]));
+
+        Test(() => string.Join(", ", (IEnumerable<int>)[]), () => "");
+        Test(() => string.Join(", ", (IEnumerable<int>)[100]), () => $"{100}");
+        Test(() => string.Join(",", (IEnumerable<int>)[1, 2, 3]), () => MissingStringMethods.Join(',', (IEnumerable<int>)[1, 2, 3]));
+
+        Test(() => string.Join(", ", (string?[])[]), () => "");
+        Test(() => string.Join(", ", (string?[])["item"]), () => "item");
+        Test(() => string.Join(",", (string?[])["item1", "item2"]), () => MissingStringMethods.Join(',', (string?[])["item1", "item2"]));
+
+        Test(() => string.Join(", ", (string?[])["item1", "item2"], 0, 0), () => "");
+        Test(() => string.Join(", ", (string?[])["item"], 1, 0), () => "");
+        Test(() => string.Join(", ", (string?[])["item"], 0, 1), () => "item");
+        Test(() => string.Join(",", (string?[])["item1", "item2"], 1, 1), () => MissingStringMethods.Join(',', (string?[])["item1", "item2"], 1, 1));
+
+        Test(() => MissingStringMethods.Join(", ", default(ReadOnlySpan<string?>)), () => "");
+        Test(() => MissingStringMethods.Join(", ", new ReadOnlySpan<string?>()), () => "");
+        Test(() => MissingStringMethods.Join(", ", (ReadOnlySpan<string?>)[]), () => "");
+        Test(() => MissingStringMethods.Join(", ", (ReadOnlySpan<string?>)["item"]), () => "item");
+        Test(
+            () => MissingStringMethods.Join(",", (ReadOnlySpan<string?>)["item1", "item2"]),
+            () => MissingStringMethods.Join(',', (ReadOnlySpan<string?>)["item1", "item2"]));
+
+        Test(() => MissingStringMethods.Join(',', (object?[])[]), () => "");
+        Test(() => MissingStringMethods.Join(',', (object?[])[100]), () => $"{100}");
+
+        Test(() => MissingStringMethods.Join(',', default(ReadOnlySpan<object?>)), () => "");
+        Test(() => MissingStringMethods.Join(',', new ReadOnlySpan<object?>()), () => "");
+        Test(() => MissingStringMethods.Join(',', (ReadOnlySpan<object?>)[]), () => "");
+        Test(() => MissingStringMethods.Join(',', (ReadOnlySpan<object?>)[100]), () => $"{100}");
+
+        Test(() => MissingStringMethods.Join(',', (IEnumerable<int>)[]), () => "");
+        Test(() => MissingStringMethods.Join(',', (IEnumerable<int>)[100]), () => $"{100}");
+
+        Test(() => MissingStringMethods.Join(',', (string?[])[]), () => "");
+        Test(() => MissingStringMethods.Join(',', (string?[])["item"]), () => "item");
+
+        Test(() => MissingStringMethods.Join(',', (string?[])["item1", "item2"], 0, 0), () => "");
+        Test(() => MissingStringMethods.Join(',', (string?[])["item"], 1, 0), () => "");
+        Test(() => MissingStringMethods.Join(',', (string?[])["item"], 0, 1), () => "item");
+
+        Test(() => MissingStringMethods.Join(',', default(ReadOnlySpan<string?>)), () => "");
+        Test(() => MissingStringMethods.Join(',', new ReadOnlySpan<string?>()), () => "");
+        Test(() => MissingStringMethods.Join(',', (ReadOnlySpan<string?>)[]), () => "");
+        Test(() => MissingStringMethods.Join(',', (ReadOnlySpan<string?>)["item"]), () => "item");
 
         DoNamedTest2();
     }

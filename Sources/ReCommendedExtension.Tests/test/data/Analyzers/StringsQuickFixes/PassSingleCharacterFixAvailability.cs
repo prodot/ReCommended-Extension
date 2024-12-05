@@ -35,5 +35,15 @@ namespace Test
             var result21 = text.Split("a", count);
             var result22 = text.Split("a", count, options);
         }
+
+        public void Join(object?[] objectItems, int[] intItems, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings, int startIndex, int count)
+        {
+            var result1 = string.Join(",", objectItems);
+            var result2 = string.Join(",", intItems);
+            var result3 = string.Join(",", stringItems);
+            var result4 = string.Join(",", spanOfObjects);
+            var result5 = string.Join(",", spanOfStrings);
+            var result6 = string.Join(",", stringItems, startIndex, count);
+        }
     }
 }
