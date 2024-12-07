@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Extensions;
@@ -27,6 +28,15 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     : ElementProblemAnalyzer<IInvocationExpression>
 {
     [Pure]
+    static IEnumerable<IProperty> GetAllProperties(ITypeElement typeElement)
+        => typeElement.Properties.Concat(
+            from baseTypeElement in typeElement.GetAllSuperTypeElements() from property in baseTypeElement.Properties select property);
+
+    [Pure]
+    static IEnumerable<IProperty> GetIndexers(IEnumerable<IProperty> properties)
+        => from property in properties where property.Parameters is [{ Type: var parameterType }] && parameterType.IsInt() select property;
+
+    [Pure]
     static bool IsCollection(IType type, ITreeNode context)
     {
         var psiModule = context.GetPsiModule();
@@ -39,29 +49,94 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     }
 
     [Pure]
-    static bool IsIndexableCollection(IType type, ITreeNode context)
+    static bool IsIndexableCollectionOrString(IType type, ITreeNode context)
     {
-        var psiModule = context.GetPsiModule();
+        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray(context) || type.IsString())
+        {
+            return true;
+        }
 
-        return type.IsGenericIList()
-            || type.IsGenericIReadOnlyList()
-            || type.IsGenericArray(context)
-            || type.GetTypeElement() is { } typeElement
-            && (typeElement.IsDescendantOf(PredefinedType.GENERIC_ILIST_FQN.TryGetTypeElement(psiModule))
-                || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlyList.TryGetTypeElement(psiModule)));
+        if (type.GetTypeElement() is { } typeElement)
+        {
+            var psiModule = context.GetPsiModule();
+
+            return typeElement.IsDescendantOf(PredefinedType.GENERIC_ILIST_FQN.TryGetTypeElement(psiModule))
+                || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlyList.TryGetTypeElement(psiModule));
+        }
+
+        return false;
+    }
+
+    [Pure]
+    static bool IsIndexableCollectionOrString(IType type, ICSharpExpression expression, out bool hasAccessibleIndexer)
+    {
+        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray(expression) || type.IsString())
+        {
+            hasAccessibleIndexer = true;
+            return true;
+        }
+
+        if (type.GetTypeElement() is { } typeElement)
+        {
+            var psiModule = expression.GetPsiModule();
+
+            var implementedListTypeElement = PredefinedType.GENERIC_ILIST_FQN.TryGetTypeElement(psiModule) is { } t1 && typeElement.IsDescendantOf(t1)
+                ? t1
+                : null;
+
+            var implementedReadOnlyListTypeElement =
+                ClrTypeNames.IReadOnlyList.TryGetTypeElement(psiModule) is { } t2 && typeElement.IsDescendantOf(t2) ? t2 : null;
+
+            if (implementedListTypeElement is { } || implementedReadOnlyListTypeElement is { })
+            {
+                if (typeElement is ITypeParameter typeParameter)
+                {
+                    var hasAccessibleIndexerIfIndexableCollection = false;
+                    if (typeParameter.TypeConstraints.Any(
+                        t => IsIndexableCollectionOrString(t, expression, out hasAccessibleIndexerIfIndexableCollection)))
+                    {
+                        hasAccessibleIndexer = hasAccessibleIndexerIfIndexableCollection;
+                        return true;
+                    }
+                }
+
+                var listIndexer = implementedListTypeElement is { } ? GetIndexers(implementedListTypeElement.Properties).FirstOrDefault() : null;
+                var readOnlyListIndexer = implementedReadOnlyListTypeElement is { }
+                    ? GetIndexers(implementedReadOnlyListTypeElement.Properties).FirstOrDefault()
+                    : null;
+
+                hasAccessibleIndexer = GetIndexers(GetAllProperties(typeElement))
+                    .Any(
+                        indexer => (listIndexer is { } && indexer.OverridesOrImplements(listIndexer)
+                                || readOnlyListIndexer is { } && indexer.OverridesOrImplements(readOnlyListIndexer))
+                            && AccessUtil.IsSymbolAccessible(indexer, new ElementAccessContext(expression)));
+                return true;
+            }
+        }
+
+        hasAccessibleIndexer = false;
+        return false;
     }
 
     [Pure]
     static bool IsDistinctCollection(IType type, ITreeNode context)
     {
-        var psiModule = context.GetPsiModule();
-
-        return type.IsClrType(PredefinedType.ISET_FQN)
+        if (type.IsClrType(PredefinedType.ISET_FQN)
             || type.IsClrType(ClrTypeNames.IReadOnlySet)
-            || type.IsClrType(ClrTypeNames.DictionaryKeyCollection)
-            || type.GetTypeElement() is { } typeElement
-            && (typeElement.IsDescendantOf(PredefinedType.ISET_FQN.TryGetTypeElement(psiModule))
-                || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlySet.TryGetTypeElement(psiModule)));
+            || type.IsClrType(ClrTypeNames.DictionaryKeyCollection))
+        {
+            return true;
+        }
+
+        if (type.GetTypeElement() is { } typeElement)
+        {
+            var psiModule = context.GetPsiModule();
+
+            return typeElement.IsDescendantOf(PredefinedType.ISET_FQN.TryGetTypeElement(psiModule))
+                || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlySet.TryGetTypeElement(psiModule));
+        }
+
+        return false;
     }
 
     [Pure]
@@ -93,15 +168,18 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
+        if (IsIndexableCollectionOrString(type, invokedExpression.QualifierExpression, out var hasAccessibleIndexer))
         {
-            consumer.AddHighlighting(
-                new UseIndexerSuggestion(
-                    "Use the indexer.",
-                    invocationExpression,
-                    invokedExpression,
-                    indexArgument.Value.GetText(),
-                    type.IsGenericArray(invocationExpression) || type.IsString()));
+            if (hasAccessibleIndexer)
+            {
+                consumer.AddHighlighting(
+                    new UseIndexerSuggestion(
+                        "Use the indexer.",
+                        invocationExpression,
+                        invokedExpression,
+                        indexArgument.Value.GetText(),
+                        type.IsGenericArray(invocationExpression) || type.IsString()));
+            }
 
             return;
         }
@@ -129,7 +207,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
+        if (IsIndexableCollectionOrString(type, invokedExpression))
         {
             return;
         }
@@ -154,9 +232,12 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
+        if (IsIndexableCollectionOrString(type, invokedExpression, out var hasAccessibleIndexer))
         {
-            consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "0", true));
+            if (hasAccessibleIndexer)
+            {
+                consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "0", true));
+            }
 
             return;
         }
@@ -188,9 +269,10 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
+        if (IsIndexableCollectionOrString(type, invokedExpression, out var hasAccessibleIndexer))
         {
-            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+            if (hasAccessibleIndexer
+                && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
@@ -226,9 +308,9 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
+        if (IsIndexableCollectionOrString(type, invokedExpression, out var hasAccessibleIndexer))
         {
-            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80)
+            if (hasAccessibleIndexer && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp80)
             {
                 consumer.AddHighlighting(new UseIndexerSuggestion("Use the indexer.", invocationExpression, invokedExpression, "^1", true));
             }
@@ -263,9 +345,10 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (IsIndexableCollection(type, invokedExpression) || type.IsString())
+        if (IsIndexableCollectionOrString(type, invokedExpression, out var hasAccessibleIndexer))
         {
-            if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+            if (hasAccessibleIndexer
+                && invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
@@ -336,7 +419,8 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
         {
             var type = invokedExpression.QualifierExpression.Type();
 
-            if ((IsIndexableCollection(type, invokedExpression) || type.IsString())
+            if (IsIndexableCollectionOrString(type, invokedExpression, out var hasAccessibleIndexer)
+                && hasAccessibleIndexer
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(
@@ -362,7 +446,8 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
         {
             var type = invokedExpression.QualifierExpression.Type();
 
-            if ((IsIndexableCollection(type, invokedExpression) || type.IsString())
+            if (IsIndexableCollectionOrString(type, invokedExpression, out var hasAccessibleIndexer)
+                && hasAccessibleIndexer
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
             {
                 consumer.AddHighlighting(

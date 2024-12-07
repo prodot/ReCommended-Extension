@@ -118,13 +118,28 @@ namespace Test
         {
             var last = list.Last(x => x > 0);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.Last();
+            var secondFromEnd = orderedDictionary.Last();
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.|Last()|(10);
+            var secondFromEnd = list3.|Last()|(11);
+        }
     }
 
     public class MixedBehaviorCollections
     {
         public void Method(CustomListUniqueItems<int> list)
         {
-            var last1 = list.|Last()|(10);
+            var last1 = list.|Last()|(12);
             var last2 = list.Last(x => x > 0);
         }
     }
@@ -133,37 +148,37 @@ namespace Test
     {
         public void NonGenericMethod(ISet<int> collection)
         {
-            var last1 = collection.|Last()|(11);
+            var last1 = collection.|Last()|(13);
             var last2 = collection.Last(x => x > 0);
         }
 
         public void NonGenericMethod(IReadOnlySet<int> collection)
         {
-            var last1 = collection.|Last()|(12);
+            var last1 = collection.|Last()|(14);
             var last2 = collection.Last(x => x > 0);
         }
 
         public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
         {
-            var last1 = collection.|Last()|(13);
+            var last1 = collection.|Last()|(15);
             var last2 = collection.Last(x => x > 0);
         }
 
         public void NonGenericMethod(HashSet<int> collection)
         {
-            var last1 = collection.|Last()|(14);
+            var last1 = collection.|Last()|(16);
             var last2 = collection.Last(x => x > 0);
         }
 
         public void GenericMethod<T>(HashSet<T> collection)
         {
-            var last1 = collection.|Last()|(15);
+            var last1 = collection.|Last()|(17);
             var last2 = collection.Last(x => x.ToString() != "");
         }
 
         public void ConstrainedGenericMethod<L>(L collection) where L : IReadOnlySet<int>
         {
-            var last1 = collection.|Last()|(16);
+            var last1 = collection.|Last()|(18);
             var last2 = collection.Last(x => x > 0);
         }
     }
@@ -179,9 +194,11 @@ namespace Test
 (8): ReSharper Suggestion: Use the indexer.
 (9): ReSharper Suggestion: Use the indexer.
 (10): ReSharper Suggestion: Use the indexer.
-(11): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
-(12): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(11): ReSharper Suggestion: Use the indexer.
+(12): ReSharper Suggestion: Use the indexer.
 (13): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
 (14): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
 (15): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
 (16): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(17): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(18): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.

@@ -123,6 +123,21 @@ namespace Test
             var third = text.ElementAt(2);
             var secondFromEnd = text.ElementAt(^2);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.ElementAt(2);
+            var secondFromEnd = orderedDictionary.ElementAt(^2);
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.ElementAt(2);
+            var secondFromEnd = list3.ElementAt(^2);
+        }
     }
 
     public class MixedBehaviorCollections

@@ -110,5 +110,20 @@ namespace Test
             var single1 = list?.SingleOrDefault();
             var single2 = list?.SingleOrDefault(1);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.SingleOrDefault();
+            var secondFromEnd = orderedDictionary.SingleOrDefault();
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.SingleOrDefault();
+            var secondFromEnd = list3.SingleOrDefault();
+        }
     }
 }

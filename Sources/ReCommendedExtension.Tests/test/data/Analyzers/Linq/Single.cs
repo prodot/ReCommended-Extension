@@ -98,5 +98,20 @@ namespace Test
         {
             var first = list?.Single();
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.Single();
+            var secondFromEnd = orderedDictionary.Single();
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.Single();
+            var secondFromEnd = list3.Single();
+        }
     }
 }

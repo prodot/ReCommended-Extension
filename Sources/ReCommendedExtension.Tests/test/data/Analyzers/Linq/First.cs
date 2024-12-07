@@ -118,6 +118,21 @@ namespace Test
         {
             var first = list.First(x => x > 0);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.First();
+            var secondFromEnd = orderedDictionary.First();
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.First();
+            var secondFromEnd = list3.First();
+        }
     }
 
     public class MixedBehaviorCollections

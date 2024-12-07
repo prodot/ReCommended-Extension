@@ -135,6 +135,21 @@ namespace Test
             var last1 = list?.LastOrDefault();
             var last2 = list?.LastOrDefault(2);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.LastOrDefault();
+            var secondFromEnd = orderedDictionary.LastOrDefault();
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.LastOrDefault();
+            var secondFromEnd = list3.LastOrDefault();
+        }
     }
 
     public class MixedBehaviorCollections

@@ -110,6 +110,21 @@ namespace Test
             var single1 = list?.SingleOrDefault();
             var single2 = list?.SingleOrDefault(1);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.SingleOrDefault();
+            var secondFromEnd = orderedDictionary.SingleOrDefault();
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.|SingleOrDefault()|(20);
+            var secondFromEnd = list3.|SingleOrDefault()|(21);
+        }
     }
 }
 ---------------------------------------------------------
@@ -133,3 +148,5 @@ namespace Test
 (17): ReSharper Suggestion: Use switch expression.
 (18): ReSharper Suggestion: Use switch expression.
 (19): ReSharper Suggestion: Use switch expression.
+(20): ReSharper Suggestion: Use switch expression.
+(21): ReSharper Suggestion: Use switch expression.

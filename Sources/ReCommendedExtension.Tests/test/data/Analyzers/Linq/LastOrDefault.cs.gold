@@ -135,14 +135,29 @@ namespace Test
             var last1 = list?.LastOrDefault();
             var last2 = list?.LastOrDefault(2);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.LastOrDefault();
+            var secondFromEnd = orderedDictionary.LastOrDefault();
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.|LastOrDefault()|(20);
+            var secondFromEnd = list3.|LastOrDefault()|(21);
+        }
     }
 
     public class MixedBehaviorCollections
     {
         public void Method(CustomListUniqueItems<int> list)
         {
-            var last1 = list.|LastOrDefault()|(20);
-            var last2 = list.|LastOrDefault(1)|(21);
+            var last1 = list.|LastOrDefault()|(22);
+            var last2 = list.|LastOrDefault(1)|(23);
             var last3 = list.LastOrDefault(x => x > 0);
             var last4 = list.LastOrDefault(x => x > 0, 1);
         }
@@ -152,21 +167,13 @@ namespace Test
     {
         public void NonGenericMethod(ISet<int> collection)
         {
-            var last1 = collection.|LastOrDefault()|(22);
-            var last2 = collection.|LastOrDefault(1)|(23);
-            var last3 = collection.LastOrDefault(x => x > 0);
-            var last4 = collection.LastOrDefault(x => x > 0, 1);
-        }
-
-        public void NonGenericMethod(IReadOnlySet<int> collection)
-        {
             var last1 = collection.|LastOrDefault()|(24);
             var last2 = collection.|LastOrDefault(1)|(25);
             var last3 = collection.LastOrDefault(x => x > 0);
             var last4 = collection.LastOrDefault(x => x > 0, 1);
         }
 
-        public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
+        public void NonGenericMethod(IReadOnlySet<int> collection)
         {
             var last1 = collection.|LastOrDefault()|(26);
             var last2 = collection.|LastOrDefault(1)|(27);
@@ -174,7 +181,7 @@ namespace Test
             var last4 = collection.LastOrDefault(x => x > 0, 1);
         }
 
-        public void NonGenericMethod(HashSet<int> collection)
+        public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
         {
             var last1 = collection.|LastOrDefault()|(28);
             var last2 = collection.|LastOrDefault(1)|(29);
@@ -182,18 +189,26 @@ namespace Test
             var last4 = collection.LastOrDefault(x => x > 0, 1);
         }
 
-        public void GenericMethod<T>(HashSet<T> collection, T fallback)
+        public void NonGenericMethod(HashSet<int> collection)
         {
             var last1 = collection.|LastOrDefault()|(30);
-            var last2 = collection.|LastOrDefault(fallback)|(31);
+            var last2 = collection.|LastOrDefault(1)|(31);
+            var last3 = collection.LastOrDefault(x => x > 0);
+            var last4 = collection.LastOrDefault(x => x > 0, 1);
+        }
+
+        public void GenericMethod<T>(HashSet<T> collection, T fallback)
+        {
+            var last1 = collection.|LastOrDefault()|(32);
+            var last2 = collection.|LastOrDefault(fallback)|(33);
             var last3 = collection.LastOrDefault(x => x.ToString() != "");
             var last4 = collection.LastOrDefault(x => x.ToString() != "", fallback);
         }
 
         public void ConstrainedGenericMethod<L>(L collection) where L : IReadOnlySet<int>
         {
-            var last1 = collection.|LastOrDefault()|(32);
-            var last2 = collection.|LastOrDefault(1)|(33);
+            var last1 = collection.|LastOrDefault()|(34);
+            var last2 = collection.|LastOrDefault(1)|(35);
             var last3 = collection.LastOrDefault(x => x > 0);
             var last4 = collection.LastOrDefault(x => x > 0, 1);
         }
@@ -222,8 +237,8 @@ namespace Test
 (19): ReSharper Suggestion: Use list pattern.
 (20): ReSharper Suggestion: Use list pattern.
 (21): ReSharper Suggestion: Use list pattern.
-(22): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
-(23): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
+(22): ReSharper Suggestion: Use list pattern.
+(23): ReSharper Suggestion: Use list pattern.
 (24): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
 (25): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
 (26): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
@@ -234,3 +249,5 @@ namespace Test
 (31): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
 (32): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
 (33): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
+(34): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.
+(35): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving a "last" item could result in unpredictable behavior.

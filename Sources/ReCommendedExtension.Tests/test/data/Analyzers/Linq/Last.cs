@@ -118,6 +118,21 @@ namespace Test
         {
             var last = list.Last(x => x > 0);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.Last();
+            var secondFromEnd = orderedDictionary.Last();
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.Last();
+            var secondFromEnd = list3.Last();
+        }
     }
 
     public class MixedBehaviorCollections

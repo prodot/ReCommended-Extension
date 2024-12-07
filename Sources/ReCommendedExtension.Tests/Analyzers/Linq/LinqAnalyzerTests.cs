@@ -113,8 +113,9 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-    [TestNet60]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet90]
     [SuppressMessage("ReSharper", "UseIndexer")]
     public void TestElementAt()
     {
@@ -136,6 +137,8 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     public void TestElementAtOrDefault() => DoNamedTest2();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
+    [TestNet90]
     [SuppressMessage("ReSharper", "UseIndexer")]
     public void TestFirst()
     {
@@ -152,9 +155,9 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [NullableContext(NullableContextKind.Enable)]
-    [TestNet70]
+    [TestNet90]
     public void TestFirstOrDefault()
     {
         Test([1, 2, 3], source => source.FirstOrDefault(), source => source is [var first, ..] ? first : 0, false);
@@ -169,6 +172,8 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
+    [TestNet90]
     [SuppressMessage("ReSharper", "UseIndexer")]
     public void TestLast()
     {
@@ -185,9 +190,9 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [NullableContext(NullableContextKind.Enable)]
-    [TestNet70]
+    [TestNet90]
     public void TestLastOrDefault()
     {
         Test([1, 2, 3], source => source.LastOrDefault(), source => source is [.., var last] ? last : 0, false);
@@ -218,9 +223,9 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [NullableContext(NullableContextKind.Enable)]
-    [TestNet70]
+    [TestNet90]
     public void TestSingle()
     {
         Test([1], source => source.Single(), source => source is [var item] ? item : throw new InvalidOperationException());
@@ -231,9 +236,9 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [NullableContext(NullableContextKind.Enable)]
-    [TestNet70]
+    [TestNet90]
     public void TestSingleOrDefault()
     {
         Test(

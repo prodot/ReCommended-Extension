@@ -123,14 +123,29 @@ namespace Test
             var third = text.|ElementAt(2)|(18);
             var secondFromEnd = text.|ElementAt(^2)|(19);
         }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.ElementAt(2);
+            var secondFromEnd = orderedDictionary.ElementAt(^2);
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.|ElementAt(2)|(20);
+            var secondFromEnd = list3.|ElementAt(^2)|(21);
+        }
     }
 
     public class MixedBehaviorCollections
     {
         public void Method(CustomListUniqueItems<int> list)
         {
-            var third = list.|ElementAt(2)|(20);
-            var secondFromEnd = list.|ElementAt(^2)|(21);
+            var third = list.|ElementAt(2)|(22);
+            var secondFromEnd = list.|ElementAt(^2)|(23);
         }
     }
 
@@ -138,38 +153,38 @@ namespace Test
     {
         public void NonGenericMethod(ISet<int> collection)
         {
-            var third = collection.|ElementAt(2)|(22);
-            var secondFromEnd = collection.|ElementAt(^2)|(23);
-        }
-
-        public void NonGenericMethod(IReadOnlySet<int> collection)
-        {
             var third = collection.|ElementAt(2)|(24);
             var secondFromEnd = collection.|ElementAt(^2)|(25);
         }
 
-        public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
+        public void NonGenericMethod(IReadOnlySet<int> collection)
         {
             var third = collection.|ElementAt(2)|(26);
             var secondFromEnd = collection.|ElementAt(^2)|(27);
         }
 
-        public void NonGenericMethod(HashSet<int> collection)
+        public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
         {
             var third = collection.|ElementAt(2)|(28);
             var secondFromEnd = collection.|ElementAt(^2)|(29);
         }
 
-        public void GenericMethod<T>(HashSet<T> collection)
+        public void NonGenericMethod(HashSet<int> collection)
         {
             var third = collection.|ElementAt(2)|(30);
             var secondFromEnd = collection.|ElementAt(^2)|(31);
         }
 
-        public void ConstrainedGenericMethod<L>(L collection) where L : IReadOnlySet<int>
+        public void GenericMethod<T>(HashSet<T> collection)
         {
             var third = collection.|ElementAt(2)|(32);
             var secondFromEnd = collection.|ElementAt(^2)|(33);
+        }
+
+        public void ConstrainedGenericMethod<L>(L collection) where L : IReadOnlySet<int>
+        {
+            var third = collection.|ElementAt(2)|(34);
+            var secondFromEnd = collection.|ElementAt(^2)|(35);
         }
     }
 }
@@ -196,8 +211,8 @@ namespace Test
 (19): ReSharper Suggestion: Use the indexer.
 (20): ReSharper Suggestion: Use the indexer.
 (21): ReSharper Suggestion: Use the indexer.
-(22): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
-(23): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(22): ReSharper Suggestion: Use the indexer.
+(23): ReSharper Suggestion: Use the indexer.
 (24): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
 (25): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
 (26): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
@@ -208,3 +223,5 @@ namespace Test
 (31): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
 (32): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
 (33): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(34): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(35): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
