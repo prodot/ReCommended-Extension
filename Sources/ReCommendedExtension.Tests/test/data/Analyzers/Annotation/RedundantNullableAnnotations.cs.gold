@@ -51,9 +51,30 @@ namespace Test
         }
     }
 
+    internal class AsyncMethods
+    {
+        public async Task||?|(4)|(5) AsyncTask1() => await Task.Yield();
+
+        public async Task|?|(6) AsyncTask2()
+        {
+            await Task.Yield();
+            Console.WriteLine();
+        } 
+
+        public async Task<int>||?|(7)|(8) AsyncTaskWithResult()
+        {
+            await Task.Yield();
+            return 1;
+        }
+    }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Return type of 'IteratorNullable' can be non-nullable.
-(1): ReSharper Dead Code: Return type of 'IteratorNullable' can be non-nullable.
-(2): ReSharper Dead Code: Return type of 'IteratorNullable' can be non-nullable.
-(3): ReSharper Dead Code: Return type of 'IteratorNullable' can be non-nullable.
+(0): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
+(1): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
+(2): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
+(3): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
+(4):<overlapped> ReSharper Dead Code: Return type of 'AsyncTask1' can be made non-nullable.
+(5): ReSharper Dead Code: Return type of 'AsyncTask1' can be made non-nullable
+(6): ReSharper Dead Code: Return type of 'AsyncTask2' can be made non-nullable.
+(7):<overlapped> ReSharper Dead Code: Return type of 'AsyncTaskWithResult' can be made non-nullable.
+(8): ReSharper Dead Code: Return type of 'AsyncTaskWithResult' can be made non-nullable

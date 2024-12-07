@@ -21,4 +21,15 @@ namespace Test
             yield return 1;
         }
     }
+
+    internal class AsyncMethods
+    {
+        public async Task? AsyncTask() => await Task.Yield();
+
+        public async Task<int>? AsyncTaskWithResult()
+        {
+            await Task.Yield();
+            return 1;
+        }
+    }
 }

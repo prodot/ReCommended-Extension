@@ -243,13 +243,16 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
         if (attributesOwnerDeclaration is IMethodDeclaration
             {
-                IsIterator: true,
                 DeclaredElement.ReturnType: { Classify: TypeClassification.REFERENCE_TYPE, NullableAnnotation: NullableAnnotation.Annotated },
                 TypeUsage: INullableTypeUsage nullableTypeUsage,
                 NameIdentifier.Name: var methodName,
-            })
+            }
+            and ({ IsIterator: true } or { IsAsync: true }))
         {
-            consumer.AddHighlighting(new RedundantNullableAnnotationHint($"Return type of '{methodName}' can be non-nullable.", nullableTypeUsage));
+            // R# doesn't seem to cover multi-line async methods that return "Task?"
+
+            consumer.AddHighlighting(
+                new RedundantNullableAnnotationHint($"Return type of '{methodName}' can be made non-nullable.", nullableTypeUsage));
         }
     }
 

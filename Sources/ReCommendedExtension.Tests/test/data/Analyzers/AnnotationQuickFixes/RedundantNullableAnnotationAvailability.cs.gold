@@ -21,11 +21,28 @@ namespace Test
             yield return 1;
         }
     }
+
+    internal class AsyncMethods
+    {
+        public async Task|?|(2) AsyncTask() => await Task.Yield();
+
+        public async Task<int>|?|(3) AsyncTaskWithResult()
+        {
+            await Task.Yield();
+            return 1;
+        }
+    }
 }
 ------------------------------------------------
-0: Return type of 'IteratorNullable' can be non-nullable.
+0: Return type of 'IteratorNullable' can be made non-nullable.
 QUICKFIXES:
 Make method return type not nullable
-1: Return type of 'IteratorNullable' can be non-nullable.
+1: Return type of 'IteratorNullable' can be made non-nullable.
+QUICKFIXES:
+Make method return type not nullable
+2: Return type of 'AsyncTask' can be made non-nullable.
+QUICKFIXES:
+Make method return type not nullable
+3: Return type of 'AsyncTaskWithResult' can be made non-nullable.
 QUICKFIXES:
 Make method return type not nullable
