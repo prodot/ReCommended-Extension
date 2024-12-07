@@ -1,4 +1,5 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.YieldReturnWithinLock;
@@ -12,11 +13,14 @@ public sealed class YieldReturnWithinLockAnalyzer : ElementProblemAnalyzer<IYiel
         {
             switch (treeNode)
             {
-                case ILockStatement:
+                case ILockStatement lockStatement when ClrTypeNames.Lock.TryGetTypeElement(element.GetPsiModule()) is not { } typeElement
+                    || !TypeEqualityComparer.Default.Equals(lockStatement.Monitor.Type(), TypeFactory.CreateType(typeElement)):
+
                     consumer.AddHighlighting(new YieldReturnWithinLockWarning("'yield return' used inside the 'lock' block.", element));
+
                     return;
 
-                case ILocalFunctionDeclaration: return;
+                case IAttributesOwnerDeclaration: return;
             }
         }
     }

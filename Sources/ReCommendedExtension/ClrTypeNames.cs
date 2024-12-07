@@ -80,7 +80,9 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName ConfigureAwaitOptions = new ClrTypeName("System.Threading.Tasks.ConfigureAwaitOptions");
 
-    public static readonly IClrTypeName StringSplitOptions = new ClrTypeName("System.StringSplitOptions");
+    public static readonly IClrTypeName StringSplitOptions = GetClrTypeName<StringSplitOptions>();
+
+    public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");
 
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
