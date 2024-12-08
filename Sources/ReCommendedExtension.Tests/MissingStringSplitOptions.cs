@@ -1,7 +1,7 @@
 ﻿namespace ReCommendedExtension.Tests;
 
 [Flags]
-public enum MissingStringSplitOptions
+internal enum MissingStringSplitOptions
 {
     None = StringSplitOptions.None,
     RemoveEmptyEntries = StringSplitOptions.RemoveEmptyEntries,

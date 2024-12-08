@@ -308,6 +308,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
+    [SuppressMessage("ReSharper", "UseOtherMethod")]
+    [SuppressMessage("ReSharper", "RedundantElement")]
     public void TestIndexOfAny()
     {
         Test("abcde", text => text.IndexOfAny([]), _ => -1);
@@ -335,6 +337,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet90]
+    [SuppressMessage("ReSharper", "RedundantCast")]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestJoin()
     {
         Test(() => string.Join(", ", (object?[])[]), () => "");
@@ -424,6 +428,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
+    [SuppressMessage("ReSharper", "UseOtherMethod")]
+    [SuppressMessage("ReSharper", "RedundantElement")]
     public void TestLastIndexOfAny()
     {
         Test("abcde", text => text.LastIndexOfAny([]), _ => -1);
