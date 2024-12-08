@@ -3328,7 +3328,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     break;
 
                                 case ([{ Type: var anyOfType }, { Type: var startIndexType }, { Type: var countType }], [
-                                    var anyOfArgument, var startIndexArgument, var valueArgument
+                                    var anyOfArgument, var startIndexArgument, var valueArgument,
                                 ]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && countType.IsInt():
 
                                     AnalyzeIndexOfAny_CharArray_Int32_Int32(
@@ -3377,7 +3377,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     break;
 
                                 case ([{ Type: var anyOfType }, { Type: var startIndexType }, { Type: var countType }], [
-                                    var anyOfArgument, var startIndexArgument, var valueArgument
+                                    var anyOfArgument, var startIndexArgument, var valueArgument,
                                 ]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && countType.IsInt():
 
                                     AnalyzeLastIndexOfAny_CharArray_Int32_Int32(

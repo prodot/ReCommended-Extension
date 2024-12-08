@@ -136,7 +136,7 @@ internal static class CSharpExpressionExtensions
                 NullableAnnotation.RuntimeNotNullable when expression is IObjectCreationExpression
                     || expression.Parent is not IReferenceExpression
                     {
-                        Reference: var reference
+                        Reference: var reference,
                     } // the nullability detection doesn't work well for extension method invocations
                     || reference.Resolve().DeclaredElement is not IMethod { IsExtensionMethod: true } => CSharpControlFlowNullReferenceState.NOT_NULL,
 
