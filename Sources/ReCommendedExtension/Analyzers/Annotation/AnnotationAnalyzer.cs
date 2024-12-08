@@ -241,18 +241,31 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
     {
         Debug.Assert(attributesOwnerDeclaration.IsNullableAnnotationsContextEnabled());
 
-        if (attributesOwnerDeclaration is IMethodDeclaration
+        switch (attributesOwnerDeclaration)
+        {
+            case IMethodDeclaration
             {
                 DeclaredElement.ReturnType: { Classify: TypeClassification.REFERENCE_TYPE, NullableAnnotation: NullableAnnotation.Annotated },
                 TypeUsage: INullableTypeUsage nullableTypeUsage,
                 NameIdentifier.Name: var methodName,
-            }
-            and ({ IsIterator: true } or { IsAsync: true }))
-        {
-            // R# doesn't seem to cover multi-line async methods that return "Task?"
+            } methodDeclaration when methodDeclaration.IsIterator || methodDeclaration.IsAsync:
 
-            consumer.AddHighlighting(
-                new RedundantNullableAnnotationHint($"Return type of '{methodName}' can be made non-nullable.", nullableTypeUsage));
+                // R# doesn't seem to cover multi-line async methods that return "Task?"
+
+                consumer.AddHighlighting(
+                    new RedundantNullableAnnotationHint($"Return type of '{methodName}' can be made non-nullable.", nullableTypeUsage));
+                break;
+
+            case ILocalFunctionDeclaration
+            {
+                DeclaredElement.ReturnType: { Classify: TypeClassification.REFERENCE_TYPE, NullableAnnotation: NullableAnnotation.Annotated },
+                TypeUsage: INullableTypeUsage nullableTypeUsage,
+                NameIdentifier.Name: var localFunctionName,
+            } localFunction when localFunction.IsIterator || localFunction.IsAsync:
+
+                consumer.AddHighlighting(
+                    new RedundantNullableAnnotationHint($"Return type of '{localFunctionName}' can be made non-nullable.", nullableTypeUsage));
+                break;
         }
     }
 

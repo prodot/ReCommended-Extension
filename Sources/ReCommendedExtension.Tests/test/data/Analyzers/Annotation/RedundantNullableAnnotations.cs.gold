@@ -67,6 +67,72 @@ namespace Test
             return 1;
         }
     }
+
+    internal static class LocalFunctions
+    {
+        public static void Enumerables()
+        {
+            IEnumerable<int>? NonIterator() => null;
+
+            IEnumerable<int>|?|(9) IteratorNullable()
+            {
+                yield return 1;
+            }
+        }
+
+        public static void Iterators()
+        {
+            [MustDisposeResource(false)]
+            IEnumerator<int>? NonIterator() => null;
+
+            [MustDisposeResource(false)]
+            IEnumerator<int>|?|(10) IteratorNullable()
+            {
+                yield return 1;
+            }
+        }
+
+        public static void AsyncEnumerables()
+        {
+            IAsyncEnumerable<int>? NonIterator() => null;
+
+            async IAsyncEnumerable<int>|?|(11) IteratorNullable()
+            {
+                await Task.Yield();
+                yield return 1;
+            }
+        }
+
+        internal static void AsyncIterators()
+        {
+            [MustDisposeResource(false)]
+            IAsyncEnumerator<int>? NonIterator() => null;
+
+            [MustDisposeResource(false)]
+            async IAsyncEnumerator<int>|?|(12) IteratorNullable()
+            {
+                await Task.Yield();
+                yield return 1;
+            }
+        }
+
+        internal static void AsyncMethods()
+        {
+            async Task|?|(13) AsyncTask1() => await Task.Yield();
+
+            async Task|?|(14) AsyncTask2()
+            {
+                await Task.Yield();
+                Console.WriteLine();
+            }
+
+            async Task<int>|?|(15) AsyncTaskWithResult()
+            {
+                await Task.Yield();
+                return 1;
+            }
+        }
+    }
 }
 ---------------------------------------------------------
 (0): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
@@ -78,3 +144,10 @@ namespace Test
 (6): ReSharper Dead Code: Return type of 'AsyncTask2' can be made non-nullable.
 (7):<overlapped> ReSharper Dead Code: Return type of 'AsyncTaskWithResult' can be made non-nullable.
 (8): ReSharper Dead Code: Return type of 'AsyncTaskWithResult' can be made non-nullable
+(9): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
+(10): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
+(11): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
+(12): ReSharper Dead Code: Return type of 'IteratorNullable' can be made non-nullable.
+(13): ReSharper Dead Code: Return type of 'AsyncTask1' can be made non-nullable.
+(14): ReSharper Dead Code: Return type of 'AsyncTask2' can be made non-nullable.
+(15): ReSharper Dead Code: Return type of 'AsyncTaskWithResult' can be made non-nullable.

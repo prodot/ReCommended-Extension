@@ -67,4 +67,70 @@ namespace Test
             return 1;
         }
     }
+
+    internal static class LocalFunctions
+    {
+        public static void Enumerables()
+        {
+            IEnumerable<int>? NonIterator() => null;
+
+            IEnumerable<int>? IteratorNullable()
+            {
+                yield return 1;
+            }
+        }
+
+        public static void Iterators()
+        {
+            [MustDisposeResource(false)]
+            IEnumerator<int>? NonIterator() => null;
+
+            [MustDisposeResource(false)]
+            IEnumerator<int>? IteratorNullable()
+            {
+                yield return 1;
+            }
+        }
+
+        public static void AsyncEnumerables()
+        {
+            IAsyncEnumerable<int>? NonIterator() => null;
+
+            async IAsyncEnumerable<int>? IteratorNullable()
+            {
+                await Task.Yield();
+                yield return 1;
+            }
+        }
+
+        internal static void AsyncIterators()
+        {
+            [MustDisposeResource(false)]
+            IAsyncEnumerator<int>? NonIterator() => null;
+
+            [MustDisposeResource(false)]
+            async IAsyncEnumerator<int>? IteratorNullable()
+            {
+                await Task.Yield();
+                yield return 1;
+            }
+        }
+
+        internal static void AsyncMethods()
+        {
+            async Task? AsyncTask1() => await Task.Yield();
+
+            async Task? AsyncTask2()
+            {
+                await Task.Yield();
+                Console.WriteLine();
+            }
+
+            async Task<int>? AsyncTaskWithResult()
+            {
+                await Task.Yield();
+                return 1;
+            }
+        }
+    }
 }
