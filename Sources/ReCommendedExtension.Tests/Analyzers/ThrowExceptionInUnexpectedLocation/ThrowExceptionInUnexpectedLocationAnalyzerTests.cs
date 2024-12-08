@@ -3,6 +3,7 @@ using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
@@ -28,4 +29,8 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpHigh
     [Test]
     [TestNet70]
     public void TestThrowExceptionInUnexpectedLocation_UnreachableException() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
+    public void TestThrowExceptionInUnexpectedLocation_ExceptionHandling() => DoNamedTest2();
 }

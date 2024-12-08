@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
@@ -10,8 +9,12 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve.Managed;
 using JetBrains.ReSharper.Psi.Modules;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Extensions;
+using IBlock = JetBrains.ReSharper.Psi.CSharp.Tree.IBlock;
+using IThrowStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IThrowStatement;
+using ITryStatement = JetBrains.ReSharper.Psi.CSharp.Tree.ITryStatement;
 
 namespace ReCommendedExtension.Analyzers.ThrowExceptionInUnexpectedLocation;
 
@@ -68,10 +71,12 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
         DisposeMethodWithParameterFalseCodePath,
         EqualityOperator,
         ImplicitCastOperator,
+        FinallyBlock,
+        ExceptionFilterExpression,
     }
 
     [Pure]
-    static IMethod GetMethod(ITypeElement type, string name) => type.Methods.First(m => m.ShortName == name);
+    static IMethod? TryGetMethod(ITypeElement type, string name) => type.Methods.FirstOrDefault(m => m.ShortName == name);
 
     [Pure]
     static Location? TryGetLocation(ICSharpTreeNode element)
@@ -112,56 +117,64 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
             case IMethodDeclaration { DeclaredElement: { } } methodDeclaration:
                 var psiModule = element.GetPsiModule();
 
-                var objectClass = PredefinedType.OBJECT_FQN.TryGetTypeElement(psiModule);
-                Debug.Assert(objectClass is { });
+                if (PredefinedType.OBJECT_FQN.TryGetTypeElement(psiModule) is { } objectClass)
+                {
+                    if (TryGetMethod(objectClass, nameof(Equals)) is { } equalsMethod
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(equalsMethod))
+                    {
+                        return Location.EqualsMethod;
+                    }
 
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(objectClass, nameof(Equals))))
-                {
-                    return Location.EqualsMethod;
-                }
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(objectClass, nameof(GetHashCode))))
-                {
-                    return Location.GetHashCodeMethod;
-                }
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(objectClass, nameof(ToString))))
-                {
-                    return Location.ToStringMethod;
-                }
+                    if (TryGetMethod(objectClass, nameof(GetHashCode)) is { } getHashCodeMethod
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(getHashCodeMethod))
+                    {
+                        return Location.GetHashCodeMethod;
+                    }
 
-                var equatableGenericInterface = PredefinedType.GENERIC_IEQUATABLE_FQN.TryGetTypeElement(psiModule);
-                Debug.Assert(equatableGenericInterface is { });
-
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(GetMethod(equatableGenericInterface, nameof(IEquatable<int>.Equals))))
-                {
-                    return Location.EqualsMethod;
+                    if (TryGetMethod(objectClass, nameof(ToString)) is { } toStringMethod
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(toStringMethod))
+                    {
+                        return Location.ToStringMethod;
+                    }
                 }
 
-                var equalityComparerGenericInterface = ClrTypeNames.IEqualityComparerGeneric.TryGetTypeElement(psiModule);
-                Debug.Assert(equalityComparerGenericInterface is { });
-
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(
-                    GetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<int>.Equals))))
+                if (PredefinedType.GENERIC_IEQUATABLE_FQN.TryGetTypeElement(psiModule) is { } equatableGenericInterface)
                 {
-                    return Location.EqualsMethodWithParameters;
-                }
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(
-                    GetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<int>.GetHashCode))))
-                {
-                    return Location.GetHashCodeMethodWithParameter;
+                    if (TryGetMethod(equatableGenericInterface, nameof(IEquatable<int>.Equals)) is { } equalsMethod
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(equalsMethod))
+                    {
+                        return Location.EqualsMethod;
+                    }
                 }
 
-                var equalityComparerInterface = ClrTypeNames.IEqualityComparer.TryGetTypeElement(psiModule);
-                Debug.Assert(equalityComparerInterface is { });
+                if (ClrTypeNames.IEqualityComparerGeneric.TryGetTypeElement(psiModule) is { } equalityComparerGenericInterface)
+                {
+                    if (TryGetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<int>.Equals)) is { } equalsMethod
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(equalsMethod))
+                    {
+                        return Location.EqualsMethodWithParameters;
+                    }
 
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(
-                    GetMethod(equalityComparerInterface, nameof(IEqualityComparer.Equals))))
-                {
-                    return Location.EqualsMethodWithParameters;
+                    if (TryGetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<int>.GetHashCode)) is { } getHashCodeMethod
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(getHashCodeMethod))
+                    {
+                        return Location.GetHashCodeMethodWithParameter;
+                    }
                 }
-                if (methodDeclaration.DeclaredElement.OverridesOrImplements(
-                    GetMethod(equalityComparerInterface, nameof(IEqualityComparer.GetHashCode))))
+
+                if (ClrTypeNames.IEqualityComparer.TryGetTypeElement(psiModule) is { } equalityComparerInterface)
                 {
-                    return Location.GetHashCodeMethodWithParameter;
+                    if (TryGetMethod(equalityComparerInterface, nameof(IEqualityComparer.Equals)) is { } equalsMethod
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(equalsMethod))
+                    {
+                        return Location.EqualsMethodWithParameters;
+                    }
+
+                    if (TryGetMethod(equalityComparerInterface, nameof(IEqualityComparer.GetHashCode)) is { } getHashCodeMethod
+                        && methodDeclaration.DeclaredElement.OverridesOrImplements(getHashCodeMethod))
+                    {
+                        return Location.GetHashCodeMethodWithParameter;
+                    }
                 }
 
                 if (methodDeclaration.DeclaredElement.IsDisposeMethod())
@@ -212,23 +225,36 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
 
         if (!element.IsInsideClosure())
         {
-            if (element.GetContainingNode<IFieldDeclaration>() is { IsStatic: true } fieldDeclaration)
+            if (element.GetContainingNode<IFieldDeclaration>() is { IsStatic: true } fieldDeclaration
+                && element.GetContainingNode<IExpressionInitializer>() is { } fieldInitializer
+                && fieldInitializer.GetContainingNode<IFieldDeclaration>() == fieldDeclaration)
             {
-                var initializer = element.GetContainingNode<IExpressionInitializer>();
-                if (initializer is { } && initializer.GetContainingNode<IFieldDeclaration>() == fieldDeclaration)
-                {
-                    return Location.StaticFieldInitializationExpression;
-                }
+                return Location.StaticFieldInitializationExpression;
             }
 
-            if (element.GetContainingNode<IEventDeclaration>() is { IsStatic: true } eventDeclaration)
+            if (element.GetContainingNode<IEventDeclaration>() is { IsStatic: true } eventDeclaration
+                && element.GetContainingNode<IExpressionInitializer>() is { } eventInitializer
+                && eventInitializer.GetContainingNode<IEventDeclaration>() == eventDeclaration)
             {
-                var initializer = element.GetContainingNode<IExpressionInitializer>();
-                if (initializer is { } && initializer.GetContainingNode<IEventDeclaration>() == eventDeclaration)
-                {
-                    return Location.StaticEventInitializationExpression;
-                }
+                return Location.StaticEventInitializationExpression;
             }
+        }
+
+        if (element
+                .PathToRoot()
+                .TakeWhile(node => node is not IAttributesOwnerDeclaration)
+                .FirstOrDefault(node => node is ITryStatement or ICSharpClosure) is ITryStatement tryStatement
+            && element.PathToRoot().TakeWhile(node => node != tryStatement).Any(node => node is IBlock block && block == tryStatement.FinallyBlock))
+        {
+            return Location.FinallyBlock;
+        }
+
+        if (element
+                .PathToRoot()
+                .TakeWhile(node => node is not IAttributesOwnerDeclaration)
+                .FirstOrDefault(node => node is IExceptionFilterClause or ICSharpClosure) is IExceptionFilterClause)
+        {
+            return Location.ExceptionFilterExpression;
         }
 
         return null;
@@ -242,36 +268,28 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
     }
 
     [Pure]
-    static IEnumerable<ITypeElement> GetAllowedExceptions(Location location, IPsiModule psiModule)
+    static IEnumerable<ITypeElement?> GetAllowedExceptions(Location location, IPsiModule psiModule)
     {
-        ITypeElement GetTypeElementByClrName(IClrTypeName clrTypeName)
-        {
-            var typeElement = clrTypeName.TryGetTypeElement(psiModule);
-            Debug.Assert(typeElement is { });
-
-            return typeElement;
-        }
-
         switch (location)
         {
             case Location.PropertyGetter:
-                yield return GetTypeElementByClrName(PredefinedType.INVALIDOPERATIONEXCEPTION_FQN);
-                yield return GetTypeElementByClrName(ClrTypeNames.NotSupportedException);
+                yield return PredefinedType.INVALIDOPERATIONEXCEPTION_FQN.TryGetTypeElement(psiModule);
+                yield return ClrTypeNames.NotSupportedException.TryGetTypeElement(psiModule);
                 break;
 
             case Location.IndexerGetter:
-                yield return GetTypeElementByClrName(PredefinedType.ARGUMENTEXCEPTION_FQN);
-                yield return GetTypeElementByClrName(ClrTypeNames.KeyNotFoundException);
+                yield return PredefinedType.ARGUMENTEXCEPTION_FQN.TryGetTypeElement(psiModule);
+                yield return ClrTypeNames.KeyNotFoundException.TryGetTypeElement(psiModule);
                 goto case Location.PropertyGetter;
 
             case Location.EventAccessor:
-                yield return GetTypeElementByClrName(PredefinedType.INVALIDOPERATIONEXCEPTION_FQN);
-                yield return GetTypeElementByClrName(ClrTypeNames.NotSupportedException);
-                yield return GetTypeElementByClrName(PredefinedType.ARGUMENTEXCEPTION_FQN);
+                yield return PredefinedType.INVALIDOPERATIONEXCEPTION_FQN.TryGetTypeElement(psiModule);
+                yield return ClrTypeNames.NotSupportedException.TryGetTypeElement(psiModule);
+                yield return PredefinedType.ARGUMENTEXCEPTION_FQN.TryGetTypeElement(psiModule);
                 break;
 
             case Location.GetHashCodeMethodWithParameter:
-                yield return GetTypeElementByClrName(PredefinedType.ARGUMENTEXCEPTION_FQN);
+                yield return PredefinedType.ARGUMENTEXCEPTION_FQN.TryGetTypeElement(psiModule);
                 break;
         }
     }
@@ -297,46 +315,40 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
             Location.DisposeMethodWithParameterFalseCodePath => $"'{nameof(IDisposable.Dispose)}(false)' code paths",
             Location.EqualityOperator => "equality operators",
             Location.ImplicitCastOperator => "implicit cast operators",
+            Location.FinallyBlock => "finally blocks",
+            Location.ExceptionFilterExpression => "exception filter expressions",
 
             _ => throw new NotSupportedException(),
         };
 
     protected override void Run(ICSharpTreeNode element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        IExpressionType? exceptionType;
-        switch (element)
+        var exceptionType = element switch
         {
-            case IThrowStatement throwStatement:
-                exceptionType = throwStatement.Exception?.GetExpressionType();
-                break;
+            IThrowStatement throwStatement => throwStatement.Exception?.GetExpressionType(),
+            IThrowExpression throwExpression => throwExpression.Exception.GetExpressionType(),
 
-            case IThrowExpression throwExpression:
-                exceptionType = throwExpression.Exception.GetExpressionType();
-                break;
+            _ => null,
+        };
 
-            default: return;
-        }
-
-        if (exceptionType is not { })
+        if (exceptionType is { })
         {
-            return;
-        }
-
-        if (ClrTypeNames.UnreachableException.TryGetTypeElement(element.GetPsiModule()) is { } unreachableExceptionType
-            && IsOrDerivesFrom(exceptionType, unreachableExceptionType))
-        {
-            return;
-        }
-
-        if (TryGetLocation(element) is { } location)
-        {
-            if (GetAllowedExceptions(location, element.GetPsiModule()).Any(e => IsOrDerivesFrom(exceptionType, e)))
+            if (ClrTypeNames.UnreachableException.TryGetTypeElement(element.GetPsiModule()) is { } unreachableExceptionType
+                && IsOrDerivesFrom(exceptionType, unreachableExceptionType))
             {
                 return;
             }
 
-            consumer.AddHighlighting(
-                new ThrowExceptionInUnexpectedLocationWarning($"Exceptions should never be thrown in {GetText(location)}.", element));
+            if (TryGetLocation(element) is { } location)
+            {
+                if (GetAllowedExceptions(location, element.GetPsiModule()).Any(e => e is { } && IsOrDerivesFrom(exceptionType, e)))
+                {
+                    return;
+                }
+
+                consumer.AddHighlighting(
+                    new ThrowExceptionInUnexpectedLocationWarning($"Exceptions should never be thrown in {GetText(location)}.", element));
+            }
         }
     }
 }
