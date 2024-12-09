@@ -28,7 +28,7 @@ internal sealed class CollectionExpressionCollectionCreation(ICollectionExpressi
     {
         get
         {
-            Debug.Assert(collectionExpression.CollectionElements.Count == 1);
+            Debug.Assert(Count == 1);
 
             return collectionExpression.CollectionElements[0];
         }

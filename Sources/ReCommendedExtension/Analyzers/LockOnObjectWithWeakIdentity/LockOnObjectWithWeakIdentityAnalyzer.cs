@@ -55,7 +55,6 @@ public sealed class LockOnObjectWithWeakIdentityAnalyzer : ElementProblemAnalyze
             foreach (var type in classTypes)
             {
                 var objectType = (IClass?)type.TryGetTypeElement(psiModule);
-                Debug.Assert(objectType is { });
 
                 if (monitorTypeElement.IsDescendantOf(objectType))
                 {

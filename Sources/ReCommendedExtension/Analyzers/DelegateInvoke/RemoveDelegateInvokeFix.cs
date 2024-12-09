@@ -20,10 +20,10 @@ public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeHint highligh
     {
         using (WriteLockCookie.Create())
         {
-            var dotToken = highlighting.ReferenceExpression.NameIdentifier.GetPreviousMeaningfulToken();
-            Debug.Assert(dotToken is { });
-
-            ModificationUtil.DeleteChildRange(dotToken, highlighting.ReferenceExpression.NameIdentifier);
+            if (highlighting.ReferenceExpression.NameIdentifier.GetPreviousMeaningfulToken() is { } dotToken)
+            {
+                ModificationUtil.DeleteChildRange(dotToken, highlighting.ReferenceExpression.NameIdentifier);
+            }
         }
 
         return _ => { };

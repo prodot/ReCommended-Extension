@@ -54,12 +54,13 @@ public sealed class ReplaceWithCollectionExpressionFix(UseTargetTypedCollectionE
                 // set inferred type arguments
 
                 var (declaredElement, substitution) = highlighting.MethodReferenceToSetInferredTypeArguments.Reference.Resolve().Result;
-                Debug.Assert(declaredElement is ITypeParametersOwner);
 
-                var typeArguments = (from typeParameter in ((ITypeParametersOwner)declaredElement).TypeParameters select substitution[typeParameter])
-                    .ToList();
+                if (declaredElement is ITypeParametersOwner typeParametersOwner)
+                {
+                    var typeArguments = (from typeParameter in typeParametersOwner.TypeParameters select substitution[typeParameter]).ToList();
 
-                highlighting.MethodReferenceToSetInferredTypeArguments.SetTypeArguments(typeArguments);
+                    highlighting.MethodReferenceToSetInferredTypeArguments.SetTypeArguments(typeArguments);
+                }
             }
 
             var items = from item in highlighting.Items select item.GetText();

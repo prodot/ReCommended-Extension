@@ -37,7 +37,7 @@ internal sealed class ArrayCreationExpressionCollectionCreation : CollectionCrea
     {
         get
         {
-            Debug.Assert(arrayCreationExpression.ArrayInitializer.ElementInitializers.Count == 1);
+            Debug.Assert(Count == 1);
 
             return arrayCreationExpression.ArrayInitializer.ElementInitializers[0];
         }

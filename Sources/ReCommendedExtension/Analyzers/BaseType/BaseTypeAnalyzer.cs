@@ -9,16 +9,11 @@ public sealed class BaseTypeAnalyzer : ElementProblemAnalyzer<IClassLikeDeclarat
 {
     protected override void Run(IClassLikeDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (element is IClassDeclaration or IRecordDeclaration { IsStruct: false })
+        if (element is IClassDeclaration or IRecordDeclaration { IsStruct: false }
+            && element.SuperTypes.FirstOrDefault().IsObject()
+            && element.ExtendsList is { ExtendedTypes: [_, ..] } baseTypes)
         {
-            var firstBaseType = element.SuperTypes.FirstOrDefault();
-            if (firstBaseType.IsObject())
-            {
-                var baseTypes = element.ExtendsList;
-                Debug.Assert(baseTypes is { ExtendedTypes: [_, ..] });
-
-                consumer.AddHighlighting(new RemoveRedundantBaseTypeDeclarationHint("'object' is the default base type.", baseTypes));
-            }
+            consumer.AddHighlighting(new RemoveRedundantBaseTypeDeclarationHint("'object' is the default base type.", baseTypes));
         }
     }
 }

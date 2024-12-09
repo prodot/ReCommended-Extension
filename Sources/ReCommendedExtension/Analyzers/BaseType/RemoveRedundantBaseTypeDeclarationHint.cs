@@ -25,5 +25,10 @@ public sealed class RemoveRedundantBaseTypeDeclarationHint(string message, IExte
 
     internal IExtendsList BaseTypes => baseTypes;
 
-    public override DocumentRange CalculateRange() => baseTypes.ExtendedTypes[0].GetDocumentRange();
+    public override DocumentRange CalculateRange()
+    {
+        Debug.Assert(baseTypes.ExtendedTypes is [_, ..]);
+
+        return baseTypes.ExtendedTypes[0].GetDocumentRange();
+    }
 }
