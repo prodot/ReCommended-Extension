@@ -108,7 +108,7 @@ namespace Test
 (19): ReSharper Suggestion: Use collection expression
 (20): ReSharper Warning: Use 'Array.Empty<T>()'.
 (21): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(22): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(22):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (23): ReSharper Suggestion: Use collection expression
 (24): ReSharper Suggestion: Use collection expression
 (25): ReSharper Suggestion: Use collection expression

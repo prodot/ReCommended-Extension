@@ -183,7 +183,6 @@ namespace Test
             string.Join(s, new ReadOnlySpan<string?>());
             string.Join(s, (ReadOnlySpan<string?>)[]);
             string.Join(s, (ReadOnlySpan<string?>)[stringItem]);
-            string.|Join|(77)(s, stringItem);
 
             string.Join(c, (object?[])[]);
             string.Join(c, new object?[0]);
@@ -302,4 +301,3 @@ namespace Test
 (74): ReSharper Warning: Return value of pure method is not used
 (75): ReSharper Warning: Return value of pure method is not used
 (76): ReSharper Warning: Return value of pure method is not used
-(77): ReSharper Warning: Return value of pure method is not used

@@ -183,7 +183,6 @@ namespace Test
             string.Join(s, new ReadOnlySpan<string?>());
             string.Join(s, (ReadOnlySpan<string?>)[]);
             string.Join(s, (ReadOnlySpan<string?>)[stringItem]);
-            string.Join(s, stringItem);
 
             string.Join(c, (object?[])[]);
             string.Join(c, new object?[0]);

@@ -99,7 +99,7 @@ namespace Test
 (10): ReSharper Warning: Use 'Array.Empty<T>()'.
 (11): ReSharper Warning: Use 'Array.Empty<T>()'.
 (12): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(13): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(13):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (14): ReSharper Warning: Use 'Array.Empty<T>()'.
 (15): ReSharper Warning: Use 'Array.Empty<T>()'.
 (16): ReSharper Warning: Use 'Array.Empty<T>()'.
