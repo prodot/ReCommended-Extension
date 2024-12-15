@@ -11,6 +11,7 @@ using ReCommendedExtension.Analyzers.Collection;
 namespace ReCommendedExtension.Tests.Analyzers.Collection;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
 public sealed class ArrayWithDefaultValuesInitializationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
@@ -28,11 +29,10 @@ public sealed class ArrayWithDefaultValuesInitializationQuickFixAvailabilityTest
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     public void TestArrayWithDefaultValuesInitializationAvailabilityWithNullableAnnotations() => DoNamedTest2();
 
     [Test]
-    [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
     public void TestArrayWithDefaultValuesInitializationAvailabilityWithNullableAnnotations_CS12() => DoNamedTest2();
 }

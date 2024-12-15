@@ -1,4 +1,3 @@
-using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -13,6 +12,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.ControlFlow;
 
@@ -21,7 +21,7 @@ namespace ReCommendedExtension.Analyzers.ControlFlow;
     HighlightingTypes = [typeof(RedundantAssertionStatementSuggestion), typeof(RedundantInlineAssertionSuggestion)])]
 public sealed class ControlFlowAnalyzer(
     CodeAnnotationsCache codeAnnotationsCache,
-    NullableReferenceTypesDataFlowAnalysisRunSynchronizer referenceTypesDataFlowAnalysisRunSynchronizer) : ElementProblemAnalyzer<ICSharpTreeNode>
+    NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer) : ElementProblemAnalyzer<ICSharpTreeNode>
 {
     [Pure]
     static ICSharpExpression? TryGetOtherOperand(
@@ -49,50 +49,6 @@ public sealed class ControlFlowAnalyzer(
     static bool IsLiteral(IExpression? expression, TokenNodeType tokenType)
         => (expression as ICSharpLiteralExpression)?.Literal.GetTokenType() == tokenType;
 
-    [Pure]
-    static CSharpControlFlowNullReferenceState GetExpressionNullReferenceStateByNullableContext(
-        CSharpCompilerNullableInspector? nullabilityInspector,
-        ICSharpExpression expression)
-    {
-        var type = expression.Type();
-        if (expression.IsDefaultValueOf(type))
-        {
-            switch (type.Classify)
-            {
-                case TypeClassification.VALUE_TYPE:
-                    return type.IsNullable() ? CSharpControlFlowNullReferenceState.NULL : CSharpControlFlowNullReferenceState.NOT_NULL;
-
-                case TypeClassification.REFERENCE_TYPE: return CSharpControlFlowNullReferenceState.NULL;
-
-                case TypeClassification.UNKNOWN: return CSharpControlFlowNullReferenceState.UNKNOWN; // unconstrained generic type
-
-                default: goto case TypeClassification.UNKNOWN;
-            }
-        }
-
-        if (expression.GetContainingNode<ICSharpClosure>() is { } closure)
-        {
-            nullabilityInspector = nullabilityInspector?.GetClosureAnalysisResult(closure) as CSharpCompilerNullableInspector;
-        }
-
-        if (nullabilityInspector?.ControlFlowGraph.GetLeafElementsFor(expression).LastOrDefault()?.Exits.FirstOrDefault() is { } edge)
-        {
-            var nullableContext = nullabilityInspector.GetContext(edge);
-
-            return nullableContext?.ExpressionAnnotation switch
-            {
-                NullableAnnotation.NotAnnotated or NullableAnnotation.NotNullable or NullableAnnotation.RuntimeNotNullable =>
-                    CSharpControlFlowNullReferenceState.NOT_NULL,
-
-                NullableAnnotation.Annotated or NullableAnnotation.Nullable => CSharpControlFlowNullReferenceState.MAY_BE_NULL, // todo: distinguish if the expression is "null" or just "may be null" here
-
-                _ => CSharpControlFlowNullReferenceState.UNKNOWN,
-            };
-        }
-
-        return CSharpControlFlowNullReferenceState.UNKNOWN;
-    }
-
     readonly NullnessProvider nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
     readonly AssertionMethodAnnotationProvider assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
     readonly AssertionConditionAnnotationProvider assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
@@ -116,12 +72,7 @@ public sealed class ControlFlowAnalyzer(
 
         if (rootNode.IsNullableWarningsContextEnabled())
         {
-            nullabilityInspector =
-                (CSharpCompilerNullableInspector?)referenceTypesDataFlowAnalysisRunSynchronizer.RunNullableAnalysisAndGetResults(
-                    rootNode,
-                    null!, // wrong [NotNull] annotation in R# code
-                    ValueAnalysisMode.OFF,
-                    false);
+            nullabilityInspector = rootNode.TryGetNullableInspector(nullableReferenceTypesDataFlowAnalysisRunSynchronizer);
             inspector = null;
             alwaysSuccessTryCastExpressions = null;
         }
@@ -332,7 +283,7 @@ public sealed class ControlFlowAnalyzer(
     {
         if (nullabilityInspector is { })
         {
-            return GetExpressionNullReferenceStateByNullableContext(nullabilityInspector, expression);
+            return expression.GetNullReferenceStateByNullableContext(nullabilityInspector);
         }
 
         Debug.Assert(inspector is { });

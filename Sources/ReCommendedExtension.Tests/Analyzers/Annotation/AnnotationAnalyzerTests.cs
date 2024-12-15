@@ -18,12 +18,14 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAnnotationSuggestion
+        => highlighting is RedundantNullableAnnotationHint
+            or RedundantAnnotationSuggestion
             or NotAllowedAnnotationWarning
             or MissingAnnotationWarning
             or MissingSuppressionJustificationWarning
             or ConflictingAnnotationWarning
-            or InParameterWithMustDisposeResourceAttributeWarning; // to figure out which cases are supported by R#
+            or InParameterWithMustDisposeResourceAttributeWarning // to figure out which cases are supported by R#
+            or ReturnTypeCanBeNotNullableWarning; // to figure out which cases are supported by R#
 
     [Test]
     [TestNetFramework45]
@@ -50,8 +52,8 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     [TestCase("Other_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
     [TestCase("Override.cs", ValueAnalysisMode.PESSIMISTIC)]
     [TestCase("ItemNotNull.cs", ValueAnalysisMode.PESSIMISTIC)]
-    [TestNetFramework45]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+    [TestNetFramework45]
     public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
         => ExecuteWithinSettingsTransaction(
             store =>
@@ -62,13 +64,13 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
             });
 
     [Test]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     [NullableContext(NullableContextKind.Enable)]
+    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestNullableAnnotationContext() => DoNamedTest2();
 
     [Test]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     [NullableContext(NullableContextKind.Enable)]
+    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestNonNegativeValue() => DoNamedTest2();
 
     [Test]
@@ -139,4 +141,10 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
     public void TestDisposalHandling_Fields() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNetCore30(ANNOTATIONS_PACKAGE)]
+    public void TestRedundantNullableAnnotations() => DoNamedTest2();
 }

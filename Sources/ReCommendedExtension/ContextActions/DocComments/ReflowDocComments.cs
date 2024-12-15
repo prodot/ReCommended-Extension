@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using JetBrains.Application.Progress;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
@@ -12,7 +13,6 @@ using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.ReSharper.Psi.Xml.XmlDocComments;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
-using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions.DocComments;
 
@@ -20,7 +20,7 @@ namespace ReCommendedExtension.ContextActions.DocComments;
     GroupType = typeof(CSharpContextActions),
     Name = "Reflow XML doc comments" + ZoneMarker.Suffix,
     Description = "Reflow XML doc comments XML doc comments, i.e. apply smart formatting, tag reordering, etc.")]
-public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider) : XmlDocCommentContextAction
+public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider) : XmlDocCommentContextAction<ICSharpDocCommentBlock>(provider)
 {
     enum TopLevelTagAttribute
     {
@@ -210,24 +210,27 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
     /// </remarks>
     static readonly IReadOnlyList<TopLevelTagInfo> topLevelTags =
     [
-        new TopLevelTagInfo { Name = "summary", Flow = TopLevelTagFlow.Multiline },
-        new TopLevelTagInfo
+        new() { Name = "summary", Flow = TopLevelTagFlow.Multiline },
+        new()
         {
             Name = @"typeparam",
             Attribute = TopLevelTagAttribute.Name,
             TryGetDeclarations = TryGetTypeParameters,
             Flow = TopLevelTagFlow.FirstTryOneLine,
         },
-        new TopLevelTagInfo
+        new()
         {
-            Name = "param", Attribute = TopLevelTagAttribute.Name, TryGetDeclarations = TryGetParameters, Flow = TopLevelTagFlow.FirstTryOneLine,
+            Name = "param",
+            Attribute = TopLevelTagAttribute.Name,
+            TryGetDeclarations = TryGetParameters,
+            Flow = TopLevelTagFlow.FirstTryOneLine,
         },
-        new TopLevelTagInfo { Name = "returns", Flow = TopLevelTagFlow.FirstTryOneLine },
-        new TopLevelTagInfo { Name = "value", Flow = TopLevelTagFlow.FirstTryOneLine },
-        new TopLevelTagInfo { Name = "exception", Attribute = TopLevelTagAttribute.Cref, Flow = TopLevelTagFlow.FirstTryOneLine },
-        new TopLevelTagInfo { Name = "remarks", Flow = TopLevelTagFlow.Multiline },
-        new TopLevelTagInfo { Name = "example", Flow = TopLevelTagFlow.FirstTryOneLine },
-        new TopLevelTagInfo { Name = @"seealso", Attribute = TopLevelTagAttribute.CrefOrHref, Flow = TopLevelTagFlow.FirstTryOneLine },
+        new() { Name = "returns", Flow = TopLevelTagFlow.FirstTryOneLine },
+        new() { Name = "value", Flow = TopLevelTagFlow.FirstTryOneLine },
+        new() { Name = "exception", Attribute = TopLevelTagAttribute.Cref, Flow = TopLevelTagFlow.FirstTryOneLine },
+        new() { Name = "remarks", Flow = TopLevelTagFlow.Multiline },
+        new() { Name = "example", Flow = TopLevelTagFlow.FirstTryOneLine },
+        new() { Name = @"seealso", Attribute = TopLevelTagAttribute.CrefOrHref, Flow = TopLevelTagFlow.FirstTryOneLine },
     ];
 
     static readonly IReadOnlyDictionary<string, TopLevelTagInfo> topLevelTagsByName = topLevelTags.ToDictionary(
@@ -996,19 +999,13 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
     ICSharpDocCommentBlock? docCommentBlock;
 
     [MemberNotNullWhen(true, nameof(docCommentBlock))]
-    public override bool IsAvailable(IUserDataHolder cache)
+    protected override bool IsAvailable(ICSharpDocCommentBlock selectedElement, DocumentRange documentSelection)
     {
-        docCommentBlock = provider.GetSelectedElement<ICSharpDocCommentBlock>();
-
-        if (docCommentBlock is { })
+        if (selectedElement.DocComments.All(docComment => docComment.CommentType == CommentType.DOC_COMMENT)
+            && AreTopLevelTagsValid(selectedElement.GetXmlPsi().XmlFile, selectedElement.Parent))
         {
-            if (docCommentBlock.DocComments.All(docComment => docComment.CommentType == CommentType.DOC_COMMENT)
-                && AreTopLevelTagsValid(docCommentBlock.GetXmlPsi().XmlFile, docCommentBlock.Parent))
-            {
-                return true; // supporting only "///"-style doc comments
-            }
-
-            docCommentBlock = null;
+            docCommentBlock = selectedElement;
+            return true; // supporting only "///"-style doc comments
         }
 
         return false;
@@ -1024,7 +1021,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
             using (WriteLockCookie.Create())
             {
-                var settings = Settings.Load(provider);
+                var settings = Settings.Load(PsiServices);
 
                 var position = (int)docCommentBlock.GetDocumentRange().StartOffset.ToDocumentCoords().Column;
 

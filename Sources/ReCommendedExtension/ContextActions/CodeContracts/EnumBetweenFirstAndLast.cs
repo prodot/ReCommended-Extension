@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.ContextActions.CodeContracts.Internal;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 

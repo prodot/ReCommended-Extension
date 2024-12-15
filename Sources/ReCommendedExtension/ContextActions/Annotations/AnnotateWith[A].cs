@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl.Special;
-using JetBrains.ReSharper.Psi.Modules;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
 
@@ -16,7 +15,6 @@ public abstract class AnnotateWith<A>(ICSharpContextActionDataProvider provider)
 
     protected sealed override Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,
-        IPsiModule psiModule,
         out IAttribute[] attributesToReplace)
     {
         attributesToReplace = [];
@@ -28,8 +26,7 @@ public abstract class AnnotateWith<A>(ICSharpContextActionDataProvider provider)
                 var fullName = typeof(A).FullName;
                 Debug.Assert(fullName is { });
 
-                return factory.CreateAttribute(
-                    new SpecialAttributeInstance(new ClrTypeName(fullName), psiModule, () => GetAnnotationArguments(psiModule)));
+                return factory.CreateAttribute(new SpecialAttributeInstance(new ClrTypeName(fullName), PsiModule, GetAnnotationArguments));
             };
         }
 

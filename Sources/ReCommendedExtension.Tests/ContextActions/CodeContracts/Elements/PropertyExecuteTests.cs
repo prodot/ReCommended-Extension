@@ -5,8 +5,8 @@ using ReCommendedExtension.ContextActions.CodeContracts;
 
 namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Elements;
 
-[TestNetFramework4]
 [TestFixture]
+[TestNetFramework4]
 public sealed class PropertyExecuteTests : CSharpContextActionExecuteTestBase<NotNull>
 {
     protected override string ExtraPath => "";

@@ -3,6 +3,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstructor;
 
@@ -57,8 +58,8 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzer : Elem
 
             consumer.AddHighlighting(
                 new NotifyPropertyChangedInvocatorFromConstructorWarning(
-                    element,
-                    $"Invocation of a method annotated with [{name}] from a constructor is redundant."));
+                    $"Invocation of a method annotated with [{name}] from a constructor is redundant.",
+                    element));
         }
     }
 }

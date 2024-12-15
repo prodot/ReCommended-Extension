@@ -1,15 +1,15 @@
 ﻿using JetBrains.Application.Progress;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
-using JetBrains.Util;
 
 namespace ReCommendedExtension.ContextActions.DocComments;
 
-public abstract class EncompassInDocComment(ICSharpContextActionDataProvider provider) : XmlDocCommentContextAction
+public abstract class EncompassInDocComment(ICSharpContextActionDataProvider provider) : XmlDocCommentContextAction<IDocCommentNode>(provider)
 {
     [Pure]
     static (int start, int end) GetWordBoundaries(string text, [NonNegativeValue] int position)
@@ -48,50 +48,44 @@ public abstract class EncompassInDocComment(ICSharpContextActionDataProvider pro
     protected abstract string Encompass(string text, Settings settings);
 
     [MemberNotNullWhen(true, nameof(docCommentNode))]
-    public sealed override bool IsAvailable(IUserDataHolder cache)
+    protected sealed override bool IsAvailable(IDocCommentNode selectedElement, DocumentRange documentSelection)
     {
-        docCommentNode = provider.GetSelectedElement<IDocCommentNode>();
-        if (docCommentNode is not { })
-        {
-            return false;
-        }
-
-        var text = docCommentNode.GetText(); // includes the leading "///" or "/**" characters
-        Debug.Assert(text != "");
-
-        var startOffset = docCommentNode.GetDocumentStartOffset();
-
-        var documentSelection = provider.DocumentSelection;
+        var startOffset = selectedElement.GetDocumentStartOffset();
 
         if (documentSelection.IsEmpty)
         {
+            var text = selectedElement.GetText(); // includes the leading "///" or "/**" characters
+            Debug.Assert(text != "");
+
             var position = documentSelection.StartOffset - startOffset; // relative to the text
 
             (start, end) = GetWordBoundaries(text, position);
 
-            if (start == end)
+            if (start != end)
             {
-                docCommentNode = null;
+                docCommentNode = selectedElement;
+                return true; // for performance reasons: we don't check if the result becomes a valid XML
             }
         }
         else
         {
             (start, end) = (documentSelection.StartOffset - startOffset, documentSelection.EndOffset - startOffset);
 
-            if (start < 0 || end < 0)
+            if (start >= 0 && end >= 0) // otherwise, selection could be started before the text
             {
-                docCommentNode = null; // selection could be started before the text
+                docCommentNode = selectedElement;
+                return true; // for performance reasons: we don't check if the result becomes a valid XML
             }
         }
 
-        return docCommentNode is { }; // for performance reasons: we don't check if the result becomes a valid XML
+        return false;
     }
 
     protected sealed override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         try
         {
-            var settings = Settings.Load(provider);
+            var settings = Settings.Load(PsiServices);
 
             Debug.Assert(docCommentNode is { });
 

@@ -12,8 +12,8 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class NotAllowedAnnotationWarning(IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute, string message)
-    : AttributeHighlighting(attributesOwnerDeclaration, attribute, false, message)
+public sealed class NotAllowedAnnotationWarning(string message, IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute)
+    : AttributeHighlighting(message, attributesOwnerDeclaration, attribute, false)
 {
     const string SeverityId = "NotAllowedAnnotation";
 }

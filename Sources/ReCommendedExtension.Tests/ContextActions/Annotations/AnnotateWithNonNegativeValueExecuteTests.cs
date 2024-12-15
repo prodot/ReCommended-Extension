@@ -7,6 +7,7 @@ using ReCommendedExtension.ContextActions.Annotations;
 namespace ReCommendedExtension.Tests.ContextActions.Annotations;
 
 [TestFixture]
+[TestNetCore30(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotateWithNonNegativeValueExecuteTests : CSharpContextActionExecuteTestBase<AnnotateWithNonNegativeValue>
 {
     protected override string ExtraPath => "";
@@ -14,7 +15,6 @@ public sealed class AnnotateWithNonNegativeValueExecuteTests : CSharpContextActi
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithNonNegativeValue";
 
     [Test]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestExecute() => DoNamedTest2();
 
     [Test]

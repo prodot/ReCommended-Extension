@@ -15,21 +15,21 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
 public sealed class InvalidValueRangeBoundaryWarning(
+    string message,
     ICSharpExpression positionParameter,
     ValueRangeBoundary boundary,
     IType type,
-    bool typeIsSigned,
-    string message) : Highlighting(message)
+    bool typeIsSigned) : Highlighting(message)
 {
     const string SeverityId = "InvalidValueRangeBoundary";
 
-    internal ICSharpExpression PositionParameter { get; } = positionParameter;
+    internal ICSharpExpression PositionParameter => positionParameter;
 
-    internal ValueRangeBoundary Boundary { get; } = boundary;
+    internal ValueRangeBoundary Boundary => boundary;
 
-    internal IType Type { get; } = type;
+    internal IType Type => type;
 
-    internal bool TypeIsSigned { get; } = typeIsSigned;
+    internal bool TypeIsSigned => typeIsSigned;
 
     public override DocumentRange CalculateRange() => PositionParameter.GetNavigationRange();
 }

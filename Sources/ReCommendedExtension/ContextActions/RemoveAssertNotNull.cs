@@ -13,16 +13,14 @@ namespace ReCommendedExtension.ContextActions;
     GroupType = typeof(CSharpContextActions),
     Name = "Remove inline assertion for non-nullness" + ZoneMarker.Suffix,
     Description = "Removes inline assertion for non-nullness.")]
-public sealed class RemoveAssertNotNull(ICSharpContextActionDataProvider provider) : ContextActionBase
+public sealed class RemoveAssertNotNull(ICSharpContextActionDataProvider provider) : ContextAction<IInvocationExpression>(provider)
 {
     InlineAssertion? assertion;
 
     [MemberNotNullWhen(true, nameof(assertion))]
-    public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
+    protected override bool IsAvailable(IInvocationExpression selectedElement)
     {
-        var invocationExpression = provider.GetSelectedElement<IInvocationExpression>(true, false);
-
-        assertion = invocationExpression is { } ? InlineAssertion.TryFromInvocationExpression(invocationExpression) : null;
+        assertion = InlineAssertion.TryFromInvocationExpression(selectedElement);
 
         return assertion is { };
     }

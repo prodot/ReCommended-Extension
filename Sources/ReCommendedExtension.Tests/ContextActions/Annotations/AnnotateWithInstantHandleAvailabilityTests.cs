@@ -8,6 +8,7 @@ namespace ReCommendedExtension.Tests.ContextActions.Annotations;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
 public sealed class AnnotateWithInstantHandleAvailabilityTests : CSharpContextActionAvailabilityTestBase<AnnotateWithInstantHandle>
 {
     protected override string ExtraPath => "";
@@ -15,7 +16,6 @@ public sealed class AnnotateWithInstantHandleAvailabilityTests : CSharpContextAc
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithInstantHandle";
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     public void TestAvailabilityCS80() => DoNamedTest2();
 
     [Test]
@@ -23,7 +23,6 @@ public sealed class AnnotateWithInstantHandleAvailabilityTests : CSharpContextAc
     public void TestAvailabilityCS90() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestAvailabilityAsyncEnumerableCS80() => DoNamedTest2();
 

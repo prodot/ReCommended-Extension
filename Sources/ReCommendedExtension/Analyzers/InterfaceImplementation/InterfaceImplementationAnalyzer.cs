@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
 
@@ -11,10 +12,14 @@ namespace ReCommendedExtension.Analyzers.InterfaceImplementation;
     typeof(IClassLikeDeclaration),
     HighlightingTypes =
     [
-        typeof(ImplementEqualityOperatorsForClassesSuggestion), typeof(ImplementEqualityOperatorsForStructsSuggestion),
-        typeof(ImplementEqualityOperatorsForRecordsSuggestion), typeof(ImplementComparisonOperatorsForClassesSuggestion),
-        typeof(ImplementComparisonOperatorsForStructsSuggestion), typeof(ImplementComparisonOperatorsForRecordsSuggestion),
-        typeof(ImplementEquatableWarning), typeof(OverrideEqualsWarning),
+        typeof(ImplementEqualityOperatorsForClassesSuggestion),
+        typeof(ImplementEqualityOperatorsForStructsSuggestion),
+        typeof(ImplementEqualityOperatorsForRecordsSuggestion),
+        typeof(ImplementComparisonOperatorsForClassesSuggestion),
+        typeof(ImplementComparisonOperatorsForStructsSuggestion),
+        typeof(ImplementComparisonOperatorsForRecordsSuggestion),
+        typeof(ImplementEquatableWarning),
+        typeof(OverrideEqualsWarning),
     ])]
 public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<IClassLikeDeclaration>
 {

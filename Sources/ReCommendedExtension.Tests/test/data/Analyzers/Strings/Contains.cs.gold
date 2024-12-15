@@ -1,0 +1,55 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Empty(string text, StringComparison comparison)
+        {
+            var result0 = |text.Contains(string.Empty)|(0);
+            var result1 = |text.Contains("")|(1);
+            var result2 = |text.Contains(value: "")|(2);
+
+            var result3 = |text.Contains("", comparison)|(3);
+            var result4 = |text.Contains(value: "", comparison)|(4);
+        }
+
+        public void SingleCharacter(string text, StringComparison comparison)
+        {
+            var result1 = text.Contains(|"a"|(5));
+            var result2 = text.Contains(value: |"a"|(6));
+
+            var result3 = text.Contains(|"a"|(7), comparison);
+            var result4 = text.Contains(value: |"a"|(8), comparison);
+        }
+
+        public void NoDetection(string text, string value, StringComparison comparison)
+        {
+            text.|Contains|(9)("");
+            text.Contains("", comparison);
+
+            var result1 = text.Contains("abc");
+            var result2 = text.Contains(value);
+
+            var result3 = text.Contains("abc", comparison);
+            var result4 = text.Contains(value, comparison);
+        }
+
+        public void NoDetection(string? text, StringComparison comparison)
+        {
+            var result1 = text?.Contains("");
+            var result2 = text?.Contains("", comparison);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always true.
+(1): ReSharper Suggestion: The expression is always true.
+(2): ReSharper Suggestion: The expression is always true.
+(3): ReSharper Suggestion: The expression is always true.
+(4): ReSharper Suggestion: The expression is always true.
+(5): ReSharper Suggestion: Pass the single character.
+(6): ReSharper Suggestion: Pass the single character.
+(7): ReSharper Suggestion: Pass the single character.
+(8): ReSharper Suggestion: Pass the single character.
+(9): ReSharper Warning: Return value of pure method is not used

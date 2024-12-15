@@ -7,6 +7,7 @@ using ReCommendedExtension.ContextActions.Annotations;
 namespace ReCommendedExtension.Tests.ContextActions.Annotations;
 
 [TestFixture]
+[TestNetCore30(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotateWithValueRangeExecuteTests : CSharpContextActionExecuteTestBase<AnnotateWithValueRange>
 {
     protected override string ExtraPath => "";
@@ -14,7 +15,6 @@ public sealed class AnnotateWithValueRangeExecuteTests : CSharpContextActionExec
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithValueRange";
 
     [Test]
-    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestExecute() => DoNamedTest2();
 
     [Test]

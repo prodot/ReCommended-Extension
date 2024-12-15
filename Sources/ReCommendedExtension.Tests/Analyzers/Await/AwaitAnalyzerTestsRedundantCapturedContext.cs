@@ -11,6 +11,7 @@ using ReCommendedExtension.Analyzers.Await;
 namespace ReCommendedExtension.Tests.Analyzers.Await;
 
 [TestFixture]
+[TestNetFramework45]
 public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\Await";
@@ -18,28 +19,27 @@ public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpHighlight
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantCapturedContextSuggestion or RedundantConfigureAwaitWarning; // to figure out which cases are supported by R#
 
-    [TestNetFramework45]
     [Test]
     public void TestRedundantCapturedContext() => DoNamedTest2();
 
-    [TestNetCore21]
     [Test]
+    [TestNetCore21]
     public void TestRedundantCapturedContext_ValueTask() => DoNamedTest2();
 
-    [TestNetCore21]
     [Test]
+    [TestNetCore21]
     public void TestRedundantCapturedContext_ReturnValueTask() => DoNamedTest2();
 
-    [TestNetCore21]
     [Test]
+    [TestNetCore21]
     public void TestRedundantCapturedContext_ValueTask_ReturnTask() => DoNamedTest2();
 
-    [TestNetCore30]
     [Test]
+    [TestNetCore30]
     public void TestRedundantCapturedContext_IAsyncTypes() => DoNamedTest2();
 
-    [TestNetCore30]
     [Test]
+    [TestNetCore30]
     public void TestRedundantCapturedContext_LibraryMode()
         => ExecuteWithinSettingsTransaction(
             store =>
@@ -52,11 +52,11 @@ public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpHighlight
                 DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
             });
 
-    [TestNet80]
     [Test]
+    [TestNet80]
     public void TestRedundantCapturedContext_NET_8() => DoNamedTest2();
 
-    [TestNet80]
     [Test]
+    [TestNet80]
     public void TestRedundantCapturedContext_ValueTask_NET_8() => DoNamedTest2();
 }

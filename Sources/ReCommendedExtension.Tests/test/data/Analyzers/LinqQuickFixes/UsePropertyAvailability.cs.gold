@@ -1,0 +1,25 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Class
+    {
+        public void Method(ICollection<int> collection, string s, int[] array)
+        {
+            var count1 = collection.|LongCount()|(0);
+            var count2 = s.|LongCount()|(1);
+            var count3 = array.|LongCount()|(2);
+        }
+    }
+}
+------------------------------------------------
+0: Use the 'Count' property.
+QUICKFIXES:
+Replace with 'Count'
+1: Use the 'Length' property.
+QUICKFIXES:
+Replace with 'Length'
+2: Use the 'Length' property.
+QUICKFIXES:
+Replace with 'Length'

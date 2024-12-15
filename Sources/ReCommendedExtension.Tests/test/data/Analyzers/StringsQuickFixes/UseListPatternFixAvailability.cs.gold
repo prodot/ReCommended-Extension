@@ -1,0 +1,97 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void EndsWith(string text, char c)
+        {
+            var result1 = text.|EndsWith('a')|(0);
+            var result2 = text.|EndsWith(value: 'a')|(1);
+
+            var result3 = text.|EndsWith(c)|(2);
+            var result4 = text.|EndsWith(value: c)|(3);
+
+            var result5 = text.|EndsWith("a", StringComparison.Ordinal)|(4);
+            var result6 = text.|EndsWith("a", StringComparison.OrdinalIgnoreCase)|(5);
+            var result7 = text.|EndsWith("ß", StringComparison.OrdinalIgnoreCase)|(6);
+        }
+
+        public void IndexOf(string text, char c)
+        {
+            var result11 = text.|IndexOf(c) == 0|(7);
+            var result12 = text.|IndexOf('a') == 0|(8);
+
+            var result21 = text.|IndexOf(c) != 0|(9);
+            var result22 = text.|IndexOf('a') != 0|(10);
+        }
+
+        public void StartsWith(string text, char c)
+        {
+            var result1 = text.|StartsWith('a')|(11);
+            var result2 = text.|StartsWith(value: 'a')|(12);
+
+            var result3 = text.|StartsWith(c)|(13);
+            var result4 = text.|StartsWith(value: c)|(14);
+
+            var result5 = text.|StartsWith("a", StringComparison.Ordinal)|(15);
+            var result6 = text.|StartsWith("a", StringComparison.OrdinalIgnoreCase)|(16);
+            var result7 = text.|StartsWith("ß", StringComparison.OrdinalIgnoreCase)|(17);
+        }
+    }
+}
+------------------------------------------------
+0: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., 'a']'
+1: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., 'a']'
+2: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., var lastChar] && lastChar == c'
+3: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., var lastChar] && lastChar == c'
+4: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., 'a']'
+5: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., 'a' or 'A']'
+6: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., 'ß']'
+7: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var firstChar, ..] && firstChar == c'
+8: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a', ..]'
+9: Use list pattern.
+QUICKFIXES:
+Replace with 'is not [var firstChar, ..] || firstChar != c'
+10: Use list pattern.
+QUICKFIXES:
+Replace with 'is not ['a', ..]'
+11: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a', ..]'
+12: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a', ..]'
+13: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var firstChar, ..] && firstChar == c'
+14: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var firstChar, ..] && firstChar == c'
+15: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a', ..]'
+16: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['a' or 'A', ..]'
+17: Use list pattern.
+QUICKFIXES:
+Replace with 'is ['ß', ..]'

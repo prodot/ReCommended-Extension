@@ -1,6 +1,5 @@
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Intentions.Util;
 using JetBrains.ReSharper.Psi;
@@ -8,13 +7,13 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
 
-public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : ContextActionBase
+public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : ContextAction<IAttributesOwnerDeclaration>(provider)
 {
     IAttributesOwnerDeclaration? attributesOwnerDeclaration;
 
@@ -30,7 +29,6 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
     [Pure]
     protected abstract Func<CSharpElementFactory, IAttribute>? CreateAttributeFactoryIfAvailable(
         IAttributesOwnerDeclaration attributesOwnerDeclaration,
-        IPsiModule psiModule,
         out IAttribute[] attributeToReplace);
 
     protected virtual string TextSuffix => "";
@@ -39,27 +37,27 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
     protected virtual bool AllowsMultiple => false;
 
+    protected virtual bool AnnotateMethodReturnValue => false;
+
     [Pure]
-    protected virtual AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => [];
+    protected virtual AttributeValue[] GetAnnotationArguments() => [];
 
     [MemberNotNullWhen(true, nameof(createAttributeFactory))]
     [MemberNotNullWhen(true, nameof(attributesOwnerDeclaration))]
-    public sealed override bool IsAvailable(JetBrains.Util.IUserDataHolder cache)
+    protected sealed override bool IsAvailable(IAttributesOwnerDeclaration selectedElement)
     {
-        attributesOwnerDeclaration = provider.GetSelectedElement<IAttributesOwnerDeclaration>(true, false);
-
-        if (attributesOwnerDeclaration is { }
-            && attributesOwnerDeclaration.GetNameRange().Contains(provider.SelectedTreeRange)
-            && (AllowsInheritedMethods || !attributesOwnerDeclaration.OverridesInheritedMember())
-            && !attributesOwnerDeclaration.IsOnLocalFunctionWithUnsupportedAttributes()
-            && !attributesOwnerDeclaration.IsOnLambdaExpressionWithUnsupportedAttributes()
-            && !attributesOwnerDeclaration.IsOnAnonymousMethodWithUnsupportedAttributes()
-            && (AllowsMultiple || !attributesOwnerDeclaration.Attributes.Any(IsAttribute)))
+        if (selectedElement.GetNameRange().Contains(SelectedTreeRange)
+            && (AllowsInheritedMethods || !selectedElement.OverridesInheritedMember())
+            && !selectedElement.IsOnLocalFunctionWithUnsupportedAttributes()
+            && !selectedElement.IsOnLambdaExpressionWithUnsupportedAttributes()
+            && !selectedElement.IsOnAnonymousMethodWithUnsupportedAttributes()
+            && (AllowsMultiple || !selectedElement.Attributes.Any(IsAttribute)))
         {
-            createAttributeFactory = CreateAttributeFactoryIfAvailable(attributesOwnerDeclaration, provider.PsiModule, out attributesToReplace);
+            createAttributeFactory = CreateAttributeFactoryIfAvailable(selectedElement, out attributesToReplace);
 
             if (createAttributeFactory is { })
             {
+                attributesOwnerDeclaration = selectedElement;
                 return true;
             }
         }
@@ -81,7 +79,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
                 ? typeName[..^nameof(Attribute).Length]
                 : typeName;
 
-            var annotationArguments = GetAnnotationArguments(provider.PsiModule);
+            var annotationArguments = GetAnnotationArguments();
 
             var arguments = annotationArguments is [] or [{ ConstantValue.Kind: ConstantValueKind.NonCompileTimeConstant }]
                 ? ""
@@ -109,14 +107,24 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
             using (WriteLockCookie.Create())
             {
-                var attributeTarget = AttributeTarget.None;
+                AttributeTarget attributeTarget;
 
-                if (attributesOwnerDeclaration is IPrimaryConstructorDeclaration primaryConstructorDeclaration)
+                switch (attributesOwnerDeclaration)
                 {
-                    attributesOwnerDeclaration = primaryConstructorDeclaration.GetContainingTypeDeclaration();
-                    Debug.Assert(attributesOwnerDeclaration is { });
+                    case IPrimaryConstructorDeclaration primaryConstructorDeclaration:
+                        attributesOwnerDeclaration = primaryConstructorDeclaration.GetContainingTypeDeclaration();
+                        Debug.Assert(attributesOwnerDeclaration is { });
 
-                    attributeTarget = AttributeTarget.Method;
+                        attributeTarget = AttributeTarget.Method;
+                        break;
+
+                    case IMethodDeclaration when AnnotateMethodReturnValue:
+                        attributeTarget = AttributeTarget.Return;
+                        break;
+
+                    default:
+                        attributeTarget = AttributeTarget.None;
+                        break;
                 }
 
                 var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
@@ -154,7 +162,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
             return textControl =>
             {
-                if (GetAnnotationArguments(provider.PsiModule) is [{ ConstantValue.Kind: ConstantValueKind.NonCompileTimeConstant }])
+                if (GetAnnotationArguments() is [{ ConstantValue.Kind: ConstantValueKind.NonCompileTimeConstant }])
                 {
                     textControl.Caret.MoveTo(attribute.Arguments[0].GetDocumentRange().EndOffset, CaretVisualPlacement.DontScrollIfVisible);
                     textControl.EmulateAction("TextControl.Backspace");

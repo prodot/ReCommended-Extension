@@ -13,9 +13,9 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
 public sealed class MissingSuppressionJustificationWarning(
+    string message,
     IAttributesOwnerDeclaration attributesOwnerDeclaration,
-    IAttribute attribute,
-    string message) : AttributeHighlighting(attributesOwnerDeclaration, attribute, false, message)
+    IAttribute attribute) : AttributeHighlighting(message, attributesOwnerDeclaration, attribute, false)
 {
     const string SeverityId = "MissingSuppressionJustification";
 }

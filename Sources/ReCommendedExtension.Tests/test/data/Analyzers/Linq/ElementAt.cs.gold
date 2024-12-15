@@ -1,0 +1,227 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    class CustomList<T> : IList<T>
+    {
+        public int IndexOf(T item) => throw new NotImplementedException();
+    
+        public void Insert(int index, T item) => throw new NotImplementedException();
+    
+        public void RemoveAt(int index) => throw new NotImplementedException();
+    
+        public T this[int index]
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+    
+        public void Add(T item) => throw new NotImplementedException();
+    
+        public void Clear() => throw new NotImplementedException();
+    
+        public bool Contains(T item) => throw new NotImplementedException();
+    
+        public void CopyTo(T[] array, int arrayIndex) => throw new NotImplementedException();
+    
+        public bool Remove(T item) => throw new NotImplementedException();
+    
+        public int Count => throw new NotImplementedException();
+    
+        public bool IsReadOnly => throw new NotImplementedException();
+    
+        public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
+    
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    class CustomListUniqueItems<T> : CustomList<T>, ISet<T>
+    {
+        public bool Add(T item) => throw new NotImplementedException();
+
+        public void UnionWith(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public void IntersectWith(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public void ExceptWith(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public void SymmetricExceptWith(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public bool IsSubsetOf(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public bool IsSupersetOf(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public bool IsProperSupersetOf(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public bool IsProperSubsetOf(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public bool Overlaps(IEnumerable<T> other) => throw new NotImplementedException();
+
+        public bool SetEquals(IEnumerable<T> other) => throw new NotImplementedException();
+    }
+
+    public class IndexableCollections
+    {
+        public void NonGenericMethod(IList<int> list)
+        {
+            var third = list.|ElementAt(2)|(0);
+            var secondFromEnd = list.|ElementAt(^2)|(1);
+        }
+        
+        public void GenericMethod<T>(IList<T> list2)
+        {
+            var third = list2.|ElementAt(2)|(2);
+            var secondFromEnd = list2.|ElementAt(^2)|(3);
+        }
+        
+        public void ConstrainedGenericMethod<L>(L list3) where L : IList<int>
+        {
+            var third = list3.|ElementAt(2)|(4);
+            var secondFromEnd = list3.|ElementAt(^2)|(5);
+        }
+        
+        public void Method(object list4)
+        {
+            var third = ((IList<int>)list4).|ElementAt(2)|(6);
+            var secondFromEnd = ((IList<int>)list4).|ElementAt(^2)|(7);
+        }
+        
+        public void NonGenericMethod(List<int> list5)
+        {
+            var third = list5.|ElementAt(2)|(8);
+            var secondFromEnd = list5.|ElementAt(^2)|(9);
+        }
+
+        public void NonGenericMethod(int[] list6)
+        {
+            var third = list6.|ElementAt(2)|(10);
+            var secondFromEnd = list6.|ElementAt(^2)|(11);
+        }
+
+        public void NonGenericMethod(int[][] list7)
+        {
+            var third = list7.|ElementAt(2)|(12);
+            var secondFromEnd = list7.|ElementAt(^2)|(13);
+        }
+
+        public void GenericMethod<T>(CustomList<T> list8)
+        {
+            var third = list8.|ElementAt(2)|(14);
+            var secondFromEnd = list8.|ElementAt(^2)|(15);
+        }
+
+        public void NonGenericMethod(IReadOnlyList<int> list9)
+        {
+            var third = list9.|ElementAt(2)|(16);
+            var secondFromEnd = list9.|ElementAt(^2)|(17);
+        }
+
+        public void NonGenericMethod(string text)
+        {
+            var third = text.|ElementAt(2)|(18);
+            var secondFromEnd = text.|ElementAt(^2)|(19);
+        }
+
+        public void NonAccessibleIndexers(OrderedDictionary<int, string> orderedDictionary)
+        {
+            var third = orderedDictionary.ElementAt(2);
+            var secondFromEnd = orderedDictionary.ElementAt(^2);
+        }
+    }
+
+    public class ConstrainedGenericClass<L> where L : IList<int>
+    {
+        public void ConstrainedGenericMethod(L list3)
+        {
+            var third = list3.|ElementAt(2)|(20);
+            var secondFromEnd = list3.|ElementAt(^2)|(21);
+        }
+    }
+
+    public class MixedBehaviorCollections
+    {
+        public void Method(CustomListUniqueItems<int> list)
+        {
+            var third = list.|ElementAt(2)|(22);
+            var secondFromEnd = list.|ElementAt(^2)|(23);
+        }
+    }
+
+    public class DistinctCollections
+    {
+        public void NonGenericMethod(ISet<int> collection)
+        {
+            var third = collection.|ElementAt(2)|(24);
+            var secondFromEnd = collection.|ElementAt(^2)|(25);
+        }
+
+        public void NonGenericMethod(IReadOnlySet<int> collection)
+        {
+            var third = collection.|ElementAt(2)|(26);
+            var secondFromEnd = collection.|ElementAt(^2)|(27);
+        }
+
+        public void NonGenericMethod(Dictionary<int, string>.KeyCollection collection)
+        {
+            var third = collection.|ElementAt(2)|(28);
+            var secondFromEnd = collection.|ElementAt(^2)|(29);
+        }
+
+        public void NonGenericMethod(HashSet<int> collection)
+        {
+            var third = collection.|ElementAt(2)|(30);
+            var secondFromEnd = collection.|ElementAt(^2)|(31);
+        }
+
+        public void GenericMethod<T>(HashSet<T> collection)
+        {
+            var third = collection.|ElementAt(2)|(32);
+            var secondFromEnd = collection.|ElementAt(^2)|(33);
+        }
+
+        public void ConstrainedGenericMethod<L>(L collection) where L : IReadOnlySet<int>
+        {
+            var third = collection.|ElementAt(2)|(34);
+            var secondFromEnd = collection.|ElementAt(^2)|(35);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the indexer.
+(1): ReSharper Suggestion: Use the indexer.
+(2): ReSharper Suggestion: Use the indexer.
+(3): ReSharper Suggestion: Use the indexer.
+(4): ReSharper Suggestion: Use the indexer.
+(5): ReSharper Suggestion: Use the indexer.
+(6): ReSharper Suggestion: Use the indexer.
+(7): ReSharper Suggestion: Use the indexer.
+(8): ReSharper Suggestion: Use the indexer.
+(9): ReSharper Suggestion: Use the indexer.
+(10): ReSharper Suggestion: Use the indexer.
+(11): ReSharper Suggestion: Use the indexer.
+(12): ReSharper Suggestion: Use the indexer.
+(13): ReSharper Suggestion: Use the indexer.
+(14): ReSharper Suggestion: Use the indexer.
+(15): ReSharper Suggestion: Use the indexer.
+(16): ReSharper Suggestion: Use the indexer.
+(17): ReSharper Suggestion: Use the indexer.
+(18): ReSharper Suggestion: Use the indexer.
+(19): ReSharper Suggestion: Use the indexer.
+(20): ReSharper Suggestion: Use the indexer.
+(21): ReSharper Suggestion: Use the indexer.
+(22): ReSharper Suggestion: Use the indexer.
+(23): ReSharper Suggestion: Use the indexer.
+(24): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(25): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(26): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(27): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(28): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(29): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(30): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(31): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(32): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(33): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(34): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(35): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.

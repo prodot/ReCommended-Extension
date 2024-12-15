@@ -46,6 +46,12 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName IEqualityComparer = GetClrTypeName<IEqualityComparer>();
 
+    public static readonly IClrTypeName IReadOnlyList = GetClrTypeName(typeof(IReadOnlyList<>));
+
+    public static readonly IClrTypeName IReadOnlySet = GetClrTypeName(typeof(IReadOnlySet<>));
+
+    public static readonly IClrTypeName DictionaryKeyCollection = GetClrTypeName(typeof(Dictionary<,>.KeyCollection));
+
     public static readonly IClrTypeName MemberInfo = GetClrTypeName<System.Reflection.MemberInfo>();
 
     public static readonly IClrTypeName ParameterInfo = GetClrTypeName<ParameterInfo>();
@@ -73,6 +79,10 @@ internal static class ClrTypeNames
     public static readonly IClrTypeName IComparisonOperators = new ClrTypeName("System.Numerics.IComparisonOperators`3");
 
     public static readonly IClrTypeName ConfigureAwaitOptions = new ClrTypeName("System.Threading.Tasks.ConfigureAwaitOptions");
+
+    public static readonly IClrTypeName StringSplitOptions = GetClrTypeName<StringSplitOptions>();
+
+    public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");
 
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

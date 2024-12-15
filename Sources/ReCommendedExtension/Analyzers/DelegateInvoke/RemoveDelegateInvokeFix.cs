@@ -10,7 +10,7 @@ using JetBrains.Util;
 namespace ReCommendedExtension.Analyzers.DelegateInvoke;
 
 [QuickFix]
-public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeSuggestion highlighting) : QuickFixBase
+public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeHint highlighting) : QuickFixBase
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
@@ -20,10 +20,10 @@ public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeSuggestion hi
     {
         using (WriteLockCookie.Create())
         {
-            var dotToken = highlighting.ReferenceExpression.NameIdentifier.GetPreviousMeaningfulToken();
-            Debug.Assert(dotToken is { });
-
-            ModificationUtil.DeleteChildRange(dotToken, highlighting.ReferenceExpression.NameIdentifier);
+            if (highlighting.ReferenceExpression.NameIdentifier.GetPreviousMeaningfulToken() is { } dotToken)
+            {
+                ModificationUtil.DeleteChildRange(dotToken, highlighting.ReferenceExpression.NameIdentifier);
+            }
         }
 
         return _ => { };

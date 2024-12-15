@@ -2,6 +2,7 @@ using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
 
@@ -56,7 +57,7 @@ public sealed class AnnotateWithHandlesResourceDisposal(ICSharpContextActionData
         {
             IMethod { IsStatic: false, ContainingType: { } } method => method.GetAccessRights() is not (AccessRights.PRIVATE or AccessRights.NONE)
                 && (!IsAnyBaseMethodAnnotated(method)
-                    && method.ContainingType.IsDisposable(context.GetPsiModule())
+                    && method.ContainingType.IsDisposable(PsiModule)
                     && !method.IsDisposeMethod()
                     && !method.IsDisposeAsyncMethod()
                     || method.ContainingType is IStruct { IsByRefLike: true }

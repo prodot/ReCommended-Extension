@@ -1,0 +1,30 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Class
+    {
+        public void Method(IList<int> list)
+        {
+            var first = list.|First()|(0);
+            var last = list.|Last()|(1);
+
+            var third = list.|ElementAt(2)|(2);
+            var secondFromEnd = list.|ElementAt(^2)|(3);
+        }
+    }
+}
+------------------------------------------------
+0: Use the indexer.
+QUICKFIXES:
+Replace with '[0]' (other exception could be thrown)
+1: Use the indexer.
+QUICKFIXES:
+Replace with '[^1]' (other exception could be thrown)
+2: Use the indexer.
+QUICKFIXES:
+Replace with '[2]'
+3: Use the indexer.
+QUICKFIXES:
+Replace with '[^2]'

@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void LastIndexOfAny(string text)
+        {
+            var result = -1{caret};
+        }
+    }
+}

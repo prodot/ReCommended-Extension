@@ -8,8 +8,8 @@ using ReCommendedExtension.Analyzers.ValueTask;
 
 namespace ReCommendedExtension.Tests.Analyzers.ValueTask;
 
-[TestNetCore30]
 [TestFixture]
+[TestNetCore30]
 public sealed class ValueTaskAnalyzerTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\ValueTask";

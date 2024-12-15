@@ -2,6 +2,8 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.YieldReturnWithinLock;
 
@@ -17,4 +19,9 @@ public sealed class YieldReturnWithinLockAnalyzerTests : CSharpHighlightingTestB
 
     [Test]
     public void TestYieldReturnWithinLock() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
+    [TestNet90]
+    public void TestYieldReturnWithinLockAroundLockObject() => DoNamedTest2();
 }

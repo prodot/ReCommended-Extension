@@ -10,8 +10,9 @@ using ReCommendedExtension.Analyzers.Annotation;
 
 namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
-[TestNetFramework45]
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
+[TestNetFramework45]
 public sealed class AnnotationAnalyzerTestsWithoutAnnotations : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
@@ -22,7 +23,6 @@ public sealed class AnnotationAnalyzerTestsWithoutAnnotations : CSharpHighlighti
     [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.PESSIMISTIC)]
     [TestCase("WithoutAnnotations_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
     [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.OFF)]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
         => ExecuteWithinSettingsTransaction(
             store =>

@@ -1,0 +1,9 @@
+﻿namespace Test
+{
+    public class Strings
+    {
+        public void Replace(object? obj, string suffix)
+        {
+            var result = {caret}obj + suffix is not { Length: > 0 };
+        }
+    }

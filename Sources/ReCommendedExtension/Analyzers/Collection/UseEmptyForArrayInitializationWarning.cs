@@ -19,9 +19,9 @@ public sealed class UseEmptyForArrayInitializationWarning(string message, ICShar
 {
     const string SeverityId = "UseEmptyForArrayInitialization";
 
-    internal ICSharpTreeNode TreeNode { get; } = treeNode;
+    internal ICSharpTreeNode TreeNode => treeNode;
 
-    internal IType ArrayItemType { get; } = arrayItemType;
+    internal IType ArrayItemType => arrayItemType;
 
     public override DocumentRange CalculateRange() => TreeNode.GetDocumentRange();
 }

@@ -1,0 +1,11 @@
+﻿using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Execute
+    {        
+        void Method<[DefaultEqualityUsage] U{caret}>(U one) { }
+    }
+}

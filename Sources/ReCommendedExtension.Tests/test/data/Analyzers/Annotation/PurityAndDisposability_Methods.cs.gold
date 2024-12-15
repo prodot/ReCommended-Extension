@@ -554,13 +554,13 @@ namespace Disposable
             public void Dispose() { }
         }
 
-        public Class? |NullableClass|(127)() => throw new NotImplementedException();
+        public Class|?|(127) |NullableClass|(128)() => throw new NotImplementedException();
 
-        public Struct? |NullableStruct|(128)() => throw new NotImplementedException();
+        public Struct? |NullableStruct|(129)() => throw new NotImplementedException();
 
-        public ValueTask<Class?> |NullableClassTaskLike|(129)() => throw new NotImplementedException();
+        public ValueTask<Class?> |NullableClassTaskLike|(130)() => throw new NotImplementedException();
 
-        public ValueTask<Struct?> |NullableStructTaskLike|(130)() => throw new NotImplementedException();
+        public ValueTask<Struct?> |NullableStructTaskLike|(131)() => throw new NotImplementedException();
     }
 }
 ---------------------------------------------------------
@@ -691,7 +691,8 @@ namespace Disposable
 (124): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (125): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (126): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(127): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(127): ReSharper Dead Code: Return type of 'NullableClass' can be made non-nullable
 (128): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (129): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (130): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(131): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].

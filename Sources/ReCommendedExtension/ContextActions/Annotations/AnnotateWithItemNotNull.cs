@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
 
@@ -17,7 +18,7 @@ public sealed class AnnotateWithItemNotNull(ICSharpContextActionDataProvider pro
     [Pure]
     static bool IsAvailableForType(IType type, ITreeNode context)
     {
-        if ((type.IsGenericEnumerableOrDescendant() || type.IsGenericArray(context))
+        if ((type.IsGenericEnumerableOrDescendant() || type.IsGenericArrayOfAnyRank(context))
             && CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { Classify: TypeClassification.REFERENCE_TYPE })
         {
             return true;

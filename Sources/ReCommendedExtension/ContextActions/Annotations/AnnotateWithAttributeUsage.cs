@@ -1,7 +1,6 @@
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Util;
 
 namespace ReCommendedExtension.ContextActions.Annotations;
@@ -16,5 +15,5 @@ public sealed class AnnotateWithAttributeUsage(ICSharpContextActionDataProvider 
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement)
         => declaredElement is ITypeElement typeElement && typeElement.IsAttribute();
 
-    protected override AttributeValue[] GetAnnotationArguments(IPsiModule psiModule) => [new AttributeValue(ConstantValue.NOT_COMPILE_TIME_CONSTANT)];
+    protected override AttributeValue[] GetAnnotationArguments() => [new(ConstantValue.NOT_COMPILE_TIME_CONSTANT)];
 }

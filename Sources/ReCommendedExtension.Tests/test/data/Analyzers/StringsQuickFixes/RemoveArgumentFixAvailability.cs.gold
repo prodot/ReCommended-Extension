@@ -1,0 +1,74 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void IndexOf(string text, char c, string s)
+        {
+            var result1 = text.IndexOf(c, |0|(0));
+            var result2 = text.IndexOf(c, |startIndex: 0|(1));
+
+            var result3 = text.IndexOf(s, |0|(2));
+            var result4 = text.IndexOf(s, |startIndex: 0|(3));
+
+            var result5 = text.IndexOf(s, |0|(4), StringComparison.CurrentCulture);
+            var result6 = text.IndexOf(s, |startIndex: 0|(5), StringComparison.CurrentCulture);
+        }
+
+        public void IndexOfAny(string text, char[] c)
+        {
+            var result1 = text.IndexOfAny(c, |0|(6));
+            var result2 = text.IndexOfAny(c, |startIndex: 0|(7));
+        }
+
+        public void PadLeft(string text, int totalWidth)
+        {
+            var result3 = text.PadLeft(totalWidth, |' '|(8));
+        }
+
+        public void PadRight(string text, int totalWidth)
+        {
+            var result3 = text.PadRight(totalWidth, |' '|(9));
+        }
+
+        public void Split(string text)
+        {
+            var result11 = text.Split('a', 'b', |'a'|(10));
+        }
+    }
+}
+------------------------------------------------
+0: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+1: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+2: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+3: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+4: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+5: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+6: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+7: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+8: Passing ' ' is redundant.
+QUICKFIXES:
+Remove argument
+9: Passing ' ' is redundant.
+QUICKFIXES:
+Remove argument
+10: The character is already passed.
+QUICKFIXES:
+Remove argument

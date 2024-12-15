@@ -5,8 +5,8 @@ using ReCommendedExtension.ContextActions.CodeContracts;
 
 namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types;
 
-[TestNetFramework4]
 [TestFixture]
+[TestNetFramework4]
 public sealed class TimeSpanZeroOrNegativeAvailabilityTests : CSharpContextActionAvailabilityTestBase<TimeSpanZeroOrNegative>
 {
     protected override string ExtraPath => "";

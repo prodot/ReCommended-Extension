@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts;
 
@@ -22,7 +23,7 @@ public sealed class CollectionCountPositive(ICSharpContextActionDataProvider pro
             var context = Provider.GetSelectedElement<ITreeNode>();
             Debug.Assert(context is { });
 
-            if (type.IsGenericArray(context))
+            if (type.IsGenericArrayOfAnyRank(context))
             {
                 // type is T[...]
                 isArray = true;

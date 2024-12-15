@@ -1,0 +1,9 @@
+﻿namespace Test
+{
+    public class Strings
+    {
+        public void Replace(string? text)
+        {
+            var result = text is null o{caret}r [];
+        }
+    }

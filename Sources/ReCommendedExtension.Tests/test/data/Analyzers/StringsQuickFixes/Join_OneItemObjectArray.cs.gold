@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Join(string s, object objectItem)
+        {
+            var result = $"{o{caret}bjectItem}";
+        }
+    }
+}

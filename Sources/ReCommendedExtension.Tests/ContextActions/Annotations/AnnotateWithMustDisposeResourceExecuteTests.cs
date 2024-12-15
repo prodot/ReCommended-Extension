@@ -7,8 +7,8 @@ using ReCommendedExtension.ContextActions.Annotations;
 namespace ReCommendedExtension.Tests.ContextActions.Annotations;
 
 [TestFixture]
-[TestNet80(ANNOTATIONS_PACKAGE)]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+[TestNet80(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotateWithMustDisposeResourceExecuteTests : CSharpContextActionExecuteTestBase<AnnotateWithMustDisposeResource>
 {
     protected override string ExtraPath => "";

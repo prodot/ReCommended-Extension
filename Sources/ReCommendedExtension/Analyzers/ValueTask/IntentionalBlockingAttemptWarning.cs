@@ -23,9 +23,9 @@ public sealed class IntentionalBlockingAttemptWarning(
 {
     const string SeverityId = "IntentionalBlockingAttempt";
 
-    internal ICSharpExpression Expression { get; } = expression;
+    internal ICSharpExpression Expression => expression;
 
-    internal ICSharpExpression ValueTaskExpression { get; } = valueTaskExpression;
+    internal ICSharpExpression ValueTaskExpression => valueTaskExpression;
 
     public override DocumentRange CalculateRange()
     {

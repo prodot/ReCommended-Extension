@@ -8,9 +8,9 @@ using ReCommendedExtension.ContextActions.InterfaceImplementationDeclarations;
 namespace ReCommendedExtension.Tests.ContextActions.InterfaceImplementationDeclarations;
 
 [TestFixture]
-[TestNet70]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
 [NullableContext(NullableContextKind.Enable)]
+[TestNet70]
 public sealed class DeclareComparisonOperatorsExecuteTests : CSharpContextActionExecuteTestBase<DeclareComparisonOperators>
 {
     protected override string ExtraPath => "";

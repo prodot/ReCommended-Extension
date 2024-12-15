@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void EmptyArray(string text, StringSplitOptions options)
+        {
+            var result = text.Split('a'{caret}, options);
+        }
+    }
+}

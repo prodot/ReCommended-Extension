@@ -28,9 +28,7 @@ public sealed class ConditionalInvocationHint(string message, IInvocationExpress
     {
         var range = invocationExpression.GetHighlightingRange();
 
-        var nextToken = invocationExpression.NextTokens().SkipWhile(token => token.IsWhitespaceToken()).FirstOrDefault();
-
-        if (nextToken is { } && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON)
+        if (invocationExpression.GetNextNonWhitespaceToken() is { } nextToken && nextToken.GetTokenType() == CSharpTokenType.SEMICOLON)
         {
             range = new DocumentRange(
                 range.Document,

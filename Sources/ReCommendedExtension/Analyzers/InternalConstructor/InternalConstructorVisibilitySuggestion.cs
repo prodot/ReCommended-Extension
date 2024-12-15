@@ -23,9 +23,9 @@ public sealed class InternalConstructorVisibilitySuggestion(
 {
     const string SeverityId = "InternalConstructorVisibility";
 
-    internal IConstructorDeclaration ConstructorDeclaration { get; } = constructorDeclaration;
+    internal IConstructorDeclaration ConstructorDeclaration => constructorDeclaration;
 
-    internal AccessRights Visibility { get; } = visibility;
+    internal AccessRights Visibility => visibility;
 
     public override DocumentRange CalculateRange() => modifierTokenNode.GetDocumentRange();
 }

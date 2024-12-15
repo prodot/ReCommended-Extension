@@ -6,9 +6,9 @@ using ReCommendedExtension.Analyzers.Collection;
 
 namespace ReCommendedExtension.Tests.Analyzers.Collection;
 
+[TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 [TestNet80]
-[TestFixture]
 public sealed class ReplaceWithCollectionExpressionQuickFixTests : QuickFixTestBase<ReplaceWithCollectionExpressionFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";

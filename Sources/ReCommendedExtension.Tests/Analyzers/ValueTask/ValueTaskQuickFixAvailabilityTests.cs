@@ -8,8 +8,8 @@ using ReCommendedExtension.Analyzers.ValueTask;
 
 namespace ReCommendedExtension.Tests.Analyzers.ValueTask;
 
-[TestNetCore30]
 [TestFixture]
+[TestNetCore30]
 public sealed class ValueTaskQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\ValueTaskQuickFixes";

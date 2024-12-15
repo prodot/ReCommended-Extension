@@ -1,0 +1,81 @@
+﻿using System;
+using System.Text;
+
+namespace Test
+{
+    public class StringBuilders
+    {
+        public void RedundantInvocation(StringBuilder builder, int index)
+        {
+            var result = builder.|Insert(index, null as object)|(0);
+
+            |builder.Insert(index, null as object)|(1);
+        }
+
+        public void RedundantInvocation_Nullable(StringBuilder? builder, int index)
+        {
+            var result = builder?.|Insert(index, null as object)|(2);
+
+            |builder?.Insert(index, null as object)|(3);
+        }
+
+        public void RedundantArgument(StringBuilder builder, int index, string s)
+        {
+            var result = builder.Insert(index, s, |1|(4));
+
+            builder.Insert(index, s, |1|(5));
+        }
+
+        public void RedundantArgument_Nullable(StringBuilder? builder, int index, string s)
+        {
+            var result = builder?.Insert(index, s, |1|(6));
+
+            builder?.Insert(index, s, |1|(7));
+        }
+
+        public void SingleCharacter(StringBuilder builder, int index)
+        {
+            var result1 = builder.Insert(index, |"a"|(8), 1);
+            var result2 = builder.Insert(index, |"a"|(9));
+
+            builder.Insert(index, |"a"|(10), 1);
+            builder.Insert(index, |"a"|(11));
+        }
+
+        public void SingleCharacter_Nullable(StringBuilder? builder, int index)
+        {
+            var result1 = builder?.Insert(index, |"a"|(12), 1);
+            var result2 = builder?.Insert(index, |"a"|(13));
+
+            builder?.Insert(index, |"a"|(14), 1);
+            builder?.Insert(index, |"a"|(15));
+        }
+
+        public void NoDetection(StringBuilder builder, int index, string s, int repeatCount, object obj)
+        {
+            var result11 = builder.Insert(index, s, repeatCount);
+            var result12 = builder.Insert(index, "abc", repeatCount);
+
+            var result21 = builder.Insert(index, "abc");
+
+            var result31 = builder.Insert(index, obj);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Calling 'Insert' with null is redundant.
+(1): ReSharper Dead Code: Calling 'Insert' with null is redundant.
+(2): ReSharper Dead Code: Calling 'Insert' with null is redundant.
+(3): ReSharper Dead Code: Calling 'Insert' with null is redundant.
+(4): ReSharper Dead Code: Passing 1 is redundant.
+(5): ReSharper Dead Code: Passing 1 is redundant.
+(6): ReSharper Dead Code: Passing 1 is redundant.
+(7): ReSharper Dead Code: Passing 1 is redundant.
+(8): ReSharper Suggestion: Pass the single character.
+(9): ReSharper Suggestion: Pass the single character.
+(10): ReSharper Suggestion: Pass the single character.
+(11): ReSharper Suggestion: Pass the single character.
+(12): ReSharper Suggestion: Pass the single character.
+(13): ReSharper Suggestion: Pass the single character.
+(14): ReSharper Suggestion: Pass the single character.
+(15): ReSharper Suggestion: Pass the single character.

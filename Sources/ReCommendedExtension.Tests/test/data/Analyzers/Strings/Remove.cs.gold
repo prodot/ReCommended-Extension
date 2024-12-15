@@ -1,0 +1,41 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void ExpressionResult(string text)
+        {
+            var result = |text.Remove(0)|(0);
+        }
+
+        public void RangeIndexer(string text, int startIndex, int count)
+        {
+            var result1 = text.|Remove(startIndex)|(1);
+            var result2 = text.|Remove(0, count)|(2);
+        }
+
+        public void NoDetection(string text, int startIndex, int count)
+        {
+            var result1 = text.Remove(1, count);
+            var result2 = text.Remove(startIndex, 1);
+            var result3 = text.Remove(1, count);
+
+            text.Remove(0);
+            text.Remove(startIndex);
+            text.|Remove|(3)(startIndex, 0);
+            text.|Remove|(4)(0, count);
+        }
+
+        public void NoDetection(string? text)
+        {
+            var result = text?.Remove(0);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always an empty string.
+(1): ReSharper Suggestion: Use the range indexer.
+(2): ReSharper Suggestion: Use the range indexer.
+(3): ReSharper Warning: Return value of pure method is not used
+(4): ReSharper Warning: Return value of pure method is not used

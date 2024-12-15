@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Strings
+    {
+        public void Join(string s, int[] items)
+        {
+            var result = ""{caret};
+        }
+    }
+}

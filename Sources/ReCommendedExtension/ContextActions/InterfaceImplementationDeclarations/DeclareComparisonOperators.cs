@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl;
-using JetBrains.Util;
 using ReCommendedExtension.Analyzers.InterfaceImplementation;
 
 namespace ReCommendedExtension.ContextActions.InterfaceImplementationDeclarations;
@@ -15,41 +14,41 @@ namespace ReCommendedExtension.ContextActions.InterfaceImplementationDeclaration
     GroupType = typeof(CSharpContextActions),
     Name = "Declare IComparisonOperators<T, T, bool>" + ZoneMarker.Suffix,
     Description = "Declare IComparisonOperators<T, T, bool>.")]
-public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider provider) : ContextActionBase
+public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider provider) : ContextAction<IClassLikeDeclaration>(provider)
 {
     IClassLikeDeclaration? declaration;
     ITypeElement? comparisonOperatorsInterface;
 
     [MemberNotNullWhen(true, nameof(declaration))]
     [MemberNotNullWhen(true, nameof(comparisonOperatorsInterface))]
-    public override bool IsAvailable(IUserDataHolder cache)
+    protected override bool IsAvailable(IClassLikeDeclaration selectedElement)
     {
-        if (provider.GetSelectedElement<IClassLikeDeclaration>(true, false) is { } declaration
-            && declaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
-            && ClrTypeNames.IComparisonOperators.TryGetTypeElement(declaration.GetPsiModule()) is { } comparisonOperatorsInterface
-            && declaration.DeclaredElement is { })
+        if (selectedElement.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp110
+            && ClrTypeNames.IComparisonOperators.TryGetTypeElement(PsiModule) is { } comparisonOperatorsInterface
+            && selectedElement.DeclaredElement is { })
         {
             var (_, _, declaresComparable, declaresComparisonOperators) = InterfaceImplementationAnalyzer.GetInterfaces(
-                declaration.DeclaredElement,
-                TypeFactory.CreateType(declaration.DeclaredElement),
+                selectedElement.DeclaredElement,
+                TypeFactory.CreateType(selectedElement.DeclaredElement),
                 null,
                 comparisonOperatorsInterface,
-                PredefinedType.GENERIC_ICOMPARABLE_FQN.TryGetTypeElement(declaration.GetPsiModule()));
+                PredefinedType.GENERIC_ICOMPARABLE_FQN.TryGetTypeElement(PsiModule));
 
-            this.declaration =
-                declaration is IClassDeclaration or IStructDeclaration or IRecordDeclaration && declaresComparable && !declaresComparisonOperators
-                    ? declaration
+            declaration = selectedElement is IClassDeclaration or IStructDeclaration or IRecordDeclaration
+                && declaresComparable
+                && !declaresComparisonOperators
+                    ? selectedElement
                     : null;
 
             this.comparisonOperatorsInterface = comparisonOperatorsInterface;
         }
         else
         {
-            this.declaration = null;
+            declaration = null;
             this.comparisonOperatorsInterface = null;
         }
 
-        return this.declaration is { };
+        return declaration is { };
     }
 
     public override string Text
@@ -72,12 +71,10 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
             Debug.Assert(declaration is { DeclaredElement: { } });
             Debug.Assert(comparisonOperatorsInterface is { });
 
-            var psiModule = declaration.GetPsiModule();
-
             var type = TypeFactory.CreateType(declaration.DeclaredElement);
 
             declaration.AddSuperInterface(
-                TypeFactory.CreateType(comparisonOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(psiModule)]),
+                TypeFactory.CreateType(comparisonOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(PsiModule)]),
                 false);
 
             return _ => { };

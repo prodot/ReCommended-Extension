@@ -1,7 +1,9 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Annotation;
@@ -15,7 +17,8 @@ public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTe
     protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is NotAllowedAnnotationWarning
+        => highlighting is RedundantNullableAnnotationHint
+            or NotAllowedAnnotationWarning
             or ConflictingAnnotationWarning
             or RedundantAnnotationSuggestion
             or InvalidValueRangeBoundaryWarning;
@@ -25,4 +28,9 @@ public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTe
 
     [Test]
     public void TestCoerceValueRangeBoundaryAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [NullableContext(NullableContextKind.Enable)]
+    public void TestRedundantNullableAnnotationAvailability() => DoNamedTest2();
 }

@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Execute<T>
+    {        
+        [return: DefaultEqualityUsage]
+        T Meth{caret}od()
+        {
+            return default;
+        }
+    }
+}

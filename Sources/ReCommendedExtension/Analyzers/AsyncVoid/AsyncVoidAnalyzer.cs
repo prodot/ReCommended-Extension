@@ -172,13 +172,14 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
             return; // direct event target
         }
 
-        Debug.Assert(lambdaExpression.AsyncKeyword is { });
-
-        consumer.AddHighlighting(
-            new AsyncVoidFunctionExpressionWarning(
-                "'async void' lambda expression not used as a direct event handler.",
-                lambdaExpression.AsyncKeyword,
-                () => lambdaExpression.SetAsync(false)));
+        if (lambdaExpression.AsyncKeyword is { })
+        {
+            consumer.AddHighlighting(
+                new AsyncVoidFunctionExpressionWarning(
+                    "'async void' lambda expression not used as a direct event handler.",
+                    lambdaExpression.AsyncKeyword,
+                    () => lambdaExpression.SetAsync(false)));
+        }
     }
 
     static void Analyze(IAnonymousMethodExpression anonymousMethodExpression, IHighlightingConsumer consumer)
