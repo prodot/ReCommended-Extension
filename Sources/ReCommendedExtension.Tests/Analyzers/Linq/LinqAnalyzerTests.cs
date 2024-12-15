@@ -162,7 +162,7 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     {
         Test([1, 2, 3], source => source.FirstOrDefault(), source => source is [var first, ..] ? first : 0, false);
         Test(["one", "two", "three"], source => source.FirstOrDefault(), source => source is [var first, ..] ? first : null, false);
-        Test("abcde", source => source.FirstOrDefault(), source => source is [var first, ..] ? first : default, false);
+        Test("abcde", source => source.FirstOrDefault(), source => source is [var first, ..] ? first : '\0', false);
 
         Test([1, 2, 3], source => source.FirstOrDefault(-1), source => source is [var first, ..] ? first : -1, false);
         Test(["one", "two", "three"], source => source.FirstOrDefault("zero"), source => source is [var first, ..] ? first : "zero", false);
@@ -197,7 +197,7 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     {
         Test([1, 2, 3], source => source.LastOrDefault(), source => source is [.., var last] ? last : 0, false);
         Test(["one", "two", "three"], source => source.LastOrDefault(), source => source is [.., var last] ? last : null, false);
-        Test("abcde", source => source.LastOrDefault(), source => source is [.., var last] ? last : default, false);
+        Test("abcde", source => source.LastOrDefault(), source => source is [.., var last] ? last : '\0', false);
 
         Test([1, 2, 3], source => source.LastOrDefault(-1), source => source is [.., var last] ? last : -1, false);
         Test(["one", "two", "three"], source => source.LastOrDefault("zero"), source => source is [.., var last] ? last : "zero", false);
