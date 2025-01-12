@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net481</TargetFramework>
-    <UserSecretsId>960c5dc0-8d5f-4cf4-a50a-79fd8a439eaa</UserSecretsId>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net481</TargetFramework>
+        <UserSecretsId>960c5dc0-8d5f-4cf4-a50a-79fd8a439eaa</UserSecretsId>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\ExternalAnnotations\**" LinkBase="_External Annotations" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\ExternalAnnotations\**" LinkBase="_External Annotations" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Settings.settings" DesignTimeSharedInput="True" />
-    <None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />
-    <None Update="ReCommendedExtension.nuspec" CopyToOutputDirectory="Always" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\Settings.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Settings.settings"
+                 DesignTimeSharedInput="True" />
+        <None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />
+        <None Update="ReCommendedExtension.nuspec" CopyToOutputDirectory="Always" />
+    </ItemGroup>
 
 </Project>

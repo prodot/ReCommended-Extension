@@ -1,33 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
-    <DefaultItemExcludes>$(DefaultItemExcludes);test\packages\**</DefaultItemExcludes>
-    <NoWarn>$(NoWarn);NU1903</NoWarn> <!-- transitive package has a known high severity vulnerability -->
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <DefaultItemExcludes>$(DefaultItemExcludes);test\packages\**</DefaultItemExcludes>
+        <NoWarn>$(NoWarn);NU1903</NoWarn> <!-- transitive package has a known high severity vulnerability -->
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Lifetimes" Version="2024.3.0" />
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2024.3.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="System.Memory" Version="4.5.5" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Lifetimes" Version="2024.3.0" />
+        <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2024.3.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="NUnit" Version="3.13.2" />
+        <PackageReference Include="System.Memory" Version="4.5.5" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ReCommendedExtension\ReCommendedExtension.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ReCommendedExtension\ReCommendedExtension.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="test\data\**\*.cs" />
-    <None Include="test\data\**\*.cs" />
-    <None Update="test\data\**\*.cs.gold" DependentUpon="%(Filename)" />
-    <None Update="test\data\**\*.cs.tmp" DependentUpon="%(Filename)" />
-    <None Update="test\data\**\*.xaml.gold" DependentUpon="%(Filename)" />
-    <None Update="test\data\**\*.xaml.tmp" DependentUpon="%(Filename)" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="test\data\**\*.cs" />
+        <None Include="test\data\**\*.cs" />
+        <None Update="test\data\**\*.cs.gold" DependentUpon="%(Filename)" />
+        <None Update="test\data\**\*.cs.tmp" DependentUpon="%(Filename)" />
+        <None Update="test\data\**\*.xaml.gold" DependentUpon="%(Filename)" />
+        <None Update="test\data\**\*.xaml.tmp" DependentUpon="%(Filename)" />
+    </ItemGroup>
 
 </Project>
