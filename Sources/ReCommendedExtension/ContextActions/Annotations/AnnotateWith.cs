@@ -150,7 +150,7 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
                 }
 
                 if (attributesOwnerDeclaration is IParameter { ContainingParametersOwner: ILambdaExpression { ParameterDeclarations: [_] } }
-                    and TreeElement { PrevSibling: not { }, NextSibling: not { } } treeElement)
+                    and TreeElement { PrevSibling: null, NextSibling: null } treeElement)
                 {
                     // parenthesize the parameter
                     ModificationUtil.AddChildBefore(treeElement, CSharpTokenType.LPARENTH.CreateLeafElement());

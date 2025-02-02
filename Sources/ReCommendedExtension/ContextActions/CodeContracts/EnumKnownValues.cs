@@ -26,7 +26,7 @@ public sealed class EnumKnownValues(ICSharpContextActionDataProvider provider) :
         {
             members = [..enumType.EnumMembers.WithoutObsolete()];
 
-            if (members is not [])
+            if (members is [_, ..])
             {
                 return true;
             }

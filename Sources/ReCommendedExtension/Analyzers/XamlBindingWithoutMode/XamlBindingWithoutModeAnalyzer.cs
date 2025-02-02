@@ -14,18 +14,18 @@ public sealed class XamlBindingWithoutModeAnalyzer : ElementProblemAnalyzer<IXml
     {
         switch (element)
         {
-            case IBindingMarkup { ModeAttribute: not { }, NameNode: { } } bindingMarkup:
+            case IBindingMarkup { ModeAttribute: null, NameNode: { } } bindingMarkup:
                 consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", bindingMarkup.NameNode));
                 break;
 
             case IBindingElement bindingElement when ClrTypeNames.Binding.Equals((bindingElement.Type as IDeclaredType)?.GetClrName())
-                && bindingElement.GetAttribute("Mode") is not { }:
+                && bindingElement.GetAttribute("Mode") == null:
                 consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", bindingElement.Header.Name));
                 break;
 
             case IXamlObjectElement objectElement and ITypeOwnerDeclaration typeOwnerDeclaration
                 when ClrTypeNames.MultiBinding.Equals((typeOwnerDeclaration.Type as IDeclaredType)?.GetClrName())
-                && objectElement.GetAttribute("Mode") is not { }:
+                && objectElement.GetAttribute("Mode") == null:
                 consumer.AddHighlighting(new XamlBindingWithoutModeWarning("Binding mode is not set explicitly.", objectElement.Header.Name));
                 break;
         }

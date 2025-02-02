@@ -162,7 +162,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
     {
         internal TextToken(string text, TextTokenKind kind, bool hasSpaceBefore, NestedTagInfo? tagInfo = null)
         {
-            Debug.Assert(kind is TextTokenKind.Lexeme or TextTokenKind.Code && tagInfo is not { } || kind == TextTokenKind.Tag && tagInfo is { });
+            Debug.Assert(kind is TextTokenKind.Lexeme or TextTokenKind.Code && tagInfo is null || kind == TextTokenKind.Tag && tagInfo is { });
 
             Text = text;
             Kind = kind;
@@ -645,7 +645,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                         case TopLevelTagAttribute.Cref:
                         {
-                            if (TryGetValidAttributeValue(tag, "cref") is not { })
+                            if (TryGetValidAttributeValue(tag, "cref") == null)
                             {
                                 return false; // attribute not found, or duplicate, or an unknown attribute detected
                             }
@@ -655,7 +655,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                         case TopLevelTagAttribute.CrefOrHref:
                         {
-                            if (TryGetValidAttributeValue(tag, "cref", "href") is not { })
+                            if (TryGetValidAttributeValue(tag, "cref", "href") == null)
                             {
                                 return false; // attribute not found, or duplicate, or an unknown attribute detected
                             }
@@ -702,7 +702,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                     case NestedTagAttribute.Name:
                     {
-                        if (TryGetValidAttributeValue(tag, "name") is not { })
+                        if (TryGetValidAttributeValue(tag, "name") == null)
                         {
                             return false; // attribute not found, or duplicate, or an unknown attribute detected
                         }
@@ -712,7 +712,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                     case NestedTagAttribute.Type:
                     {
-                        if (TryGetValidAttributeValue(tag, "type") is not { })
+                        if (TryGetValidAttributeValue(tag, "type") == null)
                         {
                             return false; // attribute not found, or duplicate, or an unknown attribute detected
                         }
@@ -722,7 +722,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                     case NestedTagAttribute.CrefOrHref:
                     {
-                        if (TryGetValidAttributeValue(tag, "cref", "href") is not { })
+                        if (TryGetValidAttributeValue(tag, "cref", "href") == null)
                         {
                             return false; // attribute not found, or duplicate, or an unknown attribute detected
                         }
@@ -872,7 +872,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                     break;
 
                 case InstructionToken { Kind: InstructionTokenKind.BeginIndentation }:
-                    if (stack is not { Count: > 0 })
+                    if (stack is null or { Count: 0 })
                     {
                         // not within a "one line attempt"
 
@@ -882,7 +882,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                     break;
 
                 case InstructionToken { Kind: InstructionTokenKind.EndIndentation }:
-                    if (stack is not { Count: > 0 })
+                    if (stack is null or { Count: 0 })
                     {
                         // not within a "one line attempt"
 
@@ -943,7 +943,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
         Debug.Assert(
             (RequiredAttribute: tagInfo.Attribute, attribute)
             is (TopLevelTagAttribute.Name or TopLevelTagAttribute.Cref or TopLevelTagAttribute.CrefOrHref, { Value.UnquotedValue: { } })
-            or (TopLevelTagAttribute.None, not { }));
+            or (TopLevelTagAttribute.None, null));
 
         var textBuilder = null as StringBuilder;
 

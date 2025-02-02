@@ -28,7 +28,7 @@ internal abstract class CollectionCreation
             // new T[0]
             IArrayCreationExpression
             {
-                DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: not { },
+                DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: null,
             } arrayCreationExpression => new EmptyCollectionCreation(arrayCreationExpression),
 
             // default(ReadOnlySpan<T>)
@@ -43,7 +43,7 @@ internal abstract class CollectionCreation
             {
                 TypeName: { Reference: var reference, TypeArgumentList.TypeArguments: [_] },
                 Arguments: [],
-                Initializer: not { } or { InitializerElements: [] },
+                Initializer: null or { InitializerElements: [] },
             } objectCreationExpression when (reference.Resolve().DeclaredElement as ITypeElement).IsClrType(
                 PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN) => new EmptyCollectionCreation(objectCreationExpression),
 
@@ -115,7 +115,7 @@ internal abstract class CollectionCreation
     {
         get
         {
-            if (stringConstants is not { })
+            if (stringConstants == null)
             {
                 var array = new string?[Count];
 

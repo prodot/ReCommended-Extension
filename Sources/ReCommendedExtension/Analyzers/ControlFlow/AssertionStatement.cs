@@ -19,7 +19,7 @@ public sealed record AssertionStatement : Assertion
             {
                 var parameterAssertionCondition = assertionConditionAnnotationProvider.GetInfo(parameter);
 
-                if (parameterAssertionCondition is not { } && parameter.Type.IsBool())
+                if (parameterAssertionCondition == null && parameter.Type.IsBool())
                 {
                     parameterAssertionCondition = AssertionConditionType.IS_TRUE;
                 }

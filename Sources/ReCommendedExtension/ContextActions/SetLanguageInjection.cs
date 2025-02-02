@@ -100,7 +100,7 @@ public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provid
     public bool IsAvailable(IUserDataHolder cache)
     {
         var injectorProviders = provider.Solution.GetComponent<InjectorProvidersInLiteralsViewer>().Providers;
-        if (injectorProviders is not { })
+        if (injectorProviders == null)
         {
             return false;
         }
@@ -115,7 +115,7 @@ public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provid
                     provider.Document,
                     provider.DocumentSelection.StartOffset.Offset);
 
-                if (node is not { }
+                if (node == null
                     || !injectorProvider.IsSupportedLiteralForInjection(node)
                     || injectorProvider is ILanguageInjectorProviderInLiterals languageInjectorProviderInLiterals
                     && languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
@@ -140,7 +140,7 @@ public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provid
                 injectorProvider.LocateInjectNodeByTreeOffset(provider.PsiFile, provider.Document, provider.DocumentSelection.StartOffset.Offset)
             where node is { } && injectorProvider.IsSupportedLiteralForInjection(node)
             let languageInjectorProviderInLiterals = injectorProvider as ILanguageInjectorProviderInLiterals
-            where (languageInjectorProviderInLiterals is not { } || !languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
+            where (languageInjectorProviderInLiterals == null || !languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
                 && languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage)
             orderby injectorProvider.Priority
             select new InjectLanguageActionItem(injectorProvider, node)).ToList();

@@ -197,7 +197,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                         var inspector = ControlFlowGraphInspectorWithValueAnalysis.Inspect(controlFlowGraph, ValueAnalysisMode.OPTIMISTIC);
 
                         if (inspector.FindVariableInfo(parameter) is { } variableInfo
-                            && inspector.GetContext(controlFlowEdge)?.GetVariableDefiniteState(variableInfo) is not { }
+                            && inspector.GetContext(controlFlowEdge)?.GetVariableDefiniteState(variableInfo) is null
                                 or CSharpControlFlowVariableValue.FALSE)
                         {
                             return Location.DisposeMethodWithParameterFalseCodePath;

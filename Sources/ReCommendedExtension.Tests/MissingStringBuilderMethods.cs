@@ -11,7 +11,7 @@ internal static class MissingStringBuilderMethods
         [NonNegativeValue] int count)
         => (value, startIndex, count) switch
         {
-            (not { }, 0, 0) or ({ }, _, 0) => source,
+            (null, 0, 0) or ({ }, _, 0) => source,
             _ => source.Append(value?.ToString(startIndex, count)),
         };
 

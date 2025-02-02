@@ -210,7 +210,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 Parent: ICSharpArgument
                 {
-                    MatchingParameter: { Substitution: var substitution, Element.ContainingParametersOwner: IMethod { TypeParameters: not [] } },
+                    MatchingParameter: { Substitution: var substitution, Element.ContainingParametersOwner: IMethod { TypeParameters: [_, ..] } },
                     Invocation: IInvocationExpression { InvokedExpression: IReferenceExpression { TypeArguments: [] } methodReference },
                 },
             }
@@ -472,9 +472,9 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                             isCollectionItemTypeCovariant)
                             && (isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is { }
                                 || isEmptyArray
-                                && (arrayCreationExpression.ArrayInitializer is not { }
+                                && (arrayCreationExpression.ArrayInitializer == null
                                     || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { }
-                                    || isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is not { })))
+                                    || isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is null)))
                         {
                             string? covariantTypeName;
                             if (isCollectionItemTypeCovariant)
@@ -515,7 +515,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                             is var (collectionItemType, isCollectionItemTypeCovariant)
                             && (isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is { }
                                 || isEmptyArray
-                                && (arrayCreationExpression.ArrayInitializer is not { }
+                                && (arrayCreationExpression.ArrayInitializer == null
                                     || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { })))
                         {
                             Debug.Assert(CSharpLanguage.Instance is { });
@@ -543,7 +543,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     if (TryGetIfTargetTypedToArray() is var (arrayItemType, isArrayItemTypeCovariant)
                         && (isArrayItemTypeCovariant && arrayCreationExpression.TypeName is { }
                             || isEmptyArray
-                            && (arrayCreationExpression.ArrayInitializer is not { } && isArrayItemTypeCovariant
+                            && (arrayCreationExpression.ArrayInitializer == null && isArrayItemTypeCovariant
                                 || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { })))
                     {
                         string? covariantTypeName;
@@ -574,7 +574,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 else
                 {
                     if (arrayCreationExpression is { DimInits: [], ArrayInitializer.InitializerElements: [] }
-                        && arrayCreationExpression.GetContainingNode<IAttribute>() is not { }
+                        && arrayCreationExpression.GetContainingNode<IAttribute>() == null
                         && ArrayEmptyMethodExists(psiModule))
                     {
                         // new T[] { }  ->  Array.Empty<T>();
@@ -593,7 +593,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         else
         {
             if (arrayCreationExpression is { DimInits: [], ArrayInitializer.InitializerElements: [] }
-                && arrayCreationExpression.GetContainingNode<IAttribute>() is not { }
+                && arrayCreationExpression.GetContainingNode<IAttribute>() == null
                 && ArrayEmptyMethodExists(psiModule))
             {
                 // new T[] { }  ->  Array.Empty<T>();
@@ -665,7 +665,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 | (parameterType.IsGenericIEnumerable() ? ListArguments.Collection : 0);
 
             var isEmptyList = (arguments & ListArguments.Collection) == 0
-                && listCreationExpression.Initializer is not { InitializerElements: [_, ..] };
+                && listCreationExpression.Initializer is null or { InitializerElements: [] };
 
             var methodReferenceToSetInferredTypeArguments =
                 isEmptyList ? TryGetMethodReferenceToSetInferredTypeArguments(listCreationExpression) : null;
@@ -764,7 +764,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         : 0);
 
             var isEmptyHashSet = (arguments & HashSetArguments.Collection) == 0
-                && hashSetCreationExpression.Initializer is not { InitializerElements: [_, ..] };
+                && hashSetCreationExpression.Initializer is null or { InitializerElements: [] };
 
             var methodReferenceToSetInferredTypeArguments =
                 isEmptyHashSet ? TryGetMethodReferenceToSetInferredTypeArguments(hashSetCreationExpression) : null;
@@ -849,7 +849,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         : 0);
 
             var isEmptyDictionary = (arguments & (DictionaryArguments.Dictionary | DictionaryArguments.Pairs)) == 0
-                && dictionaryCreationExpression.Initializer is not { InitializerElements: [_, ..] };
+                && dictionaryCreationExpression.Initializer is null or { InitializerElements: [] };
 
             var methodReferenceToSetInferredTypeArguments =
                 isEmptyDictionary ? TryGetMethodReferenceToSetInferredTypeArguments(dictionaryCreationExpression) : null;
@@ -885,7 +885,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         bool hasAccessibleAddMethod,
         IType targetType)
     {
-        var isPublicDefaultCtorUsed = collectionCreationExpression is { Arguments: [], Initializer: not { InitializerElements: [_, ..] } };
+        var isPublicDefaultCtorUsed = collectionCreationExpression is { Arguments: [], Initializer: null or { InitializerElements: [] } };
 
         var methodReferenceToSetInferredTypeArguments =
             isPublicDefaultCtorUsed ? TryGetMethodReferenceToSetInferredTypeArguments(collectionCreationExpression) : null;

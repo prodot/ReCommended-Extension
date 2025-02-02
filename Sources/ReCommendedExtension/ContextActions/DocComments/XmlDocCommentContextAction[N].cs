@@ -79,7 +79,7 @@ public abstract class XmlDocCommentContextAction<N>(ICSharpContextActionDataProv
         Settings settings)
     {
         Debug.Assert(
-            option is TagOption.Collapsed or TagOption.Expanded or TagOption.HeaderOnly || option == TagOption.FooterOnly && attribute is not { });
+            option is TagOption.Collapsed or TagOption.Expanded or TagOption.HeaderOnly || option == TagOption.FooterOnly && attribute == null);
 
         builder.Append('<');
 
@@ -123,7 +123,7 @@ public abstract class XmlDocCommentContextAction<N>(ICSharpContextActionDataProv
                 break;
 
             case TagOption.Collapsed:
-                if (settings.TagSpaceBeforeHeaderEnd1 && (attribute is not { } || !settings.TagSpaceAfterLastAttr))
+                if (settings.TagSpaceBeforeHeaderEnd1 && (attribute == null || !settings.TagSpaceAfterLastAttr))
                 {
                     builder.Append(' ');
                 }
