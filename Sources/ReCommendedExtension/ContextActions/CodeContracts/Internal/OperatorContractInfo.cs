@@ -15,7 +15,7 @@ internal sealed record OperatorContractInfo : ContractInfo
         TreeTextRange selectedTreeRange,
         Func<IType, bool> isAvailableForType)
     {
-        if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause is not { })
+        if (declaration.GetNameRange().Contains(selectedTreeRange) && declaration.ArrowClause == null)
         {
             var operatorElement = declaration.DeclaredElement;
             Debug.Assert(operatorElement is { });

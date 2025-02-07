@@ -16,8 +16,8 @@ internal sealed record PropertyContractInfo : ContractInfo
         Func<IType, bool> isAvailableForType)
     {
         if (declaration.GetNameRange().Contains(selectedTreeRange)
-            && declaration.ArrowClause is not { }
-            && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause is not { }))
+            && declaration.ArrowClause == null
+            && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
         {
             var property = declaration.DeclaredElement;
             Debug.Assert(property is { });
@@ -49,8 +49,8 @@ internal sealed record PropertyContractInfo : ContractInfo
         Func<IType, bool> isAvailableForType)
     {
         if (declaration.GetNameRange().Contains(selectedTreeRange)
-            && declaration.ArrowClause is not { }
-            && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause is not { }))
+            && declaration.ArrowClause == null
+            && declaration.AccessorDeclarations.Any(accessorDeclaration => accessorDeclaration.ArrowClause == null))
         {
             var property = declaration.DeclaredElement;
             Debug.Assert(property is { });

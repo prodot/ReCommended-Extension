@@ -26,7 +26,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
     {
         var argumentList = argument.Parent as IArgumentList;
 
-        if (argumentList is not { } or { Arguments: not [_] })
+        if (argumentList is null or { Arguments: not [_] })
         {
             return null;
         }
@@ -86,7 +86,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
         }
 
         var method = methodDeclaration.DeclaredElement;
-        if (method is not { })
+        if (method == null)
         {
             return; // cannot analyze
         }
@@ -110,7 +110,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
                 var implicitUseAnnotationProvider = psiServices.GetCodeAnnotationsCache().GetProvider<ImplicitUseAnnotationProvider>();
 
                 var useKindFlags = implicitUseAnnotationProvider.IsImplicitlyUsed(method);
-                if (useKindFlags is not { })
+                if (useKindFlags == null)
                 {
                     // [UsedImplicitly] annotation not applied
                     consumer.AddHighlighting(

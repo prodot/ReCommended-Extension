@@ -147,7 +147,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         {
             // first check if declaration is a IMethodDeclaration and its TypeUsage is null
             // (otherwise the Type property throws the NullReferenceException)
-            if (typeOwner is IMethodDeclaration { TypeUsage: not { } })
+            if (typeOwner is IMethodDeclaration { TypeUsage: null })
             {
                 return false;
             }
@@ -1112,14 +1112,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     _ => null,
                 };
 
-                if (type is not { })
+                if (type == null)
                 {
                     continue;
                 }
 
                 numericRange ??= NumericRange.TryGetFor(type);
 
-                if (numericRange is not { })
+                if (numericRange == null)
                 {
                     consumer.AddHighlighting(
                         new NotAllowedAnnotationWarning(
@@ -1448,7 +1448,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             case ValueAnalysisMode.OPTIMISTIC:
                 foreach (var attributeMark in GetAttributeMarks(attributesOwnerDeclaration))
                 {
-                    if (attributeMark is not { })
+                    if (attributeMark == null)
                     {
                         if (attributesOwnerDeclaration.IsAnnotationProvided(nameof(NotNullAttribute))
                             && attributesOwnerDeclaration.IsAnnotationProvided(nameof(CanBeNullAttribute)))

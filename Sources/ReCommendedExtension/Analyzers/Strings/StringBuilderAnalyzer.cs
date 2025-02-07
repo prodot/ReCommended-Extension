@@ -1122,7 +1122,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     {
         switch (valueArgument.Value.TryGetStringConstant(), countArgument.Value.TryGetInt32Constant())
         {
-            case (not { }, 1):
+            case (null, 1):
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", countArgument));
                 break;
 

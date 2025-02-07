@@ -161,10 +161,10 @@ internal abstract record ContractInfo
             return contractClassDeclaration;
         }
 
-        var typeParameters = typeDeclaration.TypeParameters is not []
+        var typeParameters = typeDeclaration.TypeParameters is [_, ..]
             ? $"<{string.Join(", ", from typeParameter in typeDeclaration.TypeParameters select typeParameter.DeclaredName)}>"
             : "";
-        var typeParametersForAttribute = typeDeclaration.TypeParameters is not []
+        var typeParametersForAttribute = typeDeclaration.TypeParameters is [_, ..]
             ? $"<{new string(',', typeDeclaration.TypeParameters.Count - 1)}>"
             : "";
 

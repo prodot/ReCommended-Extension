@@ -17,7 +17,7 @@ public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvo
         }
 
         var sourceFile = invocationExpression.GetSourceFile();
-        if (sourceFile is not { })
+        if (sourceFile == null)
         {
             return []; // cannot analyze => do not highlight
         }
@@ -34,7 +34,7 @@ public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvo
             }
         }
 
-        if (declaredConditions is not { })
+        if (declaredConditions == null)
         {
             return []; // no declared conditions => do not highlight
         }

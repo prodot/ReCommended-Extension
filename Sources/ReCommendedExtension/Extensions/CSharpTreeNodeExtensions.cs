@@ -47,7 +47,7 @@ internal static class CSharpTreeNodeExtensions
                     var structType = type.GetStructType(); // null if type is a generic type
 
                     return Equals(objectCreationExpression.Type(), type)
-                        && objectCreationExpression is { Arguments: [], Initializer: not { } or { InitializerElements: [] } }
+                        && objectCreationExpression is { Arguments: [], Initializer: null or { InitializerElements: [] } }
                         && structType is { HasCustomParameterlessConstructor: false };
 
                 case IAsExpression asExpression:
