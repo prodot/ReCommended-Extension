@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using ReCommendedExtension;
 
 // General Information about an assembly is controlled through the following
@@ -13,5 +13,5 @@ using ReCommendedExtension;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("7.0.3.0")]
-[assembly: AssemblyFileVersion("7.0.3")]
+[assembly: AssemblyVersion("7.0.4.0")]
+[assembly: AssemblyFileVersion("7.0.4")]
