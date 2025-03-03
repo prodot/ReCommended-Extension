@@ -1,4 +1,4 @@
-using JetBrains.DocumentModel;
+﻿using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 
 namespace ReCommendedExtension.Analyzers;

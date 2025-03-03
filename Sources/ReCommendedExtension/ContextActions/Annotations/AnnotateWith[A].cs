@@ -1,4 +1,4 @@
-using JetBrains.Metadata.Reader.Impl;
+﻿using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;

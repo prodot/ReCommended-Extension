@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using JetBrains.Application.Settings;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;

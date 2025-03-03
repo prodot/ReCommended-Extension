@@ -1,4 +1,4 @@
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Psi;
 
 namespace ReCommendedExtension.ContextActions.CodeContracts.Internal;
 

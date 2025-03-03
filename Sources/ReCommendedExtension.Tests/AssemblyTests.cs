@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using JetBrains.Application.UI.Extensions;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using NUnit.Framework;

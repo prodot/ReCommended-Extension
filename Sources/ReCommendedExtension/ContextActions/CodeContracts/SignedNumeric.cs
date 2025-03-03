@@ -1,4 +1,4 @@
-using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
+﻿using JetBrains.ReSharper.Feature.Services.CSharp.ContextActions;
 using JetBrains.ReSharper.Psi;
 using ReCommendedExtension.ContextActions.CodeContracts.Internal;
 

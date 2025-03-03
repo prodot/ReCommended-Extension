@@ -1,4 +1,4 @@
-using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions;
 

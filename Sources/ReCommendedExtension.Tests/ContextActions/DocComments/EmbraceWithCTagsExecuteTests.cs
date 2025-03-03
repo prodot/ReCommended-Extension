@@ -1,4 +1,4 @@
-using JetBrains.ReSharper.Psi.CSharp.Tree;
+﻿using JetBrains.ReSharper.Psi.CSharp.Tree;
 using NUnit.Framework;
 using ReCommendedExtension.ContextActions.DocComments;
 

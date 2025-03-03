@@ -1,4 +1,4 @@
-using JetBrains.DocumentModel;
+﻿using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
