@@ -1,4 +1,10 @@
 ﻿<Solution>
+  <Configurations>
+    <BuildType Name="DebugReSharper" />
+    <BuildType Name="ReleaseReSharper" />
+    <BuildType Name="DebugRider" />
+    <BuildType Name="ReleaseRider" />
+  </Configurations>
   <Folder Name="/.nuget/">
     <File Path=".nuget/NuGet.Config" />
     <File Path=".nuget/NuGet.exe" />

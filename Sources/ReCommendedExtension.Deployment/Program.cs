@@ -14,22 +14,33 @@ internal static class Program
     {
         try
         {
+            var targetPlatform = GeTargetPlatform();
+
             var executionDirectoryPath = GetExecutionDirectoryPath();
 
-            CopyAssembly(executionDirectoryPath, out var assemblyPath, out var isReleaseBuild);
+            CopyAssembly(executionDirectoryPath, targetPlatform, out var assemblyPath, out var isReleaseBuild);
 
             if (isReleaseBuild)
             {
                 ResignAssembly(assemblyPath);
             }
 
-            UpdateNuspec(executionDirectoryPath, assemblyPath, out var nuspecPath);
+            switch (targetPlatform)
+            {
+                case TargetPlatform.ReSharper:
+                    UpdateNuspec(executionDirectoryPath, assemblyPath, out var nuspecPath);
 
-            SetAssemblyReference(nuspecPath, assemblyPath, out var packageFileName);
+                    SetAssemblyReference(nuspecPath, assemblyPath, out var packageFileName);
 
-            BuildPackage(nuspecPath);
+                    BuildPackage(nuspecPath);
 
-            OpenInWindowsExplorer(nuspecPath, packageFileName);
+                    OpenInWindowsExplorer(nuspecPath, packageFileName);
+                    break;
+
+                case TargetPlatform.Rider:
+                    // todo: package for Rider
+                    break;
+            }
 
             return 0;
         }
@@ -45,6 +56,24 @@ internal static class Program
         }
     }
 
+    enum TargetPlatform
+    {
+        ReSharper,
+        Rider,
+    }
+
+    [Pure]
+    static TargetPlatform GeTargetPlatform()
+    {
+#if RESHARPER
+        return TargetPlatform.ReSharper;
+#endif
+
+#if RIDER
+        return TargetPlatform.Rider;
+#endif
+    }
+
     [Pure]
     static string GetExecutionDirectoryPath()
     {
@@ -57,7 +86,7 @@ internal static class Program
         return directoryPath;
     }
 
-    static void CopyAssembly(string executionDirectoryPath, out string assemblyPath, out bool isReleaseBuild)
+    static void CopyAssembly(string executionDirectoryPath, TargetPlatform targetPlatform, out string assemblyPath, out bool isReleaseBuild)
     {
         Console.Write("Copying assembly...");
 
@@ -65,7 +94,7 @@ internal static class Program
 
         var executionDirectory = Path.GetFileName(Path.GetDirectoryName(executionDirectoryPath));
 
-        isReleaseBuild = string.Equals(executionDirectory, "release", StringComparison.OrdinalIgnoreCase);
+        isReleaseBuild = string.Equals(executionDirectory, $"Release{targetPlatform:G}", StringComparison.OrdinalIgnoreCase);
 
         var projectDirectory = Path.Combine(executionDirectoryPath, @"..\..\..\..\ReCommendedExtension");
 
