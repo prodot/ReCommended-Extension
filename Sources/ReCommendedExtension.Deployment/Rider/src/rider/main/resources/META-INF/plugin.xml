@@ -1,0 +1,34 @@
+<idea-plugin require-restart="true">
+  <id>com.prodot.rider.plugins.recommendedextension</id>
+  <name>ReCommended Extension</name>
+  <version>_PLACEHOLDER_</version>
+  <vendor url="https://github.com/prodot/ReCommended-Extension">prodot GmbH</vendor>
+  <idea-version since-build="_PLACEHOLDER_" until-build="_PLACEHOLDER_" />
+  <depends>com.intellij.modules.rider</depends>
+
+  <description>
+<![CDATA[
+<p>The ReCommended Extension augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
+
+- advanced disposable object analysis built around the "[MustDisposeResource]" and "[HandlesResourceDisposal]" annotations,
+- detection of more cases where collection expressions can be used,
+- detection of redundant assertions,
+- inappropriate use of "async void",
+- exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
+- array initializers (empty arrays or arrays initialized with default values),
+- "await" expression analyzer (add ".ConfigureAwait(false)" for last expressions),
+- "ValueTask" analyzer (possible multiple consumption),
+- LINQ and "string" method analyzers (to encourage use of modern language features),
+- incorrect use of "ArgumentException" constructor parameters,
+- locking on weak identity objects,
+- use of "yield return" inside the "lock" blocks,
+- incorrect use of ReSharper annotations,
+- and lots more.
+
+Most of the highlightings also have quick fixes for obvious solutions.
+
+Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReSharper annotations, adjusting XML doc comments, setting language injections, etc.</p>
+]]>
+  </description>
+
+</idea-plugin>

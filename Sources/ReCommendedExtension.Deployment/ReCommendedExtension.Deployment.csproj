@@ -22,4 +22,10 @@
         <None Update="ReCommendedExtension.nuspec" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="Rider\build\**" />
+        <EmbeddedResource Remove="Rider\build\**" />
+        <None Remove="Rider\build\**" />
+    </ItemGroup>
+
 </Project>
