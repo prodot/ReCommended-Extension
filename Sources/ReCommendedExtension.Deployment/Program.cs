@@ -291,7 +291,6 @@ internal static class Program
         var pluginXml = XDocument.Load(pluginXmlPath);
         Debug.Assert(pluginXml.Root is { });
 
-        pluginXml.Root.Element("name")?.SetValue(assembly.GetAttributeValue<AssemblyTitleAttribute>());
         pluginXml.Root.Element("vendor")?.SetValue(assembly.GetAttributeValue<AssemblyCompanyAttribute>());
 
         using (var writer = XmlWriter.Create(pluginXmlPath, new XmlWriterSettings { Encoding = encoding, Indent = true }))

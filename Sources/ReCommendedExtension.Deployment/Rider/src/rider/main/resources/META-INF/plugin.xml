@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <idea-plugin require-restart="true">
-  <id>com.prodot.rider.plugins.recommendedextension</id>
+  <id>com.prodot.plugins.recommendedextension</id>
   <name>ReCommended Extension</name>
   <version>_PLACEHOLDER_</version>
   <vendor url="https://github.com/prodot/ReCommended-Extension">prodot GmbH</vendor>
