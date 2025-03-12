@@ -1,9 +1,11 @@
-﻿using System.Reflection;
+﻿using System.IO.Compression;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
+using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Extensions.Configuration.UserSecrets;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ReCommendedExtension.Deployment.Properties;
 
 namespace ReCommendedExtension.Deployment;
@@ -16,29 +18,50 @@ internal static class Program
         {
             var targetPlatform = GeTargetPlatform();
 
+            var solutionDirectoryPath = GetSolutionDirectoryPath();
             var executionDirectoryPath = GetExecutionDirectoryPath();
+            Debug.Assert(executionDirectoryPath.StartsWith(solutionDirectoryPath, StringComparison.OrdinalIgnoreCase));
 
-            CopyAssembly(executionDirectoryPath, targetPlatform, out var assemblyPath, out var isReleaseBuild);
+            CopyAssembly(executionDirectoryPath, targetPlatform, solutionDirectoryPath, out var assemblyPath, out var isReleaseBuild);
+            Debug.Assert(assemblyPath.StartsWith(solutionDirectoryPath, StringComparison.OrdinalIgnoreCase));
 
             if (isReleaseBuild)
             {
                 ResignAssembly(assemblyPath);
             }
 
+            var assembly = LoadAssemblyForReflection(assemblyPath);
+
             switch (targetPlatform)
             {
                 case TargetPlatform.ReSharper:
-                    UpdateNuspec(executionDirectoryPath, assemblyPath, out var nuspecPath);
+                    UpdateNuspec(executionDirectoryPath, assemblyPath, assembly, out var nuspecPath);
+                    Debug.Assert(nuspecPath.StartsWith(solutionDirectoryPath, StringComparison.OrdinalIgnoreCase));
 
-                    SetAssemblyReference(nuspecPath, assemblyPath, out var packageFileName);
+                    SetAssemblyReference(nuspecPath, assemblyPath, out var nugetFileName);
 
-                    BuildPackage(nuspecPath);
+                    BuildNuget(solutionDirectoryPath, nuspecPath, nugetFileName, out var nugetPath);
+                    Debug.Assert(nugetPath.StartsWith(solutionDirectoryPath, StringComparison.OrdinalIgnoreCase));
 
-                    OpenInWindowsExplorer(nuspecPath, packageFileName);
+                    OpenInWindowsExplorer(nugetPath);
                     break;
 
                 case TargetPlatform.Rider:
-                    // todo: package for Rider
+                    var riderBuildPath = GetRiderBuildPath(solutionDirectoryPath);
+                    Debug.Assert(riderBuildPath.StartsWith(solutionDirectoryPath, StringComparison.OrdinalIgnoreCase));
+
+                    var encoding = new UTF8Encoding(false, true); // UTF-8 without BOM
+
+                    UpdatePluginXml(riderBuildPath, assembly, encoding);
+                    UpdateGradleProperties(riderBuildPath, assembly, encoding);
+                    UpdateSettingsGradleKts(riderBuildPath, assembly, encoding);
+
+                    BuildJar(riderBuildPath, assembly, out var jarPath);
+                    Debug.Assert(jarPath.StartsWith(riderBuildPath, StringComparison.OrdinalIgnoreCase));
+
+                    BuildZip(executionDirectoryPath, assembly, assemblyPath, jarPath, out var zipPath);
+
+                    OpenInWindowsExplorer(zipPath);
                     break;
             }
 
@@ -75,6 +98,15 @@ internal static class Program
     }
 
     [Pure]
+    static string GetSolutionDirectoryPath([CallerFilePath] string? currentFilePath = null)
+    {
+        var solutionDirectory = Path.GetDirectoryName(Path.GetDirectoryName(currentFilePath));
+        Debug.Assert(solutionDirectory is { });
+
+        return solutionDirectory;
+    }
+
+    [Pure]
     static string GetExecutionDirectoryPath()
     {
         var entryAssembly = Assembly.GetEntryAssembly();
@@ -86,7 +118,12 @@ internal static class Program
         return directoryPath;
     }
 
-    static void CopyAssembly(string executionDirectoryPath, TargetPlatform targetPlatform, out string assemblyPath, out bool isReleaseBuild)
+    static void CopyAssembly(
+        string executionDirectoryPath,
+        TargetPlatform targetPlatform,
+        string solutionDirectoryPath,
+        out string assemblyPath,
+        out bool isReleaseBuild)
     {
         Console.Write("Copying assembly...");
 
@@ -96,15 +133,14 @@ internal static class Program
 
         isReleaseBuild = string.Equals(executionDirectory, $"Release{targetPlatform:G}", StringComparison.OrdinalIgnoreCase);
 
-        var projectDirectory = Path.Combine(executionDirectoryPath, @"..\..\..\..\ReCommendedExtension");
+        var extensionProjectDirectory = Path.Combine(solutionDirectoryPath, "ReCommendedExtension");
 
-        var projectFilePath = Path.Combine(projectDirectory, "ReCommendedExtension.csproj");
-        var projectFile = XDocument.Load(projectFilePath);
+        var projectFile = XDocument.Load(Path.Combine(extensionProjectDirectory, "ReCommendedExtension.csproj"));
         Debug.Assert(projectFile.Root is { });
 
         var targetFramework = (string)projectFile.Root.Elements("PropertyGroup").Elements("TargetFramework").First();
 
-        var sourceAssemblyPath = Path.Combine(projectDirectory, "bin", executionDirectory, targetFramework, fileName);
+        var sourceAssemblyPath = Path.Combine(extensionProjectDirectory, "bin", executionDirectory, targetFramework, fileName);
         assemblyPath = Path.Combine(executionDirectoryPath, fileName);
         File.Copy(sourceAssemblyPath, assemblyPath, true);
 
@@ -127,20 +163,17 @@ internal static class Program
         var secretsPath = PathHelper.GetSecretsPathFromSecretsId(userSecretId);
         // must be: %APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
 
-        var json = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(secretsPath));
-        Debug.Assert(json is { });
-
-        var snkPath = (string?)json["SNKey"];
+        var json = JsonDocument.Parse(File.ReadAllText(secretsPath));
+        var snkPath = json.RootElement.GetProperty("SNKey").GetString();
 
         Console.WriteLine($"Key path: {snkPath}");
 
         RunConsoleApplication($"\"{Settings.Default.SnPath}\"", $"-R \"{assemblyPath}\" \"{snkPath}\"");
     }
 
-    static void UpdateNuspec(string executionDirectoryPath, string assemblyPath, out string nuspecPath)
+    [Pure]
+    static Assembly LoadAssemblyForReflection(string assemblyPath)
     {
-        Console.Write("Updating nuspec...");
-
         var assembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
 
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (_, e) =>
@@ -163,6 +196,13 @@ internal static class Program
             return Assembly.ReflectionOnlyLoadFrom(file);
         };
 
+        return assembly;
+    }
+
+    static void UpdateNuspec(string executionDirectoryPath, string assemblyPath, Assembly assembly, out string nuspecPath)
+    {
+        Console.Write("Updating nuspec...");
+
         nuspecPath = Path.Combine(executionDirectoryPath, $"{Path.GetFileNameWithoutExtension(assemblyPath)}.nuspec");
         var nuspec = File.ReadAllText(nuspecPath, Encoding.UTF8);
 
@@ -175,8 +215,6 @@ internal static class Program
 
     static void ReplacePlaceholders(ref string nuspec, Assembly assembly)
     {
-        var customAttributes = assembly.GetCustomAttributesData();
-
         const string startToken = "{{";
         const string endToken = "}}";
 
@@ -191,23 +229,19 @@ internal static class Program
             var end = nuspec.IndexOf(endToken, start + startToken.Length, StringComparison.Ordinal);
 
             var shortAttributeTypeName = nuspec.Substring(start + startToken.Length, end - start - endToken.Length);
-
             var fullAttributeTypeName = $"System.Reflection.{shortAttributeTypeName}Attribute";
 
             var attributeType = Type.GetType(fullAttributeTypeName);
+            Debug.Assert(attributeType is { });
 
-            var customAttribute = customAttributes.First(a => a.AttributeType == attributeType);
-
-            Debug.Assert(customAttribute.ConstructorArguments[0].Value is string);
-
-            var replacementText = (string)customAttribute.ConstructorArguments[0].Value;
+            var replacementText = assembly.GetAttributeValue(attributeType);
 
             nuspec = nuspec.Remove(start, end - start + endToken.Length);
             nuspec = nuspec.Insert(start, replacementText);
         }
     }
 
-    static void SetAssemblyReference(string nuspecPath, string assemblyPath, out string packageFileName)
+    static void SetAssemblyReference(string nuspecPath, string assemblyPath, out string nugetFileName)
     {
         Console.Write("Setting assembly reference...");
 
@@ -223,23 +257,134 @@ internal static class Program
         var metadataElement = nuspec.Root.Element("metadata");
         Debug.Assert(metadataElement is { });
 
-        packageFileName = $"{(string)metadataElement.Element("id")}.{(string)metadataElement.Element("version")}.nupkg";
+        nugetFileName = $"{(string)metadataElement.Element("id")}.{(string)metadataElement.Element("version")}.nupkg";
 
         nuspec.Save(nuspecPath);
 
         Console.WriteLine("done");
     }
 
-    static void BuildPackage(string nuspecPath)
+    static void BuildNuget(string solutionDirectoryPath, string nuspecPath, string packageFileName, out string nugetPath)
     {
-        Console.WriteLine("Building package...");
+        Console.WriteLine("Building nuget...");
 
         var nuspecDirectoryPath = Path.GetDirectoryName(nuspecPath);
         Debug.Assert(nuspecDirectoryPath is { });
 
         RunConsoleApplication(
-            $"\"{Path.Combine(nuspecDirectoryPath, @"..\..\..\..\.nuget\NuGet.exe")}\"",
+            $"\"{Path.Combine(solutionDirectoryPath, ".nuget", "NuGet.exe")}\"",
             $"pack \"{nuspecPath}\" -OutputDirectory \"{nuspecDirectoryPath}\" -NoPackageAnalysis -Verbosity detailed");
+
+        nugetPath = Path.Combine(nuspecDirectoryPath, packageFileName);
+        Debug.Assert(File.Exists(nugetPath));
+    }
+
+    [Pure]
+    static string GetRiderBuildPath(string solutionDirectoryPath) => Path.Combine(solutionDirectoryPath, "ReCommendedExtension.Deployment", "Rider");
+
+    static void UpdatePluginXml(string riderBuildPath, Assembly assembly, Encoding encoding)
+    {
+        Console.Write("Updating plugin.xml...");
+
+        var pluginXmlPath = Path.Combine(riderBuildPath, "src", "rider", "main", "resources", "META-INF", "plugin.xml");
+
+        var pluginXml = XDocument.Load(pluginXmlPath);
+        Debug.Assert(pluginXml.Root is { });
+
+        pluginXml.Root.Element("name")?.SetValue(assembly.GetAttributeValue<AssemblyTitleAttribute>());
+        pluginXml.Root.Element("vendor")?.SetValue(assembly.GetAttributeValue<AssemblyCompanyAttribute>());
+
+        using (var writer = XmlWriter.Create(pluginXmlPath, new XmlWriterSettings { Encoding = encoding, Indent = true }))
+        {
+            pluginXml.Save(writer);
+        }
+
+        Console.WriteLine("done");
+    }
+
+    static void UpdateGradleProperties(string riderBuildPath, Assembly assembly, Encoding encoding)
+    {
+        Console.Write("Updating gradle.properties...");
+
+        var gradePropertiesPath = Path.Combine(riderBuildPath, "gradle.properties");
+
+        var gradeProperties = File.ReadAllLines(gradePropertiesPath);
+
+        for (var i = 0; i < gradeProperties.Length; i++)
+        {
+            const string propertyName = "PluginVersion";
+
+            var line = gradeProperties[i];
+
+            if (line.StartsWith($"{propertyName}=", StringComparison.Ordinal))
+            {
+                gradeProperties[i] = $"{propertyName}={assembly.GetAttributeValue<AssemblyFileVersionAttribute>()}";
+                break;
+            }
+        }
+
+        File.WriteAllLines(gradePropertiesPath, gradeProperties, encoding);
+
+        Console.WriteLine("done");
+    }
+
+    static void UpdateSettingsGradleKts(string riderBuildPath, Assembly assembly, Encoding encoding)
+    {
+        Console.Write("Updating settings.gradle.kts...");
+
+        var settingsPath = Path.Combine(riderBuildPath, "settings.gradle.kts");
+
+        var lines = File.ReadAllLines(settingsPath);
+
+        for (var i = 0; i < lines.Length; i++)
+        {
+            const string propertyName = "rootProject.name";
+
+            var line = lines[i];
+
+            if (line.StartsWith($"{propertyName} = ", StringComparison.Ordinal))
+            {
+                lines[i] = $"{propertyName} = \"Prodot.{assembly.GetAttributeValue<AssemblyProductAttribute>()}\"";
+                break;
+            }
+        }
+
+        File.WriteAllLines(settingsPath, lines, encoding);
+
+        Console.WriteLine("done");
+    }
+
+    static void BuildJar(string riderBuildPath, Assembly assembly, out string jarPath)
+    {
+        Console.WriteLine("Building JAR...");
+
+        Directory.SetCurrentDirectory(riderBuildPath);
+
+        RunConsoleApplication("gradlew.bat", "build");
+
+        jarPath = Path.Combine(
+            riderBuildPath,
+            "build",
+            "libs",
+            $"Prodot.{assembly.GetAttributeValue<AssemblyProductAttribute>()}-{assembly.GetAttributeValue<AssemblyFileVersionAttribute>()}.jar");
+        Debug.Assert(File.Exists(jarPath));
+    }
+
+    static void BuildZip(string executionDirectoryPath, Assembly assembly, string assemblyPath, string jarPath, out string zipPath)
+    {
+        Console.Write("Building zip...");
+
+        zipPath = Path.Combine(executionDirectoryPath, $"{Path.GetFileNameWithoutExtension(jarPath)}.zip");
+
+        using var fileStream = File.Create(zipPath);
+        using var zip = new ZipArchive(fileStream, ZipArchiveMode.Create, true);
+
+        var rootEntry = $"Prodot.{assembly.GetAttributeValue<AssemblyProductAttribute>()}";
+
+        zip.CreateEntryFromFile(assemblyPath, $"{rootEntry}/dotnet/{Path.GetFileName(assemblyPath)}");
+        zip.CreateEntryFromFile(jarPath, $"{rootEntry}/lib/{Path.GetFileName(jarPath)}");
+
+        Console.WriteLine("done");
     }
 
     static void RunConsoleApplication(string executablePath, string arguments)
@@ -273,11 +418,20 @@ internal static class Program
 
     static void Process_DataReceived(object? sender, DataReceivedEventArgs e) => Console.WriteLine($"    {e.Data}");
 
-    static void OpenInWindowsExplorer(string nuspecPath, string packageFileName)
+    static void OpenInWindowsExplorer(string filePath)
     {
-        var nuspecDirectoryPath = Path.GetDirectoryName(nuspecPath);
-        Debug.Assert(nuspecDirectoryPath is { });
+        using (Process.Start("explorer", $"/select, \"{filePath}\"")) { }
+    }
 
-        using (Process.Start("explorer", $"/select, \"{Path.Combine(nuspecDirectoryPath, packageFileName)}\"")) { }
+    [Pure]
+    static string GetAttributeValue<A>(this Assembly assembly) where A : Attribute => assembly.GetAttributeValue(typeof(A));
+
+    [Pure]
+    static string GetAttributeValue(this Assembly assembly, Type attributeType)
+    {
+        var customAttribute = assembly.GetCustomAttributesData().First(a => a.AttributeType == attributeType);
+        Debug.Assert(customAttribute.ConstructorArguments[0].Value is string);
+
+        return (string)customAttribute.ConstructorArguments[0].Value;
     }
 }
