@@ -1,4 +1,4 @@
-using JetBrains.DocumentModel;
+﻿using JetBrains.DocumentModel;
 
 namespace ReCommendedExtension.Analyzers;
 

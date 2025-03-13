@@ -1,6 +1,7 @@
-# <img src="Images/Icon.png" width="32" height="32" /> ReCommended Extension for ReSharper [![ReSharper Extension](https://img.shields.io/resharper/v/Prodot.ReCommendedExtension.svg?label=ReSharper%20Extension)](https://plugins.jetbrains.com/plugin/11646-recommended-extension-for-resharper)
+﻿# <img src="Images/Icon.png" width="32" height="32" /> ReCommended Extension for ReSharper and Rider
+[![ReSharper Extension](https://img.shields.io/resharper/v/Prodot.ReCommendedExtension.svg?label=ReSharper%20Extension)](https://plugins.jetbrains.com/plugin/11646-recommended-extension-for-resharper) [![Rider Plugin](https://img.shields.io/jetbrains/plugin/v/26815?label=Rider%20Plugin)](https://plugins.jetbrains.com/plugin/26815-recommended-extension)
 
-The ReCommended Extension for ReSharper augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
+The ReCommended Extension for ReSharper and Rider augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
 - advanced disposable object analysis built around the `[MustDisposeResource]` and `[HandlesResourceDisposal]` annotations,
 - detection of more cases where collection expressions can be used,
@@ -31,7 +32,7 @@ Another feature of the extension are new context actions that simply save time f
 
 # Installation
 
-To install the ReCommended Extension use the ReSharper's Extension Manager.
+To install the ReCommended Extension use the ReSharper's Extension Manager or Rider's Plugins.
 
 # Limitations
 

@@ -4,16 +4,25 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Configurations>DebugReSharper;ReleaseReSharper;DebugRider;ReleaseRider</Configurations>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)'=='DebugReSharper' OR '$(Configuration)'=='DebugRider'">
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
         <DefineConstants>DEBUG;TRACE</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)'=='ReleaseReSharper' OR '$(Configuration)'=='ReleaseRider'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='DebugReSharper' OR '$(Configuration)'=='ReleaseReSharper'">
+        <DefineConstants>$(DefineConstants);RESHARPER</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='DebugRider' OR '$(Configuration)'=='ReleaseRider'">
+        <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>

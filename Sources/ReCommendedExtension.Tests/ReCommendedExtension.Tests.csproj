@@ -6,9 +6,19 @@
         <NoWarn>$(NoWarn);NU1903</NoWarn> <!-- transitive package has a known high severity vulnerability -->
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)'=='DebugRider' OR '$(Configuration)'=='ReleaseRider'">
+        <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- unresolved package dependency -->
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="JetBrains.Lifetimes" Version="2024.3.0" />
-        <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2024.3.6">
+        <PackageReference Condition="'$(Configuration)'=='DebugReSharper' OR '$(Configuration)'=='ReleaseReSharper'"
+                          Include="JetBrains.ReSharper.SDK.Tests" Version="2024.3.6">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Condition="'$(Configuration)'=='DebugRider' OR '$(Configuration)'=='ReleaseRider'"
+                          Include="JetBrains.Rider.SDK.Tests" Version="2024.3.6">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>

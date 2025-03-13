@@ -1,4 +1,4 @@
-using JetBrains.ReSharper.Psi.CSharp;
+﻿using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;

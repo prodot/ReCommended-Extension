@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<idea-plugin require-restart="true">
+  <id>com.prodot.plugins.recommendedextension</id>
+  <name>ReCommended Extension</name>
+  <version>_PLACEHOLDER_</version>
+  <vendor url="https://github.com/prodot/ReCommended-Extension">prodot GmbH</vendor>
+  <idea-version since-build="_PLACEHOLDER_" until-build="_PLACEHOLDER_" />
+  <depends>com.intellij.modules.rider</depends>
+  <description><![CDATA[
+<p>The ReCommended Extension for ReSharper and Rider augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are</p>
+
+<ul>
+    <li>advanced disposable object analysis built around the <code>[MustDisposeResource]</code> and <code>[HandlesResourceDisposal]</code> annotations,</li>
+    <li>detection of more cases where collection expressions can be used,</li>
+    <li>detection of redundant assertions,</li>
+    <li>inappropriate use of <code>async void</code>,</li>
+    <li>exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),</li>
+    <li>array initializers (empty arrays or arrays initialized with default values),</li>
+    <li><code>await</code> expression analyzer (add <code>.ConfigureAwait(false)</code> for last expressions),</li>
+    <li><code>ValueTask</code>/<code>ValueTask&lt;T&gt;</code> analyzer (possible multiple consumption),</li>
+    <li>LINQ and <code>string</code> method analyzers (to encourage use of modern language features),</li>
+    <li>incorrect use of <code>ArgumentException</code> constructor parameters,</li>
+    <li>locking on weak identity objects,</li>
+    <li>use of <code>yield return</code> inside the <code>lock</code> blocks,</li>
+    <li>incorrect use of ReSharper annotations,</li>
+    <li>and lots more.</li>
+</ul>
+
+<p>Most of the highlightings also have quick fixes for obvious solutions.</p>
+
+<p>Another feature of the extension are new context actions that simply save time for accomplishing everyday tasks, e.g. for adding ReSharper annotations, adjusting XML doc comments, setting language injections, etc.</p>
+
+<p><a href="https://github.com/prodot/ReCommended-Extension/wiki">show more...</a></p>
+]]></description>
+</idea-plugin>

@@ -59,12 +59,15 @@ public abstract class EncompassInDocComment(ICSharpContextActionDataProvider pro
 
             var position = documentSelection.StartOffset - startOffset; // relative to the text
 
-            (start, end) = GetWordBoundaries(text, position);
-
-            if (start != end)
+            if (position < text.Length)
             {
-                docCommentNode = selectedElement;
-                return true; // for performance reasons: we don't check if the result becomes a valid XML
+                (start, end) = GetWordBoundaries(text, position);
+
+                if (start != end)
+                {
+                    docCommentNode = selectedElement;
+                    return true; // for performance reasons: we don't check if the result becomes a valid XML
+                }
             }
         }
         else

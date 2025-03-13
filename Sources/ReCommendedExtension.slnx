@@ -1,0 +1,27 @@
+﻿<Solution>
+  <Configurations>
+    <BuildType Name="DebugReSharper" />
+    <BuildType Name="ReleaseReSharper" />
+    <BuildType Name="DebugRider" />
+    <BuildType Name="ReleaseRider" />
+  </Configurations>
+  <Folder Name="/.nuget/">
+    <File Path=".nuget/NuGet.Config" />
+    <File Path=".nuget/NuGet.exe" />
+    <File Path=".nuget/NuGet.targets" />
+    <File Path=".nuget/packages.config" />
+  </Folder>
+  <Folder Name="/GitHub/">
+    <File Path="../CONTRIBUTING.md" />
+    <File Path="../README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="ReCommendedExtension.sln.DotSettings" />
+  </Folder>
+  <Project Path="ReCommendedExtension.Deployment/ReCommendedExtension.Deployment.csproj">
+    <BuildDependency Project="ReCommendedExtension/ReCommendedExtension.csproj" />
+  </Project>
+  <Project Path="ReCommendedExtension.Tests/ReCommendedExtension.Tests.csproj" />
+  <Project Path="ReCommendedExtension/ReCommendedExtension.csproj" />
+</Solution>

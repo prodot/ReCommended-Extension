@@ -1,4 +1,4 @@
-using JetBrains.Application.Progress;
+﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Resources.Shell;

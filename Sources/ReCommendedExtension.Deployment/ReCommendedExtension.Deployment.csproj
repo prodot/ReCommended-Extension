@@ -11,9 +11,18 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Remove="Rider\build\**" />
+        <EmbeddedResource Remove="Rider\build\**" />
+        <None Remove="Rider\build\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="System.IO.Compression" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.2" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.3" />
     </ItemGroup>
 
     <ItemGroup>
