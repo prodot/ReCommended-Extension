@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Analyzers.Linq;
 [RegisterConfigurableSeverity(
     SeverityId,
     null,
-    HighlightingGroupIds.LanguageUsage,
+    HighlightingGroupIds.CodeSmell,
     "Suspicious element access" + ZoneMarker.Suffix,
     "",
     Severity.WARNING)]
