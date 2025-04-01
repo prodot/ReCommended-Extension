@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Linq;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
 [TestNet50]
-public sealed class UseLinqQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
 

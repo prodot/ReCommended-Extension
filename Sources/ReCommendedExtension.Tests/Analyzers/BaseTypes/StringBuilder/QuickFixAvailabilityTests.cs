@@ -11,7 +11,7 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.StringBuilder;
 
 [TestFixture]
-public sealed class UseStringBuilderQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilderQuickFixes";
 
