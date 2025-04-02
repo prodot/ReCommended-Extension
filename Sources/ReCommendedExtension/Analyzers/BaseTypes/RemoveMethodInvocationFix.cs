@@ -36,11 +36,22 @@ public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationHint high
             {
                 var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-                ModificationUtil
-                    .ReplaceChild(
-                        highlighting.InvocationExpression,
-                        factory.CreateExpression("($0)", highlighting.InvokedExpression.QualifierExpression))
-                    .TryRemoveParentheses(factory);
+                if (highlighting.ArgumentToKeep is { })
+                {
+                    ModificationUtil
+                        .ReplaceChild(
+                            highlighting.InvocationExpression,
+                            factory.CreateExpression("($0)", highlighting.ArgumentToKeep))
+                        .TryRemoveParentheses(factory);
+                }
+                else
+                {
+                    ModificationUtil
+                        .ReplaceChild(
+                            highlighting.InvocationExpression,
+                            factory.CreateExpression("($0)", highlighting.InvokedExpression.QualifierExpression))
+                        .TryRemoveParentheses(factory);
+                }
             }
         }
 

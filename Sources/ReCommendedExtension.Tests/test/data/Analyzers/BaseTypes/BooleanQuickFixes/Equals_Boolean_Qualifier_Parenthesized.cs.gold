@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Booleans
+    {
+        public void Equals(int x)
+        {
+            var result = (x > 0{caret});
+        }
+    }
+}

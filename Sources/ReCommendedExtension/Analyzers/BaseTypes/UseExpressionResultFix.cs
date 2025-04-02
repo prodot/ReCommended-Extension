@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes;
 
@@ -22,7 +23,9 @@ public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlig
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            ModificationUtil.ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"{highlighting.Replacement}"));
+            ModificationUtil
+                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"{highlighting.Replacement}"))
+                .TryRemoveUnaryOperatorParentheses(factory);
         }
 
         return _ => { };

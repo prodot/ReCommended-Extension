@@ -24,13 +24,16 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
 public sealed class RedundantMethodInvocationHint(
     string message,
     IInvocationExpression invocationExpression,
-    IReferenceExpression invokedExpression) : Highlighting(message)
+    IReferenceExpression invokedExpression,
+    ICSharpExpression? argumentToKeep = null) : Highlighting(message)
 {
     const string SeverityId = "RedundantMethodInvocation";
 
     internal IInvocationExpression InvocationExpression => invocationExpression;
 
     internal IReferenceExpression InvokedExpression => invokedExpression;
+
+    internal ICSharpExpression? ArgumentToKeep => argumentToKeep;
 
     [Pure]
     internal bool RemoveEntireInvocationExpression()
@@ -41,6 +44,13 @@ public sealed class RedundantMethodInvocationHint(
         if (RemoveEntireInvocationExpression())
         {
             return invocationExpression.GetDocumentRange();
+        }
+
+        if (argumentToKeep is { })
+        {
+            var endOffset = invokedExpression.Reference.GetDocumentRange().EndOffset;
+
+            return invocationExpression.GetDocumentRange().SetEndTo(endOffset);
         }
 
         var startOffset = invokedExpression.Reference.GetDocumentRange().StartOffset;

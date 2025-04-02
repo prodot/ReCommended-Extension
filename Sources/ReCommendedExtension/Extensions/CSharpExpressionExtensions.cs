@@ -65,6 +65,10 @@ internal static class CSharpExpressionExtensions
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Int, IntValue: var value } } ? value : null;
 
     [Pure]
+    public static bool? TryGetBooleanConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: var value } } ? value : null;
+
+    [Pure]
     public static StringComparison? TryGetStringComparisonConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
             && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
@@ -96,6 +100,23 @@ internal static class CSharpExpressionExtensions
         {
             rangeExpression.LeftOperand?.TryRemoveParentheses(factory);
             rangeExpression.RightOperand?.TryRemoveParentheses(factory);
+        }
+    }
+
+    public static void TryRemoveUnaryOperatorParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
+    {
+        if (expression is IUnaryOperatorExpression unaryOperatorExpression)
+        {
+            unaryOperatorExpression.Operand.TryRemoveParentheses(factory);
+        }
+    }
+
+    public static void TryRemoveBinaryOperatorParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
+    {
+        if (expression is IBinaryExpression binaryExpression)
+        {
+            binaryExpression.LeftOperand.TryRemoveParentheses(factory);
+            binaryExpression.RightOperand.TryRemoveParentheses(factory);
         }
     }
 

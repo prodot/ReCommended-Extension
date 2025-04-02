@@ -1,0 +1,18 @@
+﻿namespace Test
+{
+    public class Booleans
+    {
+        public void Equals(bool flag, bool obj)
+        {
+            var result1 = flag.|Equals(true)|(0);
+            var result2 = |true.Equals|(1)(obj);
+        }
+    }
+}
+------------------------------------------------
+0: Calling 'Equals' with true is redundant.
+QUICKFIXES:
+Remove method invocation
+1: Calling 'true.Equals' is redundant.
+QUICKFIXES:
+Remove method invocation
