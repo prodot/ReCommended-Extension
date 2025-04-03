@@ -1,5 +1,5 @@
 ﻿# <img src="Images/Icon.png" width="32" height="32" /> ReCommended Extension for ReSharper and Rider
-[![ReSharper Extension](https://img.shields.io/resharper/v/Prodot.ReCommendedExtension.svg?label=ReSharper%20Extension)](https://plugins.jetbrains.com/plugin/11646-recommended-extension-for-resharper) [![Rider Plugin](https://img.shields.io/jetbrains/plugin/v/26815?label=Rider%20Plugin)](https://plugins.jetbrains.com/plugin/26815-recommended-extension)
+[![ReSharper Extension](https://img.shields.io/resharper/v/Prodot.ReCommendedExtension.svg?label=ReSharper%20Extension)](https://plugins.jetbrains.com/plugin/11646-recommended-extension-for-resharper) [![Rider Plugin](https://img.shields.io/jetbrains/plugin/v/26815?label=Rider%20Plugin)](https://plugins.jetbrains.com/plugin/26815-recommended-extension) [![GitHub Release Date](https://img.shields.io/github/release-date/prodot/ReCommended-Extension?label=Release%20Date&color=darkorange)](https://github.com/prodot/ReCommended-Extension/releases)
 
 The ReCommended Extension for ReSharper and Rider augments the sophisticated code analysis engine by providing more rules not (yet) available from JetBrains. Among the most interesting features are
 
