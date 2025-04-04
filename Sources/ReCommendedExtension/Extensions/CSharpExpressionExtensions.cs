@@ -111,7 +111,7 @@ internal static class CSharpExpressionExtensions
                 ? (NumberStyles)constantValue.IntValue
                 : null;
 
-    public static void TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
+    public static ICSharpExpression TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
     {
         if (expression is IParenthesizedExpression parenthesizedExpression
             && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
@@ -119,8 +119,10 @@ internal static class CSharpExpressionExtensions
                 NeedsToRemove: true,
             })
         {
-            ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+            return ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
         }
+
+        return expression;
     }
 
     public static void TryRemoveRangeIndexParentheses(this ICSharpExpression expression, CSharpElementFactory factory)

@@ -38,7 +38,8 @@ public sealed class UseBinaryOperationFix(UseBinaryOperationSuggestion highlight
             ModificationUtil
                 .ReplaceChild(
                     highlighting.InvocationExpression,
-                    factory.CreateExpression($"{leftOperand} {highlighting.Operator} {rightOperand}"))
+                    factory.CreateExpression($"({leftOperand} {highlighting.Operator} {rightOperand})"))
+                .TryRemoveParentheses(factory)
                 .TryRemoveBinaryOperatorParentheses(factory);
         }
 
