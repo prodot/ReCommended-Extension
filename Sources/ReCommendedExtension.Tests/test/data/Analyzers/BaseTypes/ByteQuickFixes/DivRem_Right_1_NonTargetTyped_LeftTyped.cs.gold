@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Bytes
+    {
+        public void DivRem(byte left)
+        {
+            var result = (Quoti{caret}ent: left, Remainder: (byte)0);
+        }
+    }
+}

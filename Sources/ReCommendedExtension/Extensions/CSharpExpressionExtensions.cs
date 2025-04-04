@@ -1,4 +1,5 @@
-﻿using JetBrains.Metadata.Reader.API;
+﻿using System.Globalization;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -69,6 +70,27 @@ internal static class CSharpExpressionExtensions
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: var value } } ? value : null;
 
     [Pure]
+    public static byte? TryGetByteConstant(this ICSharpExpression? expression, out bool implicitlyConverted)
+    {
+        if (expression is IConstantValueOwner constantValueOwner)
+        {
+            switch (constantValueOwner.ConstantValue)
+            {
+                case { Kind: ConstantValueKind.Byte, ByteValue: var value }:
+                    implicitlyConverted = false;
+                    return value;
+
+                case { Kind: ConstantValueKind.Int, IntValue: >= 0 and <= byte.MaxValue and var value }:
+                    implicitlyConverted = true;
+                    return unchecked((byte)value);
+            }
+        }
+
+        implicitlyConverted = false;
+        return null;
+    }
+
+    [Pure]
     public static StringComparison? TryGetStringComparisonConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
             && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
@@ -80,6 +102,13 @@ internal static class CSharpExpressionExtensions
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
             && enumType.IsClrType(ClrTypeNames.StringSplitOptions)
                 ? (StringSplitOptions)constantValue.IntValue
+                : null;
+
+    [Pure]
+    public static NumberStyles? TryGetNumberStylesConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(ClrTypeNames.NumberStyles)
+                ? (NumberStyles)constantValue.IntValue
                 : null;
 
     public static void TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)

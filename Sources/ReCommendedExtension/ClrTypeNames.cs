@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
@@ -81,6 +82,8 @@ internal static class ClrTypeNames
     public static readonly IClrTypeName ConfigureAwaitOptions = new ClrTypeName("System.Threading.Tasks.ConfigureAwaitOptions");
 
     public static readonly IClrTypeName StringSplitOptions = GetClrTypeName<StringSplitOptions>();
+
+    public static readonly IClrTypeName NumberStyles = GetClrTypeName<NumberStyles>();
 
     public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");
 

@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Bytes
+    {
+        public void Parse(string s)
+        {
+            var result = byte.Parse(s{caret});
+        }
+    }
+}

@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Bytes
+    {
+        public void TryParse(ReadOnlySpan<byte> utf8Text)
+        {
+            var result = byte.TryParse(utf8Text, nu{caret}ll, out _);
+        }
+    }
+}

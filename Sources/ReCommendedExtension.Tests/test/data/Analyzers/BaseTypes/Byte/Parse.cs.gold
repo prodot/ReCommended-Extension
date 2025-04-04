@@ -1,0 +1,35 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Bytes
+    {
+        public void RedundantArgument(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
+        {
+            var result11 = byte.Parse(s, |NumberStyles.Integer|(0));
+            var result12 = byte.Parse(s, |null|(1));
+            var result13 = byte.Parse(s, |NumberStyles.AllowLeadingSign | NumberStyles.AllowTrailingWhite | NumberStyles.AllowLeadingWhite|(2), provider);
+            var result14 = byte.Parse(s, style, |null|(3));
+            var result15 = byte.Parse(s, |NumberStyles.Integer|(4), |null|(5));
+
+            var result21 = byte.Parse(s1, |null|(6));
+
+            var result31 = byte.Parse(utf8Text, |null|(7));
+        }
+
+        public void NoDetection()
+        {
+            
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing NumberStyles.Integer is redundant.
+(1): ReSharper Dead Code: Passing null is redundant.
+(2): ReSharper Dead Code: Passing NumberStyles.Integer is redundant.
+(3): ReSharper Dead Code: Passing null is redundant.
+(4): ReSharper Dead Code: Passing NumberStyles.Integer is redundant.
+(5): ReSharper Dead Code: Passing null is redundant.
+(6): ReSharper Dead Code: Passing null is redundant.
+(7): ReSharper Dead Code: Passing null is redundant.

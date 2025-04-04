@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Bytes
+    {
+        public void Parse(string s, IFormatProvider provider)
+        {
+            var result = byte.Parse(s, NumberStyles{caret}.Integer, provider);
+        }
+    }
+}

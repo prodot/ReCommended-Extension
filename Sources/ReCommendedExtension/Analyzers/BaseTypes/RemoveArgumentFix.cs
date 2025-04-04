@@ -24,13 +24,29 @@ public sealed class RemoveArgumentFix(RedundantArgumentHint highlighting) : Quic
             if (highlighting
                     .Argument.PrevTokens()
                     .TakeWhile(t => t.Parent == highlighting.Argument.Parent)
-                    .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } commaToken)
+                    .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } previousCommaToken)
             {
-                ModificationUtil.DeleteChildRange(commaToken, highlighting.Argument);
+                ModificationUtil.DeleteChildRange(previousCommaToken, highlighting.Argument);
             }
             else
             {
-                ModificationUtil.DeleteChild(highlighting.Argument);
+                if (highlighting
+                        .Argument.NextTokens()
+                        .TakeWhile(t => t.Parent == highlighting.Argument.Parent)
+                        .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } nextCommaToken)
+                {
+                    var lastToken = nextCommaToken
+                        .NextTokens()
+                        .TakeWhile(t => t.Parent == highlighting.Argument.Parent)
+                        .FirstOrDefault(t => !t.IsWhitespaceToken()) is { } nonWhitespaceToken
+                        ? nonWhitespaceToken.PrevTokens().First()
+                        : nextCommaToken;
+                    ModificationUtil.DeleteChildRange(highlighting.Argument, lastToken);
+                }
+                else
+                {
+                    ModificationUtil.DeleteChild(highlighting.Argument);
+                }
             }
         }
 

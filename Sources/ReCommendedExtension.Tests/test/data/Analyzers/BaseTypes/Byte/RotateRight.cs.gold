@@ -1,0 +1,20 @@
+﻿namespace Test
+{
+    public class Bytes
+    {
+        public void ExpressionResult(byte n)
+        {
+            var result = |byte.RotateRight(n, 0)|(0);
+        }
+
+        public void NoDetection(byte n, int rotateAmount)
+        {
+            var result1 = byte.RotateRight(n, 1);
+            var result2 = byte.RotateRight(n, rotateAmount);
+
+            byte.RotateRight(n, 0);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always the same as the first argument.

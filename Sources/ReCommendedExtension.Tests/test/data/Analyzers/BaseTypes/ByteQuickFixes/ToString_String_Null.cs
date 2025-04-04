@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Bytes
+    {
+        public void ToString(byte number, string format)
+        {
+            var result = number.ToString(format, {caret}null);
+        }
+    }
+}

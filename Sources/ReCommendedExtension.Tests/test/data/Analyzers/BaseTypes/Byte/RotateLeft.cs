@@ -1,0 +1,18 @@
+﻿namespace Test
+{
+    public class Bytes
+    {
+        public void ExpressionResult(byte n)
+        {
+            var result = byte.RotateLeft(n, 0);
+        }
+
+        public void NoDetection(byte n, int rotateAmount)
+        {
+            var result1 = byte.RotateLeft(n, 1);
+            var result2 = byte.RotateLeft(n, rotateAmount);
+
+            byte.RotateLeft(n, 0);
+        }
+    }
+}

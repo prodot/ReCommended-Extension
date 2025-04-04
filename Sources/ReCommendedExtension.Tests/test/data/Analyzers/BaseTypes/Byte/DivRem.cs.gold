@@ -1,0 +1,23 @@
+﻿namespace Test
+{
+    public class Bytes
+    {
+        public void ExpressionResult(byte left)
+        {
+            var result1 = |byte.DivRem(0, 10)|(0);
+            var result2 = |byte.DivRem(left, 1)|(1);
+        }
+
+        public void NoDetection(byte left, byte right)
+        {
+            var result1 = byte.DivRem(0, right);
+            var result2 = byte.DivRem(left, 2);
+
+            byte.DivRem(0, 10);
+            byte.DivRem(left, 1);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always (0, 0).
+(1): ReSharper Suggestion: The expression is always the same as the first argument with no remainder.

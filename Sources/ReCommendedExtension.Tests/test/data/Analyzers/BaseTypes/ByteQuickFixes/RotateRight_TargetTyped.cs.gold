@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Bytes
+    {
+        public void RotateRight()
+        {
+            byte result = {caret}1;
+        }
+    }
+}

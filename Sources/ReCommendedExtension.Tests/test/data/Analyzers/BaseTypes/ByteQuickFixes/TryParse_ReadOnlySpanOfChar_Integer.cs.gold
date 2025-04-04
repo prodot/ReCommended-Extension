@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Bytes
+    {
+        public void TryParse(ReadOnlySpan<char> s, IFormatProvider provider)
+        {
+            var result = byte.TryParse(s{caret}, provider, out _);
+        }
+    }
+}

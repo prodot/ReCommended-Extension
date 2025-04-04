@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Bytes
+    {
+        public void DivRem()
+        {
+            (byte, byte) result = {caret}(0, 0);
+        }
+    }
+}
