@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.MethodFinding;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -116,8 +117,18 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
     /// <remarks>
     /// <c>flag.ToString(provider)</c> → <c>flag.ToString()</c>
     /// </remarks>
-    static void AnalyzeToString_IFormatProvider(IHighlightingConsumer consumer, ICSharpArgument providerArgument)
-        => consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
+    static void AnalyzeToString_IFormatProvider(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument providerArgument)
+    {
+        if (PredefinedType.BOOLEAN_FQN.HasMethod(
+            new MethodSignature { Name = nameof(bool.ToString), ParameterTypes = [] },
+            invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
+        }
+    }
 
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
@@ -154,7 +165,7 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var providerType }], [var providerArgument]) when providerType.IsIFormatProvider():
-                            AnalyzeToString_IFormatProvider(consumer, providerArgument);
+                            AnalyzeToString_IFormatProvider(consumer, element, providerArgument);
                             break;
                     }
                     break;

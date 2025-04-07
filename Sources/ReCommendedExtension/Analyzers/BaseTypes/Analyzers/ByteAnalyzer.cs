@@ -147,7 +147,7 @@ public sealed class ByteAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     }
 
     /// <remarks>
-    /// <c>number.Equals(obj)</c> → <c>flag == obj</c>
+    /// <c>number.Equals(obj)</c> → <c>number == obj</c>
     /// </remarks>
     static void AnalyzeEquals_Byte(
         IHighlightingConsumer consumer,
@@ -170,7 +170,7 @@ public sealed class ByteAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     }
 
     /// <remarks>
-    /// <c>flag.Equals(null)</c> → <c>false</c>
+    /// <c>number.Equals(null)</c> → <c>false</c>
     /// </remarks>
     static void AnalyzeEquals_Object(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
     {
@@ -181,7 +181,7 @@ public sealed class ByteAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     }
 
     /// <remarks>
-    /// <c>flag.GetTypeCode()</c> → <c>TypeCode.Byte</c>
+    /// <c>number.GetTypeCode()</c> → <c>TypeCode.Byte</c>
     /// </remarks>
     static void AnalyzeGetTypeCode(IHighlightingConsumer consumer, IInvocationExpression invocationExpression)
     {
@@ -586,14 +586,14 @@ public sealed class ByteAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                             }
                             break;
 
-                        case nameof(bool.GetTypeCode):
+                        case nameof(byte.GetTypeCode):
                             switch (method.Parameters, element.Arguments)
                             {
                                 case ([], []): AnalyzeGetTypeCode(consumer, element); break;
                             }
                             break;
 
-                        case nameof(bool.ToString):
+                        case nameof(byte.ToString):
                             switch (method.Parameters, element.Arguments)
                             {
                                 case ([{ Type: var formatType }], [var formatArgument]) when formatType.IsString():

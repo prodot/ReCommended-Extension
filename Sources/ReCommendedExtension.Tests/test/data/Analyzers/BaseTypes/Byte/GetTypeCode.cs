@@ -9,7 +9,7 @@
 
         public void NoDetection(byte number)
         {
-            flag.GetTypeCode();
+            number.GetTypeCode();
         }
     }
 }

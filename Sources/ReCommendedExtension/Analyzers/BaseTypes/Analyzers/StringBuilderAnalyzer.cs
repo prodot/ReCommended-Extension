@@ -68,6 +68,11 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
         public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
 
+        public static IReadOnlyList<ParameterType> Int32_String { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.INT_FQN }, new() { ClrTypeName = PredefinedType.STRING_FQN },
+        ];
+
         public static IReadOnlyList<ParameterType> Int32_Char { get; } =
         [
             new() { ClrTypeName = PredefinedType.INT_FQN }, new() { ClrTypeName = PredefinedType.CHAR_FQN },
@@ -1122,7 +1127,9 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     {
         switch (valueArgument.Value.TryGetStringConstant(), countArgument.Value.TryGetInt32Constant())
         {
-            case (null, 1):
+            case (null, 1) when PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Insert), ParameterTypes = ParameterTypes.Int32_String },
+                invocationExpression.PsiModule):
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", countArgument));
                 break;
 
