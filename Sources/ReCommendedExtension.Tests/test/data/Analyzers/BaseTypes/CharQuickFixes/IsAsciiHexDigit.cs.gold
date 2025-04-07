@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Characters
+    {
+        public void IsAsciiHexDigit(char c)
+        {
+            var result = c is >= '0' and <= '9' or >= 'A' and <= 'F' or >= 'a' and <= 'f'{caret};
+        }
+    }
+}

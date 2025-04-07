@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Characters
+    {
+        public void CharRangePattern(char c)
+        {
+            var result = |char.IsAsciiHexDigitUpper(c)|(0);
+        }
+
+        public void NoDetection(char c)
+        {
+            char.IsAsciiHexDigitUpper(c);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use relational and logical patterns.
