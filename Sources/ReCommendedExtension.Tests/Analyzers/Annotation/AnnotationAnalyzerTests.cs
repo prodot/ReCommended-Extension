@@ -25,7 +25,8 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
             or MissingSuppressionJustificationWarning
             or ConflictingAnnotationWarning
             or InParameterWithMustDisposeResourceAttributeWarning // to figure out which cases are supported by R#
-            or ReturnTypeCanBeNotNullableWarning; // to figure out which cases are supported by R#
+            or ReturnTypeCanBeNotNullableWarning // to figure out which cases are supported by R#
+            or NotResolvedError;
 
     [Test]
     [TestNetFramework45]

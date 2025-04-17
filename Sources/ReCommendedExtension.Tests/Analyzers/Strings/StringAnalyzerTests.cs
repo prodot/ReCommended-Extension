@@ -31,7 +31,8 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             or UseRangeIndexerSuggestion
             or RedundantToStringCallWarning // to figure out which cases are supported by R#
             or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
-            or ReturnValueOfPureMethodIsNotUsedWarning; // to figure out which cases are supported by R#
+            or ReturnValueOfPureMethodIsNotUsedWarning // to figure out which cases are supported by R#
+            or NotResolvedError;
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 

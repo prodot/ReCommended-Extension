@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -110,7 +111,7 @@ QUICKFIXES:
 Replace with 'is [.., var last] ? last : new CancellationToken()'
 13: Use list pattern.
 QUICKFIXES:
-Replace with 'is [.., var last] ? last : default(DayOfWeek)'
+Replace with 'is [.., var last] ? last : DayOfWeek.Sunday'
 14: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : null'

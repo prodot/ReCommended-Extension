@@ -22,6 +22,12 @@ public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseLinqListPa
     public void TestUseListPattern_FirstOrDefault_Parenthesized() => DoNamedTest2();
 
     [Test]
+    public void TestUseListPattern_FirstOrDefault_Enum() => DoNamedTest2();
+
+    [Test]
+    public void TestUseListPattern_FirstOrDefault_Enum_OneBased() => DoNamedTest2();
+
+    [Test]
     public void TestUseListPattern_LastOrDefault() => DoNamedTest2();
 
     [Test]

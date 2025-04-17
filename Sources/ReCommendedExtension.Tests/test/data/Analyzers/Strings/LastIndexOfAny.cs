@@ -26,14 +26,14 @@ namespace Test
             var result3 = text?.LastIndexOfAny(['a', 'a'], startIndex, count);
         }
 
-        public void OtherMethod(string text, int startIndex, int count)
+        public void OtherMethod(string text, char c, int startIndex, int count)
         {
             var result1 = text.LastIndexOfAny([c]);
             var result2 = text.LastIndexOfAny([c], startIndex);
             var result3 = text.LastIndexOfAny([c], startIndex, count);
         }
 
-        public void OtherMethod_Nullable(string? text, int startIndex, int count)
+        public void OtherMethod_Nullable(string? text, char c, int startIndex, int count)
         {
             var result1 = text?.LastIndexOfAny([c]);
             var result2 = text?.LastIndexOfAny([c], startIndex);
@@ -42,7 +42,7 @@ namespace Test
 
         public void NoDetection(string text, char[] c, int startIndex)
         {
-            var result11 = text.LastndexOfAny([c, c]);
+            var result11 = text.LastIndexOfAny([c, c]);
 
             var result21 = text.LastIndexOfAny(c, 1);
             var result22 = text.LastIndexOfAny(c, startIndex);

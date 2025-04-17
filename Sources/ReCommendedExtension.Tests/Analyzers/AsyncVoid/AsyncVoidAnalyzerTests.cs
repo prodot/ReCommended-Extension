@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -15,7 +16,7 @@ public sealed class AsyncVoidAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning;
+        => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning or NotResolvedError;
 
     [Test]
     public void TestAnonymousMethod() => DoNamedTest2();

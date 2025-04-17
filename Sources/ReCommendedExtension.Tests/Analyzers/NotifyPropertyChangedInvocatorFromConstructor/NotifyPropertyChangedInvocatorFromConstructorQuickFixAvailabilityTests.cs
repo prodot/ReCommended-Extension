@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -15,7 +16,7 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailab
     protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning;
+        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning or NotResolvedError;
 
     [Test]
     public void TestNotifyPropertyChangedInvocatorFromConstructorAvailability() => DoNamedTest2();

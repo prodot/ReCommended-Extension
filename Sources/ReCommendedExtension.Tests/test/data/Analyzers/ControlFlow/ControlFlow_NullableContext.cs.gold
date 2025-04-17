@@ -195,13 +195,13 @@ namespace Test
         static void Foo(string xf)
         {
             |AssertThatNotNull(xf)|(36); // redundant
-            x.AssertNotNull(); // redundant
-            |AssertThatTrue(xf != null)|(37); // redundant
+            xf.|AssertNotNull|(37)(); // redundant
+            |AssertThatTrue(xf != null)|(38); // redundant
         }
 
         static void Foo2(string x2)
         {
-            |AssertThatFalse(x2 == null)|(38); // redundant
+            |AssertThatFalse(x2 == null)|(39); // redundant
         }
 
         class A
@@ -215,13 +215,13 @@ namespace Test
 
         static void NullPropagation2(A? canBeNull) => AssertThatNotNull(canBeNull?.NotNull);
 
-        static void NullPropagation3(A? canBeNull) => Console.WriteLine(canBeNull?.NotNull.|AssertNotNull|(39)()); // redundant
+        static void NullPropagation3(A? canBeNull) => Console.WriteLine(canBeNull?.NotNull.|AssertNotNull|(40)()); // redundant
 
         static void NullPropagation4(A notNull) => AssertThatTrue(notNull?.NotNull != null); // redundant
 
         static void NullPropagation5(A notNull) => AssertThatNotNull(notNull?.NotNull); // redundant
 
-        static void NullPropagation6(A notNull) => Console.WriteLine(notNull?.NotNull.|AssertNotNull|(40)()); // redundant
+        static void NullPropagation6(A notNull) => Console.WriteLine(notNull?.NotNull.|AssertNotNull|(41)()); // redundant
 
         static void NullPropagation7(A notNull) => AssertThatTrue(notNull?.CanBeNull != null);
 
@@ -254,7 +254,7 @@ namespace Test
         {
             var result = PassThrough(value);
 
-            |Debug.Assert(result != null)|(41); // redundant
+            |Debug.Assert(result != null)|(42); // redundant
         }
     }
 }
@@ -296,8 +296,9 @@ namespace Test
 (34): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
 (35): ReSharper Suggestion: Assertion is redundant because the expression is true here.
 (36): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(37): ReSharper Suggestion: Assertion is redundant because the expression is true here.
-(38): ReSharper Suggestion: Assertion is redundant because the expression is false here.
-(39): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(37): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(38): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(39): ReSharper Suggestion: Assertion is redundant because the expression is false here.
 (40): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
-(41): ReSharper Suggestion: Assertion is redundant because the expression is true here.
+(41): ReSharper Suggestion: Assertion is redundant because the expression is not null here.
+(42): ReSharper Suggestion: Assertion is redundant because the expression is true here.

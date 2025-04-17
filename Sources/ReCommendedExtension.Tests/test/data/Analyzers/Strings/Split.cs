@@ -198,7 +198,7 @@ namespace Test
             text.Split(new[] { "" }, count, StringSplitOptions.TrimEntries);
         }
 
-        public void NoDetection(string? text, StringSplitOptions options, string s, char c)
+        public void NoDetection(string? text, StringSplitOptions options, string s, char c, int count)
         {
             var result11 = text?.Split(c, 0);
             var result12 = text?.Split(c, 0, options);

@@ -140,13 +140,20 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     }
 
     [Pure]
-    static IExpression? TryGetItemDefaultValue(IType collectionType, ITreeNode context)
+    static string? TryGetItemDefaultValue(IType collectionType, ITreeNode context)
     {
         if (collectionType is IDeclaredType declaredType && declaredType.TryGetGenericParameterTypes() is [{ } itemType])
         {
             Debug.Assert(CSharpLanguage.Instance is { });
 
-            return DefaultValueUtil.GetClrDefaultValue(itemType, CSharpLanguage.Instance, context);
+            var defaultValue = DefaultValueUtil.GetClrDefaultValue(itemType, CSharpLanguage.Instance, context);
+
+            if (itemType.IsEnumType() && defaultValue is { } and not ICastExpression)
+            {
+                return $"{itemType.GetPresentableName(CSharpLanguage.Instance)}.{defaultValue.GetText()}";
+            }
+
+            return defaultValue?.GetText();
         }
 
         return null;
@@ -282,7 +289,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                         invokedExpression,
                         ListPatternSuggestionKind.FirstOrDefault,
                         defaultValueArgument?.Value.GetText()
-                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)?.GetText()));
+                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)));
             }
 
             return;
@@ -358,7 +365,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                         invokedExpression,
                         ListPatternSuggestionKind.LastOrDefault,
                         defaultValueArgument?.Value.GetText()
-                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)?.GetText()));
+                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)));
             }
 
             return;
@@ -456,7 +463,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                         invocationExpression,
                         invokedExpression,
                         defaultValueArgument?.Value.GetText()
-                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)?.GetText()));
+                        ?? TryGetItemDefaultValue(invokedExpression.QualifierExpression.Type(), invokedExpression)));
             }
         }
     }

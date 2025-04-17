@@ -1,5 +1,6 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -21,7 +22,8 @@ public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTe
             or NotAllowedAnnotationWarning
             or ConflictingAnnotationWarning
             or RedundantAnnotationSuggestion
-            or InvalidValueRangeBoundaryWarning;
+            or InvalidValueRangeBoundaryWarning
+            or NotResolvedError;
 
     [Test]
     public void TestAnnotationAvailability() => DoNamedTest2();

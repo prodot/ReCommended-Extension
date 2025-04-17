@@ -1,5 +1,6 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -18,7 +19,11 @@ public sealed class UseLinqQuickFixAvailabilityTests : QuickFixAvailabilityTestB
     protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseIndexerSuggestion or UseLinqListPatternSuggestion or UseSwitchExpressionSuggestion or UseCollectionPropertySuggestion;
+        => highlighting is UseIndexerSuggestion
+            or UseLinqListPatternSuggestion
+            or UseSwitchExpressionSuggestion
+            or UseCollectionPropertySuggestion
+            or NotResolvedError;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
