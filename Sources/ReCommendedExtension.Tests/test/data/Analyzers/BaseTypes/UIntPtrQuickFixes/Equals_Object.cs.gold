@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class UIntPtrs
+    {
+        public void Equals(nuint number)
+        {
+            var result = fal{caret}se;
+        }
+    }
+}

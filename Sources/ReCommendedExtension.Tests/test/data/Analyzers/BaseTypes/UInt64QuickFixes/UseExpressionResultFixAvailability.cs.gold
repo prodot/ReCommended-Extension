@@ -1,0 +1,261 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt64s
+    {
+        public void Clamp(ulong number)
+        {
+            const int c = 1;
+
+            var result11 = |ulong.Clamp(number, 1, 1)|(0);
+            var result12 = |ulong.Clamp(number, 1, 1u)|(1);
+            var result13 = |ulong.Clamp(number, 1, 1L)|(2);
+            var result14 = |ulong.Clamp(number, 1, 1ul)|(3);
+            var result15 = |ulong.Clamp(number, 1, c)|(4);
+            var result16 = |ulong.Clamp(number, 97, 'a')|(5);
+
+            ulong result21 = |ulong.Clamp(number, 1, 1)|(6);
+            ulong result22 = |ulong.Clamp(number, 1, 1u)|(7);
+            ulong result23 = |ulong.Clamp(number, 1, 1L)|(8);
+            ulong result24 = |ulong.Clamp(number, 1, 1ul)|(9);
+            ulong result25 = |ulong.Clamp(number, 1, c)|(10);
+            ulong result26 = |ulong.Clamp(number, 97, 'a')|(11);
+
+            var result31 = |ulong.Clamp(number, ulong.MinValue, ulong.MaxValue)|(12);
+            var result32 = |ulong.Clamp(1, ulong.MinValue, ulong.MaxValue)|(13);
+            var result33 = |ulong.Clamp(1u, ulong.MinValue, ulong.MaxValue)|(14);
+            var result34 = |ulong.Clamp(1L, ulong.MinValue, ulong.MaxValue)|(15);
+            var result35 = |ulong.Clamp(1ul, ulong.MinValue, ulong.MaxValue)|(16);
+            var result36 = |ulong.Clamp(c, ulong.MinValue, ulong.MaxValue)|(17);
+            var result37 = |ulong.Clamp('a', ulong.MinValue, ulong.MaxValue)|(18);
+
+            ulong result41 = |ulong.Clamp(number, ulong.MinValue, ulong.MaxValue)|(19);
+            ulong result42 = |ulong.Clamp(1, ulong.MinValue, ulong.MaxValue)|(20);
+            ulong result43 = |ulong.Clamp(1u, ulong.MinValue, ulong.MaxValue)|(21);
+            ulong result44 = |ulong.Clamp(1L, ulong.MinValue, ulong.MaxValue)|(22);
+            ulong result45 = |ulong.Clamp(1ul, ulong.MinValue, ulong.MaxValue)|(23);
+            ulong result46 = |ulong.Clamp(c, ulong.MinValue, ulong.MaxValue)|(24);
+            ulong result47 = |ulong.Clamp('a', ulong.MinValue, ulong.MaxValue)|(25);
+
+            var result51 = |Math.Clamp(number, 1ul, 1ul)|(26);
+            var result52 = |Math.Clamp(number, ulong.MinValue, ulong.MaxValue)|(27);
+        }
+
+        public void DivRem(ulong left)
+        {
+            const int c = 1;
+
+            var result11 = |ulong.DivRem(0, 10)|(28);
+
+            (ulong, ulong) result21 = |ulong.DivRem(0, 10)|(29);
+
+            (ulong quotient, ulong remainder) result32 = |ulong.DivRem(0, 10)|(30);
+
+            var result31 = |ulong.DivRem(left, 1)|(31);
+            var result32 = |ulong.DivRem(0x10, 1)|(32);
+            var result33 = |ulong.DivRem(0x10u, 1)|(33);
+            var result34 = |ulong.DivRem(0x10L, 1)|(34);
+            var result35 = |ulong.DivRem(0x10ul, 1)|(35);
+            var result36 = |ulong.DivRem(c, 1)|(36);
+            var result37 = |ulong.DivRem('a', 1)|(37);
+
+            (ulong, ulong) result41 = |ulong.DivRem(left, 1)|(38);
+            (ulong, ulong) result42 = |ulong.DivRem(0x10, 1)|(39);
+            (ulong, ulong) result43 = |ulong.DivRem(0x10u, 1)|(40);
+            (ulong, ulong) result44 = |ulong.DivRem(0x10L, 1)|(41);
+            (ulong, ulong) result45 = |ulong.DivRem(0x10ul, 1)|(42);
+            (ulong, ulong) result46 = |ulong.DivRem(c, 1)|(43);
+            (ulong, ulong) result47 = |ulong.DivRem('a', 1)|(44);
+
+            (ulong quotient, ulong remainder) result51 = |ulong.DivRem(left, 1)|(45);
+            (ulong quotient, ulong remainder) result52 = |ulong.DivRem(0x10, 1)|(46);
+            (ulong quotient, ulong remainder) result53 = |ulong.DivRem(0x10u, 1)|(47);
+            (ulong quotient, ulong remainder) result54 = |ulong.DivRem(0x10L, 1)|(48);
+            (ulong quotient, ulong remainder) result55 = |ulong.DivRem(0x10ul, 1)|(49);
+            (ulong quotient, ulong remainder) result56 = |ulong.DivRem(c, 1)|(50);
+            (ulong quotient, ulong remainder) result57 = |ulong.DivRem('a', 1)|(51);
+
+            var result61 = |Math.DivRem(0ul, 10ul)|(52);
+            var result62 = |Math.DivRem(left, 1ul)|(53);
+        }
+
+        public void Equals(ulong number)
+        {
+            var result = |number.Equals(null)|(54);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '1ul'
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '1ul'
+2: The expression is always 1.
+QUICKFIXES:
+Replace with '1ul'
+3: The expression is always 1.
+QUICKFIXES:
+Replace with '1ul'
+4: The expression is always 1.
+QUICKFIXES:
+Replace with '(ulong)c'
+Replace with '1ul'
+5: The expression is always 97.
+QUICKFIXES:
+Replace with '(ulong)'a''
+Replace with '97ul'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with '1'
+7: The expression is always 1.
+QUICKFIXES:
+Replace with '1u'
+Replace with '1'
+8: The expression is always 1.
+QUICKFIXES:
+Replace with '1L'
+Replace with '1'
+9: The expression is always 1.
+QUICKFIXES:
+Replace with '1ul'
+Replace with '1'
+10: The expression is always 1.
+QUICKFIXES:
+Replace with 'c'
+Replace with '1'
+11: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+12: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+13: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul'
+14: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul'
+15: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul'
+16: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul'
+17: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(ulong)c'
+18: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(ulong)'a''
+19: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+20: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+21: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+22: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L'
+23: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul'
+24: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+25: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with ''a''
+26: The expression is always 1.
+QUICKFIXES:
+Replace with '1ul'
+27: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+28: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0ul, Remainder: 0ul)'
+29: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+30: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+31: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: 0ul)'
+32: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10ul, Remainder: 0ul)'
+33: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10ul, Remainder: 0ul)'
+34: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10ul, Remainder: 0ul)'
+35: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10ul, Remainder: 0ul)'
+36: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (ulong)c, Remainder: 0ul)'
+37: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (ulong)'a', Remainder: 0ul)'
+38: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+39: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+40: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+41: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10L, 0)'
+42: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10ul, 0)'
+43: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+44: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+45: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+46: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+47: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+48: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10L, 0)'
+49: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10ul, 0)'
+50: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+51: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+52: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0ul, Remainder: 0ul)'
+53: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: 0ul)'
+54: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

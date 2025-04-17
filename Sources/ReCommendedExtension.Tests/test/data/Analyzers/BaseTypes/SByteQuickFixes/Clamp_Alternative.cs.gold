@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class SBytes
+    {
+        public void Clamp(sbyte number)
+        {
+            var result = (sbyte){caret}0x01;
+        }
+    }
+}

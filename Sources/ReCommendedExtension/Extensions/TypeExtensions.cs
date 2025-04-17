@@ -103,4 +103,27 @@ internal static class TypeExtensions
 
     [Pure]
     public static bool IsGenericType(this IType type) => (type as IDeclaredType)?.GetTypeElement() is { TypeParameters: [_, ..] };
+
+    [Pure]
+    public static bool IsValueTuple(
+        [NotNullWhen(true)] this IType? type,
+        [NotNullWhen(true)] out IType? t1TypeArgument,
+        [NotNullWhen(true)] out IType? t2TypeArgument)
+    {
+        if (type is IDeclaredType declaredType)
+        {
+            var (typeElement, substitution) = declaredType;
+
+            if (typeElement.IsClrType(PredefinedType.VALUE_TUPLE_2_FQN) && typeElement.TypeParameters is [var t1TypeParameter, var t2TypeParameter])
+            {
+                t1TypeArgument = t1TypeParameter is { } ? substitution[t2TypeParameter] : TypeFactory.CreateUnknownType(type.Module);
+                t2TypeArgument = t2TypeParameter is { } ? substitution[t2TypeParameter] : TypeFactory.CreateUnknownType(type.Module);
+                return true;
+            }
+        }
+
+        t1TypeArgument = null;
+        t2TypeArgument = null;
+        return false;
+    }
 }

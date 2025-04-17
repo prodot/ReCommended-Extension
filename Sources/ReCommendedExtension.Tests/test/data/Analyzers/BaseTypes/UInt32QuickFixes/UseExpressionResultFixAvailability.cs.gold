@@ -1,0 +1,206 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt32s
+    {
+        public void Clamp(uint number)
+        {
+            const int c = 1;
+
+            var result11 = |uint.Clamp(number, 1, 0x0001)|(0);
+            var result12 = |uint.Clamp(number, 1, 0x0001u)|(1);
+            var result13 = |uint.Clamp(number, 1, c)|(2);
+            var result14 = |uint.Clamp(number, 97, 'a')|(3);
+
+            uint result21 = |uint.Clamp(number, 1, 0x0001)|(4);
+            uint result22 = |uint.Clamp(number, 1, 0x0001u)|(5);
+            uint result23 = |uint.Clamp(number, 1, c)|(6);
+            uint result24 = |uint.Clamp(number, 97, 'a')|(7);
+
+            var result31 = |uint.Clamp(number, uint.MinValue, uint.MaxValue)|(8);
+            var result32 = |uint.Clamp(1, uint.MinValue, uint.MaxValue)|(9);
+            var result33 = |uint.Clamp(1u, uint.MinValue, uint.MaxValue)|(10);
+            var result34 = |uint.Clamp(c, uint.MinValue, uint.MaxValue)|(11);
+            var result35 = |uint.Clamp('a', uint.MinValue, uint.MaxValue)|(12);
+
+            uint result41 = |uint.Clamp(number, uint.MinValue, uint.MaxValue)|(13);
+            uint result42 = |uint.Clamp(1, uint.MinValue, uint.MaxValue)|(14);
+            uint result43 = |uint.Clamp(1u, uint.MinValue, uint.MaxValue)|(15);
+            uint result44 = |uint.Clamp(c, uint.MinValue, uint.MaxValue)|(16);
+            uint result45 = |uint.Clamp('a', uint.MinValue, uint.MaxValue)|(17);
+
+            var result51 = |Math.Clamp(number, 1u, 1u)|(18);
+            var result52 = |Math.Clamp(number, uint.MinValue, uint.MaxValue)|(19);
+        }
+
+        public void DivRem(uint left)
+        {
+            const int c = 1;
+
+            var result11 = |uint.DivRem(0, 10)|(20);
+
+            (uint, uint) result21 = |uint.DivRem(0, 10)|(21);
+
+            (uint quotient, uint remainder) result32 = |uint.DivRem(0, 10)|(22);
+
+            var result31 = |uint.DivRem(left, 1)|(23);
+            var result32 = |uint.DivRem(0x10, 1)|(24);
+            var result33 = |uint.DivRem(0x10u, 1)|(25);
+            var result34 = |uint.DivRem(c, 1)|(26);
+            var result35 = |uint.DivRem('a', 1)|(27);
+
+            (uint, uint) result41 = |uint.DivRem(left, 1)|(28);
+            (uint, uint) result42 = |uint.DivRem(0x10, 1)|(29);
+            (uint, uint) result43 = |uint.DivRem(0x10u, 1)|(30);
+            (uint, uint) result44 = |uint.DivRem(c, 1)|(31);
+            (uint, uint) result45 = |uint.DivRem('a', 1)|(32);
+
+            (uint quotient, uint remainder) result51 = |uint.DivRem(left, 1)|(33);
+            (uint quotient, uint remainder) result52 = |uint.DivRem(0x10, 1)|(34);
+            (uint quotient, uint remainder) result53 = |uint.DivRem(0x10u, 1)|(35);
+            (uint quotient, uint remainder) result54 = |uint.DivRem(c, 1)|(36);
+            (uint quotient, uint remainder) result55 = |uint.DivRem('a', 1)|(37);
+
+            var result61 = |Math.DivRem(0u, 10u)|(38);
+            var result62 = |Math.DivRem(left, 1u)|(39);
+        }
+
+        public void Equals(uint number)
+        {
+            var result = |number.Equals(null)|(40);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001u'
+Replace with '1u'
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001u'
+Replace with '1u'
+2: The expression is always 1.
+QUICKFIXES:
+Replace with '(uint)c'
+Replace with '1u'
+3: The expression is always 97.
+QUICKFIXES:
+Replace with '(uint)'a''
+Replace with '97u'
+4: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001'
+Replace with '1'
+5: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001u'
+Replace with '1'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with 'c'
+Replace with '1'
+7: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+8: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+9: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+10: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+11: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)c'
+12: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)'a''
+13: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+14: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+15: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+16: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+17: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with ''a''
+18: The expression is always 1.
+QUICKFIXES:
+Replace with '1u'
+19: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+20: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0u, Remainder: 0u)'
+21: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+22: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+23: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: 0u)'
+24: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10u, Remainder: 0u)'
+25: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10u, Remainder: 0u)'
+26: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (uint)c, Remainder: 0u)'
+27: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (uint)'a', Remainder: 0u)'
+28: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+29: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+30: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+31: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+32: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+33: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+34: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+35: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+36: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+37: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+38: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0u, Remainder: 0u)'
+39: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: 0u)'
+40: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

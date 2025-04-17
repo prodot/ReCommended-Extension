@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Int16s
+    {
+        public void DivRem()
+        {
+            var result = (Quotient: (short)0, {caret}Remainder: (short)0);
+        }
+    }
+}

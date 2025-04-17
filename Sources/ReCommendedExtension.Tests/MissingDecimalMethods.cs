@@ -1,0 +1,25 @@
+﻿namespace ReCommendedExtension.Tests;
+
+internal static class MissingDecimalMethods
+{
+    [Pure]
+    public static decimal Clamp(decimal value, decimal min, decimal max)
+    {
+        if (min > max)
+        {
+            throw new ArgumentException($"'{min}' cannot be greater than {max}.");
+        }
+
+        if (value < min)
+        {
+            return min;
+        }
+
+        if (value > max)
+        {
+            return max;
+        }
+
+        return value;
+    }
+}

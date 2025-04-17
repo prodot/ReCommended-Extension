@@ -1,0 +1,63 @@
+﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
+using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
+using JetBrains.ReSharper.Psi;
+using NUnit.Framework;
+using ReCommendedExtension.Analyzers.BaseTypes;
+
+namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Single;
+
+[TestFixture]
+public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
+{
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Single";
+
+    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+        => highlighting is UseExpressionResultSuggestion or NotResolvedError;
+
+    static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
+
+    static void Test<R>(Func<float, R> expected, Func<float, R> actual)
+    {
+        Assert.AreEqual(expected(0), actual(0));
+        Assert.AreEqual(expected(float.MinValue), actual(float.MinValue));
+        Assert.AreEqual(expected(float.MaxValue), actual(float.MaxValue));
+        Assert.AreEqual(expected(float.Epsilon), actual(float.Epsilon));
+        Assert.AreEqual(expected(float.NaN), actual(float.NaN));
+        Assert.AreEqual(expected(float.PositiveInfinity), actual(float.PositiveInfinity));
+        Assert.AreEqual(expected(float.NegativeInfinity), actual(float.NegativeInfinity));
+    }
+
+    static void Test<R>(Func<float, float, R> expected, Func<float, float, R> actual)
+    {
+        Assert.AreEqual(expected(0, 0), actual(0, 0));
+        Assert.AreEqual(expected(0, float.MaxValue), actual(0, float.MaxValue));
+        Assert.AreEqual(expected(float.MinValue, 0), actual(float.MinValue, 0));
+        Assert.AreEqual(expected(float.MinValue, float.MinValue), actual(float.MinValue, float.MinValue));
+        Assert.AreEqual(expected(float.MaxValue, float.MaxValue), actual(float.MaxValue, float.MaxValue));
+        Assert.AreEqual(expected(float.MinValue, float.MaxValue), actual(float.MinValue, float.MaxValue));
+    }
+
+    delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
+
+    static void Test(FuncWithOut<float, float, bool> expected, FuncWithOut<float, float, bool> actual)
+    {
+        Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
+        Assert.AreEqual(expectedResult, actualResult);
+
+        Assert.AreEqual(expected(float.MaxValue, out expectedResult), actual(float.MaxValue, out actualResult));
+        Assert.AreEqual(expectedResult, actualResult);
+
+        Assert.AreEqual(expected(float.MinValue, out expectedResult), actual(float.MinValue, out actualResult));
+        Assert.AreEqual(expectedResult, actualResult);
+    }
+
+    [Test]
+    public void TestEquals()
+    {
+        Test(number => number.Equals(null), _ => false);
+
+        DoNamedTest2();
+    }
+}

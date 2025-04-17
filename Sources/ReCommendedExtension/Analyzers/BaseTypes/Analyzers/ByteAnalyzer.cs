@@ -12,8 +12,8 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseBinaryOperationSuggestion), typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
-public sealed class ByteAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
+public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_FQN)
 {
     [Pure]
     static bool IsNumberStyles(IType type) => type.IsClrType(ClrTypeNames.NumberStyles);
@@ -65,119 +65,6 @@ public sealed class ByteAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
             new() { ClrTypeName = PredefinedType.BYTE_FQN },
         ];
-    }
-
-    /// <remarks>
-    /// <c>byte.Clamp(value, n, n)</c> → <c>n</c> (.NET 7)<para/>
-    /// <c>byte.Clamp(value, 0, 255)</c> → <c>value</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeClamp(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument minArgument,
-        ICSharpArgument maxArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement())
-        {
-            switch (minArgument.Value.TryGetByteConstant(out var implicitlyConverted), maxArgument.Value.TryGetByteConstant(out _))
-            {
-                case (0, byte.MaxValue) when valueArgument.Value is { } value:
-                {
-                    var cast = value.TryGetByteConstant(out var valueImplicitlyConverted) is { }
-                        && valueImplicitlyConverted
-                        && invocationExpression.TryGetTargetType() == null
-                            ? "(byte)"
-                            : "";
-                    consumer.AddHighlighting(
-                        new UseExpressionResultSuggestion(
-                            "The expression is always the same as the first argument.",
-                            invocationExpression,
-                            $"{cast}{value.GetText()}"));
-                    break;
-                }
-
-                case ({ } min, { } max) when min == max:
-                {
-                    var cast = implicitlyConverted && invocationExpression.TryGetTargetType() == null ? "(byte)" : "";
-                    consumer.AddHighlighting(
-                        new UseExpressionResultSuggestion($"The expression is always {min}.", invocationExpression, $"{cast}{min}"));
-                    break;
-                }
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>byte.DivRem(0, right)</c> → <c>(0, 0)</c> (.NET 7)<para/>
-    /// <c>byte.DivRem(left, 1)</c> → <c>(left, 0)</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeDivRem(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument leftArgument,
-        ICSharpArgument rightArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement())
-        {
-            switch (leftArgument.Value.TryGetByteConstant(out _), rightArgument.Value.TryGetByteConstant(out _))
-            {
-                case (0, { } and not 0):
-                    consumer.AddHighlighting(
-                        new UseExpressionResultSuggestion(
-                            "The expression is always (0, 0).",
-                            invocationExpression,
-                            invocationExpression.TryGetTargetType() == null ? "(Quotient: (byte)0, Remainder: (byte)0)" : "(0, 0)"));
-                    break;
-
-                case (_, 1) when leftArgument.Value is { } left:
-                    var replacement = invocationExpression.TryGetTargetType() == null
-                        ? leftArgument.Value.TryGetByteConstant(out var leftImplicitlyConverted) is { } && leftImplicitlyConverted
-                            ? $"(Quotient: (byte){left.GetText()}, Remainder: (byte)0)"
-                            : $"(Quotient: {left.GetText()}, Remainder: (byte)0)"
-                        : $"({left.GetText()}, 0)";
-                    consumer.AddHighlighting(
-                        new UseExpressionResultSuggestion(
-                            "The expression is always the same as the first argument with no remainder.",
-                            invocationExpression,
-                            replacement));
-                    break;
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>number.Equals(obj)</c> → <c>number == obj</c>
-    /// </remarks>
-    static void AnalyzeEquals_Byte(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument objArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperationSuggestion(
-                    "Use the '==' operator.",
-                    invocationExpression,
-                    "==",
-                    invokedExpression.QualifierExpression,
-                    objArgument.Value));
-        }
-    }
-
-    /// <remarks>
-    /// <c>number.Equals(null)</c> → <c>false</c>
-    /// </remarks>
-    static void AnalyzeEquals_Object(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && objArgument.Value.IsDefaultValue())
-        {
-            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always false.", invocationExpression, "false"));
-        }
     }
 
     /// <remarks>
@@ -559,33 +446,59 @@ public sealed class ByteAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         }
     }
 
-    protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+    private protected override byte? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
-        if (element is { InvokedExpression: IReferenceExpression { Reference: var reference } invokedExpression }
-            && reference.Resolve().DeclaredElement is IMethod
+        if (expression is IConstantValueOwner constantValueOwner)
+        {
+            switch (constantValueOwner.ConstantValue)
             {
-                AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC, TypeParameters: [],
-            } method
-            && method.ContainingType.IsClrType(PredefinedType.BYTE_FQN))
+                case { Kind: ConstantValueKind.Byte, ByteValue: var value }:
+                    implicitlyConverted = false;
+                    return value;
+
+                case { Kind: ConstantValueKind.Int, IntValue: >= byte.MinValue and <= byte.MaxValue and var value }:
+                    implicitlyConverted = true;
+                    return unchecked((byte)value);
+            }
+        }
+
+        implicitlyConverted = false;
+        return null;
+    }
+
+    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
+    {
+        var result = constant.GetText();
+
+        if (implicitlyConverted)
+        {
+            return $"(byte){result}";
+        }
+
+        return result;
+    }
+
+    private protected override string CastZero() => "(byte)0";
+
+    private protected override bool AreEqual(byte x, byte y) => x == y;
+
+    private protected override bool IsZero(byte value) => value == 0;
+
+    private protected override bool IsOne(byte value) => value == 1;
+
+    private protected override bool AreMinMaxValues(byte min, byte max) => (min, max) == (byte.MinValue, byte.MaxValue);
+
+    private protected override void Analyze(IInvocationExpression element, IReferenceExpression invokedExpression, IMethod method, IHighlightingConsumer consumer)
+    {
+        base.Analyze(element, invokedExpression, method, consumer);
+
+        if (method.ContainingType.IsClrType(PredefinedType.BYTE_FQN))
         {
             switch (invokedExpression, method)
             {
                 case ({ QualifierExpression: { } }, { IsStatic: false }):
                     switch (method.ShortName)
                     {
-                        case nameof(byte.Equals):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var objType }], [var objArgument]) when objType.IsByte():
-                                    AnalyzeEquals_Byte(consumer, element, invokedExpression, objArgument);
-                                    break;
-
-                                case ([{ Type: var objType }], [var objArgument]) when objType.IsObject():
-                                    AnalyzeEquals_Object(consumer, element, objArgument);
-                                    break;
-                            }
-                            break;
-
                         case nameof(byte.GetTypeCode):
                             switch (method.Parameters, element.Arguments)
                             {
@@ -617,28 +530,6 @@ public sealed class ByteAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                 case (_, { IsStatic: true }):
                     switch (method.ShortName)
                     {
-                        case "Clamp": // todo: nameof(byte.Clamp) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var valueType }, { Type: var minType }, { Type: var maxType }], [
-                                    var valueArgument, var minArgument, var maxArgument,
-                                ]) when valueType.IsByte() && minType.IsByte() && maxType.IsByte():
-                                    AnalyzeClamp(consumer, element, valueArgument, minArgument, maxArgument);
-                                    break;
-                            }
-                            break;
-
-                        case "DivRem": // todo: nameof(byte.DivRem) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
-                                    when leftType.IsByte() && rightType.IsByte():
-
-                                    AnalyzeDivRem(consumer, element, leftArgument, rightArgument);
-                                    break;
-                            }
-                            break;
-
                         case "Max": // todo: nameof(byte.Max) when available
                             switch (method.Parameters, element.Arguments)
                             {

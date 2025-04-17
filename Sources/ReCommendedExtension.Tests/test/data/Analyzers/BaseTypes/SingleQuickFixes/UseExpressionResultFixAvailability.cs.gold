@@ -1,0 +1,14 @@
+﻿namespace Test
+{
+    public class Singles
+    {
+        public void Equals(float number)
+        {
+            var result = |number.Equals(null)|(0);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

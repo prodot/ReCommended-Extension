@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class UInt16s
+    {
+        public void Clamp(ushort number)
+        {
+            var result = (ushort){caret}0x01;
+        }
+    }
+}

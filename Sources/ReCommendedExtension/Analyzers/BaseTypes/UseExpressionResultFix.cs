@@ -24,7 +24,8 @@ public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlig
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
             ModificationUtil
-                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"{highlighting.Replacement}"))
+                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"({highlighting.Replacement})"))
+                .TryRemoveParentheses(factory)
                 .TryRemoveUnaryOperatorParentheses(factory);
         }
 

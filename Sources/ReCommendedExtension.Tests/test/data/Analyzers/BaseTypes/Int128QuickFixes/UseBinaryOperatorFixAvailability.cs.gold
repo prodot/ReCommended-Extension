@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Test
+{
+    public class Int128s
+    {
+        public void Equals(Int128 number, Int128 obj)
+        {
+            var result = |number.Equals(obj)|(0);
+        }
+    }
+}
+------------------------------------------------
+0: Use the '==' operator.
+QUICKFIXES:
+Replace with 'number == obj'

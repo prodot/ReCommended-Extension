@@ -1,0 +1,14 @@
+﻿namespace Test
+{
+    public class Int32s
+    {
+        public void Equals(int number, int obj)
+        {
+            var result = |number.Equals(obj)|(0);
+        }
+    }
+}
+------------------------------------------------
+0: Use the '==' operator.
+QUICKFIXES:
+Replace with 'number == obj'

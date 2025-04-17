@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt128s
+    {
+        public void Equals(UInt128 number, UInt128 obj)
+        {
+            var result = number.Equal{caret}s(obj);
+        }
+    }
+}

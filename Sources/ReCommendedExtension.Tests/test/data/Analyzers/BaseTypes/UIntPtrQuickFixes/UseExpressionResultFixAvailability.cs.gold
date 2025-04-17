@@ -1,0 +1,160 @@
+﻿using System;
+
+namespace Test
+{
+    public class UIntPtrs
+    {
+        public void Clamp(nuint number)
+        {
+            const int c = 1;
+
+            var result11 = |nuint.Clamp(number, 1, 0x01)|(0);
+            var result12 = |nuint.Clamp(number, 1, 0x01u)|(1);
+            var result13 = |nuint.Clamp(number, 1, c)|(2);
+            var result14 = |nuint.Clamp(number, 97, 'a')|(3);
+
+            nuint result21 = |nuint.Clamp(number, 1, 0x01)|(4);
+            nuint result22 = |nuint.Clamp(number, 1, 0x01u)|(5);
+            nuint result23 = |nuint.Clamp(number, 1, c)|(6);
+            nuint result24 = |nuint.Clamp(number, 97, 'a')|(7);
+
+            var result3 = |Math.Clamp(number, (nuint)1, (nuint)1)|(8);
+        }
+
+        public void DivRem(nuint left)
+        {
+            const int c = 1;
+
+            var result11 = |nuint.DivRem(0, 10)|(9);
+
+            (nuint, nuint) result21 = |nuint.DivRem(0, 10)|(10);
+
+            (nuint quotient, nuint remainder) result32 = |nuint.DivRem(0, 10)|(11);
+
+            var result31 = |nuint.DivRem(left, 1)|(12);
+            var result32 = |nuint.DivRem(0x10, 1)|(13);
+            var result33 = |nuint.DivRem(0x10u, 1)|(14);
+            var result34 = |nuint.DivRem(c, 1)|(15);
+            var result35 = |nuint.DivRem('a', 1)|(16);
+
+            (nuint, nuint) result41 = |nuint.DivRem(left, 1)|(17);
+            (nuint, nuint) result42 = |nuint.DivRem(0x10, 1)|(18);
+            (nuint, nuint) result43 = |nuint.DivRem(0x10u, 1)|(19);
+            (nuint, nuint) result44 = |nuint.DivRem(c, 1)|(20);
+            (nuint, nuint) result45 = |nuint.DivRem('a', 1)|(21);
+
+            (nuint quotient, nuint remainder) result51 = |nuint.DivRem(left, 1)|(22);
+            (nuint quotient, nuint remainder) result52 = |nuint.DivRem(0x10, 1)|(23);
+            (nuint quotient, nuint remainder) result53 = |nuint.DivRem(0x10u, 1)|(24);
+            (nuint quotient, nuint remainder) result54 = |nuint.DivRem(c, 1)|(25);
+            (nuint quotient, nuint remainder) result55 = |nuint.DivRem('a', 1)|(26);
+
+            var result61 = |Math.DivRem((nuint)0, (nuint)10)|(27);
+            var result62 = |Math.DivRem(left, (nuint)1)|(28);
+        }
+
+        public void Equals(nuint number)
+        {
+            var result = |number.Equals(null)|(29);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '(nuint)0x01'
+Replace with '(nuint)1'
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '(nuint)0x01u'
+Replace with '(nuint)1'
+2: The expression is always 1.
+QUICKFIXES:
+Replace with '(nuint)c'
+Replace with '(nuint)1'
+3: The expression is always 97.
+QUICKFIXES:
+Replace with '(nuint)'a''
+Replace with '(nuint)97'
+4: The expression is always 1.
+QUICKFIXES:
+Replace with '0x01'
+Replace with '1'
+5: The expression is always 1.
+QUICKFIXES:
+Replace with '0x01u'
+Replace with '1'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with 'c'
+Replace with '1'
+7: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+8: The expression is always 1.
+QUICKFIXES:
+Replace with '(nuint)1'
+9: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (nuint)0, Remainder: (nuint)0)'
+10: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+11: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+12: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: (nuint)0)'
+13: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (nuint)0x10, Remainder: (nuint)0)'
+14: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (nuint)0x10u, Remainder: (nuint)0)'
+15: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (nuint)c, Remainder: (nuint)0)'
+16: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (nuint)'a', Remainder: (nuint)0)'
+17: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+18: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+19: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+20: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+21: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+22: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+23: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+24: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+25: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+26: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+27: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (nuint)0, Remainder: (nuint)0)'
+28: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: (nuint)0)'
+29: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

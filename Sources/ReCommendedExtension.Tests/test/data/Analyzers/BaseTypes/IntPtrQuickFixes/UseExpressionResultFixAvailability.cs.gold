@@ -1,0 +1,138 @@
+﻿using System;
+
+namespace Test
+{
+    public class IntPtrs
+    {
+        public void Clamp(nint number)
+        {
+            const int c = 1;
+
+            var result11 = |nint.Clamp(number, 1, 0x01)|(0);
+            var result12 = |nint.Clamp(number, 1, c)|(1);
+            var result13 = |nint.Clamp(number, 97, 'a')|(2);
+
+            nint result21 = |nint.Clamp(number, 1, 0x01)|(3);
+            nint result22 = |nint.Clamp(number, 1, c)|(4);
+            nint result23 = |nint.Clamp(number, 97, 'a')|(5);
+
+            var result3 = |Math.Clamp(number, (nint)1, (nint)1)|(6);
+        }
+
+        public void DivRem(nint left)
+        {
+            const int c = 1;
+
+            var result11 = |nint.DivRem(0, 10)|(7);
+
+            (nint, nint) result21 = |nint.DivRem(0, 10)|(8);
+
+            (nint quotient, nint remainder) result32 = |nint.DivRem(0, 10)|(9);
+
+            var result31 = |nint.DivRem(left, 1)|(10);
+            var result32 = |nint.DivRem(0x10, 1)|(11);
+            var result32 = |nint.DivRem(c, 1)|(12);
+            var result33 = |nint.DivRem('a', 1)|(13);
+
+            (nint, nint) result41 = |nint.DivRem(left, 1)|(14);
+            (nint, nint) result42 = |nint.DivRem(0x10, 1)|(15);
+            (nint, nint) result42 = |nint.DivRem(c, 1)|(16);
+            (nint, nint) result43 = |nint.DivRem('a', 1)|(17);
+
+            (nint quotient, nint remainder) result51 = |nint.DivRem(left, 1)|(18);
+            (nint quotient, nint remainder) result52 = |nint.DivRem(0x10, 1)|(19);
+            (nint quotient, nint remainder) result52 = |nint.DivRem(c, 1)|(20);
+            (nint quotient, nint remainder) result53 = |nint.DivRem('a', 1)|(21);
+
+            var result61 = |Math.DivRem((nint)0, (nint)10)|(22);
+            var result62 = |Math.DivRem(left, (nint)1)|(23);
+        }
+
+        public void Equals(nint number)
+        {
+            var result = |number.Equals(null)|(24);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '(nint)0x01'
+Replace with '(nint)1'
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '(nint)c'
+Replace with '(nint)1'
+2: The expression is always 97.
+QUICKFIXES:
+Replace with '(nint)'a''
+Replace with '(nint)97'
+3: The expression is always 1.
+QUICKFIXES:
+Replace with '0x01'
+Replace with '1'
+4: The expression is always 1.
+QUICKFIXES:
+Replace with 'c'
+Replace with '1'
+5: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with '(nint)1'
+7: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (nint)0, Remainder: (nint)0)'
+8: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+9: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+10: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: (nint)0)'
+11: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (nint)0x10, Remainder: (nint)0)'
+12: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (nint)c, Remainder: (nint)0)'
+13: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (nint)'a', Remainder: (nint)0)'
+14: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+15: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+16: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+17: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+18: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+19: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+20: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+21: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+22: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (nint)0, Remainder: (nint)0)'
+23: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: (nint)0)'
+24: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

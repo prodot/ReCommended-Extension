@@ -1,0 +1,153 @@
+﻿using System;
+
+namespace Test
+{
+    public class Int32s
+    {
+        public void Clamp(int number)
+        {
+            var result11 = |int.Clamp(number, 1, 0x0001)|(0);
+            var result12 = |int.Clamp(number, 97, 'a')|(1);
+
+            int result21 = |int.Clamp(number, 1, 0x0001)|(2);
+            int result22 = |int.Clamp(number, 97, 'a')|(3);
+
+            var result31 = |int.Clamp(number, int.MinValue, int.MaxValue)|(4);
+            var result32 = |int.Clamp(1, int.MinValue, int.MaxValue)|(5);
+            var result33 = |int.Clamp('a', int.MinValue, int.MaxValue)|(6);
+
+            int result41 = |int.Clamp(number, int.MinValue, int.MaxValue)|(7);
+            int result42 = |int.Clamp(1, int.MinValue, int.MaxValue)|(8);
+            int result43 = |int.Clamp('a', int.MinValue, int.MaxValue)|(9);
+
+            var result51 = |Math.Clamp(number, 1, 1)|(10);
+            var result52 = |Math.Clamp(number, int.MinValue, int.MaxValue)|(11);
+        }
+
+        public void DivRem(short left)
+        {
+            const int c = 1;
+
+            var result11 = |int.DivRem(0, 10)|(12);
+
+            (int, int) result21 = |int.DivRem(0, 10)|(13);
+
+            (int quotient, int remainder) result32 = |int.DivRem(0, 10)|(14);
+
+            var result31 = |int.DivRem(left, 1)|(15);
+            var result32 = |int.DivRem(0x10, 1)|(16);
+            var result32 = |int.DivRem(c, 1)|(17);
+            var result33 = |int.DivRem('a', 1)|(18);
+
+            (int, int) result41 = |int.DivRem(left, 1)|(19);
+            (int, int) result42 = |int.DivRem(0x10, 1)|(20);
+            (int, int) result42 = |int.DivRem(c, 1)|(21);
+            (int, int) result43 = |int.DivRem('a', 1)|(22);
+
+            (int quotient, int remainder) result51 = |int.DivRem(left, 1)|(23);
+            (int quotient, int remainder) result52 = |int.DivRem(0x10, 1)|(24);
+            (int quotient, int remainder) result52 = |int.DivRem(c, 1)|(25);
+            (int quotient, int remainder) result53 = |int.DivRem('a', 1)|(26);
+
+            var result61 = |Math.DivRem(0, 10)|(27);
+            var result62 = Math.DivRem(left, 1);
+        }
+
+        public void Equals(int number)
+        {
+            var result = |number.Equals(null)|(28);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001'
+Replace with '1'
+1: The expression is always 97.
+QUICKFIXES:
+Replace with '(int)'a''
+Replace with '97'
+2: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001'
+Replace with '1'
+3: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+4: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+5: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+6: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(int)'a''
+7: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+8: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+9: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with ''a''
+10: The expression is always 1.
+QUICKFIXES:
+Replace with '1'
+11: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+12: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0, Remainder: 0)'
+13: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+14: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+15: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: 0)'
+16: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10, Remainder: 0)'
+17: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: c, Remainder: 0)'
+18: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (int)'a', Remainder: 0)'
+19: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+20: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+21: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+22: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+23: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+24: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+25: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+26: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+27: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0, Remainder: 0)'
+28: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

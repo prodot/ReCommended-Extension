@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class UInt32s
+    {
+        public void Equals(uint number)
+        {
+            var result = number.Equal{caret}s(null);
+        }
+    }
+}

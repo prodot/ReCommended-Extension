@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Test
+{
+    public class Halves
+    {
+        public void Equals(Half number)
+        {
+            var result = |number.Equals(null)|(0);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

@@ -1,0 +1,190 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt128s
+    {
+        public void Clamp(UInt128 number)
+        {
+            const int c = 1;
+
+            var result11 = |UInt128.Clamp(number, 1, 0x0001)|(0);
+            var result12 = |UInt128.Clamp(number, 1, 0x0001L)|(1);
+            var result13 = |UInt128.Clamp(number, 1, 0x0001u)|(2);
+            var result14 = |UInt128.Clamp(number, 1, 0x0001ul)|(3);
+            var result15 = |UInt128.Clamp(number, 1, c)|(4);
+            var result16 = |UInt128.Clamp(number, 97, 'a')|(5);
+
+            UInt128 result21 = |UInt128.Clamp(number, 1, 0x0001)|(6);
+            UInt128 result22 = |UInt128.Clamp(number, 1, 0x0001L)|(7);
+            UInt128 result23 = |UInt128.Clamp(number, 1, 0x0001u)|(8);
+            UInt128 result24 = |UInt128.Clamp(number, 1, 0x0001ul)|(9);
+            UInt128 result25 = |UInt128.Clamp(number, 1, c)|(10);
+            UInt128 result26 = |UInt128.Clamp(number, 97, 'a')|(11);
+        }
+
+        public void DivRem(UInt128 left)
+        {
+            const int c = 1;
+
+            var result11 = |UInt128.DivRem(0, 10)|(12);
+
+            (UInt128, UInt128) result21 = |UInt128.DivRem(0, 10)|(13);
+
+            (UInt128 quotient, UInt128 remainder) result32 = |UInt128.DivRem(0, 10)|(14);
+
+            var result31 = |UInt128.DivRem(left, 1)|(15);
+            var result32 = |UInt128.DivRem(0x10, 1)|(16);
+            var result33 = |UInt128.DivRem(0x10L, 1)|(17);
+            var result34 = |UInt128.DivRem(0x10u, 1)|(18);
+            var result35 = |UInt128.DivRem(0x10ul, 1)|(19);
+            var result36 = |UInt128.DivRem(c, 1)|(20);
+            var result37 = |UInt128.DivRem('a', 1)|(21);
+
+            (UInt128, UInt128) result41 = |UInt128.DivRem(left, 1)|(22);
+            (UInt128, UInt128) result42 = |UInt128.DivRem(0x10, 1)|(23);
+            (UInt128, UInt128) result43 = |UInt128.DivRem(0x10L, 1)|(24);
+            (UInt128, UInt128) result44 = |UInt128.DivRem(0x10u, 1)|(25);
+            (UInt128, UInt128) result45 = |UInt128.DivRem(0x10ul, 1)|(26);
+            (UInt128, UInt128) result46 = |UInt128.DivRem(c, 1)|(27);
+            (UInt128, UInt128) result47 = |UInt128.DivRem('a', 1)|(28);
+
+            (UInt128 quotient, UInt128 remainder) result51 = |UInt128.DivRem(left, 1)|(29);
+            (UInt128 quotient, UInt128 remainder) result52 = |UInt128.DivRem(0x10, 1)|(30);
+            (UInt128 quotient, UInt128 remainder) result53 = |UInt128.DivRem(0x10L, 1)|(31);
+            (UInt128 quotient, UInt128 remainder) result54 = |UInt128.DivRem(0x10u, 1)|(32);
+            (UInt128 quotient, UInt128 remainder) result55 = |UInt128.DivRem(0x10ul, 1)|(33);
+            (UInt128 quotient, UInt128 remainder) result56 = |UInt128.DivRem(c, 1)|(34);
+            (UInt128 quotient, UInt128 remainder) result57 = |UInt128.DivRem('a', 1)|(35);
+        }
+
+        public void Equals(UInt128 number)
+        {
+            var result = |number.Equals(null)|(36);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '(UInt128)0x0001'
+Replace with '(UInt128)1'
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '(UInt128)0x0001L'
+Replace with '(UInt128)1'
+2: The expression is always 1.
+QUICKFIXES:
+Replace with '(UInt128)0x0001u'
+Replace with '(UInt128)1'
+3: The expression is always 1.
+QUICKFIXES:
+Replace with '(UInt128)0x0001ul'
+Replace with '(UInt128)1'
+4: The expression is always 1.
+QUICKFIXES:
+Replace with '(UInt128)c'
+Replace with '(UInt128)1'
+5: The expression is always 97.
+QUICKFIXES:
+Replace with '(UInt128)'a''
+Replace with '(UInt128)97'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001'
+Replace with '1'
+7: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001L'
+Replace with '1'
+8: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001u'
+Replace with '1'
+9: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001ul'
+Replace with '1'
+10: The expression is always 1.
+QUICKFIXES:
+Replace with 'c'
+Replace with '1'
+11: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+12: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (UInt128)0, Remainder: (UInt128)0)'
+13: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+14: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+15: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: (UInt128)0)'
+16: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (UInt128)0x10, Remainder: (UInt128)0)'
+17: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (UInt128)0x10L, Remainder: (UInt128)0)'
+18: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (UInt128)0x10u, Remainder: (UInt128)0)'
+19: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (UInt128)0x10ul, Remainder: (UInt128)0)'
+20: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (UInt128)c, Remainder: (UInt128)0)'
+21: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (UInt128)'a', Remainder: (UInt128)0)'
+22: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+23: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+24: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10L, 0)'
+25: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+26: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10ul, 0)'
+27: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+28: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+29: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+30: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+31: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10L, 0)'
+32: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+33: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10ul, 0)'
+34: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+35: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+36: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

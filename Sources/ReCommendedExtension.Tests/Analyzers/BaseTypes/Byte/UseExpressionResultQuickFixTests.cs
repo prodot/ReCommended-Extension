@@ -12,47 +12,11 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 
     [Test]
     [TestNet70]
-    public void TestClamp_EqualMinMax_TargetTyped() => DoNamedTest2();
+    public void TestClamp() => DoNamedTest2();
 
     [Test]
     [TestNet70]
-    public void TestClamp_EqualMinMax_NonTargetTyped() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestClamp_FullRange_Typed() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestClamp_FullRange_TargetTyped() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestClamp_FullRange_NonTargetTyped() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestDivRem_Left_0_TargetTyped() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestDivRem_Left_0_TargetTyped_Named() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestDivRem_Left_0_NonTargetTyped() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestDivRem_Right_1_TargetTyped() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestDivRem_Right_1_NonTargetTyped_LeftTyped() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestDivRem_Right_1_NonTargetTyped_LeftConstant() => DoNamedTest2();
+    public void TestDivRem() => DoNamedTest2();
 
     [Test]
     public void TestEquals_Object() => DoNamedTest2();

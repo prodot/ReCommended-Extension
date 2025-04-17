@@ -14,14 +14,19 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UseExpressionResultSuggestion(string message, IInvocationExpression invocationExpression, string replacement) : Highlighting(
-    message)
+public sealed class UseExpressionResultSuggestion(
+    string message,
+    IInvocationExpression invocationExpression,
+    string replacement,
+    string? alternativeReplacement = null) : Highlighting(message)
 {
     const string SeverityId = "UseExpressionResult";
 
     internal IInvocationExpression InvocationExpression => invocationExpression;
 
     internal string Replacement => replacement;
+
+    internal string? AlternativeReplacement => alternativeReplacement;
 
     public override DocumentRange CalculateRange() => invocationExpression.GetDocumentRange();
 }

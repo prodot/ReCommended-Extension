@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class UInt32s
+    {
+        public void DivRem()
+        {
+            var result = (Quotient: 0u, {caret}Remainder: 0u);
+        }
+    }
+}

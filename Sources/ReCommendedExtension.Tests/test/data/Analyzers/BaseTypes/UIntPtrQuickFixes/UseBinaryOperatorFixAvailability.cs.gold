@@ -1,0 +1,14 @@
+﻿namespace Test
+{
+    public class UIntPtrs
+    {
+        public void Equals(nuint number, nuint obj)
+        {
+            var result = |number.Equals(obj)|(0);
+        }
+    }
+}
+------------------------------------------------
+0: Use the '==' operator.
+QUICKFIXES:
+Replace with 'number == obj'

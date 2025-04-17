@@ -1,0 +1,236 @@
+﻿using System;
+
+namespace Test
+{
+    public class Int64s
+    {
+        public void Clamp(long number)
+        {
+            const int c = 1;
+
+            var result11 = |long.Clamp(number, 1, 0x0001)|(0);
+            var result12 = |long.Clamp(number, 1, 0x0001L)|(1);
+            var result13 = |long.Clamp(number, 1, 0x0001u)|(2);
+            var result14 = |long.Clamp(number, 1, c)|(3);
+            var result15 = |long.Clamp(number, 97, 'a')|(4);
+
+            long result21 = |long.Clamp(number, 1, 0x0001)|(5);
+            long result22 = |long.Clamp(number, 1, 0x0001L)|(6);
+            long result23 = |long.Clamp(number, 1, 0x0001u)|(7);
+            long result24 = |long.Clamp(number, 1, c)|(8);
+            long result25 = |long.Clamp(number, 97, 'a')|(9);
+
+            var result31 = |long.Clamp(number, long.MinValue, long.MaxValue)|(10);
+            var result32 = |long.Clamp(1, long.MinValue, long.MaxValue)|(11);
+            var result33 = |long.Clamp(1L, long.MinValue, long.MaxValue)|(12);
+            var result34 = |long.Clamp(1u, long.MinValue, long.MaxValue)|(13);
+            var result35 = |long.Clamp(c, long.MinValue, long.MaxValue)|(14);
+            var result36 = |long.Clamp('a', long.MinValue, long.MaxValue)|(15);
+
+            long result41 = |long.Clamp(number, long.MinValue, long.MaxValue)|(16);
+            long result42 = |long.Clamp(1, long.MinValue, long.MaxValue)|(17);
+            long result43 = |long.Clamp(1L, long.MinValue, long.MaxValue)|(18);
+            long result44 = |long.Clamp(1u, long.MinValue, long.MaxValue)|(19);
+            long result45 = |long.Clamp(c, long.MinValue, long.MaxValue)|(20);
+            long result46 = |long.Clamp('a', long.MinValue, long.MaxValue)|(21);
+
+            var result51 = |Math.Clamp(number, 1L, 1L)|(22);
+            var result52 = |Math.Clamp(number, long.MinValue, long.MaxValue)|(23);
+        }
+
+        public void DivRem(long left)
+        {
+            const int c = 1;
+
+            var result11 = |long.DivRem(0, 10)|(24);
+
+            (long, long) result21 = |long.DivRem(0, 10)|(25);
+
+            (long quotient, long remainder) result32 = |long.DivRem(0, 10)|(26);
+
+            var result31 = |long.DivRem(left, 1)|(27);
+            var result32 = |long.DivRem(0x10, 1)|(28);
+            var result33 = |long.DivRem(0x10L, 1)|(29);
+            var result34 = |long.DivRem(0x10u, 1)|(30);
+            var result35 = |long.DivRem(c, 1)|(31);
+            var result36 = |long.DivRem('a', 1)|(32);
+
+            (long, long) result41 = |long.DivRem(left, 1)|(33);
+            (long, long) result42 = |long.DivRem(0x10, 1)|(34);
+            (long, long) result43 = |long.DivRem(0x10L, 1)|(35);
+            (long, long) result44 = |long.DivRem(0x10u, 1)|(36);
+            (long, long) result45 = |long.DivRem(c, 1)|(37);
+            (long, long) result46 = |long.DivRem('a', 1)|(38);
+
+            (long quotient, long remainder) result51 = |long.DivRem(left, 1)|(39);
+            (long quotient, long remainder) result52 = |long.DivRem(0x10, 1)|(40);
+            (long quotient, long remainder) result53 = |long.DivRem(0x10L, 1)|(41);
+            (long quotient, long remainder) result54 = |long.DivRem(0x10u, 1)|(42);
+            (long quotient, long remainder) result55 = |long.DivRem(c, 1)|(43);
+            (long quotient, long remainder) result56 = |long.DivRem('a', 1)|(44);
+
+            var result61 = |Math.DivRem(0L, 10L)|(45);
+            var result62 = |Math.DivRem(left, 1L)|(46);
+        }
+
+        public void Equals(long number)
+        {
+            var result = |number.Equals(null)|(47);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001L'
+Replace with '1L'
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001L'
+Replace with '1L'
+2: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001L'
+Replace with '1L'
+3: The expression is always 1.
+QUICKFIXES:
+Replace with '(long)c'
+Replace with '1L'
+4: The expression is always 97.
+QUICKFIXES:
+Replace with '(long)'a''
+Replace with '97L'
+5: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001'
+Replace with '1'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001L'
+Replace with '1'
+7: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001u'
+Replace with '1'
+8: The expression is always 1.
+QUICKFIXES:
+Replace with 'c'
+Replace with '1'
+9: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+10: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+11: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L'
+12: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L'
+13: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L'
+14: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(long)c'
+15: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(long)'a''
+16: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+17: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+18: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L'
+19: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+20: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+21: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with ''a''
+22: The expression is always 1.
+QUICKFIXES:
+Replace with '1L'
+23: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+24: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0L, Remainder: 0L)'
+25: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+26: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+27: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: 0L)'
+28: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10L, Remainder: 0L)'
+29: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10L, Remainder: 0L)'
+30: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: 0x10L, Remainder: 0L)'
+31: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (long)c, Remainder: 0L)'
+32: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (long)'a', Remainder: 0L)'
+33: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+34: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+35: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10L, 0)'
+36: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+37: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+38: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+39: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+40: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+41: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10L, 0)'
+42: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10u, 0)'
+43: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+44: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '('a', 0)'
+45: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0L, Remainder: 0L)'
+46: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: 0L)'
+47: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

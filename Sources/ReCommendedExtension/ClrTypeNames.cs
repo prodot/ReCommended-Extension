@@ -87,6 +87,12 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");
 
+    public static readonly IClrTypeName Int128 = new ClrTypeName("System.Int128");
+
+    public static readonly IClrTypeName UInt128 = new ClrTypeName("System.UInt128");
+
+    public static readonly IClrTypeName Half = new ClrTypeName("System.Half");
+
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsClrType([NotNullWhen(true)] this ITypeElement? typeElement, IClrTypeName clrName)

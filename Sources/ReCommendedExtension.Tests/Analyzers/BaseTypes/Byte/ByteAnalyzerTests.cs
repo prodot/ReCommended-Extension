@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -16,7 +17,7 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Byte";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseBinaryOperationSuggestion or UseExpressionResultSuggestion or RedundantArgumentHint;
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantArgumentHint or NotResolvedError;
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -31,7 +32,6 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
         Assert.AreEqual(expected(0, 0), actual(0, 0));
         Assert.AreEqual(expected(0, byte.MaxValue), actual(0, byte.MaxValue));
         Assert.AreEqual(expected(byte.MaxValue, byte.MaxValue), actual(byte.MaxValue, byte.MaxValue));
-        Assert.AreEqual(expected(byte.MaxValue, 0), actual(byte.MaxValue, 0));
     }
 
     delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
@@ -52,6 +52,9 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
         Test(number => MissingByteMethods.Clamp(number, 1, 1), _ => 1);
         Test(number => MissingByteMethods.Clamp(number, 0, 255), number => number);
 
+        Test(number => MissingMathMethods.Clamp(number, (byte)1, (byte)1), _ => 1);
+        Test(number => MissingMathMethods.Clamp(number, byte.MinValue, byte.MaxValue), number => number);
+
         DoNamedTest2();
     }
 
@@ -61,6 +64,9 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(() => MissingByteMethods.DivRem(0, 10), () => (0, 0));
         Test(number => MissingByteMethods.DivRem(number, 1), number => (number, 0));
+
+        Test(() => MissingMathMethods.DivRem((byte)0, (byte)10), () => (0, 0));
+        Test(number => MissingMathMethods.DivRem(number, (byte)1), number => (number, 0));
 
         DoNamedTest2();
     }

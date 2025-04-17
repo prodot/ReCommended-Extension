@@ -1,0 +1,36 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt32s
+    {
+        public void ExpressionResult(uint left)
+        {
+            var result11 = |uint.DivRem(0, 10)|(0);
+            var result12 = |uint.DivRem(left, 1)|(1);
+
+            var result21 = |Math.DivRem(0u, 10u)|(2);
+            var result22 = |Math.DivRem(left, 1u)|(3);
+        }
+
+        public void NoDetection(uint left, uint right)
+        {
+            var result11 = uint.DivRem(0, right);
+            var result12 = uint.DivRem(left, 2);
+
+            var result21 = Math.DivRem(0u, right);
+            var result22 = Math.DivRem(left, 2u);
+
+            uint.DivRem(0, 10);
+            uint.DivRem(left, 1);
+
+            Math.DivRem(0u, 10u);
+            Math.DivRem(left, 1u);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always (0, 0).
+(1): ReSharper Suggestion: The expression is always the same as the first argument with no remainder.
+(2): ReSharper Suggestion: The expression is always (0, 0).
+(3): ReSharper Suggestion: The expression is always the same as the first argument with no remainder.

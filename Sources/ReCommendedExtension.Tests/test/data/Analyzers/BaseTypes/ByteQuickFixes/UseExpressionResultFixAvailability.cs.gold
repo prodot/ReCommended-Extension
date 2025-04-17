@@ -1,78 +1,166 @@
-﻿namespace Test
+﻿using System;
+
+namespace Test
 {
     public class Bytes
     {
         public void Clamp(byte number)
         {
-            var result1 = |byte.Clamp(number, 1, 1)|(0);
-            var result2 = |byte.Clamp(number, 0, 255)|(1);
+            var result11 = |byte.Clamp(number, 1, 0x01)|(0);
+
+            byte result21 = |byte.Clamp(number, 1, 0x01)|(1);
+
+            var result31 = |byte.Clamp(number, 0, 255)|(2);
+            var result32 = |byte.Clamp(1, 0, 255)|(3);
+
+            byte result41 = |byte.Clamp(number, 0, 255)|(4);
+            byte result42 = |byte.Clamp(1, 0, 255)|(5);
+
+            var result51 = |Math.Clamp(number, (byte)1, (byte)1)|(6);
+            var result52 = |Math.Clamp(number, byte.MinValue, byte.MaxValue)|(7);
         }
 
         public void DivRem(byte left)
         {
-            var result1 = |byte.DivRem(0, 10)|(2);
-            var result2 = |byte.DivRem(left, 1)|(3);
+            const int c = 1;
+
+            var result11 = |byte.DivRem(0, 10)|(8);
+
+            (byte, byte) result21 = |byte.DivRem(0, 10)|(9);
+
+            (byte quotient, byte remainder) result32 = |byte.DivRem(0, 10)|(10);
+
+            var result31 = |byte.DivRem(left, 1)|(11);
+            var result32 = |byte.DivRem(0x10, 1)|(12);
+            var result32 = |byte.DivRem(c, 1)|(13);
+
+            (byte, byte) result41 = |byte.DivRem(left, 1)|(14);
+            (byte, byte) result42 = |byte.DivRem(0x10, 1)|(15);
+            (byte, byte) result42 = |byte.DivRem(c, 1)|(16);
+
+            (byte quotient, byte remainder) result51 = |byte.DivRem(left, 1)|(17);
+            (byte quotient, byte remainder) result52 = |byte.DivRem(0x10, 1)|(18);
+            (byte quotient, byte remainder) result52 = |byte.DivRem(c, 1)|(19);
+
+            var result61 = |Math.DivRem((byte)0, (byte)10)|(20);
+            var result62 = |Math.DivRem(left, (byte)1)|(21);
         }
 
         public void Equals(byte number)
         {
-            var result = |number.Equals(null)|(4);
+            var result = |number.Equals(null)|(22);
         }
 
         public void GetTypeCode(byte number)
         {
-            var result = |number.GetTypeCode()|(5);
+            var result = |number.GetTypeCode()|(23);
         }
 
         public void Max()
         {
-            var result = |byte.Max(10, 10)|(6);
+            var result = |byte.Max(10, 10)|(24);
         }
 
         public void Min()
         {
-            var result = |byte.Min(10, 10)|(7);
+            var result = |byte.Min(10, 10)|(25);
         }
 
         public void RotateLeft(byte n)
         {
-            var result = |byte.RotateLeft(n, 0)|(8);
+            var result = |byte.RotateLeft(n, 0)|(26);
         }
 
         public void RotateRight(byte n)
         {
-            var result = |byte.RotateRight(n, 0)|(9);
+            var result = |byte.RotateRight(n, 0)|(27);
         }
     }
 }
 ------------------------------------------------
 0: The expression is always 1.
 QUICKFIXES:
+Replace with '(byte)0x01'
 Replace with '(byte)1'
-1: The expression is always the same as the first argument.
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '0x01'
+Replace with '1'
+2: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'number'
-2: The expression is always (0, 0).
+3: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(byte)1'
+4: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+5: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with '(byte)1'
+7: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+8: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(Quotient: (byte)0, Remainder: (byte)0)'
-3: The expression is always the same as the first argument with no remainder.
+9: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+10: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+11: The expression is always the same as the first argument with no remainder.
 QUICKFIXES:
 Replace with '(Quotient: left, Remainder: (byte)0)'
-4: The expression is always false.
+12: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (byte)0x10, Remainder: (byte)0)'
+13: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: (byte)c, Remainder: (byte)0)'
+14: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+15: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+16: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+17: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(left, 0)'
+18: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(0x10, 0)'
+19: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(c, 0)'
+20: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (byte)0, Remainder: (byte)0)'
+21: The expression is always the same as the first argument with no remainder.
+QUICKFIXES:
+Replace with '(Quotient: left, Remainder: (byte)0)'
+22: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
-5: The expression is always TypeCode.Byte.
+23: The expression is always TypeCode.Byte.
 QUICKFIXES:
 Replace with 'TypeCode.Byte'
-6: The expression is always 10.
+24: The expression is always 10.
 QUICKFIXES:
 Replace with '(byte)10'
-7: The expression is always 10.
+25: The expression is always 10.
 QUICKFIXES:
 Replace with '(byte)10'
-8: The expression is always the same as the first argument.
+26: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'n'
-9: The expression is always the same as the first argument.
+27: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'n'

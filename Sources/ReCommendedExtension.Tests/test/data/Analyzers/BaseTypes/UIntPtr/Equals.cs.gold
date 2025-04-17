@@ -1,0 +1,27 @@
+﻿namespace Test
+{
+    public class UIntPtrs
+    {
+        public void ExpressionResult(nuint number)
+        {
+            var result = |number.Equals(null)|(0);
+        }
+
+        public void Operator(nuint number, nuint obj)
+        {
+            var result = |number.Equals(obj)|(1);
+        }
+
+        public void NoDetection(nuint number, nuint obj, nuint? otherObj)
+        {
+            var result = number.Equals(otherObj);
+
+            number.Equals(null);
+
+            number.Equals(obj);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always false.
+(1): ReSharper Suggestion: Use the '==' operator.
