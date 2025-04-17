@@ -1349,8 +1349,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         }
     }
 
-    readonly NullnessProvider nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
-    readonly ContainerElementNullnessProvider containerElementNullnessProvider = codeAnnotationsCache.GetProvider<ContainerElementNullnessProvider>();
+    readonly Lazy<NullnessProvider> nullnessProvider = codeAnnotationsCache.GetLazyProvider<NullnessProvider>();
+
+    readonly Lazy<ContainerElementNullnessProvider> containerElementNullnessProvider =
+        codeAnnotationsCache.GetLazyProvider<ContainerElementNullnessProvider>();
 
     [Pure]
     IEnumerable<NullabilityAttributeMark?> GetAttributeMarks(IAttributesOwnerDeclaration declaration)
@@ -1359,7 +1361,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
         foreach (var attribute in declaration.Attributes)
         {
-            if (nullnessProvider.GetNullableAttributeMark(attribute.GetAttributeInstance()) is { } mark)
+            if (nullnessProvider.Value.GetNullableAttributeMark(attribute.GetAttributeInstance()) is { } mark)
             {
                 yield return new NullabilityAttributeMark { AnnotationNullableValue = mark, Attribute = attribute };
 
@@ -1512,9 +1514,9 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             return;
         }
 
-        var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(
-            attribute => containerElementNullnessProvider.GetContainerElementNullableAttributeMark(attribute.GetAttributeInstance())
-                == CodeAnnotationNullableValue.NOT_NULL);
+        var itemNotNullAttribute = attributesOwnerDeclaration.Attributes.FirstOrDefault(attribute
+            => containerElementNullnessProvider.Value.GetContainerElementNullableAttributeMark(attribute.GetAttributeInstance())
+            == CodeAnnotationNullableValue.NOT_NULL);
         if (itemNotNullAttribute is { })
         {
             if (attributesOwnerDeclaration.OverridesInheritedMember())

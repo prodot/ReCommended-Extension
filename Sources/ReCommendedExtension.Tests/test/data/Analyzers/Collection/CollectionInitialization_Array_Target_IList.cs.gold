@@ -12,7 +12,7 @@ namespace TargetList
         IList<int> field5 = ||new int[0]|(5)|(6);
         IList<int> field6 = new int[3];
         IList<int> field7 = |new[]|(7) { 1, 2, 3 };
-        IList<int> field8 = |Array.Empty<int>()|(8);
+        IList<int> field8 = Array.|Empty<int>()|(8);
 
         void Method(int a, int b, int c)
         {
@@ -23,7 +23,7 @@ namespace TargetList
             IList<int> var5 = ||new int[0]|(14)|(15);
             IList<int> var6 = new int[3];
             IList<int> var7 = |new[]|(16) { a, b, c };
-            IList<int> var8 = |Array.Empty<int>()|(17);
+            IList<int> var8 = Array.|Empty<int>()|(17);
 
             Consumer(|new int[]|(18) { });
             Consumer(|new int[]|(19) { a, b, c });
@@ -32,7 +32,7 @@ namespace TargetList
             Consumer(||new int[0]|(23)|(24));
             Consumer(new int[3]);
             Consumer(|new[]|(25) { a, b, c });
-            Consumer(|Array.Empty<int>()|(26));
+            Consumer(Array.|Empty<int>()|(26));
 
             ConsumerGeneric(|new int[]|(27) { });
             ConsumerGeneric(|new int[]|(28) { a, b, c });
@@ -66,7 +66,7 @@ namespace TargetList
         IList<T> field5 = ||new T[0]|(49)|(50);
         IList<T> field6 = new T[3];
         IList<T> field7 = |new[]|(51) { default, default(T), new() };
-        IList<T> field8 = |Array.Empty<T>()|(52);
+        IList<T> field8 = Array.|Empty<T>()|(52);
 
         void Method(T a, T b, T c)
         {
@@ -77,7 +77,7 @@ namespace TargetList
             IList<T> var5 = ||new T[0]|(58)|(59);
             IList<T> var6 = new T[3];
             IList<T> var7 = |new[]|(60) { a, b, c };
-            IList<T> var8 = |Array.Empty<T>()|(61);
+            IList<T> var8 = Array.|Empty<T>()|(61);
 
             Consumer(|new T[]|(62) { });
             Consumer(|new T[]|(63) { a, b, c });
@@ -86,7 +86,7 @@ namespace TargetList
             Consumer(||new T[0]|(67)|(68));
             Consumer(new T[3]);
             Consumer(|new[]|(69) { a, b, c });
-            Consumer(|Array.Empty<T>()|(70));
+            Consumer(Array.|Empty<T>()|(70));
         }
 
         void Consumer(IList<T> items) { }
@@ -98,7 +98,7 @@ namespace TargetList
         IList<T> Property5 => ||new T[0]|(76)|(77);
         IList<T> Property6 => new T[3];
         IList<T> Property7 => |new[]|(78) { default, default(T), new() };
-        IList<T> Property8 => |Array.Empty<T>()|(79);
+        IList<T> Property8 => Array.|Empty<T>()|(79);
     }
 
     internal class A { }
@@ -113,7 +113,7 @@ namespace TargetList
         IList<A> field5 = ||new B[0]|(84)|(85);
         IList<A> field6 = new B[3];
         IList<A> field7 = |new[]|(86) { new B(1), new B(2), new B(3) };
-        IList<A> field8 = |Array.Empty<B>()|(87);
+        IList<A> field8 = Array.|Empty<B>()|(87);
 
         void Method(B a, B b, B c)
         {
@@ -124,7 +124,7 @@ namespace TargetList
             IList<A> var5 = ||new B[0]|(93)|(94);
             IList<A> var6 = new B[3];
             IList<A> var7 = |new[]|(95) { a, b, c };
-            IList<A> var8 = |Array.Empty<B>()|(96);
+            IList<A> var8 = Array.|Empty<B>()|(96);
 
             Consumer(|new B[]|(97) { });
             Consumer(|new B[]|(98) { a, b, c });
@@ -133,7 +133,7 @@ namespace TargetList
             Consumer(||new B[0]|(102)|(103));
             Consumer(new B[3]);
             Consumer(|new[]|(104) { a, b, c });
-            Consumer(|Array.Empty<B>()|(105));
+            Consumer(Array.|Empty<B>()|(105));
         }
 
         void Consumer(IList<A> items) { }
@@ -145,7 +145,7 @@ namespace TargetList
         IList<A> Property5 => ||new B[0]|(110)|(111);
         IList<A> Property6 => new B[3];
         IList<A> Property7 => |new[]|(112) { new B(1), new B(2), new B(3) };
-        IList<A> Property8 => |Array.Empty<B>()|(113);
+        IList<A> Property8 => Array.|Empty<B>()|(113);
     }
 }
 ---------------------------------------------------------
@@ -157,7 +157,7 @@ namespace TargetList
 (5): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (6): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
 (7): ReSharper Suggestion: Use collection expression
-(8): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(8): ReSharper Suggestion: Use collection expression
 (9): ReSharper Suggestion: Use collection expression
 (10): ReSharper Suggestion: Use collection expression
 (11):<overlapped> ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
@@ -166,7 +166,7 @@ namespace TargetList
 (14): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (15): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
 (16): ReSharper Suggestion: Use collection expression
-(17): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(17): ReSharper Suggestion: Use collection expression
 (18): ReSharper Suggestion: Use collection expression
 (19): ReSharper Suggestion: Use collection expression
 (20):<overlapped> ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
@@ -175,7 +175,7 @@ namespace TargetList
 (23): ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
 (24): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
 (25): ReSharper Suggestion: Use collection expression
-(26): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
+(26): ReSharper Suggestion: Use collection expression
 (27): ReSharper Suggestion: Use collection expression ('List<int>' will be used).
 (28): ReSharper Suggestion: Use collection expression
 (29):<overlapped> ReSharper Suggestion: Use 'Array.Empty<int>()' to avoid array allocation
@@ -201,7 +201,7 @@ namespace TargetList
 (49): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (50): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (51):<overlapped> ReSharper Suggestion: Use collection expression
-(52): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(52): ReSharper Suggestion: Use collection expression
 (53): ReSharper Suggestion: Use collection expression
 (54): ReSharper Suggestion: Use collection expression
 (55):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
@@ -210,7 +210,7 @@ namespace TargetList
 (58): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (59): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (60): ReSharper Suggestion: Use collection expression
-(61): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(61): ReSharper Suggestion: Use collection expression
 (62): ReSharper Suggestion: Use collection expression
 (63): ReSharper Suggestion: Use collection expression
 (64):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
@@ -219,7 +219,7 @@ namespace TargetList
 (67): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (68): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (69): ReSharper Suggestion: Use collection expression
-(70): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(70): ReSharper Suggestion: Use collection expression
 (71): ReSharper Suggestion: Use collection expression
 (72): ReSharper Suggestion: Use collection expression
 (73):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
@@ -228,7 +228,7 @@ namespace TargetList
 (76): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (77): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (78):<overlapped> ReSharper Suggestion: Use collection expression
-(79): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(79): ReSharper Suggestion: Use collection expression
 (80): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (81):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (82): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
@@ -236,7 +236,7 @@ namespace TargetList
 (84):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (85): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (86):<overlapped> ReSharper Suggestion: Use collection expression
-(87): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(87): ReSharper Suggestion: Use collection expression
 (88): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (89): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (90):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
@@ -245,7 +245,7 @@ namespace TargetList
 (93):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (94): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (95):<overlapped> ReSharper Suggestion: Use collection expression
-(96): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(96): ReSharper Suggestion: Use collection expression
 (97): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (98): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (99):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
@@ -254,7 +254,7 @@ namespace TargetList
 (102):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (103): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (104):<overlapped> ReSharper Suggestion: Use collection expression
-(105): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(105):<overlapped> ReSharper Suggestion: Use collection expression
 (106): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (107):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (108): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
@@ -262,4 +262,4 @@ namespace TargetList
 (110):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (111): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (112):<overlapped> ReSharper Suggestion: Use collection expression
-(113): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(113):<overlapped> ReSharper Suggestion: Use collection expression
