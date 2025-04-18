@@ -29,4 +29,7 @@ internal static class MissingIntPtrMethods
         var quotient = left / right;
         return (quotient, left - quotient * right);
     }
+
+    [Pure]
+    public static nint Max(nint x, nint y) => x >= y ? x : y;
 }

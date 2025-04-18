@@ -55,6 +55,15 @@ namespace Test
         {
             var result = |number.GetTypeCode()|(23);
         }
+
+        public void Max()
+        {
+            var result11 = |sbyte.Max(10, 0x0A)|(24);
+
+            sbyte result2 = |sbyte.Max(10, 0x0A)|(25);
+
+            var result3 = |Math.Max((sbyte)10, (sbyte)10)|(26);
+        }
     }
 }
 ------------------------------------------------
@@ -132,3 +141,14 @@ Replace with 'false'
 23: The expression is always TypeCode.SByte.
 QUICKFIXES:
 Replace with 'TypeCode.SByte'
+24: The expression is always 10.
+QUICKFIXES:
+Replace with '(sbyte)0x0A'
+Replace with '(sbyte)10'
+25: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+26: The expression is always 10.
+QUICKFIXES:
+Replace with '(sbyte)10'

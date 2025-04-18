@@ -86,4 +86,14 @@ public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMax()
+    {
+        Test(n => MissingUInt64Methods.Max(n, n), n => n);
+        Test(n => Math.Max(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

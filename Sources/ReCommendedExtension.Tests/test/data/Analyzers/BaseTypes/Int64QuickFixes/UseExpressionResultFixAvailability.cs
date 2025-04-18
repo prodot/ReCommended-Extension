@@ -82,5 +82,24 @@ namespace Test
         {
             var result = number.GetTypeCode();
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = long.Max(10, 0x0A);
+            var result12 = long.Max(10, 10L);
+            var result13 = long.Max(10, 10u);
+            var result14 = long.Max(10, c);
+            var result15 = long.Max(97, 'a');
+
+            long result21 = long.Max(10, 0x0A);
+            long result22 = long.Max(10, 10L);
+            long result23 = long.Max(10, 10u);
+            long result24 = long.Max(10, c);
+            long result25 = long.Max(97, 'a');
+
+            var result31 = Math.Max(10L, 10L);
+        }
     }
 }

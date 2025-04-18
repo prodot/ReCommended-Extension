@@ -49,6 +49,27 @@ namespace Test
         {
             var result = |number.GetTypeCode()|(27);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |decimal.Max(10, 0x0A)|(28);
+            var result12 = |decimal.Max(10, 0x0Aul)|(29);
+            var result13 = |decimal.Max(10, 0x0Au)|(30);
+            var result14 = |decimal.Max(10, 0x0AL)|(31);
+            var result15 = |decimal.Max(10, c)|(32);
+            var result16 = |decimal.Max(97, 'a')|(33);
+
+            decimal result21 = |decimal.Max(10, 0x0A)|(34);
+            decimal result22 = |decimal.Max(10, 0x0Aul)|(35);
+            decimal result23 = |decimal.Max(10, 0x0Au)|(36);
+            decimal result24 = |decimal.Max(10, 0x0AL)|(37);
+            decimal result25 = |decimal.Max(10, c)|(38);
+            decimal result26 = |decimal.Max(97, 'a')|(39);
+
+            var result31 = |Math.Max(10m, 10m)|(40);
+        }
     }
 }
 ------------------------------------------------
@@ -143,3 +164,54 @@ Replace with 'false'
 27: The expression is always TypeCode.Decimal.
 QUICKFIXES:
 Replace with 'TypeCode.Decimal'
+28: The expression is always 10.
+QUICKFIXES:
+Replace with '(decimal)0x0A'
+Replace with '10m'
+29: The expression is always 10.
+QUICKFIXES:
+Replace with '(decimal)0x0Aul'
+Replace with '10m'
+30: The expression is always 10.
+QUICKFIXES:
+Replace with '(decimal)0x0Au'
+Replace with '10m'
+31: The expression is always 10.
+QUICKFIXES:
+Replace with '(decimal)0x0AL'
+Replace with '10m'
+32: The expression is always 10.
+QUICKFIXES:
+Replace with '(decimal)c'
+Replace with '10m'
+33: The expression is always 97.
+QUICKFIXES:
+Replace with '(decimal)'a''
+Replace with '97m'
+34: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+35: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0Aul'
+Replace with '10'
+36: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0Au'
+Replace with '10'
+37: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0AL'
+Replace with '10'
+38: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+39: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+40: The expression is always 10.
+QUICKFIXES:
+Replace with '10m'

@@ -29,4 +29,7 @@ internal static class MissingUInt64Methods
         var quotient = left / right;
         return (quotient, left - quotient * right);
     }
+
+    [Pure]
+    public static ulong Max(ulong x, ulong y) => x >= y ? x : y;
 }

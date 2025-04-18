@@ -58,22 +58,26 @@ namespace Test
 
         public void Max()
         {
-            var result = |byte.Max(10, 10)|(24);
+            var result1 = |byte.Max(10, 0x0A)|(24);
+
+            byte result2 = |byte.Max(10, 0x0A)|(25);
+
+            var result3 = |Math.Max((byte)10, (byte)10)|(26);
         }
 
         public void Min()
         {
-            var result = |byte.Min(10, 10)|(25);
+            var result = |byte.Min(10, 10)|(27);
         }
 
         public void RotateLeft(byte n)
         {
-            var result = |byte.RotateLeft(n, 0)|(26);
+            var result = |byte.RotateLeft(n, 0)|(28);
         }
 
         public void RotateRight(byte n)
         {
-            var result = |byte.RotateRight(n, 0)|(27);
+            var result = |byte.RotateRight(n, 0)|(29);
         }
     }
 }
@@ -154,13 +158,21 @@ QUICKFIXES:
 Replace with 'TypeCode.Byte'
 24: The expression is always 10.
 QUICKFIXES:
+Replace with '(byte)0x0A'
 Replace with '(byte)10'
 25: The expression is always 10.
 QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+26: The expression is always 10.
+QUICKFIXES:
 Replace with '(byte)10'
-26: The expression is always the same as the first argument.
+27: The expression is always 10.
+QUICKFIXES:
+Replace with '(byte)10'
+28: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'n'
-27: The expression is always the same as the first argument.
+29: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'n'

@@ -11,8 +11,8 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
     private protected IClrTypeName ClrTypeName => clrTypeName;
 
     /// <remarks>
-    /// <c>T.Clamp(value, n, n)</c> → <c>n</c> (.NET 7)<para/>
-    /// <c>T.Clamp(value, 0, 255)</c> → <c>value</c> (.NET 7)
+    /// <c>T.Clamp(value, n, n)</c> → <c>n</c><para/>
+    /// <c>T.Clamp(value, 0, 255)</c> → <c>value</c>
     /// </remarks>
     void AnalyzeClamp(
         IHighlightingConsumer consumer,
@@ -103,6 +103,32 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
         }
     }
 
+    /// <remarks>
+    /// <c>T.Max(n, n)</c> → <c>n</c>
+    /// </remarks>
+    void AnalyzeMax(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument xArgument, ICSharpArgument yArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement()
+            && TryGetConstant(xArgument.Value, out var xImplicitlyConverted) is { } x
+            && TryGetConstant(yArgument.Value, out var yImplicitlyConverted) is { } y
+            && AreEqual(x, y))
+        {
+            Debug.Assert(xArgument.Value is { });
+            Debug.Assert(yArgument.Value is { });
+
+            var (replacementX, replacementY) = invocationExpression.TryGetTargetType().IsClrType(clrTypeName)
+                ? (xArgument.Value.GetText(), yArgument.Value.GetText())
+                : (CastConstant(xArgument.Value, xImplicitlyConverted), CastConstant(yArgument.Value, yImplicitlyConverted));
+
+            consumer.AddHighlighting(
+                new UseExpressionResultSuggestion(
+                    $"The expression is always {x}.",
+                    invocationExpression,
+                    replacementX,
+                    replacementY != replacementX ? replacementY : null));
+        }
+    }
+
     [Pure]
     private protected abstract TypeCode? TryGetTypeCode();
 
@@ -166,6 +192,17 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
                                     break;
                             }
                             break;
+
+                        case "Max": // todo: nameof(INumber<T>.Max) when available
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
+                                    when xType.IsClrType(clrTypeName) && yType.IsClrType(clrTypeName):
+
+                                    AnalyzeMax(consumer, element, xArgument, yArgument);
+                                    break;
+                            }
+                            break;
                     }
                     break;
             }
@@ -182,6 +219,17 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
                             var valueArgument, var minArgument, var maxArgument,
                         ]) when valueType.IsClrType(clrTypeName) && minType.IsClrType(clrTypeName) && maxType.IsClrType(clrTypeName):
                             AnalyzeClamp(consumer, element, valueArgument, minArgument, maxArgument);
+                            break;
+                    }
+                    break;
+
+                case nameof(Math.Max):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var val1Type }, { Type: var val2Type }], [var val1Argument, var val2Argument])
+                            when val1Type.IsClrType(clrTypeName) && val2Type.IsClrType(clrTypeName):
+
+                            AnalyzeMax(consumer, element, val1Argument, val2Argument);
                             break;
                     }
                     break;

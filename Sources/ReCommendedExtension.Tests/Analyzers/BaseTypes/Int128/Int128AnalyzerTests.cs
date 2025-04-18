@@ -87,4 +87,13 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMax()
+    {
+        Test(n => Int128Analyzer.Int128.Max(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

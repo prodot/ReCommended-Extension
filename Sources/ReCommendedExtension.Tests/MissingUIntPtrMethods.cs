@@ -29,4 +29,7 @@ internal static class MissingUIntPtrMethods
         var quotient = left / right;
         return (quotient, left - quotient * right);
     }
+
+    [Pure]
+    public static nuint Max(nuint x, nuint y) => x >= y ? x : y;
 }

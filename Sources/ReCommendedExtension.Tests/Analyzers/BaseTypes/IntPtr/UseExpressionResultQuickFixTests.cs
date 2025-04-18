@@ -23,4 +23,8 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 
     [Test]
     public void TestEquals_Object() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestMax() => DoNamedTest2();
 }

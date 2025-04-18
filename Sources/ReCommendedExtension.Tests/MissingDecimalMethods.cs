@@ -22,4 +22,7 @@ internal static class MissingDecimalMethods
 
         return value;
     }
+
+    [Pure]
+    public static decimal Max(decimal x, decimal y) => x >= y ? x : y;
 }

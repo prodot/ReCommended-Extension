@@ -93,4 +93,14 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMax()
+    {
+        Test(n => MissingSByteMethods.Max(n, n), n => n);
+        Test(n => Math.Max(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

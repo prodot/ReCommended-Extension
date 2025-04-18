@@ -62,6 +62,21 @@ namespace Test
         {
             var result = |number.GetTypeCode()|(29);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |int.Max(10, 0x0A)|(30);
+            var result12 = |int.Max(10, c)|(31);
+            var result13 = |int.Max(97, 'a')|(32);
+
+            int result21 = |int.Max(10, 0x0A)|(33);
+            int result22 = |int.Max(10, c)|(34);
+            int result23 = |int.Max(97, 'a')|(35);
+
+            var result31 = |Math.Max(10, 10)|(36);
+        }
     }
 }
 ------------------------------------------------
@@ -159,3 +174,30 @@ Replace with 'false'
 29: The expression is always TypeCode.Int32.
 QUICKFIXES:
 Replace with 'TypeCode.Int32'
+30: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+31: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+32: The expression is always 97.
+QUICKFIXES:
+Replace with '(int)'a''
+Replace with '97'
+33: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+34: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+35: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+36: The expression is always 10.
+QUICKFIXES:
+Replace with '10'

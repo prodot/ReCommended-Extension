@@ -80,4 +80,14 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMax()
+    {
+        Test(n => MissingDecimalMethods.Max(n, n), n => n);
+        Test(n => Math.Max(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

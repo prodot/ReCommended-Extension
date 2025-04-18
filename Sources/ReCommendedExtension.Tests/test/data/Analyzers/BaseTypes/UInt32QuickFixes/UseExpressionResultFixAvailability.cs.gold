@@ -75,6 +75,23 @@ namespace Test
         {
             var result = |number.GetTypeCode()|(41);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |uint.Max(10, 0x0A)|(42);
+            var result12 = |uint.Max(10, 10u)|(43);
+            var result13 = |uint.Max(10, c)|(44);
+            var result14 = |uint.Max(97, 'a')|(45);
+
+            uint result21 = |uint.Max(10, 0x0A)|(46);
+            uint result22 = |uint.Max(10, 10u)|(47);
+            uint result23 = |uint.Max(10, c)|(48);
+            uint result24 = |uint.Max(97, 'a')|(49);
+
+            var result31 = |Math.Max(10u, 10u)|(50);
+        }
     }
 }
 ------------------------------------------------
@@ -212,3 +229,37 @@ Replace with 'false'
 41: The expression is always TypeCode.UInt32.
 QUICKFIXES:
 Replace with 'TypeCode.UInt32'
+42: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0Au'
+Replace with '10u'
+43: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+44: The expression is always 10.
+QUICKFIXES:
+Replace with '(uint)c'
+Replace with '10u'
+45: The expression is always 97.
+QUICKFIXES:
+Replace with '(uint)'a''
+Replace with '97u'
+46: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+47: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+48: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+49: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+50: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'

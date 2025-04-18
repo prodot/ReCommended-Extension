@@ -55,6 +55,15 @@ namespace Test
         {
             var result = |number.GetTypeCode()|(23);
         }
+
+        public void Max()
+        {
+            var result1 = |short.Max(10, 0x0A)|(24);
+
+            short result2 = |short.Max(10, 0x0A)|(25);
+
+            var result2 = |Math.Max((short)10, (short)10)|(26);
+        }
     }
 }
 ------------------------------------------------
@@ -132,3 +141,14 @@ Replace with 'false'
 23: The expression is always TypeCode.Int16.
 QUICKFIXES:
 Replace with 'TypeCode.Int16'
+24: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)0x0A'
+Replace with '(short)10'
+25: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+26: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)10'

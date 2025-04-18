@@ -89,5 +89,26 @@ namespace Test
         {
             var result = number.GetTypeCode();
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = ulong.Max(10, 0x0A);
+            var result12 = ulong.Max(10, 10u);
+            var result13 = ulong.Max(10, 10L);
+            var result14 = ulong.Max(10, 10ul);
+            var result15 = ulong.Max(10, c);
+            var result16 = ulong.Max(97, 'a');
+
+            ulong result11 = ulong.Max(10, 0x0A);
+            ulong result12 = ulong.Max(10, 10u);
+            ulong result13 = ulong.Max(10, 10L);
+            ulong result14 = ulong.Max(10, 10ul);
+            ulong result15 = ulong.Max(10, c);
+            ulong result16 = ulong.Max(97, 'a');
+
+            var result31 = Math.Max(10ul, 10ul);
+        }
     }
 }

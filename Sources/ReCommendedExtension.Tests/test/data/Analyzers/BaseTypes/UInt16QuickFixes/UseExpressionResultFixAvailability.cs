@@ -62,5 +62,20 @@ namespace Test
         {
             var result = number.GetTypeCode();
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = ushort.Max(10, 0x0A);
+            var result12 = ushort.Max(10, c);
+            var result13 = ushort.Max(97, 'a');
+
+            ushort result21 = ushort.Max(10, 0x0A);
+            ushort result22 = ushort.Max(10, c);
+            ushort result23 = ushort.Max(97, 'a');
+
+            var result31 = Math.Max((ushort)10, (ushort)10);
+        }
     }
 }

@@ -57,6 +57,23 @@ namespace Test
         {
             var result = |number.Equals(null)|(29);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |nuint.Max(10, 0x0A)|(30);
+            var result12 = |nuint.Max(10, 10u)|(31);
+            var result13 = |nuint.Max(10, c)|(32);
+            var result14 = |nuint.Max(97, 'a')|(33);
+
+            nuint result21 = |nuint.Max(10, 0x0A)|(34);
+            nuint result22 = |nuint.Max(10, 10u)|(35);
+            nuint result23 = |nuint.Max(10, c)|(36);
+            nuint result24 = |nuint.Max(97, 'a')|(37);
+
+            var result31 = |Math.Max((nuint)10, (nuint)10)|(38);
+        }
     }
 }
 ------------------------------------------------
@@ -158,3 +175,38 @@ Replace with '(Quotient: left, Remainder: (nuint)0)'
 29: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+30: The expression is always 10.
+QUICKFIXES:
+Replace with '(nuint)0x0A'
+Replace with '(nuint)10'
+31: The expression is always 10.
+QUICKFIXES:
+Replace with '(nuint)10u'
+Replace with '(nuint)10'
+32: The expression is always 10.
+QUICKFIXES:
+Replace with '(nuint)c'
+Replace with '(nuint)10'
+33: The expression is always 97.
+QUICKFIXES:
+Replace with '(nuint)'a''
+Replace with '(nuint)97'
+34: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+35: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+36: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+37: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+38: The expression is always 10.
+QUICKFIXES:
+Replace with '(nuint)10'

@@ -29,4 +29,7 @@ internal static class MissingInt64Methods
         var quotient = left / right;
         return (quotient, left - quotient * right);
     }
+
+    [Pure]
+    public static long Max(long x, long y) => x >= y ? x : y;
 }

@@ -49,5 +49,26 @@ namespace Test
         {
             var result = number.GetTypeCode();
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = decimal.Max(10, 0x0A);
+            var result12 = decimal.Max(10, 0x0Aul);
+            var result13 = decimal.Max(10, 0x0Au);
+            var result14 = decimal.Max(10, 0x0AL);
+            var result15 = decimal.Max(10, c);
+            var result16 = decimal.Max(97, 'a');
+
+            decimal result21 = decimal.Max(10, 0x0A);
+            decimal result22 = decimal.Max(10, 0x0Aul);
+            decimal result23 = decimal.Max(10, 0x0Au);
+            decimal result24 = decimal.Max(10, 0x0AL);
+            decimal result25 = decimal.Max(10, c);
+            decimal result26 = decimal.Max(97, 'a');
+
+            var result31 = Math.Max(10m, 10m);
+        }
     }
 }

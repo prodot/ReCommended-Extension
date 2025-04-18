@@ -62,6 +62,21 @@ namespace Test
         {
             var result = |number.GetTypeCode()|(30);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |ushort.Max(10, 0x0A)|(31);
+            var result12 = |ushort.Max(10, c)|(32);
+            var result13 = |ushort.Max(97, 'a')|(33);
+
+            ushort result21 = |ushort.Max(10, 0x0A)|(34);
+            ushort result22 = |ushort.Max(10, c)|(35);
+            ushort result23 = |ushort.Max(97, 'a')|(36);
+
+            var result31 = |Math.Max((ushort)10, (ushort)10)|(37);
+        }
     }
 }
 ------------------------------------------------
@@ -162,3 +177,30 @@ Replace with 'false'
 30: The expression is always TypeCode.UInt16.
 QUICKFIXES:
 Replace with 'TypeCode.UInt16'
+31: The expression is always 10.
+QUICKFIXES:
+Replace with '(ushort)0x0A'
+Replace with '(ushort)10'
+32: The expression is always 10.
+QUICKFIXES:
+Replace with '(ushort)c'
+Replace with '(ushort)10'
+33: The expression is always 97.
+QUICKFIXES:
+Replace with '(ushort)'a''
+Replace with '(ushort)97'
+34: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+35: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+36: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+37: The expression is always 10.
+QUICKFIXES:
+Replace with '(ushort)10'

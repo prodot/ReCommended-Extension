@@ -29,4 +29,7 @@ internal static class MissingSByteMethods
         var quotient = unchecked((sbyte)(left / right));
         return (quotient, unchecked((sbyte)(left - quotient * right)));
     }
+
+    [Pure]
+    public static sbyte Max(sbyte x, sbyte y) => x >= y ? x : y;
 }

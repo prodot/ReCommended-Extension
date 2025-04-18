@@ -78,4 +78,13 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMax()
+    {
+        Test(n => UInt128Analyzer.UInt128.Max(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

@@ -67,4 +67,14 @@ public sealed class IntPtrAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMax()
+    {
+        Test(n => MissingIntPtrMethods.Max(n, n), n => n);
+        Test(n => MissingMathMethods.Max(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

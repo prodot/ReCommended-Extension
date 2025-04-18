@@ -29,4 +29,7 @@ internal static class MissingInt16Methods
         var quotient = unchecked((short)(left / right));
         return (quotient, unchecked((short)(left - quotient * right)));
     }
+
+    [Pure]
+    public static short Max(short x, short y) => x >= y ? x : y;
 }

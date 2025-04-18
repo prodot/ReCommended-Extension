@@ -72,4 +72,10 @@ internal static class MissingMathMethods
 
     [Pure]
     public static (nuint Quotient, nuint Remainder) DivRem(nuint left, nuint right) => MissingUIntPtrMethods.DivRem(left, right);
+
+    [Pure]
+    public static nint Max(nint x, nint y) => MissingIntPtrMethods.Max(x, y);
+
+    [Pure]
+    public static nuint Max(nuint x, nuint y) => MissingUIntPtrMethods.Max(x, y);
 }

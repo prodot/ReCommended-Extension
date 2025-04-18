@@ -55,5 +55,14 @@ namespace Test
         {
             var result = number.GetTypeCode();
         }
+
+        public void Max()
+        {
+            var result1 = short.Max(10, 0x0A);
+
+            short result2 = short.Max(10, 0x0A);
+
+            var result2 = Math.Max((short)10, (short)10);
+        }
     }
 }

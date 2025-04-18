@@ -1,0 +1,28 @@
+﻿using System;
+
+namespace Test
+{
+    public class Decimals
+    {
+        public void ExpressionResult(decimal number)
+        {
+            var result1 = |decimal.Max(10, 10)|(0);
+
+            var result2 = |Math.Max(10m, 10m)|(1);
+        }
+
+        public void NoDetection(decimal x, decimal y)
+        {
+            var result11 = decimal.Max(1, 2);
+            var result12 = decimal.Max(x, 2);
+            var result13 = decimal.Max(1, y);
+
+            decimal.Max(10, 10);
+
+            Math.Max(10m, 10m);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always 10.
+(1): ReSharper Suggestion: The expression is always 10.

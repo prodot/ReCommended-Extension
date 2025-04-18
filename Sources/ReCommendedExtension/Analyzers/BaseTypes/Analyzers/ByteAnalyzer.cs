@@ -68,25 +68,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
     }
 
     /// <remarks>
-    /// <c>byte.Max(n, n)</c> → <c>n</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeMax(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument xArgument,
-        ICSharpArgument yArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement()
-            && xArgument.Value.TryGetByteConstant(out var implicitlyConverted) is { } x
-            && yArgument.Value.TryGetByteConstant(out _) is { } y
-            && x == y)
-        {
-            var cast = implicitlyConverted && invocationExpression.TryGetTargetType() == null ? "(byte)" : "";
-            consumer.AddHighlighting(new UseExpressionResultSuggestion($"The expression is always {x}.", invocationExpression, $"{cast}{x}"));
-        }
-    }
-
-    /// <remarks>
     /// <c>byte.Min(n, n)</c> → <c>n</c> (.NET 7)
     /// </remarks>
     static void AnalyzeMin(
@@ -510,17 +491,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
                 case (_, { IsStatic: true }):
                     switch (method.ShortName)
                     {
-                        case "Max": // todo: nameof(byte.Max) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
-                                    when xType.IsByte() && yType.IsByte():
-
-                                    AnalyzeMax(consumer, element, xArgument, yArgument);
-                                    break;
-                            }
-                            break;
-
                         case "Min": // todo: nameof(byte.Min) when available
                             switch (method.Parameters, element.Arguments)
                             {

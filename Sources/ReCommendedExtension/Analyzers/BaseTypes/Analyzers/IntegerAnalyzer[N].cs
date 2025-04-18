@@ -10,8 +10,8 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyzer<N>(clrTypeName) where N : struct
 {
     /// <remarks>
-    /// <c>T.DivRem(0, right)</c> → <c>(0, 0)</c> (.NET 7)<para/>
-    /// <c>T.DivRem(left, 1)</c> → <c>(left, 0)</c> (.NET 7)
+    /// <c>T.DivRem(0, right)</c> → <c>(0, 0)</c><para/>
+    /// <c>T.DivRem(left, 1)</c> → <c>(left, 0)</c>
     /// </remarks>
     void AnalyzeDivRem(
         IHighlightingConsumer consumer,
@@ -688,6 +688,9 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
         }
 
         [Pure]
+        public static Int128 Max(Int128 x, Int128 y) => x >= y ? x : y;
+
+        [Pure]
         public static (Int128 Quotient, Int128 Remainder) DivRem(Int128 left, Int128 right)
         {
             if (left.upper == 0 && right.upper == 0)
@@ -875,6 +878,9 @@ public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>
 
             return value;
         }
+
+        [Pure]
+        public static UInt128 Max(UInt128 x, UInt128 y) => x >= y ? x : y;
 
         [Pure]
         public static (UInt128 Quotient, UInt128 Remainder) DivRem(UInt128 left, UInt128 right)

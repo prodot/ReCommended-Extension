@@ -93,4 +93,14 @@ public sealed class Int16AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMax()
+    {
+        Test(n => MissingInt16Methods.Max(n, n), n => n);
+        Test(n => Math.Max(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

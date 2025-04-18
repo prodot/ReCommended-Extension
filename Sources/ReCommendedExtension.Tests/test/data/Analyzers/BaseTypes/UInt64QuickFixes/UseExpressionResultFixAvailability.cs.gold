@@ -89,6 +89,27 @@ namespace Test
         {
             var result = |number.GetTypeCode()|(55);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |ulong.Max(10, 0x0A)|(56);
+            var result12 = |ulong.Max(10, 10u)|(57);
+            var result13 = |ulong.Max(10, 10L)|(58);
+            var result14 = |ulong.Max(10, 10ul)|(59);
+            var result15 = |ulong.Max(10, c)|(60);
+            var result16 = |ulong.Max(97, 'a')|(61);
+
+            ulong result11 = |ulong.Max(10, 0x0A)|(62);
+            ulong result12 = |ulong.Max(10, 10u)|(63);
+            ulong result13 = |ulong.Max(10, 10L)|(64);
+            ulong result14 = |ulong.Max(10, 10ul)|(65);
+            ulong result15 = |ulong.Max(10, c)|(66);
+            ulong result16 = |ulong.Max(97, 'a')|(67);
+
+            var result31 = |Math.Max(10ul, 10ul)|(68);
+        }
     }
 }
 ------------------------------------------------
@@ -267,3 +288,51 @@ Replace with 'false'
 55: The expression is always TypeCode.UInt64.
 QUICKFIXES:
 Replace with 'TypeCode.UInt64'
+56: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0Aul'
+Replace with '10ul'
+57: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+58: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+59: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+60: The expression is always 10.
+QUICKFIXES:
+Replace with '(ulong)c'
+Replace with '10ul'
+61: The expression is always 97.
+QUICKFIXES:
+Replace with '(ulong)'a''
+Replace with '97ul'
+62: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+63: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+64: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+Replace with '10'
+65: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+Replace with '10'
+66: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+67: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+68: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'

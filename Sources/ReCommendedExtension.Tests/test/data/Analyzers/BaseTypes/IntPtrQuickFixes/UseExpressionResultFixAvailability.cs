@@ -52,5 +52,20 @@ namespace Test
         {
             var result = number.Equals(null);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = nint.Max(10, 0x0A);
+            var result12 = nint.Max(10, c);
+            var result13 = nint.Max(97, 'a');
+
+            nint result21 = nint.Max(10, 0x0A);
+            nint result22 = nint.Max(10, c);
+            nint result23 = nint.Max(97, 'a');
+
+            var result31 = Math.Max((nint)10, (nint)10);
+        }
     }
 }

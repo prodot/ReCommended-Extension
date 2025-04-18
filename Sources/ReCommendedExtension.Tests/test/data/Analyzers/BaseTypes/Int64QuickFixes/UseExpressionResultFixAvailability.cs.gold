@@ -82,6 +82,25 @@ namespace Test
         {
             var result = |number.GetTypeCode()|(48);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |long.Max(10, 0x0A)|(49);
+            var result12 = |long.Max(10, 10L)|(50);
+            var result13 = |long.Max(10, 10u)|(51);
+            var result14 = |long.Max(10, c)|(52);
+            var result15 = |long.Max(97, 'a')|(53);
+
+            long result21 = |long.Max(10, 0x0A)|(54);
+            long result22 = |long.Max(10, 10L)|(55);
+            long result23 = |long.Max(10, 10u)|(56);
+            long result24 = |long.Max(10, c)|(57);
+            long result25 = |long.Max(97, 'a')|(58);
+
+            var result31 = |Math.Max(10L, 10L)|(59);
+        }
     }
 }
 ------------------------------------------------
@@ -242,3 +261,44 @@ Replace with 'false'
 48: The expression is always TypeCode.Int64.
 QUICKFIXES:
 Replace with 'TypeCode.Int64'
+49: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0AL'
+Replace with '10L'
+50: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+51: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+52: The expression is always 10.
+QUICKFIXES:
+Replace with '(long)c'
+Replace with '10L'
+53: The expression is always 97.
+QUICKFIXES:
+Replace with '(long)'a''
+Replace with '97L'
+54: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+55: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+Replace with '10'
+56: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+57: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+58: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+59: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'

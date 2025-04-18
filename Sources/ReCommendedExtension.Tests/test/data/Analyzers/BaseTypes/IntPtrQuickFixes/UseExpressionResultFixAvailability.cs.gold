@@ -52,6 +52,21 @@ namespace Test
         {
             var result = |number.Equals(null)|(24);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |nint.Max(10, 0x0A)|(25);
+            var result12 = |nint.Max(10, c)|(26);
+            var result13 = |nint.Max(97, 'a')|(27);
+
+            nint result21 = |nint.Max(10, 0x0A)|(28);
+            nint result22 = |nint.Max(10, c)|(29);
+            nint result23 = |nint.Max(97, 'a')|(30);
+
+            var result31 = |Math.Max((nint)10, (nint)10)|(31);
+        }
     }
 }
 ------------------------------------------------
@@ -136,3 +151,30 @@ Replace with '(Quotient: left, Remainder: (nint)0)'
 24: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+25: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)0x0A'
+Replace with '(nint)10'
+26: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)c'
+Replace with '(nint)10'
+27: The expression is always 97.
+QUICKFIXES:
+Replace with '(nint)'a''
+Replace with '(nint)97'
+28: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+29: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+30: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+31: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)10'

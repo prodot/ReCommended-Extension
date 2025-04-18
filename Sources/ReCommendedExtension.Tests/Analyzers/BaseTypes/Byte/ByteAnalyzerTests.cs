@@ -94,6 +94,7 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
     public void TestMax()
     {
         Test(n => MissingByteMethods.Max(n, n), n => n);
+        Test(n => Math.Max(n, n), n => n);
 
         DoNamedTest2();
     }

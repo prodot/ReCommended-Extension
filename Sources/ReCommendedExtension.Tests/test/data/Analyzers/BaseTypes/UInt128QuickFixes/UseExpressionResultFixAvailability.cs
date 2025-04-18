@@ -62,5 +62,24 @@ namespace Test
         {
             var result = number.Equals(null);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = UInt128.Max(10, 0x0A);
+            var result12 = UInt128.Max(10, 10ul);
+            var result13 = UInt128.Max(10, 10u);
+            var result14 = UInt128.Max(10, 10L);
+            var result15 = UInt128.Max(10, c);
+            var result16 = UInt128.Max(97, 'a');
+
+            UInt128 result11 = UInt128.Max(10, 0x0A);
+            UInt128 result12 = UInt128.Max(10, 10ul);
+            UInt128 result13 = UInt128.Max(10, 10u);
+            UInt128 result14 = UInt128.Max(10, 10L);
+            UInt128 result15 = UInt128.Max(10, c);
+            UInt128 result16 = UInt128.Max(97, 'a');
+        }
     }
 }

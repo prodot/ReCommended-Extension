@@ -58,7 +58,11 @@ namespace Test
 
         public void Max()
         {
-            var result = byte.Max(10, 10);
+            var result1 = byte.Max(10, 0x0A);
+
+            byte result2 = byte.Max(10, 0x0A);
+
+            var result3 = Math.Max((byte)10, (byte)10);
         }
 
         public void Min()

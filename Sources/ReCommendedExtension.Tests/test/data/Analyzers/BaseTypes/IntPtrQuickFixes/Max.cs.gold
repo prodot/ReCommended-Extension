@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class IntPtrs
+    {
+        public void Max()
+        {
+            var result = (nint){caret}10;
+        }
+    }
+}

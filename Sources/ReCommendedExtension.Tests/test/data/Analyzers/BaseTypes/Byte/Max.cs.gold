@@ -1,21 +1,28 @@
-﻿namespace Test
+﻿using System;
+
+namespace Test
 {
     public class Bytes
     {
         public void ExpressionResult()
         {
-            var result = |byte.Max(10, 10)|(0);
+            var result1 = |byte.Max(10, 10)|(0);
+
+            var result2 = |Math.Max((byte)10, (byte)10)|(1);
         }
 
         public void NoDetection(byte x, byte y)
         {
-            var result1 = byte.Max(1, 2);
-            var result2 = byte.Max(x, 2);
-            var result3 = byte.Max(1, y);
+            var result11 = byte.Max(1, 2);
+            var result12 = byte.Max(x, 2);
+            var result13 = byte.Max(1, y);
 
             byte.Max(10, 10);
+
+            Math.Max((byte)10, (byte)10);
         }
     }
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always 10.
+(1): ReSharper Suggestion: The expression is always 10.

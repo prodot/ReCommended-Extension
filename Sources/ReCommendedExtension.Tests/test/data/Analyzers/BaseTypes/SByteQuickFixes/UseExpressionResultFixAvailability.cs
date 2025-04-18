@@ -55,5 +55,14 @@ namespace Test
         {
             var result = number.GetTypeCode();
         }
+
+        public void Max()
+        {
+            var result11 = sbyte.Max(10, 0x0A);
+
+            sbyte result2 = sbyte.Max(10, 0x0A);
+
+            var result3 = Math.Max((sbyte)10, (sbyte)10);
+        }
     }
 }

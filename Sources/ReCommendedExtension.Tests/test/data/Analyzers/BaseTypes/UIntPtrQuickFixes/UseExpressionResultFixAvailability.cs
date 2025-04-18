@@ -57,5 +57,22 @@ namespace Test
         {
             var result = number.Equals(null);
         }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = nuint.Max(10, 0x0A);
+            var result12 = nuint.Max(10, 10u);
+            var result13 = nuint.Max(10, c);
+            var result14 = nuint.Max(97, 'a');
+
+            nuint result21 = nuint.Max(10, 0x0A);
+            nuint result22 = nuint.Max(10, 10u);
+            nuint result23 = nuint.Max(10, c);
+            nuint result24 = nuint.Max(97, 'a');
+
+            var result31 = Math.Max((nuint)10, (nuint)10);
+        }
     }
 }
