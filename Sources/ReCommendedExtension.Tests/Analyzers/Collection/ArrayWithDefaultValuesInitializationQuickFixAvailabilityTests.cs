@@ -1,5 +1,6 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -17,7 +18,7 @@ public sealed class ArrayWithDefaultValuesInitializationQuickFixAvailabilityTest
     protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ArrayWithDefaultValuesInitializationSuggestion;
+        => highlighting is ArrayWithDefaultValuesInitializationSuggestion or NotResolvedError;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]

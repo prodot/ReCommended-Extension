@@ -11,6 +11,7 @@ public abstract class DocCommentsExecuteTests<A, N> : CSharpContextActionExecute
     where A : XmlDocCommentContextAction<N> where N : class, ITreeNode
 {
     static void SetValue<T>(IContextBoundSettingsStore store, Expression<Func<XmlDocFormatterSettingsKey, T>> lambdaExpression, T value)
+        where T : notnull
         => store.SetValue(lambdaExpression, value);
 
     protected void DoNamedTestWithSettings()

@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -14,7 +15,7 @@ public sealed class ControlFlowQuickFixAvailabilityTests : QuickFixAvailabilityT
     protected override string RelativeTestDataPath => @"Analyzers\ControlFlowQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAssertionStatementSuggestion;
+        => highlighting is RedundantAssertionStatementSuggestion or NotResolvedError;
 
     [Test]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]

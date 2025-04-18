@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Test
 {
     internal class AsyncMethod
     {
-        IEnumerable<string> Iterator(IEnumerable<string> p)
+        IEnumerable<string> |Iterator|(0)(IEnumerable<string> p)
         {
             yield break;
         }
@@ -92,3 +93,4 @@ namespace Test
     }
 }
 ---------------------------------------------------------
+(0): ReSharper Warning: Declared element can never be null by default, but is not annotated with 'NotNullAttribute'.

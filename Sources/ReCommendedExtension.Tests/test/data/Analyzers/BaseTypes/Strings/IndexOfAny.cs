@@ -35,14 +35,14 @@ namespace Test
             var result3 = text?.IndexOfAny(['a', 'a'], startIndex, count);
         }
 
-        public void OtherMethod(string text, int startIndex, int count)
+        public void OtherMethod(string text, char c, int startIndex, int count)
         {
             var result1 = text.IndexOfAny([c]);
             var result2 = text.IndexOfAny([c], startIndex);
             var result3 = text.IndexOfAny([c], startIndex, count);
         }
 
-        public void OtherMethod_Nullable(string? text, int startIndex, int count)
+        public void OtherMethod_Nullable(string? text, char c, int startIndex, int count)
         {
             var result1 = text?.IndexOfAny([c]);
             var result2 = text?.IndexOfAny([c], startIndex);

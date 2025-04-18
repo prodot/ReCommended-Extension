@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -13,7 +14,7 @@ public sealed class CatchClauseWithoutVariableQuickFixAvailabilityTests : QuickF
     protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariableQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is CatchClauseWithoutVariableHint;
+        => highlighting is CatchClauseWithoutVariableHint or NotResolvedError;
 
     [Test]
     public void TestCatchClauseWithoutVariableAvailability() => DoNamedTest2();

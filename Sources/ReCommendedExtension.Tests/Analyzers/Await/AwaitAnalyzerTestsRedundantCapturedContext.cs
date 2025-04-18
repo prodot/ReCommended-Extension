@@ -17,7 +17,9 @@ public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpHighlight
     protected override string RelativeTestDataPath => @"Analyzers\Await";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantCapturedContextSuggestion or RedundantConfigureAwaitWarning; // to figure out which cases are supported by R#
+        => highlighting is RedundantCapturedContextSuggestion
+            or RedundantConfigureAwaitWarning // to figure out which cases are supported by R#
+            or NotResolvedError;
 
     [Test]
     public void TestRedundantCapturedContext() => DoNamedTest2();

@@ -1082,7 +1082,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [var separatorArgument, .. var valuesArguments])
+        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             if (!invocationExpression.IsUsedAsStatement())
             {
@@ -1158,7 +1158,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [var separatorArgument, .. var valuesArguments])
+        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             if (!invocationExpression.IsUsedAsStatement())
             {
@@ -1288,7 +1288,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [var separatorArgument, .. var valuesArguments])
+        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             if (!invocationExpression.IsUsedAsStatement())
             {
@@ -1424,7 +1424,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [var separatorArgument, .. var valuesArguments])
+        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             if (!invocationExpression.IsUsedAsStatement())
             {
@@ -1501,7 +1501,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [_, .. var valuesArguments] && !invocationExpression.IsUsedAsStatement())
+        if (arguments.TrySplit(out _, out var valuesArguments) && !invocationExpression.IsUsedAsStatement())
         {
             switch (valuesArguments)
             {
@@ -1557,7 +1557,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [_, .. var valuesArguments] && !invocationExpression.IsUsedAsStatement())
+        if (arguments.TrySplit(out _, out var valuesArguments) && !invocationExpression.IsUsedAsStatement())
         {
             switch (valuesArguments)
             {
@@ -1639,7 +1639,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [_, .. var valuesArguments] && !invocationExpression.IsUsedAsStatement())
+        if (arguments.TrySplit(out _, out var valuesArguments) && !invocationExpression.IsUsedAsStatement())
         {
             switch (valuesArguments)
             {
@@ -1728,7 +1728,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [_, .. var valuesArguments] && !invocationExpression.IsUsedAsStatement())
+        if (arguments.TrySplit(out _, out var valuesArguments) && !invocationExpression.IsUsedAsStatement())
         {
             switch (valuesArguments)
             {

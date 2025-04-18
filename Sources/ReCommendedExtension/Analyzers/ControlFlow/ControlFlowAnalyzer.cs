@@ -49,9 +49,13 @@ public sealed class ControlFlowAnalyzer(
     static bool IsLiteral(IExpression? expression, TokenNodeType tokenType)
         => (expression as ICSharpLiteralExpression)?.Literal.GetTokenType() == tokenType;
 
-    readonly NullnessProvider nullnessProvider = codeAnnotationsCache.GetProvider<NullnessProvider>();
-    readonly AssertionMethodAnnotationProvider assertionMethodAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionMethodAnnotationProvider>();
-    readonly AssertionConditionAnnotationProvider assertionConditionAnnotationProvider = codeAnnotationsCache.GetProvider<AssertionConditionAnnotationProvider>();
+    readonly Lazy<NullnessProvider> nullnessProvider = codeAnnotationsCache.GetLazyProvider<NullnessProvider>();
+
+    readonly Lazy<AssertionMethodAnnotationProvider> assertionMethodAnnotationProvider =
+        codeAnnotationsCache.GetLazyProvider<AssertionMethodAnnotationProvider>();
+
+    readonly Lazy<AssertionConditionAnnotationProvider> assertionConditionAnnotationProvider =
+        codeAnnotationsCache.GetLazyProvider<AssertionConditionAnnotationProvider>();
 
     void AnalyzeAssertions(
         ElementProblemAnalyzerData data,
@@ -59,7 +63,7 @@ public sealed class ControlFlowAnalyzer(
         ICSharpTreeNode rootNode,
         ICSharpControlFlowGraph controlFlowGraph)
     {
-        var assertions = Assertion.CollectAssertions(assertionMethodAnnotationProvider, assertionConditionAnnotationProvider, rootNode);
+        var assertions = Assertion.CollectAssertions(assertionMethodAnnotationProvider.Value, assertionConditionAnnotationProvider.Value, rootNode);
 
         if (assertions.Count == 0)
         {
@@ -336,7 +340,7 @@ public sealed class ControlFlowAnalyzer(
         {
             case IFunction function:
             {
-                var (annotationNullableValue, _, _) = nullnessProvider.GetInfo(function);
+                var (annotationNullableValue, _, _) = nullnessProvider.Value.GetInfo(function);
                 if (annotationNullableValue == CodeAnnotationNullableValue.NOT_NULL)
                 {
                     return CSharpControlFlowNullReferenceState.NOT_NULL;
@@ -348,7 +352,7 @@ public sealed class ControlFlowAnalyzer(
             case ITypeOwner typeOwner when !typeOwner.Type.IsDelegateType():
                 if (typeOwner is IAttributesOwner attributesOwner)
                 {
-                    var (annotationNullableValue, _, _) = nullnessProvider.GetInfo(attributesOwner);
+                    var (annotationNullableValue, _, _) = nullnessProvider.Value.GetInfo(attributesOwner);
                     if (annotationNullableValue == CodeAnnotationNullableValue.NOT_NULL)
                     {
                         return CSharpControlFlowNullReferenceState.NOT_NULL;

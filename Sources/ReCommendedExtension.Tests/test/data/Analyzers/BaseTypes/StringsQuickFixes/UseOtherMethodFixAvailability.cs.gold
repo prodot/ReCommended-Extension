@@ -37,14 +37,14 @@ namespace Test
             var result65 = text.|IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0|(23);
         }
 
-        public void IndexOfAny(string text, int startIndex, int count)
+        public void IndexOfAny(string text, char c, int startIndex, int count)
         {
             var result1 = text.|IndexOfAny([c])|(24);
             var result2 = text.|IndexOfAny([c], startIndex)|(25);
             var result3 = text.|IndexOfAny([c], startIndex, count)|(26);
         }
 
-        public void LastIndexOfAny(string text, int startIndex, int count)
+        public void LastIndexOfAny(string text, char c, int startIndex, int count)
         {
             var result1 = text.|LastIndexOfAny([c])|(27);
             var result2 = text.|LastIndexOfAny([c], startIndex)|(28);

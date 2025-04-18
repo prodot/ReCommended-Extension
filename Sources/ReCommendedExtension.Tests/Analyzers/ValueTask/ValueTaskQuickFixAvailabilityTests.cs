@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -18,7 +19,7 @@ public sealed class ValueTaskQuickFixAvailabilityTests : QuickFixAvailabilityTes
         IHighlighting highlighting,
         IPsiSourceFile psiSourceFile,
         IContextBoundSettingsStore boundSettingsStore)
-        => highlighting is IntentionalBlockingAttemptWarning;
+        => highlighting is IntentionalBlockingAttemptWarning or NotResolvedError;
 
     [Test]
     public void TestIntentionalBlockingAttemptsAvailability() => DoNamedTest2();

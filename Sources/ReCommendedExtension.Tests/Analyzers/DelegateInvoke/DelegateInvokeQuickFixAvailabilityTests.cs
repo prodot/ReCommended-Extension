@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -13,7 +14,7 @@ public sealed class DelegateInvokeQuickFixAvailabilityTests : QuickFixAvailabili
     protected override string RelativeTestDataPath => @"Analyzers\DelegateInvokeQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantDelegateInvokeHint;
+        => highlighting is RedundantDelegateInvokeHint or NotResolvedError;
 
     [Test]
     public void TestDelegateInvokeAvailability() => DoNamedTest2();

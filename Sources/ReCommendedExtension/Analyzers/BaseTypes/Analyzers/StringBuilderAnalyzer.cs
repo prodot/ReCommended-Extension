@@ -350,7 +350,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [var separatorArgument, .. var valuesArguments])
+        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -446,7 +446,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [var separatorArgument, .. var valuesArguments])
+        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -601,7 +601,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [var separatorArgument, .. var valuesArguments])
+        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -697,7 +697,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [var separatorArgument, .. var valuesArguments])
+        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -790,7 +790,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [_, .. var valuesArguments])
+        if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -865,7 +865,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [_, .. var valuesArguments])
+        if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -977,7 +977,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [_, .. var valuesArguments])
+        if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -1052,7 +1052,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
-        if (arguments is [_, .. var valuesArguments])
+        if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
             {

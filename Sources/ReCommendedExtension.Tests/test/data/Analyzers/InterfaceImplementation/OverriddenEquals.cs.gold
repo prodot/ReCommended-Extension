@@ -13,7 +13,7 @@ namespace Test
 
         public override int GetHashCode() => _value.GetHashCode();
 
-        public override bool Equals(object other) => other is S otherS && _value == otherS._value;
+        public override bool Equals(object other) => other is Struct1 otherS && _value == otherS._value;
     }
 
     internal struct Struct2

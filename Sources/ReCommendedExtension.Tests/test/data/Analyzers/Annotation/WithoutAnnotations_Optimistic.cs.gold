@@ -1,43 +1,44 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Test
 {
     internal class AsyncMethod
     {
-        IEnumerable<string> Iterator(IEnumerable<string> p)
+        IEnumerable<string> |Iterator|(0)(IEnumerable<string> |p|(1))
         {
             yield break;
         }
 
         async Task<string> AsyncMethod() => await AsyncProperty1;
 
-        Task<string> |AsyncProperty1|(0) { get; set; }
+        Task<string> |AsyncProperty1|(2) { get; set; }
 
-        Task<string> |AsyncProperty2|(1) => null;
+        Task<string> |AsyncProperty2|(3) => null;
 
-        Task<string> |this|(2)[Task<string> |index|(3)] => null;
+        Task<string> |this|(4)[Task<string> |index|(5)] => null;
 
-        Task<string> |this|(4)[Task<string> |index|(5), Task<string> |index2|(6)] => null;
+        Task<string> |this|(6)[Task<string> |index|(7), Task<string> |index2|(8)] => null;
 
-        Lazy<string> |LazyMethod|(7)() => null;
+        Lazy<string> |LazyMethod|(9)() => null;
 
-        Lazy<string> |LazyProperty1|(8) { get; set; }
+        Lazy<string> |LazyProperty1|(10) { get; set; }
 
-        Lazy<string> |LazyProperty2|(9) => null;
+        Lazy<string> |LazyProperty2|(11) => null;
 
-        Lazy<string> |this|(10)[Lazy<string> |index|(11)] => null;
+        Lazy<string> |this|(12)[Lazy<string> |index|(13)] => null;
 
-        Lazy<string> |this|(12)[Lazy<string> |index|(13), Lazy<string> |index2|(14)] => null;
+        Lazy<string> |this|(14)[Lazy<string> |index|(15), Lazy<string> |index2|(16)] => null;
 
-        string |Method1|(15)(string |p1|(16))
+        string |Method1|(17)(string |p1|(18))
         {
             return null;
         }
 
-        string |Method2|(17)(string |p1|(18)) => null;
+        string |Method2|(19)(string |p1|(20)) => null;
 
-        string |Property1|(19)
+        string |Property1|(21)
         {
             get
             {
@@ -46,9 +47,9 @@ namespace Test
             set { }
         }
 
-        string |Property2|(20) { get; set; }
+        string |Property2|(22) { get; set; }
 
-        string |Property3|(21)
+        string |Property3|(23)
         {
             get
             {
@@ -56,13 +57,13 @@ namespace Test
             }
         }
 
-        string |Property4|(22) => null;
+        string |Property4|(24) => null;
 
-        string |Property5|(23) { get; set; } = null;
+        string |Property5|(25) { get; set; } = null;
 
-        string |Property6|(24) { get; } = null;
+        string |Property6|(26) { get; } = null;
 
-        string |this|(25)[string |index|(26)]
+        string |this|(27)[string |index|(28)]
         {
             get
             {
@@ -71,7 +72,7 @@ namespace Test
             set { }
         }
 
-        string |this|(27)[string |index1|(28), string |index2|(29)]
+        string |this|(29)[string |index1|(30), string |index2|(31)]
         {
             get
             {
@@ -79,9 +80,9 @@ namespace Test
             }
         }
 
-        string |this|(30)[string |index1|(31), string |index2|(32), string |index3|(33)] => null;
+        string |this|(32)[string |index1|(33), string |index2|(34), string |index3|(35)] => null;
 
-        string |field1|(34);
+        string |field1|(36);
 
         void Functions()
         {
@@ -92,7 +93,7 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.
+(0): ReSharper Warning: Declared element can never be null by default, but is not annotated with 'NotNullAttribute'.
 (1): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.
 (2): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.
 (3): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.
@@ -127,3 +128,5 @@ namespace Test
 (32): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.
 (33): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.
 (34): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.
+(35): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.
+(36): ReSharper Warning: Declared element is nullable, but is not annotated with 'NotNullAttribute' or 'CanBeNullAttribute'.

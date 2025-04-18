@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -17,6 +18,13 @@ namespace Test
             var single = list.Single();
         }
 
+        public enum NonZeroBased
+        {
+            One = 1,
+            Two = 2,
+            Three = 3,
+        }
+
         public void DefaultValues(
             IList<bool> booleans,
             IList<int> integers,
@@ -27,6 +35,7 @@ namespace Test
             IList<char> chars,
             IList<CancellationToken> structs,
             IList<DayOfWeek> enums,
+            IList<NonZeroBased> nonZeroBasedEnums,
             IList<string> strings,
             IList<(int first, bool second)> tuples,
             IList<int?> nullableStructs)
@@ -40,6 +49,7 @@ namespace Test
             var char_ = chars.LastOrDefault();
             var struct_ = structs.LastOrDefault();
             var enum_ = enums.LastOrDefault();
+            var nonZeroBasedEnums_ = nonZeroBasedEnums.LastOrDefault();
             var string_ = strings.LastOrDefault();
             var tuple_ = tuples.LastOrDefault();
             var nullableStruct_ = nullableStructs.LastOrDefault();

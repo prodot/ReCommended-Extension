@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -17,7 +18,7 @@ public sealed class ReplaceWithCollectionExpressionQuickFixAvailabilityTests : Q
     protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseTargetTypedCollectionExpressionSuggestion;
+        => highlighting is UseTargetTypedCollectionExpressionSuggestion or NotResolvedError;
 
     [Test]
     public void TestCollectionInitialization_Array_Target_Array_Availability() => DoNamedTest2();

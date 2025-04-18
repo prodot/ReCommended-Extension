@@ -3,6 +3,7 @@ using JetBrains.Application.Settings;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.Flavours;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -18,7 +19,7 @@ public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpHig
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is MissingSuppressionJustificationWarning;
+        => highlighting is MissingSuppressionJustificationWarning or NotResolvedError;
 
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     protected override void DoTest(Lifetime lifetime, IProject project)

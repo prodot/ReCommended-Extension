@@ -24,9 +24,11 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
             or UseSwitchExpressionSuggestion
             or UseCollectionPropertySuggestion
             or SuspiciousElementAccessWarning
-            or UseCollectionCountPropertyWarning; // to figure out which cases are supported by R#
+            or UseCollectionCountPropertyWarning // to figure out which cases are supported by R#
+            or NotResolvedError;
 
     [SuppressMessage("ReSharper", "UseTargetTypedCollectionExpression")]
+    [SuppressMessage("ReSharper", "UseCollectionExpression")]
     static void Test<T, R>(T[] array, Func<IList<T>, R> expected, Func<IList<T>, R> actual, bool emptyThrows = true)
     {
         var list = array.ToList();
@@ -50,6 +52,7 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [SuppressMessage("ReSharper", "UseTargetTypedCollectionExpression")]
+    [SuppressMessage("ReSharper", "UseCollectionExpression")]
     static void TestNullable<T, R>(T[] array, Func<IList<T>?, R> expected, Func<IList<T>?, R> actual, bool emptyThrows = true)
     {
         var list = array.ToList();

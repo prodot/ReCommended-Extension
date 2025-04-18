@@ -52,7 +52,7 @@ namespace Test
         public bool Equals(Class2? other) => throw new NotImplementedException();
     }
 
-    internal class Class6 : Class5
+    internal class Class6
     {
         class Nested : IEquatable<Nested>
         {

@@ -1,5 +1,6 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -20,7 +21,8 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
             or PassSingleCharactersSuggestion
             or UseOtherMethodSuggestion
             or RedundantArgumentHint
-            or RedundantMethodInvocationHint;
+            or RedundantMethodInvocationHint
+            or NotResolvedError;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]

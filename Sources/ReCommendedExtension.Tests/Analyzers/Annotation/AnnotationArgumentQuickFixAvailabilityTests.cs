@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -17,7 +18,7 @@ public sealed class AnnotationArgumentQuickFixAvailabilityTests : QuickFixAvaila
     protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAnnotationArgumentSuggestion;
+        => highlighting is RedundantAnnotationArgumentSuggestion or NotResolvedError;
 
     [Test]
     public void TestRedundantAnnotationArgumentAvailability() => DoNamedTest2();

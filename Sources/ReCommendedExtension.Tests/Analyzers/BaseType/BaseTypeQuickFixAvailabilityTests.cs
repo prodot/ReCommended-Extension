@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -17,7 +18,7 @@ public sealed class BaseTypeQuickFixAvailabilityTests : QuickFixAvailabilityTest
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypeQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RemoveRedundantBaseTypeDeclarationHint;
+        => highlighting is RemoveRedundantBaseTypeDeclarationHint or NotResolvedError;
 
     [Test]
     public void TestAvailability() => DoNamedTest2();
