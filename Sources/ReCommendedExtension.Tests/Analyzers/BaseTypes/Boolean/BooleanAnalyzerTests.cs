@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -14,7 +15,11 @@ public sealed class BooleanAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Boolean";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantMethodInvocationHint or RedundantArgumentHint;
+        => highlighting is UseExpressionResultSuggestion
+            or UseBinaryOperationSuggestion
+            or RedundantMethodInvocationHint
+            or RedundantArgumentHint
+            or NotResolvedError;
 
     static void Test<R>(Func<bool, R> expected, Func<bool, R> actual)
     {

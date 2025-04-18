@@ -1,6 +1,4 @@
-﻿using JetBrains.ProjectModel.Properties.CSharp;
-using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
-using JetBrains.ReSharper.TestFramework;
+﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
 
