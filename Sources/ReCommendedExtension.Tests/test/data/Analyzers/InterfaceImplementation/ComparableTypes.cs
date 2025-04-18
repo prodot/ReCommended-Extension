@@ -54,7 +54,7 @@ namespace Test
         public int CompareTo(Class2? other) => throw new NotImplementedException();
     }
 
-    internal class Class6 : Class5
+    internal class Class6
     {
         class Nested : IComparable<Nested>
         {

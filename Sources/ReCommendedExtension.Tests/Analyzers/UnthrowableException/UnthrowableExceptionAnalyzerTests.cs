@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -13,7 +14,7 @@ public sealed class UnthrowableExceptionAnalyzerTests : CSharpHighlightingTestBa
     protected override string RelativeTestDataPath => @"Analyzers\UnthrowableException";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UnthrowableExceptionWarning;
+        => highlighting is UnthrowableExceptionWarning or NotResolvedError;
 
     [Test]
     public void TestUnthrowableException() => DoNamedTest2();

@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -13,7 +14,7 @@ public sealed class LockOnObjectWithWeakIdentityAnalyzerTests : CSharpHighlighti
     protected override string RelativeTestDataPath => @"Analyzers\LockOnObjectWithWeakIdentity";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is LockOnObjectWithWeakIdentityWarning;
+        => highlighting is LockOnObjectWithWeakIdentityWarning or NotResolvedError;
 
     [Test]
     public void TestLockOnObjectWithWeakIdentity() => DoNamedTest2();

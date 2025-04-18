@@ -195,7 +195,7 @@ namespace Test
         static void Foo(string xf)
         {
             AssertThatNotNull(xf); // redundant
-            x.AssertNotNull(); // redundant
+            xf.AssertNotNull(); // redundant
             AssertThatTrue(xf != null); // redundant
         }
 

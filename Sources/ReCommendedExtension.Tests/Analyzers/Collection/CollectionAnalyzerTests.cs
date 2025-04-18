@@ -25,7 +25,8 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
             or UseCollectionExpressionForArrayInitializerWarning // to figure out which cases are supported by R#
             or ReplaceInvocationWithCollectionExpressionWarning // to figure out which cases are supported by R#
             or ReplaceInvocationWithSingleSpreadCollectionExpressionWarning // to figure out which cases are supported by R#
-            or ReplaceWithEmptyCollectionExpressionWarning; // to figure out which cases are supported by R#
+            or ReplaceWithEmptyCollectionExpressionWarning // to figure out which cases are supported by R#
+            or NotResolvedError;
 
     [Test]
     [TestNet60]

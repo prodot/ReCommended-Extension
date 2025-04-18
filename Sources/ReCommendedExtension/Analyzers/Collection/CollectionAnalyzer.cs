@@ -971,11 +971,13 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             (IType? arrayItemType, bool isCovariant)? TryGetIfTargetTypedToArray()
                 => TryGetIfTargetTypedToGenericArray(arrayEmptyInvocationExpression, itemType, targetType);
 
-            // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
+            // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T> - inferred
             if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
                     ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
                     ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN)) is var (covariantCollectionItemType,
-                isCollectionItemTypeCovariant))
+                isCollectionItemTypeCovariant)
+                && arrayEmptyInvocationExpression.Parent is ICSharpArgument
+                && methodReferenceToSetInferredTypeArguments is { })
             {
                 string? covariantTypeName;
                 if (isCollectionItemTypeCovariant)
@@ -1001,9 +1003,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         methodReferenceToSetInferredTypeArguments));
             }
 
-            // target-typed to ICollection<T> or IList<T>
-            if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN)) is
-                var (collectionItemType, _))
+            // target-typed to ICollection<T> or IList<T> - inferred, but not covariant
+            if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN)) is var (
+                collectionItemType, _)
+                && arrayEmptyInvocationExpression.Parent is ICSharpArgument
+                && methodReferenceToSetInferredTypeArguments is { })
             {
                 Debug.Assert(CSharpLanguage.Instance is { });
 
@@ -1022,27 +1026,15 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 }
             }
 
-            // target-typed to T[] - either covariant or inferred
-            if (TryGetIfTargetTypedToArray() is var (covariantItemType, isCovariant)
-                && (isCovariant || arrayEmptyInvocationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { }))
+            // target-typed to T[] - inferred, but not covariant
+            if (TryGetIfTargetTypedToArray() is (_, false)
+                && arrayEmptyInvocationExpression.Parent is ICSharpArgument
+                && methodReferenceToSetInferredTypeArguments is { })
             {
-                string? covariantTypeName;
-                if (isCovariant)
-                {
-                    Debug.Assert(covariantItemType is { });
-                    Debug.Assert(CSharpLanguage.Instance is { });
-
-                    covariantTypeName = TypeFactory.CreateArrayType(covariantItemType, 1).GetPresentableName(CSharpLanguage.Instance);
-                }
-                else
-                {
-                    covariantTypeName = null;
-                }
-
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
-                        covariantTypeName is { } ? $"Use collection expression ('{covariantTypeName}' will be used)." : "Use collection expression.",
-                        covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null,
+                        "Use collection expression.",
+                        null,
                         arrayEmptyInvocationExpression,
                         null,
                         null,
