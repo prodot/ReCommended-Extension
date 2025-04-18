@@ -6,9 +6,17 @@
         {
             var result = |number.Equals(null)|(0);
         }
+
+        public void GetTypeCode(float number)
+        {
+            var result = |number.GetTypeCode()|(1);
+        }
     }
 }
 ------------------------------------------------
 0: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+1: The expression is always TypeCode.Single.
+QUICKFIXES:
+Replace with 'TypeCode.Single'

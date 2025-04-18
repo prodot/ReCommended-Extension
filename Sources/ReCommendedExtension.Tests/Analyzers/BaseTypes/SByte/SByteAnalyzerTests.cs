@@ -85,4 +85,12 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    public void TestGetTypeCode()
+    {
+        Test(number => number.GetTypeCode(), _ => TypeCode.SByte);
+
+        DoNamedTest2();
+    }
 }

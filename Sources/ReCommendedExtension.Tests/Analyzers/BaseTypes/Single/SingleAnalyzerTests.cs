@@ -60,4 +60,12 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    public void TestGetTypeCode()
+    {
+        Test(number => number.GetTypeCode(), _ => TypeCode.Single);
+
+        DoNamedTest2();
+    }
 }

@@ -57,6 +57,11 @@ namespace Test
         {
             var result = |number.Equals(null)|(28);
         }
+
+        public void GetTypeCode(int number)
+        {
+            var result = |number.GetTypeCode()|(29);
+        }
     }
 }
 ------------------------------------------------
@@ -151,3 +156,6 @@ Replace with '(Quotient: 0, Remainder: 0)'
 28: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+29: The expression is always TypeCode.Int32.
+QUICKFIXES:
+Replace with 'TypeCode.Int32'

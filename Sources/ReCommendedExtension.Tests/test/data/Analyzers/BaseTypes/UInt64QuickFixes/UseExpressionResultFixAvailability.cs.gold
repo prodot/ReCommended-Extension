@@ -84,6 +84,11 @@ namespace Test
         {
             var result = |number.Equals(null)|(54);
         }
+
+        public void GetTypeCode(ulong number)
+        {
+            var result = |number.GetTypeCode()|(55);
+        }
     }
 }
 ------------------------------------------------
@@ -259,3 +264,6 @@ Replace with '(Quotient: left, Remainder: 0ul)'
 54: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+55: The expression is always TypeCode.UInt64.
+QUICKFIXES:
+Replace with 'TypeCode.UInt64'

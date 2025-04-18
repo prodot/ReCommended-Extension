@@ -12,6 +12,8 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class DecimalAnalyzer() : NumberAnalyzer<decimal>(PredefinedType.DECIMAL_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.Decimal;
+
     private protected override decimal? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)

@@ -50,5 +50,10 @@ namespace Test
         {
             var result = number.Equals(null);
         }
+
+        public void GetTypeCode(short number)
+        {
+            var result = number.GetTypeCode();
+        }
     }
 }

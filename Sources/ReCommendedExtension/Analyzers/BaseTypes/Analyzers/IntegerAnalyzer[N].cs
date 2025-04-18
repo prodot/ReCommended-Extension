@@ -3,7 +3,6 @@ using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
@@ -125,6 +124,8 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class SByteAnalyzer() : IntegerAnalyzer<sbyte>(PredefinedType.SBYTE_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.SByte;
+
     private protected override sbyte? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -176,6 +177,8 @@ public sealed class SByteAnalyzer() : IntegerAnalyzer<sbyte>(PredefinedType.SBYT
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class Int16Analyzer() : IntegerAnalyzer<short>(PredefinedType.SHORT_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.Int16;
+
     private protected override short? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -235,6 +238,8 @@ public sealed class Int16Analyzer() : IntegerAnalyzer<short>(PredefinedType.SHOR
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class UInt16Analyzer() : IntegerAnalyzer<ushort>(PredefinedType.USHORT_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.UInt16;
+
     private protected override ushort? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -294,6 +299,8 @@ public sealed class UInt16Analyzer() : IntegerAnalyzer<ushort>(PredefinedType.US
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class Int32Analyzer() : IntegerAnalyzer<int>(PredefinedType.INT_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.Int32;
+
     private protected override int? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -361,6 +368,8 @@ public sealed class Int32Analyzer() : IntegerAnalyzer<int>(PredefinedType.INT_FQ
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class UInt32Analyzer() : IntegerAnalyzer<uint>(PredefinedType.UINT_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.UInt32;
+
     private protected override uint? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -434,6 +443,8 @@ public sealed class UInt32Analyzer() : IntegerAnalyzer<uint>(PredefinedType.UINT
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class Int64Analyzer() : IntegerAnalyzer<long>(PredefinedType.LONG_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.Int64;
+
     private protected override long? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -528,6 +539,8 @@ public sealed class Int64Analyzer() : IntegerAnalyzer<long>(PredefinedType.LONG_
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class UInt64Analyzer() : IntegerAnalyzer<ulong>(PredefinedType.ULONG_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.UInt64;
+
     private protected override ulong? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -619,6 +632,8 @@ public sealed class UInt64Analyzer() : IntegerAnalyzer<ulong>(PredefinedType.ULO
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(ClrTypeNames.Int128)
 {
+    private protected override TypeCode? TryGetTypeCode() => null;
+
     public readonly record struct Int128 // todo: remove when available (used only for testing)
     {
         public static Int128 MinValue => new(0x8000_0000_0000_0000, 0);
@@ -812,6 +827,8 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
 public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>(ClrTypeNames.UInt128)
 {
+    private protected override TypeCode? TryGetTypeCode() => null;
+
     public readonly record struct UInt128 // todo: remove when available (used only for testing)
     {
         public static UInt128 MinValue => new(0, 0);

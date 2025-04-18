@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Int32s
+    {
+        public void GetTypeCode(int number)
+        {
+            var result = {caret}TypeCode.Int32;
+        }
+    }
+}

@@ -77,6 +77,11 @@ namespace Test
         {
             var result = |number.Equals(null)|(47);
         }
+
+        public void GetTypeCode(long number)
+        {
+            var result = |number.GetTypeCode()|(48);
+        }
     }
 }
 ------------------------------------------------
@@ -234,3 +239,6 @@ Replace with '(Quotient: left, Remainder: 0L)'
 47: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+48: The expression is always TypeCode.Int64.
+QUICKFIXES:
+Replace with 'TypeCode.Int64'

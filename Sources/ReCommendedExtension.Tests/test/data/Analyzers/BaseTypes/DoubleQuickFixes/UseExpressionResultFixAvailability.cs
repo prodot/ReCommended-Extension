@@ -8,5 +8,10 @@ namespace Test
         {
             var result = number.Equals(null);
         }
+
+        public void GetTypeCode(double number)
+        {
+            var result = number.GetTypeCode();
+        }
     }
 }

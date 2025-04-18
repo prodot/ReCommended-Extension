@@ -57,6 +57,11 @@ namespace Test
         {
             var result = |number.Equals(null)|(29);
         }
+
+        public void GetTypeCode(ushort number)
+        {
+            var result = |number.GetTypeCode()|(30);
+        }
     }
 }
 ------------------------------------------------
@@ -154,3 +159,6 @@ Replace with '(Quotient: left, Remainder: (ushort)0)'
 29: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+30: The expression is always TypeCode.UInt16.
+QUICKFIXES:
+Replace with 'TypeCode.UInt16'

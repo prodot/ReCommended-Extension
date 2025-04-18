@@ -70,6 +70,11 @@ namespace Test
         {
             var result = |number.Equals(null)|(40);
         }
+
+        public void GetTypeCode(uint number)
+        {
+            var result = |number.GetTypeCode()|(41);
+        }
     }
 }
 ------------------------------------------------
@@ -204,3 +209,6 @@ Replace with '(Quotient: left, Remainder: 0u)'
 40: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+41: The expression is always TypeCode.UInt32.
+QUICKFIXES:
+Replace with 'TypeCode.UInt32'

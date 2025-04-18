@@ -72,4 +72,12 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    public void TestGetTypeCode()
+    {
+        Test(number => number.GetTypeCode(), _ => TypeCode.Decimal);
+
+        DoNamedTest2();
+    }
 }

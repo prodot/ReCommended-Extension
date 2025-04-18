@@ -84,5 +84,10 @@ namespace Test
         {
             var result = number.Equals(null);
         }
+
+        public void GetTypeCode(ulong number)
+        {
+            var result = number.GetTypeCode();
+        }
     }
 }

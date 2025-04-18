@@ -50,6 +50,11 @@ namespace Test
         {
             var result = |number.Equals(null)|(22);
         }
+
+        public void GetTypeCode(sbyte number)
+        {
+            var result = |number.GetTypeCode()|(23);
+        }
     }
 }
 ------------------------------------------------
@@ -124,3 +129,6 @@ Replace with '(Quotient: left, Remainder: (sbyte)0)'
 22: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+23: The expression is always TypeCode.SByte.
+QUICKFIXES:
+Replace with 'TypeCode.SByte'

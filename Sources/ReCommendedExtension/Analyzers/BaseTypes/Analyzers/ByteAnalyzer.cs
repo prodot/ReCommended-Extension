@@ -68,21 +68,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
     }
 
     /// <remarks>
-    /// <c>number.GetTypeCode()</c> → <c>TypeCode.Byte</c>
-    /// </remarks>
-    static void AnalyzeGetTypeCode(IHighlightingConsumer consumer, IInvocationExpression invocationExpression)
-    {
-        if (!invocationExpression.IsUsedAsStatement())
-        {
-            consumer.AddHighlighting(
-                new UseExpressionResultSuggestion(
-                    $"The expression is always {nameof(TypeCode)}.{nameof(TypeCode.Byte)}.",
-                    invocationExpression,
-                    $"{nameof(TypeCode)}.{nameof(TypeCode.Byte)}"));
-        }
-    }
-
-    /// <remarks>
     /// <c>byte.Max(n, n)</c> → <c>n</c> (.NET 7)
     /// </remarks>
     static void AnalyzeMax(
@@ -478,6 +463,8 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
         return result;
     }
 
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.Byte;
+
     private protected override string CastZero() => "(byte)0";
 
     private protected override bool AreEqual(byte x, byte y) => x == y;
@@ -499,13 +486,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
                 case ({ QualifierExpression: { } }, { IsStatic: false }):
                     switch (method.ShortName)
                     {
-                        case nameof(byte.GetTypeCode):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([], []): AnalyzeGetTypeCode(consumer, element); break;
-                            }
-                            break;
-
                         case nameof(byte.ToString):
                             switch (method.Parameters, element.Arguments)
                             {

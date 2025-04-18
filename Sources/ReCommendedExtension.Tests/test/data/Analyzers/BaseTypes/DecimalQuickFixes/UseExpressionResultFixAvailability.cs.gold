@@ -44,6 +44,11 @@ namespace Test
         {
             var result = |number.Equals(null)|(26);
         }
+
+        public void GetTypeCode(decimal number)
+        {
+            var result = |number.GetTypeCode()|(27);
+        }
     }
 }
 ------------------------------------------------
@@ -135,3 +140,6 @@ Replace with 'number'
 26: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+27: The expression is always TypeCode.Decimal.
+QUICKFIXES:
+Replace with 'TypeCode.Decimal'

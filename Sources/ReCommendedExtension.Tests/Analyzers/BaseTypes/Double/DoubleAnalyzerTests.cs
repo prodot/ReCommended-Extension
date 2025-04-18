@@ -60,4 +60,12 @@ public sealed class DoubleAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    public void TestGetTypeCode()
+    {
+        Test(number => number.GetTypeCode(), _ => TypeCode.Double);
+
+        DoNamedTest2();
+    }
 }

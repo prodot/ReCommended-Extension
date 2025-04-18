@@ -20,4 +20,7 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 
     [Test]
     public void TestEquals_Object() => DoNamedTest2();
+
+    [Test]
+    public void TestGetTypeCode() => DoNamedTest2();
 }

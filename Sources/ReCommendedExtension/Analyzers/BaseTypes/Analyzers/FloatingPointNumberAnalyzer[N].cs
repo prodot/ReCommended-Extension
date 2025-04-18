@@ -27,6 +27,8 @@ public abstract class FloatingPointNumberAnalyzer<N>(IClrTypeName clrTypeName) :
 [ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
 public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(PredefinedType.DOUBLE_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.Double;
+
     private protected override double? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -100,6 +102,8 @@ public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(Prede
 [ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
 public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(PredefinedType.FLOAT_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.Single;
+
     private protected override float? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -169,6 +173,8 @@ public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(Predef
 [ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
 public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Half>(ClrTypeNames.Half)
 {
+    private protected override TypeCode? TryGetTypeCode() => null;
+
     public readonly record struct Half // todo: remove when available (used only for testing)
     {
         public static Half Epsilon => new(0x0001);

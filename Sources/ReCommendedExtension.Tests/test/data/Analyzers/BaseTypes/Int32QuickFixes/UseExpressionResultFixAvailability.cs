@@ -57,5 +57,10 @@ namespace Test
         {
             var result = number.Equals(null);
         }
+
+        public void GetTypeCode(int number)
+        {
+            var result = number.GetTypeCode();
+        }
     }
 }

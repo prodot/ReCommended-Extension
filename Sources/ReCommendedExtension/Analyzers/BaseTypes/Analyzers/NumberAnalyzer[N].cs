@@ -89,6 +89,23 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
         }
     }
 
+    /// <remarks>
+    /// <c>number.GetTypeCode()</c> → <c>TypeCode...</c>
+    /// </remarks>
+    void AnalyzeGetTypeCode(IHighlightingConsumer consumer, IInvocationExpression invocationExpression)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && TryGetTypeCode() is { } typeCode)
+        {
+            var replacement = $"{nameof(TypeCode)}.{typeCode:G}";
+
+            consumer.AddHighlighting(
+                new UseExpressionResultSuggestion($"The expression is always {replacement}.", invocationExpression, replacement));
+        }
+    }
+
+    [Pure]
+    private protected abstract TypeCode? TryGetTypeCode();
+
     [Pure]
     private protected abstract N? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted);
 
@@ -124,6 +141,13 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
                                 case ([{ Type: var objType }], [var objArgument]) when objType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, objArgument);
                                     break;
+                            }
+                            break;
+
+                        case nameof(IConvertible.GetTypeCode):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([], []): AnalyzeGetTypeCode(consumer, element); break;
                             }
                             break;
                     }

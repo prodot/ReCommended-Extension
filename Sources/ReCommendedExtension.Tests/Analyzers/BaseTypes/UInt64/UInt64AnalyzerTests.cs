@@ -78,4 +78,12 @@ public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    public void TestGetTypeCode()
+    {
+        Test(number => number.GetTypeCode(), _ => TypeCode.UInt64);
+
+        DoNamedTest2();
+    }
 }
