@@ -67,6 +67,21 @@ namespace Test
 
             var result31 = |Math.Max((nint)10, (nint)10)|(31);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = |nint.Min(10, 0x0A)|(32);
+            var result12 = |nint.Min(10, c)|(33);
+            var result13 = |nint.Min(97, 'a')|(34);
+
+            nint result21 = |nint.Min(10, 0x0A)|(35);
+            nint result22 = |nint.Min(10, c)|(36);
+            nint result23 = |nint.Min(97, 'a')|(37);
+
+            var result31 = |Math.Min((nint)10, (nint)10)|(38);
+        }
     }
 }
 ------------------------------------------------
@@ -176,5 +191,32 @@ QUICKFIXES:
 Replace with ''a''
 Replace with '97'
 31: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)10'
+32: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)0x0A'
+Replace with '(nint)10'
+33: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)c'
+Replace with '(nint)10'
+34: The expression is always 97.
+QUICKFIXES:
+Replace with '(nint)'a''
+Replace with '(nint)97'
+35: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+36: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+37: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+38: The expression is always 10.
 QUICKFIXES:
 Replace with '(nint)10'

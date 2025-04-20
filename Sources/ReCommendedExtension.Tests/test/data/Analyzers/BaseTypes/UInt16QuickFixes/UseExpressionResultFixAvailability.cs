@@ -77,5 +77,20 @@ namespace Test
 
             var result31 = Math.Max((ushort)10, (ushort)10);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = ushort.Min(10, 0x0A);
+            var result12 = ushort.Min(10, c);
+            var result13 = ushort.Min(97, 'a');
+
+            ushort result21 = ushort.Min(10, 0x0A);
+            ushort result22 = ushort.Min(10, c);
+            ushort result23 = ushort.Min(97, 'a');
+
+            var result31 = Math.Min((ushort)10, (ushort)10);
+        }
     }
 }

@@ -78,4 +78,10 @@ internal static class MissingMathMethods
 
     [Pure]
     public static nuint Max(nuint x, nuint y) => MissingUIntPtrMethods.Max(x, y);
+
+    [Pure]
+    public static nint Min(nint x, nint y) => MissingIntPtrMethods.Min(x, y);
+
+    [Pure]
+    public static nuint Min(nuint x, nuint y) => MissingUIntPtrMethods.Min(x, y);
 }

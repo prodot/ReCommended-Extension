@@ -32,4 +32,7 @@ internal static class MissingInt64Methods
 
     [Pure]
     public static long Max(long x, long y) => x >= y ? x : y;
+
+    [Pure]
+    public static long Min(long x, long y) => x <= y ? x : y;
 }

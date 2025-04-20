@@ -32,4 +32,7 @@ internal static class MissingUIntPtrMethods
 
     [Pure]
     public static nuint Max(nuint x, nuint y) => x >= y ? x : y;
+
+    [Pure]
+    public static nuint Min(nuint x, nuint y) => x <= y ? x : y;
 }

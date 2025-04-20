@@ -101,5 +101,24 @@ namespace Test
 
             var result31 = Math.Max(10L, 10L);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = long.Min(10, 0x0A);
+            var result12 = long.Min(10, 10L);
+            var result13 = long.Min(10, 10u);
+            var result14 = long.Min(10, c);
+            var result15 = long.Min(97, 'a');
+
+            long result21 = long.Min(10, 0x0A);
+            long result22 = long.Min(10, 10L);
+            long result23 = long.Min(10, 10u);
+            long result24 = long.Min(10, c);
+            long result25 = long.Min(97, 'a');
+
+            var result31 = Math.Min(10L, 10L);
+        }
     }
 }

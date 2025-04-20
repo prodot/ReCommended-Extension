@@ -32,4 +32,7 @@ internal static class MissingInt16Methods
 
     [Pure]
     public static short Max(short x, short y) => x >= y ? x : y;
+
+    [Pure]
+    public static short Min(short x, short y) => x <= y ? x : y;
 }

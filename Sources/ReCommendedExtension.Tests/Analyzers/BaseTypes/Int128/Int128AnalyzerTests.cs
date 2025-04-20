@@ -96,4 +96,13 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMin()
+    {
+        Test(n => Int128Analyzer.Int128.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

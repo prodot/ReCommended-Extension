@@ -27,4 +27,8 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     [Test]
     [TestNet70]
     public void TestMax() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestMin() => DoNamedTest2();
 }

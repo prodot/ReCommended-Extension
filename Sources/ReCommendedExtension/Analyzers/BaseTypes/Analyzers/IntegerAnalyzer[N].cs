@@ -691,6 +691,9 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
         public static Int128 Max(Int128 x, Int128 y) => x >= y ? x : y;
 
         [Pure]
+        public static Int128 Min(Int128 x, Int128 y) => x <= y ? x : y;
+
+        [Pure]
         public static (Int128 Quotient, Int128 Remainder) DivRem(Int128 left, Int128 right)
         {
             if (left.upper == 0 && right.upper == 0)
@@ -881,6 +884,9 @@ public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>
 
         [Pure]
         public static UInt128 Max(UInt128 x, UInt128 y) => x >= y ? x : y;
+
+        [Pure]
+        public static UInt128 Min(UInt128 x, UInt128 y) => x <= y ? x : y;
 
         [Pure]
         public static (UInt128 Quotient, UInt128 Remainder) DivRem(UInt128 left, UInt128 right)

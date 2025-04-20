@@ -64,5 +64,14 @@ namespace Test
 
             var result2 = Math.Max((short)10, (short)10);
         }
+
+        public void Min()
+        {
+            var result1 = short.Min(10, 0x0A);
+
+            short result2 = short.Min(10, 0x0A);
+
+            var result2 = Math.Min((short)10, (short)10);
+        }
     }
 }

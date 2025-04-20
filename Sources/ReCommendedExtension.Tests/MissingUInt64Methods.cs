@@ -32,4 +32,7 @@ internal static class MissingUInt64Methods
 
     [Pure]
     public static ulong Max(ulong x, ulong y) => x >= y ? x : y;
+
+    [Pure]
+    public static ulong Min(ulong x, ulong y) => x <= y ? x : y;
 }

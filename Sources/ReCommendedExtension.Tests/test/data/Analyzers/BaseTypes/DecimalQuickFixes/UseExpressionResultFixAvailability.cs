@@ -70,5 +70,26 @@ namespace Test
 
             var result31 = Math.Max(10m, 10m);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = decimal.Min(10, 0x0A);
+            var result12 = decimal.Min(10, 0x0Aul);
+            var result13 = decimal.Min(10, 0x0Au);
+            var result14 = decimal.Min(10, 0x0AL);
+            var result15 = decimal.Min(10, c);
+            var result16 = decimal.Min(97, 'a');
+
+            decimal result21 = decimal.Min(10, 0x0A);
+            decimal result22 = decimal.Min(10, 0x0Aul);
+            decimal result23 = decimal.Min(10, 0x0Au);
+            decimal result24 = decimal.Min(10, 0x0AL);
+            decimal result25 = decimal.Min(10, c);
+            decimal result26 = decimal.Min(97, 'a');
+
+            var result31 = Math.Min(10m, 10m);
+        }
     }
 }

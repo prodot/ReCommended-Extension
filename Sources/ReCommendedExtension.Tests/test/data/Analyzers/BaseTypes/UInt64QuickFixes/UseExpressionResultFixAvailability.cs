@@ -110,5 +110,26 @@ namespace Test
 
             var result31 = Math.Max(10ul, 10ul);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = ulong.Min(10, 0x0A);
+            var result12 = ulong.Min(10, 10u);
+            var result13 = ulong.Min(10, 10L);
+            var result14 = ulong.Min(10, 10ul);
+            var result15 = ulong.Min(10, c);
+            var result16 = ulong.Min(97, 'a');
+
+            ulong result11 = ulong.Min(10, 0x0A);
+            ulong result12 = ulong.Min(10, 10u);
+            ulong result13 = ulong.Min(10, 10L);
+            ulong result14 = ulong.Min(10, 10ul);
+            ulong result15 = ulong.Min(10, c);
+            ulong result16 = ulong.Min(97, 'a');
+
+            var result31 = Math.Min(10ul, 10ul);
+        }
     }
 }

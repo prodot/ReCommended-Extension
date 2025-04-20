@@ -74,5 +74,22 @@ namespace Test
 
             var result31 = Math.Max((nuint)10, (nuint)10);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = nuint.Min(10, 0x0A);
+            var result12 = nuint.Min(10, 10u);
+            var result13 = nuint.Min(10, c);
+            var result14 = nuint.Min(97, 'a');
+
+            nuint result21 = nuint.Min(10, 0x0A);
+            nuint result22 = nuint.Min(10, 10u);
+            nuint result23 = nuint.Min(10, c);
+            nuint result24 = nuint.Min(97, 'a');
+
+            var result31 = Math.Min((nuint)10, (nuint)10);
+        }
     }
 }

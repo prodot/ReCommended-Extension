@@ -64,6 +64,15 @@ namespace Test
 
             var result2 = |Math.Max((short)10, (short)10)|(26);
         }
+
+        public void Min()
+        {
+            var result1 = |short.Min(10, 0x0A)|(27);
+
+            short result2 = |short.Min(10, 0x0A)|(28);
+
+            var result2 = |Math.Min((short)10, (short)10)|(29);
+        }
     }
 }
 ------------------------------------------------
@@ -150,5 +159,16 @@ QUICKFIXES:
 Replace with '0x0A'
 Replace with '10'
 26: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)10'
+27: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)0x0A'
+Replace with '(short)10'
+28: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+29: The expression is always 10.
 QUICKFIXES:
 Replace with '(short)10'

@@ -101,6 +101,25 @@ namespace Test
 
             var result31 = |Math.Max(10L, 10L)|(59);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = |long.Min(10, 0x0A)|(60);
+            var result12 = |long.Min(10, 10L)|(61);
+            var result13 = |long.Min(10, 10u)|(62);
+            var result14 = |long.Min(10, c)|(63);
+            var result15 = |long.Min(97, 'a')|(64);
+
+            long result21 = |long.Min(10, 0x0A)|(65);
+            long result22 = |long.Min(10, 10L)|(66);
+            long result23 = |long.Min(10, 10u)|(67);
+            long result24 = |long.Min(10, c)|(68);
+            long result25 = |long.Min(97, 'a')|(69);
+
+            var result31 = |Math.Min(10L, 10L)|(70);
+        }
     }
 }
 ------------------------------------------------
@@ -300,5 +319,46 @@ QUICKFIXES:
 Replace with ''a''
 Replace with '97'
 59: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+60: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0AL'
+Replace with '10L'
+61: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+62: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+63: The expression is always 10.
+QUICKFIXES:
+Replace with '(long)c'
+Replace with '10L'
+64: The expression is always 97.
+QUICKFIXES:
+Replace with '(long)'a''
+Replace with '97L'
+65: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+66: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+Replace with '10'
+67: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+68: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+69: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+70: The expression is always 10.
 QUICKFIXES:
 Replace with '10L'

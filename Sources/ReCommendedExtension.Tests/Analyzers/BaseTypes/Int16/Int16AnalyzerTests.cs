@@ -103,4 +103,14 @@ public sealed class Int16AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMin()
+    {
+        Test(n => MissingInt16Methods.Min(n, n), n => n);
+        Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

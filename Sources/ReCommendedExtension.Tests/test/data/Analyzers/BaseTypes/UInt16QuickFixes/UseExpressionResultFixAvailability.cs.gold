@@ -77,6 +77,21 @@ namespace Test
 
             var result31 = |Math.Max((ushort)10, (ushort)10)|(37);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = |ushort.Min(10, 0x0A)|(38);
+            var result12 = |ushort.Min(10, c)|(39);
+            var result13 = |ushort.Min(97, 'a')|(40);
+
+            ushort result21 = |ushort.Min(10, 0x0A)|(41);
+            ushort result22 = |ushort.Min(10, c)|(42);
+            ushort result23 = |ushort.Min(97, 'a')|(43);
+
+            var result31 = |Math.Min((ushort)10, (ushort)10)|(44);
+        }
     }
 }
 ------------------------------------------------
@@ -202,5 +217,32 @@ QUICKFIXES:
 Replace with ''a''
 Replace with '97'
 37: The expression is always 10.
+QUICKFIXES:
+Replace with '(ushort)10'
+38: The expression is always 10.
+QUICKFIXES:
+Replace with '(ushort)0x0A'
+Replace with '(ushort)10'
+39: The expression is always 10.
+QUICKFIXES:
+Replace with '(ushort)c'
+Replace with '(ushort)10'
+40: The expression is always 97.
+QUICKFIXES:
+Replace with '(ushort)'a''
+Replace with '(ushort)97'
+41: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+42: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+43: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+44: The expression is always 10.
 QUICKFIXES:
 Replace with '(ushort)10'

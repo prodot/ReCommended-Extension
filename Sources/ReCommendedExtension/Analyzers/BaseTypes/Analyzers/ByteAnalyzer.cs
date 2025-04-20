@@ -68,25 +68,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
     }
 
     /// <remarks>
-    /// <c>byte.Min(n, n)</c> → <c>n</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeMin(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument xArgument,
-        ICSharpArgument yArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement()
-            && xArgument.Value.TryGetByteConstant(out var implicitlyConverted) is { } x
-            && yArgument.Value.TryGetByteConstant(out _) is { } y
-            && x == y)
-        {
-            var cast = implicitlyConverted && invocationExpression.TryGetTargetType() == null ? "(byte)" : "";
-            consumer.AddHighlighting(new UseExpressionResultSuggestion($"The expression is always {x}.", invocationExpression, $"{cast}{x}"));
-        }
-    }
-
-    /// <remarks>
     /// <c>byte.Parse(s, NumberStyles.Integer)</c> → <c>byte.Parse(s)</c>
     /// </remarks>
     static void AnalyzeParse_String_NumberStyles(
@@ -491,17 +472,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
                 case (_, { IsStatic: true }):
                     switch (method.ShortName)
                     {
-                        case "Min": // todo: nameof(byte.Min) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
-                                    when xType.IsByte() && yType.IsByte():
-
-                                    AnalyzeMin(consumer, element, xArgument, yArgument);
-                                    break;
-                            }
-                            break;
-
                         case "RotateLeft": // todo: nameof(byte.RotateLeft) when available
                             switch (method.Parameters, element.Arguments)
                             {

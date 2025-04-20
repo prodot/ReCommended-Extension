@@ -104,6 +104,7 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
     public void TestMin()
     {
         Test(n => MissingByteMethods.Min(n, n), n => n);
+        Test(n => Math.Min(n, n), n => n);
 
         DoNamedTest2();
     }

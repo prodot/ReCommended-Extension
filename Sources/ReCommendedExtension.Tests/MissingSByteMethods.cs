@@ -32,4 +32,7 @@ internal static class MissingSByteMethods
 
     [Pure]
     public static sbyte Max(sbyte x, sbyte y) => x >= y ? x : y;
+
+    [Pure]
+    public static sbyte Min(sbyte x, sbyte y) => x <= y ? x : y;
 }

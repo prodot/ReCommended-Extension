@@ -67,5 +67,20 @@ namespace Test
 
             var result31 = Math.Max((nint)10, (nint)10);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = nint.Min(10, 0x0A);
+            var result12 = nint.Min(10, c);
+            var result13 = nint.Min(97, 'a');
+
+            nint result21 = nint.Min(10, 0x0A);
+            nint result22 = nint.Min(10, c);
+            nint result23 = nint.Min(97, 'a');
+
+            var result31 = Math.Min((nint)10, (nint)10);
+        }
     }
 }

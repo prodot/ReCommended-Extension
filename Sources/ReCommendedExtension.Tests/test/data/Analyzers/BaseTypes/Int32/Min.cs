@@ -1,0 +1,25 @@
+﻿using System;
+
+namespace Test
+{
+    public class Int32s
+    {
+        public void ExpressionResult(int number)
+        {
+            var result1 = int.Min(10, 10);
+
+            var result2 = Math.Min(10, 10);
+        }
+
+        public void NoDetection(int x, int y)
+        {
+            var result11 = int.Min(1, 2);
+            var result12 = int.Min(x, 2);
+            var result13 = int.Min(1, y);
+
+            int.Min(10, 10);
+
+            Math.Min(10, 10);
+        }
+    }
+}

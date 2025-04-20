@@ -32,4 +32,7 @@ internal static class MissingUInt16Methods
 
     [Pure]
     public static ushort Max(ushort x, ushort y) => x >= y ? x : y;
+
+    [Pure]
+    public static ushort Min(ushort x, ushort y) => x <= y ? x : y;
 }

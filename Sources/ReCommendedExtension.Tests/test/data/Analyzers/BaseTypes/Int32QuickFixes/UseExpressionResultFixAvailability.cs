@@ -77,5 +77,20 @@ namespace Test
 
             var result31 = Math.Max(10, 10);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = int.Min(10, 0x0A);
+            var result12 = int.Min(10, c);
+            var result13 = int.Min(97, 'a');
+
+            int result21 = int.Min(10, 0x0A);
+            int result22 = int.Min(10, c);
+            int result23 = int.Min(97, 'a');
+
+            var result31 = Math.Min(10, 10);
+        }
     }
 }

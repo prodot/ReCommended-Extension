@@ -96,4 +96,14 @@ public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMin()
+    {
+        Test(n => MissingUInt64Methods.Min(n, n), n => n);
+        Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

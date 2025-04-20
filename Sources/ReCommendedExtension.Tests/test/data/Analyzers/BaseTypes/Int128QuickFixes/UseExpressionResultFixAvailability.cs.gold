@@ -81,6 +81,25 @@ namespace Test
             Int128 result15 = |Int128.Max(10, c)|(47);
             Int128 result16 = |Int128.Max(97, 'a')|(48);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = |Int128.Min(10, 0x0A)|(49);
+            var result12 = |Int128.Min(10, 10ul)|(50);
+            var result13 = |Int128.Min(10, 10u)|(51);
+            var result14 = |Int128.Min(10, 10L)|(52);
+            var result15 = |Int128.Min(10, c)|(53);
+            var result16 = |Int128.Min(97, 'a')|(54);
+
+            Int128 result11 = |Int128.Min(10, 0x0A)|(55);
+            Int128 result12 = |Int128.Min(10, 10ul)|(56);
+            Int128 result13 = |Int128.Min(10, 10u)|(57);
+            Int128 result14 = |Int128.Min(10, 10L)|(58);
+            Int128 result15 = |Int128.Min(10, c)|(59);
+            Int128 result16 = |Int128.Min(97, 'a')|(60);
+        }
     }
 }
 ------------------------------------------------
@@ -252,6 +271,54 @@ QUICKFIXES:
 Replace with 'c'
 Replace with '10'
 48: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+49: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)0x0A'
+Replace with '(Int128)10'
+50: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10ul'
+Replace with '(Int128)10'
+51: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10u'
+Replace with '(Int128)10'
+52: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10L'
+Replace with '(Int128)10'
+53: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)c'
+Replace with '(Int128)10'
+54: The expression is always 97.
+QUICKFIXES:
+Replace with '(Int128)'a''
+Replace with '(Int128)97'
+55: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+56: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+Replace with '10'
+57: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+58: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+Replace with '10'
+59: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+60: The expression is always 97.
 QUICKFIXES:
 Replace with ''a''
 Replace with '97'

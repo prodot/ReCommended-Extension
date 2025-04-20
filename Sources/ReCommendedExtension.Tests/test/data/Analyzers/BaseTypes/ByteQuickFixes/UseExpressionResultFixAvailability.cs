@@ -67,7 +67,11 @@ namespace Test
 
         public void Min()
         {
-            var result = byte.Min(10, 10);
+            var result1 = byte.Min(10, 0x0A);
+
+            byte result2 = byte.Min(10, 0x0A);
+
+            var result3 = Math.Min((byte)10, (byte)10);
         }
 
         public void RotateLeft(byte n)

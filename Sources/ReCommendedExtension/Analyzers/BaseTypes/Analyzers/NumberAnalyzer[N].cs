@@ -129,6 +129,32 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
         }
     }
 
+    /// <remarks>
+    /// <c>T.Max(n, n)</c> → <c>n</c>
+    /// </remarks>
+    void AnalyzeMin(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument xArgument, ICSharpArgument yArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement()
+            && TryGetConstant(xArgument.Value, out var xImplicitlyConverted) is { } x
+            && TryGetConstant(yArgument.Value, out var yImplicitlyConverted) is { } y
+            && AreEqual(x, y))
+        {
+            Debug.Assert(xArgument.Value is { });
+            Debug.Assert(yArgument.Value is { });
+
+            var (replacementX, replacementY) = invocationExpression.TryGetTargetType().IsClrType(clrTypeName)
+                ? (xArgument.Value.GetText(), yArgument.Value.GetText())
+                : (CastConstant(xArgument.Value, xImplicitlyConverted), CastConstant(yArgument.Value, yImplicitlyConverted));
+
+            consumer.AddHighlighting(
+                new UseExpressionResultSuggestion(
+                    $"The expression is always {x}.",
+                    invocationExpression,
+                    replacementX,
+                    replacementY != replacementX ? replacementY : null));
+        }
+    }
+
     [Pure]
     private protected abstract TypeCode? TryGetTypeCode();
 
@@ -203,6 +229,17 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
                                     break;
                             }
                             break;
+
+                        case "Min": // todo: nameof(INumber<T>.Min) when available
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
+                                    when xType.IsClrType(clrTypeName) && yType.IsClrType(clrTypeName):
+
+                                    AnalyzeMin(consumer, element, xArgument, yArgument);
+                                    break;
+                            }
+                            break;
                     }
                     break;
             }
@@ -230,6 +267,17 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
                             when val1Type.IsClrType(clrTypeName) && val2Type.IsClrType(clrTypeName):
 
                             AnalyzeMax(consumer, element, val1Argument, val2Argument);
+                            break;
+                    }
+                    break;
+
+                case nameof(Math.Min):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var val1Type }, { Type: var val2Type }], [var val1Argument, var val2Argument])
+                            when val1Type.IsClrType(clrTypeName) && val2Type.IsClrType(clrTypeName):
+
+                            AnalyzeMin(consumer, element, val1Argument, val2Argument);
                             break;
                     }
                     break;

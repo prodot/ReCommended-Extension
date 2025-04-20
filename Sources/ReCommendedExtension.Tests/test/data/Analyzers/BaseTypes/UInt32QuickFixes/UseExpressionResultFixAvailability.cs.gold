@@ -92,6 +92,23 @@ namespace Test
 
             var result31 = |Math.Max(10u, 10u)|(50);
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = |uint.Min(10, 0x0A)|(51);
+            var result12 = |uint.Min(10, 10u)|(52);
+            var result13 = |uint.Min(10, c)|(53);
+            var result14 = |uint.Min(97, 'a')|(54);
+
+            uint result21 = |uint.Min(10, 0x0A)|(55);
+            uint result22 = |uint.Min(10, 10u)|(56);
+            uint result23 = |uint.Min(10, c)|(57);
+            uint result24 = |uint.Min(97, 'a')|(58);
+
+            var result31 = |Math.Min(10u, 10u)|(59);
+        }
     }
 }
 ------------------------------------------------
@@ -261,5 +278,39 @@ QUICKFIXES:
 Replace with ''a''
 Replace with '97'
 50: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+51: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0Au'
+Replace with '10u'
+52: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+53: The expression is always 10.
+QUICKFIXES:
+Replace with '(uint)c'
+Replace with '10u'
+54: The expression is always 97.
+QUICKFIXES:
+Replace with '(uint)'a''
+Replace with '97u'
+55: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+56: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+57: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+58: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+59: The expression is always 10.
 QUICKFIXES:
 Replace with '10u'

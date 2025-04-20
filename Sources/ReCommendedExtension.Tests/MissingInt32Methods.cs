@@ -32,4 +32,7 @@ internal static class MissingInt32Methods
 
     [Pure]
     public static int Max(int x, int y) => x >= y ? x : y;
+
+    [Pure]
+    public static int Min(int x, int y) => x <= y ? x : y;
 }

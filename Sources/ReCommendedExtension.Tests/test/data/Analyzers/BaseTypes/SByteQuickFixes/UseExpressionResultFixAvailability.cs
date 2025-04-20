@@ -64,5 +64,14 @@ namespace Test
 
             var result3 = Math.Max((sbyte)10, (sbyte)10);
         }
+
+        public void Min()
+        {
+            var result11 = sbyte.Min(10, 0x0A);
+
+            sbyte result2 = sbyte.Min(10, 0x0A);
+
+            var result3 = Math.Min((sbyte)10, (sbyte)10);
+        }
     }
 }

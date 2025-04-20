@@ -25,4 +25,7 @@ internal static class MissingDecimalMethods
 
     [Pure]
     public static decimal Max(decimal x, decimal y) => x >= y ? x : y;
+
+    [Pure]
+    public static decimal Min(decimal x, decimal y) => x <= y ? x : y;
 }

@@ -81,5 +81,24 @@ namespace Test
             Int128 result15 = Int128.Max(10, c);
             Int128 result16 = Int128.Max(97, 'a');
         }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = Int128.Min(10, 0x0A);
+            var result12 = Int128.Min(10, 10ul);
+            var result13 = Int128.Min(10, 10u);
+            var result14 = Int128.Min(10, 10L);
+            var result15 = Int128.Min(10, c);
+            var result16 = Int128.Min(97, 'a');
+
+            Int128 result11 = Int128.Min(10, 0x0A);
+            Int128 result12 = Int128.Min(10, 10ul);
+            Int128 result13 = Int128.Min(10, 10u);
+            Int128 result14 = Int128.Min(10, 10L);
+            Int128 result15 = Int128.Min(10, c);
+            Int128 result16 = Int128.Min(97, 'a');
+        }
     }
 }

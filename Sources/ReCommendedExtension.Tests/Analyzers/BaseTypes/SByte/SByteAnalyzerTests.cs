@@ -103,4 +103,14 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet70]
+    public void TestMin()
+    {
+        Test(n => MissingSByteMethods.Min(n, n), n => n);
+        Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
 }

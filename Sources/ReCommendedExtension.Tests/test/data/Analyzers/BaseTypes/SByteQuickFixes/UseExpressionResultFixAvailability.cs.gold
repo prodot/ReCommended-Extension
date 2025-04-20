@@ -64,6 +64,15 @@ namespace Test
 
             var result3 = |Math.Max((sbyte)10, (sbyte)10)|(26);
         }
+
+        public void Min()
+        {
+            var result11 = |sbyte.Min(10, 0x0A)|(27);
+
+            sbyte result2 = |sbyte.Min(10, 0x0A)|(28);
+
+            var result3 = |Math.Min((sbyte)10, (sbyte)10)|(29);
+        }
     }
 }
 ------------------------------------------------
@@ -150,5 +159,16 @@ QUICKFIXES:
 Replace with '0x0A'
 Replace with '10'
 26: The expression is always 10.
+QUICKFIXES:
+Replace with '(sbyte)10'
+27: The expression is always 10.
+QUICKFIXES:
+Replace with '(sbyte)0x0A'
+Replace with '(sbyte)10'
+28: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+29: The expression is always 10.
 QUICKFIXES:
 Replace with '(sbyte)10'
