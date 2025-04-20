@@ -1,9 +1,9 @@
-﻿namespace ReCommendedExtension.Tests;
+﻿namespace ReCommendedExtension.Tests.Missing;
 
-internal static class MissingUInt32Methods
+internal static class MissingUInt64Methods
 {
     [Pure]
-    public static uint Clamp(uint value, uint min, uint max)
+    public static ulong Clamp(ulong value, ulong min, ulong max)
     {
         if (min > max)
         {
@@ -24,15 +24,15 @@ internal static class MissingUInt32Methods
     }
 
     [Pure]
-    public static (uint Quotient, uint Remainder) DivRem(uint left, [ValueRange(1, uint.MaxValue)] uint right)
+    public static (ulong Quotient, ulong Remainder) DivRem(ulong left, [ValueRange(1, ulong.MaxValue)] ulong right)
     {
         var quotient = left / right;
         return (quotient, left - quotient * right);
     }
 
     [Pure]
-    public static uint Max(uint x, uint y) => x >= y ? x : y;
+    public static ulong Max(ulong x, ulong y) => x >= y ? x : y;
 
     [Pure]
-    public static uint Min(uint x, uint y) => x <= y ? x : y;
+    public static ulong Min(ulong x, ulong y) => x <= y ? x : y;
 }

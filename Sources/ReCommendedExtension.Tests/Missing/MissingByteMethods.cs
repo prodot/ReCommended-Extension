@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace ReCommendedExtension.Tests;
+namespace ReCommendedExtension.Tests.Missing;
 
 internal static class MissingByteMethods
 {

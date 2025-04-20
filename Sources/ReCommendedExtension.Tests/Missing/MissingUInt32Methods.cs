@@ -1,9 +1,9 @@
-﻿namespace ReCommendedExtension.Tests;
+﻿namespace ReCommendedExtension.Tests.Missing;
 
-internal static class MissingIntPtrMethods
+internal static class MissingUInt32Methods
 {
     [Pure]
-    public static nint Clamp(nint value, nint min, nint max)
+    public static uint Clamp(uint value, uint min, uint max)
     {
         if (min > max)
         {
@@ -24,15 +24,15 @@ internal static class MissingIntPtrMethods
     }
 
     [Pure]
-    public static (nint Quotient, nint Remainder) DivRem(nint left, nint right)
+    public static (uint Quotient, uint Remainder) DivRem(uint left, [ValueRange(1, uint.MaxValue)] uint right)
     {
         var quotient = left / right;
         return (quotient, left - quotient * right);
     }
 
     [Pure]
-    public static nint Max(nint x, nint y) => x >= y ? x : y;
+    public static uint Max(uint x, uint y) => x >= y ? x : y;
 
     [Pure]
-    public static nint Min(nint x, nint y) => x <= y ? x : y;
+    public static uint Min(uint x, uint y) => x <= y ? x : y;
 }
