@@ -18,15 +18,15 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseEmptyForArrayInitializationWarning
-            or UseTargetTypedCollectionExpressionSuggestion
-            or ArrayWithDefaultValuesInitializationSuggestion
-            or UseArrayEmptyMethodWarning // to figure out which cases are supported by R#
-            or UseCollectionExpressionWarning // to figure out which cases are supported by R#
-            or UseCollectionExpressionForArrayInitializerWarning // to figure out which cases are supported by R#
-            or ReplaceInvocationWithCollectionExpressionWarning // to figure out which cases are supported by R#
-            or ReplaceInvocationWithSingleSpreadCollectionExpressionWarning // to figure out which cases are supported by R#
-            or ReplaceWithEmptyCollectionExpressionWarning // to figure out which cases are supported by R#
-            or NotResolvedError;
+                or UseTargetTypedCollectionExpressionSuggestion
+                or ArrayWithDefaultValuesInitializationSuggestion
+                or UseArrayEmptyMethodWarning // to figure out which cases are supported by R#
+                or UseCollectionExpressionWarning // to figure out which cases are supported by R#
+                or UseCollectionExpressionForArrayInitializerWarning // to figure out which cases are supported by R#
+                or ReplaceInvocationWithCollectionExpressionWarning // to figure out which cases are supported by R#
+                or ReplaceInvocationWithSingleSpreadCollectionExpressionWarning // to figure out which cases are supported by R#
+                or ReplaceWithEmptyCollectionExpressionWarning // to figure out which cases are supported by R#
+            || highlighting.IsError();
 
     [Test]
     [TestNet60]

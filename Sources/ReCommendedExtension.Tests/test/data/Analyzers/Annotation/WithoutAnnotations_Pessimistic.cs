@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Test
 {
-    internal class AsyncMethod
+    internal class TestAsyncMethod
     {
         IEnumerable<string> Iterator(IEnumerable<string> p)
         {

@@ -21,19 +21,19 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-            or PassSingleCharacterSuggestion
-            or PassSingleCharactersSuggestion
-            or UseStringListPatternSuggestion
-            or UseOtherMethodSuggestion
-            or RedundantArgumentHint
-            or RedundantElementHint
-            or UseStringPropertySuggestion
-            or RedundantMethodInvocationHint
-            or UseRangeIndexerSuggestion
-            or RedundantToStringCallWarning // to figure out which cases are supported by R#
-            or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
-            or ReturnValueOfPureMethodIsNotUsedWarning // to figure out which cases are supported by R#
-            or NotResolvedError;
+                or PassSingleCharacterSuggestion
+                or PassSingleCharactersSuggestion
+                or UseStringListPatternSuggestion
+                or UseOtherMethodSuggestion
+                or RedundantArgumentHint
+                or RedundantElementHint
+                or UseStringPropertySuggestion
+                or RedundantMethodInvocationHint
+                or UseRangeIndexerSuggestion
+                or RedundantToStringCallWarning // to figure out which cases are supported by R#
+                or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
+                or ReturnValueOfPureMethodIsNotUsedWarning // to figure out which cases are supported by R#
+            || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 

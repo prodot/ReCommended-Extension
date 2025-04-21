@@ -238,7 +238,7 @@ namespace PartialTypes
     internal partial struct DisposableStruct
     {
         [MustDisposeResource]
-        public Struct(int x) { }
+        public DisposableStruct(int x) { }
     }
 
     internal partial struct DisposableStruct : IDisposable

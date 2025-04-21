@@ -5,40 +5,40 @@ using System.Linq;
 
 namespace Test
 {
-    class CustomList<T> : IList<T>
+    public class CustomList<T> : IList<T>
     {
         public int IndexOf(T item) => throw new NotImplementedException();
-    
+
         public void Insert(int index, T item) => throw new NotImplementedException();
-    
+
         public void RemoveAt(int index) => throw new NotImplementedException();
-    
+
         public T this[int index]
         {
             get => throw new NotImplementedException();
             set => throw new NotImplementedException();
         }
-    
+
         public void Add(T item) => throw new NotImplementedException();
-    
+
         public void Clear() => throw new NotImplementedException();
-    
+
         public bool Contains(T item) => throw new NotImplementedException();
-    
+
         public void CopyTo(T[] array, int arrayIndex) => throw new NotImplementedException();
-    
+
         public bool Remove(T item) => throw new NotImplementedException();
-    
+
         public int Count => throw new NotImplementedException();
-    
+
         public bool IsReadOnly => throw new NotImplementedException();
-    
+
         public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
-    
+
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    class CustomListUniqueItems<T> : CustomList<T>, ISet<T>
+    public class CustomListUniqueItems<T> : CustomList<T>, ISet<T>
     {
         public bool Add(T item) => throw new NotImplementedException();
 
@@ -69,22 +69,22 @@ namespace Test
         {
             var last = list.Last();
         }
-        
+
         public void GenericMethod<T>(IList<T> list2)
         {
             var last = list2.Last();
         }
-        
+
         public void ConstrainedGenericMethod<L>(L list3) where L : IList<int>
         {
             var last = list3.Last();
         }
-        
+
         public void Method(object list4)
         {
             var last = ((IList<int>)list4).Last();
         }
-        
+
         public void NonGenericMethod(List<int> list5)
         {
             var last = list5.Last();
@@ -183,3 +183,4 @@ namespace Test
             var last2 = collection.Last(x => x > 0);
         }
     }
+}

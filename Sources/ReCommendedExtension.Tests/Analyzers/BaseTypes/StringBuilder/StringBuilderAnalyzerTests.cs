@@ -1,6 +1,5 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -22,11 +21,11 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is PassSingleCharacterSuggestion
-            or PassSingleCharactersSuggestion
-            or UseOtherMethodSuggestion
-            or RedundantArgumentHint
-            or RedundantMethodInvocationHint
-            or NotResolvedError;
+                or PassSingleCharactersSuggestion
+                or UseOtherMethodSuggestion
+                or RedundantArgumentHint
+                or RedundantMethodInvocationHint
+            || highlighting.IsError();
 
     static void AreEqual<T>(T? expected, T? actual)
     {

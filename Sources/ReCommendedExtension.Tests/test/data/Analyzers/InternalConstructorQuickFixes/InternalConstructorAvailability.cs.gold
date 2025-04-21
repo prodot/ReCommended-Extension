@@ -1,11 +1,11 @@
 ﻿namespace ReCommendedExtension.Tests.test.data.Analyzers.InternalConstructor
 {
-    public class NonAbtractPublicClass()
+    public class NonAbtractPublicClass
     {
         internal NonAbtractPublicClass() { }
     }
 
-    internal class NonAbtractInternalClass()
+    internal class NonAbtractInternalClass
     {
         internal NonAbtractInternalClass() { }
     }

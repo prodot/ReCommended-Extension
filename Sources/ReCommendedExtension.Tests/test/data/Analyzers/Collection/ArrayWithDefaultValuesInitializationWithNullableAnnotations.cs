@@ -64,8 +64,8 @@ namespace Test
 
         void Method()
         {
-            var variable = new[] { 0, default, default(int) };
-            var variable = new int[] { 0, default, default(int) };
+            var variable1 = new[] { 0, default, default(int) };
+            var variable2 = new int[] { 0, default, default(int) };
         }
     }
 

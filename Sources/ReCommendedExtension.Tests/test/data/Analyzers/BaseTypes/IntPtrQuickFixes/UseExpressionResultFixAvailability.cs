@@ -29,23 +29,23 @@ namespace Test
 
             (nint quotient, nint remainder) result32 = nint.DivRem(0, 10);
 
-            var result31 = nint.DivRem(left, 1);
-            var result32 = nint.DivRem(0x10, 1);
-            var result32 = nint.DivRem(c, 1);
-            var result33 = nint.DivRem('a', 1);
+            var result41 = nint.DivRem(left, 1);
+            var result42 = nint.DivRem(0x10, 1);
+            var result43 = nint.DivRem(c, 1);
+            var result44 = nint.DivRem('a', 1);
 
-            (nint, nint) result41 = nint.DivRem(left, 1);
-            (nint, nint) result42 = nint.DivRem(0x10, 1);
-            (nint, nint) result42 = nint.DivRem(c, 1);
-            (nint, nint) result43 = nint.DivRem('a', 1);
+            (nint, nint) result51 = nint.DivRem(left, 1);
+            (nint, nint) result52 = nint.DivRem(0x10, 1);
+            (nint, nint) result53 = nint.DivRem(c, 1);
+            (nint, nint) result54 = nint.DivRem('a', 1);
 
-            (nint quotient, nint remainder) result51 = nint.DivRem(left, 1);
-            (nint quotient, nint remainder) result52 = nint.DivRem(0x10, 1);
-            (nint quotient, nint remainder) result52 = nint.DivRem(c, 1);
-            (nint quotient, nint remainder) result53 = nint.DivRem('a', 1);
+            (nint quotient, nint remainder) result61 = nint.DivRem(left, 1);
+            (nint quotient, nint remainder) result62 = nint.DivRem(0x10, 1);
+            (nint quotient, nint remainder) result63 = nint.DivRem(c, 1);
+            (nint quotient, nint remainder) result64 = nint.DivRem('a', 1);
 
-            var result61 = Math.DivRem((nint)0, (nint)10);
-            var result62 = Math.DivRem(left, (nint)1);
+            var result71 = Math.DivRem((nint)0, (nint)10);
+            var result72 = Math.DivRem(left, (nint)1);
         }
 
         public void Equals(nint number)

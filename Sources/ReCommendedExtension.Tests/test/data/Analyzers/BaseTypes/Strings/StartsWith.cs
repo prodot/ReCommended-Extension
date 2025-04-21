@@ -25,7 +25,7 @@ namespace Test
         public void NoDetection(string text, string value, StringComparison comparisonType)
         {
             text.StartsWith("");
-            text.StartsWith("", StringComparison.OrdinalIgnoreCase)
+            text.StartsWith("", StringComparison.OrdinalIgnoreCase);
 
             text.StartsWith('a');
             text.StartsWith("a", StringComparison.Ordinal);

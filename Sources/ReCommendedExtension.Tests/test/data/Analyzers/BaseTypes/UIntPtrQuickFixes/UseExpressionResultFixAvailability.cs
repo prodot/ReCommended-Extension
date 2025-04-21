@@ -31,26 +31,26 @@ namespace Test
 
             (nuint quotient, nuint remainder) result32 = nuint.DivRem(0, 10);
 
-            var result31 = nuint.DivRem(left, 1);
-            var result32 = nuint.DivRem(0x10, 1);
-            var result33 = nuint.DivRem(0x10u, 1);
-            var result34 = nuint.DivRem(c, 1);
-            var result35 = nuint.DivRem('a', 1);
+            var result41 = nuint.DivRem(left, 1);
+            var result42 = nuint.DivRem(0x10, 1);
+            var result43 = nuint.DivRem(0x10u, 1);
+            var result44 = nuint.DivRem(c, 1);
+            var result45 = nuint.DivRem('a', 1);
 
-            (nuint, nuint) result41 = nuint.DivRem(left, 1);
-            (nuint, nuint) result42 = nuint.DivRem(0x10, 1);
-            (nuint, nuint) result43 = nuint.DivRem(0x10u, 1);
-            (nuint, nuint) result44 = nuint.DivRem(c, 1);
-            (nuint, nuint) result45 = nuint.DivRem('a', 1);
+            (nuint, nuint) result51 = nuint.DivRem(left, 1);
+            (nuint, nuint) result52 = nuint.DivRem(0x10, 1);
+            (nuint, nuint) result53 = nuint.DivRem(0x10u, 1);
+            (nuint, nuint) result54 = nuint.DivRem(c, 1);
+            (nuint, nuint) result55 = nuint.DivRem('a', 1);
 
-            (nuint quotient, nuint remainder) result51 = nuint.DivRem(left, 1);
-            (nuint quotient, nuint remainder) result52 = nuint.DivRem(0x10, 1);
-            (nuint quotient, nuint remainder) result53 = nuint.DivRem(0x10u, 1);
-            (nuint quotient, nuint remainder) result54 = nuint.DivRem(c, 1);
-            (nuint quotient, nuint remainder) result55 = nuint.DivRem('a', 1);
+            (nuint quotient, nuint remainder) result61 = nuint.DivRem(left, 1);
+            (nuint quotient, nuint remainder) result62 = nuint.DivRem(0x10, 1);
+            (nuint quotient, nuint remainder) result63 = nuint.DivRem(0x10u, 1);
+            (nuint quotient, nuint remainder) result64 = nuint.DivRem(c, 1);
+            (nuint quotient, nuint remainder) result65 = nuint.DivRem('a', 1);
 
-            var result61 = Math.DivRem((nuint)0, (nuint)10);
-            var result62 = Math.DivRem(left, (nuint)1);
+            var result71 = Math.DivRem((nuint)0, (nuint)10);
+            var result72 = Math.DivRem(left, (nuint)1);
         }
 
         public void Equals(nuint number)

@@ -17,7 +17,7 @@ namespace Test
 
         void From_ToGreaterThanMaxValue(
             [ValueRange(1, 2_147_483_647L + 10)] int a, 
-            [ValueRange(1, uint.MaxValue + 10)] uint b, 
+            [ValueRange(1, uint.MaxValue + 10L)] uint b, 
             [ValueRange(1, long.MaxValue + 10ul)] long c,
             [ValueRange(1, 1_000_000)] short e, 
             [ValueRange(1, 1_000_000)] ushort f, 

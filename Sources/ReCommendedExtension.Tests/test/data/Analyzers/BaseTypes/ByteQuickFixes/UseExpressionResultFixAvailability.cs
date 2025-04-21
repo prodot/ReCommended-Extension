@@ -30,20 +30,20 @@ namespace Test
 
             (byte quotient, byte remainder) result32 = byte.DivRem(0, 10);
 
-            var result31 = byte.DivRem(left, 1);
-            var result32 = byte.DivRem(0x10, 1);
-            var result32 = byte.DivRem(c, 1);
+            var result41 = byte.DivRem(left, 1);
+            var result42 = byte.DivRem(0x10, 1);
+            var result43 = byte.DivRem(c, 1);
 
-            (byte, byte) result41 = byte.DivRem(left, 1);
-            (byte, byte) result42 = byte.DivRem(0x10, 1);
-            (byte, byte) result42 = byte.DivRem(c, 1);
+            (byte, byte) result51 = byte.DivRem(left, 1);
+            (byte, byte) result52 = byte.DivRem(0x10, 1);
+            (byte, byte) result53 = byte.DivRem(c, 1);
 
-            (byte quotient, byte remainder) result51 = byte.DivRem(left, 1);
-            (byte quotient, byte remainder) result52 = byte.DivRem(0x10, 1);
-            (byte quotient, byte remainder) result52 = byte.DivRem(c, 1);
+            (byte quotient, byte remainder) result61 = byte.DivRem(left, 1);
+            (byte quotient, byte remainder) result62 = byte.DivRem(0x10, 1);
+            (byte quotient, byte remainder) result63 = byte.DivRem(c, 1);
 
-            var result61 = Math.DivRem((byte)0, (byte)10);
-            var result62 = Math.DivRem(left, (byte)1);
+            var result71 = Math.DivRem((byte)0, (byte)10);
+            var result72 = Math.DivRem(left, (byte)1);
         }
 
         public void Equals(byte number)

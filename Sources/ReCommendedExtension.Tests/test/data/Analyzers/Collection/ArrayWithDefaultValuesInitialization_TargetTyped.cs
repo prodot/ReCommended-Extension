@@ -18,8 +18,8 @@ namespace Test
 
     public class ComplexClass
     {
-        public IList<Class> Classes { get; init; }
-        public IList<Struct> Structs { get; init; }
+        public IList<Class> Classes { get; set; }
+        public IList<Struct> Structs { get; set; }
     }
 
     class Foo

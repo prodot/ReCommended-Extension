@@ -19,14 +19,14 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantNullableAnnotationHint
-            or RedundantAnnotationSuggestion
-            or NotAllowedAnnotationWarning
-            or MissingAnnotationWarning
-            or MissingSuppressionJustificationWarning
-            or ConflictingAnnotationWarning
-            or InParameterWithMustDisposeResourceAttributeWarning // to figure out which cases are supported by R#
-            or ReturnTypeCanBeNotNullableWarning // to figure out which cases are supported by R#
-            or NotResolvedError;
+                or RedundantAnnotationSuggestion
+                or NotAllowedAnnotationWarning
+                or MissingAnnotationWarning
+                or MissingSuppressionJustificationWarning
+                or ConflictingAnnotationWarning
+                or InParameterWithMustDisposeResourceAttributeWarning // to figure out which cases are supported by R#
+                or ReturnTypeCanBeNotNullableWarning // to figure out which cases are supported by R#
+            || highlighting.IsError();
 
     [Test]
     [TestNetFramework45]
@@ -56,13 +56,12 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetFramework45]
     public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
-        => ExecuteWithinSettingsTransaction(
-            store =>
-            {
-                RunGuarded(() => store.SetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode, valueAnalysisMode));
+        => ExecuteWithinSettingsTransaction(store =>
+        {
+            RunGuarded(() => store.SetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode, valueAnalysisMode));
 
-                DoTestSolution(file);
-            });
+            DoTestSolution(file);
+        });
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
@@ -144,7 +143,7 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     public void TestDisposalHandling_Fields() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestRedundantNullableAnnotations() => DoNamedTest2();

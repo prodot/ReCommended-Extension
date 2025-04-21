@@ -40,17 +40,17 @@ namespace Test
             var result3 = text?.LastIndexOfAny([c], startIndex, count);
         }
 
-        public void NoDetection(string text, char[] c, int startIndex)
+        public void NoDetection(string text, char c, char[] ca, int startIndex)
         {
             var result11 = text.LastIndexOfAny([c, c]);
 
-            var result21 = text.LastIndexOfAny(c, 1);
-            var result22 = text.LastIndexOfAny(c, startIndex);
+            var result21 = text.LastIndexOfAny(ca, 1);
+            var result22 = text.LastIndexOfAny(ca, startIndex);
 
             text.LastIndexOfAny([]);
-            text.LastIndexOfAny(c, 0);
-            text.LastIndexOfAny(c, 0, 0);
-            text.LastIndexOfAny(c, 0, 1);
+            text.LastIndexOfAny(ca, 0);
+            text.LastIndexOfAny(ca, 0, 0);
+            text.LastIndexOfAny(ca, 0, 1);
         }
 
         public void NoDetection_Nullable(string? text, char[] c)

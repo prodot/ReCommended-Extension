@@ -6,9 +6,9 @@ namespace Test
     {
         #region region within a type
 
-        void M() { }
+        static void M() { }
 
-        void M2() { }
+        static void M2() { }
 
         #endregion
 
@@ -116,9 +116,12 @@ namespace Test
 
             M();
             M2();
+            return false;
 
             #endregion
         }
+
+        public static bool operator !=(Class x, Class y) => !(x == y);
 
         event EventHandler Changed
         {

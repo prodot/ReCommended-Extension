@@ -116,7 +116,7 @@ namespace Test
             }
         }
 
-        static void Foo(bool b, object? s, string? x)
+        static void Foo2(bool b, object? s, string? x)
         {
             Action action = () =>
             {
@@ -192,14 +192,14 @@ namespace Test
             }
         }
 
-        static void Foo(string xf)
+        static void Foo3(string xf)
         {
             AssertThatNotNull(xf); // redundant
             xf.AssertNotNull(); // redundant
             AssertThatTrue(xf != null); // redundant
         }
 
-        static void Foo2(string x2)
+        static void Foo4(string x2)
         {
             AssertThatFalse(x2 == null); // redundant
         }

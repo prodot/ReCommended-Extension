@@ -160,13 +160,9 @@ namespace TargetHashSet
         void Consumer(HashSet<T> items) { }
 
         HashSet<T> Property01 { get; } = |new|(44) HashSet<T>();
-        HashSet<T> Property02 { get; } = new HashSet<T> { 1, 2, 3 };
         HashSet<T> Property03 { get; set; } = new HashSet<T>(8);
-        HashSet<T> Property04 { get; set; } = new HashSet<T>(8) { 1, 2, 3 };
         HashSet<T> Property13 => |new|(45)();
-        HashSet<T> Property14 => new() { 1, 2, 3 };
         HashSet<T> Property15 => new(8);
-        HashSet<T> Property16 => new(8) { 1, 2, 3 };
     }
 
     internal class A { }

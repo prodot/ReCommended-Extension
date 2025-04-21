@@ -1,6 +1,5 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -18,11 +17,11 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is PassSingleCharacterSuggestion
-            or PassSingleCharactersSuggestion
-            or UseOtherMethodSuggestion
-            or RedundantArgumentHint
-            or RedundantMethodInvocationHint
-            or NotResolvedError;
+                or PassSingleCharactersSuggestion
+                or UseOtherMethodSuggestion
+                or RedundantArgumentHint
+                or RedundantMethodInvocationHint
+            || highlighting.IsError();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]

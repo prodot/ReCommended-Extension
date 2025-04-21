@@ -130,14 +130,6 @@ namespace Test
         public static bool operator >=(ClassRecordWithOperators? left, ClassRecordWithOperators? right) => throw new NotImplementedException();
     }
 
-    internal record ClassRecordWithSomeOperators : IComparable<ClassRecordWithSomeOperators> // declare IComparisonOperators<ClassRecordWithSomeOperators, ClassRecordWithSomeOperators, bool> interface (operators partially available)
-    {
-        public int CompareTo(ClassRecordWithSomeOperators? other) => throw new NotImplementedException();
-
-        public static bool operator <(ClassRecordWithSomeOperators? left, ClassRecordWithSomeOperators? right) => throw new NotImplementedException();
-        public static bool operator <=(ClassRecordWithSomeOperators? left, ClassRecordWithSomeOperators? right) => throw new NotImplementedException();
-    }
-
     internal record ClassRecordWithOperatorsAndInterface :
         IEqualityOperators<ClassRecordWithOperatorsAndInterface, ClassRecordWithOperatorsAndInterface, bool>,
         IComparable<ClassRecordWithOperatorsAndInterface>, 

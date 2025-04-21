@@ -65,7 +65,7 @@ namespace Test
             var first = items.FirstOrDefault();
         }
 
-        class SomeClass { }
+        public class SomeClass { }
 
         public void DefaultValues_KnownReferenceType<T>(IList<T> items) where T : SomeClass
         {

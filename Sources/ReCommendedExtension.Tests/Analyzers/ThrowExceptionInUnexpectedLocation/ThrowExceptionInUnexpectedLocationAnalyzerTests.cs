@@ -1,6 +1,5 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -18,7 +17,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpHigh
     protected override string RelativeTestDataPath => @"Analyzers\ThrowExceptionInUnexpectedLocation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ThrowExceptionInUnexpectedLocationWarning or NotResolvedError;
+        => highlighting is ThrowExceptionInUnexpectedLocationWarning || highlighting.IsError();
 
     [Test]
     public void TestThrowExceptionInUnexpectedLocation() => DoNamedTest2();
@@ -32,6 +31,6 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpHigh
     public void TestThrowExceptionInUnexpectedLocation_UnreachableException() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp70)]
     public void TestThrowExceptionInUnexpectedLocation_ExceptionHandling() => DoNamedTest2();
 }

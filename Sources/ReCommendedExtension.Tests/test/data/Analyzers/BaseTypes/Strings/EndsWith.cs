@@ -25,7 +25,7 @@ namespace Test
         public void NoDetection(string text, string value, StringComparison comparisonType)
         {
             text.EndsWith("");
-            text.EndsWith("", StringComparison.OrdinalIgnoreCase)
+            text.EndsWith("", StringComparison.OrdinalIgnoreCase);
 
             text.EndsWith('a');
             text.EndsWith("a", StringComparison.Ordinal);

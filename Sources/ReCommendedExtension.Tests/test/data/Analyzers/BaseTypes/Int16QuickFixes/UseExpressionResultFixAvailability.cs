@@ -30,20 +30,20 @@ namespace Test
 
             (short quotient, short remainder) result32 = short.DivRem(0, 10);
 
-            var result31 = short.DivRem(left, 1);
-            var result32 = short.DivRem(0x10, 1);
-            var result32 = short.DivRem(c, 1);
+            var result41 = short.DivRem(left, 1);
+            var result42 = short.DivRem(0x10, 1);
+            var result43 = short.DivRem(c, 1);
 
-            (short, short) result41 = short.DivRem(left, 1);
-            (short, short) result42 = short.DivRem(0x10, 1);
-            (short, short) result42 = short.DivRem(c, 1);
+            (short, short) result51 = short.DivRem(left, 1);
+            (short, short) result52 = short.DivRem(0x10, 1);
+            (short, short) result53 = short.DivRem(c, 1);
 
-            (short quotient, short remainder) result51 = short.DivRem(left, 1);
-            (short quotient, short remainder) result52 = short.DivRem(0x10, 1);
-            (short quotient, short remainder) result52 = short.DivRem(c, 1);
+            (short quotient, short remainder) result61 = short.DivRem(left, 1);
+            (short quotient, short remainder) result62 = short.DivRem(0x10, 1);
+            (short quotient, short remainder) result63 = short.DivRem(c, 1);
 
-            var result61 = Math.DivRem((short)0, (short)10);
-            var result62 = Math.DivRem(left, (short)1);
+            var result71 = Math.DivRem((short)0, (short)10);
+            var result72 = Math.DivRem(left, (short)1);
         }
 
         public void Equals(short number)
@@ -62,7 +62,7 @@ namespace Test
 
             short result2 = short.Max(10, 0x0A);
 
-            var result2 = Math.Max((short)10, (short)10);
+            var result3 = Math.Max((short)10, (short)10);
         }
 
         public void Min()
@@ -71,7 +71,7 @@ namespace Test
 
             short result2 = short.Min(10, 0x0A);
 
-            var result2 = Math.Min((short)10, (short)10);
+            var result3 = Math.Min((short)10, (short)10);
         }
     }
 }

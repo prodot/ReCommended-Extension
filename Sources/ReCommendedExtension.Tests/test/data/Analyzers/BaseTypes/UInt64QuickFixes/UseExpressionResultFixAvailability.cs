@@ -52,32 +52,32 @@ namespace Test
 
             (ulong quotient, ulong remainder) result32 = ulong.DivRem(0, 10);
 
-            var result31 = ulong.DivRem(left, 1);
-            var result32 = ulong.DivRem(0x10, 1);
-            var result33 = ulong.DivRem(0x10u, 1);
-            var result34 = ulong.DivRem(0x10L, 1);
-            var result35 = ulong.DivRem(0x10ul, 1);
-            var result36 = ulong.DivRem(c, 1);
-            var result37 = ulong.DivRem('a', 1);
+            var result41 = ulong.DivRem(left, 1);
+            var result42 = ulong.DivRem(0x10, 1);
+            var result43 = ulong.DivRem(0x10u, 1);
+            var result44 = ulong.DivRem(0x10L, 1);
+            var result45 = ulong.DivRem(0x10ul, 1);
+            var result46 = ulong.DivRem(c, 1);
+            var result47 = ulong.DivRem('a', 1);
 
-            (ulong, ulong) result41 = ulong.DivRem(left, 1);
-            (ulong, ulong) result42 = ulong.DivRem(0x10, 1);
-            (ulong, ulong) result43 = ulong.DivRem(0x10u, 1);
-            (ulong, ulong) result44 = ulong.DivRem(0x10L, 1);
-            (ulong, ulong) result45 = ulong.DivRem(0x10ul, 1);
-            (ulong, ulong) result46 = ulong.DivRem(c, 1);
-            (ulong, ulong) result47 = ulong.DivRem('a', 1);
+            (ulong, ulong) result51 = ulong.DivRem(left, 1);
+            (ulong, ulong) result52 = ulong.DivRem(0x10, 1);
+            (ulong, ulong) result53 = ulong.DivRem(0x10u, 1);
+            (ulong, ulong) result54 = ulong.DivRem(0x10L, 1);
+            (ulong, ulong) result55 = ulong.DivRem(0x10ul, 1);
+            (ulong, ulong) result56 = ulong.DivRem(c, 1);
+            (ulong, ulong) result57 = ulong.DivRem('a', 1);
 
-            (ulong quotient, ulong remainder) result51 = ulong.DivRem(left, 1);
-            (ulong quotient, ulong remainder) result52 = ulong.DivRem(0x10, 1);
-            (ulong quotient, ulong remainder) result53 = ulong.DivRem(0x10u, 1);
-            (ulong quotient, ulong remainder) result54 = ulong.DivRem(0x10L, 1);
-            (ulong quotient, ulong remainder) result55 = ulong.DivRem(0x10ul, 1);
-            (ulong quotient, ulong remainder) result56 = ulong.DivRem(c, 1);
-            (ulong quotient, ulong remainder) result57 = ulong.DivRem('a', 1);
+            (ulong quotient, ulong remainder) result61 = ulong.DivRem(left, 1);
+            (ulong quotient, ulong remainder) result62 = ulong.DivRem(0x10, 1);
+            (ulong quotient, ulong remainder) result63 = ulong.DivRem(0x10u, 1);
+            (ulong quotient, ulong remainder) result64 = ulong.DivRem(0x10L, 1);
+            (ulong quotient, ulong remainder) result65 = ulong.DivRem(0x10ul, 1);
+            (ulong quotient, ulong remainder) result66 = ulong.DivRem(c, 1);
+            (ulong quotient, ulong remainder) result67 = ulong.DivRem('a', 1);
 
-            var result61 = Math.DivRem(0ul, 10ul);
-            var result62 = Math.DivRem(left, 1ul);
+            var result71 = Math.DivRem(0ul, 10ul);
+            var result72 = Math.DivRem(left, 1ul);
         }
 
         public void Equals(ulong number)
@@ -101,12 +101,12 @@ namespace Test
             var result15 = ulong.Max(10, c);
             var result16 = ulong.Max(97, 'a');
 
-            ulong result11 = ulong.Max(10, 0x0A);
-            ulong result12 = ulong.Max(10, 10u);
-            ulong result13 = ulong.Max(10, 10L);
-            ulong result14 = ulong.Max(10, 10ul);
-            ulong result15 = ulong.Max(10, c);
-            ulong result16 = ulong.Max(97, 'a');
+            ulong result21 = ulong.Max(10, 0x0A);
+            ulong result22 = ulong.Max(10, 10u);
+            ulong result23 = ulong.Max(10, 10L);
+            ulong result24 = ulong.Max(10, 10ul);
+            ulong result25 = ulong.Max(10, c);
+            ulong result26 = ulong.Max(97, 'a');
 
             var result31 = Math.Max(10ul, 10ul);
         }
@@ -122,12 +122,12 @@ namespace Test
             var result15 = ulong.Min(10, c);
             var result16 = ulong.Min(97, 'a');
 
-            ulong result11 = ulong.Min(10, 0x0A);
-            ulong result12 = ulong.Min(10, 10u);
-            ulong result13 = ulong.Min(10, 10L);
-            ulong result14 = ulong.Min(10, 10ul);
-            ulong result15 = ulong.Min(10, c);
-            ulong result16 = ulong.Min(97, 'a');
+            ulong result21 = ulong.Min(10, 0x0A);
+            ulong result22 = ulong.Min(10, 10u);
+            ulong result23 = ulong.Min(10, 10L);
+            ulong result24 = ulong.Min(10, 10ul);
+            ulong result25 = ulong.Min(10, c);
+            ulong result26 = ulong.Min(97, 'a');
 
             var result31 = Math.Min(10ul, 10ul);
         }

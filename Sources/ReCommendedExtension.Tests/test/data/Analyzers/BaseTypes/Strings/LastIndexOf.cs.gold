@@ -33,7 +33,7 @@ namespace Test
 
             text.|LastIndexOf|(4)(c, 0);
             text.|LastIndexOf|(5)("");
-            text.|LastIndexOf|(6)("", StringComparison.OrdinalIgnoreCase)
+            text.|LastIndexOf|(6)("", StringComparison.OrdinalIgnoreCase);
         }
 
         public void NoDetection(string? text, char c)

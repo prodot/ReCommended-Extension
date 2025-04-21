@@ -54,7 +54,7 @@ namespace TargetList
         IList<string?> Property5 => new string?[0];
         IList<string?> Property6 => new string?[3];
         IList<string?> Property7 => new[] { "one", "two", "three", null };
-        IList<string?> Property8 => Array.Empty<int>();
+        IList<string?> Property8 => Array.Empty<string>();
     }
 
     public class GenericClass<T> where T : new()

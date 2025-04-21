@@ -17,12 +17,12 @@ namespace Test
 
         void From_ToGreaterThanMaxValue(
             [ValueRange(1, |2_147_483_647L + 10|(7))] int a, 
-            [ValueRange(1, uint.MaxValue + 10)] uint b, 
-            [ValueRange(1, |long.MaxValue + 10ul|(8))] long c,
-            [ValueRange(1, |1_000_000|(9))] short e, 
-            [ValueRange(1, |1_000_000|(10))] ushort f, 
-            [ValueRange(1, |300|(11))] byte g,
-            [ValueRange(1, |200|(12))] sbyte h) { }
+            [ValueRange(1, |uint.MaxValue + 10L|(8))] uint b, 
+            [ValueRange(1, |long.MaxValue + 10ul|(9))] long c,
+            [ValueRange(1, |1_000_000|(10))] short e, 
+            [ValueRange(1, |1_000_000|(11))] ushort f, 
+            [ValueRange(1, |300|(12))] byte g,
+            [ValueRange(1, |200|(13))] sbyte h) { }
     }
 }
 ------------------------------------------------
@@ -50,18 +50,21 @@ Set the 'from' value to the 'sbyte.MinValue'
 7: The 'to' value is greater than the 'int.MaxValue'.
 QUICKFIXES:
 Set the 'to' value to the 'int.MaxValue'
-8: The 'to' value is greater than the 'long.MaxValue'.
+8: The 'to' value is greater than the 'uint.MaxValue'.
+QUICKFIXES:
+Set the 'to' value to the 'uint.MaxValue'
+9: The 'to' value is greater than the 'long.MaxValue'.
 QUICKFIXES:
 Set the 'to' value to the 'long.MaxValue'
-9: The 'to' value is greater than the 'short.MaxValue'.
+10: The 'to' value is greater than the 'short.MaxValue'.
 QUICKFIXES:
 Set the 'to' value to the 'short.MaxValue'
-10: The 'to' value is greater than the 'ushort.MaxValue'.
+11: The 'to' value is greater than the 'ushort.MaxValue'.
 QUICKFIXES:
 Set the 'to' value to the 'ushort.MaxValue'
-11: The 'to' value is greater than the 'byte.MaxValue'.
+12: The 'to' value is greater than the 'byte.MaxValue'.
 QUICKFIXES:
 Set the 'to' value to the 'byte.MaxValue'
-12: The 'to' value is greater than the 'sbyte.MaxValue'.
+13: The 'to' value is greater than the 'sbyte.MaxValue'.
 QUICKFIXES:
 Set the 'to' value to the 'sbyte.MaxValue'

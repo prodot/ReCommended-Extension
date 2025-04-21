@@ -106,6 +106,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                     return await Task.FromResult(3);
                 }
             }
+
+            throw new NotImplementedException();
         }
 
         async Task<int> Method_UsingDeclaration()
@@ -123,6 +125,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 return await Task.FromResult(3);
             }
+
+            throw new NotImplementedException();
         }
 
         async Task<int> Method_NestedInTryBlock()
@@ -150,6 +154,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 throw;
             }
+
+            throw new NotImplementedException();
         }
     }
 
@@ -245,7 +251,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             };
 
-            Func<Task<int>> Method_NestedInUsingScope = async (int x) =>
+            Func<int, Task<int>> Method_NestedInUsingScope2 = async (int x) =>
             {
                 using (new Process())
                 {
@@ -254,6 +260,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                         return await Task.FromResult(3);
                     }
                 }
+
+                throw new NotImplementedException();
             };
 
             Func<Task<int>> Method_UsingDeclaration = async () =>
@@ -263,7 +271,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 return await Task.FromResult(3);
             };
 
-            Func<Task<int>> Method_UsingDeclaration = async (int x) =>
+            Func<int, Task<int>> Method_UsingDeclaration2 = async (int x) =>
             {
                 using var p = new Process();
 
@@ -271,6 +279,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 {
                     return await Task.FromResult(3);
                 }
+
+                throw new NotImplementedException();
             };
 
             Func<Task<int>> Method_NestedInTryBlock = async () =>
@@ -285,7 +295,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             };
 
-            Func<Task<int>> Method_NestedInTryBlock = async (int x) =>
+            Func<int, Task<int>> Method_NestedInTryBlock2 = async (int x) =>
             {
                 try
                 {
@@ -298,6 +308,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 {
                     throw;
                 }
+
+                throw new NotImplementedException();
             };
         }
     }
@@ -392,7 +404,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
         };
 
-        Func<Task<int>> Method_NestedInUsingScope = async (int x) =>
+        Func<int, Task<int>> Method_NestedInUsingScope2 = async (int x) =>
         {
             using (new Process())
             {
@@ -401,6 +413,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                     return await Task.FromResult(3);
                 }
             }
+
+            throw new NotImplementedException();
         };
 
         Func<Task<int>> Method_UsingDeclaration = async () =>
@@ -410,7 +424,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             return await Task.FromResult(3);
         };
 
-        Func<Task<int>> Method_UsingDeclaration = async (int x) =>
+        Func<int, Task<int>> Method_UsingDeclaration2 = async (int x) =>
         {
             using var p = new Process();
 
@@ -418,6 +432,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 return await Task.FromResult(3);
             }
+
+            throw new NotImplementedException();
         };
 
         Func<Task<int>> Method_NestedInTryBlock = async () =>
@@ -432,7 +448,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
         };
 
-        Func<Task<int>> Method_NestedInTryBlock = async (int x) =>
+        Func<int, Task<int>> Method_NestedInTryBlock2 = async (int x) =>
         {
             try
             {
@@ -445,6 +461,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 throw;
             }
+
+            throw new NotImplementedException();
         };
     }
 
@@ -540,7 +558,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             };
 
-            Func<Task<int>> Method_NestedInUsingScope = async delegate(int x)
+            Func<int, Task<int>> Method_NestedInUsingScope2 = async delegate(int x)
             {
                 using (new Process())
                 {
@@ -549,6 +567,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                         return await Task.FromResult(3);
                     }
                 }
+
+                throw new NotImplementedException();
             };
 
             Func<Task<int>> Method_UsingDeclaration = async delegate
@@ -558,7 +578,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 return await Task.FromResult(3);
             };
 
-            Func<Task<int>> Method_UsingDeclaration = async delegate(int x)
+            Func<int, Task<int>> Method_UsingDeclaration2 = async delegate(int x)
             {
                 using var p = new Process();
 
@@ -566,6 +586,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 {
                     return await Task.FromResult(3);
                 }
+
+                throw new NotImplementedException();
             };
 
             Func<Task<int>> Method_NestedInTryBlock = async delegate
@@ -580,7 +602,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             };
 
-            Func<Task<int>> Method_NestedInTryBlock = async delegate(int x)
+            Func<int, Task<int>> Method_NestedInTryBlock2 = async delegate(int x)
             {
                 try
                 {
@@ -593,6 +615,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 {
                     throw;
                 }
+
+                throw new NotImplementedException();
             };
         }
     }
@@ -687,7 +711,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
         };
 
-        Func<Task<int>> Method_NestedInUsingScope = async delegate(int x)
+        Func<int, Task<int>> Method_NestedInUsingScope2 = async delegate(int x)
         {
             using (new Process())
             {
@@ -696,6 +720,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                     return await Task.FromResult(3);
                 }
             }
+
+            throw new NotImplementedException();
         };
 
         Func<Task<int>> Method_UsingDeclaration = async delegate
@@ -705,7 +731,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             return await Task.FromResult(3);
         };
 
-        Func<Task<int>> Method_UsingDeclaration = async delegate(int x)
+        Func<int, Task<int>> Method_UsingDeclaration2 = async delegate(int x)
         {
             using var p = new Process();
 
@@ -713,6 +739,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 return await Task.FromResult(3);
             }
+
+            throw new NotImplementedException();
         };
 
         Func<Task<int>> Method_NestedInTryBlock = async delegate
@@ -727,7 +755,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             }
         };
 
-        Func<Task<int>> Method_NestedInTryBlock = async delegate(int x)
+        Func<int, Task<int>> Method_NestedInTryBlock2 = async delegate(int x)
         {
             try
             {
@@ -740,6 +768,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
             {
                 throw;
             }
+
+            throw new NotImplementedException();
         };
     }
 
@@ -838,7 +868,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             }
 
-            async Task<int> Method_NestedInUsingScope(int x)
+            async Task<int> Method_NestedInUsingScope2(int x)
             {
                 using (new Process())
                 {
@@ -847,6 +877,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                         return await Task.FromResult(3);
                     }
                 }
+
+                throw new NotImplementedException();
             }
 
             async Task<int> Method_UsingDeclaration()
@@ -856,7 +888,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 return await Task.FromResult(3);
             }
 
-            async Task<int> Method_UsingDeclaration(int x)
+            async Task<int> Method_UsingDeclaration2(int x)
             {
                 using var p = new Process();
 
@@ -864,6 +896,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 {
                     return await Task.FromResult(3);
                 }
+
+                throw new NotImplementedException();
             }
 
             async Task<int> Method_NestedInTryBlock()
@@ -878,7 +912,7 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 }
             }
 
-            async Task<int> Method_NestedInTryBlock(int x)
+            async Task<int> Method_NestedInTryBlock2(int x)
             {
                 try
                 {
@@ -891,6 +925,8 @@ namespace ReCommendedExtension.Tests.test.data.Analyzers.Await
                 {
                     throw;
                 }
+
+                throw new NotImplementedException();
             }
         }
     }

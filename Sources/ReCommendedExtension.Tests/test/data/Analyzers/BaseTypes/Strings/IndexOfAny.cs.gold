@@ -49,12 +49,12 @@ namespace Test
             var result3 = text?.|IndexOfAny([c], startIndex, count)|(16);
         }
 
-        public void NoDetection(string text, char[] c, int startIndex)
+        public void NoDetection(string text, char c, char[] ca, int startIndex)
         {
             var result11 = text.IndexOfAny([c, c]);
 
-            var result21 = text.IndexOfAny(c, 1);
-            var result22 = text.IndexOfAny(c, startIndex);
+            var result21 = text.IndexOfAny(ca, 1);
+            var result22 = text.IndexOfAny(ca, startIndex);
 
             text.|IndexOfAny|(17)([]);
         }

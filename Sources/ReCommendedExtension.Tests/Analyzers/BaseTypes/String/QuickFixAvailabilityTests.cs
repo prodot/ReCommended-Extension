@@ -1,6 +1,5 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -18,16 +17,16 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-            or PassSingleCharacterSuggestion
-            or PassSingleCharactersSuggestion
-            or UseStringListPatternSuggestion
-            or UseOtherMethodSuggestion
-            or RedundantArgumentHint
-            or RedundantElementHint
-            or UseStringPropertySuggestion
-            or RedundantMethodInvocationHint
-            or UseRangeIndexerSuggestion
-            or NotResolvedError;
+                or PassSingleCharacterSuggestion
+                or PassSingleCharactersSuggestion
+                or UseStringListPatternSuggestion
+                or UseOtherMethodSuggestion
+                or RedundantArgumentHint
+                or RedundantElementHint
+                or UseStringPropertySuggestion
+                or RedundantMethodInvocationHint
+                or UseRangeIndexerSuggestion
+            || highlighting.IsError();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
@@ -41,8 +40,8 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     public void TestPassSingleCharacterFixAvailability() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
     public void TestPassSingleCharactersFixAvailability() => DoNamedTest2();
 
     [Test]
@@ -52,9 +51,9 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     public void TestUseListPatternFixAvailability() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
-    [TestNet70]
+    [TestNet80]
     public void TestUseOtherMethodFixAvailability() => DoNamedTest2();
 
     [Test]

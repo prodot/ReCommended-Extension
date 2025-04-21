@@ -24,7 +24,7 @@ namespace Test
             var result52 = Math.Clamp(number, int.MinValue, int.MaxValue);
         }
 
-        public void DivRem(short left)
+        public void DivRem(int left)
         {
             const int c = 1;
 
@@ -34,23 +34,23 @@ namespace Test
 
             (int quotient, int remainder) result32 = int.DivRem(0, 10);
 
-            var result31 = int.DivRem(left, 1);
-            var result32 = int.DivRem(0x10, 1);
-            var result32 = int.DivRem(c, 1);
-            var result33 = int.DivRem('a', 1);
+            var result41 = int.DivRem(left, 1);
+            var result42 = int.DivRem(0x10, 1);
+            var result43 = int.DivRem(c, 1);
+            var result44 = int.DivRem('a', 1);
 
-            (int, int) result41 = int.DivRem(left, 1);
-            (int, int) result42 = int.DivRem(0x10, 1);
-            (int, int) result42 = int.DivRem(c, 1);
-            (int, int) result43 = int.DivRem('a', 1);
+            (int, int) result51 = int.DivRem(left, 1);
+            (int, int) result52 = int.DivRem(0x10, 1);
+            (int, int) result53 = int.DivRem(c, 1);
+            (int, int) result54 = int.DivRem('a', 1);
 
-            (int quotient, int remainder) result51 = int.DivRem(left, 1);
-            (int quotient, int remainder) result52 = int.DivRem(0x10, 1);
-            (int quotient, int remainder) result52 = int.DivRem(c, 1);
-            (int quotient, int remainder) result53 = int.DivRem('a', 1);
+            (int quotient, int remainder) result61 = int.DivRem(left, 1);
+            (int quotient, int remainder) result62 = int.DivRem(0x10, 1);
+            (int quotient, int remainder) result63 = int.DivRem(c, 1);
+            (int quotient, int remainder) result64 = int.DivRem('a', 1);
 
-            var result61 = Math.DivRem(0, 10);
-            var result62 = Math.DivRem(left, 1);
+            var result71 = Math.DivRem(0, 10);
+            var result72 = Math.DivRem(left, 1);
         }
 
         public void Equals(int number)

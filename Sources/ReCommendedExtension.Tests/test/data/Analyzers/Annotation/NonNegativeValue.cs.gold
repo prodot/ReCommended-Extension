@@ -19,7 +19,10 @@ namespace Test
     public class Elements
     {
         [|NonNegativeValue|(9)]
-        uint Method() { }
+        uint Method()
+        {
+            return 0;
+        }
 
         [|NonNegativeValue|(10)] uint Property => 3;
         [|NonNegativeValue|(11)] uint Property2 { get; set; }

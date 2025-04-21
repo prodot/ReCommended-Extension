@@ -54,51 +54,51 @@ namespace TargetCollection
         ICollection<string?> Property5 => ||new string?[0]|(41)|(42);
         ICollection<string?> Property6 => new string?[3];
         ICollection<string?> Property7 => |new[]|(43) { "one", "two", "three", null };
-        ICollection<string?> Property8 => Array.Empty<int>();
+        ICollection<string?> Property8 => Array.|Empty<string>()|(44);
     }
 
     public class GenericClass<T> where T : new()
     {
-        ICollection<T> field1 = |new T[]|(44) { };
-        ICollection<T> field2 = |new T[]|(45) { default, default(T), new() };
-        ICollection<T> field3 = ||new T[0]|(47) { }|(46);
-        ICollection<T> field4 = |new T[3]|(48) { default, default(T), new() };
-        ICollection<T> field5 = ||new T[0]|(49)|(50);
+        ICollection<T> field1 = |new T[]|(45) { };
+        ICollection<T> field2 = |new T[]|(46) { default, default(T), new() };
+        ICollection<T> field3 = ||new T[0]|(48) { }|(47);
+        ICollection<T> field4 = |new T[3]|(49) { default, default(T), new() };
+        ICollection<T> field5 = ||new T[0]|(50)|(51);
         ICollection<T> field6 = new T[3];
-        ICollection<T> field7 = |new[]|(51) { default, default(T), new() };
-        ICollection<T> field8 = Array.|Empty<T>()|(52);
+        ICollection<T> field7 = |new[]|(52) { default, default(T), new() };
+        ICollection<T> field8 = Array.|Empty<T>()|(53);
 
         void Method(T a, T b, T c)
         {
-            ICollection<T> var1 = |new T[]|(53) { };
-            ICollection<T> var2 = |new T[]|(54) { a, b, c };
-            ICollection<T> var3 = ||new T[0]|(56) { }|(55);
-            ICollection<T> var4 = |new T[3]|(57) { a, b, c };
-            ICollection<T> var5 = ||new T[0]|(58)|(59);
+            ICollection<T> var1 = |new T[]|(54) { };
+            ICollection<T> var2 = |new T[]|(55) { a, b, c };
+            ICollection<T> var3 = ||new T[0]|(57) { }|(56);
+            ICollection<T> var4 = |new T[3]|(58) { a, b, c };
+            ICollection<T> var5 = ||new T[0]|(59)|(60);
             ICollection<T> var6 = new T[3];
-            ICollection<T> var7 = |new[]|(60) { a, b, c };
-            ICollection<T> var8 = Array.|Empty<T>()|(61);
+            ICollection<T> var7 = |new[]|(61) { a, b, c };
+            ICollection<T> var8 = Array.|Empty<T>()|(62);
 
-            Consumer(|new T[]|(62) { });
-            Consumer(|new T[]|(63) { a, b, c });
-            Consumer(||new T[0]|(65) { }|(64));
-            Consumer(|new T[3]|(66) { a, b, c });
-            Consumer(||new T[0]|(67)|(68));
+            Consumer(|new T[]|(63) { });
+            Consumer(|new T[]|(64) { a, b, c });
+            Consumer(||new T[0]|(66) { }|(65));
+            Consumer(|new T[3]|(67) { a, b, c });
+            Consumer(||new T[0]|(68)|(69));
             Consumer(new T[3]);
-            Consumer(|new[]|(69) { a, b, c });
-            Consumer(Array.|Empty<T>()|(70));
+            Consumer(|new[]|(70) { a, b, c });
+            Consumer(Array.|Empty<T>()|(71));
         }
 
         void Consumer(ICollection<T> items) { }
 
-        ICollection<T> Property1 { get; } = |new T[]|(71) { };
-        ICollection<T> Property2 { get; } = |new T[]|(72) { default, default(T), new() };
-        ICollection<T> Property3 { get; set; } = ||new T[0]|(74) { }|(73);
-        ICollection<T> Property4 { get; set; } = |new T[3]|(75) { default, default(T), new() };
-        ICollection<T> Property5 => ||new T[0]|(76)|(77);
+        ICollection<T> Property1 { get; } = |new T[]|(72) { };
+        ICollection<T> Property2 { get; } = |new T[]|(73) { default, default(T), new() };
+        ICollection<T> Property3 { get; set; } = ||new T[0]|(75) { }|(74);
+        ICollection<T> Property4 { get; set; } = |new T[3]|(76) { default, default(T), new() };
+        ICollection<T> Property5 => ||new T[0]|(77)|(78);
         ICollection<T> Property6 => new T[3];
-        ICollection<T> Property7 => |new[]|(78) { default, default(T), new() };
-        ICollection<T> Property8 => Array.|Empty<T>()|(79);
+        ICollection<T> Property7 => |new[]|(79) { default, default(T), new() };
+        ICollection<T> Property8 => Array.|Empty<T>()|(80);
     }
 
     internal class A { }
@@ -106,46 +106,46 @@ namespace TargetCollection
 
     public class InferenceClass
     {
-        ICollection<A> field1 = |new B[]|(80) { };
+        ICollection<A> field1 = |new B[]|(81) { };
         ICollection<A> field2 = new B[] { new(1), new(2), new(3) };
-        ICollection<A> field3 = ||new B[0]|(82) { }|(81);
-        ICollection<A> field4 = |new B[3]|(83) { new B(1), new B(2), new B(3) };
-        ICollection<A> field5 = ||new B[0]|(84)|(85);
+        ICollection<A> field3 = ||new B[0]|(83) { }|(82);
+        ICollection<A> field4 = |new B[3]|(84) { new B(1), new B(2), new B(3) };
+        ICollection<A> field5 = ||new B[0]|(85)|(86);
         ICollection<A> field6 = new B[3];
-        ICollection<A> field7 = |new[]|(86) { new B(1), new B(2), new B(3) };
-        ICollection<A> field8 = Array.|Empty<B>()|(87);
+        ICollection<A> field7 = |new[]|(87) { new B(1), new B(2), new B(3) };
+        ICollection<A> field8 = Array.|Empty<B>()|(88);
 
         void Method(B a, B b, B c)
         {
-            ICollection<A> var1 = |new B[]|(88) { };
-            ICollection<A> var2 = |new B[]|(89) { a, b, c };
-            ICollection<A> var3 = ||new B[0]|(91) { }|(90);
-            ICollection<A> var4 = |new B[3]|(92) { a, b, c };
-            ICollection<A> var5 = ||new B[0]|(93)|(94);
+            ICollection<A> var1 = |new B[]|(89) { };
+            ICollection<A> var2 = |new B[]|(90) { a, b, c };
+            ICollection<A> var3 = ||new B[0]|(92) { }|(91);
+            ICollection<A> var4 = |new B[3]|(93) { a, b, c };
+            ICollection<A> var5 = ||new B[0]|(94)|(95);
             ICollection<A> var6 = new B[3];
-            ICollection<A> var7 = |new[]|(95) { a, b, c };
-            ICollection<A> var8 = Array.|Empty<B>()|(96);
+            ICollection<A> var7 = |new[]|(96) { a, b, c };
+            ICollection<A> var8 = Array.|Empty<B>()|(97);
 
-            Consumer(|new B[]|(97) { });
-            Consumer(|new B[]|(98) { a, b, c });
-            Consumer(||new B[0]|(100) { }|(99));
-            Consumer(|new B[3]|(101) { a, b, c });
-            Consumer(||new B[0]|(102)|(103));
+            Consumer(|new B[]|(98) { });
+            Consumer(|new B[]|(99) { a, b, c });
+            Consumer(||new B[0]|(101) { }|(100));
+            Consumer(|new B[3]|(102) { a, b, c });
+            Consumer(||new B[0]|(103)|(104));
             Consumer(new B[3]);
-            Consumer(|new[]|(104) { a, b, c });
-            Consumer(Array.|Empty<B>()|(105));
+            Consumer(|new[]|(105) { a, b, c });
+            Consumer(Array.|Empty<B>()|(106));
         }
 
         void Consumer(ICollection<A> items) { }
 
-        ICollection<A> Property1 { get; } = |new B[]|(106) { };
+        ICollection<A> Property1 { get; } = |new B[]|(107) { };
         ICollection<A> Property2 { get; } = new B[] { new(1), new(2), new(3) };
-        ICollection<A> Property3 { get; set; } = ||new B[0]|(108) { }|(107);
-        ICollection<A> Property4 { get; set; } = |new B[3]|(109) { new B(1), new B(2), new B(3) };
-        ICollection<A> Property5 => ||new B[0]|(110)|(111);
+        ICollection<A> Property3 { get; set; } = ||new B[0]|(109) { }|(108);
+        ICollection<A> Property4 { get; set; } = |new B[3]|(110) { new B(1), new B(2), new B(3) };
+        ICollection<A> Property5 => ||new B[0]|(111)|(112);
         ICollection<A> Property6 => new B[3];
-        ICollection<A> Property7 => |new[]|(112) { new B(1), new B(2), new B(3) };
-        ICollection<A> Property8 => Array.|Empty<B>()|(113);
+        ICollection<A> Property7 => |new[]|(113) { new B(1), new B(2), new B(3) };
+        ICollection<A> Property8 => Array.|Empty<B>()|(114);
     }
 }
 ---------------------------------------------------------
@@ -195,71 +195,72 @@ namespace TargetCollection
 (43): ReSharper Suggestion: Use collection expression
 (44): ReSharper Suggestion: Use collection expression
 (45): ReSharper Suggestion: Use collection expression
-(46):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(47): ReSharper Suggestion: Use collection expression
+(46): ReSharper Suggestion: Use collection expression
+(47):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (48): ReSharper Suggestion: Use collection expression
-(49): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(50): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(51):<overlapped> ReSharper Suggestion: Use collection expression
-(52): ReSharper Suggestion: Use collection expression
+(49): ReSharper Suggestion: Use collection expression
+(50): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(51): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(52):<overlapped> ReSharper Suggestion: Use collection expression
 (53): ReSharper Suggestion: Use collection expression
 (54): ReSharper Suggestion: Use collection expression
-(55):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(56): ReSharper Suggestion: Use collection expression
+(55): ReSharper Suggestion: Use collection expression
+(56):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (57): ReSharper Suggestion: Use collection expression
-(58): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(59): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(60): ReSharper Suggestion: Use collection expression
+(58): ReSharper Suggestion: Use collection expression
+(59): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(60): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (61): ReSharper Suggestion: Use collection expression
 (62): ReSharper Suggestion: Use collection expression
 (63): ReSharper Suggestion: Use collection expression
-(64):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(65): ReSharper Suggestion: Use collection expression
+(64): ReSharper Suggestion: Use collection expression
+(65):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (66): ReSharper Suggestion: Use collection expression
-(67): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(68): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(69): ReSharper Suggestion: Use collection expression
+(67): ReSharper Suggestion: Use collection expression
+(68): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(69): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
 (70): ReSharper Suggestion: Use collection expression
 (71): ReSharper Suggestion: Use collection expression
 (72): ReSharper Suggestion: Use collection expression
-(73):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(74): ReSharper Suggestion: Use collection expression
+(73): ReSharper Suggestion: Use collection expression
+(74):<overlapped> ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
 (75): ReSharper Suggestion: Use collection expression
-(76): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
-(77): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
-(78):<overlapped> ReSharper Suggestion: Use collection expression
-(79): ReSharper Suggestion: Use collection expression
-(80): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(81): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(82): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(76): ReSharper Suggestion: Use collection expression
+(77): ReSharper Suggestion: Use 'Array.Empty<T>()' to avoid array allocation
+(78): ReSharper Suggestion: Use collection expression ('List<T>' will be used).
+(79):<overlapped> ReSharper Suggestion: Use collection expression
+(80): ReSharper Suggestion: Use collection expression
+(81): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(82): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (83): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(84): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(85): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(86): ReSharper Suggestion: Use collection expression
+(84): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(85): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
+(86): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (87): ReSharper Suggestion: Use collection expression
-(88): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(88): ReSharper Suggestion: Use collection expression
 (89): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(90): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(91): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(90): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(91): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (92): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(93): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(94): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(95): ReSharper Suggestion: Use collection expression
+(93): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(94): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
+(95): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (96): ReSharper Suggestion: Use collection expression
-(97): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(97): ReSharper Suggestion: Use collection expression
 (98): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(99): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(100): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(99): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(100): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (101): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(102): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(103): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(104): ReSharper Suggestion: Use collection expression
+(102): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(103): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
+(104): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (105): ReSharper Suggestion: Use collection expression
-(106): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(107): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(108): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(106): ReSharper Suggestion: Use collection expression
+(107): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(108): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (109): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(110): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(111): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
-(112): ReSharper Suggestion: Use collection expression
+(110): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(111): ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
+(112): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (113): ReSharper Suggestion: Use collection expression
+(114): ReSharper Suggestion: Use collection expression

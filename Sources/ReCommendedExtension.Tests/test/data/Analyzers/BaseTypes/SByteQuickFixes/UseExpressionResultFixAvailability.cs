@@ -30,20 +30,20 @@ namespace Test
 
             (sbyte quotient, sbyte remainder) result32 = sbyte.DivRem(0, 10);
 
-            var result31 = sbyte.DivRem(left, 1);
-            var result32 = sbyte.DivRem(0x10, 1);
-            var result32 = sbyte.DivRem(c, 1);
+            var result41 = sbyte.DivRem(left, 1);
+            var result42 = sbyte.DivRem(0x10, 1);
+            var result43 = sbyte.DivRem(c, 1);
 
-            (sbyte, sbyte) result41 = sbyte.DivRem(left, 1);
-            (sbyte, sbyte) result42 = sbyte.DivRem(0x10, 1);
-            (sbyte, sbyte) result42 = sbyte.DivRem(c, 1);
+            (sbyte, sbyte) result51 = sbyte.DivRem(left, 1);
+            (sbyte, sbyte) result52 = sbyte.DivRem(0x10, 1);
+            (sbyte, sbyte) result53 = sbyte.DivRem(c, 1);
 
-            (sbyte quotient, sbyte remainder) result51 = sbyte.DivRem(left, 1);
-            (sbyte quotient, sbyte remainder) result52 = sbyte.DivRem(0x10, 1);
-            (sbyte quotient, sbyte remainder) result52 = sbyte.DivRem(c, 1);
+            (sbyte quotient, sbyte remainder) result61 = sbyte.DivRem(left, 1);
+            (sbyte quotient, sbyte remainder) result62 = sbyte.DivRem(0x10, 1);
+            (sbyte quotient, sbyte remainder) result63 = sbyte.DivRem(c, 1);
 
-            var result61 = Math.DivRem((sbyte)0, (sbyte)10);
-            var result62 = Math.DivRem(left, (sbyte)1);
+            var result71 = Math.DivRem((sbyte)0, (sbyte)10);
+            var result72 = Math.DivRem(left, (sbyte)1);
         }
 
         public void Equals(sbyte number)

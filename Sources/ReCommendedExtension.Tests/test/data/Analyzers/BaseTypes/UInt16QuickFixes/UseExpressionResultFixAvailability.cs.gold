@@ -34,23 +34,23 @@ namespace Test
 
             (ushort quotient, ushort remainder) result32 = |ushort.DivRem(0, 10)|(14);
 
-            var result31 = |ushort.DivRem(left, 1)|(15);
-            var result32 = |ushort.DivRem(0x10, 1)|(16);
-            var result32 = |ushort.DivRem(c, 1)|(17);
-            var result33 = |ushort.DivRem('a', 1)|(18);
+            var result41 = |ushort.DivRem(left, 1)|(15);
+            var result42 = |ushort.DivRem(0x10, 1)|(16);
+            var result43 = |ushort.DivRem(c, 1)|(17);
+            var result44 = |ushort.DivRem('a', 1)|(18);
 
-            (ushort, ushort) result41 = |ushort.DivRem(left, 1)|(19);
-            (ushort, ushort) result42 = |ushort.DivRem(0x10, 1)|(20);
-            (ushort, ushort) result42 = |ushort.DivRem(c, 1)|(21);
-            (ushort, ushort) result43 = |ushort.DivRem('a', 1)|(22);
+            (ushort, ushort) result51 = |ushort.DivRem(left, 1)|(19);
+            (ushort, ushort) result52 = |ushort.DivRem(0x10, 1)|(20);
+            (ushort, ushort) result53 = |ushort.DivRem(c, 1)|(21);
+            (ushort, ushort) result54 = |ushort.DivRem('a', 1)|(22);
 
-            (ushort quotient, ushort remainder) result51 = |ushort.DivRem(left, 1)|(23);
-            (ushort quotient, ushort remainder) result52 = |ushort.DivRem(0x10, 1)|(24);
-            (ushort quotient, ushort remainder) result52 = |ushort.DivRem(c, 1)|(25);
-            (ushort quotient, ushort remainder) result53 = |ushort.DivRem('a', 1)|(26);
+            (ushort quotient, ushort remainder) result61 = |ushort.DivRem(left, 1)|(23);
+            (ushort quotient, ushort remainder) result62 = |ushort.DivRem(0x10, 1)|(24);
+            (ushort quotient, ushort remainder) result63 = |ushort.DivRem(c, 1)|(25);
+            (ushort quotient, ushort remainder) result64 = |ushort.DivRem('a', 1)|(26);
 
-            var result61 = |Math.DivRem((ushort)0, (ushort)10)|(27);
-            var result62 = |Math.DivRem(left, (ushort)1)|(28);
+            var result71 = |Math.DivRem((ushort)0, (ushort)10)|(27);
+            var result72 = |Math.DivRem(left, (ushort)1)|(28);
         }
 
         public void Equals(ushort number)

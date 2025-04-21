@@ -33,29 +33,29 @@ namespace Test
 
             (Int128 quotient, Int128 remainder) result32 = Int128.DivRem(0, 10);
 
-            var result31 = Int128.DivRem(left, 1);
-            var result32 = Int128.DivRem(0x10, 1);
-            var result33 = Int128.DivRem(0x10ul, 1);
-            var result34 = Int128.DivRem(0x10u, 1);
-            var result35 = Int128.DivRem(0x10L, 1);
-            var result36 = Int128.DivRem(c, 1);
-            var result37 = Int128.DivRem('a', 1);
+            var result41 = Int128.DivRem(left, 1);
+            var result42 = Int128.DivRem(0x10, 1);
+            var result43 = Int128.DivRem(0x10ul, 1);
+            var result44 = Int128.DivRem(0x10u, 1);
+            var result45 = Int128.DivRem(0x10L, 1);
+            var result46 = Int128.DivRem(c, 1);
+            var result47 = Int128.DivRem('a', 1);
 
-            (Int128, Int128) result41 = Int128.DivRem(left, 1);
-            (Int128, Int128) result42 = Int128.DivRem(0x10, 1);
-            (Int128, Int128) result43 = Int128.DivRem(0x10ul, 1);
-            (Int128, Int128) result44 = Int128.DivRem(0x10u, 1);
-            (Int128, Int128) result45 = Int128.DivRem(0x10L, 1);
-            (Int128, Int128) result46 = Int128.DivRem(c, 1);
-            (Int128, Int128) result47 = Int128.DivRem('a', 1);
+            (Int128, Int128) result51 = Int128.DivRem(left, 1);
+            (Int128, Int128) result52 = Int128.DivRem(0x10, 1);
+            (Int128, Int128) result53 = Int128.DivRem(0x10ul, 1);
+            (Int128, Int128) result54 = Int128.DivRem(0x10u, 1);
+            (Int128, Int128) result55 = Int128.DivRem(0x10L, 1);
+            (Int128, Int128) result56 = Int128.DivRem(c, 1);
+            (Int128, Int128) result57 = Int128.DivRem('a', 1);
 
-            (Int128 quotient, Int128 remainder) result51 = Int128.DivRem(left, 1);
-            (Int128 quotient, Int128 remainder) result52 = Int128.DivRem(0x10, 1);
-            (Int128 quotient, Int128 remainder) result53 = Int128.DivRem(0x10ul, 1);
-            (Int128 quotient, Int128 remainder) result54 = Int128.DivRem(0x10u, 1);
-            (Int128 quotient, Int128 remainder) result55 = Int128.DivRem(0x10L, 1);
-            (Int128 quotient, Int128 remainder) result56 = Int128.DivRem(c, 1);
-            (Int128 quotient, Int128 remainder) result57 = Int128.DivRem('a', 1);
+            (Int128 quotient, Int128 remainder) result61 = Int128.DivRem(left, 1);
+            (Int128 quotient, Int128 remainder) result62 = Int128.DivRem(0x10, 1);
+            (Int128 quotient, Int128 remainder) result63 = Int128.DivRem(0x10ul, 1);
+            (Int128 quotient, Int128 remainder) result64 = Int128.DivRem(0x10u, 1);
+            (Int128 quotient, Int128 remainder) result65 = Int128.DivRem(0x10L, 1);
+            (Int128 quotient, Int128 remainder) result66 = Int128.DivRem(c, 1);
+            (Int128 quotient, Int128 remainder) result67 = Int128.DivRem('a', 1);
         }
 
         public void Equals(Int128 number)
@@ -74,12 +74,12 @@ namespace Test
             var result15 = Int128.Max(10, c);
             var result16 = Int128.Max(97, 'a');
 
-            Int128 result11 = Int128.Max(10, 0x0A);
-            Int128 result12 = Int128.Max(10, 10ul);
-            Int128 result13 = Int128.Max(10, 10u);
-            Int128 result14 = Int128.Max(10, 10L);
-            Int128 result15 = Int128.Max(10, c);
-            Int128 result16 = Int128.Max(97, 'a');
+            Int128 result21 = Int128.Max(10, 0x0A);
+            Int128 result22 = Int128.Max(10, 10ul);
+            Int128 result23 = Int128.Max(10, 10u);
+            Int128 result24 = Int128.Max(10, 10L);
+            Int128 result25 = Int128.Max(10, c);
+            Int128 result26 = Int128.Max(97, 'a');
         }
 
         public void Min()
@@ -93,12 +93,12 @@ namespace Test
             var result15 = Int128.Min(10, c);
             var result16 = Int128.Min(97, 'a');
 
-            Int128 result11 = Int128.Min(10, 0x0A);
-            Int128 result12 = Int128.Min(10, 10ul);
-            Int128 result13 = Int128.Min(10, 10u);
-            Int128 result14 = Int128.Min(10, 10L);
-            Int128 result15 = Int128.Min(10, c);
-            Int128 result16 = Int128.Min(97, 'a');
+            Int128 result21 = Int128.Min(10, 0x0A);
+            Int128 result22 = Int128.Min(10, 10ul);
+            Int128 result23 = Int128.Min(10, 10u);
+            Int128 result24 = Int128.Min(10, 10L);
+            Int128 result25 = Int128.Min(10, c);
+            Int128 result26 = Int128.Min(97, 'a');
         }
     }
 }

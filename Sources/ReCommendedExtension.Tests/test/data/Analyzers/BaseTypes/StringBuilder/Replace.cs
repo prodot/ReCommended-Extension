@@ -41,8 +41,8 @@ namespace Test
 
         public void NoDetection(StringBuilder builder)
         {
-            var result11 = builder.Replace("ab", "abc");
-            var result11 = builder.Replace('a', 'b');
+            var result1 = builder.Replace("ab", "abc");
+            var result2 = builder.Replace('a', 'b');
         }
     }
 }

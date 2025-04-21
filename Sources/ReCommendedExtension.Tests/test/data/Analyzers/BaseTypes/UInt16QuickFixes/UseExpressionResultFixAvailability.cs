@@ -34,23 +34,23 @@ namespace Test
 
             (ushort quotient, ushort remainder) result32 = ushort.DivRem(0, 10);
 
-            var result31 = ushort.DivRem(left, 1);
-            var result32 = ushort.DivRem(0x10, 1);
-            var result32 = ushort.DivRem(c, 1);
-            var result33 = ushort.DivRem('a', 1);
+            var result41 = ushort.DivRem(left, 1);
+            var result42 = ushort.DivRem(0x10, 1);
+            var result43 = ushort.DivRem(c, 1);
+            var result44 = ushort.DivRem('a', 1);
 
-            (ushort, ushort) result41 = ushort.DivRem(left, 1);
-            (ushort, ushort) result42 = ushort.DivRem(0x10, 1);
-            (ushort, ushort) result42 = ushort.DivRem(c, 1);
-            (ushort, ushort) result43 = ushort.DivRem('a', 1);
+            (ushort, ushort) result51 = ushort.DivRem(left, 1);
+            (ushort, ushort) result52 = ushort.DivRem(0x10, 1);
+            (ushort, ushort) result53 = ushort.DivRem(c, 1);
+            (ushort, ushort) result54 = ushort.DivRem('a', 1);
 
-            (ushort quotient, ushort remainder) result51 = ushort.DivRem(left, 1);
-            (ushort quotient, ushort remainder) result52 = ushort.DivRem(0x10, 1);
-            (ushort quotient, ushort remainder) result52 = ushort.DivRem(c, 1);
-            (ushort quotient, ushort remainder) result53 = ushort.DivRem('a', 1);
+            (ushort quotient, ushort remainder) result61 = ushort.DivRem(left, 1);
+            (ushort quotient, ushort remainder) result62 = ushort.DivRem(0x10, 1);
+            (ushort quotient, ushort remainder) result63 = ushort.DivRem(c, 1);
+            (ushort quotient, ushort remainder) result64 = ushort.DivRem('a', 1);
 
-            var result61 = Math.DivRem((ushort)0, (ushort)10);
-            var result62 = Math.DivRem(left, (ushort)1);
+            var result71 = Math.DivRem((ushort)0, (ushort)10);
+            var result72 = Math.DivRem(left, (ushort)1);
         }
 
         public void Equals(ushort number)

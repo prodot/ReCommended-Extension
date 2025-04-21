@@ -150,7 +150,7 @@ namespace Test
 
         static string Property9 { get; set; } = F() ?? throw new UnreachableException();
 
-        string field1 = S ?? throw new UnreachableException()
+        string field1 = S ?? throw new UnreachableException();
 
         static string field2 = F() ?? throw new UnreachableException();
 

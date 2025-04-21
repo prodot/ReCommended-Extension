@@ -44,26 +44,26 @@ namespace Test
 
             (uint quotient, uint remainder) result32 = uint.DivRem(0, 10);
 
-            var result31 = uint.DivRem(left, 1);
-            var result32 = uint.DivRem(0x10, 1);
-            var result33 = uint.DivRem(0x10u, 1);
-            var result34 = uint.DivRem(c, 1);
-            var result35 = uint.DivRem('a', 1);
+            var result41 = uint.DivRem(left, 1);
+            var result42 = uint.DivRem(0x10, 1);
+            var result43 = uint.DivRem(0x10u, 1);
+            var result44 = uint.DivRem(c, 1);
+            var result45 = uint.DivRem('a', 1);
 
-            (uint, uint) result41 = uint.DivRem(left, 1);
-            (uint, uint) result42 = uint.DivRem(0x10, 1);
-            (uint, uint) result43 = uint.DivRem(0x10u, 1);
-            (uint, uint) result44 = uint.DivRem(c, 1);
-            (uint, uint) result45 = uint.DivRem('a', 1);
+            (uint, uint) result51 = uint.DivRem(left, 1);
+            (uint, uint) result52 = uint.DivRem(0x10, 1);
+            (uint, uint) result53 = uint.DivRem(0x10u, 1);
+            (uint, uint) result54 = uint.DivRem(c, 1);
+            (uint, uint) result55 = uint.DivRem('a', 1);
 
-            (uint quotient, uint remainder) result51 = uint.DivRem(left, 1);
-            (uint quotient, uint remainder) result52 = uint.DivRem(0x10, 1);
-            (uint quotient, uint remainder) result53 = uint.DivRem(0x10u, 1);
-            (uint quotient, uint remainder) result54 = uint.DivRem(c, 1);
-            (uint quotient, uint remainder) result55 = uint.DivRem('a', 1);
+            (uint quotient, uint remainder) result61 = uint.DivRem(left, 1);
+            (uint quotient, uint remainder) result62 = uint.DivRem(0x10, 1);
+            (uint quotient, uint remainder) result63 = uint.DivRem(0x10u, 1);
+            (uint quotient, uint remainder) result64 = uint.DivRem(c, 1);
+            (uint quotient, uint remainder) result65 = uint.DivRem('a', 1);
 
-            var result61 = Math.DivRem(0u, 10u);
-            var result62 = Math.DivRem(left, 1u);
+            var result71 = Math.DivRem(0u, 10u);
+            var result72 = Math.DivRem(left, 1u);
         }
 
         public void Equals(uint number)

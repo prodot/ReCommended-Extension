@@ -52,32 +52,32 @@ namespace Test
 
             (ulong quotient, ulong remainder) result32 = |ulong.DivRem(0, 10)|(30);
 
-            var result31 = |ulong.DivRem(left, 1)|(31);
-            var result32 = |ulong.DivRem(0x10, 1)|(32);
-            var result33 = |ulong.DivRem(0x10u, 1)|(33);
-            var result34 = |ulong.DivRem(0x10L, 1)|(34);
-            var result35 = |ulong.DivRem(0x10ul, 1)|(35);
-            var result36 = |ulong.DivRem(c, 1)|(36);
-            var result37 = |ulong.DivRem('a', 1)|(37);
+            var result41 = |ulong.DivRem(left, 1)|(31);
+            var result42 = |ulong.DivRem(0x10, 1)|(32);
+            var result43 = |ulong.DivRem(0x10u, 1)|(33);
+            var result44 = |ulong.DivRem(0x10L, 1)|(34);
+            var result45 = |ulong.DivRem(0x10ul, 1)|(35);
+            var result46 = |ulong.DivRem(c, 1)|(36);
+            var result47 = |ulong.DivRem('a', 1)|(37);
 
-            (ulong, ulong) result41 = |ulong.DivRem(left, 1)|(38);
-            (ulong, ulong) result42 = |ulong.DivRem(0x10, 1)|(39);
-            (ulong, ulong) result43 = |ulong.DivRem(0x10u, 1)|(40);
-            (ulong, ulong) result44 = |ulong.DivRem(0x10L, 1)|(41);
-            (ulong, ulong) result45 = |ulong.DivRem(0x10ul, 1)|(42);
-            (ulong, ulong) result46 = |ulong.DivRem(c, 1)|(43);
-            (ulong, ulong) result47 = |ulong.DivRem('a', 1)|(44);
+            (ulong, ulong) result51 = |ulong.DivRem(left, 1)|(38);
+            (ulong, ulong) result52 = |ulong.DivRem(0x10, 1)|(39);
+            (ulong, ulong) result53 = |ulong.DivRem(0x10u, 1)|(40);
+            (ulong, ulong) result54 = |ulong.DivRem(0x10L, 1)|(41);
+            (ulong, ulong) result55 = |ulong.DivRem(0x10ul, 1)|(42);
+            (ulong, ulong) result56 = |ulong.DivRem(c, 1)|(43);
+            (ulong, ulong) result57 = |ulong.DivRem('a', 1)|(44);
 
-            (ulong quotient, ulong remainder) result51 = |ulong.DivRem(left, 1)|(45);
-            (ulong quotient, ulong remainder) result52 = |ulong.DivRem(0x10, 1)|(46);
-            (ulong quotient, ulong remainder) result53 = |ulong.DivRem(0x10u, 1)|(47);
-            (ulong quotient, ulong remainder) result54 = |ulong.DivRem(0x10L, 1)|(48);
-            (ulong quotient, ulong remainder) result55 = |ulong.DivRem(0x10ul, 1)|(49);
-            (ulong quotient, ulong remainder) result56 = |ulong.DivRem(c, 1)|(50);
-            (ulong quotient, ulong remainder) result57 = |ulong.DivRem('a', 1)|(51);
+            (ulong quotient, ulong remainder) result61 = |ulong.DivRem(left, 1)|(45);
+            (ulong quotient, ulong remainder) result62 = |ulong.DivRem(0x10, 1)|(46);
+            (ulong quotient, ulong remainder) result63 = |ulong.DivRem(0x10u, 1)|(47);
+            (ulong quotient, ulong remainder) result64 = |ulong.DivRem(0x10L, 1)|(48);
+            (ulong quotient, ulong remainder) result65 = |ulong.DivRem(0x10ul, 1)|(49);
+            (ulong quotient, ulong remainder) result66 = |ulong.DivRem(c, 1)|(50);
+            (ulong quotient, ulong remainder) result67 = |ulong.DivRem('a', 1)|(51);
 
-            var result61 = |Math.DivRem(0ul, 10ul)|(52);
-            var result62 = |Math.DivRem(left, 1ul)|(53);
+            var result71 = |Math.DivRem(0ul, 10ul)|(52);
+            var result72 = |Math.DivRem(left, 1ul)|(53);
         }
 
         public void Equals(ulong number)
@@ -101,12 +101,12 @@ namespace Test
             var result15 = |ulong.Max(10, c)|(60);
             var result16 = |ulong.Max(97, 'a')|(61);
 
-            ulong result11 = |ulong.Max(10, 0x0A)|(62);
-            ulong result12 = |ulong.Max(10, 10u)|(63);
-            ulong result13 = |ulong.Max(10, 10L)|(64);
-            ulong result14 = |ulong.Max(10, 10ul)|(65);
-            ulong result15 = |ulong.Max(10, c)|(66);
-            ulong result16 = |ulong.Max(97, 'a')|(67);
+            ulong result21 = |ulong.Max(10, 0x0A)|(62);
+            ulong result22 = |ulong.Max(10, 10u)|(63);
+            ulong result23 = |ulong.Max(10, 10L)|(64);
+            ulong result24 = |ulong.Max(10, 10ul)|(65);
+            ulong result25 = |ulong.Max(10, c)|(66);
+            ulong result26 = |ulong.Max(97, 'a')|(67);
 
             var result31 = |Math.Max(10ul, 10ul)|(68);
         }
@@ -122,12 +122,12 @@ namespace Test
             var result15 = |ulong.Min(10, c)|(73);
             var result16 = |ulong.Min(97, 'a')|(74);
 
-            ulong result11 = |ulong.Min(10, 0x0A)|(75);
-            ulong result12 = |ulong.Min(10, 10u)|(76);
-            ulong result13 = |ulong.Min(10, 10L)|(77);
-            ulong result14 = |ulong.Min(10, 10ul)|(78);
-            ulong result15 = |ulong.Min(10, c)|(79);
-            ulong result16 = |ulong.Min(97, 'a')|(80);
+            ulong result21 = |ulong.Min(10, 0x0A)|(75);
+            ulong result22 = |ulong.Min(10, 10u)|(76);
+            ulong result23 = |ulong.Min(10, 10L)|(77);
+            ulong result24 = |ulong.Min(10, 10ul)|(78);
+            ulong result25 = |ulong.Min(10, c)|(79);
+            ulong result26 = |ulong.Min(97, 'a')|(80);
 
             var result31 = |Math.Min(10ul, 10ul)|(81);
         }

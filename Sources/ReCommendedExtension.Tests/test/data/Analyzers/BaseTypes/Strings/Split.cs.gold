@@ -98,7 +98,7 @@ namespace Test
             var result12 = text.Split('a', 2);
             var result13 = text.Split('a', 1, StringSplitOptions.RemoveEmptyEntries);
             var result14 = text.Split('a', 1, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            var result14 = text.Split('a', 1, options);
+            var result15 = text.Split('a', 1, options);
 
             var result21 = text.Split(c, 'b', c);
             var result22 = text.Split([c, 'b', c]);
@@ -140,14 +140,14 @@ namespace Test
             var result54 = text.Split(s, 1, options);
             var result55 = text.Split("aa", count, options);
 
-            var result61 = text.Split(new string[] { }, options);
-            var result62 = text.Split(["a", "bb"], options);
-            var result63 = text.Split(["a", s], options);
+            var resultA1 = text.Split(new string[] { }, options);
+            var resultA2 = text.Split(["a", "bb"], options);
+            var resultA3 = text.Split(["a", s], options);
 
-            var result71 = text.Split([s], 1, options);
-            var result72 = text.Split([""], count, options);
-            var result73 = text.Split(["aa", "bb"], count, options);
-            var result74 = text.Split(["a", "bb"], count, options);
+            var resultB1 = text.Split([s], 1, options);
+            var resultB2 = text.Split([""], count, options);
+            var resultB3 = text.Split(["aa", "bb"], count, options);
+            var resultB4 = text.Split(["a", "bb"], count, options);
 
             text.Split('a', 0);
             text.Split('a', 0, StringSplitOptions.RemoveEmptyEntries);

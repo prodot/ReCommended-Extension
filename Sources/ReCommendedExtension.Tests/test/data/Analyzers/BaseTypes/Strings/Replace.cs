@@ -13,7 +13,7 @@ namespace Test
         public void RedundantInvocation(string text)
         {
             var result11 = text.Replace("a", "a", StringComparison.Ordinal);
-            var result11 = text.Replace("aa", "aa", StringComparison.Ordinal);
+            var result12 = text.Replace("aa", "aa", StringComparison.Ordinal);
 
             var result21 = text.Replace("a", "a");
             var result22 = text.Replace("aa", "aa");
@@ -46,7 +46,7 @@ namespace Test
 
             text.Replace("aa", "aa", StringComparison.Ordinal);
             text.Replace("aa", "aa");
-            text.Replace('a', 'a')
+            text.Replace('a', 'a');
         }
     }
 }

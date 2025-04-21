@@ -121,7 +121,7 @@ namespace Tests
 
         async ValueTask Loop2(ValueTask vt)
         {
-            for (var i = 0, j = 1; i < 10 && j < 11; i++, j++)
+            for (int i = 0, j = 1; i < 10 && j < 11; i++, j++)
             {
                 await vt;
             }
@@ -139,7 +139,7 @@ namespace Tests
         {
             foreach (var i in a)
             {
-                if (i = 3)
+                if (i == 3)
                 {
                     await vt;
                     break;

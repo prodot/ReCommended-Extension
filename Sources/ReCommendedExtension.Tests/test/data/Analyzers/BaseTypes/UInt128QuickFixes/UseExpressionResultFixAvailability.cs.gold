@@ -33,29 +33,29 @@ namespace Test
 
             (UInt128 quotient, UInt128 remainder) result32 = |UInt128.DivRem(0, 10)|(14);
 
-            var result31 = |UInt128.DivRem(left, 1)|(15);
-            var result32 = |UInt128.DivRem(0x10, 1)|(16);
-            var result33 = |UInt128.DivRem(0x10L, 1)|(17);
-            var result34 = |UInt128.DivRem(0x10u, 1)|(18);
-            var result35 = |UInt128.DivRem(0x10ul, 1)|(19);
-            var result36 = |UInt128.DivRem(c, 1)|(20);
-            var result37 = |UInt128.DivRem('a', 1)|(21);
+            var result41 = |UInt128.DivRem(left, 1)|(15);
+            var result42 = |UInt128.DivRem(0x10, 1)|(16);
+            var result43 = |UInt128.DivRem(0x10L, 1)|(17);
+            var result44 = |UInt128.DivRem(0x10u, 1)|(18);
+            var result45 = |UInt128.DivRem(0x10ul, 1)|(19);
+            var result46 = |UInt128.DivRem(c, 1)|(20);
+            var result47 = |UInt128.DivRem('a', 1)|(21);
 
-            (UInt128, UInt128) result41 = |UInt128.DivRem(left, 1)|(22);
-            (UInt128, UInt128) result42 = |UInt128.DivRem(0x10, 1)|(23);
-            (UInt128, UInt128) result43 = |UInt128.DivRem(0x10L, 1)|(24);
-            (UInt128, UInt128) result44 = |UInt128.DivRem(0x10u, 1)|(25);
-            (UInt128, UInt128) result45 = |UInt128.DivRem(0x10ul, 1)|(26);
-            (UInt128, UInt128) result46 = |UInt128.DivRem(c, 1)|(27);
-            (UInt128, UInt128) result47 = |UInt128.DivRem('a', 1)|(28);
+            (UInt128, UInt128) result51 = |UInt128.DivRem(left, 1)|(22);
+            (UInt128, UInt128) result52 = |UInt128.DivRem(0x10, 1)|(23);
+            (UInt128, UInt128) result53 = |UInt128.DivRem(0x10L, 1)|(24);
+            (UInt128, UInt128) result54 = |UInt128.DivRem(0x10u, 1)|(25);
+            (UInt128, UInt128) result55 = |UInt128.DivRem(0x10ul, 1)|(26);
+            (UInt128, UInt128) result56 = |UInt128.DivRem(c, 1)|(27);
+            (UInt128, UInt128) result57 = |UInt128.DivRem('a', 1)|(28);
 
-            (UInt128 quotient, UInt128 remainder) result51 = |UInt128.DivRem(left, 1)|(29);
-            (UInt128 quotient, UInt128 remainder) result52 = |UInt128.DivRem(0x10, 1)|(30);
-            (UInt128 quotient, UInt128 remainder) result53 = |UInt128.DivRem(0x10L, 1)|(31);
-            (UInt128 quotient, UInt128 remainder) result54 = |UInt128.DivRem(0x10u, 1)|(32);
-            (UInt128 quotient, UInt128 remainder) result55 = |UInt128.DivRem(0x10ul, 1)|(33);
-            (UInt128 quotient, UInt128 remainder) result56 = |UInt128.DivRem(c, 1)|(34);
-            (UInt128 quotient, UInt128 remainder) result57 = |UInt128.DivRem('a', 1)|(35);
+            (UInt128 quotient, UInt128 remainder) result61 = |UInt128.DivRem(left, 1)|(29);
+            (UInt128 quotient, UInt128 remainder) result62 = |UInt128.DivRem(0x10, 1)|(30);
+            (UInt128 quotient, UInt128 remainder) result63 = |UInt128.DivRem(0x10L, 1)|(31);
+            (UInt128 quotient, UInt128 remainder) result64 = |UInt128.DivRem(0x10u, 1)|(32);
+            (UInt128 quotient, UInt128 remainder) result65 = |UInt128.DivRem(0x10ul, 1)|(33);
+            (UInt128 quotient, UInt128 remainder) result66 = |UInt128.DivRem(c, 1)|(34);
+            (UInt128 quotient, UInt128 remainder) result67 = |UInt128.DivRem('a', 1)|(35);
         }
 
         public void Equals(UInt128 number)
@@ -74,12 +74,12 @@ namespace Test
             var result15 = |UInt128.Max(10, c)|(41);
             var result16 = |UInt128.Max(97, 'a')|(42);
 
-            UInt128 result11 = |UInt128.Max(10, 0x0A)|(43);
-            UInt128 result12 = |UInt128.Max(10, 10ul)|(44);
-            UInt128 result13 = |UInt128.Max(10, 10u)|(45);
-            UInt128 result14 = |UInt128.Max(10, 10L)|(46);
-            UInt128 result15 = |UInt128.Max(10, c)|(47);
-            UInt128 result16 = |UInt128.Max(97, 'a')|(48);
+            UInt128 result21 = |UInt128.Max(10, 0x0A)|(43);
+            UInt128 result22 = |UInt128.Max(10, 10ul)|(44);
+            UInt128 result23 = |UInt128.Max(10, 10u)|(45);
+            UInt128 result24 = |UInt128.Max(10, 10L)|(46);
+            UInt128 result25 = |UInt128.Max(10, c)|(47);
+            UInt128 result26 = |UInt128.Max(97, 'a')|(48);
         }
 
         public void Min()
@@ -93,12 +93,12 @@ namespace Test
             var result15 = |UInt128.Min(10, c)|(53);
             var result16 = |UInt128.Min(97, 'a')|(54);
 
-            UInt128 result11 = |UInt128.Min(10, 0x0A)|(55);
-            UInt128 result12 = |UInt128.Min(10, 10ul)|(56);
-            UInt128 result13 = |UInt128.Min(10, 10u)|(57);
-            UInt128 result14 = |UInt128.Min(10, 10L)|(58);
-            UInt128 result15 = |UInt128.Min(10, c)|(59);
-            UInt128 result16 = |UInt128.Min(97, 'a')|(60);
+            UInt128 result21 = |UInt128.Min(10, 0x0A)|(55);
+            UInt128 result22 = |UInt128.Min(10, 10ul)|(56);
+            UInt128 result23 = |UInt128.Min(10, 10u)|(57);
+            UInt128 result24 = |UInt128.Min(10, 10L)|(58);
+            UInt128 result25 = |UInt128.Min(10, c)|(59);
+            UInt128 result26 = |UInt128.Min(97, 'a')|(60);
         }
     }
 }

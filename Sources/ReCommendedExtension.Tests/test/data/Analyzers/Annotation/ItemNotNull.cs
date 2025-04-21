@@ -138,7 +138,7 @@ namespace Test
         string Other([ItemNotNull] (int, string) p) => null;
 
         [ItemNotNull]
-        public ValueTask<string> AsyncMethod2() => null;
+        public ValueTask<string> AsyncMethod2() => default;
 
         [ItemNotNull]
         public ValueTask<string> AsyncProperty3 { get; set; }
@@ -151,13 +151,13 @@ namespace Test
         {
             get
             {
-                return null;
+                return default;
             }
             set { }
         }
 
         [ItemNotNull]
-        ValueTask<string> IBase.this[[ItemNotNull] ValueTask<string> index, [ItemNotNull] ValueTask<string> index2] => null;
+        ValueTask<string> IBase.this[[ItemNotNull] ValueTask<string> index, [ItemNotNull] ValueTask<string> index2] => default;
 
         [ItemNotNull]
         ValueTask TaskProperty2 { get; set; }
@@ -166,10 +166,10 @@ namespace Test
         ValueTask<int> TaskPropertyWithValueType3 { get; set; }
 
         [ItemNotNull]
-        ValueTask this[[ItemNotNull] ValueTask index] => null;
+        ValueTask this[[ItemNotNull] ValueTask index] => default;
 
         [ItemNotNull]
-        ValueTask<int> this[[ItemNotNull] ValueTask<int> index] => null;
+        ValueTask<int> this[[ItemNotNull] ValueTask<int> index] => default;
 
         [ItemNotNull]
         delegate ValueTask<int> DelegateWithValueType3([ItemNotNull] ValueTask<int> p);

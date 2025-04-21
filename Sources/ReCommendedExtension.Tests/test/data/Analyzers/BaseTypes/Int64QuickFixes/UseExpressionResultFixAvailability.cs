@@ -48,29 +48,29 @@ namespace Test
 
             (long quotient, long remainder) result32 = long.DivRem(0, 10);
 
-            var result31 = long.DivRem(left, 1);
-            var result32 = long.DivRem(0x10, 1);
-            var result33 = long.DivRem(0x10L, 1);
-            var result34 = long.DivRem(0x10u, 1);
-            var result35 = long.DivRem(c, 1);
-            var result36 = long.DivRem('a', 1);
+            var result41 = long.DivRem(left, 1);
+            var result42 = long.DivRem(0x10, 1);
+            var result43 = long.DivRem(0x10L, 1);
+            var result44 = long.DivRem(0x10u, 1);
+            var result45 = long.DivRem(c, 1);
+            var result46 = long.DivRem('a', 1);
 
-            (long, long) result41 = long.DivRem(left, 1);
-            (long, long) result42 = long.DivRem(0x10, 1);
-            (long, long) result43 = long.DivRem(0x10L, 1);
-            (long, long) result44 = long.DivRem(0x10u, 1);
-            (long, long) result45 = long.DivRem(c, 1);
-            (long, long) result46 = long.DivRem('a', 1);
+            (long, long) result51 = long.DivRem(left, 1);
+            (long, long) result52 = long.DivRem(0x10, 1);
+            (long, long) result53 = long.DivRem(0x10L, 1);
+            (long, long) result54 = long.DivRem(0x10u, 1);
+            (long, long) result55 = long.DivRem(c, 1);
+            (long, long) result56 = long.DivRem('a', 1);
 
-            (long quotient, long remainder) result51 = long.DivRem(left, 1);
-            (long quotient, long remainder) result52 = long.DivRem(0x10, 1);
-            (long quotient, long remainder) result53 = long.DivRem(0x10L, 1);
-            (long quotient, long remainder) result54 = long.DivRem(0x10u, 1);
-            (long quotient, long remainder) result55 = long.DivRem(c, 1);
-            (long quotient, long remainder) result56 = long.DivRem('a', 1);
+            (long quotient, long remainder) result61 = long.DivRem(left, 1);
+            (long quotient, long remainder) result62 = long.DivRem(0x10, 1);
+            (long quotient, long remainder) result63 = long.DivRem(0x10L, 1);
+            (long quotient, long remainder) result64 = long.DivRem(0x10u, 1);
+            (long quotient, long remainder) result65 = long.DivRem(c, 1);
+            (long quotient, long remainder) result66 = long.DivRem('a', 1);
 
-            var result61 = Math.DivRem(0L, 10L);
-            var result62 = Math.DivRem(left, 1L);
+            var result71 = Math.DivRem(0L, 10L);
+            var result72 = Math.DivRem(left, 1L);
         }
 
         public void Equals(long number)

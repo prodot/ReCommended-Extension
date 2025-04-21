@@ -64,7 +64,7 @@ namespace Test
         public void AsCharacter(string text)
         {
             var result1 = text.IndexOf(|"a"|(36));
-            var result1 = text.IndexOf(|"a"|(37), StringComparison.OrdinalIgnoreCase);
+            var result2 = text.IndexOf(|"a"|(37), StringComparison.OrdinalIgnoreCase);
         }
 
         public void NoDetection(string text, char c, int startIndex)
@@ -78,11 +78,11 @@ namespace Test
 
         public void NoDetection(string? text, StringComparison comparisonType, char c, string s)
         {
-            var result23 = text?.IndexOf(c) > -1;
-            var result24 = text?.IndexOf(c) != -1;
-            var result25 = text?.IndexOf(c) >= 0;
-            var result64 = text?.IndexOf(s) == -1;
-            var result65 = text?.IndexOf(s) < 0;
+            var result21 = text?.IndexOf(c) > -1;
+            var result22 = text?.IndexOf(c) != -1;
+            var result23 = text?.IndexOf(c) >= 0;
+            var result24 = text?.IndexOf(s) == -1;
+            var result25 = text?.IndexOf(s) < 0;
 
             var result41 = text?.IndexOf(c, comparisonType) > -1;
             var result42 = text?.IndexOf(c, comparisonType) != -1;

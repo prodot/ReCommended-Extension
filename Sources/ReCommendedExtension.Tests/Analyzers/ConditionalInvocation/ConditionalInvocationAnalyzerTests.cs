@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -14,7 +13,7 @@ public sealed class ConditionalInvocationAnalyzerTests : CSharpHighlightingTestB
     protected override string RelativeTestDataPath => @"Analyzers\ConditionalInvocation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ConditionalInvocationHint or NotResolvedError;
+        => highlighting is ConditionalInvocationHint || highlighting.IsError();
 
     [Test]
     public void TestConditional() => DoNamedTest2();
