@@ -32,13 +32,10 @@ public sealed class UseBinaryOperationFix(UseBinaryOperationSuggestion highlight
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            var leftOperand = $"({highlighting.LeftOperand.GetText()})";
-            var rightOperand = $"({highlighting.RightOperand.GetText()})";
-
             ModificationUtil
                 .ReplaceChild(
                     highlighting.InvocationExpression,
-                    factory.CreateExpression($"({leftOperand} {highlighting.Operator} {rightOperand})"))
+                    factory.CreateExpression($"(($0) {highlighting.Operator} ($1))", highlighting.LeftOperand, highlighting.RightOperand))
                 .TryRemoveParentheses(factory)
                 .TryRemoveBinaryOperatorParentheses(factory);
         }

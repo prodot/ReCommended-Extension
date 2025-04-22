@@ -63,32 +63,27 @@ internal static class CSharpExpressionExtensions
 
     [Pure]
     public static int? TryGetInt32Constant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Int, IntValue: var value } } ? value : null;
+    {
+        if (expression is IConstantValueOwner constantValueOwner)
+        {
+            return constantValueOwner.ConstantValue switch
+            {
+                { Kind: ConstantValueKind.Int, IntValue: var value } => value,
+                { Kind: ConstantValueKind.Byte, ByteValue: var value } => value,
+                { Kind: ConstantValueKind.Sbyte, SbyteValue: var value } => value,
+                { Kind: ConstantValueKind.Short, ShortValue: var value } => value,
+                { Kind: ConstantValueKind.Ushort, UshortValue: var value } => value,
+                { Kind: ConstantValueKind.Char, CharValue: var value } => value,
+                _ => null,
+            };
+        }
+
+        return null;
+    }
 
     [Pure]
     public static bool? TryGetBooleanConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: var value } } ? value : null;
-
-    [Pure]
-    public static byte? TryGetByteConstant(this ICSharpExpression? expression, out bool implicitlyConverted)
-    {
-        if (expression is IConstantValueOwner constantValueOwner)
-        {
-            switch (constantValueOwner.ConstantValue)
-            {
-                case { Kind: ConstantValueKind.Byte, ByteValue: var value }:
-                    implicitlyConverted = false;
-                    return value;
-
-                case { Kind: ConstantValueKind.Int, IntValue: >= 0 and <= byte.MaxValue and var value }:
-                    implicitlyConverted = true;
-                    return unchecked((byte)value);
-            }
-        }
-
-        implicitlyConverted = false;
-        return null;
-    }
 
     [Pure]
     public static StringComparison? TryGetStringComparisonConstant(this ICSharpExpression? expression)
