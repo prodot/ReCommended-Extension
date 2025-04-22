@@ -68,10 +68,8 @@ public sealed class Int32AnalyzerTests : CSharpHighlightingTestBase
     public void TestDivRem()
     {
         Test(() => MissingInt32Methods.DivRem(0, 10), () => (0, 0));
-        Test(number => MissingInt32Methods.DivRem(number, 1), number => (number, 0));
 
         Test(() => MissingMathMethods.DivRem(0, 10), () => (0, 0));
-        Test(number => MissingMathMethods.DivRem(number, 1), number => (number, 0));
 
         DoNamedTest2();
     }
@@ -110,6 +108,24 @@ public sealed class Int32AnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingInt32Methods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateLeft()
+    {
+        Test(n => MissingInt32Methods.RotateLeft(n, 0), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateRight()
+    {
+        Test(n => MissingInt32Methods.RotateRight(n, 0), n => n);
 
         DoNamedTest2();
     }

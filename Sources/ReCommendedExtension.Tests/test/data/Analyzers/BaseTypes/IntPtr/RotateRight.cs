@@ -1,0 +1,18 @@
+﻿namespace Test
+{
+    public class IntPtrs
+    {
+        public void ExpressionResult(nint n)
+        {
+            var result = nint.RotateRight(n, 0);
+        }
+
+        public void NoDetection(nint n, int rotateAmount)
+        {
+            var result1 = nint.RotateRight(n, 1);
+            var result2 = nint.RotateRight(n, rotateAmount);
+
+            nint.RotateRight(n, 0);
+        }
+    }
+}

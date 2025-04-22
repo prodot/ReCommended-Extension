@@ -21,66 +21,82 @@ namespace Test
 
         public void DivRem(nint left)
         {
-            const int c = 1;
-
             var result11 = |nint.DivRem(0, 10)|(7);
 
             (nint, nint) result21 = |nint.DivRem(0, 10)|(8);
 
             (nint quotient, nint remainder) result32 = |nint.DivRem(0, 10)|(9);
 
-            var result41 = |nint.DivRem(left, 1)|(10);
-            var result42 = |nint.DivRem(0x10, 1)|(11);
-            var result43 = |nint.DivRem(c, 1)|(12);
-            var result44 = |nint.DivRem('a', 1)|(13);
-
-            (nint, nint) result51 = |nint.DivRem(left, 1)|(14);
-            (nint, nint) result52 = |nint.DivRem(0x10, 1)|(15);
-            (nint, nint) result53 = |nint.DivRem(c, 1)|(16);
-            (nint, nint) result54 = |nint.DivRem('a', 1)|(17);
-
-            (nint quotient, nint remainder) result61 = |nint.DivRem(left, 1)|(18);
-            (nint quotient, nint remainder) result62 = |nint.DivRem(0x10, 1)|(19);
-            (nint quotient, nint remainder) result63 = |nint.DivRem(c, 1)|(20);
-            (nint quotient, nint remainder) result64 = |nint.DivRem('a', 1)|(21);
-
-            var result71 = |Math.DivRem((nint)0, (nint)10)|(22);
-            var result72 = |Math.DivRem(left, (nint)1)|(23);
+            var result71 = |Math.DivRem((nint)0, (nint)10)|(10);
         }
 
         public void Equals(nint number)
         {
-            var result = |number.Equals(null)|(24);
+            var result = |number.Equals(null)|(11);
         }
 
         public void Max()
         {
             const int c = 10;
 
-            var result11 = |nint.Max(10, 0x0A)|(25);
-            var result12 = |nint.Max(10, c)|(26);
-            var result13 = |nint.Max(97, 'a')|(27);
+            var result11 = |nint.Max(10, 0x0A)|(12);
+            var result12 = |nint.Max(10, c)|(13);
+            var result13 = |nint.Max(97, 'a')|(14);
 
-            nint result21 = |nint.Max(10, 0x0A)|(28);
-            nint result22 = |nint.Max(10, c)|(29);
-            nint result23 = |nint.Max(97, 'a')|(30);
+            nint result21 = |nint.Max(10, 0x0A)|(15);
+            nint result22 = |nint.Max(10, c)|(16);
+            nint result23 = |nint.Max(97, 'a')|(17);
 
-            var result31 = |Math.Max((nint)10, (nint)10)|(31);
+            var result31 = |Math.Max((nint)10, (nint)10)|(18);
         }
 
         public void Min()
         {
             const int c = 10;
 
-            var result11 = |nint.Min(10, 0x0A)|(32);
-            var result12 = |nint.Min(10, c)|(33);
-            var result13 = |nint.Min(97, 'a')|(34);
+            var result11 = |nint.Min(10, 0x0A)|(19);
+            var result12 = |nint.Min(10, c)|(20);
+            var result13 = |nint.Min(97, 'a')|(21);
 
-            nint result21 = |nint.Min(10, 0x0A)|(35);
-            nint result22 = |nint.Min(10, c)|(36);
-            nint result23 = |nint.Min(97, 'a')|(37);
+            nint result21 = |nint.Min(10, 0x0A)|(22);
+            nint result22 = |nint.Min(10, c)|(23);
+            nint result23 = |nint.Min(97, 'a')|(24);
 
-            var result31 = |Math.Min((nint)10, (nint)10)|(38);
+            var result31 = |Math.Min((nint)10, (nint)10)|(25);
+        }
+
+        public void RotateLeft(nint n)
+        {
+            const int c = 1;
+
+            var result11 = |nint.RotateLeft(n, 0)|(26);
+            var result12 = |nint.RotateLeft(0x01, 0)|(27);
+            var result13 = |nint.RotateLeft(1 + 1, 0)|(28);
+            var result14 = |nint.RotateLeft(c, 0)|(29);
+            var result15 = |nint.RotateLeft('a', 0)|(30);
+
+            nint result21 = |nint.RotateLeft(n, 0)|(31);
+            nint result22 = |nint.RotateLeft(0x01, 0)|(32);
+            nint result23 = |nint.RotateLeft(1 + 1, 0)|(33);
+            nint result24 = |nint.RotateLeft(c, 0)|(34);
+            nint result25 = |nint.RotateLeft('a', 0)|(35);
+        }
+
+        public void RotateRight(nint n)
+        {
+            const int c = 1;
+
+            var result11 = |nint.RotateRight(n, 0)|(36);
+            var result12 = |nint.RotateRight(0x01, 0)|(37);
+            var result13 = |nint.RotateRight(1 + 1, 0)|(38);
+            var result14 = |nint.RotateRight(c, 0)|(39);
+            var result15 = |nint.RotateRight('a', 0)|(40);
+
+            nint result21 = |nint.RotateRight(n, 0)|(41);
+            nint result22 = |nint.RotateRight(0x01, 0)|(42);
+            nint result23 = |nint.RotateRight(1 + 1, 0)|(43);
+            nint result24 = |nint.RotateRight(c, 0)|(44);
+            nint result25 = |nint.RotateRight('a', 0)|(45);
         }
     }
 }
@@ -121,102 +137,123 @@ Replace with '(0, 0)'
 9: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(0, 0)'
-10: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: (nint)0)'
-11: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (nint)0x10, Remainder: (nint)0)'
-12: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (nint)c, Remainder: (nint)0)'
-13: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (nint)'a', Remainder: (nint)0)'
-14: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-15: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-16: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-17: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '('a', 0)'
-18: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-19: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-20: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-21: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '('a', 0)'
-22: The expression is always (0, 0).
+10: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(Quotient: (nint)0, Remainder: (nint)0)'
-23: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: (nint)0)'
-24: The expression is always false.
+11: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+12: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)0x0A'
+Replace with '(nint)10'
+13: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)c'
+Replace with '(nint)10'
+14: The expression is always 97.
+QUICKFIXES:
+Replace with '(nint)'a''
+Replace with '(nint)97'
+15: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+16: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+17: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+18: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)10'
+19: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)0x0A'
+Replace with '(nint)10'
+20: The expression is always 10.
+QUICKFIXES:
+Replace with '(nint)c'
+Replace with '(nint)10'
+21: The expression is always 97.
+QUICKFIXES:
+Replace with '(nint)'a''
+Replace with '(nint)97'
+22: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+23: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+24: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
 25: The expression is always 10.
 QUICKFIXES:
-Replace with '(nint)0x0A'
 Replace with '(nint)10'
-26: The expression is always 10.
+26: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+27: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(nint)0x01'
+28: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(nint)(1 + 1)'
+29: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(nint)c'
-Replace with '(nint)10'
-27: The expression is always 97.
+30: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(nint)'a''
-Replace with '(nint)97'
-28: The expression is always 10.
+31: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-29: The expression is always 10.
+Replace with 'n'
+32: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01'
+33: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+34: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-30: The expression is always 97.
+35: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with ''a''
-Replace with '97'
-31: The expression is always 10.
+36: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(nint)10'
-32: The expression is always 10.
+Replace with 'n'
+37: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(nint)0x0A'
-Replace with '(nint)10'
-33: The expression is always 10.
+Replace with '(nint)0x01'
+38: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(nint)(1 + 1)'
+39: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(nint)c'
-Replace with '(nint)10'
-34: The expression is always 97.
+40: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(nint)'a''
-Replace with '(nint)97'
-35: The expression is always 10.
+41: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-36: The expression is always 10.
+Replace with 'n'
+42: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01'
+43: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+44: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-37: The expression is always 97.
+45: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with ''a''
-Replace with '97'
-38: The expression is always 10.
-QUICKFIXES:
-Replace with '(nint)10'

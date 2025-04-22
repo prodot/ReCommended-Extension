@@ -35,4 +35,10 @@ internal static class MissingInt32Methods
 
     [Pure]
     public static int Min(int x, int y) => x <= y ? x : y;
+
+    [Pure]
+    public static int RotateLeft(int value, int rotateAmount) => unchecked((int)MissingUInt32Methods.RotateLeft((uint)value, rotateAmount));
+
+    [Pure]
+    public static int RotateRight(int value, int rotateAmount) => unchecked((int)MissingUInt32Methods.RotateRight((uint)value, rotateAmount));
 }

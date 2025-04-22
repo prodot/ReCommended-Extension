@@ -35,4 +35,12 @@ internal static class MissingInt16Methods
 
     [Pure]
     public static short Min(short x, short y) => x <= y ? x : y;
+
+    [Pure]
+    public static short RotateLeft(short value, int rotateAmount)
+        => unchecked((short)(value << (rotateAmount & 15) | (ushort)value >> (16 - rotateAmount & 15)));
+
+    [Pure]
+    public static short RotateRight(short value, int rotateAmount)
+        => unchecked((short)((ushort)value >> (rotateAmount & 15) | value << (16 - rotateAmount & 15)));
 }

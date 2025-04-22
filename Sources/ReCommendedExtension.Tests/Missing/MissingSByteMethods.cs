@@ -35,4 +35,12 @@ internal static class MissingSByteMethods
 
     [Pure]
     public static sbyte Min(sbyte x, sbyte y) => x <= y ? x : y;
+
+    [Pure]
+    public static sbyte RotateLeft(sbyte value, int rotateAmount)
+        => unchecked((sbyte)(value << (rotateAmount & 7) | (byte)value >> (8 - rotateAmount & 7)));
+
+    [Pure]
+    public static sbyte RotateRight(sbyte value, int rotateAmount)
+        => unchecked((sbyte)((byte)value >> (rotateAmount & 7) | value << (8 - rotateAmount & 7)));
 }

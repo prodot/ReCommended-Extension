@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -94,6 +95,8 @@ public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(Prede
     }
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotImplementedException();
+
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("double").GetText();
 }
 
 /// <remarks>
@@ -165,6 +168,8 @@ public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(Predef
     }
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotImplementedException();
+
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("float").GetText();
 }
 
 /// <remarks>
@@ -286,4 +291,6 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
     }
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotImplementedException();
+
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("Half").GetText();
 }

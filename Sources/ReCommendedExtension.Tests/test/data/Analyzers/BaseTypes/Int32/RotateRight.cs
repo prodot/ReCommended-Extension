@@ -1,0 +1,18 @@
+﻿namespace Test
+{
+    public class Int32s
+    {
+        public void ExpressionResult(int n)
+        {
+            var result = int.RotateRight(n, 0);
+        }
+
+        public void NoDetection(int n, int rotateAmount)
+        {
+            var result1 = int.RotateRight(n, 1);
+            var result2 = int.RotateRight(n, rotateAmount);
+
+            int.RotateRight(n, 0);
+        }
+    }
+}

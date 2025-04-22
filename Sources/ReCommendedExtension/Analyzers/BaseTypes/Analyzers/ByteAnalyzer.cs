@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Extensions;
 using ReCommendedExtension.Extensions.MethodFinding;
@@ -169,54 +170,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>byte.RotateLeft(n, 0)</c> → <c>n</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeRotateLeft(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument rotateAmountArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && rotateAmountArgument.Value.TryGetInt32Constant() is 0 && valueArgument.Value is { } value)
-        {
-            var cast = value.TryGetByteConstant(out var implicitlyConverted) is { }
-                && implicitlyConverted
-                && invocationExpression.TryGetTargetType() == null
-                    ? "(byte)"
-                    : "";
-            consumer.AddHighlighting(
-                new UseExpressionResultSuggestion(
-                    "The expression is always the same as the first argument.",
-                    invocationExpression,
-                    $"{cast}{value.GetText()}"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>byte.RotateRight(n, 0)</c> → <c>n</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeRotateRight(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument rotateAmountArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && rotateAmountArgument.Value.TryGetInt32Constant() is 0 && valueArgument.Value is { } value)
-        {
-            var cast = value.TryGetByteConstant(out var implicitlyConverted) is { }
-                && implicitlyConverted
-                && invocationExpression.TryGetTargetType() == null
-                    ? "(byte)"
-                    : "";
-            consumer.AddHighlighting(
-                new UseExpressionResultSuggestion(
-                    "The expression is always the same as the first argument.",
-                    invocationExpression,
-                    $"{cast}{value.GetText()}"));
         }
     }
 
@@ -393,6 +346,8 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
         }
     }
 
+    private protected override TypeCode? TryGetTypeCode() => TypeCode.Byte;
+
     private protected override byte? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -415,25 +370,21 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
-            return $"(byte){result}";
+            return constant.Cast("byte").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override TypeCode? TryGetTypeCode() => TypeCode.Byte;
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("byte").GetText();
 
-    private protected override string CastZero() => "(byte)0";
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "(byte)0";
 
     private protected override bool AreEqual(byte x, byte y) => x == y;
 
     private protected override bool IsZero(byte value) => value == 0;
-
-    private protected override bool IsOne(byte value) => value == 1;
 
     private protected override bool AreMinMaxValues(byte min, byte max) => (min, max) == (byte.MinValue, byte.MaxValue);
 
@@ -472,28 +423,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
                 case (_, { IsStatic: true }):
                     switch (method.ShortName)
                     {
-                        case "RotateLeft": // todo: nameof(byte.RotateLeft) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
-                                    when valueType.IsByte() && rotateAmountType.IsInt():
-
-                                    AnalyzeRotateLeft(consumer, element, valueArgument, rotateAmountArgument);
-                                    break;
-                            }
-                            break;
-
-                        case "RotateRight": // todo: nameof(byte.RotateRight) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
-                                    when valueType.IsByte() && rotateAmountType.IsInt():
-
-                                    AnalyzeRotateRight(consumer, element, valueArgument, rotateAmountArgument);
-                                    break;
-                            }
-                            break;
-
                         case nameof(byte.Parse):
                             switch (method.Parameters, element.Arguments)
                             {

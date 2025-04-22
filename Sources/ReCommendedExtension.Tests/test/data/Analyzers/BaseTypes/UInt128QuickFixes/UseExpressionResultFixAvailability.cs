@@ -25,37 +25,11 @@ namespace Test
 
         public void DivRem(UInt128 left)
         {
-            const int c = 1;
-
             var result11 = UInt128.DivRem(0, 10);
 
             (UInt128, UInt128) result21 = UInt128.DivRem(0, 10);
 
             (UInt128 quotient, UInt128 remainder) result32 = UInt128.DivRem(0, 10);
-
-            var result41 = UInt128.DivRem(left, 1);
-            var result42 = UInt128.DivRem(0x10, 1);
-            var result43 = UInt128.DivRem(0x10L, 1);
-            var result44 = UInt128.DivRem(0x10u, 1);
-            var result45 = UInt128.DivRem(0x10ul, 1);
-            var result46 = UInt128.DivRem(c, 1);
-            var result47 = UInt128.DivRem('a', 1);
-
-            (UInt128, UInt128) result51 = UInt128.DivRem(left, 1);
-            (UInt128, UInt128) result52 = UInt128.DivRem(0x10, 1);
-            (UInt128, UInt128) result53 = UInt128.DivRem(0x10L, 1);
-            (UInt128, UInt128) result54 = UInt128.DivRem(0x10u, 1);
-            (UInt128, UInt128) result55 = UInt128.DivRem(0x10ul, 1);
-            (UInt128, UInt128) result56 = UInt128.DivRem(c, 1);
-            (UInt128, UInt128) result57 = UInt128.DivRem('a', 1);
-
-            (UInt128 quotient, UInt128 remainder) result61 = UInt128.DivRem(left, 1);
-            (UInt128 quotient, UInt128 remainder) result62 = UInt128.DivRem(0x10, 1);
-            (UInt128 quotient, UInt128 remainder) result63 = UInt128.DivRem(0x10L, 1);
-            (UInt128 quotient, UInt128 remainder) result64 = UInt128.DivRem(0x10u, 1);
-            (UInt128 quotient, UInt128 remainder) result65 = UInt128.DivRem(0x10ul, 1);
-            (UInt128 quotient, UInt128 remainder) result66 = UInt128.DivRem(c, 1);
-            (UInt128 quotient, UInt128 remainder) result67 = UInt128.DivRem('a', 1);
         }
 
         public void Equals(UInt128 number)
@@ -99,6 +73,64 @@ namespace Test
             UInt128 result24 = UInt128.Min(10, 10L);
             UInt128 result25 = UInt128.Min(10, c);
             UInt128 result26 = UInt128.Min(97, 'a');
+        }
+
+        public void RotateLeft(UInt128 n)
+        {
+            const int c = 1;
+
+            var result11 = UInt128.RotateLeft(n, 0);
+            var result12 = UInt128.RotateLeft(0x01, 0);
+            var result13 = UInt128.RotateLeft(0x01u, 0);
+            var result14 = UInt128.RotateLeft(0x01L, 0);
+            var result15 = UInt128.RotateLeft(0x01ul, 0);
+            var result16 = UInt128.RotateLeft(1 + 1, 0);
+            var result17 = UInt128.RotateLeft(1u + 1u, 0);
+            var result18 = UInt128.RotateLeft(1L + 1L, 0);
+            var result19 = UInt128.RotateLeft(1ul + 1ul, 0);
+            var result1A = UInt128.RotateLeft(c, 0);
+            var result1B = UInt128.RotateLeft('a', 0);
+
+            UInt128 result21 = UInt128.RotateLeft(n, 0);
+            UInt128 result22 = UInt128.RotateLeft(0x01, 0);
+            UInt128 result23 = UInt128.RotateLeft(0x01u, 0);
+            UInt128 result24 = UInt128.RotateLeft(0x01L, 0);
+            UInt128 result25 = UInt128.RotateLeft(0x01ul, 0);
+            UInt128 result26 = UInt128.RotateLeft(1 + 1, 0);
+            UInt128 result27 = UInt128.RotateLeft(1u + 1u, 0);
+            UInt128 result28 = UInt128.RotateLeft(1L + 1L, 0);
+            UInt128 result29 = UInt128.RotateLeft(1ul + 1ul, 0);
+            UInt128 result2A = UInt128.RotateLeft(c, 0);
+            UInt128 result2B = UInt128.RotateLeft('a', 0);
+        }
+
+        public void RotateRight(UInt128 n)
+        {
+            const int c = 1;
+
+            var result11 = UInt128.RotateRight(n, 0);
+            var result12 = UInt128.RotateRight(0x01, 0);
+            var result13 = UInt128.RotateRight(0x01u, 0);
+            var result14 = UInt128.RotateRight(0x01L, 0);
+            var result15 = UInt128.RotateRight(0x01ul, 0);
+            var result16 = UInt128.RotateRight(1 + 1, 0);
+            var result17 = UInt128.RotateRight(1u + 1u, 0);
+            var result18 = UInt128.RotateRight(1L + 1L, 0);
+            var result19 = UInt128.RotateRight(1ul + 1ul, 0);
+            var result1A = UInt128.RotateRight(c, 0);
+            var result1B = UInt128.RotateRight('a', 0);
+
+            UInt128 result21 = UInt128.RotateRight(n, 0);
+            UInt128 result22 = UInt128.RotateRight(0x01, 0);
+            UInt128 result23 = UInt128.RotateRight(0x01u, 0);
+            UInt128 result24 = UInt128.RotateRight(0x01L, 0);
+            UInt128 result25 = UInt128.RotateRight(0x01ul, 0);
+            UInt128 result26 = UInt128.RotateRight(1 + 1, 0);
+            UInt128 result27 = UInt128.RotateRight(1u + 1u, 0);
+            UInt128 result28 = UInt128.RotateRight(1L + 1L, 0);
+            UInt128 result29 = UInt128.RotateRight(1ul + 1ul, 0);
+            UInt128 result2A = UInt128.RotateRight(c, 0);
+            UInt128 result2B = UInt128.RotateRight('a', 0);
         }
     }
 }

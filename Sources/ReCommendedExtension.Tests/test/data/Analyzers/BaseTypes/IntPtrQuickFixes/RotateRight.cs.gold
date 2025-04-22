@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class IntPtrs
+    {
+        public void RotateRight()
+        {
+            var result = (nint{caret})1;
+        }
+    }
+}

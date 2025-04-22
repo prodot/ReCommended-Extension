@@ -1,6 +1,7 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -76,21 +77,21 @@ public sealed class DecimalAnalyzer() : NumberAnalyzer<decimal>(PredefinedType.D
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
             if (constant is ICSharpLiteralExpression)
             {
+                if (constant.Type().IsChar())
+                {
+                    return constant.Cast("decimal").GetText();
+                }
+
+                var result = constant.GetText();
+
                 var magnitude = result is ['-' or '+', .. var m] ? m : result;
                 if (magnitude is ['0', 'x' or 'X' or 'b' or 'B', ..])
                 {
-                    return $"(decimal){result}";
-                }
-
-                if (result is ['\'', .., '\''])
-                {
-                    return $"(decimal){result}";
+                    return constant.Cast("decimal").GetText();
                 }
 
                 return result switch
@@ -104,11 +105,13 @@ public sealed class DecimalAnalyzer() : NumberAnalyzer<decimal>(PredefinedType.D
                 };
             }
 
-            return $"(decimal){result}";
+            return constant.Cast("decimal").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
+
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("decimal").GetText();
 
     private protected override bool AreEqual(decimal x, decimal y) => x == y;
 

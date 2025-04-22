@@ -68,10 +68,8 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
     public void TestDivRem()
     {
         Test(() => MissingSByteMethods.DivRem(0, 10), () => (0, 0));
-        Test(number => MissingSByteMethods.DivRem(number, 1), number => (number, 0));
 
         Test(() => MissingMathMethods.DivRem((sbyte)0, (sbyte)10), () => (0, 0));
-        Test(number => MissingMathMethods.DivRem(number, (sbyte)1), number => (number, 0));
 
         DoNamedTest2();
     }
@@ -110,6 +108,24 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingSByteMethods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateLeft()
+    {
+        Test(n => MissingSByteMethods.RotateLeft(n, 0), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateRight()
+    {
+        Test(n => MissingSByteMethods.RotateRight(n, 0), n => n);
 
         DoNamedTest2();
     }

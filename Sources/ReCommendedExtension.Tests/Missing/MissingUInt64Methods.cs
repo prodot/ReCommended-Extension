@@ -35,4 +35,10 @@ internal static class MissingUInt64Methods
 
     [Pure]
     public static ulong Min(ulong x, ulong y) => x <= y ? x : y;
+
+    [Pure]
+    public static ulong RotateLeft(ulong value, int offset) => value << offset | value >> (64 - offset);
+
+    [Pure]
+    public static ulong RotateRight(ulong value, int offset) => value >> offset | value << (64 - offset);
 }

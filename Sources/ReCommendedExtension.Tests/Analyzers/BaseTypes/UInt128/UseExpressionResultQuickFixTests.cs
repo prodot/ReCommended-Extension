@@ -18,10 +18,14 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     public void TestEquals_Object() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     public void TestMax() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     public void TestMin() => DoNamedTest2();
+
+    [Test]
+    public void TestRotateLeft() => DoNamedTest2();
+
+    [Test]
+    public void TestRotateRight() => DoNamedTest2();
 }

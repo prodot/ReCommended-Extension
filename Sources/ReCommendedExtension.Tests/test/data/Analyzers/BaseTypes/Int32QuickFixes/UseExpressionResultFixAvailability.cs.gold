@@ -26,71 +26,87 @@ namespace Test
 
         public void DivRem(int left)
         {
-            const int c = 1;
-
             var result11 = |int.DivRem(0, 10)|(12);
 
             (int, int) result21 = |int.DivRem(0, 10)|(13);
 
             (int quotient, int remainder) result32 = |int.DivRem(0, 10)|(14);
 
-            var result41 = |int.DivRem(left, 1)|(15);
-            var result42 = |int.DivRem(0x10, 1)|(16);
-            var result43 = |int.DivRem(c, 1)|(17);
-            var result44 = |int.DivRem('a', 1)|(18);
-
-            (int, int) result51 = |int.DivRem(left, 1)|(19);
-            (int, int) result52 = |int.DivRem(0x10, 1)|(20);
-            (int, int) result53 = |int.DivRem(c, 1)|(21);
-            (int, int) result54 = |int.DivRem('a', 1)|(22);
-
-            (int quotient, int remainder) result61 = |int.DivRem(left, 1)|(23);
-            (int quotient, int remainder) result62 = |int.DivRem(0x10, 1)|(24);
-            (int quotient, int remainder) result63 = |int.DivRem(c, 1)|(25);
-            (int quotient, int remainder) result64 = |int.DivRem('a', 1)|(26);
-
-            var result71 = |Math.DivRem(0, 10)|(27);
-            var result72 = |Math.DivRem(left, 1)|(28);
+            var result71 = |Math.DivRem(0, 10)|(15);
         }
 
         public void Equals(int number)
         {
-            var result = |number.Equals(null)|(29);
+            var result = |number.Equals(null)|(16);
         }
 
         public void GetTypeCode(int number)
         {
-            var result = |number.GetTypeCode()|(30);
+            var result = |number.GetTypeCode()|(17);
         }
 
         public void Max()
         {
             const int c = 10;
 
-            var result11 = |int.Max(10, 0x0A)|(31);
-            var result12 = |int.Max(10, c)|(32);
-            var result13 = |int.Max(97, 'a')|(33);
+            var result11 = |int.Max(10, 0x0A)|(18);
+            var result12 = |int.Max(10, c)|(19);
+            var result13 = |int.Max(97, 'a')|(20);
 
-            int result21 = |int.Max(10, 0x0A)|(34);
-            int result22 = |int.Max(10, c)|(35);
-            int result23 = |int.Max(97, 'a')|(36);
+            int result21 = |int.Max(10, 0x0A)|(21);
+            int result22 = |int.Max(10, c)|(22);
+            int result23 = |int.Max(97, 'a')|(23);
 
-            var result31 = |Math.Max(10, 10)|(37);
+            var result31 = |Math.Max(10, 10)|(24);
         }
 
         public void Min()
         {
             const int c = 10;
 
-            var result11 = |int.Min(10, 0x0A)|(38);
-            var result12 = |int.Min(10, c)|(39);
-            var result13 = |int.Min(97, 'a')|(40);
+            var result11 = |int.Min(10, 0x0A)|(25);
+            var result12 = |int.Min(10, c)|(26);
+            var result13 = |int.Min(97, 'a')|(27);
 
-            int result21 = |int.Min(10, 0x0A)|(41);
-            int result22 = |int.Min(10, c)|(42);
-            int result23 = |int.Min(97, 'a')|(43);
+            int result21 = |int.Min(10, 0x0A)|(28);
+            int result22 = |int.Min(10, c)|(29);
+            int result23 = |int.Min(97, 'a')|(30);
 
-            var result31 = |Math.Min(10, 10)|(44);
+            var result31 = |Math.Min(10, 10)|(31);
+        }
+
+        public void RotateLeft(int n)
+        {
+            const int c = 1;
+
+            var result11 = |int.RotateLeft(n, 0)|(32);
+            var result12 = |int.RotateLeft(0x01, 0)|(33);
+            var result13 = |int.RotateLeft(1 + 1, 0)|(34);
+            var result14 = |int.RotateLeft(c, 0)|(35);
+            var result15 = |int.RotateLeft('a', 0)|(36);
+
+            int result21 = |int.RotateLeft(n, 0)|(37);
+            int result22 = |int.RotateLeft(1, 0)|(38);
+            int result23 = |int.RotateLeft(1 + 1, 0)|(39);
+            int result24 = |int.RotateLeft(c, 0)|(40);
+            int result25 = |int.RotateLeft('a', 0)|(41);
+        }
+
+        public void RotateRight(int n)
+        {
+            const int c = 1;
+
+            var result11 = |int.RotateRight(n, 0)|(42);
+            var result12 = |int.RotateRight(0x01, 0)|(43);
+            var result13 = |int.RotateRight(1 + 1, 0)|(44);
+            var result14 = |int.RotateRight(c, 0)|(45);
+            var result15 = |int.RotateRight('a', 0)|(46);
+
+            int result21 = |int.RotateRight(n, 0)|(47);
+            int result22 = |int.RotateRight(1, 0)|(48);
+            int result23 = |int.RotateRight(1 + 1, 0)|(49);
+            int result24 = |int.RotateRight(c, 0)|(50);
+            int result25 = |int.RotateRight('a', 0)|(51);
         }
     }
 }
@@ -144,105 +160,126 @@ Replace with '(0, 0)'
 14: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(0, 0)'
-15: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: 0)'
-16: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: 0x10, Remainder: 0)'
-17: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: c, Remainder: 0)'
-18: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (int)'a', Remainder: 0)'
-19: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-20: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-21: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-22: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '('a', 0)'
-23: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-24: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-25: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-26: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '('a', 0)'
-27: The expression is always (0, 0).
+15: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(Quotient: 0, Remainder: 0)'
-28: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: 0)'
-29: The expression is always false.
+16: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
-30: The expression is always TypeCode.Int32.
+17: The expression is always TypeCode.Int32.
 QUICKFIXES:
 Replace with 'TypeCode.Int32'
+18: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+19: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+20: The expression is always 97.
+QUICKFIXES:
+Replace with '(int)'a''
+Replace with '97'
+21: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+22: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+23: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+24: The expression is always 10.
+QUICKFIXES:
+Replace with '10'
+25: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+26: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+27: The expression is always 97.
+QUICKFIXES:
+Replace with '(int)'a''
+Replace with '97'
+28: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+29: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+30: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
 31: The expression is always 10.
 QUICKFIXES:
-Replace with '0x0A'
 Replace with '10'
-32: The expression is always 10.
+32: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+33: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01'
+34: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+35: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-33: The expression is always 97.
+36: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(int)'a''
-Replace with '97'
-34: The expression is always 10.
+37: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-35: The expression is always 10.
+Replace with 'n'
+38: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+39: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+40: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-36: The expression is always 97.
+41: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with ''a''
-Replace with '97'
-37: The expression is always 10.
+42: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10'
-38: The expression is always 10.
+Replace with 'n'
+43: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-39: The expression is always 10.
+Replace with '0x01'
+44: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+45: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-40: The expression is always 97.
+46: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(int)'a''
-Replace with '97'
-41: The expression is always 10.
+47: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-42: The expression is always 10.
+Replace with 'n'
+48: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+49: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+50: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-43: The expression is always 97.
+51: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with ''a''
-Replace with '97'
-44: The expression is always 10.
-QUICKFIXES:
-Replace with '10'

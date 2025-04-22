@@ -22,28 +22,13 @@ namespace Test
 
         public void DivRem(short left)
         {
-            const int c = 1;
-
             var result11 = short.DivRem(0, 10);
 
             (short, short) result21 = short.DivRem(0, 10);
 
             (short quotient, short remainder) result32 = short.DivRem(0, 10);
 
-            var result41 = short.DivRem(left, 1);
-            var result42 = short.DivRem(0x10, 1);
-            var result43 = short.DivRem(c, 1);
-
-            (short, short) result51 = short.DivRem(left, 1);
-            (short, short) result52 = short.DivRem(0x10, 1);
-            (short, short) result53 = short.DivRem(c, 1);
-
-            (short quotient, short remainder) result61 = short.DivRem(left, 1);
-            (short quotient, short remainder) result62 = short.DivRem(0x10, 1);
-            (short quotient, short remainder) result63 = short.DivRem(c, 1);
-
             var result71 = Math.DivRem((short)0, (short)10);
-            var result72 = Math.DivRem(left, (short)1);
         }
 
         public void Equals(short number)
@@ -72,6 +57,36 @@ namespace Test
             short result2 = short.Min(10, 0x0A);
 
             var result3 = Math.Min((short)10, (short)10);
+        }
+
+        public void RotateLeft(short n)
+        {
+            const int c = 1;
+
+            var result11 = short.RotateLeft(n, 0);
+            var result12 = short.RotateLeft(0x01, 0);
+            var result13 = short.RotateLeft(1 + 1, 0);
+            var result14 = short.RotateLeft(c, 0);
+
+            short result21 = short.RotateLeft(n, 0);
+            short result22 = short.RotateLeft(1, 0);
+            short result23 = short.RotateLeft(1 + 1, 0);
+            short result24 = short.RotateLeft(c, 0);
+        }
+
+        public void RotateRight(short n)
+        {
+            const int c = 1;
+
+            var result11 = short.RotateRight(n, 0);
+            var result12 = short.RotateRight(0x01, 0);
+            var result13 = short.RotateRight(1 + 1, 0);
+            var result14 = short.RotateRight(c, 0);
+
+            short result21 = short.RotateRight(n, 0);
+            short result22 = short.RotateRight(1, 0);
+            short result23 = short.RotateRight(1 + 1, 0);
+            short result24 = short.RotateRight(c, 0);
         }
     }
 }

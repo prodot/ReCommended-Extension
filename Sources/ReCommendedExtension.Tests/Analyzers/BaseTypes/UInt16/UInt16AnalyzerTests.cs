@@ -61,10 +61,8 @@ public sealed class UInt16AnalyzerTests : CSharpHighlightingTestBase
     public void TestDivRem()
     {
         Test(() => MissingUInt16Methods.DivRem(0, 10), () => (0, 0));
-        Test(number => MissingUInt16Methods.DivRem(number, 1), number => (number, 0));
 
         Test(() => MissingMathMethods.DivRem((ushort)0, (ushort)10), () => (0, 0));
-        Test(number => MissingMathMethods.DivRem(number, (ushort)1), number => (number, 0));
 
         DoNamedTest2();
     }
@@ -103,6 +101,24 @@ public sealed class UInt16AnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingUInt16Methods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateLeft()
+    {
+        Test(n => MissingUInt16Methods.RotateLeft(n, 0), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateRight()
+    {
+        Test(n => MissingUInt16Methods.RotateRight(n, 0), n => n);
 
         DoNamedTest2();
     }

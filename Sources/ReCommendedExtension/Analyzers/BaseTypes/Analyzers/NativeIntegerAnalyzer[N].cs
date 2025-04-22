@@ -3,6 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -63,23 +64,23 @@ public sealed class IntPtrAnalyzer() : NativeIntegerAnalyzer<nint>(PredefinedTyp
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
-            return constant.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? $"(nint){result}" : $"(IntPtr){result}";
+            return constant.Cast(constant.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? "nint" : "IntPtr").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override string CastZero() => "(nint)0";
+    private protected override string Cast(ICSharpExpression expression)
+        => expression.Cast(expression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? "nint" : "IntPtr").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel)
+        => languageLevel >= CSharpLanguageLevel.CSharp90 ? "(nint)0" : "(IntPtr)0";
 
     private protected override bool AreEqual(nint x, nint y) => x == y;
 
     private protected override bool IsZero(nint value) => value == 0;
-
-    private protected override bool IsOne(nint value) => value == 1;
 }
 
 /// <remarks>
@@ -132,17 +133,19 @@ public sealed class UIntPtrAnalyzer() : NativeIntegerAnalyzer<nuint>(PredefinedT
 
         if (implicitlyConverted)
         {
-            return constant.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? $"(nuint){result}" : $"(UIntPtr){result}";
+            return constant.Cast(constant.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? "nuint" : "UIntPtr").GetText();
         }
 
         return result;
     }
 
-    private protected override string CastZero() => "(nuint)0";
+    private protected override string Cast(ICSharpExpression expression)
+        => expression.Cast(expression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? "nuint" : "UIntPtr").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel)
+        => languageLevel >= CSharpLanguageLevel.CSharp90 ? "(nuint)0" : "(UIntPtr)0";
 
     private protected override bool AreEqual(nuint x, nuint y) => x == y;
 
     private protected override bool IsZero(nuint value) => value == 0;
-
-    private protected override bool IsOne(nuint value) => value == 1;
 }

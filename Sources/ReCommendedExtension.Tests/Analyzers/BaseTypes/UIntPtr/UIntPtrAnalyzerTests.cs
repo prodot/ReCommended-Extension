@@ -50,10 +50,8 @@ public sealed class UIntPtrAnalyzerTests : CSharpHighlightingTestBase
     public void TestDivRem()
     {
         Test(() => MissingUIntPtrMethods.DivRem(0, 10), () => (0u, 0u));
-        Test(number => MissingUIntPtrMethods.DivRem(number, 1), number => (number, 0u));
 
         Test(() => MissingMathMethods.DivRem((nuint)0, (nuint)10), () => (0u, 0u));
-        Test(number => MissingMathMethods.DivRem(number, (nuint)1), number => (number, 0u));
 
         DoNamedTest2();
     }
@@ -84,6 +82,24 @@ public sealed class UIntPtrAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingUIntPtrMethods.Min(n, n), n => n);
         Test(n => MissingMathMethods.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateLeft()
+    {
+        Test(n => MissingUIntPtrMethods.RotateLeft(n, 0), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateRight()
+    {
+        Test(n => MissingUIntPtrMethods.RotateRight(n, 0), n => n);
 
         DoNamedTest2();
     }

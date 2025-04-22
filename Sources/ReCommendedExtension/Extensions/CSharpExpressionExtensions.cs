@@ -152,6 +152,21 @@ internal static class CSharpExpressionExtensions
     }
 
     [Pure]
+    public static ICSharpExpression Cast(this ICSharpExpression expression, string typeName)
+    {
+        var factory = CSharpElementFactory.GetInstance(expression);
+
+        var newExpression = factory.CreateExpression($"({typeName})($0)", expression);
+
+        if (newExpression is ICastExpression castExpression)
+        {
+            castExpression.SetOp(castExpression.Op.TryRemoveParentheses(factory));
+        }
+
+        return newExpression;
+    }
+
+    [Pure]
     public static CSharpControlFlowNullReferenceState GetNullReferenceStateByNullableContext(
         this ICSharpExpression expression,
         CSharpCompilerNullableInspector? nullabilityInspector)

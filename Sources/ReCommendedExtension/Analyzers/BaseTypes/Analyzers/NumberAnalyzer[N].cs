@@ -30,9 +30,8 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
                 Debug.Assert(minArgument.Value is { });
                 Debug.Assert(maxArgument.Value is { });
 
-                var (replacementMin, replacementMax) = invocationExpression.TryGetTargetType().IsClrType(clrTypeName)
-                    ? (minArgument.Value.GetText(), maxArgument.Value.GetText())
-                    : (CastConstant(minArgument.Value, minImplicitlyConverted), CastConstant(maxArgument.Value, maxImplicitlyConverted));
+                var replacementMin = GetReplacementFromArgument(invocationExpression, minArgument.Value);
+                var replacementMax = GetReplacementFromArgument(invocationExpression, maxArgument.Value);
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
@@ -44,13 +43,11 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
 
             if (AreMinMaxValues(min, max) && valueArgument.Value is { } value)
             {
-                var replacement = TryGetConstant(value, out var valueImplicitlyConverted) is { }
-                    && !invocationExpression.TryGetTargetType().IsClrType(clrTypeName)
-                        ? CastConstant(value, valueImplicitlyConverted)
-                        : value.GetText();
-
                 consumer.AddHighlighting(
-                    new UseExpressionResultSuggestion("The expression is always the same as the first argument.", invocationExpression, replacement));
+                    new UseExpressionResultSuggestion(
+                        "The expression is always the same as the first argument.",
+                        invocationExpression,
+                        GetReplacementFromArgument(invocationExpression, value)));
             }
         }
     }
@@ -116,9 +113,8 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
 
-            var (replacementX, replacementY) = invocationExpression.TryGetTargetType().IsClrType(clrTypeName)
-                ? (xArgument.Value.GetText(), yArgument.Value.GetText())
-                : (CastConstant(xArgument.Value, xImplicitlyConverted), CastConstant(yArgument.Value, yImplicitlyConverted));
+            var replacementX = GetReplacementFromArgument(invocationExpression, xArgument.Value);
+            var replacementY = GetReplacementFromArgument(invocationExpression, yArgument.Value);
 
             consumer.AddHighlighting(
                 new UseExpressionResultSuggestion(
@@ -142,9 +138,8 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
 
-            var (replacementX, replacementY) = invocationExpression.TryGetTargetType().IsClrType(clrTypeName)
-                ? (xArgument.Value.GetText(), yArgument.Value.GetText())
-                : (CastConstant(xArgument.Value, xImplicitlyConverted), CastConstant(yArgument.Value, yImplicitlyConverted));
+            var replacementX = GetReplacementFromArgument(invocationExpression, xArgument.Value);
+            var replacementY = GetReplacementFromArgument(invocationExpression, yArgument.Value);
 
             consumer.AddHighlighting(
                 new UseExpressionResultSuggestion(
@@ -156,6 +151,14 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
     }
 
     [Pure]
+    private protected string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue)
+        => invocationExpression.TryGetTargetType().IsClrType(clrTypeName) || argumentValue.Type().IsClrType(ClrTypeName)
+            ? argumentValue.GetText()
+            : TryGetConstant(argumentValue, out var valueImplicitlyConverted) is { } && valueImplicitlyConverted
+                ? CastConstant(argumentValue, valueImplicitlyConverted)
+                : Cast(argumentValue);
+
+    [Pure]
     private protected abstract TypeCode? TryGetTypeCode();
 
     [Pure]
@@ -163,6 +166,9 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : ElementProbl
 
     [Pure]
     private protected abstract string CastConstant(ICSharpExpression constant, bool implicitlyConverted);
+
+    [Pure]
+    private protected abstract string Cast(ICSharpExpression expression);
 
     [Pure]
     private protected abstract bool AreEqual(N x, N y);

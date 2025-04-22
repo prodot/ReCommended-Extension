@@ -44,40 +44,13 @@ namespace Test
 
         public void DivRem(ulong left)
         {
-            const int c = 1;
-
             var result11 = ulong.DivRem(0, 10);
 
             (ulong, ulong) result21 = ulong.DivRem(0, 10);
 
             (ulong quotient, ulong remainder) result32 = ulong.DivRem(0, 10);
 
-            var result41 = ulong.DivRem(left, 1);
-            var result42 = ulong.DivRem(0x10, 1);
-            var result43 = ulong.DivRem(0x10u, 1);
-            var result44 = ulong.DivRem(0x10L, 1);
-            var result45 = ulong.DivRem(0x10ul, 1);
-            var result46 = ulong.DivRem(c, 1);
-            var result47 = ulong.DivRem('a', 1);
-
-            (ulong, ulong) result51 = ulong.DivRem(left, 1);
-            (ulong, ulong) result52 = ulong.DivRem(0x10, 1);
-            (ulong, ulong) result53 = ulong.DivRem(0x10u, 1);
-            (ulong, ulong) result54 = ulong.DivRem(0x10L, 1);
-            (ulong, ulong) result55 = ulong.DivRem(0x10ul, 1);
-            (ulong, ulong) result56 = ulong.DivRem(c, 1);
-            (ulong, ulong) result57 = ulong.DivRem('a', 1);
-
-            (ulong quotient, ulong remainder) result61 = ulong.DivRem(left, 1);
-            (ulong quotient, ulong remainder) result62 = ulong.DivRem(0x10, 1);
-            (ulong quotient, ulong remainder) result63 = ulong.DivRem(0x10u, 1);
-            (ulong quotient, ulong remainder) result64 = ulong.DivRem(0x10L, 1);
-            (ulong quotient, ulong remainder) result65 = ulong.DivRem(0x10ul, 1);
-            (ulong quotient, ulong remainder) result66 = ulong.DivRem(c, 1);
-            (ulong quotient, ulong remainder) result67 = ulong.DivRem('a', 1);
-
             var result71 = Math.DivRem(0ul, 10ul);
-            var result72 = Math.DivRem(left, 1ul);
         }
 
         public void Equals(ulong number)
@@ -130,6 +103,64 @@ namespace Test
             ulong result26 = ulong.Min(97, 'a');
 
             var result31 = Math.Min(10ul, 10ul);
+        }
+
+        public void RotateLeft(ulong n)
+        {
+            const int c = 1;
+
+            var result11 = ulong.RotateLeft(n, 0);
+            var result12 = ulong.RotateLeft(0x01, 0);
+            var result13 = ulong.RotateLeft(0x01u, 0);
+            var result14 = ulong.RotateLeft(0x01L, 0);
+            var result15 = ulong.RotateLeft(0x01ul, 0);
+            var result16 = ulong.RotateLeft(1 + 1, 0);
+            var result17 = ulong.RotateLeft(1u + 1u, 0);
+            var result18 = ulong.RotateLeft(1L + 1L, 0);
+            var result19 = ulong.RotateLeft(1ul + 1ul, 0);
+            var result1A = ulong.RotateLeft(c, 0);
+            var result1B = ulong.RotateLeft('a', 0);
+
+            ulong result21 = ulong.RotateLeft(n, 0);
+            ulong result22 = ulong.RotateLeft(0x01, 0);
+            ulong result23 = ulong.RotateLeft(0x01u, 0);
+            ulong result24 = ulong.RotateLeft(0x01L, 0);
+            ulong result25 = ulong.RotateLeft(0x01ul, 0);
+            ulong result26 = ulong.RotateLeft(1 + 1, 0);
+            ulong result27 = ulong.RotateLeft(1u + 1u, 0);
+            ulong result28 = ulong.RotateLeft(1L + 1L, 0);
+            ulong result29 = ulong.RotateLeft(1ul + 1ul, 0);
+            ulong result2A = ulong.RotateLeft(c, 0);
+            ulong result2B = ulong.RotateLeft('a', 0);
+        }
+
+        public void RotateRight(ulong n)
+        {
+            const int c = 1;
+
+            var result11 = ulong.RotateRight(n, 0);
+            var result12 = ulong.RotateRight(0x01, 0);
+            var result13 = ulong.RotateRight(0x01u, 0);
+            var result14 = ulong.RotateRight(0x01L, 0);
+            var result15 = ulong.RotateRight(0x01ul, 0);
+            var result16 = ulong.RotateRight(1 + 1, 0);
+            var result17 = ulong.RotateRight(1u + 1u, 0);
+            var result18 = ulong.RotateRight(1L + 1L, 0);
+            var result19 = ulong.RotateRight(1ul + 1ul, 0);
+            var result1A = ulong.RotateRight(c, 0);
+            var result1B = ulong.RotateRight('a', 0);
+
+            ulong result21 = ulong.RotateRight(n, 0);
+            ulong result22 = ulong.RotateRight(0x01, 0);
+            ulong result23 = ulong.RotateRight(0x01u, 0);
+            ulong result24 = ulong.RotateRight(0x01L, 0);
+            ulong result25 = ulong.RotateRight(0x01ul, 0);
+            ulong result26 = ulong.RotateRight(1 + 1, 0);
+            ulong result27 = ulong.RotateRight(1u + 1u, 0);
+            ulong result28 = ulong.RotateRight(1L + 1L, 0);
+            ulong result29 = ulong.RotateRight(1ul + 1ul, 0);
+            ulong result2A = ulong.RotateRight(c, 0);
+            ulong result2B = ulong.RotateRight('a', 0);
         }
     }
 }

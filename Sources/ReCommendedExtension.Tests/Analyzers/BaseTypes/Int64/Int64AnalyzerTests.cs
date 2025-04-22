@@ -68,10 +68,8 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
     public void TestDivRem()
     {
         Test(() => MissingInt64Methods.DivRem(0, 10), () => (0, 0));
-        Test(number => MissingInt64Methods.DivRem(number, 1), number => (number, 0));
 
         Test(() => MissingMathMethods.DivRem(0L, 10L), () => (0, 0));
-        Test(number => MissingMathMethods.DivRem(number, 1L), number => (number, 0));
 
         DoNamedTest2();
     }
@@ -110,6 +108,24 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingInt64Methods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateLeft()
+    {
+        Test(n => MissingInt64Methods.RotateLeft(n, 0), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestRotateRight()
+    {
+        Test(n => MissingInt64Methods.RotateRight(n, 0), n => n);
 
         DoNamedTest2();
     }

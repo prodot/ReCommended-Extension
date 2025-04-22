@@ -2,6 +2,7 @@
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Extensions;
 
@@ -23,45 +24,64 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
         {
             if (TryGetConstant(leftArgument.Value, out _) is { } left && IsZero(left) && !IsZero(right))
             {
-                var replacement = invocationExpression.TryGetTargetType().IsValueTuple(out var t1TypeArgument, out var t2TypeArgument)
+                var replacement =
+                    invocationExpression.TryGetTargetType().IsValueTuple(out var t1TypeArgument, out var t2TypeArgument)
                     && t1TypeArgument.IsClrType(ClrTypeName)
                     && t2TypeArgument.IsClrType(ClrTypeName)
                         ? "(0, 0)"
-                        : $"(Quotient: {CastZero()}, Remainder: {CastZero()})";
+                        : $"(Quotient: {CastZero(invocationExpression.GetCSharpLanguageLevel())}, Remainder: {CastZero(invocationExpression.GetCSharpLanguageLevel())})";
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion("The expression is always (0, 0).", invocationExpression, replacement));
 
                 return;
             }
+        }
+    }
 
-            if (IsOne(right) && leftArgument.Value is { } leftValue)
-            {
-                var replacement = invocationExpression.TryGetTargetType().IsValueTuple(out var t1TypeArgument, out var t2TypeArgument)
-                    && t1TypeArgument.IsClrType(ClrTypeName)
-                    && t2TypeArgument.IsClrType(ClrTypeName)
-                        ? $"({leftValue.GetText()}, 0)"
-                        : TryGetConstant(leftArgument.Value, out var leftImplicitlyConverted) is { } && leftImplicitlyConverted
-                            ? $"(Quotient: {CastConstant(leftValue, leftImplicitlyConverted)}, Remainder: {CastZero()})"
-                            : $"(Quotient: {leftValue.GetText()}, Remainder: {CastZero()})";
+    /// <remarks>
+    /// <c>T.RotateLeft(n, 0)</c> → <c>n</c>
+    /// </remarks>
+    void AnalyzeRotateLeft(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument valueArgument,
+        ICSharpArgument rotateAmountArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && rotateAmountArgument.Value.TryGetInt32Constant() == 0 && valueArgument.Value is { } value)
+        {
+            consumer.AddHighlighting(
+                new UseExpressionResultSuggestion(
+                    "The expression is always the same as the first argument.",
+                    invocationExpression,
+                    GetReplacementFromArgument(invocationExpression, value)));
+        }
+    }
 
-                consumer.AddHighlighting(
-                    new UseExpressionResultSuggestion(
-                        "The expression is always the same as the first argument with no remainder.",
-                        invocationExpression,
-                        replacement));
-            }
+    /// <remarks>
+    /// <c>T.RotateRight(n, 0)</c> → <c>n</c>
+    /// </remarks>
+    void AnalyzeRotateRight(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument valueArgument,
+        ICSharpArgument rotateAmountArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && rotateAmountArgument.Value.TryGetInt32Constant() == 0 && valueArgument.Value is { } value)
+        {
+            consumer.AddHighlighting(
+                new UseExpressionResultSuggestion(
+                    "The expression is always the same as the first argument.",
+                    invocationExpression,
+                    GetReplacementFromArgument(invocationExpression, value)));
         }
     }
 
     [Pure]
-    private protected abstract string CastZero();
+    private protected abstract string CastZero(CSharpLanguageLevel languageLevel);
 
     [Pure]
     private protected abstract bool IsZero(N value);
-
-    [Pure]
-    private protected abstract bool IsOne(N value);
 
     private protected override void Analyze(
         IInvocationExpression element,
@@ -89,6 +109,28 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
                                     when leftType.IsClrType(ClrTypeName) && rightType.IsClrType(ClrTypeName):
 
                                     AnalyzeDivRem(consumer, element, leftArgument, rightArgument);
+                                    break;
+                            }
+                            break;
+
+                        case "RotateLeft": // todo: nameof(IBinaryInteger<T>.RotateLeft) when available
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
+                                    when valueType.IsClrType(ClrTypeName) && rotateAmountType.IsInt():
+
+                                    AnalyzeRotateLeft(consumer, element, valueArgument, rotateAmountArgument);
+                                    break;
+                            }
+                            break;
+
+                        case "RotateRight": // todo: nameof(IBinaryInteger<T>.RotateRight) when available
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
+                                    when valueType.IsClrType(ClrTypeName) && rotateAmountType.IsInt():
+
+                                    AnalyzeRotateRight(consumer, element, valueArgument, rotateAmountArgument);
                                     break;
                             }
                             break;
@@ -148,23 +190,21 @@ public sealed class SByteAnalyzer() : IntegerAnalyzer<sbyte>(PredefinedType.SBYT
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
-            return $"(sbyte){result}";
+            return constant.Cast("sbyte").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override string CastZero() => "(sbyte)0";
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("sbyte").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "(sbyte)0";
 
     private protected override bool AreEqual(sbyte x, sbyte y) => x == y;
 
     private protected override bool IsZero(sbyte value) => value == 0;
-
-    private protected override bool IsOne(sbyte value) => value == 1;
 
     private protected override bool AreMinMaxValues(sbyte min, sbyte max) => (min, max) == (sbyte.MinValue, sbyte.MaxValue);
 }
@@ -209,23 +249,21 @@ public sealed class Int16Analyzer() : IntegerAnalyzer<short>(PredefinedType.SHOR
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
-            return $"(short){result}";
+            return constant.Cast("short").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override string CastZero() => "(short)0";
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("short").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "(short)0";
 
     private protected override bool AreEqual(short x, short y) => x == y;
 
     private protected override bool IsZero(short value) => value == 0;
-
-    private protected override bool IsOne(short value) => value == 1;
 
     private protected override bool AreMinMaxValues(short min, short max) => (min, max) == (short.MinValue, short.MaxValue);
 }
@@ -270,23 +308,21 @@ public sealed class UInt16Analyzer() : IntegerAnalyzer<ushort>(PredefinedType.US
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
-            return $"(ushort){result}";
+            return constant.Cast("ushort").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override string CastZero() => "(ushort)0";
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("ushort").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "(ushort)0";
 
     private protected override bool AreEqual(ushort x, ushort y) => x == y;
 
     private protected override bool IsZero(ushort value) => value == 0;
-
-    private protected override bool IsOne(ushort value) => value == 1;
 
     private protected override bool AreMinMaxValues(ushort min, ushort max) => (min, max) == (ushort.MinValue, ushort.MaxValue);
 }
@@ -339,23 +375,31 @@ public sealed class Int32Analyzer() : IntegerAnalyzer<int>(PredefinedType.INT_FQ
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
-        if (implicitlyConverted || result is ['\'', .., '\''])
+        if (implicitlyConverted)
         {
-            return $"(int){result}";
+            if (constant is ICSharpLiteralExpression)
+            {
+                if (constant.Type().IsChar())
+                {
+                    return constant.Cast("int").GetText();
+                }
+            }
+            else
+            {
+                return constant.Cast("int").GetText();
+            }
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override string CastZero() => "0";
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("int").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "0";
 
     private protected override bool AreEqual(int x, int y) => x == y;
 
     private protected override bool IsZero(int value) => value == 0;
-
-    private protected override bool IsOne(int value) => value == 1;
 
     private protected override bool AreMinMaxValues(int min, int max) => (min, max) == (int.MinValue, int.MaxValue);
 }
@@ -404,33 +448,31 @@ public sealed class UInt32Analyzer() : IntegerAnalyzer<uint>(PredefinedType.UINT
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
-            if (result is ['\'', .., '\''])
-            {
-                return $"(uint){result}";
-            }
-
             if (constant is ICSharpLiteralExpression)
             {
-                return $"{result}u";
+                if (constant.Type().IsChar())
+                {
+                    return constant.Cast("uint").GetText();
+                }
+
+                return $"{constant.GetText()}u";
             }
 
-            return $"(uint){result}";
+            return constant.Cast("uint").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override string CastZero() => "0u";
+    private protected override string Cast(ICSharpExpression expression) => $"(uint)({expression.GetText()})";
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "0u";
 
     private protected override bool AreEqual(uint x, uint y) => x == y;
 
     private protected override bool IsZero(uint value) => value == 0;
-
-    private protected override bool IsOne(uint value) => value == 1;
 
     private protected override bool AreMinMaxValues(uint min, uint max) => (min, max) == (uint.MinValue, uint.MaxValue);
 }
@@ -495,16 +537,16 @@ public sealed class Int64Analyzer() : IntegerAnalyzer<long>(PredefinedType.LONG_
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
             if (constant is ICSharpLiteralExpression)
             {
-                if (result is ['\'', .., '\''])
+                if (constant.Type().IsChar())
                 {
-                    return $"(long){result}";
+                    return constant.Cast("long").GetText();
                 }
+
+                var result = constant.GetText();
 
                 if (result is [.. var rest, 'u' or 'U'])
                 {
@@ -514,19 +556,19 @@ public sealed class Int64Analyzer() : IntegerAnalyzer<long>(PredefinedType.LONG_
                 return $"{result}L";
             }
 
-            return $"(long){result}";
+            return constant.Cast("long").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override string CastZero() => "0L";
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("long").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "0L";
 
     private protected override bool AreEqual(long x, long y) => x == y;
 
     private protected override bool IsZero(long value) => value == 0;
-
-    private protected override bool IsOne(long value) => value == 1;
 
     private protected override bool AreMinMaxValues(long min, long max) => (min, max) == (long.MinValue, long.MaxValue);
 }
@@ -587,16 +629,16 @@ public sealed class UInt64Analyzer() : IntegerAnalyzer<ulong>(PredefinedType.ULO
 
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
     {
-        var result = constant.GetText();
-
         if (implicitlyConverted)
         {
             if (constant is ICSharpLiteralExpression)
             {
-                if (result is ['\'', .., '\''])
+                if (constant.Type().IsChar())
                 {
-                    return $"(ulong){result}";
+                    return constant.Cast("ulong").GetText();
                 }
+
+                var result = constant.GetText();
 
                 return result switch
                 {
@@ -607,19 +649,19 @@ public sealed class UInt64Analyzer() : IntegerAnalyzer<ulong>(PredefinedType.ULO
                 };
             }
 
-            return $"(ulong){result}";
+            return constant.Cast("ulong").GetText();
         }
 
-        return result;
+        return constant.GetText();
     }
 
-    private protected override string CastZero() => "0ul";
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("ulong").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "0ul";
 
     private protected override bool AreEqual(ulong x, ulong y) => x == y;
 
     private protected override bool IsZero(ulong value) => value == 0;
-
-    private protected override bool IsOne(ulong value) => value == 1;
 
     private protected override bool AreMinMaxValues(ulong min, ulong max) => (min, max) == (ulong.MinValue, ulong.MaxValue);
 }
@@ -666,6 +708,42 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
         public static bool operator >=(Int128 x, Int128 y)
             => unchecked((long)x.upper) > unchecked((long)y.upper) || x.upper == y.upper && x.lower >= y.lower;
 
+        public static Int128 operator |(Int128 x, Int128 y) => new(x.upper | y.upper, x.lower | y.lower);
+
+        public static Int128 operator <<(Int128 value, int shiftAmount)
+        {
+            shiftAmount &= 0x7F;
+
+            if ((shiftAmount & 0x40) != 0)
+            {
+                return new Int128(value.lower << shiftAmount, 0);
+            }
+
+            if (shiftAmount != 0)
+            {
+                return new Int128(value.upper << shiftAmount | value.lower >> (64 - shiftAmount), value.lower << shiftAmount);
+            }
+
+            return value;
+        }
+
+        public static Int128 operator >>>(Int128 value, int shiftAmount)
+        {
+            shiftAmount &= 0x7F;
+
+            if ((shiftAmount & 0x40) != 0)
+            {
+                return new Int128(0, value.upper >> shiftAmount);
+            }
+
+            if (shiftAmount != 0)
+            {
+                return new Int128(value.upper >> shiftAmount, value.lower >> shiftAmount | value.upper << (64 - shiftAmount));
+            }
+
+            return value;
+        }
+
         [Pure]
         public static Int128 Clamp(Int128 value, Int128 min, Int128 max)
         {
@@ -707,6 +785,12 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
                 return (new Int128(quotient), new Int128(remainder));
             }
         }
+
+        [Pure]
+        public static Int128 RotateLeft(Int128 value, int rotateAmount) => value << rotateAmount | value >>> (128 - rotateAmount);
+
+        [Pure]
+        public static Int128 RotateRight(Int128 value, int rotateAmount) => value >>> rotateAmount | value << (128 - rotateAmount);
 
         readonly ulong lower;
         readonly ulong upper;
@@ -812,15 +896,15 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
         return null;
     }
 
-    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => $"(Int128){constant.GetText()}";
+    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => constant.Cast("Int128").GetText();
 
-    private protected override string CastZero() => "(Int128)0";
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("Int128").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "(Int128)0";
 
     private protected override bool AreEqual(Int128 x, Int128 y) => x == y;
 
     private protected override bool IsZero(Int128 value) => value == 0;
-
-    private protected override bool IsOne(Int128 value) => value == 1;
 
     private protected override bool AreMinMaxValues(Int128 min, Int128 max) => (min, max) == (Int128.MinValue, Int128.MaxValue);
 }
@@ -860,6 +944,42 @@ public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>
         public static bool operator >(UInt128 x, UInt128 y) => x.upper > y.upper || x.upper == y.upper && x.upper > y.upper;
 
         public static bool operator >=(UInt128 x, UInt128 y) => x.upper > y.upper || x.upper == y.upper && x.lower >= y.lower;
+
+        public static UInt128 operator |(UInt128 x, UInt128 y) => new(x.upper | y.upper, x.lower | y.lower);
+
+        public static UInt128 operator <<(UInt128 value, int shiftAmount)
+        {
+            shiftAmount &= 0x7F;
+
+            if ((shiftAmount & 0x40) != 0)
+            {
+                return new UInt128(value.lower << shiftAmount, 0);
+            }
+
+            if (shiftAmount != 0)
+            {
+                return new UInt128(value.upper << shiftAmount | value.lower >> (64 - shiftAmount), value.lower << shiftAmount);
+            }
+
+            return value;
+        }
+
+        public static UInt128 operator >>>(UInt128 value, int shiftAmount)
+        {
+            shiftAmount &= 0x7F;
+
+            if ((shiftAmount & 0x40) != 0)
+            {
+                return new UInt128(0, value.upper >> shiftAmount);
+            }
+
+            if (shiftAmount != 0)
+            {
+                return new UInt128(value.upper >> shiftAmount, value.lower >> shiftAmount | value.upper << (64 - shiftAmount));
+            }
+
+            return value;
+        }
 
         [Pure]
         public static UInt128 Clamp(UInt128 value, UInt128 min, UInt128 max)
@@ -902,6 +1022,12 @@ public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>
                 return (new UInt128(quotient), new UInt128(remainder));
             }
         }
+
+        [Pure]
+        public static UInt128 RotateLeft(UInt128 value, int rotateAmount) => value << rotateAmount | value >>> (128 - rotateAmount);
+
+        [Pure]
+        public static UInt128 RotateRight(UInt128 value, int rotateAmount) => value >>> rotateAmount | value << (128 - rotateAmount);
 
         readonly ulong lower;
         readonly ulong upper;
@@ -985,15 +1111,15 @@ public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>
         return null;
     }
 
-    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => $"(UInt128){constant.GetText()}";
+    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => constant.Cast("UInt128").GetText();
 
-    private protected override string CastZero() => "(UInt128)0";
+    private protected override string Cast(ICSharpExpression expression) => expression.Cast("UInt128").GetText();
+
+    private protected override string CastZero(CSharpLanguageLevel languageLevel) => "(UInt128)0";
 
     private protected override bool AreEqual(UInt128 x, UInt128 y) => x == y;
 
     private protected override bool IsZero(UInt128 value) => value == 0;
-
-    private protected override bool IsOne(UInt128 value) => value == 1;
 
     private protected override bool AreMinMaxValues(UInt128 min, UInt128 max) => (min, max) == (UInt128.MinValue, UInt128.MaxValue);
 }

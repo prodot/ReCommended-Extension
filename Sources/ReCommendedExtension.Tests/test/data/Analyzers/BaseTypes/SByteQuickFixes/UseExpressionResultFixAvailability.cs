@@ -22,28 +22,13 @@ namespace Test
 
         public void DivRem(sbyte left)
         {
-            const int c = 1;
-
             var result11 = sbyte.DivRem(0, 10);
 
             (sbyte, sbyte) result21 = sbyte.DivRem(0, 10);
 
             (sbyte quotient, sbyte remainder) result32 = sbyte.DivRem(0, 10);
 
-            var result41 = sbyte.DivRem(left, 1);
-            var result42 = sbyte.DivRem(0x10, 1);
-            var result43 = sbyte.DivRem(c, 1);
-
-            (sbyte, sbyte) result51 = sbyte.DivRem(left, 1);
-            (sbyte, sbyte) result52 = sbyte.DivRem(0x10, 1);
-            (sbyte, sbyte) result53 = sbyte.DivRem(c, 1);
-
-            (sbyte quotient, sbyte remainder) result61 = sbyte.DivRem(left, 1);
-            (sbyte quotient, sbyte remainder) result62 = sbyte.DivRem(0x10, 1);
-            (sbyte quotient, sbyte remainder) result63 = sbyte.DivRem(c, 1);
-
             var result71 = Math.DivRem((sbyte)0, (sbyte)10);
-            var result72 = Math.DivRem(left, (sbyte)1);
         }
 
         public void Equals(sbyte number)
@@ -72,6 +57,36 @@ namespace Test
             sbyte result2 = sbyte.Min(10, 0x0A);
 
             var result3 = Math.Min((sbyte)10, (sbyte)10);
+        }
+
+        public void RotateLeft(sbyte n)
+        {
+            const int c = 1;
+
+            var result11 = sbyte.RotateLeft(n, 0);
+            var result12 = sbyte.RotateLeft(1, 0);
+            var result13 = sbyte.RotateLeft(1 + 1, 0);
+            var result14 = sbyte.RotateLeft(c, 0);
+
+            sbyte result21 = sbyte.RotateLeft(n, 0);
+            sbyte result22 = sbyte.RotateLeft(1, 0);
+            sbyte result23 = sbyte.RotateLeft(1 + 1, 0);
+            sbyte result24 = sbyte.RotateLeft(c, 0);
+        }
+
+        public void RotateRight(sbyte n)
+        {
+            const int c = 1;
+
+            var result11 = sbyte.RotateRight(n, 0);
+            var result12 = sbyte.RotateRight(1, 0);
+            var result13 = sbyte.RotateRight(1 + 1, 0);
+            var result14 = sbyte.RotateRight(c, 0);
+
+            sbyte result21 = sbyte.RotateRight(n, 0);
+            sbyte result22 = sbyte.RotateRight(1, 0);
+            sbyte result23 = sbyte.RotateRight(1 + 1, 0);
+            sbyte result24 = sbyte.RotateRight(c, 0);
         }
     }
 }

@@ -31,4 +31,12 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     [Test]
     [TestNet70]
     public void TestMin() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestRotateLeft() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestRotateRight() => DoNamedTest2();
 }

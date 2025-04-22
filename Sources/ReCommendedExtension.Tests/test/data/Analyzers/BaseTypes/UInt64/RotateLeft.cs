@@ -1,0 +1,18 @@
+﻿namespace Test
+{
+    public class UInt64s
+    {
+        public void ExpressionResult(ulong n)
+        {
+            var result = ulong.RotateLeft(n, 0);
+        }
+
+        public void NoDetection(ulong n, int rotateAmount)
+        {
+            var result1 = ulong.RotateLeft(n, 1);
+            var result2 = ulong.RotateLeft(n, rotateAmount);
+
+            ulong.RotateLeft(n, 0);
+        }
+    }
+}

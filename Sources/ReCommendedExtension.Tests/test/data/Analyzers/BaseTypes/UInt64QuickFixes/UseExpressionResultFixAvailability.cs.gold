@@ -44,92 +44,123 @@ namespace Test
 
         public void DivRem(ulong left)
         {
-            const int c = 1;
-
             var result11 = |ulong.DivRem(0, 10)|(28);
 
             (ulong, ulong) result21 = |ulong.DivRem(0, 10)|(29);
 
             (ulong quotient, ulong remainder) result32 = |ulong.DivRem(0, 10)|(30);
 
-            var result41 = |ulong.DivRem(left, 1)|(31);
-            var result42 = |ulong.DivRem(0x10, 1)|(32);
-            var result43 = |ulong.DivRem(0x10u, 1)|(33);
-            var result44 = |ulong.DivRem(0x10L, 1)|(34);
-            var result45 = |ulong.DivRem(0x10ul, 1)|(35);
-            var result46 = |ulong.DivRem(c, 1)|(36);
-            var result47 = |ulong.DivRem('a', 1)|(37);
-
-            (ulong, ulong) result51 = |ulong.DivRem(left, 1)|(38);
-            (ulong, ulong) result52 = |ulong.DivRem(0x10, 1)|(39);
-            (ulong, ulong) result53 = |ulong.DivRem(0x10u, 1)|(40);
-            (ulong, ulong) result54 = |ulong.DivRem(0x10L, 1)|(41);
-            (ulong, ulong) result55 = |ulong.DivRem(0x10ul, 1)|(42);
-            (ulong, ulong) result56 = |ulong.DivRem(c, 1)|(43);
-            (ulong, ulong) result57 = |ulong.DivRem('a', 1)|(44);
-
-            (ulong quotient, ulong remainder) result61 = |ulong.DivRem(left, 1)|(45);
-            (ulong quotient, ulong remainder) result62 = |ulong.DivRem(0x10, 1)|(46);
-            (ulong quotient, ulong remainder) result63 = |ulong.DivRem(0x10u, 1)|(47);
-            (ulong quotient, ulong remainder) result64 = |ulong.DivRem(0x10L, 1)|(48);
-            (ulong quotient, ulong remainder) result65 = |ulong.DivRem(0x10ul, 1)|(49);
-            (ulong quotient, ulong remainder) result66 = |ulong.DivRem(c, 1)|(50);
-            (ulong quotient, ulong remainder) result67 = |ulong.DivRem('a', 1)|(51);
-
-            var result71 = |Math.DivRem(0ul, 10ul)|(52);
-            var result72 = |Math.DivRem(left, 1ul)|(53);
+            var result71 = |Math.DivRem(0ul, 10ul)|(31);
         }
 
         public void Equals(ulong number)
         {
-            var result = |number.Equals(null)|(54);
+            var result = |number.Equals(null)|(32);
         }
 
         public void GetTypeCode(ulong number)
         {
-            var result = |number.GetTypeCode()|(55);
+            var result = |number.GetTypeCode()|(33);
         }
 
         public void Max()
         {
             const int c = 10;
 
-            var result11 = |ulong.Max(10, 0x0A)|(56);
-            var result12 = |ulong.Max(10, 10u)|(57);
-            var result13 = |ulong.Max(10, 10L)|(58);
-            var result14 = |ulong.Max(10, 10ul)|(59);
-            var result15 = |ulong.Max(10, c)|(60);
-            var result16 = |ulong.Max(97, 'a')|(61);
+            var result11 = |ulong.Max(10, 0x0A)|(34);
+            var result12 = |ulong.Max(10, 10u)|(35);
+            var result13 = |ulong.Max(10, 10L)|(36);
+            var result14 = |ulong.Max(10, 10ul)|(37);
+            var result15 = |ulong.Max(10, c)|(38);
+            var result16 = |ulong.Max(97, 'a')|(39);
 
-            ulong result21 = |ulong.Max(10, 0x0A)|(62);
-            ulong result22 = |ulong.Max(10, 10u)|(63);
-            ulong result23 = |ulong.Max(10, 10L)|(64);
-            ulong result24 = |ulong.Max(10, 10ul)|(65);
-            ulong result25 = |ulong.Max(10, c)|(66);
-            ulong result26 = |ulong.Max(97, 'a')|(67);
+            ulong result21 = |ulong.Max(10, 0x0A)|(40);
+            ulong result22 = |ulong.Max(10, 10u)|(41);
+            ulong result23 = |ulong.Max(10, 10L)|(42);
+            ulong result24 = |ulong.Max(10, 10ul)|(43);
+            ulong result25 = |ulong.Max(10, c)|(44);
+            ulong result26 = |ulong.Max(97, 'a')|(45);
 
-            var result31 = |Math.Max(10ul, 10ul)|(68);
+            var result31 = |Math.Max(10ul, 10ul)|(46);
         }
 
         public void Min()
         {
             const int c = 10;
 
-            var result11 = |ulong.Min(10, 0x0A)|(69);
-            var result12 = |ulong.Min(10, 10u)|(70);
-            var result13 = |ulong.Min(10, 10L)|(71);
-            var result14 = |ulong.Min(10, 10ul)|(72);
-            var result15 = |ulong.Min(10, c)|(73);
-            var result16 = |ulong.Min(97, 'a')|(74);
+            var result11 = |ulong.Min(10, 0x0A)|(47);
+            var result12 = |ulong.Min(10, 10u)|(48);
+            var result13 = |ulong.Min(10, 10L)|(49);
+            var result14 = |ulong.Min(10, 10ul)|(50);
+            var result15 = |ulong.Min(10, c)|(51);
+            var result16 = |ulong.Min(97, 'a')|(52);
 
-            ulong result21 = |ulong.Min(10, 0x0A)|(75);
-            ulong result22 = |ulong.Min(10, 10u)|(76);
-            ulong result23 = |ulong.Min(10, 10L)|(77);
-            ulong result24 = |ulong.Min(10, 10ul)|(78);
-            ulong result25 = |ulong.Min(10, c)|(79);
-            ulong result26 = |ulong.Min(97, 'a')|(80);
+            ulong result21 = |ulong.Min(10, 0x0A)|(53);
+            ulong result22 = |ulong.Min(10, 10u)|(54);
+            ulong result23 = |ulong.Min(10, 10L)|(55);
+            ulong result24 = |ulong.Min(10, 10ul)|(56);
+            ulong result25 = |ulong.Min(10, c)|(57);
+            ulong result26 = |ulong.Min(97, 'a')|(58);
 
-            var result31 = |Math.Min(10ul, 10ul)|(81);
+            var result31 = |Math.Min(10ul, 10ul)|(59);
+        }
+
+        public void RotateLeft(ulong n)
+        {
+            const int c = 1;
+
+            var result11 = |ulong.RotateLeft(n, 0)|(60);
+            var result12 = |ulong.RotateLeft(0x01, 0)|(61);
+            var result13 = |ulong.RotateLeft(0x01u, 0)|(62);
+            var result14 = |ulong.RotateLeft(0x01L, 0)|(63);
+            var result15 = |ulong.RotateLeft(0x01ul, 0)|(64);
+            var result16 = |ulong.RotateLeft(1 + 1, 0)|(65);
+            var result17 = |ulong.RotateLeft(1u + 1u, 0)|(66);
+            var result18 = |ulong.RotateLeft(1L + 1L, 0)|(67);
+            var result19 = |ulong.RotateLeft(1ul + 1ul, 0)|(68);
+            var result1A = |ulong.RotateLeft(c, 0)|(69);
+            var result1B = |ulong.RotateLeft('a', 0)|(70);
+
+            ulong result21 = |ulong.RotateLeft(n, 0)|(71);
+            ulong result22 = |ulong.RotateLeft(0x01, 0)|(72);
+            ulong result23 = |ulong.RotateLeft(0x01u, 0)|(73);
+            ulong result24 = |ulong.RotateLeft(0x01L, 0)|(74);
+            ulong result25 = |ulong.RotateLeft(0x01ul, 0)|(75);
+            ulong result26 = |ulong.RotateLeft(1 + 1, 0)|(76);
+            ulong result27 = |ulong.RotateLeft(1u + 1u, 0)|(77);
+            ulong result28 = |ulong.RotateLeft(1L + 1L, 0)|(78);
+            ulong result29 = |ulong.RotateLeft(1ul + 1ul, 0)|(79);
+            ulong result2A = |ulong.RotateLeft(c, 0)|(80);
+            ulong result2B = |ulong.RotateLeft('a', 0)|(81);
+        }
+
+        public void RotateRight(ulong n)
+        {
+            const int c = 1;
+
+            var result11 = |ulong.RotateRight(n, 0)|(82);
+            var result12 = |ulong.RotateRight(0x01, 0)|(83);
+            var result13 = |ulong.RotateRight(0x01u, 0)|(84);
+            var result14 = |ulong.RotateRight(0x01L, 0)|(85);
+            var result15 = |ulong.RotateRight(0x01ul, 0)|(86);
+            var result16 = |ulong.RotateRight(1 + 1, 0)|(87);
+            var result17 = |ulong.RotateRight(1u + 1u, 0)|(88);
+            var result18 = |ulong.RotateRight(1L + 1L, 0)|(89);
+            var result19 = |ulong.RotateRight(1ul + 1ul, 0)|(90);
+            var result1A = |ulong.RotateRight(c, 0)|(91);
+            var result1B = |ulong.RotateRight('a', 0)|(92);
+
+            ulong result21 = |ulong.RotateRight(n, 0)|(93);
+            ulong result22 = |ulong.RotateRight(0x01, 0)|(94);
+            ulong result23 = |ulong.RotateRight(0x01u, 0)|(95);
+            ulong result24 = |ulong.RotateRight(0x01L, 0)|(96);
+            ulong result25 = |ulong.RotateRight(0x01ul, 0)|(97);
+            ulong result26 = |ulong.RotateRight(1 + 1, 0)|(98);
+            ulong result27 = |ulong.RotateRight(1u + 1u, 0)|(99);
+            ulong result28 = |ulong.RotateRight(1L + 1L, 0)|(100);
+            ulong result29 = |ulong.RotateRight(1ul + 1ul, 0)|(101);
+            ulong result2A = |ulong.RotateRight(c, 0)|(102);
+            ulong result2B = |ulong.RotateRight('a', 0)|(103);
         }
     }
 }
@@ -234,174 +265,240 @@ Replace with '(0, 0)'
 30: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(0, 0)'
-31: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: 0ul)'
-32: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: 0x10ul, Remainder: 0ul)'
-33: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: 0x10ul, Remainder: 0ul)'
-34: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: 0x10ul, Remainder: 0ul)'
-35: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: 0x10ul, Remainder: 0ul)'
-36: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (ulong)c, Remainder: 0ul)'
-37: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (ulong)'a', Remainder: 0ul)'
-38: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-39: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-40: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10u, 0)'
-41: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10L, 0)'
-42: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10ul, 0)'
-43: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-44: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '('a', 0)'
-45: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-46: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-47: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10u, 0)'
-48: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10L, 0)'
-49: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10ul, 0)'
-50: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-51: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '('a', 0)'
-52: The expression is always (0, 0).
+31: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(Quotient: 0ul, Remainder: 0ul)'
-53: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: 0ul)'
-54: The expression is always false.
+32: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
-55: The expression is always TypeCode.UInt64.
+33: The expression is always TypeCode.UInt64.
 QUICKFIXES:
 Replace with 'TypeCode.UInt64'
-56: The expression is always 10.
+34: The expression is always 10.
 QUICKFIXES:
 Replace with '0x0Aul'
 Replace with '10ul'
+35: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+36: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+37: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+38: The expression is always 10.
+QUICKFIXES:
+Replace with '(ulong)c'
+Replace with '10ul'
+39: The expression is always 97.
+QUICKFIXES:
+Replace with '(ulong)'a''
+Replace with '97ul'
+40: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+41: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+42: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+Replace with '10'
+43: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+Replace with '10'
+44: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+45: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+46: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+47: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0Aul'
+Replace with '10ul'
+48: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+49: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+50: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+51: The expression is always 10.
+QUICKFIXES:
+Replace with '(ulong)c'
+Replace with '10ul'
+52: The expression is always 97.
+QUICKFIXES:
+Replace with '(ulong)'a''
+Replace with '97ul'
+53: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+54: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+55: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+Replace with '10'
+56: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+Replace with '10'
 57: The expression is always 10.
 QUICKFIXES:
-Replace with '10ul'
-58: The expression is always 10.
+Replace with 'c'
+Replace with '10'
+58: The expression is always 97.
 QUICKFIXES:
-Replace with '10ul'
+Replace with ''a''
+Replace with '97'
 59: The expression is always 10.
 QUICKFIXES:
 Replace with '10ul'
-60: The expression is always 10.
+60: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+61: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01ul'
+62: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01ul'
+63: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01ul'
+64: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01ul'
+65: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(ulong)(1 + 1)'
+66: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(ulong)(1u + 1u)'
+67: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(ulong)(1L + 1L)'
+68: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul + 1ul'
+69: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(ulong)c'
-Replace with '10ul'
-61: The expression is always 97.
+70: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(ulong)'a''
-Replace with '97ul'
-62: The expression is always 10.
+71: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-63: The expression is always 10.
+Replace with 'n'
+72: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10u'
-Replace with '10'
-64: The expression is always 10.
+Replace with '0x01'
+73: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10L'
-Replace with '10'
-65: The expression is always 10.
+Replace with '0x01u'
+74: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10ul'
-Replace with '10'
-66: The expression is always 10.
+Replace with '0x01L'
+75: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01ul'
+76: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+77: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u + 1u'
+78: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L + 1L'
+79: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul + 1ul'
+80: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-67: The expression is always 97.
+81: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with ''a''
-Replace with '97'
-68: The expression is always 10.
+82: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10ul'
-69: The expression is always 10.
+Replace with 'n'
+83: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0Aul'
-Replace with '10ul'
-70: The expression is always 10.
+Replace with '0x01ul'
+84: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10ul'
-71: The expression is always 10.
+Replace with '0x01ul'
+85: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10ul'
-72: The expression is always 10.
+Replace with '0x01ul'
+86: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10ul'
-73: The expression is always 10.
+Replace with '0x01ul'
+87: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(ulong)(1 + 1)'
+88: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(ulong)(1u + 1u)'
+89: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(ulong)(1L + 1L)'
+90: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul + 1ul'
+91: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(ulong)c'
-Replace with '10ul'
-74: The expression is always 97.
+92: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(ulong)'a''
-Replace with '97ul'
-75: The expression is always 10.
+93: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-76: The expression is always 10.
+Replace with 'n'
+94: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10u'
-Replace with '10'
-77: The expression is always 10.
+Replace with '0x01'
+95: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10L'
-Replace with '10'
-78: The expression is always 10.
+Replace with '0x01u'
+96: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10ul'
-Replace with '10'
-79: The expression is always 10.
+Replace with '0x01L'
+97: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01ul'
+98: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+99: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u + 1u'
+100: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L + 1L'
+101: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul + 1ul'
+102: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-80: The expression is always 97.
+103: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with ''a''
-Replace with '97'
-81: The expression is always 10.
-QUICKFIXES:
-Replace with '10ul'

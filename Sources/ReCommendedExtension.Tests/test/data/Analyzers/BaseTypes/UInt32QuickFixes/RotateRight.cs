@@ -1,10 +1,10 @@
 ﻿namespace Test
 {
-    public class Bytes
+    public class UInt32s
     {
         public void RotateRight()
         {
-            byte result = {caret}1;
+            var result = uint.Rotate{caret}Right(1, 0);
         }
     }
 }

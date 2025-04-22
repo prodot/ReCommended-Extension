@@ -22,56 +22,71 @@ namespace Test
 
         public void DivRem(sbyte left)
         {
-            const int c = 1;
-
             var result11 = |sbyte.DivRem(0, 10)|(8);
 
             (sbyte, sbyte) result21 = |sbyte.DivRem(0, 10)|(9);
 
             (sbyte quotient, sbyte remainder) result32 = |sbyte.DivRem(0, 10)|(10);
 
-            var result41 = |sbyte.DivRem(left, 1)|(11);
-            var result42 = |sbyte.DivRem(0x10, 1)|(12);
-            var result43 = |sbyte.DivRem(c, 1)|(13);
-
-            (sbyte, sbyte) result51 = |sbyte.DivRem(left, 1)|(14);
-            (sbyte, sbyte) result52 = |sbyte.DivRem(0x10, 1)|(15);
-            (sbyte, sbyte) result53 = |sbyte.DivRem(c, 1)|(16);
-
-            (sbyte quotient, sbyte remainder) result61 = |sbyte.DivRem(left, 1)|(17);
-            (sbyte quotient, sbyte remainder) result62 = |sbyte.DivRem(0x10, 1)|(18);
-            (sbyte quotient, sbyte remainder) result63 = |sbyte.DivRem(c, 1)|(19);
-
-            var result71 = |Math.DivRem((sbyte)0, (sbyte)10)|(20);
-            var result72 = |Math.DivRem(left, (sbyte)1)|(21);
+            var result71 = |Math.DivRem((sbyte)0, (sbyte)10)|(11);
         }
 
         public void Equals(sbyte number)
         {
-            var result = |number.Equals(null)|(22);
+            var result = |number.Equals(null)|(12);
         }
 
         public void GetTypeCode(sbyte number)
         {
-            var result = |number.GetTypeCode()|(23);
+            var result = |number.GetTypeCode()|(13);
         }
 
         public void Max()
         {
-            var result11 = |sbyte.Max(10, 0x0A)|(24);
+            var result11 = |sbyte.Max(10, 0x0A)|(14);
 
-            sbyte result2 = |sbyte.Max(10, 0x0A)|(25);
+            sbyte result2 = |sbyte.Max(10, 0x0A)|(15);
 
-            var result3 = |Math.Max((sbyte)10, (sbyte)10)|(26);
+            var result3 = |Math.Max((sbyte)10, (sbyte)10)|(16);
         }
 
         public void Min()
         {
-            var result11 = |sbyte.Min(10, 0x0A)|(27);
+            var result11 = |sbyte.Min(10, 0x0A)|(17);
 
-            sbyte result2 = |sbyte.Min(10, 0x0A)|(28);
+            sbyte result2 = |sbyte.Min(10, 0x0A)|(18);
 
-            var result3 = |Math.Min((sbyte)10, (sbyte)10)|(29);
+            var result3 = |Math.Min((sbyte)10, (sbyte)10)|(19);
+        }
+
+        public void RotateLeft(sbyte n)
+        {
+            const int c = 1;
+
+            var result11 = |sbyte.RotateLeft(n, 0)|(20);
+            var result12 = |sbyte.RotateLeft(1, 0)|(21);
+            var result13 = |sbyte.RotateLeft(1 + 1, 0)|(22);
+            var result14 = |sbyte.RotateLeft(c, 0)|(23);
+
+            sbyte result21 = |sbyte.RotateLeft(n, 0)|(24);
+            sbyte result22 = |sbyte.RotateLeft(1, 0)|(25);
+            sbyte result23 = |sbyte.RotateLeft(1 + 1, 0)|(26);
+            sbyte result24 = |sbyte.RotateLeft(c, 0)|(27);
+        }
+
+        public void RotateRight(sbyte n)
+        {
+            const int c = 1;
+
+            var result11 = |sbyte.RotateRight(n, 0)|(28);
+            var result12 = |sbyte.RotateRight(1, 0)|(29);
+            var result13 = |sbyte.RotateRight(1 + 1, 0)|(30);
+            var result14 = |sbyte.RotateRight(c, 0)|(31);
+
+            sbyte result21 = |sbyte.RotateRight(n, 0)|(32);
+            sbyte result22 = |sbyte.RotateRight(1, 0)|(33);
+            sbyte result23 = |sbyte.RotateRight(1 + 1, 0)|(34);
+            sbyte result24 = |sbyte.RotateRight(c, 0)|(35);
         }
     }
 }
@@ -111,64 +126,82 @@ Replace with '(0, 0)'
 10: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(0, 0)'
-11: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: (sbyte)0)'
-12: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (sbyte)0x10, Remainder: (sbyte)0)'
-13: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (sbyte)c, Remainder: (sbyte)0)'
-14: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-15: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-16: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-17: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-18: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-19: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-20: The expression is always (0, 0).
+11: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(Quotient: (sbyte)0, Remainder: (sbyte)0)'
-21: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: (sbyte)0)'
-22: The expression is always false.
+12: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
-23: The expression is always TypeCode.SByte.
+13: The expression is always TypeCode.SByte.
 QUICKFIXES:
 Replace with 'TypeCode.SByte'
-24: The expression is always 10.
+14: The expression is always 10.
 QUICKFIXES:
 Replace with '(sbyte)0x0A'
 Replace with '(sbyte)10'
-25: The expression is always 10.
+15: The expression is always 10.
 QUICKFIXES:
 Replace with '0x0A'
 Replace with '10'
-26: The expression is always 10.
+16: The expression is always 10.
 QUICKFIXES:
 Replace with '(sbyte)10'
-27: The expression is always 10.
+17: The expression is always 10.
 QUICKFIXES:
 Replace with '(sbyte)0x0A'
 Replace with '(sbyte)10'
-28: The expression is always 10.
+18: The expression is always 10.
 QUICKFIXES:
 Replace with '0x0A'
 Replace with '10'
-29: The expression is always 10.
+19: The expression is always 10.
 QUICKFIXES:
 Replace with '(sbyte)10'
+20: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+21: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(sbyte)1'
+22: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(sbyte)(1 + 1)'
+23: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(sbyte)c'
+24: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+25: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+26: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+27: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+28: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+29: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(sbyte)1'
+30: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(sbyte)(1 + 1)'
+31: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(sbyte)c'
+32: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+33: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+34: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+35: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'

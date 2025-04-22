@@ -35,4 +35,11 @@ internal static class MissingInt64Methods
 
     [Pure]
     public static long Min(long x, long y) => x <= y ? x : y;
+
+    [Pure]
+    public static long RotateLeft(long value, int rotateAmount) => unchecked((long)MissingUInt64Methods.RotateLeft((ulong)value, rotateAmount));
+
+    [Pure]
+    public static long RotateRight(long value, int rotateAmount) => unchecked((long)MissingUInt64Methods.RotateRight((ulong)value, rotateAmount));
+
 }

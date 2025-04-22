@@ -35,4 +35,10 @@ internal static class MissingIntPtrMethods
 
     [Pure]
     public static nint Min(nint x, nint y) => x <= y ? x : y;
+
+    [Pure]
+    public static nint RotateLeft(nint value, int rotateAmount) => unchecked((nint)MissingUIntPtrMethods.RotateLeft((nuint)value, rotateAmount));
+
+    [Pure]
+    public static nint RotateRight(nint value, int rotateAmount) => unchecked((nint)MissingUIntPtrMethods.RotateRight((nuint)value, rotateAmount));
 }

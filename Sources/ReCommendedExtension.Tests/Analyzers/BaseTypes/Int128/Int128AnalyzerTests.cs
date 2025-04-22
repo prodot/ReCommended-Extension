@@ -72,7 +72,6 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
     public void TestDivRem()
     {
         Test(() => Int128Analyzer.Int128.DivRem(0, 10), () => (0, 0));
-        Test(number => Int128Analyzer.Int128.DivRem(number, 1), number => (number, 0));
 
         DoNamedTest2();
     }
@@ -88,7 +87,6 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [TestNet70]
     public void TestMax()
     {
         Test(n => Int128Analyzer.Int128.Max(n, n), n => n);
@@ -97,10 +95,25 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [TestNet70]
     public void TestMin()
     {
         Test(n => Int128Analyzer.Int128.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    public void TestRotateLeft()
+    {
+        Test(n => Int128Analyzer.Int128.RotateLeft(n, 0), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    public void TestRotateRight()
+    {
+        Test(n => Int128Analyzer.Int128.RotateRight(n, 0), n => n);
 
         DoNamedTest2();
     }

@@ -63,10 +63,8 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
     public void TestDivRem()
     {
         Test(() => MissingByteMethods.DivRem(0, 10), () => (0, 0));
-        Test(number => MissingByteMethods.DivRem(number, 1), number => (number, 0));
 
         Test(() => MissingMathMethods.DivRem((byte)0, (byte)10), () => (0, 0));
-        Test(number => MissingMathMethods.DivRem(number, (byte)1), number => (number, 0));
 
         DoNamedTest2();
     }

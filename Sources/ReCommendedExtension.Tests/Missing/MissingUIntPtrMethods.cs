@@ -35,4 +35,24 @@ internal static class MissingUIntPtrMethods
 
     [Pure]
     public static nuint Min(nuint x, nuint y) => x <= y ? x : y;
+
+    [Pure]
+    public static nuint RotateLeft(nuint value, int offset)
+        => UIntPtr.Size switch
+        {
+            8 => (nuint)MissingUInt64Methods.RotateLeft(value, offset),
+            4 => MissingUInt32Methods.RotateLeft((uint)value, offset),
+
+            _ => throw new PlatformNotSupportedException(),
+        };
+
+    [Pure]
+    public static nuint RotateRight(nuint value, int offset)
+        => UIntPtr.Size switch
+        {
+            8 => (nuint)MissingUInt64Methods.RotateRight(value, offset),
+            4 => MissingUInt32Methods.RotateRight((uint)value, offset),
+
+            _ => throw new PlatformNotSupportedException(),
+        };
 }

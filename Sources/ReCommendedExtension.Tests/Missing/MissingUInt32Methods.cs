@@ -35,4 +35,10 @@ internal static class MissingUInt32Methods
 
     [Pure]
     public static uint Min(uint x, uint y) => x <= y ? x : y;
+
+    [Pure]
+    public static uint RotateLeft(uint value, int offset) => value << offset | value >> (32 - offset);
+
+    [Pure]
+    public static uint RotateRight(uint value, int offset) => value >> offset | value << (32 - offset);
 }

@@ -23,34 +23,13 @@ namespace Test
 
         public void DivRem(nuint left)
         {
-            const int c = 1;
-
             var result11 = nuint.DivRem(0, 10);
 
             (nuint, nuint) result21 = nuint.DivRem(0, 10);
 
             (nuint quotient, nuint remainder) result32 = nuint.DivRem(0, 10);
 
-            var result41 = nuint.DivRem(left, 1);
-            var result42 = nuint.DivRem(0x10, 1);
-            var result43 = nuint.DivRem(0x10u, 1);
-            var result44 = nuint.DivRem(c, 1);
-            var result45 = nuint.DivRem('a', 1);
-
-            (nuint, nuint) result51 = nuint.DivRem(left, 1);
-            (nuint, nuint) result52 = nuint.DivRem(0x10, 1);
-            (nuint, nuint) result53 = nuint.DivRem(0x10u, 1);
-            (nuint, nuint) result54 = nuint.DivRem(c, 1);
-            (nuint, nuint) result55 = nuint.DivRem('a', 1);
-
-            (nuint quotient, nuint remainder) result61 = nuint.DivRem(left, 1);
-            (nuint quotient, nuint remainder) result62 = nuint.DivRem(0x10, 1);
-            (nuint quotient, nuint remainder) result63 = nuint.DivRem(0x10u, 1);
-            (nuint quotient, nuint remainder) result64 = nuint.DivRem(c, 1);
-            (nuint quotient, nuint remainder) result65 = nuint.DivRem('a', 1);
-
             var result71 = Math.DivRem((nuint)0, (nuint)10);
-            var result72 = Math.DivRem(left, (nuint)1);
         }
 
         public void Equals(nuint number)
@@ -90,6 +69,40 @@ namespace Test
             nuint result24 = nuint.Min(97, 'a');
 
             var result31 = Math.Min((nuint)10, (nuint)10);
+        }
+
+        public void RotateLeft(nuint n)
+        {
+            const int c = 1;
+
+            var result11 = nuint.RotateLeft(n, 0);
+            var result12 = nuint.RotateLeft(0x01, 0);
+            var result13 = nuint.RotateLeft(1 + 1, 0);
+            var result14 = nuint.RotateLeft(c, 0);
+            var result15 = nuint.RotateLeft('a', 0);
+
+            nuint result21 = nuint.RotateLeft(n, 0);
+            nuint result22 = nuint.RotateLeft(0x01, 0);
+            nuint result23 = nuint.RotateLeft(1 + 1, 0);
+            nuint result24 = nuint.RotateLeft(c, 0);
+            nuint result25 = nuint.RotateLeft('a', 0);
+        }
+
+        public void RotateRight(nuint n)
+        {
+            const int c = 1;
+
+            var result11 = nuint.RotateRight(n, 0);
+            var result12 = nuint.RotateRight(0x01, 0);
+            var result13 = nuint.RotateRight(1 + 1, 0);
+            var result14 = nuint.RotateRight(c, 0);
+            var result15 = nuint.RotateRight('a', 0);
+
+            nuint result21 = nuint.RotateRight(n, 0);
+            nuint result22 = nuint.RotateRight(0x01, 0);
+            nuint result23 = nuint.RotateRight(1 + 1, 0);
+            nuint result24 = nuint.RotateRight(c, 0);
+            nuint result25 = nuint.RotateRight('a', 0);
         }
     }
 }

@@ -26,31 +26,13 @@ namespace Test
 
         public void DivRem(ushort left)
         {
-            const int c = 1;
-
             var result11 = ushort.DivRem(0, 10);
 
             (ushort, ushort) result21 = ushort.DivRem(0, 10);
 
             (ushort quotient, ushort remainder) result32 = ushort.DivRem(0, 10);
 
-            var result41 = ushort.DivRem(left, 1);
-            var result42 = ushort.DivRem(0x10, 1);
-            var result43 = ushort.DivRem(c, 1);
-            var result44 = ushort.DivRem('a', 1);
-
-            (ushort, ushort) result51 = ushort.DivRem(left, 1);
-            (ushort, ushort) result52 = ushort.DivRem(0x10, 1);
-            (ushort, ushort) result53 = ushort.DivRem(c, 1);
-            (ushort, ushort) result54 = ushort.DivRem('a', 1);
-
-            (ushort quotient, ushort remainder) result61 = ushort.DivRem(left, 1);
-            (ushort quotient, ushort remainder) result62 = ushort.DivRem(0x10, 1);
-            (ushort quotient, ushort remainder) result63 = ushort.DivRem(c, 1);
-            (ushort quotient, ushort remainder) result64 = ushort.DivRem('a', 1);
-
             var result71 = Math.DivRem((ushort)0, (ushort)10);
-            var result72 = Math.DivRem(left, (ushort)1);
         }
 
         public void Equals(ushort number)
@@ -91,6 +73,40 @@ namespace Test
             ushort result23 = ushort.Min(97, 'a');
 
             var result31 = Math.Min((ushort)10, (ushort)10);
+        }
+
+        public void RotateLeft(ushort n)
+        {
+            const int c = 1;
+
+            var result11 = ushort.RotateLeft(n, 0);
+            var result12 = ushort.RotateLeft(0x01, 0);
+            var result13 = ushort.RotateLeft(1 + 1, 0);
+            var result14 = ushort.RotateLeft(c, 0);
+            var result15 = ushort.RotateLeft('a', 0);
+
+            ushort result21 = ushort.RotateLeft(n, 0);
+            ushort result22 = ushort.RotateLeft(1, 0);
+            ushort result23 = ushort.RotateLeft(1 + 1, 0);
+            ushort result24 = ushort.RotateLeft(c, 0);
+            ushort result25 = ushort.RotateLeft('a', 0);
+        }
+
+        public void RotateRight(ushort n)
+        {
+            const int c = 1;
+
+            var result11 = ushort.RotateRight(n, 0);
+            var result12 = ushort.RotateRight(0x01, 0);
+            var result13 = ushort.RotateRight(1 + 1, 0);
+            var result14 = ushort.RotateRight(c, 0);
+            var result15 = ushort.RotateRight('a', 0);
+
+            ushort result21 = ushort.RotateRight(n, 0);
+            ushort result22 = ushort.RotateRight(1, 0);
+            ushort result23 = ushort.RotateRight(1 + 1, 0);
+            ushort result24 = ushort.RotateRight(c, 0);
+            ushort result25 = ushort.RotateRight('a', 0);
         }
     }
 }

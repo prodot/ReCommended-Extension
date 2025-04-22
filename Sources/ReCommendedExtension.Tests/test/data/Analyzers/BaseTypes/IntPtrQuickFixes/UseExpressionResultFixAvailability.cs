@@ -21,31 +21,13 @@ namespace Test
 
         public void DivRem(nint left)
         {
-            const int c = 1;
-
             var result11 = nint.DivRem(0, 10);
 
             (nint, nint) result21 = nint.DivRem(0, 10);
 
             (nint quotient, nint remainder) result32 = nint.DivRem(0, 10);
 
-            var result41 = nint.DivRem(left, 1);
-            var result42 = nint.DivRem(0x10, 1);
-            var result43 = nint.DivRem(c, 1);
-            var result44 = nint.DivRem('a', 1);
-
-            (nint, nint) result51 = nint.DivRem(left, 1);
-            (nint, nint) result52 = nint.DivRem(0x10, 1);
-            (nint, nint) result53 = nint.DivRem(c, 1);
-            (nint, nint) result54 = nint.DivRem('a', 1);
-
-            (nint quotient, nint remainder) result61 = nint.DivRem(left, 1);
-            (nint quotient, nint remainder) result62 = nint.DivRem(0x10, 1);
-            (nint quotient, nint remainder) result63 = nint.DivRem(c, 1);
-            (nint quotient, nint remainder) result64 = nint.DivRem('a', 1);
-
             var result71 = Math.DivRem((nint)0, (nint)10);
-            var result72 = Math.DivRem(left, (nint)1);
         }
 
         public void Equals(nint number)
@@ -81,6 +63,40 @@ namespace Test
             nint result23 = nint.Min(97, 'a');
 
             var result31 = Math.Min((nint)10, (nint)10);
+        }
+
+        public void RotateLeft(nint n)
+        {
+            const int c = 1;
+
+            var result11 = nint.RotateLeft(n, 0);
+            var result12 = nint.RotateLeft(0x01, 0);
+            var result13 = nint.RotateLeft(1 + 1, 0);
+            var result14 = nint.RotateLeft(c, 0);
+            var result15 = nint.RotateLeft('a', 0);
+
+            nint result21 = nint.RotateLeft(n, 0);
+            nint result22 = nint.RotateLeft(0x01, 0);
+            nint result23 = nint.RotateLeft(1 + 1, 0);
+            nint result24 = nint.RotateLeft(c, 0);
+            nint result25 = nint.RotateLeft('a', 0);
+        }
+
+        public void RotateRight(nint n)
+        {
+            const int c = 1;
+
+            var result11 = nint.RotateRight(n, 0);
+            var result12 = nint.RotateRight(0x01, 0);
+            var result13 = nint.RotateRight(1 + 1, 0);
+            var result14 = nint.RotateRight(c, 0);
+            var result15 = nint.RotateRight('a', 0);
+
+            nint result21 = nint.RotateRight(n, 0);
+            nint result22 = nint.RotateRight(0x01, 0);
+            nint result23 = nint.RotateRight(1 + 1, 0);
+            nint result24 = nint.RotateRight(c, 0);
+            nint result25 = nint.RotateRight('a', 0);
         }
     }
 }

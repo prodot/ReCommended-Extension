@@ -40,37 +40,13 @@ namespace Test
 
         public void DivRem(long left)
         {
-            const int c = 1;
-
             var result11 = long.DivRem(0, 10);
 
             (long, long) result21 = long.DivRem(0, 10);
 
             (long quotient, long remainder) result32 = long.DivRem(0, 10);
 
-            var result41 = long.DivRem(left, 1);
-            var result42 = long.DivRem(0x10, 1);
-            var result43 = long.DivRem(0x10L, 1);
-            var result44 = long.DivRem(0x10u, 1);
-            var result45 = long.DivRem(c, 1);
-            var result46 = long.DivRem('a', 1);
-
-            (long, long) result51 = long.DivRem(left, 1);
-            (long, long) result52 = long.DivRem(0x10, 1);
-            (long, long) result53 = long.DivRem(0x10L, 1);
-            (long, long) result54 = long.DivRem(0x10u, 1);
-            (long, long) result55 = long.DivRem(c, 1);
-            (long, long) result56 = long.DivRem('a', 1);
-
-            (long quotient, long remainder) result61 = long.DivRem(left, 1);
-            (long quotient, long remainder) result62 = long.DivRem(0x10, 1);
-            (long quotient, long remainder) result63 = long.DivRem(0x10L, 1);
-            (long quotient, long remainder) result64 = long.DivRem(0x10u, 1);
-            (long quotient, long remainder) result65 = long.DivRem(c, 1);
-            (long quotient, long remainder) result66 = long.DivRem('a', 1);
-
             var result71 = Math.DivRem(0L, 10L);
-            var result72 = Math.DivRem(left, 1L);
         }
 
         public void Equals(long number)
@@ -119,6 +95,56 @@ namespace Test
             long result25 = long.Min(97, 'a');
 
             var result31 = Math.Min(10L, 10L);
+        }
+
+        public void RotateLeft(long n)
+        {
+            const int c = 1;
+
+            var result11 = long.RotateLeft(n, 0);
+            var result12 = long.RotateLeft(0x01, 0);
+            var result13 = long.RotateLeft(0x01u, 0);
+            var result14 = long.RotateLeft(0x01L, 0);
+            var result15 = long.RotateLeft(1 + 1, 0);
+            var result16 = long.RotateLeft(1u + 1u, 0);
+            var result17 = long.RotateLeft(1L + 1L, 0);
+            var result18 = long.RotateLeft(c, 0);
+            var result19 = long.RotateLeft('a', 0);
+
+            long result21 = long.RotateLeft(n, 0);
+            long result22 = long.RotateLeft(0x01, 0);
+            long result23 = long.RotateLeft(0x01u, 0);
+            long result24 = long.RotateLeft(0x01L, 0);
+            long result25 = long.RotateLeft(1 + 1, 0);
+            long result26 = long.RotateLeft(1u + 1u, 0);
+            long result27 = long.RotateLeft(1L + 1L, 0);
+            long result28 = long.RotateLeft(c, 0);
+            long result29 = long.RotateLeft('a', 0);
+        }
+
+        public void RotateRight(long n)
+        {
+            const int c = 1;
+
+            var result11 = long.RotateRight(n, 0);
+            var result12 = long.RotateRight(0x01, 0);
+            var result13 = long.RotateRight(0x01u, 0);
+            var result14 = long.RotateRight(0x01L, 0);
+            var result15 = long.RotateRight(1 + 1, 0);
+            var result16 = long.RotateRight(1u + 1u, 0);
+            var result17 = long.RotateRight(1L + 1L, 0);
+            var result18 = long.RotateRight(c, 0);
+            var result19 = long.RotateRight('a', 0);
+
+            long result21 = long.RotateRight(n, 0);
+            long result22 = long.RotateRight(0x01, 0);
+            long result23 = long.RotateRight(0x01u, 0);
+            long result24 = long.RotateRight(0x01L, 0);
+            long result25 = long.RotateRight(1 + 1, 0);
+            long result26 = long.RotateRight(1u + 1u, 0);
+            long result27 = long.RotateRight(1L + 1L, 0);
+            long result28 = long.RotateRight(c, 0);
+            long result29 = long.RotateRight('a', 0);
         }
     }
 }

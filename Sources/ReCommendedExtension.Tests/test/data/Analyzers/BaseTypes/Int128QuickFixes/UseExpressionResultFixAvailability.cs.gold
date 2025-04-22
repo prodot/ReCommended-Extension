@@ -25,80 +25,112 @@ namespace Test
 
         public void DivRem(Int128 left)
         {
-            const int c = 1;
-
             var result11 = |Int128.DivRem(0, 10)|(12);
 
             (Int128, Int128) result21 = |Int128.DivRem(0, 10)|(13);
 
             (Int128 quotient, Int128 remainder) result32 = |Int128.DivRem(0, 10)|(14);
-
-            var result41 = |Int128.DivRem(left, 1)|(15);
-            var result42 = |Int128.DivRem(0x10, 1)|(16);
-            var result43 = |Int128.DivRem(0x10ul, 1)|(17);
-            var result44 = |Int128.DivRem(0x10u, 1)|(18);
-            var result45 = |Int128.DivRem(0x10L, 1)|(19);
-            var result46 = |Int128.DivRem(c, 1)|(20);
-            var result47 = |Int128.DivRem('a', 1)|(21);
-
-            (Int128, Int128) result51 = |Int128.DivRem(left, 1)|(22);
-            (Int128, Int128) result52 = |Int128.DivRem(0x10, 1)|(23);
-            (Int128, Int128) result53 = |Int128.DivRem(0x10ul, 1)|(24);
-            (Int128, Int128) result54 = |Int128.DivRem(0x10u, 1)|(25);
-            (Int128, Int128) result55 = |Int128.DivRem(0x10L, 1)|(26);
-            (Int128, Int128) result56 = |Int128.DivRem(c, 1)|(27);
-            (Int128, Int128) result57 = |Int128.DivRem('a', 1)|(28);
-
-            (Int128 quotient, Int128 remainder) result61 = |Int128.DivRem(left, 1)|(29);
-            (Int128 quotient, Int128 remainder) result62 = |Int128.DivRem(0x10, 1)|(30);
-            (Int128 quotient, Int128 remainder) result63 = |Int128.DivRem(0x10ul, 1)|(31);
-            (Int128 quotient, Int128 remainder) result64 = |Int128.DivRem(0x10u, 1)|(32);
-            (Int128 quotient, Int128 remainder) result65 = |Int128.DivRem(0x10L, 1)|(33);
-            (Int128 quotient, Int128 remainder) result66 = |Int128.DivRem(c, 1)|(34);
-            (Int128 quotient, Int128 remainder) result67 = |Int128.DivRem('a', 1)|(35);
         }
 
         public void Equals(Int128 number)
         {
-            var result = |number.Equals(null)|(36);
+            var result = |number.Equals(null)|(15);
         }
 
         public void Max()
         {
             const int c = 10;
 
-            var result11 = |Int128.Max(10, 0x0A)|(37);
-            var result12 = |Int128.Max(10, 10ul)|(38);
-            var result13 = |Int128.Max(10, 10u)|(39);
-            var result14 = |Int128.Max(10, 10L)|(40);
-            var result15 = |Int128.Max(10, c)|(41);
-            var result16 = |Int128.Max(97, 'a')|(42);
+            var result11 = |Int128.Max(10, 0x0A)|(16);
+            var result12 = |Int128.Max(10, 10ul)|(17);
+            var result13 = |Int128.Max(10, 10u)|(18);
+            var result14 = |Int128.Max(10, 10L)|(19);
+            var result15 = |Int128.Max(10, c)|(20);
+            var result16 = |Int128.Max(97, 'a')|(21);
 
-            Int128 result21 = |Int128.Max(10, 0x0A)|(43);
-            Int128 result22 = |Int128.Max(10, 10ul)|(44);
-            Int128 result23 = |Int128.Max(10, 10u)|(45);
-            Int128 result24 = |Int128.Max(10, 10L)|(46);
-            Int128 result25 = |Int128.Max(10, c)|(47);
-            Int128 result26 = |Int128.Max(97, 'a')|(48);
+            Int128 result21 = |Int128.Max(10, 0x0A)|(22);
+            Int128 result22 = |Int128.Max(10, 10ul)|(23);
+            Int128 result23 = |Int128.Max(10, 10u)|(24);
+            Int128 result24 = |Int128.Max(10, 10L)|(25);
+            Int128 result25 = |Int128.Max(10, c)|(26);
+            Int128 result26 = |Int128.Max(97, 'a')|(27);
         }
 
         public void Min()
         {
             const int c = 10;
 
-            var result11 = |Int128.Min(10, 0x0A)|(49);
-            var result12 = |Int128.Min(10, 10ul)|(50);
-            var result13 = |Int128.Min(10, 10u)|(51);
-            var result14 = |Int128.Min(10, 10L)|(52);
-            var result15 = |Int128.Min(10, c)|(53);
-            var result16 = |Int128.Min(97, 'a')|(54);
+            var result11 = |Int128.Min(10, 0x0A)|(28);
+            var result12 = |Int128.Min(10, 10ul)|(29);
+            var result13 = |Int128.Min(10, 10u)|(30);
+            var result14 = |Int128.Min(10, 10L)|(31);
+            var result15 = |Int128.Min(10, c)|(32);
+            var result16 = |Int128.Min(97, 'a')|(33);
 
-            Int128 result21 = |Int128.Min(10, 0x0A)|(55);
-            Int128 result22 = |Int128.Min(10, 10ul)|(56);
-            Int128 result23 = |Int128.Min(10, 10u)|(57);
-            Int128 result24 = |Int128.Min(10, 10L)|(58);
-            Int128 result25 = |Int128.Min(10, c)|(59);
-            Int128 result26 = |Int128.Min(97, 'a')|(60);
+            Int128 result21 = |Int128.Min(10, 0x0A)|(34);
+            Int128 result22 = |Int128.Min(10, 10ul)|(35);
+            Int128 result23 = |Int128.Min(10, 10u)|(36);
+            Int128 result24 = |Int128.Min(10, 10L)|(37);
+            Int128 result25 = |Int128.Min(10, c)|(38);
+            Int128 result26 = |Int128.Min(97, 'a')|(39);
+        }
+
+        public void RotateLeft(Int128 n)
+        {
+            const int c = 1;
+
+            var result11 = |Int128.RotateLeft(n, 0)|(40);
+            var result12 = |Int128.RotateLeft(0x01, 0)|(41);
+            var result13 = |Int128.RotateLeft(0x01u, 0)|(42);
+            var result14 = |Int128.RotateLeft(0x01L, 0)|(43);
+            var result15 = |Int128.RotateLeft(0x01ul, 0)|(44);
+            var result16 = |Int128.RotateLeft(1 + 1, 0)|(45);
+            var result17 = |Int128.RotateLeft(1u + 1u, 0)|(46);
+            var result18 = |Int128.RotateLeft(1L + 1L, 0)|(47);
+            var result19 = |Int128.RotateLeft(1ul + 1ul, 0)|(48);
+            var result1A = |Int128.RotateLeft(c, 0)|(49);
+            var result1B = |Int128.RotateLeft('a', 0)|(50);
+
+            Int128 result21 = |Int128.RotateLeft(n, 0)|(51);
+            Int128 result22 = |Int128.RotateLeft(0x01, 0)|(52);
+            Int128 result23 = |Int128.RotateLeft(0x01u, 0)|(53);
+            Int128 result24 = |Int128.RotateLeft(0x01L, 0)|(54);
+            Int128 result25 = |Int128.RotateLeft(0x01ul, 0)|(55);
+            Int128 result26 = |Int128.RotateLeft(1 + 1, 0)|(56);
+            Int128 result27 = |Int128.RotateLeft(1u + 1u, 0)|(57);
+            Int128 result28 = |Int128.RotateLeft(1L + 1L, 0)|(58);
+            Int128 result29 = |Int128.RotateLeft(1ul + 1ul, 0)|(59);
+            Int128 result2A = |Int128.RotateLeft(c, 0)|(60);
+            Int128 result2B = |Int128.RotateLeft('a', 0)|(61);
+        }
+
+        public void RotateRight(Int128 n)
+        {
+            const int c = 1;
+
+            var result11 = |Int128.RotateRight(n, 0)|(62);
+            var result12 = |Int128.RotateRight(0x01, 0)|(63);
+            var result13 = |Int128.RotateRight(0x01u, 0)|(64);
+            var result14 = |Int128.RotateRight(0x01L, 0)|(65);
+            var result15 = |Int128.RotateRight(0x01ul, 0)|(66);
+            var result16 = |Int128.RotateRight(1 + 1, 0)|(67);
+            var result17 = |Int128.RotateRight(1u + 1u, 0)|(68);
+            var result18 = |Int128.RotateRight(1L + 1L, 0)|(69);
+            var result19 = |Int128.RotateRight(1ul + 1ul, 0)|(70);
+            var result1A = |Int128.RotateRight(c, 0)|(71);
+            var result1B = |Int128.RotateRight('a', 0)|(72);
+
+            Int128 result21 = |Int128.RotateRight(n, 0)|(73);
+            Int128 result22 = |Int128.RotateRight(0x01, 0)|(74);
+            Int128 result23 = |Int128.RotateRight(0x01u, 0)|(75);
+            Int128 result24 = |Int128.RotateRight(0x01L, 0)|(76);
+            Int128 result25 = |Int128.RotateRight(0x01ul, 0)|(77);
+            Int128 result26 = |Int128.RotateRight(1 + 1, 0)|(78);
+            Int128 result27 = |Int128.RotateRight(1u + 1u, 0)|(79);
+            Int128 result28 = |Int128.RotateRight(1L + 1L, 0)|(80);
+            Int128 result29 = |Int128.RotateRight(1ul + 1ul, 0)|(81);
+            Int128 result2A = |Int128.RotateRight(c, 0)|(82);
+            Int128 result2B = |Int128.RotateRight('a', 0)|(83);
         }
     }
 }
@@ -160,165 +192,234 @@ Replace with '(0, 0)'
 14: The expression is always (0, 0).
 QUICKFIXES:
 Replace with '(0, 0)'
-15: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: left, Remainder: (Int128)0)'
-16: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (Int128)0x10, Remainder: (Int128)0)'
-17: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (Int128)0x10ul, Remainder: (Int128)0)'
-18: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (Int128)0x10u, Remainder: (Int128)0)'
-19: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (Int128)0x10L, Remainder: (Int128)0)'
-20: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (Int128)c, Remainder: (Int128)0)'
-21: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(Quotient: (Int128)'a', Remainder: (Int128)0)'
-22: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-23: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-24: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10ul, 0)'
-25: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10u, 0)'
-26: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10L, 0)'
-27: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-28: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '('a', 0)'
-29: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(left, 0)'
-30: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10, 0)'
-31: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10ul, 0)'
-32: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10u, 0)'
-33: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(0x10L, 0)'
-34: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '(c, 0)'
-35: The expression is always the same as the first argument with no remainder.
-QUICKFIXES:
-Replace with '('a', 0)'
-36: The expression is always false.
+15: The expression is always false.
 QUICKFIXES:
 Replace with 'false'
+16: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)0x0A'
+Replace with '(Int128)10'
+17: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10ul'
+Replace with '(Int128)10'
+18: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10u'
+Replace with '(Int128)10'
+19: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10L'
+Replace with '(Int128)10'
+20: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)c'
+Replace with '(Int128)10'
+21: The expression is always 97.
+QUICKFIXES:
+Replace with '(Int128)'a''
+Replace with '(Int128)97'
+22: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+23: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+Replace with '10'
+24: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+25: The expression is always 10.
+QUICKFIXES:
+Replace with '10L'
+Replace with '10'
+26: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+27: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+28: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)0x0A'
+Replace with '(Int128)10'
+29: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10ul'
+Replace with '(Int128)10'
+30: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10u'
+Replace with '(Int128)10'
+31: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)10L'
+Replace with '(Int128)10'
+32: The expression is always 10.
+QUICKFIXES:
+Replace with '(Int128)c'
+Replace with '(Int128)10'
+33: The expression is always 97.
+QUICKFIXES:
+Replace with '(Int128)'a''
+Replace with '(Int128)97'
+34: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+35: The expression is always 10.
+QUICKFIXES:
+Replace with '10ul'
+Replace with '10'
+36: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
 37: The expression is always 10.
 QUICKFIXES:
-Replace with '(Int128)0x0A'
-Replace with '(Int128)10'
+Replace with '10L'
+Replace with '10'
 38: The expression is always 10.
 QUICKFIXES:
-Replace with '(Int128)10ul'
-Replace with '(Int128)10'
-39: The expression is always 10.
-QUICKFIXES:
-Replace with '(Int128)10u'
-Replace with '(Int128)10'
-40: The expression is always 10.
-QUICKFIXES:
-Replace with '(Int128)10L'
-Replace with '(Int128)10'
-41: The expression is always 10.
-QUICKFIXES:
-Replace with '(Int128)c'
-Replace with '(Int128)10'
-42: The expression is always 97.
-QUICKFIXES:
-Replace with '(Int128)'a''
-Replace with '(Int128)97'
-43: The expression is always 10.
-QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-44: The expression is always 10.
-QUICKFIXES:
-Replace with '10ul'
-Replace with '10'
-45: The expression is always 10.
-QUICKFIXES:
-Replace with '10u'
-Replace with '10'
-46: The expression is always 10.
-QUICKFIXES:
-Replace with '10L'
-Replace with '10'
-47: The expression is always 10.
-QUICKFIXES:
 Replace with 'c'
 Replace with '10'
-48: The expression is always 97.
+39: The expression is always 97.
 QUICKFIXES:
 Replace with ''a''
 Replace with '97'
-49: The expression is always 10.
+40: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(Int128)0x0A'
-Replace with '(Int128)10'
-50: The expression is always 10.
+Replace with 'n'
+41: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(Int128)10ul'
-Replace with '(Int128)10'
-51: The expression is always 10.
+Replace with '(Int128)0x01'
+42: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(Int128)10u'
-Replace with '(Int128)10'
-52: The expression is always 10.
+Replace with '(Int128)0x01u'
+43: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(Int128)10L'
-Replace with '(Int128)10'
-53: The expression is always 10.
+Replace with '(Int128)0x01L'
+44: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)0x01ul'
+45: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)(1 + 1)'
+46: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)(1u + 1u)'
+47: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)(1L + 1L)'
+48: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)(1ul + 1ul)'
+49: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(Int128)c'
-Replace with '(Int128)10'
-54: The expression is always 97.
+50: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with '(Int128)'a''
-Replace with '(Int128)97'
-55: The expression is always 10.
+51: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '0x0A'
-Replace with '10'
-56: The expression is always 10.
+Replace with 'n'
+52: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10ul'
-Replace with '10'
-57: The expression is always 10.
+Replace with '0x01'
+53: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10u'
-Replace with '10'
-58: The expression is always 10.
+Replace with '0x01u'
+54: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '10L'
-Replace with '10'
-59: The expression is always 10.
+Replace with '0x01L'
+55: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01ul'
+56: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+57: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u + 1u'
+58: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L + 1L'
+59: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul + 1ul'
+60: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'
-Replace with '10'
-60: The expression is always 97.
+61: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with ''a''
-Replace with '97'
+62: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+63: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)0x01'
+64: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)0x01u'
+65: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)0x01L'
+66: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)0x01ul'
+67: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)(1 + 1)'
+68: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)(1u + 1u)'
+69: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)(1L + 1L)'
+70: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)(1ul + 1ul)'
+71: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)c'
+72: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(Int128)'a''
+73: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+74: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01'
+75: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01u'
+76: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01L'
+77: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01ul'
+78: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+79: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u + 1u'
+80: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1L + 1L'
+81: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1ul + 1ul'
+82: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+83: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with ''a''
