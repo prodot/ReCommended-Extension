@@ -1,4 +1,7 @@
-﻿namespace ReCommendedExtension.Tests.Missing;
+﻿using System.Globalization;
+using System.Text;
+
+namespace ReCommendedExtension.Tests.Missing;
 
 internal static class MissingInt16Methods
 {
@@ -35,6 +38,21 @@ internal static class MissingInt16Methods
 
     [Pure]
     public static short Min(short x, short y) => x <= y ? x : y;
+
+    [Pure]
+    public static short Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
+        => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static short Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+
+    [Pure]
+    public static short Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => short.Parse(s.ToString(), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static short Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => short.Parse(s.ToString(), style, provider);
 
     [Pure]
     public static short RotateLeft(short value, int rotateAmount)

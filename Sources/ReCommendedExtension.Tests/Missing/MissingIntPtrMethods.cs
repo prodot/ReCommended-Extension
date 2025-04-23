@@ -1,4 +1,7 @@
-﻿namespace ReCommendedExtension.Tests.Missing;
+﻿using System.Globalization;
+using System.Text;
+
+namespace ReCommendedExtension.Tests.Missing;
 
 internal static class MissingIntPtrMethods
 {
@@ -35,6 +38,40 @@ internal static class MissingIntPtrMethods
 
     [Pure]
     public static nint Min(nint x, nint y) => x <= y ? x : y;
+
+    [Pure]
+    public static nint Parse(string s) => Parse(s, NumberStyles.Integer, provider: null);
+
+    [Pure]
+    public static nint Parse(string s, NumberStyles style) => Parse(s, style, provider: null);
+
+    [Pure]
+    public static nint Parse(string s, IFormatProvider? provider) => Parse(s, NumberStyles.Integer, provider);
+
+    [Pure]
+    public static nint Parse(string s, NumberStyles style, IFormatProvider? provider)
+        => IntPtr.Size switch
+        {
+            8 => (nint)long.Parse(s, style, provider),
+            4 => int.Parse(s, style, provider),
+
+            _ => throw new PlatformNotSupportedException(),
+        };
+
+    [Pure]
+    public static nint Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
+        => Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static nint Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+
+    [Pure]
+    public static nint Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s.ToString(), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static nint Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => Parse(s.ToString(), style, provider);
 
     [Pure]
     public static nint RotateLeft(nint value, int rotateAmount) => unchecked((nint)MissingUIntPtrMethods.RotateLeft((nuint)value, rotateAmount));

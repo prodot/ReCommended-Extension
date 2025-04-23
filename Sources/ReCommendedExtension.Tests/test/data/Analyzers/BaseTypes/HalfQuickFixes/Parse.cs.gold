@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Halves
+    {
+        public void Parse(string s, IFormatProvider provider)
+        {
+            var result = Half.Parse(s{caret}, provider);
+        }
+    }
+}

@@ -1,9 +1,13 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Globalization;
+using System.Text;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
+using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Single;
 
@@ -13,7 +17,7 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Single";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -64,6 +68,26 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
     public void TestGetTypeCode()
     {
         Test(number => number.GetTypeCode(), _ => TypeCode.Single);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestParse()
+    {
+        Test(n => float.Parse($"{n}", NumberStyles.Float | NumberStyles.AllowThousands), n => float.Parse($"{n}"));
+        Test(n => float.Parse($"{n}", null), n => float.Parse($"{n}"));
+        Test(
+            n => float.Parse($"{n}", NumberStyles.Float | NumberStyles.AllowThousands, new CultureInfo("en")),
+            n => float.Parse($"{n}", new CultureInfo("en")));
+        Test(
+            n => float.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, null),
+            n => float.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint));
+
+        Test(n => MissingSingleMethods.Parse($"{n}".AsSpan(), null), n => MissingSingleMethods.Parse($"{n}".AsSpan()));
+
+        Test(n => MissingSingleMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingSingleMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
 
         DoNamedTest2();
     }

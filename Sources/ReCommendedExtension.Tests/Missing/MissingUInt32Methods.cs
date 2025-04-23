@@ -1,4 +1,7 @@
-﻿namespace ReCommendedExtension.Tests.Missing;
+﻿using System.Globalization;
+using System.Text;
+
+namespace ReCommendedExtension.Tests.Missing;
 
 internal static class MissingUInt32Methods
 {
@@ -35,6 +38,21 @@ internal static class MissingUInt32Methods
 
     [Pure]
     public static uint Min(uint x, uint y) => x <= y ? x : y;
+
+    [Pure]
+    public static uint Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
+        => uint.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static uint Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => uint.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+
+    [Pure]
+    public static uint Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => uint.Parse(s.ToString(), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static uint Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => uint.Parse(s.ToString(), style, provider);
 
     [Pure]
     public static uint RotateLeft(uint value, int offset) => value << offset | value >> (32 - offset);

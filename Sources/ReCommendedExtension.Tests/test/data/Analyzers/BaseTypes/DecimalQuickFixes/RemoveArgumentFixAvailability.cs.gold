@@ -1,0 +1,46 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Decimals
+    {
+        public void Parse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
+        {
+            var result11 = decimal.Parse(s, |NumberStyles.Number|(0));
+            var result12 = decimal.Parse(s, |null|(1));
+            var result13 = decimal.Parse(s, |NumberStyles.AllowLeadingSign | NumberStyles.AllowTrailingWhite | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands|(2), provider);
+            var result14 = decimal.Parse(s, style, |null|(3));
+            var result15 = decimal.Parse(s, |NumberStyles.Number|(4), |null|(5));
+
+            var result21 = decimal.Parse(s1, |null|(6));
+
+            var result31 = decimal.Parse(utf8Text, |null|(7));
+        }
+    }
+}
+------------------------------------------------
+0: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+1: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+2: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+3: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+4: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+5: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+6: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+7: Passing null is redundant.
+QUICKFIXES:
+Remove argument

@@ -1,4 +1,6 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Globalization;
+using System.Text;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -6,6 +8,7 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
 using ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
+using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int128;
 
@@ -16,7 +19,7 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -98,6 +101,26 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
     public void TestMin()
     {
         Test(n => Int128Analyzer.Int128.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestParse()
+    {
+        Test(n => Int128Analyzer.Int128.Parse($"{n}", NumberStyles.Integer), n => Int128Analyzer.Int128.Parse($"{n}"));
+        Test(n => Int128Analyzer.Int128.Parse($"{n}", null), n => Int128Analyzer.Int128.Parse($"{n}"));
+        Test(
+            n => Int128Analyzer.Int128.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo),
+            n => Int128Analyzer.Int128.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+        Test(
+            n => Int128Analyzer.Int128.Parse($"{n}", NumberStyles.AllowLeadingSign, null),
+            n => Int128Analyzer.Int128.Parse($"{n}", NumberStyles.AllowLeadingSign));
+
+        Test(n => MissingInt128Methods.Parse($"{n}".AsSpan(), null), n => MissingInt128Methods.Parse($"{n}".AsSpan()));
+
+        Test(n => MissingInt128Methods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingInt128Methods.Parse(Encoding.UTF8.GetBytes($"{n}")));
 
         DoNamedTest2();
     }

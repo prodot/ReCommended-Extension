@@ -1,4 +1,7 @@
-﻿namespace ReCommendedExtension.Tests.Missing;
+﻿using System.Globalization;
+using System.Text;
+
+namespace ReCommendedExtension.Tests.Missing;
 
 internal static class MissingSByteMethods
 {
@@ -35,6 +38,21 @@ internal static class MissingSByteMethods
 
     [Pure]
     public static sbyte Min(sbyte x, sbyte y) => x <= y ? x : y;
+
+    [Pure]
+    public static sbyte Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
+        => sbyte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static sbyte Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => sbyte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+
+    [Pure]
+    public static sbyte Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => sbyte.Parse(s.ToString(), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static sbyte Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => sbyte.Parse(s.ToString(), style, provider);
 
     [Pure]
     public static sbyte RotateLeft(sbyte value, int rotateAmount)

@@ -1,4 +1,5 @@
-﻿using JetBrains.Metadata.Reader.API;
+﻿using System.Globalization;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -20,12 +21,14 @@ public abstract class FloatingPointNumberAnalyzer<N>(IClrTypeName clrTypeName) :
     private protected sealed override bool AreEqual(N x, N y) => false; // can only be checked by comparing literals
 
     private protected sealed override bool AreMinMaxValues(N min, N max) => false; // can only be checked by comparing literals
+
+    private protected sealed override NumberStyles GetDefaultNumberStyles() => NumberStyles.Float | NumberStyles.AllowThousands;
 }
 
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(PredefinedType.DOUBLE_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Double;
@@ -102,7 +105,7 @@ public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(Prede
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(PredefinedType.FLOAT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Single;
@@ -175,7 +178,7 @@ public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(Predef
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Half>(ClrTypeNames.Half)
 {
     private protected override TypeCode? TryGetTypeCode() => null;
@@ -236,6 +239,35 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
             }
         }
 
+        public static explicit operator float(Half value)
+        {
+            unchecked
+            {
+                const uint exponentLowerBound = 0x3880_0000u;
+                const uint exponentOffset = 0x3800_0000u;
+                const uint singleSignMask = 0x7FFFFFFFu;
+                const uint halfExponentMask = 0x7C00;
+                const int halfToSingleBitsMask = 0x0FFF_E000;
+
+                var valueInInt16Bits = (short)value.bits;
+                var sign = (uint)(int)valueInInt16Bits & singleSignMask;
+                var bitValueInProcess = (uint)valueInInt16Bits;
+                var offsetExponent = bitValueInProcess & halfExponentMask;
+                var subnormalMask = offsetExponent == 0u ? ~0u : 0u;
+                var maskedExponentLowerBound = subnormalMask & exponentLowerBound;
+                var offsetMaskedExponentLowerBound = exponentOffset | maskedExponentLowerBound;
+
+                bitValueInProcess <<= 13;
+                offsetMaskedExponentLowerBound <<= offsetExponent == halfExponentMask ? 1 : 0;
+                bitValueInProcess &= halfToSingleBitsMask;
+                bitValueInProcess += offsetMaskedExponentLowerBound;
+
+                var absoluteValue = SingleToUInt32Bits(UInt32BitsToSingle(bitValueInProcess) - UInt32BitsToSingle(maskedExponentLowerBound));
+
+                return UInt32BitsToSingle(absoluteValue | sign);
+            }
+        }
+
         [Pure]
         static uint SingleToUInt32Bits(float value) => BitConverter.ToUInt32(BitConverter.GetBytes(value), 0);
 
@@ -250,6 +282,18 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
 
         [Pure]
         static bool IsNaN(Half value) => ((uint)value.bits & ~0x8000) > 0x7C00;
+
+        [Pure]
+        public static Half Parse(string s) => Parse(s, NumberStyles.Float | NumberStyles.AllowThousands, null);
+
+        [Pure]
+        public static Half Parse(string s, NumberStyles style) => Parse(s, style, null);
+
+        [Pure]
+        public static Half Parse(string s, IFormatProvider? provider) => Parse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider);
+
+        [Pure]
+        public static Half Parse(string s, NumberStyles style, IFormatProvider? provider) => (Half)float.Parse(s, style, provider);
 
         readonly ushort bits;
 
@@ -268,6 +312,8 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
         }
 
         public bool Equals(Half other) => bits == other.bits || AreZero(this, other) || IsNaN(this) && IsNaN(other);
+
+        public override string ToString() => ((float)this).ToString(NumberFormatInfo.CurrentInfo);
     }
 
     private protected override Half? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)

@@ -1,10 +1,13 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Globalization;
+using System.Text;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
+using ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int16;
@@ -15,7 +18,7 @@ public sealed class Int16AnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int16";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -108,6 +111,24 @@ public sealed class Int16AnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingInt16Methods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestParse()
+    {
+        Test(n => short.Parse($"{n}", NumberStyles.Integer), n => short.Parse($"{n}"));
+        Test(n => short.Parse($"{n}", null), n => short.Parse($"{n}"));
+        Test(
+            n => short.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo),
+            n => short.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+        Test(n => short.Parse($"{n}", NumberStyles.AllowLeadingSign, null), n => short.Parse($"{n}", NumberStyles.AllowLeadingSign));
+
+        Test(n => MissingInt16Methods.Parse($"{n}".AsSpan(), null), n => MissingInt16Methods.Parse($"{n}".AsSpan()));
+
+        Test(n => MissingInt16Methods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingInt16Methods.Parse(Encoding.UTF8.GetBytes($"{n}")));
 
         DoNamedTest2();
     }

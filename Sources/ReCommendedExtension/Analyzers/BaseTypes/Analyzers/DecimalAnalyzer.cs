@@ -1,4 +1,5 @@
-﻿using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using System.Globalization;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Extensions;
@@ -10,10 +11,12 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class DecimalAnalyzer() : NumberAnalyzer<decimal>(PredefinedType.DECIMAL_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Decimal;
+
+    private protected override NumberStyles GetDefaultNumberStyles() => NumberStyles.Number;
 
     private protected override decimal? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {

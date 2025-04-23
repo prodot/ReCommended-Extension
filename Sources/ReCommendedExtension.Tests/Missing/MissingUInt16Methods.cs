@@ -1,4 +1,7 @@
-﻿namespace ReCommendedExtension.Tests.Missing;
+﻿using System.Globalization;
+using System.Text;
+
+namespace ReCommendedExtension.Tests.Missing;
 
 internal static class MissingUInt16Methods
 {
@@ -35,6 +38,21 @@ internal static class MissingUInt16Methods
 
     [Pure]
     public static ushort Min(ushort x, ushort y) => x <= y ? x : y;
+
+    [Pure]
+    public static ushort Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
+        => ushort.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static ushort Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => ushort.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+
+    [Pure]
+    public static ushort Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => ushort.Parse(s.ToString(), NumberStyles.Integer, provider);
+
+    [Pure]
+    public static ushort Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+        => ushort.Parse(s.ToString(), style, provider);
 
     [Pure]
     public static ushort RotateLeft(ushort value, int rotateAmount)

@@ -1,4 +1,6 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Globalization;
+using System.Text;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -18,7 +20,7 @@ public sealed class UIntPtrAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UIntPtr";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -82,6 +84,26 @@ public sealed class UIntPtrAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingUIntPtrMethods.Min(n, n), n => n);
         Test(n => MissingMathMethods.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestParse()
+    {
+        Test(n => MissingUIntPtrMethods.Parse($"{n}", NumberStyles.Integer), n => MissingUIntPtrMethods.Parse($"{n}"));
+        Test(n => MissingUIntPtrMethods.Parse($"{n}", null), n => MissingUIntPtrMethods.Parse($"{n}"));
+        Test(
+            n => MissingUIntPtrMethods.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo),
+            n => MissingUIntPtrMethods.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+        Test(n => MissingUIntPtrMethods.Parse($"{n}", NumberStyles.None, null), n => MissingUIntPtrMethods.Parse($"{n}", NumberStyles.None));
+
+        Test(n => MissingUIntPtrMethods.Parse($"{n}".AsSpan(), null), n => MissingUIntPtrMethods.Parse($"{n}".AsSpan()));
+
+        Test(
+            n => MissingUIntPtrMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null),
+            n => MissingUIntPtrMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
 
         DoNamedTest2();
     }

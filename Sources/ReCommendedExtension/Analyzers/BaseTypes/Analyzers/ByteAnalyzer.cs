@@ -20,21 +20,11 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
     static bool IsNumberStyles(IType type) => type.IsClrType(ClrTypeNames.NumberStyles);
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class ParameterTypes
+    static new class ParameterTypes
     {
         public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
 
         public static IReadOnlyList<ParameterType> IFormatProvider { get; } = [new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN }];
-
-        public static IReadOnlyList<ParameterType> String_IFormatProvider { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> String_NumberStyles { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = ClrTypeNames.NumberStyles },
-        ];
 
         public static IReadOnlyList<ParameterType> String_Byte { get; } =
         [
@@ -53,124 +43,12 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
             new() { ClrTypeName = PredefinedType.BYTE_FQN },
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_NumberStyles_IFormatProvider { get; } =
-        [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = ClrTypeNames.NumberStyles },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-        ];
-
         public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider_Byte { get; } =
         [
             new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
             new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
             new() { ClrTypeName = PredefinedType.BYTE_FQN },
         ];
-    }
-
-    /// <remarks>
-    /// <c>byte.Parse(s, NumberStyles.Integer)</c> → <c>byte.Parse(s)</c>
-    /// </remarks>
-    static void AnalyzeParse_String_NumberStyles(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument styleArgument)
-    {
-        if (styleArgument.Value.TryGetNumberStylesConstant() == NumberStyles.Integer
-            && PredefinedType.BYTE_FQN.HasMethod(
-                new MethodSignature { Name = nameof(byte.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(NumberStyles)}.{nameof(NumberStyles.Integer)} is redundant.", styleArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>byte.Parse(s, null)</c> → <c>byte.Parse(s)</c>
-    /// </remarks>
-    static void AnalyzeParse_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.BYTE_FQN.HasMethod(
-                new MethodSignature { Name = nameof(byte.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>byte.Parse(s, NumberStyles.Integer, provider)</c> → <c>byte.Parse(s, provider)</c><para/>
-    /// <c>byte.Parse(s, style, null)</c> → <c>byte.Parse(s, style)</c>
-    /// </remarks>
-    static void AnalyzeParse_String_NumberStyles_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument styleArgument,
-        ICSharpArgument providerArgument)
-    {
-        if (styleArgument.Value.TryGetNumberStylesConstant() == NumberStyles.Integer
-            && PredefinedType.BYTE_FQN.HasMethod(
-                new MethodSignature { Name = nameof(byte.Parse), ParameterTypes = ParameterTypes.String_IFormatProvider, IsStatic = true },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(NumberStyles)}.{nameof(NumberStyles.Integer)} is redundant.", styleArgument));
-        }
-
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.BYTE_FQN.HasMethod(
-                new MethodSignature { Name = nameof(byte.Parse), ParameterTypes = ParameterTypes.String_NumberStyles, IsStatic = true },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>byte.Parse(s, null)</c> → <c>byte.Parse(s)</c> (.NET Core 2.1)
-    /// </remarks>
-    static void AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.BYTE_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(byte.Parse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT_NumberStyles_IFormatProvider, IsStatic = true,
-                },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>byte.Parse(utf8Text, null)</c> → <c>byte.Parse(utf8Text)</c> (.NET 8)
-    /// </remarks>
-    static void AnalyzeParse_ReadOnlySpanOfByte_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.BYTE_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(byte.Parse),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT_NumberStyles_IFormatProvider,
-                    IsStatic = true,
-                },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
     }
 
     /// <remarks>
@@ -423,46 +301,6 @@ public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_F
                 case (_, { IsStatic: true }):
                     switch (method.ShortName)
                     {
-                        case nameof(byte.Parse):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var sType }, { Type: var styleType }], [_, var styleArgument])
-                                    when sType.IsString() && IsNumberStyles(styleType):
-
-                                    AnalyzeParse_String_NumberStyles(consumer, element, styleArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, var providerArgument])
-                                    when sType.IsString() && providerType.IsIFormatProvider():
-
-                                    AnalyzeParse_String_IFormatProvider(consumer, element, providerArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }], [
-                                    _, var styleArgument, var providerArgument,
-                                ]) when sType.IsString() && IsNumberStyles(styleType) && providerType.IsIFormatProvider():
-
-                                    AnalyzeParse_String_NumberStyles_IFormatProvider(consumer, element, styleArgument, providerArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, var providerArgument])
-                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && providerType.IsIFormatProvider():
-
-                                    AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, element, providerArgument);
-                                    break;
-
-                                case ([{ Type: var utf8TextType }, { Type: var providerType }], [_, var providerArgument])
-                                    when utf8TextType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsByte()
-                                    && providerType.IsIFormatProvider():
-
-                                    AnalyzeParse_ReadOnlySpanOfByte_IFormatProvider(consumer, element, providerArgument);
-                                    break;
-                            }
-                            break;
-
                         case nameof(byte.TryParse):
                             switch (method.Parameters, element.Arguments)
                             {

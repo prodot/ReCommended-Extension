@@ -1,4 +1,6 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Globalization;
+using System.Text;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -15,7 +17,7 @@ public sealed class Int32AnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int32";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -108,6 +110,22 @@ public sealed class Int32AnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingInt32Methods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestParse()
+    {
+        Test(n => int.Parse($"{n}", NumberStyles.Integer), n => int.Parse($"{n}"));
+        Test(n => int.Parse($"{n}", null), n => int.Parse($"{n}"));
+        Test(n => int.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo), n => int.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+        Test(n => int.Parse($"{n}", NumberStyles.AllowLeadingSign, null), n => int.Parse($"{n}", NumberStyles.AllowLeadingSign));
+
+        Test(n => MissingInt32Methods.Parse($"{n}".AsSpan(), null), n => MissingInt32Methods.Parse($"{n}".AsSpan()));
+
+        Test(n => MissingInt32Methods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingInt32Methods.Parse(Encoding.UTF8.GetBytes($"{n}")));
 
         DoNamedTest2();
     }

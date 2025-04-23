@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Globalization;
+using System.Numerics;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -33,8 +34,6 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion("The expression is always (0, 0).", invocationExpression, replacement));
-
-                return;
             }
         }
     }
@@ -76,6 +75,8 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
                     GetReplacementFromArgument(invocationExpression, value)));
         }
     }
+
+    private protected sealed override NumberStyles GetDefaultNumberStyles() => NumberStyles.Integer;
 
     [Pure]
     private protected abstract string CastZero(CSharpLanguageLevel languageLevel);
@@ -163,7 +164,7 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class SByteAnalyzer() : IntegerAnalyzer<sbyte>(PredefinedType.SBYTE_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.SByte;
@@ -214,7 +215,7 @@ public sealed class SByteAnalyzer() : IntegerAnalyzer<sbyte>(PredefinedType.SBYT
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class Int16Analyzer() : IntegerAnalyzer<short>(PredefinedType.SHORT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Int16;
@@ -273,7 +274,7 @@ public sealed class Int16Analyzer() : IntegerAnalyzer<short>(PredefinedType.SHOR
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class UInt16Analyzer() : IntegerAnalyzer<ushort>(PredefinedType.USHORT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.UInt16;
@@ -332,7 +333,7 @@ public sealed class UInt16Analyzer() : IntegerAnalyzer<ushort>(PredefinedType.US
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class Int32Analyzer() : IntegerAnalyzer<int>(PredefinedType.INT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Int32;
@@ -409,7 +410,7 @@ public sealed class Int32Analyzer() : IntegerAnalyzer<int>(PredefinedType.INT_FQ
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class UInt32Analyzer() : IntegerAnalyzer<uint>(PredefinedType.UINT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.UInt32;
@@ -482,7 +483,7 @@ public sealed class UInt32Analyzer() : IntegerAnalyzer<uint>(PredefinedType.UINT
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class Int64Analyzer() : IntegerAnalyzer<long>(PredefinedType.LONG_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Int64;
@@ -578,7 +579,7 @@ public sealed class Int64Analyzer() : IntegerAnalyzer<long>(PredefinedType.LONG_
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class UInt64Analyzer() : IntegerAnalyzer<ulong>(PredefinedType.ULONG_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.UInt64;
@@ -671,7 +672,7 @@ public sealed class UInt64Analyzer() : IntegerAnalyzer<ulong>(PredefinedType.ULO
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(ClrTypeNames.Int128)
 {
     private protected override TypeCode? TryGetTypeCode() => null;
@@ -791,6 +792,18 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
 
         [Pure]
         public static Int128 RotateRight(Int128 value, int rotateAmount) => value >>> rotateAmount | value << (128 - rotateAmount);
+
+        [Pure]
+        public static Int128 Parse(string s) => Parse(s, NumberStyles.Integer, provider: null);
+
+        [Pure]
+        public static Int128 Parse(string s, NumberStyles style) => Parse(s, style, provider: null);
+
+        [Pure]
+        public static Int128 Parse(string s, IFormatProvider? provider) => Parse(s, NumberStyles.Integer, provider);
+
+        [Pure]
+        public static Int128 Parse(string s, NumberStyles style, IFormatProvider? provider) => new(BigInteger.Parse(s, style, provider));
 
         readonly ulong lower;
         readonly ulong upper;
@@ -914,7 +927,7 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>(ClrTypeNames.UInt128)
 {
     private protected override TypeCode? TryGetTypeCode() => null;
@@ -1022,6 +1035,18 @@ public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>
                 return (new UInt128(quotient), new UInt128(remainder));
             }
         }
+
+        [Pure]
+        public static UInt128 Parse(string s) => Parse(s, NumberStyles.Integer, provider: null);
+
+        [Pure]
+        public static UInt128 Parse(string s, NumberStyles style) => Parse(s, style, provider: null);
+
+        [Pure]
+        public static UInt128 Parse(string s, IFormatProvider? provider) => Parse(s, NumberStyles.Integer, provider);
+
+        [Pure]
+        public static UInt128 Parse(string s, NumberStyles style, IFormatProvider? provider) => new(BigInteger.Parse(s, style, provider));
 
         [Pure]
         public static UInt128 RotateLeft(UInt128 value, int rotateAmount) => value << rotateAmount | value >>> (128 - rotateAmount);

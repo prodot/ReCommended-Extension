@@ -1,4 +1,6 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Globalization;
+using System.Text;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -15,7 +17,7 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -97,6 +99,26 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingDecimalMethods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestParse()
+    {
+        Test(n => decimal.Parse($"{n}", NumberStyles.Number), n => decimal.Parse($"{n}"));
+        Test(n => decimal.Parse($"{n}", null), n => decimal.Parse($"{n}"));
+        Test(
+            n => decimal.Parse($"{n}", NumberStyles.Number, NumberFormatInfo.InvariantInfo),
+            n => decimal.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+        Test(n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign, null), n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign));
+
+        Test(n => MissingDecimalMethods.Parse($"{n}".AsSpan(), null), n => MissingDecimalMethods.Parse($"{n}".AsSpan()));
+
+        Test(
+            n => MissingDecimalMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null),
+            n => MissingDecimalMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
 
         DoNamedTest2();
     }

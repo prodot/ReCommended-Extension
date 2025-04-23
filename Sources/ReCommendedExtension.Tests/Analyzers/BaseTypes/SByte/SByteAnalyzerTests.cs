@@ -1,4 +1,6 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Globalization;
+using System.Text;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -15,7 +17,7 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\SByte";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -108,6 +110,24 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(n => MissingSByteMethods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestParse()
+    {
+        Test(n => sbyte.Parse($"{n}", NumberStyles.Integer), n => sbyte.Parse($"{n}"));
+        Test(n => sbyte.Parse($"{n}", null), n => sbyte.Parse($"{n}"));
+        Test(
+            n => sbyte.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo),
+            n => sbyte.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+        Test(n => sbyte.Parse($"{n}", NumberStyles.AllowLeadingSign, null), n => sbyte.Parse($"{n}", NumberStyles.AllowLeadingSign));
+
+        Test(n => MissingSByteMethods.Parse($"{n}".AsSpan(), null), n => MissingSByteMethods.Parse($"{n}".AsSpan()));
+
+        Test(n => MissingSByteMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingSByteMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
 
         DoNamedTest2();
     }

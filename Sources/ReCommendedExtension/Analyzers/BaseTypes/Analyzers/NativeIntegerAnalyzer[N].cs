@@ -19,7 +19,7 @@ public abstract class NativeIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class IntPtrAnalyzer() : NativeIntegerAnalyzer<nint>(PredefinedType.INTPTR_FQN)
 {
     private protected override nint? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
@@ -88,7 +88,7 @@ public sealed class IntPtrAnalyzer() : NativeIntegerAnalyzer<nint>(PredefinedTyp
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class UIntPtrAnalyzer() : NativeIntegerAnalyzer<nuint>(PredefinedType.UINTPTR_FQN)
 {
     private protected override nuint? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
