@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
-public sealed class ByteAnalyzer() : IntegerAnalyzer<byte>(PredefinedType.BYTE_FQN)
+public sealed class ByteAnalyzer() : UnsignedIntegerAnalyzer<byte>(PredefinedType.BYTE_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Byte;
 

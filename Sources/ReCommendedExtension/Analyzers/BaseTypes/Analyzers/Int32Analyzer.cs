@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
-public sealed class Int32Analyzer() : IntegerAnalyzer<int>(PredefinedType.INT_FQN)
+public sealed class Int32Analyzer() : SignedIntegerAnalyzer<int>(PredefinedType.INT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Int32;
 

@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
-public sealed class UInt16Analyzer() : IntegerAnalyzer<ushort>(PredefinedType.USHORT_FQN)
+public sealed class UInt16Analyzer() : UnsignedIntegerAnalyzer<ushort>(PredefinedType.USHORT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.UInt16;
 

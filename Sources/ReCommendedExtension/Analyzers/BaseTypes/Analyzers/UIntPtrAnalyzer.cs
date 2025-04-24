@@ -12,8 +12,10 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
-public sealed class UIntPtrAnalyzer() : NativeIntegerAnalyzer<nuint>(PredefinedType.UINTPTR_FQN)
+public sealed class UIntPtrAnalyzer() : UnsignedIntegerAnalyzer<nuint>(PredefinedType.UINTPTR_FQN)
 {
+    private protected override TypeCode? TryGetTypeCode() => null;
+
     private protected override nuint? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
@@ -71,4 +73,6 @@ public sealed class UIntPtrAnalyzer() : NativeIntegerAnalyzer<nuint>(PredefinedT
     private protected override bool AreEqual(nuint x, nuint y) => x == y;
 
     private protected override bool IsZero(nuint value) => value == 0;
+
+    private protected override bool AreMinMaxValues(nuint min, nuint max) => false; // nuint.MinValue and nuint.MaxValue are platform-dependent
 }

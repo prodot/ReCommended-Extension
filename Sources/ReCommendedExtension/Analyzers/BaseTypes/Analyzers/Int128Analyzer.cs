@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
-public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(ClrTypeNames.Int128)
+public sealed class Int128Analyzer() : SignedIntegerAnalyzer<Int128Analyzer.Int128>(ClrTypeNames.Int128)
 {
     private protected override TypeCode? TryGetTypeCode() => null;
 
