@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Test
+﻿namespace Test
 {
     public class Bytes
     {
-        public void TryParse(ReadOnlySpan<char> s)
+        public void TryParse(string s)
         {
             var result = byte.TryParse(s, {caret}null, out _);
         }

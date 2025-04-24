@@ -78,4 +78,61 @@ internal static class MissingIntPtrMethods
 
     [Pure]
     public static nint RotateRight(nint value, int rotateAmount) => unchecked((nint)MissingUIntPtrMethods.RotateRight((nuint)value, rotateAmount));
+
+    [Pure]
+    public static bool TryParse([NotNullWhen(true)] string? s, out nint result) => TryParse(s, NumberStyles.Number, null, out result);
+
+    [Pure]
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out nint result)
+        => TryParse(s, NumberStyles.Number, provider, out result);
+
+    [Pure]
+    public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out nint result)
+    {
+        switch (IntPtr.Size)
+        {
+            case 8:
+                if (long.TryParse(s, style, provider, out var int64Value))
+                {
+                    result = (nint)int64Value;
+                    return true;
+                }
+                break;
+
+            case 4:
+                if (int.TryParse(s, style, provider, out var int32Value))
+                {
+                    result = int32Value;
+                    return true;
+                }
+                break;
+
+            default: throw new PlatformNotSupportedException();
+        }
+
+        result = default;
+        return false;
+    }
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out nint result)
+        => TryParse(s.ToString(), style, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out nint result)
+        => TryParse(s.ToString(), NumberStyles.Number, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, out nint result) => TryParse(s.ToString(), out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out nint result)
+        => TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out nint result)
+        => TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, out nint result) => TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
 }

@@ -142,4 +142,40 @@ public sealed class UInt16AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (ushort n, out ushort result) => ushort.TryParse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out result),
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse($"{n}", null, out result),
+            (ushort n, out ushort result) => ushort.TryParse($"{n}", out result));
+
+        Test(
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse($"{n}".AsSpan(), null, out result),
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse($"{n}".AsSpan(), out result));
+
+        Test(
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (ushort n, out ushort result) => MissingUInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
+
+        DoNamedTest2();
+    }
 }

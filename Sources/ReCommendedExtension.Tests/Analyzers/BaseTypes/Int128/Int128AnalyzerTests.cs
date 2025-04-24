@@ -140,4 +140,52 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => Int128Analyzer.Int128.TryParse(
+                $"{n}",
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result)
+                => Int128Analyzer.Int128.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => Int128Analyzer.Int128.TryParse($"{n}", null, out result),
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => Int128Analyzer.Int128.TryParse($"{n}", out result));
+
+        Test(
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => MissingInt128Methods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => MissingInt128Methods.TryParse(
+                $"{n}".AsSpan(),
+                NumberFormatInfo.InvariantInfo,
+                out result));
+        Test(
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), out result));
+
+        Test(
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => MissingInt128Methods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => MissingInt128Methods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberFormatInfo.InvariantInfo,
+                out result));
+        Test(
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result)
+                => MissingInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (Int128Analyzer.Int128 n, out Int128Analyzer.Int128 result) => MissingInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
+
+        DoNamedTest2();
+    }
 }

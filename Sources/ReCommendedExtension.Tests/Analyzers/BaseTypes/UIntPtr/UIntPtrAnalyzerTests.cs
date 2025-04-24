@@ -125,4 +125,43 @@ public sealed class UIntPtrAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out result),
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse($"{n}", null, out result),
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse($"{n}", out result));
+
+        Test(
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse($"{n}".AsSpan(), null, out result),
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse($"{n}".AsSpan(), out result));
+
+        Test(
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberFormatInfo.InvariantInfo,
+                out result));
+        Test(
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (nuint n, out nuint result) => MissingUIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
+
+        DoNamedTest2();
+    }
 }

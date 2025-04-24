@@ -805,6 +805,26 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
         [Pure]
         public static Int128 Parse(string s, NumberStyles style, IFormatProvider? provider) => new(BigInteger.Parse(s, style, provider));
 
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, out Int128 result) => TryParse(s, NumberStyles.Integer, null, out result);
+
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Int128 result)
+            => TryParse(s, NumberStyles.Integer, provider, out result);
+
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Int128 result)
+        {
+            if (BigInteger.TryParse(s, style, provider, out var value) && value >= MinValue.ToBigInteger() && value <= MaxValue.ToBigInteger())
+            {
+                result = new Int128(value);
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
         readonly ulong lower;
         readonly ulong upper;
 
@@ -1053,6 +1073,26 @@ public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>
 
         [Pure]
         public static UInt128 RotateRight(UInt128 value, int rotateAmount) => value >>> rotateAmount | value << (128 - rotateAmount);
+
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, out UInt128 result) => TryParse(s, NumberStyles.Integer, null, out result);
+
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out UInt128 result)
+            => TryParse(s, NumberStyles.Integer, provider, out result);
+
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out UInt128 result)
+        {
+            if (BigInteger.TryParse(s, style, provider, out var value) && value >= 0 && value <= MaxValue.ToBigInteger())
+            {
+                result = new UInt128(value);
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
 
         readonly ulong lower;
         readonly ulong upper;

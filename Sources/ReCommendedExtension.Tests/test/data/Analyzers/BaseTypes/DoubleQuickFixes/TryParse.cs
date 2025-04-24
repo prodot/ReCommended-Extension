@@ -1,10 +1,10 @@
 ﻿namespace Test
 {
-    public class Bytes
+    public class Doubles
     {
         public void TryParse(string s)
         {
-            var result = byte.TryParse(s, null{caret}, out _);
+            var result = double.TryParse(s, {caret}null, out _);
         }
     }
 }

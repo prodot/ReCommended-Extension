@@ -59,4 +59,31 @@ internal static class MissingUInt64Methods
 
     [Pure]
     public static ulong RotateRight(ulong value, int offset) => value >> offset | value << (64 - offset);
+
+    [Pure]
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out ulong result)
+        => ulong.TryParse(s, NumberStyles.Number, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out ulong result)
+        => ulong.TryParse(s.ToString(), style, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out ulong result)
+        => ulong.TryParse(s.ToString(), NumberStyles.Number, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, out ulong result) => ulong.TryParse(s.ToString(), out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out ulong result)
+        => ulong.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out ulong result)
+        => ulong.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, out ulong result)
+        => ulong.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
 }

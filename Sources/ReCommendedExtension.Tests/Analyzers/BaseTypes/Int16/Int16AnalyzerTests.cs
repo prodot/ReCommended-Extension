@@ -7,7 +7,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
-using ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int16;
@@ -147,6 +146,42 @@ public sealed class Int16AnalyzerTests : CSharpHighlightingTestBase
     public void TestRotateRight()
     {
         Test(n => MissingInt16Methods.RotateRight(n, 0), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (short n, out short result) => short.TryParse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out result),
+            (short n, out short result) => MissingInt16Methods.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (short n, out short result) => MissingInt16Methods.TryParse($"{n}", null, out result),
+            (short n, out short result) => short.TryParse($"{n}", out result));
+
+        Test(
+            (short n, out short result) => MissingInt16Methods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (short n, out short result) => MissingInt16Methods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (short n, out short result) => MissingInt16Methods.TryParse($"{n}".AsSpan(), null, out result),
+            (short n, out short result) => MissingInt16Methods.TryParse($"{n}".AsSpan(), out result));
+
+        Test(
+            (short n, out short result) => MissingInt16Methods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (short n, out short result) => MissingInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (short n, out short result) => MissingInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (short n, out short result) => MissingInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }

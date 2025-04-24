@@ -17,5 +17,17 @@ namespace Test
 
             var result31 = UInt128.Parse(utf8Text, null);
         }
+
+        public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
+        {
+            var result11 = UInt128.TryParse(s, NumberStyles.Integer, provider, out _);
+            var result12 = UInt128.TryParse(s, null, out _);
+
+            var result21 = UInt128.TryParse(s1, NumberStyles.Integer, provider, out _);
+            var result22 = UInt128.TryParse(s1, null, out _);
+
+            var result31 = UInt128.TryParse(utf8Text, NumberStyles.Integer, provider, out _);
+            var result32 = UInt128.TryParse(utf8Text, null, out _);
+        }
     }
 }

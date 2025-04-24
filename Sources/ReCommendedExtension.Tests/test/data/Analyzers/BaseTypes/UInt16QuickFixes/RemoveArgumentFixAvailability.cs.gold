@@ -17,6 +17,18 @@ namespace Test
 
             var result31 = ushort.Parse(utf8Text, |null|(7));
         }
+
+        public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
+        {
+            var result11 = ushort.TryParse(s, |NumberStyles.Integer|(8), provider, out _);
+            var result12 = ushort.TryParse(s, |null|(9), out _);
+
+            var result21 = ushort.TryParse(s1, |NumberStyles.Integer|(10), provider, out _);
+            var result22 = ushort.TryParse(s1, |null|(11), out _);
+
+            var result31 = ushort.TryParse(utf8Text, |NumberStyles.Integer|(12), provider, out _);
+            var result32 = ushort.TryParse(utf8Text, |null|(13), out _);
+        }
     }
 }
 ------------------------------------------------
@@ -42,5 +54,23 @@ Remove argument
 QUICKFIXES:
 Remove argument
 7: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+8: Passing NumberStyles.Integer is redundant.
+QUICKFIXES:
+Remove argument
+9: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+10: Passing NumberStyles.Integer is redundant.
+QUICKFIXES:
+Remove argument
+11: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+12: Passing NumberStyles.Integer is redundant.
+QUICKFIXES:
+Remove argument
+13: Passing null is redundant.
 QUICKFIXES:
 Remove argument

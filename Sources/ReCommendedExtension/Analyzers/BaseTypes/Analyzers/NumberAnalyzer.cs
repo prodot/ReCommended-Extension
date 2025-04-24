@@ -12,6 +12,11 @@ public abstract class NumberAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
 
+        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT { get; } =
+        [
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+        ];
+
         public static IReadOnlyList<ParameterType> String_IFormatProvider { get; } =
         [
             new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
@@ -20,6 +25,12 @@ public abstract class NumberAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         public static IReadOnlyList<ParameterType> String_NumberStyles { get; } =
         [
             new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = ClrTypeNames.NumberStyles },
+        ];
+
+        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider { get; } =
+        [
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
         ];
 
         public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_NumberStyles_IFormatProvider { get; } =

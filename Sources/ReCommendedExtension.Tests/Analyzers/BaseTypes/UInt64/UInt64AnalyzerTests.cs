@@ -142,4 +142,40 @@ public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (ulong n, out ulong result) => ulong.TryParse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out result),
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse($"{n}", null, out result),
+            (ulong n, out ulong result) => ulong.TryParse($"{n}", out result));
+
+        Test(
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse($"{n}".AsSpan(), null, out result),
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse($"{n}".AsSpan(), out result));
+
+        Test(
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (ulong n, out ulong result) => MissingUInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
+
+        DoNamedTest2();
+    }
 }

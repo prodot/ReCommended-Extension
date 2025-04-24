@@ -24,4 +24,28 @@ internal static class MissingUInt128Methods
     [Pure]
     public static UInt128Analyzer.UInt128 Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
         => UInt128Analyzer.UInt128.Parse(s.ToString(), style, provider);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out UInt128Analyzer.UInt128 result)
+        => UInt128Analyzer.UInt128.TryParse(s.ToString(), style, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out UInt128Analyzer.UInt128 result)
+        => UInt128Analyzer.UInt128.TryParse(s.ToString(), NumberStyles.Number, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, out UInt128Analyzer.UInt128 result)
+        => UInt128Analyzer.UInt128.TryParse(s.ToString(), out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out UInt128Analyzer.UInt128 result)
+        => UInt128Analyzer.UInt128.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out UInt128Analyzer.UInt128 result)
+        => UInt128Analyzer.UInt128.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, out UInt128Analyzer.UInt128 result)
+        => UInt128Analyzer.UInt128.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
 }

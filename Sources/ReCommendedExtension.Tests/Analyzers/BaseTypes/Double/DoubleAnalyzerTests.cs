@@ -44,15 +44,19 @@ public sealed class DoubleAnalyzerTests : CSharpHighlightingTestBase
 
     delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
 
-    static void Test(FuncWithOut<double, double, bool> expected, FuncWithOut<double, double, bool> actual)
+    static void Test(
+        FuncWithOut<double, double, bool> expected,
+        FuncWithOut<double, double, bool> actual,
+        double minValue = double.MinValue,
+        double maxValue = double.MaxValue)
     {
         Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
         Assert.AreEqual(expectedResult, actualResult);
 
-        Assert.AreEqual(expected(double.MaxValue, out expectedResult), actual(double.MaxValue, out actualResult));
+        Assert.AreEqual(expected(maxValue, out expectedResult), actual(maxValue, out actualResult));
         Assert.AreEqual(expectedResult, actualResult);
 
-        Assert.AreEqual(expected(double.MinValue, out expectedResult), actual(double.MinValue, out actualResult));
+        Assert.AreEqual(expected(minValue, out expectedResult), actual(minValue, out actualResult));
         Assert.AreEqual(expectedResult, actualResult);
     }
 
@@ -98,6 +102,58 @@ public sealed class DoubleAnalyzerTests : CSharpHighlightingTestBase
         Test(
             n => MissingDoubleMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null),
             n => MissingDoubleMethods.Parse(Encoding.UTF8.GetBytes($"{n}")),
+            float.MinValue,
+            float.MaxValue);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (double n, out double result) => double.TryParse(
+                $"{n}",
+                NumberStyles.Float | NumberStyles.AllowThousands,
+                new CultureInfo("en"),
+                out result),
+            (double n, out double result) => MissingDoubleMethods.TryParse($"{n}", new CultureInfo("en"), out result),
+            float.MinValue,
+            float.MaxValue);
+        Test(
+            (double n, out double result) => MissingDoubleMethods.TryParse($"{n}", null, out result),
+            (double n, out double result) => double.TryParse($"{n}", out result),
+            float.MinValue,
+            float.MaxValue);
+
+        Test(
+            (double n, out double result) => MissingDoubleMethods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Float | NumberStyles.AllowThousands,
+                new CultureInfo("en"),
+                out result),
+            (double n, out double result) => MissingDoubleMethods.TryParse($"{n}".AsSpan(), new CultureInfo("en"), out result),
+            float.MinValue,
+            float.MaxValue);
+        Test(
+            (double n, out double result) => MissingDoubleMethods.TryParse($"{n}".AsSpan(), null, out result),
+            (double n, out double result) => MissingDoubleMethods.TryParse($"{n}".AsSpan(), out result),
+            float.MinValue,
+            float.MaxValue);
+
+        Test(
+            (double n, out double result) => MissingDoubleMethods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Float | NumberStyles.AllowThousands,
+                new CultureInfo("en"),
+                out result),
+            (double n, out double result) => MissingDoubleMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), new CultureInfo("en"), out result),
+            float.MinValue,
+            float.MaxValue);
+        Test(
+            (double n, out double result) => MissingDoubleMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (double n, out double result) => MissingDoubleMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result),
             float.MinValue,
             float.MaxValue);
 

@@ -295,6 +295,27 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
         [Pure]
         public static Half Parse(string s, NumberStyles style, IFormatProvider? provider) => (Half)float.Parse(s, style, provider);
 
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, out Half result)
+            => TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, null, out result);
+
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Half result)
+            => TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
+
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Half result)
+        {
+            if (float.TryParse(s, style, provider, out var value))
+            {
+                result = (Half)value;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
         readonly ushort bits;
 
         Half(ushort bits) => this.bits = bits;

@@ -33,25 +33,5 @@ public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 
     [Test]
     [TestNet70]
-    public void TestTryParse_String_Integer() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestTryParse_String_Null() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestTryParse_ReadOnlySpanOfChar_Integer() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestTryParse_ReadOnlySpanOfChar_Null() => DoNamedTest2();
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse_ReadOnlySpanOfByte_Integer() => DoNamedTest2();
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse_ReadOnlySpanOfByte_Null() => DoNamedTest2();
+    public void TestTryParse() => DoNamedTest2();
 }

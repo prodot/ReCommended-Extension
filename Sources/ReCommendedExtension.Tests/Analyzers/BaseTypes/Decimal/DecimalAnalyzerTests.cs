@@ -122,4 +122,43 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (decimal n, out decimal result) => decimal.TryParse($"{n}", NumberStyles.Number, NumberFormatInfo.InvariantInfo, out result),
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}", null, out result),
+            (decimal n, out decimal result) => decimal.TryParse($"{n}", out result));
+
+        Test(
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Number,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), null, out result),
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), out result));
+
+        Test(
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Number,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberFormatInfo.InvariantInfo,
+                out result));
+        Test(
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
+
+        DoNamedTest2();
+    }
 }

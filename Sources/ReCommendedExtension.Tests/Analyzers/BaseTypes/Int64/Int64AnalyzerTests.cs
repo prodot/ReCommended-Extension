@@ -147,4 +147,40 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (long n, out long result) => long.TryParse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out result),
+            (long n, out long result) => MissingInt64Methods.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (long n, out long result) => MissingInt64Methods.TryParse($"{n}", null, out result),
+            (long n, out long result) => long.TryParse($"{n}", out result));
+
+        Test(
+            (long n, out long result) => MissingInt64Methods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (long n, out long result) => MissingInt64Methods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (long n, out long result) => MissingInt64Methods.TryParse($"{n}".AsSpan(), null, out result),
+            (long n, out long result) => MissingInt64Methods.TryParse($"{n}".AsSpan(), out result));
+
+        Test(
+            (long n, out long result) => MissingInt64Methods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Integer,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (long n, out long result) => MissingInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (long n, out long result) => MissingInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (long n, out long result) => MissingInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
+
+        DoNamedTest2();
+    }
 }

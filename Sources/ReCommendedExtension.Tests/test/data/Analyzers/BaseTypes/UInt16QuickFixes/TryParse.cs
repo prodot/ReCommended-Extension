@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class UInt16s
+    {
+        public void TryParse(string s)
+        {
+            var result = ushort.TryParse(s, {caret}null, out _);
+        }
+    }
+}

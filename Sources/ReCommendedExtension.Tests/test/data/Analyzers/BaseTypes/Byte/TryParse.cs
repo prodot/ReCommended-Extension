@@ -17,9 +17,13 @@ namespace Test
             var result32 = byte.TryParse(utf8Text, null, out _);
         }
 
-        public void NoDetection()
+        public void NoDetection(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
         {
-            
+            var result11 = byte.TryParse(s, style, provider, out _);
+
+            var result21 = byte.TryParse(s1, style, provider, out _);
+
+            var result31 = byte.TryParse(utf8Text, style, provider, out _);
         }
     }
 }

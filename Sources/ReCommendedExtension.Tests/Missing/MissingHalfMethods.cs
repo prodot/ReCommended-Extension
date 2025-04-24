@@ -27,4 +27,31 @@ internal static class MissingHalfMethods
         NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands,
         IFormatProvider? provider = null)
         => HalfAnalyzer.Half.Parse(s.ToString(), style, provider);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out HalfAnalyzer.Half result)
+        => HalfAnalyzer.Half.TryParse(s.ToString(), style, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out HalfAnalyzer.Half result)
+        => HalfAnalyzer.Half.TryParse(s.ToString(), NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, out HalfAnalyzer.Half result) => HalfAnalyzer.Half.TryParse(s.ToString(), out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out HalfAnalyzer.Half result)
+        => HalfAnalyzer.Half.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out HalfAnalyzer.Half result)
+        => HalfAnalyzer.Half.TryParse(
+            Encoding.UTF8.GetString(utf8Text.ToArray()),
+            NumberStyles.Float | NumberStyles.AllowThousands,
+            provider,
+            out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<byte> utf8Text, out HalfAnalyzer.Half result)
+        => HalfAnalyzer.Half.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
 }

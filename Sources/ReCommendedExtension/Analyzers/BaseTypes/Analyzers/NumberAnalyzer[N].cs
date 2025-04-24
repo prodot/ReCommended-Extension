@@ -266,6 +266,150 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         }
     }
 
+    /// <remarks>
+    /// <c>T.TryParse(s, defaultStyle, provider, out result)</c> → <c>T.TryParse(s, provider, out result)</c> (.NET 7)
+    /// </remarks>
+    void AnalyzeTryParse_String_NumberStyles_IFormatProvider_N(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument styleArgument)
+    {
+        var defaultNumberStyles = GetDefaultNumberStyles();
+
+        if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
+            && clrTypeName.HasMethod(
+                new MethodSignature
+                {
+                    Name = "TryParse", // todo: nameof(IParsable<T>.TryParse) when available
+                    ParameterTypes = [..ParameterTypes.String_IFormatProvider, new ParameterType { ClrTypeName = clrTypeName }],
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            var styles = string.Join(" | ", from t in $"{defaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+
+            consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>T.TryParse(s, null, out result)</c> → <c>T.TryParse(s, out result)</c>
+    /// </remarks>
+    void AnalyzeTryParse_String_IFormatProvider_N(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument providerArgument)
+    {
+        if (providerArgument.Value.IsDefaultValue()
+            && clrTypeName.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(int.TryParse),
+                    ParameterTypes = [..ParameterTypes.String, new ParameterType { ClrTypeName = clrTypeName }],
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>T.TryParse(s, defaultStyle, provider, out result)</c> → <c>T.TryParse(s, provider, out result)</c> (.NET 7)
+    /// </remarks>
+    void AnalyzeTryParse_ReadOnlySpanOfChar_NumberStyles_IFormatProvider_N(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument styleArgument)
+    {
+        var defaultNumberStyles = GetDefaultNumberStyles();
+
+        if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
+            && clrTypeName.HasMethod(
+                new MethodSignature
+                {
+                    Name = "TryParse", // todo: nameof(IParsable<T>.TryParse) when available
+                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT_IFormatProvider, new ParameterType { ClrTypeName = clrTypeName }],
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            var styles = string.Join(" | ", from t in $"{defaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+
+            consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>T.TryParse(s, null, out result)</c> → <c>T.TryParse(s, out result)</c> (.NET Core 2.1)
+    /// </remarks>
+    void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_N(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument providerArgument)
+    {
+        if (providerArgument.Value.IsDefaultValue()
+            && clrTypeName.HasMethod(
+                new MethodSignature
+                {
+                    Name = "TryParse", // todo: nameof(ISpanParsable<T>.TryParse) when available
+                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT, new ParameterType { ClrTypeName = clrTypeName }],
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>T.TryParse(utf8Text, defaultStyle, provider, out result)</c> → <c>T.TryParse(utf8Text, provider, out result)</c> (.NET 8)
+    /// </remarks>
+    void AnalyzeTryParse_ReadOnlySpanOfByte_NumberStyles_IFormatProvider_N(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument styleArgument)
+    {
+        var defaultNumberStyles = GetDefaultNumberStyles();
+
+        if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
+            && clrTypeName.HasMethod(
+                new MethodSignature
+                {
+                    Name = "TryParse", // todo: nameof(IUtf8SpanParsable<T>.TryParse) when available
+                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT_IFormatProvider, new ParameterType { ClrTypeName = clrTypeName }],
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            var styles = string.Join(" | ", from t in $"{defaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+
+            consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>T.TryParse(utf8Text, null, out result)</c> → <c>T.TryParse(utf8Text, out result)</c> (.NET 8)
+    /// </remarks>
+    void AnalyzeTryParse_ReadOnlySpanOfByte_IFormatProvider_N(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument providerArgument)
+    {
+        if (providerArgument.Value.IsDefaultValue()
+            && clrTypeName.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(int.TryParse),
+                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT, new ParameterType { ClrTypeName = clrTypeName }],
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+        }
+    }
+
     [Pure]
     private protected string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue)
         => invocationExpression.TryGetTargetType().IsClrType(clrTypeName) || argumentValue.Type().IsClrType(ClrTypeName)
@@ -401,6 +545,67 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                                     && providerType.IsIFormatProvider():
 
                                     AnalyzeParse_ReadOnlySpanOfByte_IFormatProvider(consumer, element, providerArgument);
+                                    break;
+                            }
+                            break;
+
+                        case nameof(int.TryParse):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
+                                        _, var styleArgument, _, _,
+                                    ]) when sType.IsString()
+                                    && IsNumberStyles(styleType)
+                                    && providerType.IsIFormatProvider()
+                                    && resultType.IsClrType(clrTypeName):
+
+                                    AnalyzeTryParse_String_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
+                                    break;
+
+                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
+                                    when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsClrType(clrTypeName):
+
+                                    AnalyzeTryParse_String_IFormatProvider_N(consumer, element, providerArgument);
+                                    break;
+
+                                case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
+                                        _, var styleArgument, _, _,
+                                    ]) when sType.IsReadOnlySpan(out var spanTypeArgument)
+                                    && spanTypeArgument.IsChar()
+                                    && IsNumberStyles(styleType)
+                                    && providerType.IsIFormatProvider()
+                                    && resultType.IsClrType(clrTypeName):
+
+                                    AnalyzeTryParse_ReadOnlySpanOfChar_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
+                                    break;
+
+                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
+                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
+                                    && spanTypeArgument.IsChar()
+                                    && providerType.IsIFormatProvider()
+                                    && resultType.IsClrType(clrTypeName):
+
+                                    AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_N(consumer, element, providerArgument);
+                                    break;
+
+                                case ([{ Type: var utf8TextType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
+                                        _, var styleArgument, _, _,
+                                    ]) when utf8TextType.IsReadOnlySpan(out var spanTypeArgument)
+                                    && spanTypeArgument.IsByte()
+                                    && IsNumberStyles(styleType)
+                                    && providerType.IsIFormatProvider()
+                                    && resultType.IsClrType(clrTypeName):
+
+                                    AnalyzeTryParse_ReadOnlySpanOfByte_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
+                                    break;
+
+                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
+                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
+                                    && spanTypeArgument.IsByte()
+                                    && providerType.IsIFormatProvider()
+                                    && resultType.IsClrType(clrTypeName):
+
+                                    AnalyzeTryParse_ReadOnlySpanOfByte_IFormatProvider_N(consumer, element, providerArgument);
                                     break;
                             }
                             break;

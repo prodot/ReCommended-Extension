@@ -1,4 +1,5 @@
 ﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
 
@@ -11,4 +12,8 @@ public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 
     [Test]
     public void TestParse() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestTryParse() => DoNamedTest2();
 }

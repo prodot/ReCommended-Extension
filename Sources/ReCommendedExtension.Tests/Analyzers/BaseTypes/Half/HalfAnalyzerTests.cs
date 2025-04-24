@@ -91,4 +91,48 @@ public sealed class HalfAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet80]
+    public void TestTryParse()
+    {
+        Test(
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => HalfAnalyzer.Half.TryParse(
+                $"{n}",
+                NumberStyles.Float | NumberStyles.AllowThousands,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => HalfAnalyzer.Half.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => HalfAnalyzer.Half.TryParse($"{n}", null, out result),
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => HalfAnalyzer.Half.TryParse($"{n}", out result));
+
+        Test(
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => MissingHalfMethods.TryParse(
+                $"{n}".AsSpan(),
+                NumberStyles.Float | NumberStyles.AllowThousands,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result)
+                => MissingHalfMethods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+        Test(
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => MissingHalfMethods.TryParse($"{n}".AsSpan(), null, out result),
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => MissingHalfMethods.TryParse($"{n}".AsSpan(), out result));
+
+        Test(
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => MissingHalfMethods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberStyles.Float | NumberStyles.AllowThousands,
+                NumberFormatInfo.InvariantInfo,
+                out result),
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => MissingHalfMethods.TryParse(
+                Encoding.UTF8.GetBytes($"{n}"),
+                NumberFormatInfo.InvariantInfo,
+                out result));
+        Test(
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => MissingHalfMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (HalfAnalyzer.Half n, out HalfAnalyzer.Half result) => MissingHalfMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
+
+        DoNamedTest2();
+    }
 }
