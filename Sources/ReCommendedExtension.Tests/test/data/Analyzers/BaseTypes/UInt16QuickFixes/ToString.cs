@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt16s
+    {
+        public void ToString(ushort number)
+        {
+            var result = number.ToString(null as {caret}IFormatProvider);
+        }
+    }
+}

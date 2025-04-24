@@ -127,6 +127,19 @@ public sealed class IntPtrAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    public void TestToString()
+    {
+        Test(n => n.ToString(null as string), n => n.ToString());
+        Test(n => n.ToString(""), n => n.ToString());
+        Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
+        Test(n => n.ToString(null, NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("D", null), n => n.ToString("D"));
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [TestNet80]
     public void TestTryParse()
     {

@@ -94,6 +94,15 @@ internal static class MissingUIntPtrMethods
         };
 
     [Pure]
+    public static string ToString(this nuint value, string? format) => value.ToString(format, NumberFormatInfo.CurrentInfo);
+
+    [Pure]
+    public static string ToString(this nuint value, IFormatProvider? provider) => value.ToString(null, provider);
+
+    [Pure]
+    public static string ToString(this nuint value, string? format, IFormatProvider? provider) => value.ToString();
+
+    [Pure]
     public static bool TryParse([NotNullWhen(true)] string? s, out nuint result) => TryParse(s, NumberStyles.Number, null, out result);
 
     [Pure]

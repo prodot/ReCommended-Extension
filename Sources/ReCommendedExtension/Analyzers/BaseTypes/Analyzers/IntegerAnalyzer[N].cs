@@ -862,14 +862,25 @@ public sealed class Int128Analyzer() : IntegerAnalyzer<Int128Analyzer.Int128>(Cl
 
         public bool Equals(Int128 other) => (lower, upper) == (other.lower, other.upper);
 
-        public override string ToString()
+        public override string ToString() => ToString(null, NumberFormatInfo.CurrentInfo);
+
+        [Pure]
+        public string ToString(string? format) => ToString(format, NumberFormatInfo.CurrentInfo);
+
+        [Pure]
+        public string ToString(IFormatProvider? provider) => ToString(null, provider);
+
+        [Pure]
+        public string ToString(string? format, IFormatProvider? provider)
         {
             if (upper == 0)
             {
-                return lower.ToString();
+                return lower.ToString(format, provider);
             }
 
-            return ToBigInteger().ToString();
+            var value = ToBigInteger();
+
+            return format is { } ? value.ToString(format, provider) ?? value.ToString(provider) : value.ToString(provider);
         }
     }
 
@@ -1121,14 +1132,25 @@ public sealed class UInt128Analyzer() : IntegerAnalyzer<UInt128Analyzer.UInt128>
 
         public bool Equals(UInt128 other) => (lower, upper) == (other.lower, other.upper);
 
-        public override string ToString()
+        public override string ToString() => ToString(null, NumberFormatInfo.CurrentInfo);
+
+        [Pure]
+        public string ToString(string? format) => ToString(format, NumberFormatInfo.CurrentInfo);
+
+        [Pure]
+        public string ToString(IFormatProvider? provider) => ToString(null, provider);
+
+        [Pure]
+        public string ToString(string? format, IFormatProvider? provider)
         {
             if (upper == 0)
             {
-                return lower.ToString();
+                return lower.ToString(format, provider);
             }
 
-            return ToBigInteger().ToString();
+            var value = ToBigInteger();
+
+            return format is { } ? value.ToString(format, provider) ?? value.ToString(provider) : value.ToString(provider);
         }
     }
 

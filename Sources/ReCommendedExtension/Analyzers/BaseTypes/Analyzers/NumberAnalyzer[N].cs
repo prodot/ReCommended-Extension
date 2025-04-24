@@ -267,6 +267,59 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     }
 
     /// <remarks>
+    /// <c>number.ToString(null)</c> → <c>number.ToString()</c><para/>
+    /// <c>number.ToString("")</c> → <c>number.ToString()</c>
+    /// </remarks>
+    void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
+    {
+        if ((formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() == "")
+            && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>number.ToString(null)</c> → <c>number.ToString()</c>
+    /// </remarks>
+    void AnalyzeToString_IFormatProvider(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument providerArgument)
+    {
+        if (providerArgument.Value.IsDefaultValue()
+            && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>number.ToString(null, provider)</c> → <c>number.ToString(provider)</c><para/>
+    /// <c>number.ToString("", provider)</c> → <c>number.ToString(provider)</c><para/>
+    /// <c>number.ToString(format, null)</c> → <c>number.ToString(format)</c>
+    /// </remarks>
+    void AnalyzeToString_String_IFormatProvider(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatArgument,
+        ICSharpArgument providerArgument)
+    {
+        if ((formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() == "")
+            && clrTypeName.HasMethod(
+                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
+        }
+
+        if (providerArgument.Value.IsDefaultValue()
+            && clrTypeName.HasMethod(
+                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+        }
+    }
+
+    /// <remarks>
     /// <c>T.TryParse(s, defaultStyle, provider, out result)</c> → <c>T.TryParse(s, provider, out result)</c> (.NET 7)
     /// </remarks>
     void AnalyzeTryParse_String_NumberStyles_IFormatProvider_N(
@@ -469,6 +522,25 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                             switch (method.Parameters, element.Arguments)
                             {
                                 case ([], []): AnalyzeGetTypeCode(consumer, element); break;
+                            }
+                            break;
+
+                        case nameof(ToString):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var formatType }], [var formatArgument]) when formatType.IsString():
+                                    AnalyzeToString_String(consumer, element, formatArgument);
+                                    break;
+
+                                case ([{ Type: var providerType }], [var providerArgument]) when providerType.IsIFormatProvider():
+                                    AnalyzeToString_IFormatProvider(consumer, element, providerArgument);
+                                    break;
+
+                                case ([{ Type: var formatType }, { Type: var providerType }], [var formatArgument, var providerArgument])
+                                    when formatType.IsString() && providerType.IsIFormatProvider():
+
+                                    AnalyzeToString_String_IFormatProvider(consumer, element, formatArgument, providerArgument);
+                                    break;
                             }
                             break;
                     }

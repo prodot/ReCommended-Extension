@@ -15,9 +15,13 @@ namespace Test
             var result7 = number.ToString(|""|(6), |null|(7));
         }
 
-        public void NoDetection()
+        public void NoDetection(byte number, string format, IFormatProvider provider)
         {
-            
+            var result1 = number.ToString(format);
+            var result2 = number.ToString("D");
+            var result3 = number.ToString(provider);
+            var result4 = number.ToString(format, provider);
+            var result5 = number.ToString("D", provider);
         }
     }
 }

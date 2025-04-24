@@ -80,6 +80,12 @@ internal static class MissingIntPtrMethods
     public static nint RotateRight(nint value, int rotateAmount) => unchecked((nint)MissingUIntPtrMethods.RotateRight((nuint)value, rotateAmount));
 
     [Pure]
+    public static string ToString(this nint value, IFormatProvider? provider) => value.ToString(null, provider);
+
+    [Pure]
+    public static string ToString(this nint value, string? format, IFormatProvider? provider) => value.ToString(format);
+
+    [Pure]
     public static bool TryParse([NotNullWhen(true)] string? s, out nint result) => TryParse(s, NumberStyles.Number, null, out result);
 
     [Pure]

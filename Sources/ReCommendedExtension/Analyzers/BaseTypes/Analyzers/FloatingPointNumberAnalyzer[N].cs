@@ -334,7 +334,16 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
 
         public bool Equals(Half other) => bits == other.bits || AreZero(this, other) || IsNaN(this) && IsNaN(other);
 
-        public override string ToString() => ((float)this).ToString(NumberFormatInfo.CurrentInfo);
+        public override string ToString() => ToString(null, NumberFormatInfo.CurrentInfo);
+
+        [Pure]
+        public string ToString(string? format) => ToString(format, NumberFormatInfo.CurrentInfo);
+
+        [Pure]
+        public string ToString(IFormatProvider? provider) => ToString(null, provider);
+
+        [Pure]
+        public string ToString(string? format, IFormatProvider? provider) => ((float)this).ToString(format, provider);
     }
 
     private protected override Half? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)

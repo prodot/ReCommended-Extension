@@ -18,16 +18,27 @@ namespace Test
             var result31 = UInt128.Parse(utf8Text, |null|(7));
         }
 
+        public void ToString(byte number, string format, IFormatProvider provider)
+        {
+            var result1 = number.ToString(|null as string|(8));
+            var result2 = number.ToString(|""|(9));
+            var result3 = number.ToString(|null as IFormatProvider|(10));
+            var result4 = number.ToString(|null|(11), provider);
+            var result5 = number.ToString(|""|(12), provider);
+            var result6 = number.ToString(format, |null|(13));
+            var result7 = number.ToString(|""|(14), |null|(15));
+        }
+
         public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
         {
-            var result11 = UInt128.TryParse(s, |NumberStyles.Integer|(8), provider, out _);
-            var result12 = UInt128.TryParse(s, |null|(9), out _);
+            var result11 = UInt128.TryParse(s, |NumberStyles.Integer|(16), provider, out _);
+            var result12 = UInt128.TryParse(s, |null|(17), out _);
 
-            var result21 = UInt128.TryParse(s1, |NumberStyles.Integer|(10), provider, out _);
-            var result22 = UInt128.TryParse(s1, |null|(11), out _);
+            var result21 = UInt128.TryParse(s1, |NumberStyles.Integer|(18), provider, out _);
+            var result22 = UInt128.TryParse(s1, |null|(19), out _);
 
-            var result31 = UInt128.TryParse(utf8Text, |NumberStyles.Integer|(12), provider, out _);
-            var result32 = UInt128.TryParse(utf8Text, |null|(13), out _);
+            var result31 = UInt128.TryParse(utf8Text, |NumberStyles.Integer|(20), provider, out _);
+            var result32 = UInt128.TryParse(utf8Text, |null|(21), out _);
         }
     }
 }
@@ -56,21 +67,45 @@ Remove argument
 7: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-8: Passing NumberStyles.Integer is redundant.
+8: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-9: Passing null is redundant.
+9: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-10: Passing NumberStyles.Integer is redundant.
+10: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-11: Passing null is redundant.
+11: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-12: Passing NumberStyles.Integer is redundant.
+12: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
 13: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+14: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+15: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+16: Passing NumberStyles.Integer is redundant.
+QUICKFIXES:
+Remove argument
+17: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+18: Passing NumberStyles.Integer is redundant.
+QUICKFIXES:
+Remove argument
+19: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+20: Passing NumberStyles.Integer is redundant.
+QUICKFIXES:
+Remove argument
+21: Passing null is redundant.
 QUICKFIXES:
 Remove argument

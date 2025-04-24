@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt64s
+    {
+        public void ToString(ulong number)
+        {
+            var result = number.ToString(null as {caret}IFormatProvider);
+        }
+    }
+}

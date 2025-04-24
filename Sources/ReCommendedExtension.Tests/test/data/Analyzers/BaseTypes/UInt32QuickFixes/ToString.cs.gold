@@ -2,9 +2,9 @@
 
 namespace Test
 {
-    public class Bytes
+    public class UInt32s
     {
-        public void ToString(byte number)
+        public void ToString(uint number)
         {
             var result = number.ToString({caret});
         }

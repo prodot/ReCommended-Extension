@@ -2,9 +2,9 @@
 
 namespace Test
 {
-    public class Bytes
+    public class Decimals
     {
-        public void ToString(byte number)
+        public void ToString(decimal number)
         {
             var result = number.ToString({caret});
         }

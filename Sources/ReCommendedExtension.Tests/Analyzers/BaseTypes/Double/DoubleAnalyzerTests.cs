@@ -109,6 +109,20 @@ public sealed class DoubleAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
+    public void TestToString()
+    {
+        Test(n => n.ToString(null as string), n => n.ToString());
+        Test(n => n.ToString(""), n => n.ToString());
+        Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
+        Test(n => n.ToString(null, NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("F", null), n => n.ToString("F"));
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [TestNet80]
     public void TestTryParse()
     {
