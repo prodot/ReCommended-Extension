@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Int16s
+    {
+        public void Operator(short number)
+        {
+            var result = |short.IsNegative(number)|(0);
+        }
+
+        public void NoDetection(short number)
+        {
+            short.IsNegative(number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '<' operator to compare to 0.

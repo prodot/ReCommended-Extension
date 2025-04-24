@@ -18,8 +18,8 @@ public sealed class UseBinaryOperationSuggestion(
     string message,
     IInvocationExpression invocationExpression,
     string @operator,
-    ICSharpExpression leftOperand,
-    ICSharpExpression rightOperand) : Highlighting(message)
+    string leftOperand,
+    string rightOperand) : Highlighting(message)
 {
     const string SeverityId = "UseBinaryOperation";
 
@@ -27,9 +27,9 @@ public sealed class UseBinaryOperationSuggestion(
 
     internal string Operator => @operator;
 
-    internal ICSharpExpression LeftOperand => leftOperand;
+    internal string LeftOperand => leftOperand;
 
-    internal ICSharpExpression RightOperand => rightOperand;
+    internal string RightOperand => rightOperand;
 
     public override DocumentRange CalculateRange() => invocationExpression.GetDocumentRange();
 }

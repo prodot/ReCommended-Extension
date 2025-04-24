@@ -16,8 +16,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128Analyzer.UInt128>(ClrTypeNames.UInt128)
 {
-    private protected override TypeCode? TryGetTypeCode() => null;
-
     public readonly record struct UInt128 // todo: remove when available (used only for testing)
     {
         public static UInt128 MinValue => new(0, 0);
@@ -208,6 +206,8 @@ public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128Analyzer.
             return format is { } ? value.ToString(format, provider) ?? value.ToString(provider) : value.ToString(provider);
         }
     }
+
+    private protected override TypeCode? TryGetTypeCode() => null;
 
     private protected override UInt128? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {

@@ -16,8 +16,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class Int128Analyzer() : SignedIntegerAnalyzer<Int128Analyzer.Int128>(ClrTypeNames.Int128)
 {
-    private protected override TypeCode? TryGetTypeCode() => null;
-
     public readonly record struct Int128 // todo: remove when available (used only for testing)
     {
         public static Int128 MinValue => new(0x8000_0000_0000_0000, 0);
@@ -106,6 +104,12 @@ public sealed class Int128Analyzer() : SignedIntegerAnalyzer<Int128Analyzer.Int1
 
             return value;
         }
+
+        [Pure]
+        public static bool IsNegative(Int128 value) => unchecked((long)value.upper) < 0;
+
+        [Pure]
+        public static bool IsPositive(Int128 value) => unchecked((long)value.upper) >= 0;
 
         [Pure]
         public static Int128 Max(Int128 x, Int128 y) => x >= y ? x : y;
@@ -224,6 +228,8 @@ public sealed class Int128Analyzer() : SignedIntegerAnalyzer<Int128Analyzer.Int1
             return format is { } ? value.ToString(format, provider) ?? value.ToString(provider) : value.ToString(provider);
         }
     }
+
+    private protected override TypeCode? TryGetTypeCode() => null;
 
     private protected override Int128? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {

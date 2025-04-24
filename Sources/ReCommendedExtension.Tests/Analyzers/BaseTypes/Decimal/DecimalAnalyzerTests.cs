@@ -85,6 +85,26 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsNegative()
+    {
+        Test(number => MissingDecimalMethods.IsNegative(number), number => number < 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsPositive()
+    {
+        Test(number => MissingDecimalMethods.IsPositive(number), number => number >= 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
     public void TestMax()
     {
         Test(n => MissingDecimalMethods.Max(n, n), n => n);

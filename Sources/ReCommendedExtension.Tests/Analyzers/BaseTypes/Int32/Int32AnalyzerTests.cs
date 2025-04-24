@@ -96,6 +96,26 @@ public sealed class Int32AnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsNegative()
+    {
+        Test(number => MissingInt32Methods.IsNegative(number), number => number < 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsPositive()
+    {
+        Test(number => MissingInt32Methods.IsPositive(number), number => number >= 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
     public void TestMax()
     {
         Test(n => MissingInt32Methods.Max(n, n), n => n);

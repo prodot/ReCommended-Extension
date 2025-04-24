@@ -23,7 +23,8 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
 
     static void Test<R>(Func<float, R> expected, Func<float, R> actual)
     {
-        Assert.AreEqual(expected(0), actual(0));
+        Assert.AreEqual(expected(0f), actual(0f));
+        Assert.AreEqual(expected(-0f), actual(-0f));
         Assert.AreEqual(expected(float.MinValue), actual(float.MinValue));
         Assert.AreEqual(expected(float.MaxValue), actual(float.MaxValue));
         Assert.AreEqual(expected(float.Epsilon), actual(float.Epsilon));
@@ -46,7 +47,10 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
 
     static void Test(FuncWithOut<float, float, bool> expected, FuncWithOut<float, float, bool> actual)
     {
-        Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
+        Assert.AreEqual(expected(0f, out var expectedResult), actual(0f, out var actualResult));
+        Assert.AreEqual(expectedResult, actualResult);
+
+        Assert.AreEqual(expected(-0f, out expectedResult), actual(-0f, out actualResult));
         Assert.AreEqual(expectedResult, actualResult);
 
         Assert.AreEqual(expected(float.MaxValue, out expectedResult), actual(float.MaxValue, out actualResult));

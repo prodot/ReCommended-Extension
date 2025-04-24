@@ -106,6 +106,7 @@ internal static class CSharpExpressionExtensions
                 ? (NumberStyles)constantValue.IntValue
                 : null;
 
+    /// <returns>The inner expression if parentheses have been removed.</returns>
     public static ICSharpExpression TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
     {
         if (expression is IParenthesizedExpression parenthesizedExpression

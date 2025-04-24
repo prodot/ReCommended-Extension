@@ -80,8 +80,8 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
                                 "Use the '==' operator.",
                                 invocationExpression,
                                 "==",
-                                invokedExpression.QualifierExpression,
-                                objArgument.Value));
+                                invokedExpression.QualifierExpression.GetText(),
+                                objArgument.Value.GetText()));
                     }
                     break;
             }

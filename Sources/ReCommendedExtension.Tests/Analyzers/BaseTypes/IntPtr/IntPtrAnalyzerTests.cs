@@ -70,6 +70,26 @@ public sealed class IntPtrAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsNegative()
+    {
+        Test(number => MissingIntPtrMethods.IsNegative(number), number => number < 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsPositive()
+    {
+        Test(number => MissingIntPtrMethods.IsPositive(number), number => number >= 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
     public void TestMax()
     {
         Test(n => MissingIntPtrMethods.Max(n, n), n => n);

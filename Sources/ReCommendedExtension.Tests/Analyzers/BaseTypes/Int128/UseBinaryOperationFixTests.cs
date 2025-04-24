@@ -13,4 +13,10 @@ public sealed class UseBinaryOperationFixTests : QuickFixTestBase<UseBinaryOpera
 
     [Test]
     public void TestEquals_Int128() => DoNamedTest2();
+
+    [Test]
+    public void TestIsNegative() => DoNamedTest2();
+
+    [Test]
+    public void TestIsPositive() => DoNamedTest2();
 }

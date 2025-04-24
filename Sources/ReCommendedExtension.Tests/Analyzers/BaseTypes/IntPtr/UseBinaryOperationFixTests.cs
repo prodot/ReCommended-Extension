@@ -15,4 +15,12 @@ public sealed class UseBinaryOperationFixTests : QuickFixTestBase<UseBinaryOpera
 
     [Test]
     public void TestEquals_IntPtr() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestIsNegative() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestIsPositive() => DoNamedTest2();
 }

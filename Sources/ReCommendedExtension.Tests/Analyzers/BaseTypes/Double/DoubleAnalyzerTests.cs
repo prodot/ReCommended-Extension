@@ -23,7 +23,8 @@ public sealed class DoubleAnalyzerTests : CSharpHighlightingTestBase
 
     static void Test<R>(Func<double, R> expected, Func<double, R> actual, double minValue = double.MinValue, double maxValue = double.MaxValue)
     {
-        Assert.AreEqual(expected(0), actual(0));
+        Assert.AreEqual(expected(0d), actual(0d));
+        Assert.AreEqual(expected(-0d), actual(-0d));
         Assert.AreEqual(expected(minValue), actual(minValue));
         Assert.AreEqual(expected(maxValue), actual(maxValue));
         Assert.AreEqual(expected(double.Epsilon), actual(double.Epsilon));
@@ -50,7 +51,10 @@ public sealed class DoubleAnalyzerTests : CSharpHighlightingTestBase
         double minValue = double.MinValue,
         double maxValue = double.MaxValue)
     {
-        Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
+        Assert.AreEqual(expected(0d, out var expectedResult), actual(0d, out var actualResult));
+        Assert.AreEqual(expectedResult, actualResult);
+
+        Assert.AreEqual(expected(-0d, out expectedResult), actual(-0d, out actualResult));
         Assert.AreEqual(expectedResult, actualResult);
 
         Assert.AreEqual(expected(maxValue, out expectedResult), actual(maxValue, out actualResult));

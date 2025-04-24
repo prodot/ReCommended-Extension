@@ -8,5 +8,15 @@ namespace Test
         {
             var result = number.Equals(obj);
         }
+
+        public void IsNegative(Int128 number)
+        {
+            var result = Int128.IsNegative(number);
+        }
+
+        public void IsPositive(Int128 number)
+        {
+            var result = Int128.IsPositive(number);
+        }
     }
 }

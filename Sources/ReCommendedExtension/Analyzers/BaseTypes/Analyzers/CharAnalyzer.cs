@@ -39,8 +39,8 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                     "Use the '==' operator.",
                     invocationExpression,
                     "==",
-                    invokedExpression.QualifierExpression,
-                    objArgument.Value));
+                    invokedExpression.QualifierExpression.GetText(),
+                    objArgument.Value.GetText()));
         }
     }
 

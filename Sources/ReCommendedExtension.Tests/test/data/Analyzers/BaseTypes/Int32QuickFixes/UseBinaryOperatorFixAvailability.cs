@@ -6,5 +6,15 @@
         {
             var result = number.Equals(obj);
         }
+
+        public void IsNegative(int number)
+        {
+            var result = int.IsNegative(number);
+        }
+
+        public void IsPositive(int number)
+        {
+            var result = int.IsPositive(number);
+        }
     }
 }

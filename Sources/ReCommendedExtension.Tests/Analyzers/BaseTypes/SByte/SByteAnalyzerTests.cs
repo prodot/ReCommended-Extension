@@ -96,6 +96,26 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsNegative()
+    {
+        Test(number => MissingSByteMethods.IsNegative(number), number => number < 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsPositive()
+    {
+        Test(number => MissingSByteMethods.IsPositive(number), number => number >= 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
     public void TestMax()
     {
         Test(n => MissingSByteMethods.Max(n, n), n => n);

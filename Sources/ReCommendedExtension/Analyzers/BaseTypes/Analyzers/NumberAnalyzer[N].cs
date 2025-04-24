@@ -61,7 +61,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     /// <remarks>
     /// <c>number.Equals(obj)</c> → <c>number == obj</c>
     /// </remarks>
-    private protected virtual void AnalyzeEquals_Number(
+    void AnalyzeEquals_N(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
@@ -69,15 +69,15 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        if (!invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
+        if (CanUseEqualityOperator() && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
         {
             consumer.AddHighlighting(
                 new UseBinaryOperationSuggestion(
                     "Use the '==' operator.",
                     invocationExpression,
                     "==",
-                    invokedExpression.QualifierExpression,
-                    objArgument.Value));
+                    invokedExpression.QualifierExpression.GetText(),
+                    objArgument.Value.GetText()));
         }
     }
 
@@ -103,6 +103,40 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
 
             consumer.AddHighlighting(
                 new UseExpressionResultSuggestion($"The expression is always {replacement}.", invocationExpression, replacement));
+        }
+    }
+
+    /// <remarks>
+    /// <c>T.IsNegative(n)</c> → <c>n &lt; 0</c>
+    /// </remarks>
+    void AnalyzeIsNegative(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
+    {
+        if (CanUseComparisonOperatorWithZero() && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperationSuggestion(
+                    "Use the '<' operator to compare to 0.",
+                    invocationExpression,
+                    "<",
+                    objArgument.Value.GetText(),
+                    "0"));
+        }
+    }
+
+    /// <remarks>
+    /// <c>T.IsPositive(n)</c> → <c>n >= 0</c>
+    /// </remarks>
+    void AnalyzeIsPositive(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
+    {
+        if (CanUseComparisonOperatorWithZero() && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperationSuggestion(
+                    "Use the '>=' operator to compare to 0.",
+                    invocationExpression,
+                    ">=",
+                    objArgument.Value.GetText(),
+                    "0"));
         }
     }
 
@@ -478,6 +512,12 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     private protected abstract NumberStyles GetDefaultNumberStyles();
 
     [Pure]
+    private protected abstract bool CanUseEqualityOperator();
+
+    [Pure]
+    private protected abstract bool CanUseComparisonOperatorWithZero();
+
+    [Pure]
     private protected abstract N? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted);
 
     [Pure]
@@ -509,7 +549,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                             switch (method.Parameters, element.Arguments)
                             {
                                 case ([{ Type: var objType }], [var objArgument]) when objType.IsClrType(ClrTypeName):
-                                    AnalyzeEquals_Number(consumer, element, invokedExpression, objArgument);
+                                    AnalyzeEquals_N(consumer, element, invokedExpression, objArgument);
                                     break;
 
                                 case ([{ Type: var objType }], [var objArgument]) when objType.IsObject():
@@ -556,6 +596,24 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                                     var valueArgument, var minArgument, var maxArgument,
                                 ]) when valueType.IsClrType(clrTypeName) && minType.IsClrType(clrTypeName) && maxType.IsClrType(clrTypeName):
                                     AnalyzeClamp(consumer, element, valueArgument, minArgument, maxArgument);
+                                    break;
+                            }
+                            break;
+
+                        case "IsNegative": // todo: nameof(INumberBase<T>.IsNegative) when available
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(clrTypeName):
+                                    AnalyzeIsNegative(consumer, element, valueArgument);
+                                    break;
+                            }
+                            break;
+
+                        case "IsPositive": // todo: nameof(INumberBase<T>.IsPositive) when available
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(clrTypeName):
+                                    AnalyzeIsPositive(consumer, element, valueArgument);
                                     break;
                             }
                             break;

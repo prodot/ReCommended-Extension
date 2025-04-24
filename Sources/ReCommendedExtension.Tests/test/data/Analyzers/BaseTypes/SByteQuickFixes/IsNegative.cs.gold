@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class SBytes
+    {
+        public void IsNegative(sbyte number)
+        {
+            var result = {caret}number < 0;
+        }
+    }
+}

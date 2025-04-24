@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Int64s
+    {
+        public void Operator(long number)
+        {
+            var result = |long.IsPositive(number)|(0);
+        }
+
+        public void NoDetection(long number)
+        {
+            long.IsPositive(number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '>=' operator to compare to 0.

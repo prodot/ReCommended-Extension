@@ -90,6 +90,24 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsNegative()
+    {
+        Test(number => Int128Analyzer.Int128.IsNegative(number), number => number < 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsPositive()
+    {
+        Test(number => Int128Analyzer.Int128.IsPositive(number), number => number >= 0);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     public void TestMax()
     {
         Test(n => Int128Analyzer.Int128.Max(n, n), n => n);

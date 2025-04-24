@@ -77,6 +77,8 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
 
     private protected sealed override NumberStyles GetDefaultNumberStyles() => NumberStyles.Integer;
 
+    private protected sealed override bool CanUseEqualityOperator() => true;
+
     [Pure]
     private protected abstract string CastZero(CSharpLanguageLevel languageLevel);
 

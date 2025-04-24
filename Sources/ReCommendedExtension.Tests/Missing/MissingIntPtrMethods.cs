@@ -34,6 +34,12 @@ internal static class MissingIntPtrMethods
     }
 
     [Pure]
+    public static bool IsNegative(nint value) => value < 0;
+
+    [Pure]
+    public static bool IsPositive(nint value) => value >= 0;
+
+    [Pure]
     public static nint Max(nint x, nint y) => x >= y ? x : y;
 
     [Pure]

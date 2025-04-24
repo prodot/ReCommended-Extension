@@ -34,6 +34,12 @@ internal static class MissingInt16Methods
     }
 
     [Pure]
+    public static bool IsNegative(short value) => value < 0;
+
+    [Pure]
+    public static bool IsPositive(short value) => value >= 0;
+
+    [Pure]
     public static short Max(short x, short y) => x >= y ? x : y;
 
     [Pure]

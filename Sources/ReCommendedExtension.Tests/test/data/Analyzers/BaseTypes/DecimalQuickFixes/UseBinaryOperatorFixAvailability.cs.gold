@@ -6,9 +6,25 @@
         {
             var result = |number.Equals(obj)|(0);
         }
+
+        public void IsNegative(decimal number)
+        {
+            var result = |decimal.IsNegative(number)|(1);
+        }
+
+        public void IsPositive(decimal number)
+        {
+            var result = |decimal.IsPositive(number)|(2);
+        }
     }
 }
 ------------------------------------------------
 0: Use the '==' operator.
 QUICKFIXES:
 Replace with 'number == obj'
+1: Use the '<' operator to compare to 0.
+QUICKFIXES:
+Replace with 'number < 0'
+2: Use the '>=' operator to compare to 0.
+QUICKFIXES:
+Replace with 'number >= 0'

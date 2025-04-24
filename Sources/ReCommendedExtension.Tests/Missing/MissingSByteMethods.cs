@@ -34,6 +34,12 @@ internal static class MissingSByteMethods
     }
 
     [Pure]
+    public static bool IsNegative(sbyte value) => value < 0;
+
+    [Pure]
+    public static bool IsPositive(sbyte value) => value >= 0;
+
+    [Pure]
     public static sbyte Max(sbyte x, sbyte y) => x >= y ? x : y;
 
     [Pure]

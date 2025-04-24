@@ -34,6 +34,12 @@ internal static class MissingInt32Methods
     }
 
     [Pure]
+    public static bool IsNegative(int value) => value < 0;
+
+    [Pure]
+    public static bool IsPositive(int value) => value >= 0;
+
+    [Pure]
     public static int Max(int x, int y) => x >= y ? x : y;
 
     [Pure]

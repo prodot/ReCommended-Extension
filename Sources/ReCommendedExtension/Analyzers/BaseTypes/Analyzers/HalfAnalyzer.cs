@@ -12,8 +12,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Half>(ClrTypeNames.Half)
 {
-    private protected override TypeCode? TryGetTypeCode() => null;
-
     public readonly record struct Half // todo: remove when available (used only for testing)
     {
         public static Half Epsilon => new(0x0001);
@@ -176,6 +174,8 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
         [Pure]
         public string ToString(string? format, IFormatProvider? provider) => ((float)this).ToString(format, provider);
     }
+
+    private protected override TypeCode? TryGetTypeCode() => null;
 
     private protected override Half? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {

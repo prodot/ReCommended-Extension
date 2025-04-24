@@ -19,8 +19,8 @@ public sealed class UseBinaryOperationFix(UseBinaryOperationSuggestion highlight
     {
         get
         {
-            var leftOperand = highlighting.LeftOperand.GetText().TrimToSingleLineWithMaxLength(120);
-            var rightOperand = highlighting.RightOperand.GetText().TrimToSingleLineWithMaxLength(120);
+            var leftOperand = highlighting.LeftOperand.TrimToSingleLineWithMaxLength(120);
+            var rightOperand = highlighting.RightOperand.TrimToSingleLineWithMaxLength(120);
 
             return $"Replace with '{leftOperand} {highlighting.Operator} {rightOperand}'";
         }
@@ -35,7 +35,7 @@ public sealed class UseBinaryOperationFix(UseBinaryOperationSuggestion highlight
             ModificationUtil
                 .ReplaceChild(
                     highlighting.InvocationExpression,
-                    factory.CreateExpression($"(($0) {highlighting.Operator} ($1))", highlighting.LeftOperand, highlighting.RightOperand))
+                    factory.CreateExpression($"(({highlighting.LeftOperand}) {highlighting.Operator} ({highlighting.RightOperand}))"))
                 .TryRemoveParentheses(factory)
                 .TryRemoveBinaryOperatorParentheses(factory);
         }

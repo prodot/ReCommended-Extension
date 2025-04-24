@@ -34,6 +34,12 @@ internal static class MissingInt64Methods
     }
 
     [Pure]
+    public static bool IsNegative(long value) => value < 0;
+
+    [Pure]
+    public static bool IsPositive(long value) => value >= 0;
+
+    [Pure]
     public static long Max(long x, long y) => x >= y ? x : y;
 
     [Pure]
