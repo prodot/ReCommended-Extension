@@ -46,6 +46,64 @@ internal static class MissingInt64Methods
     public static long Min(long x, long y) => x <= y ? x : y;
 
     [Pure]
+    public static long MaxMagnitude(long x, long y)
+    {
+        if (x == long.MinValue)
+        {
+            return x;
+        }
+
+        if (y == long.MinValue)
+        {
+            return y;
+        }
+
+        var ax = Math.Abs(x);
+        var ay = Math.Abs(y);
+
+        if (ax > ay)
+        {
+            return x;
+        }
+
+        if (ax < ay)
+        {
+            return y;
+        }
+
+        return x < 0 ? y : x;
+    }
+
+    [Pure]
+    public static long MinMagnitude(long x, long y)
+    {
+        if (x == long.MinValue)
+        {
+            return y;
+        }
+
+        if (y == long.MinValue)
+        {
+            return x;
+        }
+
+        var ax = Math.Abs(x);
+        var ay = Math.Abs(y);
+
+        if (ax < ay)
+        {
+            return x;
+        }
+
+        if (ax > ay)
+        {
+            return y;
+        }
+
+        return x < 0 ? x : y;
+    }
+
+    [Pure]
     public static long Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
         => long.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
 

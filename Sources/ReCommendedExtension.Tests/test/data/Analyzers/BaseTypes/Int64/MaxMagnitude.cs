@@ -1,0 +1,19 @@
+﻿namespace Test
+{
+    public class Int64s
+    {
+        public void ExpressionResult(long number)
+        {
+            var result = long.MaxMagnitude(10, 10);
+        }
+
+        public void NoDetection(long x, long y)
+        {
+            var result11 = long.MaxMagnitude(1, 2);
+            var result12 = long.MaxMagnitude(x, 2);
+            var result13 = long.MaxMagnitude(1, y);
+
+            long.MaxMagnitude(10, 10);
+        }
+    }
+}

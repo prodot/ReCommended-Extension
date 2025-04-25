@@ -1,5 +1,10 @@
 ﻿namespace ReCommendedExtension.Tests.Missing;
 
+/// <remarks>
+/// Original code from <see href="https://github.com/dotnet/dotnet"/><para/>
+/// License: MIT<para/>
+/// Copyright (c) .NET Foundation and Contributors
+/// </remarks>
 internal static class MissingCharMethods
 {
     [Pure]

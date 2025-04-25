@@ -50,6 +50,13 @@ namespace Test
             var result3 = Math.Max((sbyte)10, (sbyte)10);
         }
 
+        public void MaxMagnitude()
+        {
+            var result11 = sbyte.MaxMagnitude(10, 0x0A);
+
+            sbyte result2 = sbyte.MaxMagnitude(10, 0x0A);
+        }
+
         public void Min()
         {
             var result11 = sbyte.Min(10, 0x0A);
@@ -57,6 +64,13 @@ namespace Test
             sbyte result2 = sbyte.Min(10, 0x0A);
 
             var result3 = Math.Min((sbyte)10, (sbyte)10);
+        }
+
+        public void MinMagnitude()
+        {
+            var result11 = sbyte.MinMagnitude(10, 0x0A);
+
+            sbyte result2 = sbyte.MinMagnitude(10, 0x0A);
         }
 
         public void RotateLeft(sbyte n)

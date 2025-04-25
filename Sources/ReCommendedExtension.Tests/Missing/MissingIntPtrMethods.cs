@@ -46,6 +46,26 @@ internal static class MissingIntPtrMethods
     public static nint Min(nint x, nint y) => x <= y ? x : y;
 
     [Pure]
+    public static nint MaxMagnitude(nint x, nint y)
+        => IntPtr.Size switch
+        {
+            8 => (nint)MissingInt64Methods.MaxMagnitude(x, y),
+            4 => MissingInt32Methods.MaxMagnitude((int)x, (int)y),
+
+            _ => throw new PlatformNotSupportedException(),
+        };
+
+    [Pure]
+    public static nint MinMagnitude(nint x, nint y)
+        => IntPtr.Size switch
+        {
+            8 => (nint)MissingInt64Methods.MinMagnitude(x, y),
+            4 => MissingInt32Methods.MinMagnitude((int)x, (int)y),
+
+            _ => throw new PlatformNotSupportedException(),
+        };
+
+    [Pure]
     public static nint Parse(string s) => Parse(s, NumberStyles.Integer, provider: null);
 
     [Pure]

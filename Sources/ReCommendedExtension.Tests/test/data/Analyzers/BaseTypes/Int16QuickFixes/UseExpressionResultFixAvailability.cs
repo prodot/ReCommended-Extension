@@ -50,6 +50,13 @@ namespace Test
             var result3 = Math.Max((short)10, (short)10);
         }
 
+        public void MaxMagnitude()
+        {
+            var result1 = short.MaxMagnitude(10, 0x0A);
+
+            short result2 = short.MaxMagnitude(10, 0x0A);
+        }
+
         public void Min()
         {
             var result1 = short.Min(10, 0x0A);
@@ -57,6 +64,13 @@ namespace Test
             short result2 = short.Min(10, 0x0A);
 
             var result3 = Math.Min((short)10, (short)10);
+        }
+
+        public void MinMagnitude()
+        {
+            var result1 = short.MinMagnitude(10, 0x0A);
+
+            short result2 = short.MinMagnitude(10, 0x0A);
         }
 
         public void RotateLeft(short n)

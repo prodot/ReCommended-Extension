@@ -107,40 +107,6 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     }
 
     /// <remarks>
-    /// <c>T.IsNegative(n)</c> → <c>n &lt; 0</c>
-    /// </remarks>
-    void AnalyzeIsNegative(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
-    {
-        if (CanUseComparisonOperatorWithZero() && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperationSuggestion(
-                    "Use the '<' operator to compare to 0.",
-                    invocationExpression,
-                    "<",
-                    objArgument.Value.GetText(),
-                    "0"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>T.IsPositive(n)</c> → <c>n >= 0</c>
-    /// </remarks>
-    void AnalyzeIsPositive(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
-    {
-        if (CanUseComparisonOperatorWithZero() && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperationSuggestion(
-                    "Use the '>=' operator to compare to 0.",
-                    invocationExpression,
-                    ">=",
-                    objArgument.Value.GetText(),
-                    "0"));
-        }
-    }
-
-    /// <remarks>
     /// <c>T.Max(n, n)</c> → <c>n</c>
     /// </remarks>
     void AnalyzeMax(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument xArgument, ICSharpArgument yArgument)
@@ -166,7 +132,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     }
 
     /// <remarks>
-    /// <c>T.Max(n, n)</c> → <c>n</c>
+    /// <c>T.Min(n, n)</c> → <c>n</c>
     /// </remarks>
     void AnalyzeMin(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument xArgument, ICSharpArgument yArgument)
     {
@@ -515,9 +481,6 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     private protected abstract bool CanUseEqualityOperator();
 
     [Pure]
-    private protected abstract bool CanUseComparisonOperatorWithZero();
-
-    [Pure]
     private protected abstract N? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted);
 
     [Pure]
@@ -596,24 +559,6 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                                     var valueArgument, var minArgument, var maxArgument,
                                 ]) when valueType.IsClrType(clrTypeName) && minType.IsClrType(clrTypeName) && maxType.IsClrType(clrTypeName):
                                     AnalyzeClamp(consumer, element, valueArgument, minArgument, maxArgument);
-                                    break;
-                            }
-                            break;
-
-                        case "IsNegative": // todo: nameof(INumberBase<T>.IsNegative) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(clrTypeName):
-                                    AnalyzeIsNegative(consumer, element, valueArgument);
-                                    break;
-                            }
-                            break;
-
-                        case "IsPositive": // todo: nameof(INumberBase<T>.IsPositive) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(clrTypeName):
-                                    AnalyzeIsPositive(consumer, element, valueArgument);
                                     break;
                             }
                             break;

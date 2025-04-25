@@ -126,10 +126,28 @@ public sealed class SByteAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet70]
+    public void TestMaxMagnitude()
+    {
+        Test(n => MissingSByteMethods.MaxMagnitude(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
     public void TestMin()
     {
         Test(n => MissingSByteMethods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestMinMagnitude()
+    {
+        Test(n => MissingSByteMethods.MinMagnitude(n, n), n => n);
 
         DoNamedTest2();
     }

@@ -116,9 +116,25 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    public void TestMaxMagnitude()
+    {
+        Test(n => Int128Analyzer.Int128.MaxMagnitude(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     public void TestMin()
     {
         Test(n => Int128Analyzer.Int128.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    public void TestMinMagnitude()
+    {
+        Test(n => Int128Analyzer.Int128.MinMagnitude(n, n), n => n);
 
         DoNamedTest2();
     }

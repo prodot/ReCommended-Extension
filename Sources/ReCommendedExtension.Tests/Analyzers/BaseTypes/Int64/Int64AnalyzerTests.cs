@@ -126,10 +126,28 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet70]
+    public void TestMaxMagnitude()
+    {
+        Test(n => MissingInt64Methods.MaxMagnitude(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
     public void TestMin()
     {
         Test(n => MissingInt64Methods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestMinMagnitude()
+    {
+        Test(n => MissingInt64Methods.MinMagnitude(n, n), n => n);
 
         DoNamedTest2();
     }

@@ -56,6 +56,25 @@ namespace Test
             Int128 result26 = Int128.Max(97, 'a');
         }
 
+        public void MaxMagnitude()
+        {
+            const int c = 10;
+
+            var result11 = Int128.MaxMagnitude(10, 0x0A);
+            var result12 = Int128.MaxMagnitude(10, 10ul);
+            var result13 = Int128.MaxMagnitude(10, 10u);
+            var result14 = Int128.MaxMagnitude(10, 10L);
+            var result15 = Int128.MaxMagnitude(10, c);
+            var result16 = Int128.MaxMagnitude(97, 'a');
+
+            Int128 result21 = Int128.MaxMagnitude(10, 0x0A);
+            Int128 result22 = Int128.MaxMagnitude(10, 10ul);
+            Int128 result23 = Int128.MaxMagnitude(10, 10u);
+            Int128 result24 = Int128.MaxMagnitude(10, 10L);
+            Int128 result25 = Int128.MaxMagnitude(10, c);
+            Int128 result26 = Int128.MaxMagnitude(97, 'a');
+        }
+
         public void Min()
         {
             const int c = 10;
@@ -73,6 +92,25 @@ namespace Test
             Int128 result24 = Int128.Min(10, 10L);
             Int128 result25 = Int128.Min(10, c);
             Int128 result26 = Int128.Min(97, 'a');
+        }
+
+        public void MinMagnitude()
+        {
+            const int c = 10;
+
+            var result11 = Int128.MinMagnitude(10, 0x0A);
+            var result12 = Int128.MinMagnitude(10, 10ul);
+            var result13 = Int128.MinMagnitude(10, 10u);
+            var result14 = Int128.MinMagnitude(10, 10L);
+            var result15 = Int128.MinMagnitude(10, c);
+            var result16 = Int128.MinMagnitude(97, 'a');
+
+            Int128 result21 = Int128.MinMagnitude(10, 0x0A);
+            Int128 result22 = Int128.MinMagnitude(10, 10ul);
+            Int128 result23 = Int128.MinMagnitude(10, 10u);
+            Int128 result24 = Int128.MinMagnitude(10, 10L);
+            Int128 result25 = Int128.MinMagnitude(10, c);
+            Int128 result26 = Int128.MinMagnitude(97, 'a');
         }
 
         public void RotateLeft(Int128 n)

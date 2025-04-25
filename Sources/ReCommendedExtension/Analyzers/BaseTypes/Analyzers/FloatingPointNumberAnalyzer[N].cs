@@ -7,8 +7,6 @@ public abstract class FloatingPointNumberAnalyzer<N>(IClrTypeName clrTypeName) :
 {
     private protected sealed override bool CanUseEqualityOperator() => false; // can only be checked by comparing literals
 
-    private protected sealed override bool CanUseComparisonOperatorWithZero() => false; // the type supports -0
-
     private protected sealed override bool AreEqual(N x, N y) => false; // can only be checked by comparing literals
 
     private protected sealed override bool AreMinMaxValues(N min, N max) => false; // can only be checked by comparing literals

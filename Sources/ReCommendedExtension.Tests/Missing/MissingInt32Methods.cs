@@ -46,6 +46,64 @@ internal static class MissingInt32Methods
     public static int Min(int x, int y) => x <= y ? x : y;
 
     [Pure]
+    public static int MaxMagnitude(int x, int y)
+    {
+        if (x == int.MinValue)
+        {
+            return x;
+        }
+
+        if (y == int.MinValue)
+        {
+            return y;
+        }
+
+        var ax = Math.Abs(x);
+        var ay = Math.Abs(y);
+
+        if (ax > ay)
+        {
+            return x;
+        }
+
+        if (ax < ay)
+        {
+            return y;
+        }
+
+        return x < 0 ? y : x;
+    }
+
+    [Pure]
+    public static int MinMagnitude(int x, int y)
+    {
+        if (x == int.MinValue)
+        {
+            return y;
+        }
+
+        if (y == int.MinValue)
+        {
+            return x;
+        }
+
+        var ax = Math.Abs(x);
+        var ay = Math.Abs(y);
+
+        if (ax < ay)
+        {
+            return x;
+        }
+
+        if (ax > ay)
+        {
+            return y;
+        }
+
+        return x < 0 ? x : y;
+    }
+
+    [Pure]
     public static int Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
         => int.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
 

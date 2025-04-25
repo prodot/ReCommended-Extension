@@ -16,6 +16,11 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class Int128Analyzer() : SignedIntegerAnalyzer<Int128Analyzer.Int128>(ClrTypeNames.Int128)
 {
+    /// <remarks>
+    /// Original code from <see href="https://github.com/dotnet/dotnet"/><para/>
+    /// License: MIT<para/>
+    /// Copyright (c) .NET Foundation and Contributors
+    /// </remarks>
     public readonly record struct Int128 // todo: remove when available (used only for testing)
     {
         public static Int128 MinValue => new(0x8000_0000_0000_0000, 0);
@@ -35,6 +40,24 @@ public sealed class Int128Analyzer() : SignedIntegerAnalyzer<Int128Analyzer.Int1
         public static implicit operator Int128(uint value) => new(0, value);
 
         public static implicit operator Int128(ulong value) => new(0, value);
+
+        public static Int128 operator -(Int128 value) => 0 - value;
+
+        public static Int128 operator -(Int128 x, Int128 y)
+        {
+            unchecked
+            {
+                var lower = x.lower - y.lower;
+                var upper = x.upper - y.upper;
+
+                if (lower > x.lower)
+                {
+                    upper--;
+                }
+
+                return new Int128(upper, lower);
+            }
+        }
 
         public static bool operator <(Int128 x, Int128 y)
             => unchecked((long)x.upper) < unchecked((long)y.upper) || x.upper == y.upper && x.lower < y.lower;
@@ -116,6 +139,86 @@ public sealed class Int128Analyzer() : SignedIntegerAnalyzer<Int128Analyzer.Int1
 
         [Pure]
         public static Int128 Min(Int128 x, Int128 y) => x <= y ? x : y;
+
+        [Pure]
+        public static Int128 MaxMagnitude(Int128 x, Int128 y)
+        {
+            var absX = x;
+
+            if (IsNegative(absX))
+            {
+                absX = -absX;
+
+                if (IsNegative(absX))
+                {
+                    return x;
+                }
+            }
+
+            var absY = y;
+
+            if (IsNegative(absY))
+            {
+                absY = -absY;
+
+                if (IsNegative(absY))
+                {
+                    return y;
+                }
+            }
+
+            if (absX > absY)
+            {
+                return x;
+            }
+
+            if (absX == absY)
+            {
+                return IsNegative(x) ? y : x;
+            }
+
+            return y;
+        }
+
+        [Pure]
+        public static Int128 MinMagnitude(Int128 x, Int128 y)
+        {
+            var absX = x;
+
+            if (IsNegative(absX))
+            {
+                absX = unchecked(-absX);
+
+                if (IsNegative(absX))
+                {
+                    return y;
+                }
+            }
+
+            var absY = y;
+
+            if (IsNegative(absY))
+            {
+                absY = unchecked(-absY);
+
+                if (IsNegative(absY))
+                {
+                    return x;
+                }
+            }
+
+            if (absX < absY)
+            {
+                return x;
+            }
+
+            if (absX == absY)
+            {
+                return IsNegative(x) ? x : y;
+            }
+
+            return y;
+        }
 
         [Pure]
         public static (Int128 Quotient, Int128 Remainder) DivRem(Int128 left, Int128 right)

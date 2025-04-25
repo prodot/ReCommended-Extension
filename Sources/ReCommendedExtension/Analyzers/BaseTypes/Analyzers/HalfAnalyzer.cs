@@ -12,6 +12,11 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Half>(ClrTypeNames.Half)
 {
+    /// <remarks>
+    /// Original code from <see href="https://github.com/dotnet/dotnet"/><para/>
+    /// License: MIT<para/>
+    /// Copyright (c) .NET Foundation and Contributors
+    /// </remarks>
     public readonly record struct Half // todo: remove when available (used only for testing)
     {
         public static Half Epsilon => new(0x0001);

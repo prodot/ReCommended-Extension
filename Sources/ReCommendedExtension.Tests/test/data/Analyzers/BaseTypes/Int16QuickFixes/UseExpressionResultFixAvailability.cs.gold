@@ -50,43 +50,57 @@ namespace Test
             var result3 = |Math.Max((short)10, (short)10)|(16);
         }
 
+        public void MaxMagnitude()
+        {
+            var result1 = |short.MaxMagnitude(10, 0x0A)|(17);
+
+            short result2 = |short.MaxMagnitude(10, 0x0A)|(18);
+        }
+
         public void Min()
         {
-            var result1 = |short.Min(10, 0x0A)|(17);
+            var result1 = |short.Min(10, 0x0A)|(19);
 
-            short result2 = |short.Min(10, 0x0A)|(18);
+            short result2 = |short.Min(10, 0x0A)|(20);
 
-            var result3 = |Math.Min((short)10, (short)10)|(19);
+            var result3 = |Math.Min((short)10, (short)10)|(21);
+        }
+
+        public void MinMagnitude()
+        {
+            var result1 = |short.MinMagnitude(10, 0x0A)|(22);
+
+            short result2 = |short.MinMagnitude(10, 0x0A)|(23);
         }
 
         public void RotateLeft(short n)
         {
             const int c = 1;
 
-            var result11 = |short.RotateLeft(n, 0)|(20);
-            var result12 = |short.RotateLeft(0x01, 0)|(21);
-            var result13 = |short.RotateLeft(1 + 1, 0)|(22);
-            var result14 = |short.RotateLeft(c, 0)|(23);
+            var result11 = |short.RotateLeft(n, 0)|(24);
+            var result12 = |short.RotateLeft(0x01, 0)|(25);
+            var result13 = |short.RotateLeft(1 + 1, 0)|(26);
+            var result14 = |short.RotateLeft(c, 0)|(27);
 
-            short result21 = |short.RotateLeft(n, 0)|(24);
-            short result22 = |short.RotateLeft(1, 0)|(25);
-            short result23 = |short.RotateLeft(1 + 1, 0)|(26);
-            short result24 = |short.RotateLeft(c, 0)|(27);
+            short result21 = |short.RotateLeft(n, 0)|(28);
+            short result22 = |short.RotateLeft(1, 0)|(29);
+            short result23 = |short.RotateLeft(1 + 1, 0)|(30);
+            short result24 = |short.RotateLeft(c, 0)|(31);
         }
 
         public void RotateRight(short n)
         {
             const int c = 1;
 
-            var result11 = |short.RotateRight(n, 0)|(28);
-            var result12 = |short.RotateRight(0x01, 0)|(29);
-            var result13 = |short.RotateRight(1 + 1, 0)|(30);
-            var result14 = |short.RotateRight(c, 0)|(31);
+            var result11 = |short.RotateRight(n, 0)|(32);
+            var result12 = |short.RotateRight(0x01, 0)|(33);
+            var result13 = |short.RotateRight(1 + 1, 0)|(34);
+            var result14 = |short.RotateRight(c, 0)|(35);
 
-            short result21 = |short.RotateRight(n, 0)|(32);
-            short result22 = |short.RotateRight(1, 0)|(33);
-            short result23 = |short.RotateRight(1 + 1, 0)|(34);
-            short result24 = |short.RotateRight(c, 0)|(35);
+            short result21 = |short.RotateRight(n, 0)|(36);
+            short result22 = |short.RotateRight(1, 0)|(37);
+            short result23 = |short.RotateRight(1 + 1, 0)|(38);
+            short result24 = |short.RotateRight(c, 0)|(39);
         }
     }
 }
@@ -156,52 +170,68 @@ Replace with '0x0A'
 Replace with '10'
 19: The expression is always 10.
 QUICKFIXES:
+Replace with '(short)0x0A'
 Replace with '(short)10'
-20: The expression is always the same as the first argument.
+20: The expression is always 10.
 QUICKFIXES:
-Replace with 'n'
-21: The expression is always the same as the first argument.
+Replace with '0x0A'
+Replace with '10'
+21: The expression is always 10.
 QUICKFIXES:
-Replace with '(short)0x01'
-22: The expression is always the same as the first argument.
+Replace with '(short)10'
+22: The expression is always 10.
 QUICKFIXES:
-Replace with '(short)(1 + 1)'
-23: The expression is always the same as the first argument.
+Replace with '(short)0x0A'
+Replace with '(short)10'
+23: The expression is always 10.
 QUICKFIXES:
-Replace with '(short)c'
+Replace with '0x0A'
+Replace with '10'
 24: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'n'
 25: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '1'
+Replace with '(short)0x01'
 26: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '1 + 1'
+Replace with '(short)(1 + 1)'
 27: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with 'c'
+Replace with '(short)c'
 28: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'n'
 29: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(short)0x01'
+Replace with '1'
 30: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(short)(1 + 1)'
+Replace with '1 + 1'
 31: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '(short)c'
+Replace with 'c'
 32: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'n'
 33: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '1'
+Replace with '(short)0x01'
 34: The expression is always the same as the first argument.
 QUICKFIXES:
-Replace with '1 + 1'
+Replace with '(short)(1 + 1)'
 35: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(short)c'
+36: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+37: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+38: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+39: The expression is always the same as the first argument.
 QUICKFIXES:
 Replace with 'c'

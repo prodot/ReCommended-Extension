@@ -100,10 +100,28 @@ public sealed class IntPtrAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet70]
+    public void TestMaxMagnitude()
+    {
+        Test(n => MissingIntPtrMethods.MaxMagnitude(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
     public void TestMin()
     {
         Test(n => MissingIntPtrMethods.Min(n, n), n => n);
         Test(n => MissingMathMethods.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestMinMagnitude()
+    {
+        Test(n => MissingIntPtrMethods.MinMagnitude(n, n), n => n);
 
         DoNamedTest2();
     }

@@ -78,6 +78,23 @@ namespace Test
             var result31 = Math.Max(10L, 10L);
         }
 
+        public void MaxMagnitude()
+        {
+            const int c = 10;
+
+            var result11 = long.MaxMagnitude(10, 0x0A);
+            var result12 = long.MaxMagnitude(10, 10L);
+            var result13 = long.MaxMagnitude(10, 10u);
+            var result14 = long.MaxMagnitude(10, c);
+            var result15 = long.MaxMagnitude(97, 'a');
+
+            long result21 = long.MaxMagnitude(10, 0x0A);
+            long result22 = long.MaxMagnitude(10, 10L);
+            long result23 = long.MaxMagnitude(10, 10u);
+            long result24 = long.MaxMagnitude(10, c);
+            long result25 = long.MaxMagnitude(97, 'a');
+        }
+
         public void Min()
         {
             const int c = 10;
@@ -95,6 +112,23 @@ namespace Test
             long result25 = long.Min(97, 'a');
 
             var result31 = Math.Min(10L, 10L);
+        }
+
+        public void MinMagnitude()
+        {
+            const int c = 10;
+
+            var result11 = long.MinMagnitude(10, 0x0A);
+            var result12 = long.MinMagnitude(10, 10L);
+            var result13 = long.MinMagnitude(10, 10u);
+            var result14 = long.MinMagnitude(10, c);
+            var result15 = long.MinMagnitude(97, 'a');
+
+            long result21 = long.MinMagnitude(10, 0x0A);
+            long result22 = long.MinMagnitude(10, 10L);
+            long result23 = long.MinMagnitude(10, 10u);
+            long result24 = long.MinMagnitude(10, c);
+            long result25 = long.MinMagnitude(97, 'a');
         }
 
         public void RotateLeft(long n)

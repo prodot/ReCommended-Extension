@@ -27,12 +27,6 @@ internal static class MissingDecimalMethods
     }
 
     [Pure]
-    public static bool IsNegative(decimal value) => value < 0;
-
-    [Pure]
-    public static bool IsPositive(decimal value) => value >= 0;
-
-    [Pure]
     public static decimal Max(decimal x, decimal y) => x >= y ? x : y;
 
     [Pure]

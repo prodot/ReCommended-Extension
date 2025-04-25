@@ -50,6 +50,19 @@ namespace Test
             var result31 = Math.Max((nint)10, (nint)10);
         }
 
+        public void MaxMagnitude()
+        {
+            const int c = 10;
+
+            var result11 = nint.MaxMagnitude(10, 0x0A);
+            var result12 = nint.MaxMagnitude(10, c);
+            var result13 = nint.MaxMagnitude(97, 'a');
+
+            nint result21 = nint.MaxMagnitude(10, 0x0A);
+            nint result22 = nint.MaxMagnitude(10, c);
+            nint result23 = nint.MaxMagnitude(97, 'a');
+        }
+
         public void Min()
         {
             const int c = 10;
@@ -63,6 +76,19 @@ namespace Test
             nint result23 = nint.Min(97, 'a');
 
             var result31 = Math.Min((nint)10, (nint)10);
+        }
+
+        public void MinMagnitude()
+        {
+            const int c = 10;
+
+            var result11 = nint.MinMagnitude(10, 0x0A);
+            var result12 = nint.MinMagnitude(10, c);
+            var result13 = nint.MinMagnitude(97, 'a');
+
+            nint result21 = nint.MinMagnitude(10, 0x0A);
+            nint result22 = nint.MinMagnitude(10, c);
+            nint result23 = nint.MinMagnitude(97, 'a');
         }
 
         public void RotateLeft(nint n)

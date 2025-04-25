@@ -16,6 +16,11 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128Analyzer.UInt128>(ClrTypeNames.UInt128)
 {
+    /// <remarks>
+    /// Original code from <see href="https://github.com/dotnet/dotnet"/><para/>
+    /// License: MIT<para/>
+    /// Copyright (c) .NET Foundation and Contributors
+    /// </remarks>
     public readonly record struct UInt128 // todo: remove when available (used only for testing)
     {
         public static UInt128 MinValue => new(0, 0);

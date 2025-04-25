@@ -126,10 +126,28 @@ public sealed class Int16AnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet70]
+    public void TestMaxMagnitude()
+    {
+        Test(n => MissingInt16Methods.MaxMagnitude(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
     public void TestMin()
     {
         Test(n => MissingInt16Methods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    public void TestMinMagnitude()
+    {
+        Test(n => MissingInt16Methods.MinMagnitude(n, n), n => n);
 
         DoNamedTest2();
     }

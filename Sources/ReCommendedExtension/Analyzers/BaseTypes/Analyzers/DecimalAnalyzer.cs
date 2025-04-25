@@ -20,8 +20,6 @@ public sealed class DecimalAnalyzer() : NumberAnalyzer<decimal>(PredefinedType.D
 
     private protected override bool CanUseEqualityOperator() => true;
 
-    private protected override bool CanUseComparisonOperatorWithZero() => true;
-
     private protected override decimal? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)
