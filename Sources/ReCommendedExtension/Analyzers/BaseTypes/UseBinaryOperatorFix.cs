@@ -12,7 +12,7 @@ using ReCommendedExtension.Extensions;
 namespace ReCommendedExtension.Analyzers.BaseTypes;
 
 [QuickFix]
-public sealed class UseBinaryOperationFix(UseBinaryOperationSuggestion highlighting) : QuickFixBase
+public sealed class UseBinaryOperatorFix(UseBinaryOperatorSuggestion highlighting) : QuickFixBase
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 

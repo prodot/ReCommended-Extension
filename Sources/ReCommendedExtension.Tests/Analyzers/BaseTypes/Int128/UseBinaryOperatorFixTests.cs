@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int128;
 
 [TestFixture]
 [TestNet70]
-public sealed class UseBinaryOperationFixTests : QuickFixTestBase<UseBinaryOperationFix>
+public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperatorFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128QuickFixes";
 

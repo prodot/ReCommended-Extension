@@ -11,9 +11,131 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperationSuggestion), typeof(RedundantArgumentHint)])]
+    HighlightingTypes =
+    [
+        typeof(UseExpressionResultSuggestion),
+        typeof(UseBinaryOperatorSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(UseUnaryOperatorSuggestion),
+    ])]
 public sealed class DecimalAnalyzer() : NumberAnalyzer<decimal>(PredefinedType.DECIMAL_FQN)
 {
+    /// <remarks>
+    /// <c>decimal.Add(d1, d2)</c> → <c>d1 + d2</c>
+    /// </remarks>
+    static void AnalyzeAdd(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument d1Argument,
+        ICSharpArgument d2Argument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && d1Argument.Value is { } && d2Argument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperatorSuggestion(
+                    "Use the '+' operator.",
+                    invocationExpression,
+                    "+",
+                    d1Argument.Value.GetText(),
+                    d2Argument.Value.GetText()));
+        }
+    }
+
+    /// <remarks>
+    /// <c>decimal.Divide(d1, d2)</c> → <c>d1 / d2</c>
+    /// </remarks>
+    static void AnalyzeDivide(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument d1Argument,
+        ICSharpArgument d2Argument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && d1Argument.Value is { } && d2Argument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperatorSuggestion(
+                    "Use the '/' operator.",
+                    invocationExpression,
+                    "/",
+                    d1Argument.Value.GetText(),
+                    d2Argument.Value.GetText()));
+        }
+    }
+
+    /// <remarks>
+    /// <c>decimal.Multiply(d1, d2)</c> → <c>d1 * d2</c>
+    /// </remarks>
+    static void AnalyzeMultiply(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument d1Argument,
+        ICSharpArgument d2Argument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && d1Argument.Value is { } && d2Argument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperatorSuggestion(
+                    "Use the '*' operator.",
+                    invocationExpression,
+                    "*",
+                    d1Argument.Value.GetText(),
+                    d2Argument.Value.GetText()));
+        }
+    }
+
+    /// <remarks>
+    /// <c>decimal.Negate(d)</c> → <c>-d</c>
+    /// </remarks>
+    static void AnalyzeNegate(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument dArgument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && dArgument.Value is { })
+        {
+            consumer.AddHighlighting(new UseUnaryOperatorSuggestion("Use the '-' operator.", invocationExpression, "-", dArgument.Value.GetText()));
+        }
+    }
+
+    /// <remarks>
+    /// <c>decimal.Remainder(d1, d2)</c> → <c>d1 % d2</c>
+    /// </remarks>
+    static void AnalyzeRemainder(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument d1Argument,
+        ICSharpArgument d2Argument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && d1Argument.Value is { } && d2Argument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperatorSuggestion(
+                    "Use the '%' operator.",
+                    invocationExpression,
+                    "%",
+                    d1Argument.Value.GetText(),
+                    d2Argument.Value.GetText()));
+        }
+    }
+
+    /// <remarks>
+    /// <c>decimal.Subtract(d1, d2)</c> → <c>d1 - d2</c>
+    /// </remarks>
+    static void AnalyzeSubtract(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument d1Argument,
+        ICSharpArgument d2Argument)
+    {
+        if (!invocationExpression.IsUsedAsStatement() && d1Argument.Value is { } && d2Argument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperatorSuggestion(
+                    "Use the '-' operator.",
+                    invocationExpression,
+                    "-",
+                    d1Argument.Value.GetText(),
+                    d2Argument.Value.GetText()));
+        }
+    }
+
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Decimal;
 
     private protected override NumberStyles GetDefaultNumberStyles() => NumberStyles.Number;
@@ -121,4 +243,88 @@ public sealed class DecimalAnalyzer() : NumberAnalyzer<decimal>(PredefinedType.D
     private protected override bool AreEqual(decimal x, decimal y) => x == y;
 
     private protected override bool AreMinMaxValues(decimal min, decimal max) => (min, max) == (decimal.MinValue, decimal.MaxValue);
+
+    private protected override void Analyze(IInvocationExpression element, IReferenceExpression invokedExpression, IMethod method, IHighlightingConsumer consumer)
+    {
+        base.Analyze(element, invokedExpression, method, consumer);
+
+        if (method.ContainingType.IsClrType(ClrTypeName))
+        {
+            switch (invokedExpression, method)
+            {
+                case ({ QualifierExpression: { } }, { IsStatic: false }):
+                    switch (method.ShortName) { }
+                    break;
+
+                case (_, { IsStatic: true }):
+                    switch (method.ShortName)
+                    {
+                        case nameof(decimal.Add):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                                    when d1Type.IsClrType(ClrTypeName) && d2Type.IsClrType(ClrTypeName):
+
+                                    AnalyzeAdd(consumer, element, d1Argument, d2Argument);
+                                    break;
+                            }
+                            break;
+
+                        case nameof(decimal.Divide):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                                    when d1Type.IsClrType(ClrTypeName) && d2Type.IsClrType(ClrTypeName):
+
+                                    AnalyzeDivide(consumer, element, d1Argument, d2Argument);
+                                    break;
+                            }
+                            break;
+
+                        case nameof(decimal.Multiply):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                                    when d1Type.IsClrType(ClrTypeName) && d2Type.IsClrType(ClrTypeName):
+
+                                    AnalyzeMultiply(consumer, element, d1Argument, d2Argument);
+                                    break;
+                            }
+                            break;
+
+                        case nameof(decimal.Negate):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var dType }], [var dArgument]) when dType.IsClrType(ClrTypeName):
+                                    AnalyzeNegate(consumer, element, dArgument);
+                                    break;
+                            }
+                            break;
+
+                        case nameof(decimal.Remainder):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                                    when d1Type.IsClrType(ClrTypeName) && d2Type.IsClrType(ClrTypeName):
+
+                                    AnalyzeRemainder(consumer, element, d1Argument, d2Argument);
+                                    break;
+                            }
+                            break;
+
+                        case nameof(decimal.Subtract):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                                    when d1Type.IsClrType(ClrTypeName) && d2Type.IsClrType(ClrTypeName):
+
+                                    AnalyzeSubtract(consumer, element, d1Argument, d2Argument);
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
 }

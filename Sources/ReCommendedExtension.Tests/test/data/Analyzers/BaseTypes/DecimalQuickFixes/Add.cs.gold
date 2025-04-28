@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Decimals
+    {
+        public void Add(decimal d1, decimal d2)
+        {
+            var result = d{caret}1 + d2 + 1;
+        }
+    }
+}

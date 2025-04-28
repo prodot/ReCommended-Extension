@@ -6,9 +6,49 @@
         {
             var result = |number.Equals(obj)|(0);
         }
+
+        public void Add(decimal d1, decimal d2)
+        {
+            var result = |decimal.Add(d1, d2)|(1);
+        }
+
+        public void Divide(decimal d1, decimal d2)
+        {
+            var result = |decimal.Divide(d1, d2)|(2);
+        }
+
+        public void Multiply(decimal d1, decimal d2)
+        {
+            var result = |decimal.Multiply(d1, d2)|(3);
+        }
+
+        public void Remainder(decimal d1, decimal d2)
+        {
+            var result = |decimal.Remainder(d1, d2)|(4);
+        }
+
+        public void Subtract(decimal d1, decimal d2)
+        {
+            var result = |decimal.Subtract(d1, d2)|(5);
+        }
     }
 }
 ------------------------------------------------
 0: Use the '==' operator.
 QUICKFIXES:
 Replace with 'number == obj'
+1: Use the '+' operator.
+QUICKFIXES:
+Replace with 'd1 + d2'
+2: Use the '/' operator.
+QUICKFIXES:
+Replace with 'd1 / d2'
+3: Use the '*' operator.
+QUICKFIXES:
+Replace with 'd1 * d2'
+4: Use the '%' operator.
+QUICKFIXES:
+Replace with 'd1 % d2'
+5: Use the '-' operator.
+QUICKFIXES:
+Replace with 'd1 - d2'

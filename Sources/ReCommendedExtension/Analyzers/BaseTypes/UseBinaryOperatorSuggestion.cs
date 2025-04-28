@@ -10,18 +10,18 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
     SeverityId,
     null,
     HighlightingGroupIds.BestPractice,
-    "Use binary operation" + ZoneMarker.Suffix,
+    "Use binary operator" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UseBinaryOperationSuggestion(
+public sealed class UseBinaryOperatorSuggestion(
     string message,
     IInvocationExpression invocationExpression,
     string @operator,
     string leftOperand,
     string rightOperand) : Highlighting(message)
 {
-    const string SeverityId = "UseBinaryOperation";
+    const string SeverityId = "ReCommendedExtension.UseBinaryOperator";
 
     internal IInvocationExpression InvocationExpression => invocationExpression;
 

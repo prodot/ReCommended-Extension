@@ -72,7 +72,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         if (CanUseEqualityOperator() && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
         {
             consumer.AddHighlighting(
-                new UseBinaryOperationSuggestion(
+                new UseBinaryOperatorSuggestion(
                     "Use the '==' operator.",
                     invocationExpression,
                     "==",

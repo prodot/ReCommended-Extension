@@ -5,7 +5,7 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Byte;
 
 [TestFixture]
-public sealed class UseBinaryOperationFixTests : QuickFixTestBase<UseBinaryOperationFix>
+public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperatorFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\ByteQuickFixes";
 

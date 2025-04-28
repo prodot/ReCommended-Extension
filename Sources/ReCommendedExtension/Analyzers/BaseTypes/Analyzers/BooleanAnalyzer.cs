@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes =
     [
         typeof(UseExpressionResultSuggestion),
-        typeof(UseBinaryOperationSuggestion),
+        typeof(UseBinaryOperatorSuggestion),
         typeof(RedundantMethodInvocationHint),
         typeof(RedundantArgumentHint),
     ])]
@@ -76,7 +76,7 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
                     if (objArgument.Value is { })
                     {
                         consumer.AddHighlighting(
-                            new UseBinaryOperationSuggestion(
+                            new UseBinaryOperatorSuggestion(
                                 "Use the '==' operator.",
                                 invocationExpression,
                                 "==",

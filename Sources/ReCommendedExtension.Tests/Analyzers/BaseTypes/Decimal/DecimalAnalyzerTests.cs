@@ -17,7 +17,8 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperationSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint or UseUnaryOperatorSuggestion
+            || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -38,6 +39,14 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
         Assert.AreEqual(expected(decimal.MinValue, decimal.MaxValue), actual(decimal.MinValue, decimal.MaxValue));
     }
 
+    static void TestArithmetic<R>(Func<decimal, decimal, R> expected, Func<decimal, decimal, R> actual)
+    {
+        Assert.AreEqual(expected(0, 1), actual(0, 1));
+        Assert.AreEqual(expected(0, -1), actual(0, -1));
+        Assert.AreEqual(expected(-0.0m, 1), actual(-0.0m, 1));
+        Assert.AreEqual(expected(-0.0m, -1), actual(-0.0m, -1));
+    }
+
     delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
 
     static void Test(FuncWithOut<decimal, decimal, bool> expected, FuncWithOut<decimal, decimal, bool> actual)
@@ -53,6 +62,15 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestAdd()
+    {
+        TestArithmetic((d1, d2) => decimal.Add(d1, d2), (d1, d2) => d1 + d2);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [TestNet70]
     public void TestClamp()
     {
@@ -61,6 +79,15 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
 
         Test(number => MissingMathMethods.Clamp(number, 1, 1), _ => 1);
         Test(number => MissingMathMethods.Clamp(number, decimal.MinValue, decimal.MaxValue), number => number);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestDivide()
+    {
+        TestArithmetic((d1, d2) => decimal.Divide(d1, d2), (d1, d2) => d1 / d2);
 
         DoNamedTest2();
     }
@@ -104,6 +131,24 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestMultiply()
+    {
+        TestArithmetic((d1, d2) => decimal.Multiply(d1, d2), (d1, d2) => d1 * d2);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestNegate()
+    {
+        Test(d => decimal.Negate(d), d => -d);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [TestNet80]
     public void TestParse()
     {
@@ -119,6 +164,24 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
         Test(
             n => MissingDecimalMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null),
             n => MissingDecimalMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestRemainder()
+    {
+        TestArithmetic((d1, d2) => decimal.Remainder(d1, d2), (d1, d2) => d1 % d2);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestSubtract()
+    {
+        TestArithmetic((d1, d2) => decimal.Subtract(d1, d2), (d1, d2) => d1 - d2);
 
         DoNamedTest2();
     }

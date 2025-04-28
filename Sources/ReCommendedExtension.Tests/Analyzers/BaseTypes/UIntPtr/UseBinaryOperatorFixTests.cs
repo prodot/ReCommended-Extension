@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UIntPtr;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
 [TestNet50]
-public sealed class UseBinaryOperationFixTests : QuickFixTestBase<UseBinaryOperationFix>
+public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperatorFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UIntPtrQuickFixes";
 

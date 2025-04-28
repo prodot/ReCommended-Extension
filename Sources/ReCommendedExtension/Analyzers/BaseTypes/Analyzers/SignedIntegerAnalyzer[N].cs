@@ -16,7 +16,7 @@ public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
         if (!invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
         {
             consumer.AddHighlighting(
-                new UseBinaryOperationSuggestion(
+                new UseBinaryOperatorSuggestion(
                     "Use the '<' operator to compare to 0.",
                     invocationExpression,
                     "<",
@@ -33,7 +33,7 @@ public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
         if (!invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
         {
             consumer.AddHighlighting(
-                new UseBinaryOperationSuggestion(
+                new UseBinaryOperatorSuggestion(
                     "Use the '>=' operator to compare to 0.",
                     invocationExpression,
                     ">=",
