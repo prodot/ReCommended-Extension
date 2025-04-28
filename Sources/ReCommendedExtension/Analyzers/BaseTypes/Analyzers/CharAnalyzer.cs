@@ -80,11 +80,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             && cArgument.Value is { })
         {
             consumer.AddHighlighting(
-                new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
-                    invocationExpression,
-                    cArgument.Value,
-                    [new CharRange('0', '9')]));
+                new UseCharRangePatternSuggestion("Use pattern.", invocationExpression, cArgument.Value, [new CharRange('0', '9')]));
         }
     }
 
@@ -99,7 +95,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
+                    "Use pattern.",
                     invocationExpression,
                     cArgument.Value,
                     [new CharRange('0', '9'), new CharRange('A', 'F'), new CharRange('a', 'f')]));
@@ -117,7 +113,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
+                    "Use pattern.",
                     invocationExpression,
                     cArgument.Value,
                     [new CharRange('0', '9'), new CharRange('a', 'f')]));
@@ -135,7 +131,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
+                    "Use pattern.",
                     invocationExpression,
                     cArgument.Value,
                     [new CharRange('0', '9'), new CharRange('A', 'F')]));
@@ -153,7 +149,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
+                    "Use pattern.",
                     invocationExpression,
                     cArgument.Value,
                     [new CharRange('A', 'Z'), new CharRange('a', 'z')]));
@@ -170,11 +166,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             && cArgument.Value is { })
         {
             consumer.AddHighlighting(
-                new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
-                    invocationExpression,
-                    cArgument.Value,
-                    [new CharRange('a', 'z')]));
+                new UseCharRangePatternSuggestion("Use pattern.", invocationExpression, cArgument.Value, [new CharRange('a', 'z')]));
         }
     }
 
@@ -189,7 +181,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
+                    "Use pattern.",
                     invocationExpression,
                     cArgument.Value,
                     [new CharRange('A', 'Z'), new CharRange('a', 'z'), new CharRange('0', '9')]));
@@ -206,11 +198,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             && cArgument.Value is { })
         {
             consumer.AddHighlighting(
-                new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
-                    invocationExpression,
-                    cArgument.Value,
-                    [new CharRange('A', 'Z')]));
+                new UseCharRangePatternSuggestion("Use pattern.", invocationExpression, cArgument.Value, [new CharRange('A', 'Z')]));
         }
     }
 
@@ -234,7 +222,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             consumer.AddHighlighting(
                 new UseCharRangePatternSuggestion(
-                    "Use relational and logical patterns.",
+                    "Use pattern.",
                     invocationExpression,
                     cArgument.Value,
                     [new CharRange(minInclusiveArgument.Value.GetText(), maxInclusiveArgument.Value.GetText())]));

@@ -49,30 +49,30 @@
     }
 }
 ------------------------------------------------
-0: Use relational and logical patterns.
+0: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= '0' and <= '9''
-1: Use relational and logical patterns.
+1: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= '0' and <= '9' or >= 'A' and <= 'F' or >= 'a' and <= 'f''
-2: Use relational and logical patterns.
+2: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= '0' and <= '9' or >= 'a' and <= 'f''
-3: Use relational and logical patterns.
+3: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= '0' and <= '9' or >= 'A' and <= 'F''
-4: Use relational and logical patterns.
+4: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= 'A' and <= 'Z' or >= 'a' and <= 'z''
-5: Use relational and logical patterns.
+5: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= 'a' and <= 'z''
-6: Use relational and logical patterns.
+6: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= 'A' and <= 'Z' or >= 'a' and <= 'z' or >= '0' and <= '9''
-7: Use relational and logical patterns.
+7: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= 'A' and <= 'Z''
-8: Use relational and logical patterns.
+8: Use pattern.
 QUICKFIXES:
 Replace with 'c is >= 'a' and <= 'c''
