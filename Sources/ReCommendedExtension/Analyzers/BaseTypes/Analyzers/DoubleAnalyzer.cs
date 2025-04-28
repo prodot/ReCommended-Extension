@@ -8,10 +8,14 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
+[ElementProblemAnalyzer(
+    typeof(IInvocationExpression),
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint), typeof(UseFloatingPointPatternSuggestion)])]
 public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(PredefinedType.DOUBLE_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Double;
+
+    private protected override string? TryGetNanConstant() => $"double.{nameof(double.NaN)}";
 
     private protected override double? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {

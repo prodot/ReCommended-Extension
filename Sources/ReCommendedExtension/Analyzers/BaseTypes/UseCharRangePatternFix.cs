@@ -2,6 +2,7 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -26,9 +27,14 @@ public sealed class UseCharRangePatternFix(UseCharRangePatternSuggestion highlig
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            ModificationUtil
-                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"($0 is {Pattern})", highlighting.Expression))
+            var expression = ModificationUtil
+                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"(($0) is {Pattern})", highlighting.Expression))
                 .TryRemoveParentheses(factory);
+
+            if (expression is IIsExpression isExpression)
+            {
+                isExpression.Operand.TryRemoveParentheses(factory);
+            }
         }
 
         return _ => { };

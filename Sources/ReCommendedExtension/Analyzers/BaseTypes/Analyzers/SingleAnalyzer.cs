@@ -8,10 +8,14 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
+[ElementProblemAnalyzer(
+    typeof(IInvocationExpression),
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint), typeof(UseFloatingPointPatternSuggestion)])]
 public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(PredefinedType.FLOAT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Single;
+
+    private protected override string? TryGetNanConstant() => $"float.{nameof(float.NaN)}";
 
     private protected override float? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {

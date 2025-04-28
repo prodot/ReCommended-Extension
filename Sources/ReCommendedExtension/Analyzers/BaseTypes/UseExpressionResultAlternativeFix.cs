@@ -2,6 +2,7 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -31,10 +32,14 @@ public sealed class UseExpressionResultAlternativeFix(UseExpressionResultSuggest
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            ModificationUtil
+            var expression = ModificationUtil
                 .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"({highlighting.AlternativeReplacement})"))
-                .TryRemoveParentheses(factory)
-                .TryRemoveUnaryOperatorParentheses(factory);
+                .TryRemoveParentheses(factory);
+
+            if (expression is IUnaryOperatorExpression unaryOperatorExpression)
+            {
+                unaryOperatorExpression.Operand.TryRemoveParentheses(factory);
+            }
         }
 
         return _ => { };

@@ -2,6 +2,7 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -32,12 +33,17 @@ public sealed class UseBinaryOperationFix(UseBinaryOperationSuggestion highlight
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            ModificationUtil
+            var expression = ModificationUtil
                 .ReplaceChild(
                     highlighting.InvocationExpression,
                     factory.CreateExpression($"(({highlighting.LeftOperand}) {highlighting.Operator} ({highlighting.RightOperand}))"))
-                .TryRemoveParentheses(factory)
-                .TryRemoveBinaryOperatorParentheses(factory);
+                .TryRemoveParentheses(factory);
+
+            if (expression is IBinaryExpression binaryExpression)
+            {
+                binaryExpression.LeftOperand.TryRemoveParentheses(factory);
+                binaryExpression.RightOperand.TryRemoveParentheses(factory);
+            }
         }
 
         return _ => { };

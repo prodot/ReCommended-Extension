@@ -12,11 +12,11 @@ using ReCommendedExtension.Extensions;
 namespace ReCommendedExtension.Analyzers.BaseTypes;
 
 [QuickFix]
-public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlighting) : QuickFixBase
+public sealed class UseFloatingPointPatternFix(UseFloatingPointPatternSuggestion highlighting) : QuickFixBase
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '{highlighting.Replacement.TrimToSingleLineWithMaxLength(120)}'";
+    public override string Text => $"Replace with 'is {highlighting.Pattern}'";
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
@@ -25,15 +25,16 @@ public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlig
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
             var expression = ModificationUtil
-                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"({highlighting.Replacement})"))
+                .ReplaceChild(
+                    highlighting.InvocationExpression,
+                    factory.CreateExpression($"(($0) is {highlighting.Pattern})", highlighting.Expression))
                 .TryRemoveParentheses(factory);
 
-            if (expression is IUnaryOperatorExpression unaryOperatorExpression)
+            if (expression is IIsExpression isExpression)
             {
-                unaryOperatorExpression.Operand.TryRemoveParentheses(factory);
+                isExpression.Operand.TryRemoveParentheses(factory);
             }
         }
-
         return _ => { };
     }
 }

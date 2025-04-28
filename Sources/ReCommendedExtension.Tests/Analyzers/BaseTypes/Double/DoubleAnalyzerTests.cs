@@ -4,6 +4,7 @@ using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
@@ -17,7 +18,7 @@ public sealed class DoubleAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Double";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint or UseFloatingPointPatternSuggestion || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -76,6 +77,16 @@ public sealed class DoubleAnalyzerTests : CSharpHighlightingTestBase
     public void TestGetTypeCode()
     {
         Test(number => number.GetTypeCode(), _ => TypeCode.Double);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestIsNaN()
+    {
+        Test(number => double.IsNaN(number), number => number is double.NaN);
 
         DoNamedTest2();
     }

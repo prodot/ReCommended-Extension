@@ -182,6 +182,8 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
 
     private protected override TypeCode? TryGetTypeCode() => null;
 
+    private protected override string? TryGetNanConstant() => null;
+
     private protected override Half? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
         if (expression is IConstantValueOwner constantValueOwner)

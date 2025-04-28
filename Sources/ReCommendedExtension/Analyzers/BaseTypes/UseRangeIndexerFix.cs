@@ -2,6 +2,7 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -29,11 +30,16 @@ public sealed class UseRangeIndexerFix(UseRangeIndexerSuggestion highlighting) :
             var startIndex = highlighting.StartIndexArgument != "" ? $"({highlighting.StartIndexArgument})" : "";
             var endIndex = highlighting.EndIndexArgument != "" ? $"({highlighting.EndIndexArgument})" : "";
 
-            ModificationUtil
+            var expression = ModificationUtil
                 .ReplaceChild(
                     highlighting.InvocationExpression,
-                    factory.CreateExpression($"$0{conditionalAccess}[{startIndex}..{endIndex}]", highlighting.InvokedExpression.QualifierExpression))
-                .TryRemoveRangeIndexParentheses(factory);
+                    factory.CreateExpression($"$0{conditionalAccess}[{startIndex}..{endIndex}]", highlighting.InvokedExpression.QualifierExpression));
+
+            if (expression is IElementAccessExpression { Arguments: [{ Value: IRangeExpression rangeExpression }] })
+            {
+                rangeExpression.LeftOperand?.TryRemoveParentheses(factory);
+                rangeExpression.RightOperand?.TryRemoveParentheses(factory);
+            }
         }
 
         return _ => { };

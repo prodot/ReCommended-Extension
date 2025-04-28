@@ -10,11 +10,19 @@ using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using IObjectCreationExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IObjectCreationExpression;
 
 namespace ReCommendedExtension.Extensions;
 
 internal static class CSharpExpressionExtensions
 {
+    [Pure]
+    static bool AreParenthesesRedundant(this IParenthesizedExpression parenthesizedExpression)
+        => CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(parenthesizedExpression, LanguageManager.Instance, null) is
+        {
+            NeedsToRemove: true,
+        };
+
     [Pure]
     public static IType? TryGetTargetType(this ICSharpExpression expression)
     {
@@ -106,45 +114,20 @@ internal static class CSharpExpressionExtensions
                 ? (NumberStyles)constantValue.IntValue
                 : null;
 
-    /// <returns>The inner expression if parentheses have been removed.</returns>
+    /// <returns>The inner expression (regardless if parentheses have been removed).</returns>
     public static ICSharpExpression TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
     {
-        if (expression is IParenthesizedExpression parenthesizedExpression
-            && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
-            {
-                NeedsToRemove: true,
-            })
+        if (expression is IParenthesizedExpression parenthesizedExpression)
         {
-            return ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+            if (parenthesizedExpression.AreParenthesesRedundant())
+            {
+                return ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+            }
+
+            return parenthesizedExpression.Expression;
         }
 
         return expression;
-    }
-
-    public static void TryRemoveRangeIndexParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
-    {
-        if (expression is IElementAccessExpression { Arguments: [{ Value: IRangeExpression rangeExpression }] })
-        {
-            rangeExpression.LeftOperand?.TryRemoveParentheses(factory);
-            rangeExpression.RightOperand?.TryRemoveParentheses(factory);
-        }
-    }
-
-    public static void TryRemoveUnaryOperatorParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
-    {
-        if (expression is IUnaryOperatorExpression unaryOperatorExpression)
-        {
-            unaryOperatorExpression.Operand.TryRemoveParentheses(factory);
-        }
-    }
-
-    public static void TryRemoveBinaryOperatorParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
-    {
-        if (expression is IBinaryExpression binaryExpression)
-        {
-            binaryExpression.LeftOperand.TryRemoveParentheses(factory);
-            binaryExpression.RightOperand.TryRemoveParentheses(factory);
-        }
     }
 
     [Pure]
@@ -154,9 +137,10 @@ internal static class CSharpExpressionExtensions
 
         var newExpression = factory.CreateExpression($"({typeName})($0)", expression);
 
-        if (newExpression is ICastExpression castExpression)
+        if (newExpression is ICastExpression { Op: IParenthesizedExpression parenthesizedExpression } castExpression
+            && parenthesizedExpression.AreParenthesesRedundant())
         {
-            castExpression.SetOp(castExpression.Op.TryRemoveParentheses(factory));
+            castExpression.SetOp(factory.CreateExpression("$0", expression));
         }
 
         return newExpression;

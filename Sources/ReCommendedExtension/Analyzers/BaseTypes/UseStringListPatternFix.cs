@@ -2,6 +2,7 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Resources.Shell;
@@ -81,11 +82,20 @@ public sealed class UseStringListPatternFix(UseStringListPatternSuggestion highl
         {
             var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
 
-            ModificationUtil
+            var expression = ModificationUtil
                 .ReplaceChild(
                     highlighting.BinaryExpression as ITreeNode ?? highlighting.InvocationExpression,
-                    factory.CreateExpression($"($0 {Replacement})", highlighting.InvokedExpression.QualifierExpression))
+                    factory.CreateExpression($"(($0) {Replacement})", highlighting.InvokedExpression.QualifierExpression))
                 .TryRemoveParentheses(factory);
+
+            var patternOperand = expression switch
+            {
+                IIsExpression isExpression => isExpression.Operand,
+                IBinaryExpression { LeftOperand: IIsExpression isExpression } => isExpression.Operand,
+                _ => null,
+            };
+
+            patternOperand?.TryRemoveParentheses(factory);
         }
 
         return _ => { };

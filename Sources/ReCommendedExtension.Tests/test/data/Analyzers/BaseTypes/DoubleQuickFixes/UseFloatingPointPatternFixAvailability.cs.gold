@@ -1,0 +1,14 @@
+﻿namespace Test
+{
+    public class Doubles
+    {
+        public void IsNaN(double value)
+        {
+            var result = |double.IsNaN(value)|(0).ToString();
+        }
+    }
+}
+------------------------------------------------
+0: Use pattern.
+QUICKFIXES:
+Replace with 'is double.NaN'
