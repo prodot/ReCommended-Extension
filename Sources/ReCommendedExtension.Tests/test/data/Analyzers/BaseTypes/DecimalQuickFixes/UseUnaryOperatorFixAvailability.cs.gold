@@ -2,9 +2,12 @@
 {
     public class Decimals
     {
-        public void Negate(decimal d)
+        public void Negate(decimal d, int a)
         {
-            var result = |decimal.Negate(d)|(0);
+            var result11 = |decimal.Negate(d)|(0);
+            var result12 = |decimal.Negate(a)|(1);
+            var result13 = |decimal.Negate(1m)|(2);
+            var result14 = |decimal.Negate(1)|(3);
         }
     }
 }
@@ -12,3 +15,12 @@
 0: Use the '-' operator.
 QUICKFIXES:
 Replace with '-d'
+1: Use the '-' operator.
+QUICKFIXES:
+Replace with '-(decimal)a'
+2: Use the '-' operator.
+QUICKFIXES:
+Replace with '-1m'
+3: Use the '-' operator.
+QUICKFIXES:
+Replace with '-1m'
