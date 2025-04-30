@@ -18,7 +18,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(RedundantArgumentHint),
         typeof(UseUnaryOperatorSuggestion),
     ])]
-public sealed class DecimalAnalyzer() : NumberAnalyzer<decimal>(PredefinedType.DECIMAL_FQN)
+public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(PredefinedType.DECIMAL_FQN)
 {
     [Pure]
     (string leftOperand, string rightOperand)? TryGetBinaryOperatorOperandsFromArguments(ICSharpArgument d1Argument, ICSharpArgument d2Argument)

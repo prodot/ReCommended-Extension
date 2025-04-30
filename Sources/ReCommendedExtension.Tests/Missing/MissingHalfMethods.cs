@@ -29,6 +29,21 @@ internal static class MissingHalfMethods
         => HalfAnalyzer.Half.Parse(s.ToString(), style, provider);
 
     [Pure]
+    public static HalfAnalyzer.Half Round(HalfAnalyzer.Half x) => (HalfAnalyzer.Half)MissingSingleMethods.Round((float)x);
+
+    [Pure]
+    public static HalfAnalyzer.Half Round(HalfAnalyzer.Half x, [ValueRange(0, 6)] int digits)
+        => (HalfAnalyzer.Half)MissingSingleMethods.Round((float)x, digits);
+
+    [Pure]
+    public static HalfAnalyzer.Half Round(HalfAnalyzer.Half x, MidpointRounding mode)
+        => (HalfAnalyzer.Half)MissingSingleMethods.Round((float)x, mode);
+
+    [Pure]
+    public static HalfAnalyzer.Half Round(HalfAnalyzer.Half x, [ValueRange(0, 6)] int digits, MidpointRounding mode)
+        => (HalfAnalyzer.Half)MissingSingleMethods.Round((float)x, digits, mode);
+
+    [Pure]
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out HalfAnalyzer.Half result)
         => HalfAnalyzer.Half.TryParse(s.ToString(), style, provider, out result);
 

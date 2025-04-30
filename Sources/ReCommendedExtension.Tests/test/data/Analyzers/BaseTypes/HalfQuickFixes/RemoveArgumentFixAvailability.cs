@@ -18,6 +18,15 @@ namespace Test
             var result31 = Half.Parse(utf8Text, null);
         }
 
+        public void Round(Half x, int digits, MidpointRounding mode)
+        {
+            var result1 = Half.Round(x, 0);
+            var result2 = Half.Round(x, 0, mode);
+            var result3 = Half.Round(x, MidpointRounding.ToEven);
+            var result4 = Half.Round(x, digits, MidpointRounding.ToEven);
+            var result5 = Half.Round(x, 0, MidpointRounding.ToEven);
+        }
+
         public void ToString(byte number, string format, IFormatProvider provider)
         {
             var result1 = number.ToString(null as string);

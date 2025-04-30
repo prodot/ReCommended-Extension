@@ -64,6 +64,48 @@ public sealed class HalfAnalyzerTests : CSharpHighlightingTestBase
         Assert.AreEqual(expectedResult, actualResult);
     }
 
+    static void Test(
+        Func<HalfAnalyzer.Half, MidpointRounding, HalfAnalyzer.Half> expected,
+        Func<HalfAnalyzer.Half, MidpointRounding, HalfAnalyzer.Half> actual)
+    {
+        Assert.AreEqual(expected((byte)0, MidpointRounding.ToEven), actual((byte)0, MidpointRounding.ToEven));
+        Assert.AreEqual(expected((byte)0, MidpointRounding.AwayFromZero), actual((byte)0, MidpointRounding.AwayFromZero));
+
+        Assert.AreEqual(expected((HalfAnalyzer.Half)(-0f), MidpointRounding.ToEven), actual((HalfAnalyzer.Half)(-0f), MidpointRounding.ToEven));
+        Assert.AreEqual(
+            expected((HalfAnalyzer.Half)(-0f), MidpointRounding.AwayFromZero),
+            actual((HalfAnalyzer.Half)(-0f), MidpointRounding.AwayFromZero));
+
+        Assert.AreEqual(expected(HalfAnalyzer.Half.MaxValue, MidpointRounding.ToEven), actual(HalfAnalyzer.Half.MaxValue, MidpointRounding.ToEven));
+        Assert.AreEqual(
+            expected(HalfAnalyzer.Half.MaxValue, MidpointRounding.AwayFromZero),
+            actual(HalfAnalyzer.Half.MaxValue, MidpointRounding.AwayFromZero));
+
+        Assert.AreEqual(expected(HalfAnalyzer.Half.MinValue, MidpointRounding.ToEven), actual(HalfAnalyzer.Half.MinValue, MidpointRounding.ToEven));
+        Assert.AreEqual(
+            expected(HalfAnalyzer.Half.MinValue, MidpointRounding.AwayFromZero),
+            actual(HalfAnalyzer.Half.MinValue, MidpointRounding.AwayFromZero));
+    }
+
+    static void Test(Func<HalfAnalyzer.Half, int, HalfAnalyzer.Half> expected, Func<HalfAnalyzer.Half, int, HalfAnalyzer.Half> actual)
+    {
+        Assert.AreEqual(expected((byte)0, 0), actual((byte)0, 0));
+        Assert.AreEqual(expected((byte)0, 1), actual((byte)0, 1));
+        Assert.AreEqual(expected((byte)0, 2), actual((byte)0, 2));
+
+        Assert.AreEqual(expected((HalfAnalyzer.Half)(-0f), 0), actual((HalfAnalyzer.Half)(-0f), 0));
+        Assert.AreEqual(expected((HalfAnalyzer.Half)(-0f), 1), actual((HalfAnalyzer.Half)(-0f), 1));
+        Assert.AreEqual(expected((HalfAnalyzer.Half)(-0f), 2), actual((HalfAnalyzer.Half)(-0f), 2));
+
+        Assert.AreEqual(expected(HalfAnalyzer.Half.MaxValue, 0), actual(HalfAnalyzer.Half.MaxValue, 0));
+        Assert.AreEqual(expected(HalfAnalyzer.Half.MaxValue, 1), actual(HalfAnalyzer.Half.MaxValue, 1));
+        Assert.AreEqual(expected(HalfAnalyzer.Half.MaxValue, 2), actual(HalfAnalyzer.Half.MaxValue, 2));
+
+        Assert.AreEqual(expected(HalfAnalyzer.Half.MinValue, 0), actual(HalfAnalyzer.Half.MinValue, 0));
+        Assert.AreEqual(expected(HalfAnalyzer.Half.MinValue, 1), actual(HalfAnalyzer.Half.MinValue, 1));
+        Assert.AreEqual(expected(HalfAnalyzer.Half.MinValue, 2), actual(HalfAnalyzer.Half.MinValue, 2));
+    }
+
     [Test]
     public void TestEquals()
     {
@@ -88,6 +130,19 @@ public sealed class HalfAnalyzerTests : CSharpHighlightingTestBase
         Test(n => MissingHalfMethods.Parse($"{n}".AsSpan(), null), n => MissingHalfMethods.Parse($"{n}".AsSpan()));
 
         Test(n => MissingHalfMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingHalfMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestRound()
+    {
+        Test(n => MissingHalfMethods.Round(n, 0), n => MissingHalfMethods.Round(n));
+        Test(n => MissingHalfMethods.Round(n, MidpointRounding.ToEven), n => MissingHalfMethods.Round(n));
+        Test((n, mode) => MissingHalfMethods.Round(n, 0, mode), (n, mode) => MissingHalfMethods.Round(n, mode));
+        Test((n, digits) => MissingHalfMethods.Round(n, digits, MidpointRounding.ToEven), (n, digits) => MissingHalfMethods.Round(n, digits));
 
         DoNamedTest2();
     }

@@ -18,6 +18,21 @@ namespace Test
             var result31 = float.Parse(utf8Text, null);
         }
 
+        public void Round(float x, int digits, MidpointRounding mode)
+        {
+            var result11 = float.Round(x, 0);
+            var result12 = float.Round(x, 0, mode);
+            var result13 = float.Round(x, MidpointRounding.ToEven);
+            var result14 = float.Round(x, digits, MidpointRounding.ToEven);
+            var result15 = float.Round(x, 0, MidpointRounding.ToEven);
+
+            var result21 = MathF.Round(x, 0);
+            var result22 = MathF.Round(x, 0, mode);
+            var result23 = MathF.Round(x, MidpointRounding.ToEven);
+            var result24 = MathF.Round(x, digits, MidpointRounding.ToEven);
+            var result25 = MathF.Round(x, 0, MidpointRounding.ToEven);
+        }
+
         public void ToString(byte number, string format, IFormatProvider provider)
         {
             var result1 = number.ToString(null as string);

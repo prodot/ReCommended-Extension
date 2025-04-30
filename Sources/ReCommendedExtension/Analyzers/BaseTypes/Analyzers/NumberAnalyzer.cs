@@ -17,7 +17,11 @@ public abstract class NumberAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
         ];
 
+        public static IReadOnlyList<ParameterType> Int32 { get; } = [new() { ClrTypeName = PredefinedType.INT_FQN }];
+
         public static IReadOnlyList<ParameterType> IFormatProvider { get; } = [new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN }];
+
+        public static IReadOnlyList<ParameterType> MidpointRounding { get; } = [new() { ClrTypeName = ClrTypeNames.MidpointRounding }];
 
         public static IReadOnlyList<ParameterType> String_IFormatProvider { get; } =
         [

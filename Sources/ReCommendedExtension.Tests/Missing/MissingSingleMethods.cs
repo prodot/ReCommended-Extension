@@ -28,6 +28,18 @@ internal static class MissingSingleMethods
         => float.Parse(s.ToString(), style, provider);
 
     [Pure]
+    public static float Round(float x) => MissingMathFMethods.Round(x);
+
+    [Pure]
+    public static float Round(float x, [ValueRange(0, 6)] int digits) => MissingMathFMethods.Round(x, digits);
+
+    [Pure]
+    public static float Round(float x, MidpointRounding mode) => MissingMathFMethods.Round(x, mode);
+
+    [Pure]
+    public static float Round(float x, [ValueRange(0, 6)] int digits, MidpointRounding mode) => MissingMathFMethods.Round(x, digits, mode);
+
+    [Pure]
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out float result)
         => float.TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
 

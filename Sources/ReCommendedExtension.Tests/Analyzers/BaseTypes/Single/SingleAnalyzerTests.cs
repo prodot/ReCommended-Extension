@@ -61,6 +61,40 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
         Assert.AreEqual(expectedResult, actualResult);
     }
 
+    static void Test(Func<float, MidpointRounding, float> expected, Func<float, MidpointRounding, float> actual)
+    {
+        Assert.AreEqual(expected(0, MidpointRounding.ToEven), actual(0, MidpointRounding.ToEven));
+        Assert.AreEqual(expected(0, MidpointRounding.AwayFromZero), actual(0, MidpointRounding.AwayFromZero));
+
+        Assert.AreEqual(expected(-0f, MidpointRounding.ToEven), actual(-0f, MidpointRounding.ToEven));
+        Assert.AreEqual(expected(-0f, MidpointRounding.AwayFromZero), actual(-0f, MidpointRounding.AwayFromZero));
+
+        Assert.AreEqual(expected(float.MaxValue, MidpointRounding.ToEven), actual(float.MaxValue, MidpointRounding.ToEven));
+        Assert.AreEqual(expected(float.MaxValue, MidpointRounding.AwayFromZero), actual(float.MaxValue, MidpointRounding.AwayFromZero));
+
+        Assert.AreEqual(expected(float.MinValue, MidpointRounding.ToEven), actual(float.MinValue, MidpointRounding.ToEven));
+        Assert.AreEqual(expected(float.MinValue, MidpointRounding.AwayFromZero), actual(float.MinValue, MidpointRounding.AwayFromZero));
+    }
+
+    static void Test(Func<float, int, float> expected, Func<float, int, float> actual)
+    {
+        Assert.AreEqual(expected(0, 0), actual(0, 0));
+        Assert.AreEqual(expected(0, 1), actual(0, 1));
+        Assert.AreEqual(expected(0, 2), actual(0, 2));
+
+        Assert.AreEqual(expected(-0f, 0), actual(-0f, 0));
+        Assert.AreEqual(expected(-0f, 1), actual(-0f, 1));
+        Assert.AreEqual(expected(-0f, 2), actual(-0f, 2));
+
+        Assert.AreEqual(expected(float.MaxValue, 0), actual(float.MaxValue, 0));
+        Assert.AreEqual(expected(float.MaxValue, 1), actual(float.MaxValue, 1));
+        Assert.AreEqual(expected(float.MaxValue, 2), actual(float.MaxValue, 2));
+
+        Assert.AreEqual(expected(float.MinValue, 0), actual(float.MinValue, 0));
+        Assert.AreEqual(expected(float.MinValue, 1), actual(float.MinValue, 1));
+        Assert.AreEqual(expected(float.MinValue, 2), actual(float.MinValue, 2));
+    }
+
     [Test]
     public void TestEquals()
     {
@@ -103,6 +137,24 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
         Test(n => MissingSingleMethods.Parse($"{n}".AsSpan(), null), n => MissingSingleMethods.Parse($"{n}".AsSpan()));
 
         Test(n => MissingSingleMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingSingleMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [TestNet70]
+    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    public void TestRound()
+    {
+        Test(n => MissingSingleMethods.Round(n, 0), n => MissingSingleMethods.Round(n));
+        Test(n => MissingSingleMethods.Round(n, MidpointRounding.ToEven), n => MissingSingleMethods.Round(n));
+        Test((n, mode) => MissingSingleMethods.Round(n, 0, mode), (n, mode) => MissingSingleMethods.Round(n, mode));
+        Test((n, digits) => MissingSingleMethods.Round(n, digits, MidpointRounding.ToEven), (n, digits) => MissingSingleMethods.Round(n, digits));
+
+        Test(n => MissingMathFMethods.Round(n, 0), n => MissingMathFMethods.Round(n));
+        Test(n => MissingMathFMethods.Round(n, MidpointRounding.ToEven), n => MissingMathFMethods.Round(n));
+        Test((n, mode) => MissingMathFMethods.Round(n, 0, mode), (n, mode) => MissingMathFMethods.Round(n, mode));
+        Test((n, digits) => MissingMathFMethods.Round(n, digits, MidpointRounding.ToEven), (n, digits) => MissingMathFMethods.Round(n, digits));
 
         DoNamedTest2();
     }

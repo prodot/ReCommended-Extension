@@ -18,27 +18,36 @@ namespace Test
             var result31 = Half.Parse(utf8Text, |null|(7));
         }
 
+        public void Round(Half x, int digits, MidpointRounding mode)
+        {
+            var result1 = Half.Round(x, |0|(8));
+            var result2 = Half.Round(x, |0|(9), mode);
+            var result3 = Half.Round(x, |MidpointRounding.ToEven|(10));
+            var result4 = Half.Round(x, digits, |MidpointRounding.ToEven|(11));
+            var result5 = Half.Round(x, |0|(12), |MidpointRounding.ToEven|(13));
+        }
+
         public void ToString(byte number, string format, IFormatProvider provider)
         {
-            var result1 = number.ToString(|null as string|(8));
-            var result2 = number.ToString(|""|(9));
-            var result3 = number.ToString(|null as IFormatProvider|(10));
-            var result4 = number.ToString(|null|(11), provider);
-            var result5 = number.ToString(|""|(12), provider);
-            var result6 = number.ToString(format, |null|(13));
-            var result7 = number.ToString(|""|(14), |null|(15));
+            var result1 = number.ToString(|null as string|(14));
+            var result2 = number.ToString(|""|(15));
+            var result3 = number.ToString(|null as IFormatProvider|(16));
+            var result4 = number.ToString(|null|(17), provider);
+            var result5 = number.ToString(|""|(18), provider);
+            var result6 = number.ToString(format, |null|(19));
+            var result7 = number.ToString(|""|(20), |null|(21));
         }
 
         public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
         {
-            var result11 = Half.TryParse(s, |NumberStyles.Float | NumberStyles.AllowThousands|(16), provider, out _);
-            var result12 = Half.TryParse(s, |null|(17), out _);
+            var result11 = Half.TryParse(s, |NumberStyles.Float | NumberStyles.AllowThousands|(22), provider, out _);
+            var result12 = Half.TryParse(s, |null|(23), out _);
 
-            var result21 = Half.TryParse(s1, |NumberStyles.Float | NumberStyles.AllowThousands|(18), provider, out _);
-            var result22 = Half.TryParse(s1, |null|(19), out _);
+            var result21 = Half.TryParse(s1, |NumberStyles.Float | NumberStyles.AllowThousands|(24), provider, out _);
+            var result22 = Half.TryParse(s1, |null|(25), out _);
 
-            var result31 = Half.TryParse(utf8Text, |NumberStyles.Float | NumberStyles.AllowThousands|(20), provider, out _);
-            var result32 = Half.TryParse(utf8Text, |null|(21), out _);
+            var result31 = Half.TryParse(utf8Text, |NumberStyles.Float | NumberStyles.AllowThousands|(26), provider, out _);
+            var result32 = Half.TryParse(utf8Text, |null|(27), out _);
         }
     }
 }
@@ -67,45 +76,63 @@ Remove argument
 7: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-8: Passing null or an empty string is redundant.
+8: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-9: Passing null or an empty string is redundant.
+9: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-10: Passing null is redundant.
+10: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-11: Passing null or an empty string is redundant.
+11: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-12: Passing null or an empty string is redundant.
+12: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-13: Passing null is redundant.
+13: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
 14: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-15: Passing null is redundant.
+15: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-16: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+16: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-17: Passing null is redundant.
+17: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-18: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+18: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
 19: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-20: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+20: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
 21: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+22: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+QUICKFIXES:
+Remove argument
+23: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+24: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+QUICKFIXES:
+Remove argument
+25: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+26: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+QUICKFIXES:
+Remove argument
+27: Passing null is redundant.
 QUICKFIXES:
 Remove argument

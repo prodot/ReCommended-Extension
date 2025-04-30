@@ -18,27 +18,42 @@ namespace Test
             var result31 = decimal.Parse(utf8Text, |null|(7));
         }
 
+        public void Round(decimal d, int decimals, MidpointRounding mode)
+        {
+            var result11 = decimal.Round(d, |0|(8));
+            var result12 = decimal.Round(d, |0|(9), mode);
+            var result13 = decimal.Round(d, |MidpointRounding.ToEven|(10));
+            var result14 = decimal.Round(d, decimals, |MidpointRounding.ToEven|(11));
+            var result15 = decimal.Round(d, |0|(12), |MidpointRounding.ToEven|(13));
+
+            var result21 = Math.Round(d, |0|(14));
+            var result22 = Math.Round(d, |0|(15), mode);
+            var result23 = Math.Round(d, |MidpointRounding.ToEven|(16));
+            var result24 = Math.Round(d, decimals, |MidpointRounding.ToEven|(17));
+            var result25 = Math.Round(d, |0|(18), |MidpointRounding.ToEven|(19));
+        }
+
         public void ToString(byte number, string format, IFormatProvider provider)
         {
-            var result1 = number.ToString(|null as string|(8));
-            var result2 = number.ToString(|""|(9));
-            var result3 = number.ToString(|null as IFormatProvider|(10));
-            var result4 = number.ToString(|null|(11), provider);
-            var result5 = number.ToString(|""|(12), provider);
-            var result6 = number.ToString(format, |null|(13));
-            var result7 = number.ToString(|""|(14), |null|(15));
+            var result1 = number.ToString(|null as string|(20));
+            var result2 = number.ToString(|""|(21));
+            var result3 = number.ToString(|null as IFormatProvider|(22));
+            var result4 = number.ToString(|null|(23), provider);
+            var result5 = number.ToString(|""|(24), provider);
+            var result6 = number.ToString(format, |null|(25));
+            var result7 = number.ToString(|""|(26), |null|(27));
         }
 
         public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
         {
-            var result11 = decimal.TryParse(s, |NumberStyles.Number|(16), provider, out _);
-            var result12 = decimal.TryParse(s, |null|(17), out _);
+            var result11 = decimal.TryParse(s, |NumberStyles.Number|(28), provider, out _);
+            var result12 = decimal.TryParse(s, |null|(29), out _);
 
-            var result21 = decimal.TryParse(s1, |NumberStyles.Number|(18), provider, out _);
-            var result22 = decimal.TryParse(s1, |null|(19), out _);
+            var result21 = decimal.TryParse(s1, |NumberStyles.Number|(30), provider, out _);
+            var result22 = decimal.TryParse(s1, |null|(31), out _);
 
-            var result31 = decimal.TryParse(utf8Text, |NumberStyles.Number|(20), provider, out _);
-            var result32 = decimal.TryParse(utf8Text, |null|(21), out _);
+            var result31 = decimal.TryParse(utf8Text, |NumberStyles.Number|(32), provider, out _);
+            var result32 = decimal.TryParse(utf8Text, |null|(33), out _);
         }
     }
 }
@@ -67,45 +82,81 @@ Remove argument
 7: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-8: Passing null or an empty string is redundant.
+8: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-9: Passing null or an empty string is redundant.
+9: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-10: Passing null is redundant.
+10: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-11: Passing null or an empty string is redundant.
+11: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-12: Passing null or an empty string is redundant.
+12: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-13: Passing null is redundant.
+13: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-14: Passing null or an empty string is redundant.
+14: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-15: Passing null is redundant.
+15: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-16: Passing NumberStyles.Number is redundant.
+16: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-17: Passing null is redundant.
+17: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-18: Passing NumberStyles.Number is redundant.
+18: Passing 0 is redundant.
 QUICKFIXES:
 Remove argument
-19: Passing null is redundant.
+19: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-20: Passing NumberStyles.Number is redundant.
+20: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-21: Passing null is redundant.
+21: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+22: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+23: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+24: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+25: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+26: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+27: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+28: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+29: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+30: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+31: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+32: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+33: Passing null is redundant.
 QUICKFIXES:
 Remove argument

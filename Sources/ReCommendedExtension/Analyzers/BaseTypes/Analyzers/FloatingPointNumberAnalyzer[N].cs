@@ -8,7 +8,7 @@ using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
-public abstract class FloatingPointNumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyzer<N>(clrTypeName) where N : struct
+public abstract class FloatingPointNumberAnalyzer<N>(IClrTypeName clrTypeName) : FractionalNumberAnalyzer<N>(clrTypeName) where N : struct
 {
     /// <remarks>
     /// <c>T.IsNaN(value)</c> → <c>value is T.NaN</c> (C# 9)

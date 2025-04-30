@@ -29,6 +29,8 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName Math = GetClrTypeName(typeof(Math));
 
+    public static readonly IClrTypeName MathF = new ClrTypeName("System.MathF");
+
     public static readonly IClrTypeName ContractClassForAttribute = GetClrTypeName<ContractClassForAttribute>();
 
     public static readonly IClrTypeName ContractClassAttribute = GetClrTypeName<ContractClassAttribute>();
@@ -84,6 +86,8 @@ internal static class ClrTypeNames
     public static readonly IClrTypeName StringSplitOptions = GetClrTypeName<StringSplitOptions>();
 
     public static readonly IClrTypeName NumberStyles = GetClrTypeName<NumberStyles>();
+
+    public static readonly IClrTypeName MidpointRounding = GetClrTypeName<MidpointRounding>();
 
     public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");
 

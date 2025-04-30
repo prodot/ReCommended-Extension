@@ -114,6 +114,13 @@ internal static class CSharpExpressionExtensions
                 ? (NumberStyles)constantValue.IntValue
                 : null;
 
+    [Pure]
+    public static MidpointRounding? TryGetMidpointRoundingConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(ClrTypeNames.MidpointRounding)
+                ? (MidpointRounding)constantValue.IntValue
+                : null;
+
     /// <returns>The inner expression (regardless if parentheses have been removed).</returns>
     public static ICSharpExpression TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
     {

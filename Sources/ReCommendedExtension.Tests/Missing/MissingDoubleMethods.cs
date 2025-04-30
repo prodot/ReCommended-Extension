@@ -28,6 +28,18 @@ internal static class MissingDoubleMethods
         => double.Parse(s.ToString(), style, provider);
 
     [Pure]
+    public static double Round(double x) => Math.Round(x);
+
+    [Pure]
+    public static double Round(double x, [ValueRange(0, 15)] int digits) => Math.Round(x, digits);
+
+    [Pure]
+    public static double Round(double x, MidpointRounding mode) => Math.Round(x, mode);
+
+    [Pure]
+    public static double Round(double x, [ValueRange(0, 15)] int digits, MidpointRounding mode) => Math.Round(x, digits, mode);
+
+    [Pure]
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out double result)
         => double.TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
 
