@@ -42,7 +42,7 @@ public sealed class IntPtrAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(number => MissingIntPtrMethods.Clamp(number, 1, 1), _ => 1);
 
-        Test(number => MissingMathMethods.Clamp(number, (nint)1, (nint)1), _ => 1);
+        Test(number => MissingMathMethods.Clamp(number, 1, 1), _ => 1);
 
         DoNamedTest2();
     }
@@ -53,7 +53,7 @@ public sealed class IntPtrAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(() => MissingIntPtrMethods.DivRem(0, 10), () => (0, 0));
 
-        Test(() => MissingMathMethods.DivRem((nint)0, (nint)10), () => (0, 0));
+        Test(() => MissingMathMethods.DivRem((nint)0, 10), () => (0, 0));
 
         DoNamedTest2();
     }

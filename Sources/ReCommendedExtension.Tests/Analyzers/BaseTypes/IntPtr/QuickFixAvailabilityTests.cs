@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.IntPtr;
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-[TestNet50]
+[TestNet70]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\IntPtrQuickFixes";
@@ -20,11 +20,9 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
         => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     [Test]
-    [TestNet70]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
 
     [Test]

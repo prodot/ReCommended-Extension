@@ -21,7 +21,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
 
     [Test]

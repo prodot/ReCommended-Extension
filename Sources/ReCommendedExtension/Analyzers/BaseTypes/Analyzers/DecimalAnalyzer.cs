@@ -255,79 +255,68 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
-        if (method.ContainingType.IsClrType(ClrTypeName))
+        if (method.ContainingType.IsClrType(ClrTypeName) && method.IsStatic)
         {
-            switch (invokedExpression, method)
+            switch (method.ShortName)
             {
-                case ({ QualifierExpression: { } }, { IsStatic: false }):
-                    switch (method.ShortName) { }
+                case nameof(decimal.Add):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                            when d1Type.IsDecimal() && d2Type.IsDecimal():
+
+                            AnalyzeAdd(consumer, element, d1Argument, d2Argument);
+                            break;
+                    }
                     break;
 
-                case (_, { IsStatic: true }):
-                    switch (method.ShortName)
+                case nameof(decimal.Divide):
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case nameof(decimal.Add):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
-                                    when d1Type.IsDecimal() && d2Type.IsDecimal():
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                            when d1Type.IsDecimal() && d2Type.IsDecimal():
 
-                                    AnalyzeAdd(consumer, element, d1Argument, d2Argument);
-                                    break;
-                            }
+                            AnalyzeDivide(consumer, element, d1Argument, d2Argument);
                             break;
+                    }
+                    break;
 
-                        case nameof(decimal.Divide):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
-                                    when d1Type.IsDecimal() && d2Type.IsDecimal():
+                case nameof(decimal.Multiply):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                            when d1Type.IsDecimal() && d2Type.IsDecimal():
 
-                                    AnalyzeDivide(consumer, element, d1Argument, d2Argument);
-                                    break;
-                            }
+                            AnalyzeMultiply(consumer, element, d1Argument, d2Argument);
                             break;
+                    }
+                    break;
 
-                        case nameof(decimal.Multiply):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
-                                    when d1Type.IsDecimal() && d2Type.IsDecimal():
+                case nameof(decimal.Negate):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var dType }], [var dArgument]) when dType.IsDecimal(): AnalyzeNegate(consumer, element, dArgument); break;
+                    }
+                    break;
 
-                                    AnalyzeMultiply(consumer, element, d1Argument, d2Argument);
-                                    break;
-                            }
+                case nameof(decimal.Remainder):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                            when d1Type.IsDecimal() && d2Type.IsDecimal():
+
+                            AnalyzeRemainder(consumer, element, d1Argument, d2Argument);
                             break;
+                    }
+                    break;
 
-                        case nameof(decimal.Negate):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var dType }], [var dArgument]) when dType.IsDecimal():
-                                    AnalyzeNegate(consumer, element, dArgument);
-                                    break;
-                            }
-                            break;
+                case nameof(decimal.Subtract):
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                            when d1Type.IsDecimal() && d2Type.IsDecimal():
 
-                        case nameof(decimal.Remainder):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
-                                    when d1Type.IsDecimal() && d2Type.IsDecimal():
-
-                                    AnalyzeRemainder(consumer, element, d1Argument, d2Argument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(decimal.Subtract):
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
-                                    when d1Type.IsDecimal() && d2Type.IsDecimal():
-
-                                    AnalyzeSubtract(consumer, element, d1Argument, d2Argument);
-                                    break;
-                            }
+                            AnalyzeSubtract(consumer, element, d1Argument, d2Argument);
                             break;
                     }
                     break;

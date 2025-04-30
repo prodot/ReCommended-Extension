@@ -15,7 +15,7 @@ public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(Prede
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Double;
 
-    private protected override string? TryGetNanConstant() => $"double.{nameof(double.NaN)}";
+    private protected override string TryGetNanConstant() => $"double.{nameof(double.NaN)}";
 
     private protected override double? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
     {
@@ -81,7 +81,7 @@ public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(Prede
         return null;
     }
 
-    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotImplementedException();
+    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotSupportedException();
 
     private protected override string Cast(ICSharpExpression expression) => expression.Cast("double").GetText();
 }

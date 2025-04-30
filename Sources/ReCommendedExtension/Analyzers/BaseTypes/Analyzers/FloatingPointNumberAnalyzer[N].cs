@@ -43,24 +43,15 @@ public abstract class FloatingPointNumberAnalyzer<N>(IClrTypeName clrTypeName) :
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
-        if (method.ContainingType.IsClrType(ClrTypeName))
+        if (method.ContainingType.IsClrType(ClrTypeName) && method.IsStatic)
         {
-            switch (invokedExpression, method)
+            switch (method.ShortName)
             {
-                case ({ QualifierExpression: { } }, { IsStatic: false }):
-                    switch (method.ShortName) { }
-                    break;
-
-                case (_, { IsStatic: true }):
-                    switch (method.ShortName)
+                case "IsNaN": // todo: nameof(INumberBase<T>.IsNaN) when available
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case "IsNaN": // todo: nameof(INumberBase<T>.IsNaN) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(ClrTypeName):
-                                    AnalyzeIsNaN(consumer, element, valueArgument);
-                                    break;
-                            }
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(ClrTypeName):
+                            AnalyzeIsNaN(consumer, element, valueArgument);
                             break;
                     }
                     break;

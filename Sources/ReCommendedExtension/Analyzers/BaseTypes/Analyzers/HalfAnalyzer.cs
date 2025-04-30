@@ -84,7 +84,7 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
                 const int halfToSingleBitsMask = 0x0FFF_E000;
 
                 var valueInInt16Bits = (short)value.bits;
-                var sign = (uint)(int)valueInInt16Bits & singleSignMask;
+                var sign = (uint)valueInInt16Bits & singleSignMask;
                 var bitValueInProcess = (uint)valueInInt16Bits;
                 var offsetExponent = bitValueInProcess & halfExponentMask;
                 var subnormalMask = offsetExponent == 0u ? ~0u : 0u;
@@ -204,7 +204,7 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
         return null;
     }
 
-    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotImplementedException();
+    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotSupportedException();
 
     private protected override string Cast(ICSharpExpression expression) => expression.Cast("Half").GetText();
 }

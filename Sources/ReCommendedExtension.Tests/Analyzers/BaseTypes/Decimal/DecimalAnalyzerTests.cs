@@ -20,8 +20,6 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
         => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint or UseUnaryOperatorSuggestion
             || highlighting.IsError();
 
-    static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
-
     static void Test<R>(Func<decimal, R> expected, Func<decimal, R> actual)
     {
         Assert.AreEqual(expected(0), actual(0));

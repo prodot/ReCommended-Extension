@@ -93,48 +93,39 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
-        if (method.ContainingType.IsClrType(ClrTypeName))
+        if (method.ContainingType.IsClrType(ClrTypeName) && method.IsStatic)
         {
-            switch (invokedExpression, method)
+            switch (method.ShortName)
             {
-                case ({ QualifierExpression: { } }, { IsStatic: false }):
-                    switch (method.ShortName) { }
+                case "DivRem": // todo: nameof(IBinaryInteger<T>.DivRem) when available
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
+                            when leftType.IsClrType(ClrTypeName) && rightType.IsClrType(ClrTypeName):
+
+                            AnalyzeDivRem(consumer, element, leftArgument, rightArgument);
+                            break;
+                    }
                     break;
 
-                case (_, { IsStatic: true }):
-                    switch (method.ShortName)
+                case "RotateLeft": // todo: nameof(IBinaryInteger<T>.RotateLeft) when available
+                    switch (method.Parameters, element.Arguments)
                     {
-                        case "DivRem": // todo: nameof(IBinaryInteger<T>.DivRem) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
-                                    when leftType.IsClrType(ClrTypeName) && rightType.IsClrType(ClrTypeName):
+                        case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
+                            when valueType.IsClrType(ClrTypeName) && rotateAmountType.IsInt():
 
-                                    AnalyzeDivRem(consumer, element, leftArgument, rightArgument);
-                                    break;
-                            }
+                            AnalyzeRotateLeft(consumer, element, valueArgument, rotateAmountArgument);
                             break;
+                    }
+                    break;
 
-                        case "RotateLeft": // todo: nameof(IBinaryInteger<T>.RotateLeft) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
-                                    when valueType.IsClrType(ClrTypeName) && rotateAmountType.IsInt():
+                case "RotateRight": // todo: nameof(IBinaryInteger<T>.RotateRight) when available
+                    switch (method.Parameters, element.Arguments)
+                    {
+                        case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
+                            when valueType.IsClrType(ClrTypeName) && rotateAmountType.IsInt():
 
-                                    AnalyzeRotateLeft(consumer, element, valueArgument, rotateAmountArgument);
-                                    break;
-                            }
-                            break;
-
-                        case "RotateRight": // todo: nameof(IBinaryInteger<T>.RotateRight) when available
-                            switch (method.Parameters, element.Arguments)
-                            {
-                                case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
-                                    when valueType.IsClrType(ClrTypeName) && rotateAmountType.IsInt():
-
-                                    AnalyzeRotateRight(consumer, element, valueArgument, rotateAmountArgument);
-                                    break;
-                            }
+                            AnalyzeRotateRight(consumer, element, valueArgument, rotateAmountArgument);
                             break;
                     }
                     break;

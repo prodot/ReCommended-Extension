@@ -9,6 +9,7 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int32;
 
 [TestFixture]
+[TestNet70]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int32QuickFixes";
@@ -17,11 +18,9 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
         => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
 
     [Test]
-    [TestNet70]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
 
     [Test]
-    [TestNet70]
     public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
 
     [Test]
