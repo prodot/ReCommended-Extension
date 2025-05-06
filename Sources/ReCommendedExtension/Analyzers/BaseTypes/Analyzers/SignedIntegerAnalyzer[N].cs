@@ -1,12 +1,12 @@
-﻿using JetBrains.Metadata.Reader.API;
-using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
-public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : IntegerAnalyzer<N>(clrTypeName) where N : struct
+public abstract class SignedIntegerAnalyzer<N>(SignedIntegerInfo<N> numberInfo) : IntegerAnalyzer<N>(numberInfo) where N : struct
 {
     /// <remarks>
     /// <c>T.IsNegative(n)</c> → <c>n &lt; 0</c>
@@ -52,9 +52,9 @@ public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
         ICSharpArgument yArgument)
     {
         if (!invocationExpression.IsUsedAsStatement()
-            && TryGetConstant(xArgument.Value, out _) is { } x
-            && TryGetConstant(yArgument.Value, out _) is { } y
-            && AreEqual(x, y))
+            && numberInfo.TryGetConstant(xArgument.Value, out _) is { } x
+            && numberInfo.TryGetConstant(yArgument.Value, out _) is { } y
+            && numberInfo.AreEqual(x, y))
         {
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
@@ -81,9 +81,9 @@ public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
         ICSharpArgument yArgument)
     {
         if (!invocationExpression.IsUsedAsStatement()
-            && TryGetConstant(xArgument.Value, out _) is { } x
-            && TryGetConstant(yArgument.Value, out _) is { } y
-            && AreEqual(x, y))
+            && numberInfo.TryGetConstant(xArgument.Value, out _) is { } x
+            && numberInfo.TryGetConstant(yArgument.Value, out _) is { } y
+            && numberInfo.AreEqual(x, y))
         {
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
@@ -108,14 +108,14 @@ public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
-        if (method.ContainingType.IsClrType(ClrTypeName) && method.IsStatic)
+        if (method.ContainingType.IsClrType(numberInfo.ClrTypeName) && method.IsStatic)
         {
             switch (method.ShortName)
             {
                 case "IsNegative": // todo: nameof(INumberBase<T>.IsNegative) when available
                     switch (method.Parameters, element.Arguments)
                     {
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(ClrTypeName):
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(numberInfo.ClrTypeName):
                             AnalyzeIsNegative(consumer, element, valueArgument);
                             break;
                     }
@@ -124,7 +124,7 @@ public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
                 case "IsPositive": // todo: nameof(INumberBase<T>.IsPositive) when available
                     switch (method.Parameters, element.Arguments)
                     {
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(ClrTypeName):
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(numberInfo.ClrTypeName):
                             AnalyzeIsPositive(consumer, element, valueArgument);
                             break;
                     }
@@ -134,7 +134,7 @@ public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
-                            when xType.IsClrType(ClrTypeName) && yType.IsClrType(ClrTypeName):
+                            when xType.IsClrType(numberInfo.ClrTypeName) && yType.IsClrType(numberInfo.ClrTypeName):
 
                             AnalyzeMaxMagnitude(consumer, element, xArgument, yArgument);
                             break;
@@ -145,7 +145,7 @@ public abstract class SignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : Integ
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
-                            when xType.IsClrType(ClrTypeName) && yType.IsClrType(ClrTypeName):
+                            when xType.IsClrType(numberInfo.ClrTypeName) && yType.IsClrType(numberInfo.ClrTypeName):
 
                             AnalyzeMinMagnitude(consumer, element, xArgument, yArgument);
                             break;

@@ -1,14 +1,13 @@
-﻿using System.Globalization;
-using JetBrains.Metadata.Reader.API;
-using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
-public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyzer<N>(clrTypeName) where N : struct
+public abstract class IntegerAnalyzer<N>(IntegerInfo<N> numberInfo) : NumberAnalyzer<N>(numberInfo) where N : struct
 {
     /// <remarks>
     /// <c>T.DivRem(0, right)</c> → <c>(0, 0)</c><para/>
@@ -20,16 +19,16 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
         ICSharpArgument leftArgument,
         ICSharpArgument rightArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement() && TryGetConstant(rightArgument.Value, out _) is { } right)
+        if (!invocationExpression.IsUsedAsStatement() && numberInfo.TryGetConstant(rightArgument.Value, out _) is { } right)
         {
-            if (TryGetConstant(leftArgument.Value, out _) is { } left && IsZero(left) && !IsZero(right))
+            if (numberInfo.TryGetConstant(leftArgument.Value, out _) is { } left && numberInfo.IsZero(left) && !numberInfo.IsZero(right))
             {
                 var replacement =
                     invocationExpression.TryGetTargetType().IsValueTuple(out var t1TypeArgument, out var t2TypeArgument)
-                    && t1TypeArgument.IsClrType(ClrTypeName)
-                    && t2TypeArgument.IsClrType(ClrTypeName)
+                    && t1TypeArgument.IsClrType(numberInfo.ClrTypeName)
+                    && t2TypeArgument.IsClrType(numberInfo.ClrTypeName)
                         ? "(0, 0)"
-                        : $"(Quotient: {CastZero(invocationExpression.GetCSharpLanguageLevel())}, Remainder: {CastZero(invocationExpression.GetCSharpLanguageLevel())})";
+                        : $"(Quotient: {numberInfo.CastZero(invocationExpression.GetCSharpLanguageLevel())}, Remainder: {numberInfo.CastZero(invocationExpression.GetCSharpLanguageLevel())})";
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion("The expression is always (0, 0).", invocationExpression, replacement));
@@ -75,28 +74,6 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
         }
     }
 
-    private protected sealed override NumberStyles GetDefaultNumberStyles() => NumberStyles.Integer;
-
-    private protected sealed override bool CanUseEqualityOperator() => true;
-
-    private protected sealed override RoundTripFormatSpecifierSupport GetRoundTripFormatSpecifier(string precisionSpecifier, out string? replacement)
-    {
-        replacement = null;
-        return RoundTripFormatSpecifierSupport.Unsupported;
-    }
-
-    private protected sealed override bool SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision() => true;
-
-    private protected sealed override bool SupportsBinaryOrHexFormatSpecifier() => true;
-
-    private protected sealed override bool SupportsDecimalFormatSpecifier() => true;
-
-    [Pure]
-    private protected abstract string CastZero(CSharpLanguageLevel languageLevel);
-
-    [Pure]
-    private protected abstract bool IsZero(N value);
-
     private protected override void Analyze(
         IInvocationExpression element,
         IReferenceExpression invokedExpression,
@@ -105,7 +82,7 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
-        if (method.ContainingType.IsClrType(ClrTypeName) && method.IsStatic)
+        if (method.ContainingType.IsClrType(numberInfo.ClrTypeName) && method.IsStatic)
         {
             switch (method.ShortName)
             {
@@ -113,7 +90,7 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
-                            when leftType.IsClrType(ClrTypeName) && rightType.IsClrType(ClrTypeName):
+                            when leftType.IsClrType(numberInfo.ClrTypeName) && rightType.IsClrType(numberInfo.ClrTypeName):
 
                             AnalyzeDivRem(consumer, element, leftArgument, rightArgument);
                             break;
@@ -124,7 +101,7 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
-                            when valueType.IsClrType(ClrTypeName) && rotateAmountType.IsInt():
+                            when valueType.IsClrType(numberInfo.ClrTypeName) && rotateAmountType.IsInt():
 
                             AnalyzeRotateLeft(consumer, element, valueArgument, rotateAmountArgument);
                             break;
@@ -135,7 +112,7 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
-                            when valueType.IsClrType(ClrTypeName) && rotateAmountType.IsInt():
+                            when valueType.IsClrType(numberInfo.ClrTypeName) && rotateAmountType.IsInt():
 
                             AnalyzeRotateRight(consumer, element, valueArgument, rotateAmountArgument);
                             break;
@@ -152,7 +129,7 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
-                            when leftType.IsClrType(ClrTypeName) && rightType.IsClrType(ClrTypeName):
+                            when leftType.IsClrType(numberInfo.ClrTypeName) && rightType.IsClrType(numberInfo.ClrTypeName):
 
                             AnalyzeDivRem(consumer, element, leftArgument, rightArgument);
                             break;

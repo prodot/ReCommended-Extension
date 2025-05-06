@@ -1,5 +1,5 @@
-﻿using JetBrains.Metadata.Reader.API;
+﻿using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
-public abstract class UnsignedIntegerAnalyzer<N>(IClrTypeName clrTypeName) : IntegerAnalyzer<N>(clrTypeName) where N : struct;
+public abstract class UnsignedIntegerAnalyzer<N>(UnsignedIntegerInfo<N> numberInfo) : IntegerAnalyzer<N>(numberInfo) where N : struct;

@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
@@ -20,10 +20,12 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(SuspiciousFormatSpecifierWarning),
         typeof(RedundantFormatPrecisionSpecifierHint),
     ])]
-public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(PredefinedType.DECIMAL_FQN)
+public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(NumberInfo.Decimal)
 {
     [Pure]
-    (string leftOperand, string rightOperand)? TryGetBinaryOperatorOperandsFromArguments(ICSharpArgument d1Argument, ICSharpArgument d2Argument)
+    static (string leftOperand, string rightOperand)? TryGetBinaryOperatorOperandsFromArguments(
+        ICSharpArgument d1Argument,
+        ICSharpArgument d2Argument)
     {
         if (d1Argument.Value is { } d1Value && d2Argument.Value is { } d2Value)
         {
@@ -32,17 +34,17 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
                 return (d1Value.GetText(), d2Value.GetText());
             }
 
-            if (TryGetConstant(d1Value, out var d1ImplicitlyConverted) is { } && d1ImplicitlyConverted)
+            if (NumberInfo.Decimal.TryGetConstant(d1Value, out var d1ImplicitlyConverted) is { } && d1ImplicitlyConverted)
             {
-                return (CastConstant(d1Value, d1ImplicitlyConverted), d2Value.GetText());
+                return (NumberInfo.Decimal.CastConstant(d1Value, d1ImplicitlyConverted), d2Value.GetText());
             }
 
-            if (TryGetConstant(d2Value, out var d2ImplicitlyConverted) is { } && d2ImplicitlyConverted)
+            if (NumberInfo.Decimal.TryGetConstant(d2Value, out var d2ImplicitlyConverted) is { } && d2ImplicitlyConverted)
             {
-                return (d1Value.GetText(), CastConstant(d2Value, d2ImplicitlyConverted));
+                return (d1Value.GetText(), NumberInfo.Decimal.CastConstant(d2Value, d2ImplicitlyConverted));
             }
 
-            return (Cast(d1Value), d2Value.GetText());
+            return (NumberInfo.Decimal.Cast(d1Value), d2Value.GetText());
         }
 
         return null;
@@ -51,7 +53,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
     /// <remarks>
     /// <c>decimal.Add(d1, d2)</c> → <c>d1 + d2</c>
     /// </remarks>
-    void AnalyzeAdd(
+    static void AnalyzeAdd(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -67,7 +69,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
     /// <remarks>
     /// <c>decimal.Divide(d1, d2)</c> → <c>d1 / d2</c>
     /// </remarks>
-    void AnalyzeDivide(
+    static void AnalyzeDivide(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -83,7 +85,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
     /// <remarks>
     /// <c>decimal.Multiply(d1, d2)</c> → <c>d1 * d2</c>
     /// </remarks>
-    void AnalyzeMultiply(
+    static void AnalyzeMultiply(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -99,15 +101,15 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
     /// <remarks>
     /// <c>decimal.Negate(d)</c> → <c>-d</c>
     /// </remarks>
-    void AnalyzeNegate(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument dArgument)
+    static void AnalyzeNegate(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument dArgument)
     {
         if (!invocationExpression.IsUsedAsStatement() && dArgument.Value is { } value)
         {
             var operand = value.Type().IsDecimal()
                 ? dArgument.Value.GetText()
-                : TryGetConstant(value, out var implicitlyConverted) is { } && implicitlyConverted
-                    ? CastConstant(value, implicitlyConverted)
-                    : Cast(value);
+                : NumberInfo.Decimal.TryGetConstant(value, out var implicitlyConverted) is { } && implicitlyConverted
+                    ? NumberInfo.Decimal.CastConstant(value, implicitlyConverted)
+                    : NumberInfo.Decimal.Cast(value);
 
             consumer.AddHighlighting(new UseUnaryOperatorSuggestion("Use the '-' operator.", invocationExpression, "-", operand));
         }
@@ -116,7 +118,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
     /// <remarks>
     /// <c>decimal.Remainder(d1, d2)</c> → <c>d1 % d2</c>
     /// </remarks>
-    void AnalyzeRemainder(
+    static void AnalyzeRemainder(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -132,7 +134,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
     /// <remarks>
     /// <c>decimal.Subtract(d1, d2)</c> → <c>d1 - d2</c>
     /// </remarks>
-    void AnalyzeSubtract(
+    static void AnalyzeSubtract(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -145,126 +147,6 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
         }
     }
 
-    private protected override TypeCode? TryGetTypeCode() => TypeCode.Decimal;
-
-    private protected override NumberStyles GetDefaultNumberStyles() => NumberStyles.Number;
-
-    private protected override bool CanUseEqualityOperator() => true;
-
-    private protected override decimal? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted)
-    {
-        if (expression is IConstantValueOwner constantValueOwner)
-        {
-            switch (constantValueOwner.ConstantValue)
-            {
-                case { Kind: ConstantValueKind.Decimal, DecimalValue: var value }:
-                    implicitlyConverted = false;
-                    return value;
-
-                case { Kind: ConstantValueKind.Ulong, UlongValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Long, LongValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Int, IntValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Uint, UintValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Byte, ByteValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Sbyte, SbyteValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Short, ShortValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Ushort, UshortValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Nint, IntValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Nuint, UintValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-
-                case { Kind: ConstantValueKind.Char, CharValue: var value }:
-                    implicitlyConverted = true;
-                    return value;
-            }
-        }
-
-        implicitlyConverted = false;
-        return null;
-    }
-
-    private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted)
-    {
-        if (implicitlyConverted)
-        {
-            if (constant is ICSharpLiteralExpression)
-            {
-                if (constant.Type().IsChar())
-                {
-                    return constant.Cast("decimal").GetText();
-                }
-
-                var result = constant.GetText();
-
-                var magnitude = result is ['-' or '+', .. var m] ? m : result;
-                if (magnitude is ['0', 'x' or 'X' or 'b' or 'B', ..])
-                {
-                    return constant.Cast("decimal").GetText();
-                }
-
-                return result switch
-                {
-                    [.. var rest, 'u' or 'U', 'l' or 'L'] => $"{rest}m",
-                    [.. var rest, 'l' or 'L', 'u' or 'U'] => $"{rest}m",
-                    [.. var rest, 'u' or 'U'] => $"{rest}m",
-                    [.. var rest, 'l' or 'L'] => $"{rest}m",
-
-                    _ => $"{result}m",
-                };
-            }
-
-            return constant.Cast("decimal").GetText();
-        }
-
-        return constant.GetText();
-    }
-
-    private protected override string Cast(ICSharpExpression expression) => expression.Cast("decimal").GetText();
-
-    private protected override bool AreEqual(decimal x, decimal y) => x == y;
-
-    private protected override bool AreMinMaxValues(decimal min, decimal max) => (min, max) == (decimal.MinValue, decimal.MaxValue);
-
-    static readonly int MaxValueStringLength = decimal.MaxValue.ToString(NumberFormatInfo.InvariantInfo).Length;
-
-    private protected override int? TryGetMaxValueStringLength() => MaxValueStringLength;
-
-    private protected override RoundTripFormatSpecifierSupport GetRoundTripFormatSpecifier(string precisionSpecifier, out string? replacement)
-    {
-        replacement = null;
-        return RoundTripFormatSpecifierSupport.Unsupported;
-    }
-
-    private protected override bool SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision() => true;
-
     private protected override void Analyze(
         IInvocationExpression element,
         IReferenceExpression invokedExpression,
@@ -273,7 +155,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
-        if (method.ContainingType.IsClrType(ClrTypeName) && method.IsStatic)
+        if (method.ContainingType.IsClrType(NumberInfo.Decimal.ClrTypeName) && method.IsStatic)
         {
             switch (method.ShortName)
             {

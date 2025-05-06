@@ -1,20 +1,18 @@
 ﻿using System.Globalization;
-using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 using ReCommendedExtension.Extensions;
 using ReCommendedExtension.Extensions.MethodFinding;
 using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSignature;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
-public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyzer where N : struct
+public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyzer where N : struct
 {
     [Pure]
     static bool IsNumberStyles(IType type) => type.IsClrType(ClrTypeNames.NumberStyles);
-
-    private protected IClrTypeName ClrTypeName => clrTypeName;
 
     /// <remarks>
     /// <c>T.Clamp(value, n, n)</c> → <c>n</c><para/>
@@ -28,10 +26,10 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument maxArgument)
     {
         if (!invocationExpression.IsUsedAsStatement()
-            && TryGetConstant(minArgument.Value, out _) is { } min
-            && TryGetConstant(maxArgument.Value, out _) is { } max)
+            && numberInfo.TryGetConstant(minArgument.Value, out _) is { } min
+            && numberInfo.TryGetConstant(maxArgument.Value, out _) is { } max)
         {
-            if (AreEqual(min, max))
+            if (numberInfo.AreEqual(min, max))
             {
                 Debug.Assert(minArgument.Value is { });
                 Debug.Assert(maxArgument.Value is { });
@@ -47,7 +45,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                         replacementMax != replacementMin ? replacementMax : null));
             }
 
-            if (AreMinMaxValues(min, max) && valueArgument.Value is { } value)
+            if (numberInfo.AreMinMaxValues(min, max) && valueArgument.Value is { } value)
             {
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
@@ -69,7 +67,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        if (CanUseEqualityOperator() && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
+        if (numberInfo.CanUseEqualityOperator && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
         {
             consumer.AddHighlighting(
                 new UseBinaryOperatorSuggestion(
@@ -97,7 +95,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     /// </remarks>
     void AnalyzeGetTypeCode(IHighlightingConsumer consumer, IInvocationExpression invocationExpression)
     {
-        if (!invocationExpression.IsUsedAsStatement() && TryGetTypeCode() is { } typeCode)
+        if (!invocationExpression.IsUsedAsStatement() && numberInfo.TypeCode is { } typeCode)
         {
             var replacement = $"{nameof(TypeCode)}.{typeCode:G}";
 
@@ -112,9 +110,9 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     void AnalyzeMax(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument xArgument, ICSharpArgument yArgument)
     {
         if (!invocationExpression.IsUsedAsStatement()
-            && TryGetConstant(xArgument.Value, out _) is { } x
-            && TryGetConstant(yArgument.Value, out _) is { } y
-            && AreEqual(x, y))
+            && numberInfo.TryGetConstant(xArgument.Value, out _) is { } x
+            && numberInfo.TryGetConstant(yArgument.Value, out _) is { } y
+            && numberInfo.AreEqual(x, y))
         {
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
@@ -137,9 +135,9 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     void AnalyzeMin(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument xArgument, ICSharpArgument yArgument)
     {
         if (!invocationExpression.IsUsedAsStatement()
-            && TryGetConstant(xArgument.Value, out _) is { } x
-            && TryGetConstant(yArgument.Value, out _) is { } y
-            && AreEqual(x, y))
+            && numberInfo.TryGetConstant(xArgument.Value, out _) is { } x
+            && numberInfo.TryGetConstant(yArgument.Value, out _) is { } y
+            && numberInfo.AreEqual(x, y))
         {
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
@@ -161,10 +159,10 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     /// </remarks>
     void AnalyzeParse_String_NumberStyles(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument styleArgument)
     {
-        var defaultNumberStyles = GetDefaultNumberStyles();
+        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
 
         if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature { Name = nameof(int.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
                 invocationExpression.PsiModule))
         {
@@ -183,7 +181,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument providerArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature { Name = nameof(int.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
                 invocationExpression.PsiModule))
         {
@@ -201,10 +199,10 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument styleArgument,
         ICSharpArgument providerArgument)
     {
-        var defaultNumberStyles = GetDefaultNumberStyles();
+        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
 
         if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature { Name = "Parse", ParameterTypes = ParameterTypes.String_IFormatProvider, IsStatic = true }, // todo: nameof(IParsable<T>.Parse) when available
                 invocationExpression.PsiModule))
         {
@@ -214,7 +212,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         }
 
         if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature { Name = nameof(int.Parse), ParameterTypes = ParameterTypes.String_NumberStyles, IsStatic = true },
                 invocationExpression.PsiModule))
         {
@@ -231,7 +229,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument providerArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
                     Name = "Parse", // todo: nameof(INumberBase<T>.Parse) when available
@@ -253,7 +251,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument providerArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
                     Name = "Parse", // todo: nameof(INumberBase<T>.Parse) when available
@@ -286,7 +284,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         var format = formatArgument.Value.TryGetStringConstant();
 
         if ((formatArgument.Value.IsDefaultValue() || format == "")
-            && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule))
+            && numberInfo.ClrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
         }
@@ -295,18 +293,22 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         {
             case ['G', .. var precisionSpecifier] when (precisionSpecifier == ""
                     || int.TryParse(precisionSpecifier, out var precision)
-                    && (precision == 0 || TryGetMaxValueStringLength() is { } maxValueStringLength && precision >= maxValueStringLength))
-                && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule):
+                    && (precision == 0 || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
+                && numberInfo.ClrTypeName.HasMethod(
+                    new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
+                    invocationExpression.PsiModule):
             {
                 consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
                 break;
             }
 
-            case ['g', .. var precisionSpecifier] when SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision()
+            case ['g', .. var precisionSpecifier] when numberInfo.SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision
                 && (precisionSpecifier == ""
                     || int.TryParse(precisionSpecifier, out var precision)
-                    && (precision == 0 || TryGetMaxValueStringLength() is { } maxValueStringLength && precision >= maxValueStringLength))
-                && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule):
+                    && (precision == 0 || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
+                && numberInfo.ClrTypeName.HasMethod(
+                    new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
+                    invocationExpression.PsiModule):
             {
                 consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
                 break;
@@ -314,7 +316,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
 
             case ['R' or 'r', .. var precisionSpecifier]:
             {
-                switch (GetRoundTripFormatSpecifier(precisionSpecifier, out var replacement))
+                switch (numberInfo.GetRoundTripFormatSpecifier(precisionSpecifier, out var replacement))
                 {
                     case RoundTripFormatSpecifierSupport.Unsupported:
                         consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", formatArgument));
@@ -354,7 +356,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                 break;
             }
 
-            case ['D' or 'd', .. var precisionSpecifier] when SupportsDecimalFormatSpecifier()
+            case ['D' or 'd', .. var precisionSpecifier] when numberInfo.SupportsDecimalFormatSpecifier
                 && precisionSpecifier != ""
                 && int.TryParse(precisionSpecifier, out var precision)
                 && precision is 0 or 1:
@@ -366,7 +368,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                 break;
             }
 
-            case ['B' or 'b' or 'X' or 'x', .. var precisionSpecifier] when SupportsBinaryOrHexFormatSpecifier()
+            case ['B' or 'b' or 'X' or 'x', .. var precisionSpecifier] when numberInfo.SupportsBinaryOrHexFormatSpecifier
                 && precisionSpecifier != ""
                 && int.TryParse(precisionSpecifier, out var precision)
                 && precision is 0 or 1:
@@ -386,7 +388,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     void AnalyzeToString_IFormatProvider(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument providerArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule))
+            && numberInfo.ClrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
         }
@@ -419,7 +421,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         var format = formatArgument.Value.TryGetStringConstant();
 
         if ((formatArgument.Value.IsDefaultValue() || format == "")
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
                 invocationExpression.PsiModule))
         {
@@ -431,8 +433,8 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
             case ['G', .. var precisionSpecifier]
                 when (precisionSpecifier == ""
                     || int.TryParse(precisionSpecifier, out var precision)
-                    && (precision == 0 || TryGetMaxValueStringLength() is { } maxValueStringLength && precision >= maxValueStringLength))
-                && clrTypeName.HasMethod(
+                    && (precision == 0 || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
+                && numberInfo.ClrTypeName.HasMethod(
                     new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
                     invocationExpression.PsiModule):
             {
@@ -440,11 +442,11 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                 break;
             }
 
-            case ['g', .. var precisionSpecifier] when SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision()
+            case ['g', .. var precisionSpecifier] when numberInfo.SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision
                 && (precisionSpecifier == ""
                     || int.TryParse(precisionSpecifier, out var precision)
-                    && (precision == 0 || TryGetMaxValueStringLength() is { } maxValueStringLength && precision >= maxValueStringLength))
-                && clrTypeName.HasMethod(
+                    && (precision == 0 || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
+                && numberInfo.ClrTypeName.HasMethod(
                     new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
                     invocationExpression.PsiModule):
             {
@@ -454,7 +456,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
 
             case ['R' or 'r', .. var precisionSpecifier]:
             {
-                switch (GetRoundTripFormatSpecifier(precisionSpecifier, out var replacement))
+                switch (numberInfo.GetRoundTripFormatSpecifier(precisionSpecifier, out var replacement))
                 {
                     case RoundTripFormatSpecifierSupport.Unsupported:
                         consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", formatArgument));
@@ -494,7 +496,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                 break;
             }
 
-            case ['D' or 'd', .. var precisionSpecifier] when SupportsDecimalFormatSpecifier()
+            case ['D' or 'd', .. var precisionSpecifier] when numberInfo.SupportsDecimalFormatSpecifier
                 && precisionSpecifier != ""
                 && int.TryParse(precisionSpecifier, out var precision)
                 && precision is 0 or 1:
@@ -506,7 +508,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                 break;
             }
 
-            case ['B' or 'b' or 'X' or 'x', .. var precisionSpecifier] when SupportsBinaryOrHexFormatSpecifier():
+            case ['B' or 'b' or 'X' or 'x', .. var precisionSpecifier] when numberInfo.SupportsBinaryOrHexFormatSpecifier:
             {
                 if (precisionSpecifier != "" && int.TryParse(precisionSpecifier, out var precision) && precision is 0 or 1)
                 {
@@ -517,7 +519,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                 }
 
                 if (!providerArgument.Value.IsDefaultValue()
-                    && clrTypeName.HasMethod(
+                    && numberInfo.ClrTypeName.HasMethod(
                         new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
                         invocationExpression.PsiModule))
                 {
@@ -533,7 +535,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
 
         if (providerArgument.Value.IsDefaultValue())
         {
-            if (clrTypeName.HasMethod(
+            if (numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
                 invocationExpression.PsiModule))
             {
@@ -550,14 +552,14 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         IInvocationExpression invocationExpression,
         ICSharpArgument styleArgument)
     {
-        var defaultNumberStyles = GetDefaultNumberStyles();
+        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
 
         if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(IParsable<T>.TryParse) when available
-                    ParameterTypes = [..ParameterTypes.String_IFormatProvider, new ParameterType { ClrTypeName = clrTypeName }],
+                    ParameterTypes = [..ParameterTypes.String_IFormatProvider, new ParameterType { ClrTypeName = numberInfo.ClrTypeName }],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -577,11 +579,11 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument providerArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
                     Name = nameof(int.TryParse),
-                    ParameterTypes = [..ParameterTypes.String, new ParameterType { ClrTypeName = clrTypeName }],
+                    ParameterTypes = [..ParameterTypes.String, new ParameterType { ClrTypeName = numberInfo.ClrTypeName }],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -598,14 +600,14 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         IInvocationExpression invocationExpression,
         ICSharpArgument styleArgument)
     {
-        var defaultNumberStyles = GetDefaultNumberStyles();
+        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
 
         if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(IParsable<T>.TryParse) when available
-                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT_IFormatProvider, new ParameterType { ClrTypeName = clrTypeName }],
+                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT_IFormatProvider, new ParameterType { ClrTypeName = numberInfo.ClrTypeName }],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -625,11 +627,11 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument providerArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(ISpanParsable<T>.TryParse) when available
-                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT, new ParameterType { ClrTypeName = clrTypeName }],
+                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT, new ParameterType { ClrTypeName = numberInfo.ClrTypeName }],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -646,14 +648,14 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         IInvocationExpression invocationExpression,
         ICSharpArgument styleArgument)
     {
-        var defaultNumberStyles = GetDefaultNumberStyles();
+        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
 
         if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(IUtf8SpanParsable<T>.TryParse) when available
-                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT_IFormatProvider, new ParameterType { ClrTypeName = clrTypeName }],
+                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT_IFormatProvider, new ParameterType { ClrTypeName = numberInfo.ClrTypeName }],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -673,11 +675,11 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument providerArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(
+            && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
                     Name = nameof(int.TryParse),
-                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT, new ParameterType { ClrTypeName = clrTypeName }],
+                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfT, new ParameterType { ClrTypeName = numberInfo.ClrTypeName }],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -688,58 +690,11 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
 
     [Pure]
     private protected string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue)
-        => invocationExpression.TryGetTargetType().IsClrType(clrTypeName) || argumentValue.Type().IsClrType(ClrTypeName)
+        => invocationExpression.TryGetTargetType().IsClrType(numberInfo.ClrTypeName) || argumentValue.Type().IsClrType(numberInfo.ClrTypeName)
             ? argumentValue.GetText()
-            : TryGetConstant(argumentValue, out var valueImplicitlyConverted) is { } && valueImplicitlyConverted
-                ? CastConstant(argumentValue, valueImplicitlyConverted)
-                : Cast(argumentValue);
-
-    [Pure]
-    private protected abstract TypeCode? TryGetTypeCode();
-
-    [Pure]
-    private protected abstract NumberStyles GetDefaultNumberStyles();
-
-    [Pure]
-    private protected abstract bool CanUseEqualityOperator();
-
-    [Pure]
-    private protected abstract N? TryGetConstant(ICSharpExpression? expression, out bool implicitlyConverted);
-
-    [Pure]
-    private protected abstract string CastConstant(ICSharpExpression constant, bool implicitlyConverted);
-
-    [Pure]
-    private protected abstract string Cast(ICSharpExpression expression);
-
-    [Pure]
-    private protected abstract bool AreEqual(N x, N y);
-
-    [Pure]
-    private protected abstract bool AreMinMaxValues(N min, N max);
-
-    [Pure]
-    private protected abstract int? TryGetMaxValueStringLength();
-
-    private protected enum RoundTripFormatSpecifierSupport
-    {
-        Unsupported,
-        ToBeReplaced,
-        RedundantPrecisionSpecifier,
-        Ignore,
-    }
-
-    [Pure]
-    private protected abstract RoundTripFormatSpecifierSupport GetRoundTripFormatSpecifier(string precisionSpecifier, out string? replacement);
-
-    [Pure]
-    private protected abstract bool SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision();
-
-    [Pure]
-    private protected abstract bool SupportsBinaryOrHexFormatSpecifier();
-
-    [Pure]
-    private protected abstract bool SupportsDecimalFormatSpecifier();
+            : numberInfo.TryGetConstant(argumentValue, out var valueImplicitlyConverted) is { } && valueImplicitlyConverted
+                ? numberInfo.CastConstant(argumentValue, valueImplicitlyConverted)
+                : numberInfo.Cast(argumentValue);
 
     private protected virtual void Analyze(
         IInvocationExpression element,
@@ -747,7 +702,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         IMethod method,
         IHighlightingConsumer consumer)
     {
-        if (method.ContainingType.IsClrType(clrTypeName))
+        if (method.ContainingType.IsClrType(numberInfo.ClrTypeName))
         {
             switch (invokedExpression, method)
             {
@@ -757,7 +712,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                         case nameof(Equals):
                             switch (method.Parameters, element.Arguments)
                             {
-                                case ([{ Type: var objType }], [var objArgument]) when objType.IsClrType(ClrTypeName):
+                                case ([{ Type: var objType }], [var objArgument]) when objType.IsClrType(numberInfo.ClrTypeName):
                                     AnalyzeEquals_N(consumer, element, invokedExpression, objArgument);
                                     break;
 
@@ -802,8 +757,11 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                             switch (method.Parameters, element.Arguments)
                             {
                                 case ([{ Type: var valueType }, { Type: var minType }, { Type: var maxType }], [
-                                    var valueArgument, var minArgument, var maxArgument,
-                                ]) when valueType.IsClrType(clrTypeName) && minType.IsClrType(clrTypeName) && maxType.IsClrType(clrTypeName):
+                                        var valueArgument, var minArgument, var maxArgument,
+                                    ]) when valueType.IsClrType(numberInfo.ClrTypeName)
+                                    && minType.IsClrType(numberInfo.ClrTypeName)
+                                    && maxType.IsClrType(numberInfo.ClrTypeName):
+
                                     AnalyzeClamp(consumer, element, valueArgument, minArgument, maxArgument);
                                     break;
                             }
@@ -813,7 +771,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                             switch (method.Parameters, element.Arguments)
                             {
                                 case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
-                                    when xType.IsClrType(clrTypeName) && yType.IsClrType(clrTypeName):
+                                    when xType.IsClrType(numberInfo.ClrTypeName) && yType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeMax(consumer, element, xArgument, yArgument);
                                     break;
@@ -824,7 +782,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                             switch (method.Parameters, element.Arguments)
                             {
                                 case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
-                                    when xType.IsClrType(clrTypeName) && yType.IsClrType(clrTypeName):
+                                    when xType.IsClrType(numberInfo.ClrTypeName) && yType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeMin(consumer, element, xArgument, yArgument);
                                     break;
@@ -878,13 +836,13 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                                     ]) when sType.IsString()
                                     && IsNumberStyles(styleType)
                                     && providerType.IsIFormatProvider()
-                                    && resultType.IsClrType(clrTypeName):
+                                    && resultType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeTryParse_String_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
-                                    when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsClrType(clrTypeName):
+                                    when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeTryParse_String_IFormatProvider_N(consumer, element, providerArgument);
                                     break;
@@ -895,7 +853,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                                     && spanTypeArgument.IsChar()
                                     && IsNumberStyles(styleType)
                                     && providerType.IsIFormatProvider()
-                                    && resultType.IsClrType(clrTypeName):
+                                    && resultType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeTryParse_ReadOnlySpanOfChar_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
                                     break;
@@ -904,7 +862,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                                     when sType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsChar()
                                     && providerType.IsIFormatProvider()
-                                    && resultType.IsClrType(clrTypeName):
+                                    && resultType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_N(consumer, element, providerArgument);
                                     break;
@@ -915,7 +873,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                                     && spanTypeArgument.IsByte()
                                     && IsNumberStyles(styleType)
                                     && providerType.IsIFormatProvider()
-                                    && resultType.IsClrType(clrTypeName):
+                                    && resultType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeTryParse_ReadOnlySpanOfByte_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
                                     break;
@@ -924,7 +882,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                                     when sType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsByte()
                                     && providerType.IsIFormatProvider()
-                                    && resultType.IsClrType(clrTypeName):
+                                    && resultType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeTryParse_ReadOnlySpanOfByte_IFormatProvider_N(consumer, element, providerArgument);
                                     break;
@@ -943,8 +901,11 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var valueType }, { Type: var minType }, { Type: var maxType }], [
-                            var valueArgument, var minArgument, var maxArgument,
-                        ]) when valueType.IsClrType(clrTypeName) && minType.IsClrType(clrTypeName) && maxType.IsClrType(clrTypeName):
+                                var valueArgument, var minArgument, var maxArgument,
+                            ]) when valueType.IsClrType(numberInfo.ClrTypeName)
+                            && minType.IsClrType(numberInfo.ClrTypeName)
+                            && maxType.IsClrType(numberInfo.ClrTypeName):
+
                             AnalyzeClamp(consumer, element, valueArgument, minArgument, maxArgument);
                             break;
                     }
@@ -954,7 +915,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var val1Type }, { Type: var val2Type }], [var val1Argument, var val2Argument])
-                            when val1Type.IsClrType(clrTypeName) && val2Type.IsClrType(clrTypeName):
+                            when val1Type.IsClrType(numberInfo.ClrTypeName) && val2Type.IsClrType(numberInfo.ClrTypeName):
 
                             AnalyzeMax(consumer, element, val1Argument, val2Argument);
                             break;
@@ -965,7 +926,7 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
                     switch (method.Parameters, element.Arguments)
                     {
                         case ([{ Type: var val1Type }, { Type: var val2Type }], [var val1Argument, var val2Argument])
-                            when val1Type.IsClrType(clrTypeName) && val2Type.IsClrType(clrTypeName):
+                            when val1Type.IsClrType(numberInfo.ClrTypeName) && val2Type.IsClrType(numberInfo.ClrTypeName):
 
                             AnalyzeMin(consumer, element, val1Argument, val2Argument);
                             break;
