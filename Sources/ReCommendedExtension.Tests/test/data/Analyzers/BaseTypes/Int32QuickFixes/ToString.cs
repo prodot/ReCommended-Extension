@@ -6,7 +6,7 @@ namespace Test
     {
         public void ToString(int number)
         {
-            var result = number.ToString(null as {caret}IFormatProvider);
+            var result = number.ToString("E{caret}6");
         }
     }
 }

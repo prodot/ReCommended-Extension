@@ -268,14 +268,115 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
 
     /// <remarks>
     /// <c>number.ToString(null)</c> → <c>number.ToString()</c><para/>
-    /// <c>number.ToString("")</c> → <c>number.ToString()</c>
+    /// <c>number.ToString("")</c> → <c>number.ToString()</c><para/>
+    /// <c>number.ToString("G...")</c> → <c>number.ToString()</c><para/>
+    /// <c>number.ToString("E6")</c> → <c>number.ToString("E")</c><para/>
+    /// <c>number.ToString("R...")</c> → <c>number.ToString("G17")</c> (for <see cref="double"/> values)<para/>
+    /// <c>number.ToString("R...")</c> → <c>number.ToString("G9")</c> (for <see cref="float"/> values)<para/>
+    /// <c>number.ToString("R...")</c> → ⚠️ (for integer values)<para/>
+    /// <c>number.ToString("B0")</c> → <c>number.ToString("B")</c> (for integer values)<para/>
+    /// <c>number.ToString("B1")</c> → <c>number.ToString("B")</c> (for integer values)<para/>
+    /// <c>number.ToString("X0")</c> → <c>number.ToString("X")</c> (for integer values)<para/>
+    /// <c>number.ToString("X1")</c> → <c>number.ToString("X")</c> (for integer values)<para/>
+    /// <c>number.ToString("D0")</c> → <c>number.ToString("D")</c> (for integer values)<para/>
+    /// <c>number.ToString("D1")</c> → <c>number.ToString("D")</c> (for integer values)<para/>
     /// </remarks>
     void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
     {
-        if ((formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() == "")
+        var format = formatArgument.Value.TryGetStringConstant();
+
+        if ((formatArgument.Value.IsDefaultValue() || format == "")
             && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
+        }
+
+        switch (format)
+        {
+            case ['G', .. var precisionSpecifier] when (precisionSpecifier == ""
+                    || int.TryParse(precisionSpecifier, out var precision)
+                    && (precision == 0 || TryGetMaxValueStringLength() is { } maxValueStringLength && precision >= maxValueStringLength))
+                && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule):
+            {
+                consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
+                break;
+            }
+
+            case ['g', .. var precisionSpecifier] when SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision()
+                && (precisionSpecifier == ""
+                    || int.TryParse(precisionSpecifier, out var precision)
+                    && (precision == 0 || TryGetMaxValueStringLength() is { } maxValueStringLength && precision >= maxValueStringLength))
+                && clrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule):
+            {
+                consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
+                break;
+            }
+
+            case ['R' or 'r', .. var precisionSpecifier]:
+            {
+                switch (GetRoundTripFormatSpecifier(precisionSpecifier, out var replacement))
+                {
+                    case RoundTripFormatSpecifierSupport.Unsupported:
+                        consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", formatArgument));
+                        break;
+
+                    case RoundTripFormatSpecifierSupport.ToBeReplaced:
+                        Debug.Assert(replacement is { });
+                        consumer.AddHighlighting(
+                            new PassOtherFormatSpecifierSuggestion(
+                                $"Pass the '{replacement}' format specifier (string length may vary).",
+                                formatArgument,
+                                replacement));
+                        break;
+
+                    case RoundTripFormatSpecifierSupport.RedundantPrecisionSpecifier:
+                        consumer.AddHighlighting(
+                            new RedundantFormatPrecisionSpecifierHint(
+                                $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                                formatArgument));
+                        break;
+
+                    case RoundTripFormatSpecifierSupport.Ignore:
+                        // do nothing
+                        break;
+                }
+                break;
+            }
+
+            case ['E' or 'e', .. var precisionSpecifier] when precisionSpecifier != ""
+                && int.TryParse(precisionSpecifier, out var precision)
+                && precision == 6:
+            {
+                consumer.AddHighlighting(
+                    new RedundantFormatPrecisionSpecifierHint(
+                        $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                        formatArgument));
+                break;
+            }
+
+            case ['D' or 'd', .. var precisionSpecifier] when SupportsDecimalFormatSpecifier()
+                && precisionSpecifier != ""
+                && int.TryParse(precisionSpecifier, out var precision)
+                && precision is 0 or 1:
+            {
+                consumer.AddHighlighting(
+                    new RedundantFormatPrecisionSpecifierHint(
+                        $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                        formatArgument));
+                break;
+            }
+
+            case ['B' or 'b' or 'X' or 'x', .. var precisionSpecifier] when SupportsBinaryOrHexFormatSpecifier()
+                && precisionSpecifier != ""
+                && int.TryParse(precisionSpecifier, out var precision)
+                && precision is 0 or 1:
+            {
+                consumer.AddHighlighting(
+                    new RedundantFormatPrecisionSpecifierHint(
+                        $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                        formatArgument));
+                break;
+            }
         }
     }
 
@@ -294,6 +395,19 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
     /// <remarks>
     /// <c>number.ToString(null, provider)</c> → <c>number.ToString(provider)</c><para/>
     /// <c>number.ToString("", provider)</c> → <c>number.ToString(provider)</c><para/>
+    /// <c>number.ToString("G...", provider)</c> → <c>number.ToString(provider)</c><para/>
+    /// <c>number.ToString("E6", provider)</c> → <c>number.ToString("E", provider)</c><para/>
+    /// <c>number.ToString("R...", provider)</c> → <c>number.ToString("G17")</c> (for <see cref="double"/> values)<para/>
+    /// <c>number.ToString("R...", provider)</c> → <c>number.ToString("G9")</c> (for <see cref="float"/> values)<para/>
+    /// <c>number.ToString("R...", provider)</c> → ⚠️ (for integer values)<para/>
+    /// <c>number.ToString("B0", provider)</c> → <c>number.ToString("B")</c> (for integer values)<para/>
+    /// <c>number.ToString("B1", provider)</c> → <c>number.ToString("B")</c> (for integer values)<para/>
+    /// <c>number.ToString("B...", provider)</c> → <c>number.ToString("B...")</c> (for integer values)<para/>
+    /// <c>number.ToString("X0", provider)</c> → <c>number.ToString("X")</c> (for integer values)<para/>
+    /// <c>number.ToString("X1", provider)</c> → <c>number.ToString("X")</c> (for integer values)<para/>
+    /// <c>number.ToString("X...", provider)</c> → <c>number.ToString("X...")</c> (for integer values)<para/>
+    /// <c>number.ToString("D0", provider)</c> → <c>number.ToString("D", provider)</c> (for integer values)<para/>
+    /// <c>number.ToString("D1", provider)</c> → <c>number.ToString("D", provider)</c> (for integer values)<para/>
     /// <c>number.ToString(format, null)</c> → <c>number.ToString(format)</c>
     /// </remarks>
     void AnalyzeToString_String_IFormatProvider(
@@ -302,7 +416,9 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
         ICSharpArgument formatArgument,
         ICSharpArgument providerArgument)
     {
-        if ((formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() == "")
+        var format = formatArgument.Value.TryGetStringConstant();
+
+        if ((formatArgument.Value.IsDefaultValue() || format == "")
             && clrTypeName.HasMethod(
                 new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
                 invocationExpression.PsiModule))
@@ -310,12 +426,119 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
         }
 
-        if (providerArgument.Value.IsDefaultValue()
-            && clrTypeName.HasMethod(
+        switch (format)
+        {
+            case ['G', .. var precisionSpecifier]
+                when (precisionSpecifier == ""
+                    || int.TryParse(precisionSpecifier, out var precision)
+                    && (precision == 0 || TryGetMaxValueStringLength() is { } maxValueStringLength && precision >= maxValueStringLength))
+                && clrTypeName.HasMethod(
+                    new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
+                    invocationExpression.PsiModule):
+            {
+                consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
+                break;
+            }
+
+            case ['g', .. var precisionSpecifier] when SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision()
+                && (precisionSpecifier == ""
+                    || int.TryParse(precisionSpecifier, out var precision)
+                    && (precision == 0 || TryGetMaxValueStringLength() is { } maxValueStringLength && precision >= maxValueStringLength))
+                && clrTypeName.HasMethod(
+                    new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
+                    invocationExpression.PsiModule):
+            {
+                consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
+                break;
+            }
+
+            case ['R' or 'r', .. var precisionSpecifier]:
+            {
+                switch (GetRoundTripFormatSpecifier(precisionSpecifier, out var replacement))
+                {
+                    case RoundTripFormatSpecifierSupport.Unsupported:
+                        consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", formatArgument));
+                        break;
+
+                    case RoundTripFormatSpecifierSupport.ToBeReplaced:
+                        Debug.Assert(replacement is { });
+                        consumer.AddHighlighting(
+                            new PassOtherFormatSpecifierSuggestion(
+                                $"Pass the '{replacement}' format specifier (string length may vary).",
+                                formatArgument,
+                                replacement));
+                        break;
+
+                    case RoundTripFormatSpecifierSupport.RedundantPrecisionSpecifier:
+                        consumer.AddHighlighting(
+                            new RedundantFormatPrecisionSpecifierHint(
+                                $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                                formatArgument));
+                        break;
+
+                    case RoundTripFormatSpecifierSupport.Ignore:
+                        // do nothing
+                        break;
+                }
+                break;
+            }
+
+            case ['E' or 'e', .. var precisionSpecifier] when precisionSpecifier != ""
+                && int.TryParse(precisionSpecifier, out var precision)
+                && precision == 6:
+            {
+                consumer.AddHighlighting(
+                    new RedundantFormatPrecisionSpecifierHint(
+                        $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                        formatArgument));
+                break;
+            }
+
+            case ['D' or 'd', .. var precisionSpecifier] when SupportsDecimalFormatSpecifier()
+                && precisionSpecifier != ""
+                && int.TryParse(precisionSpecifier, out var precision)
+                && precision is 0 or 1:
+            {
+                consumer.AddHighlighting(
+                    new RedundantFormatPrecisionSpecifierHint(
+                        $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                        formatArgument));
+                break;
+            }
+
+            case ['B' or 'b' or 'X' or 'x', .. var precisionSpecifier] when SupportsBinaryOrHexFormatSpecifier():
+            {
+                if (precisionSpecifier != "" && int.TryParse(precisionSpecifier, out var precision) && precision is 0 or 1)
+                {
+                    consumer.AddHighlighting(
+                        new RedundantFormatPrecisionSpecifierHint(
+                            $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                            formatArgument));
+                }
+
+                if (!providerArgument.Value.IsDefaultValue()
+                    && clrTypeName.HasMethod(
+                        new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
+                        invocationExpression.PsiModule))
+                {
+                    consumer.AddHighlighting(
+                        new RedundantArgumentHint(
+                            "Passing a provider with a binary or hexadecimal format specifier is redundant.",
+                            providerArgument));
+                }
+
+                break;
+            }
+        }
+
+        if (providerArgument.Value.IsDefaultValue())
+        {
+            if (clrTypeName.HasMethod(
                 new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
                 invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+            {
+                consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+            }
         }
     }
 
@@ -494,6 +717,29 @@ public abstract class NumberAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnalyz
 
     [Pure]
     private protected abstract bool AreMinMaxValues(N min, N max);
+
+    [Pure]
+    private protected abstract int? TryGetMaxValueStringLength();
+
+    private protected enum RoundTripFormatSpecifierSupport
+    {
+        Unsupported,
+        ToBeReplaced,
+        RedundantPrecisionSpecifier,
+        Ignore,
+    }
+
+    [Pure]
+    private protected abstract RoundTripFormatSpecifierSupport GetRoundTripFormatSpecifier(string precisionSpecifier, out string? replacement);
+
+    [Pure]
+    private protected abstract bool SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision();
+
+    [Pure]
+    private protected abstract bool SupportsBinaryOrHexFormatSpecifier();
+
+    [Pure]
+    private protected abstract bool SupportsDecimalFormatSpecifier();
 
     private protected virtual void Analyze(
         IInvocationExpression element,

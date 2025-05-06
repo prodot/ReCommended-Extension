@@ -95,6 +95,10 @@ public abstract class FractionalNumberAnalyzer<N>(IClrTypeName clrTypeName) : Nu
         }
     }
 
+    private protected sealed override bool SupportsBinaryOrHexFormatSpecifier() => false;
+
+    private protected sealed override bool SupportsDecimalFormatSpecifier() => false;
+
     private protected override void Analyze(
         IInvocationExpression element,
         IReferenceExpression invokedExpression,

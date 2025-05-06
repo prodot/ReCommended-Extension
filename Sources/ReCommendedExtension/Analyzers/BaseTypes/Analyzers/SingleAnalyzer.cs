@@ -10,7 +10,14 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint), typeof(UseFloatingPointPatternSuggestion)])]
+    HighlightingTypes =
+    [
+        typeof(UseExpressionResultSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(UseFloatingPointPatternSuggestion),
+        typeof(PassOtherFormatSpecifierSuggestion),
+        typeof(RedundantFormatPrecisionSpecifierHint),
+    ])]
 public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(PredefinedType.FLOAT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Single;
@@ -80,4 +87,10 @@ public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(Predef
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotSupportedException();
 
     private protected override string Cast(ICSharpExpression expression) => expression.Cast("float").GetText();
+
+    private protected override RoundTripFormatSpecifierSupport GetRoundTripFormatSpecifier(string precisionSpecifier, out string? replacement)
+    {
+        replacement = "G9";
+        return RoundTripFormatSpecifierSupport.ToBeReplaced;
+    }
 }

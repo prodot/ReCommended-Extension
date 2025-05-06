@@ -11,7 +11,14 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(RedundantArgumentHint)])]
+    HighlightingTypes =
+    [
+        typeof(UseExpressionResultSuggestion),
+        typeof(UseBinaryOperatorSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(SuspiciousFormatSpecifierWarning),
+        typeof(RedundantFormatPrecisionSpecifierHint),
+    ])]
 public sealed class UInt64Analyzer() : UnsignedIntegerAnalyzer<ulong>(PredefinedType.ULONG_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.UInt64;
@@ -97,4 +104,8 @@ public sealed class UInt64Analyzer() : UnsignedIntegerAnalyzer<ulong>(Predefined
     private protected override bool IsZero(ulong value) => value == 0;
 
     private protected override bool AreMinMaxValues(ulong min, ulong max) => (min, max) == (ulong.MinValue, ulong.MaxValue);
+
+    static readonly int MaxValueStringLength = ulong.MaxValue.ToString().Length;
+
+    private protected override int? TryGetMaxValueStringLength() => MaxValueStringLength;
 }

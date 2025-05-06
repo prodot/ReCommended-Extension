@@ -18,7 +18,12 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Single";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint or UseFloatingPointPatternSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion
+                or RedundantArgumentHint
+                or UseFloatingPointPatternSuggestion
+                or PassOtherFormatSpecifierSuggestion
+                or RedundantFormatPrecisionSpecifierHint
+            || highlighting.IsError();
 
     static void Test<R>(Func<float, R> expected, Func<float, R> actual)
     {
@@ -148,15 +153,25 @@ public sealed class SingleAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
     public void TestToString()
     {
         Test(n => n.ToString(null as string), n => n.ToString());
         Test(n => n.ToString(""), n => n.ToString());
+        Test(n => n.ToString("G"), n => n.ToString());
+        Test(n => n.ToString("G0"), n => n.ToString());
+        Test(n => n.ToString("E6"), n => n.ToString("E"));
+        Test(n => n.ToString("e6"), n => n.ToString("e"));
+
         Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
         Test(n => n.ToString(null, NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("F", null), n => n.ToString("F"));
+        Test(n => n.ToString("G", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("G0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("E6", NumberFormatInfo.InvariantInfo), n => n.ToString("E", NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("e6", NumberFormatInfo.InvariantInfo), n => n.ToString("e", NumberFormatInfo.InvariantInfo));
 
         DoNamedTest2();
     }

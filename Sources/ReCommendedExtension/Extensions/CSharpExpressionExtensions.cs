@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Psi.CSharp.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Util.Literals;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using IObjectCreationExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IObjectCreationExpression;
@@ -51,7 +52,8 @@ internal static class CSharpExpressionExtensions
     public static string? TryGetStringConstant(this ICSharpExpression? expression)
         => expression switch
         {
-            IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } => value,
+            IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } when
+                expression is not ICSharpLiteralExpression literalExpression || !literalExpression.IsUtf8StringLiteral() => value,
 
             IReferenceExpression { Reference: var reference } when reference.Resolve().DeclaredElement is IField
                 {

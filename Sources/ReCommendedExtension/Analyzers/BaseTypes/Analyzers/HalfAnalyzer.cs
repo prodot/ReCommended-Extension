@@ -9,7 +9,9 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
+[ElementProblemAnalyzer(
+    typeof(IInvocationExpression),
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint), typeof(RedundantFormatPrecisionSpecifierHint)])]
 public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Half>(ClrTypeNames.Half)
 {
     /// <remarks>
@@ -207,4 +209,11 @@ public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfAnalyzer.Ha
     private protected override string CastConstant(ICSharpExpression constant, bool implicitlyConverted) => throw new NotSupportedException();
 
     private protected override string Cast(ICSharpExpression expression) => expression.Cast("Half").GetText();
+
+    private protected override RoundTripFormatSpecifierSupport GetRoundTripFormatSpecifier(string precisionSpecifier, out string? replacement)
+    {
+        replacement = null;
+
+        return precisionSpecifier != "" ? RoundTripFormatSpecifierSupport.RedundantPrecisionSpecifier : RoundTripFormatSpecifierSupport.Ignore;
+    }
 }

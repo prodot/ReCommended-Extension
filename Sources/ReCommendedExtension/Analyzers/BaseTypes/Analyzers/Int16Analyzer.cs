@@ -11,7 +11,14 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(RedundantArgumentHint)])]
+    HighlightingTypes =
+    [
+        typeof(UseExpressionResultSuggestion),
+        typeof(UseBinaryOperatorSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(SuspiciousFormatSpecifierWarning),
+        typeof(RedundantFormatPrecisionSpecifierHint),
+    ])]
 public sealed class Int16Analyzer() : SignedIntegerAnalyzer<short>(PredefinedType.SHORT_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Int16;
@@ -63,4 +70,8 @@ public sealed class Int16Analyzer() : SignedIntegerAnalyzer<short>(PredefinedTyp
     private protected override bool IsZero(short value) => value == 0;
 
     private protected override bool AreMinMaxValues(short min, short max) => (min, max) == (short.MinValue, short.MaxValue);
+
+    static readonly int MaxValueStringLength = short.MaxValue.ToString().Length;
+
+    private protected override int? TryGetMaxValueStringLength() => MaxValueStringLength;
 }

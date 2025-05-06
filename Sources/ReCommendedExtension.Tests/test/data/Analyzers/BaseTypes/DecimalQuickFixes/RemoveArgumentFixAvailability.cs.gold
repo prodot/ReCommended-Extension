@@ -33,27 +33,42 @@ namespace Test
             var result25 = Math.Round(d, |0|(18), |MidpointRounding.ToEven|(19));
         }
 
-        public void ToString(byte number, string format, IFormatProvider provider)
+        public void ToString(decimal number, string format, IFormatProvider provider)
         {
-            var result1 = number.ToString(|null as string|(20));
-            var result2 = number.ToString(|""|(21));
-            var result3 = number.ToString(|null as IFormatProvider|(22));
-            var result4 = number.ToString(|null|(23), provider);
-            var result5 = number.ToString(|""|(24), provider);
-            var result6 = number.ToString(format, |null|(25));
-            var result7 = number.ToString(|""|(26), |null|(27));
+            var result11 = number.ToString(|null as string|(20));
+            var result12 = number.ToString(|""|(21));
+
+            var result21 = number.ToString(|"G"|(22));
+            var result22 = number.ToString(|"G0"|(23));
+            var result23 = number.ToString(|"G29"|(24));
+            var result24 = number.ToString(|"g"|(25));
+            var result25 = number.ToString(|"g0"|(26));
+            var result26 = number.ToString(|"g29"|(27));
+
+            var result31 = number.ToString(|null as IFormatProvider|(28));
+            var result32 = number.ToString(|null|(29), provider);
+            var result33 = number.ToString(|""|(30), provider);
+            var result34 = number.ToString(format, |null|(31));
+            var result35 = number.ToString(|""|(32), |null|(33));
+
+            var result41 = number.ToString(|"G"|(34), provider);
+            var result42 = number.ToString(|"G0"|(35), provider);
+            var result43 = number.ToString(|"G29"|(36), provider);
+            var result44 = number.ToString(|"g"|(37), provider);
+            var result45 = number.ToString(|"g0"|(38), provider);
+            var result46 = number.ToString(|"g29"|(39), provider);
         }
 
         public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
         {
-            var result11 = decimal.TryParse(s, |NumberStyles.Number|(28), provider, out _);
-            var result12 = decimal.TryParse(s, |null|(29), out _);
+            var result11 = decimal.TryParse(s, |NumberStyles.Number|(40), provider, out _);
+            var result12 = decimal.TryParse(s, |null|(41), out _);
 
-            var result21 = decimal.TryParse(s1, |NumberStyles.Number|(30), provider, out _);
-            var result22 = decimal.TryParse(s1, |null|(31), out _);
+            var result21 = decimal.TryParse(s1, |NumberStyles.Number|(42), provider, out _);
+            var result22 = decimal.TryParse(s1, |null|(43), out _);
 
-            var result31 = decimal.TryParse(utf8Text, |NumberStyles.Number|(32), provider, out _);
-            var result32 = decimal.TryParse(utf8Text, |null|(33), out _);
+            var result31 = decimal.TryParse(utf8Text, |NumberStyles.Number|(44), provider, out _);
+            var result32 = decimal.TryParse(utf8Text, |null|(45), out _);
         }
     }
 }
@@ -124,39 +139,75 @@ Remove argument
 21: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-22: Passing null is redundant.
+22: Passing "G" is redundant.
 QUICKFIXES:
 Remove argument
-23: Passing null or an empty string is redundant.
+23: Passing "G0" is redundant.
 QUICKFIXES:
 Remove argument
-24: Passing null or an empty string is redundant.
+24: Passing "G29" is redundant.
 QUICKFIXES:
 Remove argument
-25: Passing null is redundant.
+25: Passing "g" is redundant.
 QUICKFIXES:
 Remove argument
-26: Passing null or an empty string is redundant.
+26: Passing "g0" is redundant.
 QUICKFIXES:
 Remove argument
-27: Passing null is redundant.
+27: Passing "g29" is redundant.
 QUICKFIXES:
 Remove argument
-28: Passing NumberStyles.Number is redundant.
+28: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-29: Passing null is redundant.
+29: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-30: Passing NumberStyles.Number is redundant.
+30: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
 31: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-32: Passing NumberStyles.Number is redundant.
+32: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
 33: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+34: Passing "G" is redundant.
+QUICKFIXES:
+Remove argument
+35: Passing "G0" is redundant.
+QUICKFIXES:
+Remove argument
+36: Passing "G29" is redundant.
+QUICKFIXES:
+Remove argument
+37: Passing "g" is redundant.
+QUICKFIXES:
+Remove argument
+38: Passing "g0" is redundant.
+QUICKFIXES:
+Remove argument
+39: Passing "g29" is redundant.
+QUICKFIXES:
+Remove argument
+40: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+41: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+42: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+43: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+44: Passing NumberStyles.Number is redundant.
+QUICKFIXES:
+Remove argument
+45: Passing null is redundant.
 QUICKFIXES:
 Remove argument

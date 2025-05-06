@@ -79,6 +79,18 @@ public abstract class IntegerAnalyzer<N>(IClrTypeName clrTypeName) : NumberAnaly
 
     private protected sealed override bool CanUseEqualityOperator() => true;
 
+    private protected sealed override RoundTripFormatSpecifierSupport GetRoundTripFormatSpecifier(string precisionSpecifier, out string? replacement)
+    {
+        replacement = null;
+        return RoundTripFormatSpecifierSupport.Unsupported;
+    }
+
+    private protected sealed override bool SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision() => true;
+
+    private protected sealed override bool SupportsBinaryOrHexFormatSpecifier() => true;
+
+    private protected sealed override bool SupportsDecimalFormatSpecifier() => true;
+
     [Pure]
     private protected abstract string CastZero(CSharpLanguageLevel languageLevel);
 

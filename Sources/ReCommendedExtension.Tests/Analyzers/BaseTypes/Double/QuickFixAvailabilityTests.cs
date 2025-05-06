@@ -15,7 +15,12 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DoubleQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint or UseFloatingPointPatternSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion
+                or RedundantArgumentHint
+                or UseFloatingPointPatternSuggestion
+                or PassOtherFormatSpecifierSuggestion
+                or RedundantFormatPrecisionSpecifierHint
+            || highlighting.IsError();
 
     [Test]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
@@ -27,4 +32,11 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     public void TestUseFloatingPointPatternFixAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestRemoveFormatPrecisionSpecifierAvailability() => DoNamedTest2();
+
+    [Test]
+    public void TestPassOtherFormatSpecifierAvailability() => DoNamedTest2();
 }

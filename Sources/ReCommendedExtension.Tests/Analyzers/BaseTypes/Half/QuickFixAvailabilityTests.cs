@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
@@ -15,7 +16,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\HalfQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint or RedundantFormatPrecisionSpecifierHint || highlighting.IsError();
 
     [Test]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
@@ -23,4 +24,8 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [Test]
     [TestNet80]
     public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    public void TestRemoveFormatPrecisionSpecifierAvailability() => DoNamedTest2();
 }

@@ -11,7 +11,14 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(RedundantArgumentHint)])]
+    HighlightingTypes =
+    [
+        typeof(UseExpressionResultSuggestion),
+        typeof(UseBinaryOperatorSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(SuspiciousFormatSpecifierWarning),
+        typeof(RedundantFormatPrecisionSpecifierHint),
+    ])]
 public sealed class UIntPtrAnalyzer() : UnsignedIntegerAnalyzer<nuint>(PredefinedType.UINTPTR_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => null;
@@ -75,4 +82,6 @@ public sealed class UIntPtrAnalyzer() : UnsignedIntegerAnalyzer<nuint>(Predefine
     private protected override bool IsZero(nuint value) => value == 0;
 
     private protected override bool AreMinMaxValues(nuint min, nuint max) => false; // nuint.MinValue and nuint.MaxValue are platform-dependent
+
+    private protected override int? TryGetMaxValueStringLength() => null;
 }

@@ -33,27 +33,34 @@ namespace Test
             var result25 = Math.Round(x, |0|(18), |MidpointRounding.ToEven|(19));
         }
 
-        public void ToString(byte number, string format, IFormatProvider provider)
+        public void ToString(double number, string format, IFormatProvider provider)
         {
-            var result1 = number.ToString(|null as string|(20));
-            var result2 = number.ToString(|""|(21));
-            var result3 = number.ToString(|null as IFormatProvider|(22));
-            var result4 = number.ToString(|null|(23), provider);
-            var result5 = number.ToString(|""|(24), provider);
-            var result6 = number.ToString(format, |null|(25));
-            var result7 = number.ToString(|""|(26), |null|(27));
+            var result11 = number.ToString(|null as string|(20));
+            var result12 = number.ToString(|""|(21));
+
+            var result21 = number.ToString(|"G"|(22));
+            var result22 = number.ToString(|"G0"|(23));
+
+            var result31 = number.ToString(|null as IFormatProvider|(24));
+            var result32 = number.ToString(|null|(25), provider);
+            var result33 = number.ToString(|""|(26), provider);
+            var result34 = number.ToString(format, |null|(27));
+            var result35 = number.ToString(|""|(28), |null|(29));
+
+            var result41 = number.ToString(|"G"|(30), provider);
+            var result42 = number.ToString(|"G0"|(31), provider);
         }
 
         public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
         {
-            var result11 = double.TryParse(s, |NumberStyles.Float | NumberStyles.AllowThousands|(28), provider, out _);
-            var result12 = double.TryParse(s, |null|(29), out _);
+            var result11 = double.TryParse(s, |NumberStyles.Float | NumberStyles.AllowThousands|(32), provider, out _);
+            var result12 = double.TryParse(s, |null|(33), out _);
 
-            var result21 = double.TryParse(s1, |NumberStyles.Float | NumberStyles.AllowThousands|(30), provider, out _);
-            var result22 = double.TryParse(s1, |null|(31), out _);
+            var result21 = double.TryParse(s1, |NumberStyles.Float | NumberStyles.AllowThousands|(34), provider, out _);
+            var result22 = double.TryParse(s1, |null|(35), out _);
 
-            var result31 = double.TryParse(utf8Text, |NumberStyles.Float | NumberStyles.AllowThousands|(32), provider, out _);
-            var result32 = double.TryParse(utf8Text, |null|(33), out _);
+            var result31 = double.TryParse(utf8Text, |NumberStyles.Float | NumberStyles.AllowThousands|(36), provider, out _);
+            var result32 = double.TryParse(utf8Text, |null|(37), out _);
         }
     }
 }
@@ -124,16 +131,16 @@ Remove argument
 21: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
-22: Passing null is redundant.
+22: Passing "G" is redundant.
 QUICKFIXES:
 Remove argument
-23: Passing null or an empty string is redundant.
+23: Passing "G0" is redundant.
 QUICKFIXES:
 Remove argument
-24: Passing null or an empty string is redundant.
+24: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-25: Passing null is redundant.
+25: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
 26: Passing null or an empty string is redundant.
@@ -142,21 +149,33 @@ Remove argument
 27: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-28: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+28: Passing null or an empty string is redundant.
 QUICKFIXES:
 Remove argument
 29: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-30: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+30: Passing "G" is redundant.
 QUICKFIXES:
 Remove argument
-31: Passing null is redundant.
+31: Passing "G0" is redundant.
 QUICKFIXES:
 Remove argument
 32: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
 QUICKFIXES:
 Remove argument
 33: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+34: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+QUICKFIXES:
+Remove argument
+35: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+36: Passing NumberStyles.AllowThousands | NumberStyles.Float is redundant.
+QUICKFIXES:
+Remove argument
+37: Passing null is redundant.
 QUICKFIXES:
 Remove argument

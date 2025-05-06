@@ -11,7 +11,14 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(RedundantArgumentHint)])]
+    HighlightingTypes =
+    [
+        typeof(UseExpressionResultSuggestion),
+        typeof(UseBinaryOperatorSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(SuspiciousFormatSpecifierWarning),
+        typeof(RedundantFormatPrecisionSpecifierHint),
+    ])]
 public sealed class ByteAnalyzer() : UnsignedIntegerAnalyzer<byte>(PredefinedType.BYTE_FQN)
 {
     private protected override TypeCode? TryGetTypeCode() => TypeCode.Byte;
@@ -55,4 +62,8 @@ public sealed class ByteAnalyzer() : UnsignedIntegerAnalyzer<byte>(PredefinedTyp
     private protected override bool IsZero(byte value) => value == 0;
 
     private protected override bool AreMinMaxValues(byte min, byte max) => (min, max) == (byte.MinValue, byte.MaxValue);
+
+    static readonly int MaxValueStringLength = byte.MaxValue.ToString().Length;
+
+    private protected override int? TryGetMaxValueStringLength() => MaxValueStringLength;
 }

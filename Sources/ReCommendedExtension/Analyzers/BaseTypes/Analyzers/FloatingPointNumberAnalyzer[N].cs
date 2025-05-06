@@ -32,6 +32,10 @@ public abstract class FloatingPointNumberAnalyzer<N>(IClrTypeName clrTypeName) :
 
     private protected sealed override NumberStyles GetDefaultNumberStyles() => NumberStyles.Float | NumberStyles.AllowThousands;
 
+    private protected sealed override int? TryGetMaxValueStringLength() => null;
+
+    private protected sealed override bool SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision() => false;
+
     [Pure]
     private protected abstract string? TryGetNanConstant();
 

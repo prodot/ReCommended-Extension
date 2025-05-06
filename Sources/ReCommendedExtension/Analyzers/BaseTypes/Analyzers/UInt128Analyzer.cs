@@ -13,7 +13,14 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(RedundantArgumentHint)])]
+    HighlightingTypes =
+    [
+        typeof(UseExpressionResultSuggestion),
+        typeof(UseBinaryOperatorSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(SuspiciousFormatSpecifierWarning),
+        typeof(RedundantFormatPrecisionSpecifierHint),
+    ])]
 public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128Analyzer.UInt128>(ClrTypeNames.UInt128)
 {
     /// <remarks>
@@ -269,4 +276,8 @@ public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128Analyzer.
     private protected override bool IsZero(UInt128 value) => value == 0;
 
     private protected override bool AreMinMaxValues(UInt128 min, UInt128 max) => (min, max) == (UInt128.MinValue, UInt128.MaxValue);
+
+    static readonly int MaxValueStringLength = UInt128.MaxValue.ToString().Length;
+
+    private protected override int? TryGetMaxValueStringLength() => MaxValueStringLength;
 }

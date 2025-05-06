@@ -4,6 +4,7 @@ using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
@@ -17,7 +18,12 @@ public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt64";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion
+                or UseBinaryOperatorSuggestion
+                or RedundantArgumentHint
+                or SuspiciousFormatSpecifierWarning
+                or RedundantFormatPrecisionSpecifierHint
+            || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -144,14 +150,51 @@ public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [TestNet80]
     public void TestToString()
     {
         Test(n => n.ToString(null as string), n => n.ToString());
         Test(n => n.ToString(""), n => n.ToString());
+        Test(n => n.ToString("G"), n => n.ToString());
+        Test(n => n.ToString("G0"), n => n.ToString());
+        Test(n => n.ToString("G20"), n => n.ToString());
+        Test(n => n.ToString("g"), n => n.ToString());
+        Test(n => n.ToString("g0"), n => n.ToString());
+        Test(n => n.ToString("g20"), n => n.ToString());
+        Test(n => n.ToString("E6"), n => n.ToString("E"));
+        Test(n => n.ToString("e6"), n => n.ToString("e"));
+        Test(n => n.ToString("D0"), n => n.ToString("D"));
+        Test(n => n.ToString("D1"), n => n.ToString("D"));
+        Test(n => n.ToString("d0"), n => n.ToString("d"));
+        Test(n => n.ToString("d1"), n => n.ToString("d"));
+        Test(n => n.ToString("X0"), n => n.ToString("X"));
+        Test(n => n.ToString("X1"), n => n.ToString("X"));
+        Test(n => n.ToString("x0"), n => n.ToString("x"));
+        Test(n => n.ToString("x1"), n => n.ToString("x"));
+
         Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
         Test(n => n.ToString(null, NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("D", null), n => n.ToString("D"));
+        Test(n => n.ToString("G", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("G0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("G20", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("g", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("g0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("g20", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("E6", NumberFormatInfo.InvariantInfo), n => n.ToString("E", NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("e6", NumberFormatInfo.InvariantInfo), n => n.ToString("e", NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("D0", NumberFormatInfo.InvariantInfo), n => n.ToString("D", NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("D1", NumberFormatInfo.InvariantInfo), n => n.ToString("D", NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("d0", NumberFormatInfo.InvariantInfo), n => n.ToString("d", NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("d1", NumberFormatInfo.InvariantInfo), n => n.ToString("d", NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("X0", NumberFormatInfo.InvariantInfo), n => n.ToString("X"));
+        Test(n => n.ToString("X1", NumberFormatInfo.InvariantInfo), n => n.ToString("X"));
+        Test(n => n.ToString("X2", NumberFormatInfo.InvariantInfo), n => n.ToString("X2"));
+        Test(n => n.ToString("x0", NumberFormatInfo.InvariantInfo), n => n.ToString("x"));
+        Test(n => n.ToString("x1", NumberFormatInfo.InvariantInfo), n => n.ToString("x"));
+        Test(n => n.ToString("x2", NumberFormatInfo.InvariantInfo), n => n.ToString("x2"));
 
         DoNamedTest2();
     }

@@ -6,7 +6,7 @@ namespace Test
     {
         public void ToString(sbyte number)
         {
-            var result = number.ToString({caret});
+            var result = number.ToString("E{caret}");
         }
     }
 }

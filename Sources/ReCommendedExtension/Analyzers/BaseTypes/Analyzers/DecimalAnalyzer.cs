@@ -17,6 +17,8 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(UseBinaryOperatorSuggestion),
         typeof(RedundantArgumentHint),
         typeof(UseUnaryOperatorSuggestion),
+        typeof(SuspiciousFormatSpecifierWarning),
+        typeof(RedundantFormatPrecisionSpecifierHint),
     ])]
 public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(PredefinedType.DECIMAL_FQN)
 {
@@ -251,7 +253,23 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Predef
 
     private protected override bool AreMinMaxValues(decimal min, decimal max) => (min, max) == (decimal.MinValue, decimal.MaxValue);
 
-    private protected override void Analyze(IInvocationExpression element, IReferenceExpression invokedExpression, IMethod method, IHighlightingConsumer consumer)
+    static readonly int MaxValueStringLength = decimal.MaxValue.ToString(NumberFormatInfo.InvariantInfo).Length;
+
+    private protected override int? TryGetMaxValueStringLength() => MaxValueStringLength;
+
+    private protected override RoundTripFormatSpecifierSupport GetRoundTripFormatSpecifier(string precisionSpecifier, out string? replacement)
+    {
+        replacement = null;
+        return RoundTripFormatSpecifierSupport.Unsupported;
+    }
+
+    private protected override bool SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision() => true;
+
+    private protected override void Analyze(
+        IInvocationExpression element,
+        IReferenceExpression invokedExpression,
+        IMethod method,
+        IHighlightingConsumer consumer)
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
