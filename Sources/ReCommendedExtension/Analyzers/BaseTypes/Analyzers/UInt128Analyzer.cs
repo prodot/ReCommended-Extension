@@ -17,4 +17,4 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(SuspiciousFormatSpecifierWarning),
         typeof(RedundantFormatPrecisionSpecifierHint),
     ])]
-public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128Info.UInt128>(NumberInfo.UInt128);
+public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128>(NumberInfos.NumberInfo.UInt128);

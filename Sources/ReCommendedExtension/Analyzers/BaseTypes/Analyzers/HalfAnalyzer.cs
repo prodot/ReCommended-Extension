@@ -10,4 +10,4 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint), typeof(RedundantFormatPrecisionSpecifierHint)])]
-public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<HalfInfo.Half>(NumberInfo.Half);
+public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<Half>(NumberInfos.NumberInfo.Half);

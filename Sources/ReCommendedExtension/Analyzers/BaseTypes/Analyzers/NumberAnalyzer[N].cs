@@ -159,14 +159,12 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
     /// </remarks>
     void AnalyzeParse_String_NumberStyles(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument styleArgument)
     {
-        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
-
-        if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
+        if (styleArgument.Value.TryGetNumberStylesConstant() == numberInfo.DefaultNumberStyles
             && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature { Name = nameof(int.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{defaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -199,14 +197,12 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
         ICSharpArgument styleArgument,
         ICSharpArgument providerArgument)
     {
-        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
-
-        if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
+        if (styleArgument.Value.TryGetNumberStylesConstant() == numberInfo.DefaultNumberStyles
             && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature { Name = "Parse", ParameterTypes = ParameterTypes.String_IFormatProvider, IsStatic = true }, // todo: nameof(IParsable<T>.Parse) when available
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{defaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -302,7 +298,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 break;
             }
 
-            case ['g', .. var precisionSpecifier] when numberInfo.SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision
+            case ['g', .. var precisionSpecifier] when (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision) != 0
                 && (precisionSpecifier == ""
                     || int.TryParse(precisionSpecifier, out var precision)
                     && (precision == 0 || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
@@ -316,32 +312,34 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
 
             case ['R' or 'r', .. var precisionSpecifier]:
             {
-                switch (numberInfo.GetRoundTripFormatSpecifier(precisionSpecifier, out var replacement))
+                Debug.Assert(
+                    (numberInfo.FormatSpecifiers & (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant))
+                    != (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant));
+
+                if ((numberInfo.FormatSpecifiers & FormatSpecifiers.RoundtripToBeReplaced) != 0)
                 {
-                    case RoundTripFormatSpecifierSupport.Unsupported:
-                        consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", formatArgument));
-                        break;
+                    Debug.Assert(numberInfo.RoundTripFormatSpecifierReplacement is { });
 
-                    case RoundTripFormatSpecifierSupport.ToBeReplaced:
-                        Debug.Assert(replacement is { });
-                        consumer.AddHighlighting(
-                            new PassOtherFormatSpecifierSuggestion(
-                                $"Pass the '{replacement}' format specifier (string length may vary).",
-                                formatArgument,
-                                replacement));
-                        break;
-
-                    case RoundTripFormatSpecifierSupport.RedundantPrecisionSpecifier:
-                        consumer.AddHighlighting(
-                            new RedundantFormatPrecisionSpecifierHint(
-                                $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
-                                formatArgument));
-                        break;
-
-                    case RoundTripFormatSpecifierSupport.Ignore:
-                        // do nothing
-                        break;
+                    consumer.AddHighlighting(
+                        new PassOtherFormatSpecifierSuggestion(
+                            $"Pass the '{numberInfo.RoundTripFormatSpecifierReplacement}' format specifier (string length may vary).",
+                            formatArgument,
+                            numberInfo.RoundTripFormatSpecifierReplacement));
                 }
+
+                if ((numberInfo.FormatSpecifiers & FormatSpecifiers.RoundtripPrecisionRedundant) != 0 && precisionSpecifier != "")
+                {
+                    consumer.AddHighlighting(
+                        new RedundantFormatPrecisionSpecifierHint(
+                            $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                            formatArgument));
+                }
+
+                if ((numberInfo.FormatSpecifiers & (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant)) == 0)
+                {
+                    consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", formatArgument));
+                }
+
                 break;
             }
 
@@ -356,7 +354,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 break;
             }
 
-            case ['D' or 'd', .. var precisionSpecifier] when numberInfo.SupportsDecimalFormatSpecifier
+            case ['D' or 'd', .. var precisionSpecifier] when (numberInfo.FormatSpecifiers & FormatSpecifiers.Decimal) != 0
                 && precisionSpecifier != ""
                 && int.TryParse(precisionSpecifier, out var precision)
                 && precision is 0 or 1:
@@ -368,7 +366,19 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 break;
             }
 
-            case ['B' or 'b' or 'X' or 'x', .. var precisionSpecifier] when numberInfo.SupportsBinaryOrHexFormatSpecifier
+            case ['B' or 'b', .. var precisionSpecifier] when (numberInfo.FormatSpecifiers & FormatSpecifiers.Binary) != 0
+                && precisionSpecifier != ""
+                && int.TryParse(precisionSpecifier, out var precision)
+                && precision is 0 or 1:
+            {
+                consumer.AddHighlighting(
+                    new RedundantFormatPrecisionSpecifierHint(
+                        $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                        formatArgument));
+                break;
+            }
+
+            case ['X' or 'x', .. var precisionSpecifier] when (numberInfo.FormatSpecifiers & FormatSpecifiers.Hexadecimal) != 0
                 && precisionSpecifier != ""
                 && int.TryParse(precisionSpecifier, out var precision)
                 && precision is 0 or 1:
@@ -442,7 +452,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 break;
             }
 
-            case ['g', .. var precisionSpecifier] when numberInfo.SupportsCaseInsensitiveGeneralFormatSpecifierWithoutPrecision
+            case ['g', .. var precisionSpecifier] when (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision) != 0
                 && (precisionSpecifier == ""
                     || int.TryParse(precisionSpecifier, out var precision)
                     && (precision == 0 || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
@@ -456,32 +466,34 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
 
             case ['R' or 'r', .. var precisionSpecifier]:
             {
-                switch (numberInfo.GetRoundTripFormatSpecifier(precisionSpecifier, out var replacement))
+                Debug.Assert(
+                    (numberInfo.FormatSpecifiers & (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant))
+                    != (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant));
+
+                if ((numberInfo.FormatSpecifiers & FormatSpecifiers.RoundtripToBeReplaced) != 0)
                 {
-                    case RoundTripFormatSpecifierSupport.Unsupported:
-                        consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", formatArgument));
-                        break;
+                    Debug.Assert(numberInfo.RoundTripFormatSpecifierReplacement is { });
 
-                    case RoundTripFormatSpecifierSupport.ToBeReplaced:
-                        Debug.Assert(replacement is { });
-                        consumer.AddHighlighting(
-                            new PassOtherFormatSpecifierSuggestion(
-                                $"Pass the '{replacement}' format specifier (string length may vary).",
-                                formatArgument,
-                                replacement));
-                        break;
-
-                    case RoundTripFormatSpecifierSupport.RedundantPrecisionSpecifier:
-                        consumer.AddHighlighting(
-                            new RedundantFormatPrecisionSpecifierHint(
-                                $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
-                                formatArgument));
-                        break;
-
-                    case RoundTripFormatSpecifierSupport.Ignore:
-                        // do nothing
-                        break;
+                    consumer.AddHighlighting(
+                        new PassOtherFormatSpecifierSuggestion(
+                            $"Pass the '{numberInfo.RoundTripFormatSpecifierReplacement}' format specifier (string length may vary).",
+                            formatArgument,
+                            numberInfo.RoundTripFormatSpecifierReplacement));
                 }
+
+                if ((numberInfo.FormatSpecifiers & FormatSpecifiers.RoundtripPrecisionRedundant) != 0 && precisionSpecifier != "")
+                {
+                    consumer.AddHighlighting(
+                        new RedundantFormatPrecisionSpecifierHint(
+                            $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                            formatArgument));
+                }
+
+                if ((numberInfo.FormatSpecifiers & (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant)) == 0)
+                {
+                    consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", formatArgument));
+                }
+
                 break;
             }
 
@@ -496,7 +508,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 break;
             }
 
-            case ['D' or 'd', .. var precisionSpecifier] when numberInfo.SupportsDecimalFormatSpecifier
+            case ['D' or 'd', .. var precisionSpecifier] when (numberInfo.FormatSpecifiers & FormatSpecifiers.Decimal) != 0
                 && precisionSpecifier != ""
                 && int.TryParse(precisionSpecifier, out var precision)
                 && precision is 0 or 1:
@@ -508,7 +520,31 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 break;
             }
 
-            case ['B' or 'b' or 'X' or 'x', .. var precisionSpecifier] when numberInfo.SupportsBinaryOrHexFormatSpecifier:
+            case ['B' or 'b', .. var precisionSpecifier] when (numberInfo.FormatSpecifiers & FormatSpecifiers.Binary) != 0:
+            {
+                if (precisionSpecifier != "" && int.TryParse(precisionSpecifier, out var precision) && precision is 0 or 1)
+                {
+                    consumer.AddHighlighting(
+                        new RedundantFormatPrecisionSpecifierHint(
+                            $"The format precision specifier is redundant, '{format[0].ToString()}' has the same effect.",
+                            formatArgument));
+                }
+
+                if (!providerArgument.Value.IsDefaultValue()
+                    && numberInfo.ClrTypeName.HasMethod(
+                        new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
+                        invocationExpression.PsiModule))
+                {
+                    consumer.AddHighlighting(
+                        new RedundantArgumentHint(
+                            "Passing a provider with a binary or hexadecimal format specifier is redundant.",
+                            providerArgument));
+                }
+
+                break;
+            }
+
+            case ['X' or 'x', .. var precisionSpecifier] when (numberInfo.FormatSpecifiers & FormatSpecifiers.Hexadecimal) != 0:
             {
                 if (precisionSpecifier != "" && int.TryParse(precisionSpecifier, out var precision) && precision is 0 or 1)
                 {
@@ -552,9 +588,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
         IInvocationExpression invocationExpression,
         ICSharpArgument styleArgument)
     {
-        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
-
-        if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
+        if (styleArgument.Value.TryGetNumberStylesConstant() == numberInfo.DefaultNumberStyles
             && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
@@ -564,7 +598,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 },
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{defaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -600,9 +634,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
         IInvocationExpression invocationExpression,
         ICSharpArgument styleArgument)
     {
-        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
-
-        if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
+        if (styleArgument.Value.TryGetNumberStylesConstant() == numberInfo.DefaultNumberStyles
             && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
@@ -612,7 +644,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 },
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{defaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -648,9 +680,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
         IInvocationExpression invocationExpression,
         ICSharpArgument styleArgument)
     {
-        var defaultNumberStyles = numberInfo.DefaultNumberStyles;
-
-        if (styleArgument.Value.TryGetNumberStylesConstant() == defaultNumberStyles
+        if (styleArgument.Value.TryGetNumberStylesConstant() == numberInfo.DefaultNumberStyles
             && numberInfo.ClrTypeName.HasMethod(
                 new MethodSignature
                 {
@@ -660,7 +690,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 },
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{defaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -690,11 +720,25 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
 
     [Pure]
     private protected string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue)
-        => invocationExpression.TryGetTargetType().IsClrType(numberInfo.ClrTypeName) || argumentValue.Type().IsClrType(numberInfo.ClrTypeName)
-            ? argumentValue.GetText()
-            : numberInfo.TryGetConstant(argumentValue, out var valueImplicitlyConverted) is { } && valueImplicitlyConverted
-                ? numberInfo.CastConstant(argumentValue, valueImplicitlyConverted)
-                : numberInfo.Cast(argumentValue);
+    {
+        if (invocationExpression.TryGetTargetType().IsClrType(numberInfo.ClrTypeName) || argumentValue.Type().IsClrType(numberInfo.ClrTypeName))
+        {
+            return argumentValue.GetText();
+        }
+
+        if (numberInfo.TryGetConstant(argumentValue, out var valueImplicitlyConverted) is { } && valueImplicitlyConverted)
+        {
+            Debug.Assert(numberInfo.CastConstant is { });
+
+            return numberInfo.CastConstant(argumentValue, valueImplicitlyConverted);
+        }
+
+        Debug.Assert(numberInfo.Cast is { });
+
+        return numberInfo.Cast(argumentValue);
+    }
+
+    private protected NumberInfo<N> NumberInfo => numberInfo;
 
     private protected virtual void Analyze(
         IInvocationExpression element,

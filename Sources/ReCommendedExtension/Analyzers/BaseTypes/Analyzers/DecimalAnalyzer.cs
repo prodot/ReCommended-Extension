@@ -1,7 +1,6 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
@@ -20,10 +19,10 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(SuspiciousFormatSpecifierWarning),
         typeof(RedundantFormatPrecisionSpecifierHint),
     ])]
-public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(NumberInfo.Decimal)
+public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(NumberInfos.NumberInfo.Decimal)
 {
     [Pure]
-    static (string leftOperand, string rightOperand)? TryGetBinaryOperatorOperandsFromArguments(
+    (string leftOperand, string rightOperand)? TryGetBinaryOperatorOperandsFromArguments(
         ICSharpArgument d1Argument,
         ICSharpArgument d2Argument)
     {
@@ -34,17 +33,23 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
                 return (d1Value.GetText(), d2Value.GetText());
             }
 
-            if (NumberInfo.Decimal.TryGetConstant(d1Value, out var d1ImplicitlyConverted) is { } && d1ImplicitlyConverted)
+            if (NumberInfo.TryGetConstant(d1Value, out var d1ImplicitlyConverted) is { } && d1ImplicitlyConverted)
             {
-                return (NumberInfo.Decimal.CastConstant(d1Value, d1ImplicitlyConverted), d2Value.GetText());
+                Debug.Assert(NumberInfo.CastConstant is { });
+
+                return (NumberInfo.CastConstant(d1Value, d1ImplicitlyConverted), d2Value.GetText());
             }
 
-            if (NumberInfo.Decimal.TryGetConstant(d2Value, out var d2ImplicitlyConverted) is { } && d2ImplicitlyConverted)
+            if (NumberInfo.TryGetConstant(d2Value, out var d2ImplicitlyConverted) is { } && d2ImplicitlyConverted)
             {
-                return (d1Value.GetText(), NumberInfo.Decimal.CastConstant(d2Value, d2ImplicitlyConverted));
+                Debug.Assert(NumberInfo.CastConstant is { });
+
+                return (d1Value.GetText(), NumberInfo.CastConstant(d2Value, d2ImplicitlyConverted));
             }
 
-            return (NumberInfo.Decimal.Cast(d1Value), d2Value.GetText());
+            Debug.Assert(NumberInfo.Cast is { });
+
+            return (NumberInfo.Cast(d1Value), d2Value.GetText());
         }
 
         return null;
@@ -53,7 +58,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
     /// <remarks>
     /// <c>decimal.Add(d1, d2)</c> → <c>d1 + d2</c>
     /// </remarks>
-    static void AnalyzeAdd(
+    void AnalyzeAdd(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -69,7 +74,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
     /// <remarks>
     /// <c>decimal.Divide(d1, d2)</c> → <c>d1 / d2</c>
     /// </remarks>
-    static void AnalyzeDivide(
+    void AnalyzeDivide(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -85,7 +90,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
     /// <remarks>
     /// <c>decimal.Multiply(d1, d2)</c> → <c>d1 * d2</c>
     /// </remarks>
-    static void AnalyzeMultiply(
+    void AnalyzeMultiply(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -101,15 +106,17 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
     /// <remarks>
     /// <c>decimal.Negate(d)</c> → <c>-d</c>
     /// </remarks>
-    static void AnalyzeNegate(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument dArgument)
+    void AnalyzeNegate(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument dArgument)
     {
         if (!invocationExpression.IsUsedAsStatement() && dArgument.Value is { } value)
         {
+            Debug.Assert(NumberInfo is { CastConstant: { }, Cast: { } });
+
             var operand = value.Type().IsDecimal()
                 ? dArgument.Value.GetText()
-                : NumberInfo.Decimal.TryGetConstant(value, out var implicitlyConverted) is { } && implicitlyConverted
-                    ? NumberInfo.Decimal.CastConstant(value, implicitlyConverted)
-                    : NumberInfo.Decimal.Cast(value);
+                : NumberInfo.TryGetConstant(value, out var implicitlyConverted) is { } && implicitlyConverted
+                    ? NumberInfo.CastConstant(value, implicitlyConverted)
+                    : NumberInfo.Cast(value);
 
             consumer.AddHighlighting(new UseUnaryOperatorSuggestion("Use the '-' operator.", invocationExpression, "-", operand));
         }
@@ -118,7 +125,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
     /// <remarks>
     /// <c>decimal.Remainder(d1, d2)</c> → <c>d1 % d2</c>
     /// </remarks>
-    static void AnalyzeRemainder(
+    void AnalyzeRemainder(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -134,7 +141,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
     /// <remarks>
     /// <c>decimal.Subtract(d1, d2)</c> → <c>d1 - d2</c>
     /// </remarks>
-    static void AnalyzeSubtract(
+    void AnalyzeSubtract(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument d1Argument,
@@ -155,7 +162,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
-        if (method.ContainingType.IsClrType(NumberInfo.Decimal.ClrTypeName) && method.IsStatic)
+        if (method.ContainingType.IsClrType(NumberInfo.ClrTypeName) && method.IsStatic)
         {
             switch (method.ShortName)
             {

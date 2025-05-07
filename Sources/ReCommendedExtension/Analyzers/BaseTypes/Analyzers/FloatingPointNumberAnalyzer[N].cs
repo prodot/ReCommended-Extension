@@ -7,7 +7,7 @@ using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
-public abstract class FloatingPointNumberAnalyzer<N>(FloatingPointNumberInfo<N> numberInfo) : FractionalNumberAnalyzer<N>(numberInfo) where N : struct
+public abstract class FloatingPointNumberAnalyzer<N>(NumberInfo<N> numberInfo) : FractionalNumberAnalyzer<N>(numberInfo) where N : struct
 {
     /// <remarks>
     /// <c>T.IsNaN(value)</c> → <c>value is T.NaN</c> (C# 9)
@@ -15,7 +15,7 @@ public abstract class FloatingPointNumberAnalyzer<N>(FloatingPointNumberInfo<N> 
     void AnalyzeIsNaN(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
     {
         if (invocationExpression.GetLanguageVersion() >= CSharpLanguageLevel.CSharp90
-            && numberInfo.NanConstant is { } nanConstant
+            && NumberInfo.NanConstant is { } nanConstant
             && !invocationExpression.IsUsedAsStatement()
             && valueArgument.Value is { })
         {
@@ -31,14 +31,14 @@ public abstract class FloatingPointNumberAnalyzer<N>(FloatingPointNumberInfo<N> 
     {
         base.Analyze(element, invokedExpression, method, consumer);
 
-        if (method.ContainingType.IsClrType(numberInfo.ClrTypeName) && method.IsStatic)
+        if (method.ContainingType.IsClrType(NumberInfo.ClrTypeName) && method.IsStatic)
         {
             switch (method.ShortName)
             {
                 case "IsNaN": // todo: nameof(INumberBase<T>.IsNaN) when available
                     switch (method.Parameters, element.Arguments)
                     {
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(numberInfo.ClrTypeName):
+                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
                             AnalyzeIsNaN(consumer, element, valueArgument);
                             break;
                     }

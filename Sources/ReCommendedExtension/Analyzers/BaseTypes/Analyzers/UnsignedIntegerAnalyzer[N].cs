@@ -2,4 +2,4 @@
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
-public abstract class UnsignedIntegerAnalyzer<N>(UnsignedIntegerInfo<N> numberInfo) : IntegerAnalyzer<N>(numberInfo) where N : struct;
+public abstract class UnsignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : IntegerAnalyzer<N>(numberInfo) where N : struct;

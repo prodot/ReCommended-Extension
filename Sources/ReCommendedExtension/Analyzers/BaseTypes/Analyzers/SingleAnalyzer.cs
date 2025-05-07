@@ -1,6 +1,5 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -17,4 +16,4 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(PassOtherFormatSpecifierSuggestion),
         typeof(RedundantFormatPrecisionSpecifierHint),
     ])]
-public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(NumberInfo.Single);
+public sealed class SingleAnalyzer() : FloatingPointNumberAnalyzer<float>(NumberInfos.NumberInfo.Single);

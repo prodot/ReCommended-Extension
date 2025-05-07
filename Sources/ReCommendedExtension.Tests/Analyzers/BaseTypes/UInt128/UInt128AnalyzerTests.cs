@@ -8,10 +8,11 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
-using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UInt128;
+
+using uint128 = ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos.UInt128;
 
 [TestFixture]
 [TestNet70]
@@ -29,41 +30,35 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
-    static void Test<R>(Func<UInt128Info.UInt128, R> expected, Func<UInt128Info.UInt128, R> actual)
+    static void Test<R>(Func<uint128, R> expected, Func<uint128, R> actual)
     {
         Assert.AreEqual(expected(0), actual(0));
-        Assert.AreEqual(expected(UInt128Info.UInt128.MaxValue), actual(UInt128Info.UInt128.MaxValue));
+        Assert.AreEqual(expected(uint128.MaxValue), actual(uint128.MaxValue));
     }
 
-    static void Test<R>(
-        Func<UInt128Info.UInt128, UInt128Info.UInt128, R> expected,
-        Func<UInt128Info.UInt128, UInt128Info.UInt128, R> actual)
+    static void Test<R>(Func<uint128, uint128, R> expected, Func<uint128, uint128, R> actual)
     {
         Assert.AreEqual(expected(0, 0), actual(0, 0));
-        Assert.AreEqual(expected(0, UInt128Info.UInt128.MaxValue), actual(0, UInt128Info.UInt128.MaxValue));
-        Assert.AreEqual(
-            expected(UInt128Info.UInt128.MaxValue, UInt128Info.UInt128.MaxValue),
-            actual(UInt128Info.UInt128.MaxValue, UInt128Info.UInt128.MaxValue));
+        Assert.AreEqual(expected(0, uint128.MaxValue), actual(0, uint128.MaxValue));
+        Assert.AreEqual(expected(uint128.MaxValue, uint128.MaxValue), actual(uint128.MaxValue, uint128.MaxValue));
     }
 
     delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
 
-    static void Test(
-        FuncWithOut<UInt128Info.UInt128, UInt128Info.UInt128, bool> expected,
-        FuncWithOut<UInt128Info.UInt128, UInt128Info.UInt128, bool> actual)
+    static void Test(FuncWithOut<uint128, uint128, bool> expected, FuncWithOut<uint128, uint128, bool> actual)
     {
         Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
         Assert.AreEqual(expectedResult, actualResult);
 
-        Assert.AreEqual(expected(UInt128Info.UInt128.MaxValue, out expectedResult), actual(UInt128Info.UInt128.MaxValue, out actualResult));
+        Assert.AreEqual(expected(uint128.MaxValue, out expectedResult), actual(uint128.MaxValue, out actualResult));
         Assert.AreEqual(expectedResult, actualResult);
     }
 
     [Test]
     public void TestClamp()
     {
-        Test(number => UInt128Info.UInt128.Clamp(number, 1, 1), _ => 1u);
-        Test(number => UInt128Info.UInt128.Clamp(number, UInt128Info.UInt128.MinValue, UInt128Info.UInt128.MaxValue), number => number);
+        Test(number => uint128.Clamp(number, 1, 1), _ => 1u);
+        Test(number => uint128.Clamp(number, uint128.MinValue, uint128.MaxValue), number => number);
 
         DoNamedTest2();
     }
@@ -71,7 +66,7 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestDivRem()
     {
-        Test(() => UInt128Info.UInt128.DivRem(0, 10), () => (0, 0));
+        Test(() => uint128.DivRem(0, 10), () => (0, 0));
 
         DoNamedTest2();
     }
@@ -89,7 +84,7 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestMax()
     {
-        Test(n => UInt128Info.UInt128.Max(n, n), n => n);
+        Test(n => uint128.Max(n, n), n => n);
 
         DoNamedTest2();
     }
@@ -97,7 +92,7 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestMin()
     {
-        Test(n => UInt128Info.UInt128.Min(n, n), n => n);
+        Test(n => uint128.Min(n, n), n => n);
 
         DoNamedTest2();
     }
@@ -106,12 +101,12 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
     [TestNet80]
     public void TestParse()
     {
-        Test(n => UInt128Info.UInt128.Parse($"{n}", NumberStyles.Integer), n => UInt128Info.UInt128.Parse($"{n}"));
-        Test(n => UInt128Info.UInt128.Parse($"{n}", null), n => UInt128Info.UInt128.Parse($"{n}"));
+        Test(n => uint128.Parse($"{n}", NumberStyles.Integer), n => uint128.Parse($"{n}"));
+        Test(n => uint128.Parse($"{n}", null), n => uint128.Parse($"{n}"));
         Test(
-            n => UInt128Info.UInt128.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo),
-            n => UInt128Info.UInt128.Parse($"{n}", NumberFormatInfo.InvariantInfo));
-        Test(n => UInt128Info.UInt128.Parse($"{n}", NumberStyles.None, null), n => UInt128Info.UInt128.Parse($"{n}", NumberStyles.None));
+            n => uint128.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo),
+            n => uint128.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+        Test(n => uint128.Parse($"{n}", NumberStyles.None, null), n => uint128.Parse($"{n}", NumberStyles.None));
 
         Test(n => MissingUInt128Methods.Parse($"{n}".AsSpan(), null), n => MissingUInt128Methods.Parse($"{n}".AsSpan()));
 
@@ -125,7 +120,7 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestRotateLeft()
     {
-        Test(n => UInt128Info.UInt128.RotateLeft(n, 0), n => n);
+        Test(n => uint128.RotateLeft(n, 0), n => n);
 
         DoNamedTest2();
     }
@@ -133,7 +128,7 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestRotateRight()
     {
-        Test(n => UInt128Info.UInt128.RotateRight(n, 0), n => n);
+        Test(n => uint128.RotateRight(n, 0), n => n);
 
         DoNamedTest2();
     }
@@ -193,46 +188,36 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
     public void TestTryParse()
     {
         Test(
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => UInt128Info.UInt128.TryParse(
-                $"{n}",
-                NumberStyles.Integer,
-                NumberFormatInfo.InvariantInfo,
-                out result),
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result)
-                => UInt128Info.UInt128.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+            (uint128 n, out uint128 result) => uint128.TryParse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out result),
+            (uint128 n, out uint128 result) => uint128.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
         Test(
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => UInt128Info.UInt128.TryParse($"{n}", null, out result),
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => UInt128Info.UInt128.TryParse($"{n}", out result));
+            (uint128 n, out uint128 result) => uint128.TryParse($"{n}", null, out result),
+            (uint128 n, out uint128 result) => uint128.TryParse($"{n}", out result));
 
         Test(
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => MissingUInt128Methods.TryParse(
+            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse(
                 $"{n}".AsSpan(),
                 NumberStyles.Integer,
                 NumberFormatInfo.InvariantInfo,
                 out result),
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => MissingUInt128Methods.TryParse(
-                $"{n}".AsSpan(),
-                NumberFormatInfo.InvariantInfo,
-                out result));
+            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
         Test(
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), out result));
+            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
+            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), out result));
 
         Test(
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => MissingUInt128Methods.TryParse(
+            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse(
                 Encoding.UTF8.GetBytes($"{n}"),
                 NumberStyles.Integer,
                 NumberFormatInfo.InvariantInfo,
                 out result),
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result) => MissingUInt128Methods.TryParse(
+            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse(
                 Encoding.UTF8.GetBytes($"{n}"),
                 NumberFormatInfo.InvariantInfo,
                 out result));
         Test(
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result)
-                => MissingUInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
-            (UInt128Info.UInt128 n, out UInt128Info.UInt128 result)
-                => MissingUInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
+            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
+            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }
