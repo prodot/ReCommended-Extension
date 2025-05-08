@@ -4,9 +4,10 @@
 public enum FormatSpecifiers
 {
     GeneralCaseInsensitiveWithoutPrecision = 1 << 0,
-    Binary = 1 << 1,
-    Hexadecimal = 1 << 2,
-    Decimal = 1 << 3,
-    RoundtripToBeReplaced = 1 << 4,
-    RoundtripPrecisionRedundant = 1 << 5,
+    GeneralZeroPrecisionRedundant = 1 << 1,
+    Binary = 1 << 2,
+    Hexadecimal = 1 << 3,
+    Decimal = 1 << 4,
+    RoundtripToBeReplaced = 1 << 5,
+    RoundtripPrecisionRedundant = 1 << 6,
 }

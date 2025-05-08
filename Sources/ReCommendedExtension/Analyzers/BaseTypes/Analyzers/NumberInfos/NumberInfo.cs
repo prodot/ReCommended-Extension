@@ -877,6 +877,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -898,6 +899,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -919,6 +921,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -940,6 +943,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -961,6 +965,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -982,6 +987,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -1003,6 +1009,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -1024,6 +1031,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -1044,6 +1052,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -1064,6 +1073,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -1084,6 +1094,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -1103,6 +1114,7 @@ public abstract record NumberInfo
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
+            | FormatSpecifiers.GeneralZeroPrecisionRedundant
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
@@ -1122,7 +1134,6 @@ public abstract record NumberInfo
         DefaultNumberStyles = NumberStyles.Number,
         CanUseEqualityOperator = true,
         FormatSpecifiers = FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision,
-        MaxValueStringLength = decimal.MaxValue.ToString(NumberFormatInfo.InvariantInfo).Length,
         TryGetConstant = TryGetDecimalConstant,
         CastConstant = CastConstantToDecimal,
         Cast = expression => expression.Cast("decimal").GetText(),
@@ -1136,7 +1147,7 @@ public abstract record NumberInfo
         TypeCode = System.TypeCode.Double,
         DefaultNumberStyles = NumberStyles.Float | NumberStyles.AllowThousands,
         CanUseEqualityOperator = false, // can only be checked by comparing literals
-        FormatSpecifiers = FormatSpecifiers.RoundtripToBeReplaced,
+        FormatSpecifiers = FormatSpecifiers.GeneralZeroPrecisionRedundant | FormatSpecifiers.RoundtripToBeReplaced,
         RoundTripFormatSpecifierReplacement = "G17",
         TryGetConstant = TryGetDoubleConstant,
         Cast = expression => expression.Cast("double").GetText(),
@@ -1151,7 +1162,7 @@ public abstract record NumberInfo
         TypeCode = System.TypeCode.Single,
         DefaultNumberStyles = NumberStyles.Float | NumberStyles.AllowThousands,
         CanUseEqualityOperator = false, // can only be checked by comparing literals
-        FormatSpecifiers = FormatSpecifiers.RoundtripToBeReplaced,
+        FormatSpecifiers = FormatSpecifiers.GeneralZeroPrecisionRedundant | FormatSpecifiers.RoundtripToBeReplaced,
         RoundTripFormatSpecifierReplacement = "G9",
         TryGetConstant = TryGetSingleConstant,
         Cast = expression => expression.Cast("float").GetText(),
@@ -1165,7 +1176,7 @@ public abstract record NumberInfo
         ClrTypeName = ClrTypeNames.Half,
         DefaultNumberStyles = NumberStyles.Float | NumberStyles.AllowThousands,
         CanUseEqualityOperator = false, // can only be checked by comparing literals
-        FormatSpecifiers = FormatSpecifiers.RoundtripPrecisionRedundant,
+        FormatSpecifiers = FormatSpecifiers.GeneralZeroPrecisionRedundant | FormatSpecifiers.RoundtripPrecisionRedundant,
         TryGetConstant = TryGetHalfConstant,
         Cast = expression => expression.Cast("Half").GetText(),
         AreEqual = (_, _) => false, // can only be checked by comparing literals

@@ -158,21 +158,21 @@ namespace Test
 (38): ReSharper Dead Code: The format precision specifier is redundant, 'd' has the same effect.
 (39): ReSharper Dead Code: The format precision specifier is redundant, 'd' has the same effect.
 (40): ReSharper Dead Code: The format precision specifier is redundant, 'B' has the same effect.
-(41): ReSharper Dead Code: Passing a provider with a binary or hexadecimal format specifier is redundant.
+(41): ReSharper Dead Code: Passing a provider with a binary format specifier is redundant.
 (42): ReSharper Dead Code: The format precision specifier is redundant, 'B' has the same effect.
-(43): ReSharper Dead Code: Passing a provider with a binary or hexadecimal format specifier is redundant.
+(43): ReSharper Dead Code: Passing a provider with a binary format specifier is redundant.
 (44): ReSharper Dead Code: The format precision specifier is redundant, 'b' has the same effect.
-(45): ReSharper Dead Code: Passing a provider with a binary or hexadecimal format specifier is redundant.
+(45): ReSharper Dead Code: Passing a provider with a binary format specifier is redundant.
 (46): ReSharper Dead Code: The format precision specifier is redundant, 'b' has the same effect.
-(47): ReSharper Dead Code: Passing a provider with a binary or hexadecimal format specifier is redundant.
+(47): ReSharper Dead Code: Passing a provider with a binary format specifier is redundant.
 (48): ReSharper Dead Code: The format precision specifier is redundant, 'X' has the same effect.
-(49): ReSharper Dead Code: Passing a provider with a binary or hexadecimal format specifier is redundant.
+(49): ReSharper Dead Code: Passing a provider with a hexadecimal format specifier is redundant.
 (50): ReSharper Dead Code: The format precision specifier is redundant, 'X' has the same effect.
-(51): ReSharper Dead Code: Passing a provider with a binary or hexadecimal format specifier is redundant.
+(51): ReSharper Dead Code: Passing a provider with a hexadecimal format specifier is redundant.
 (52): ReSharper Dead Code: The format precision specifier is redundant, 'x' has the same effect.
-(53): ReSharper Dead Code: Passing a provider with a binary or hexadecimal format specifier is redundant.
+(53): ReSharper Dead Code: Passing a provider with a hexadecimal format specifier is redundant.
 (54): ReSharper Dead Code: The format precision specifier is redundant, 'x' has the same effect.
-(55): ReSharper Dead Code: Passing a provider with a binary or hexadecimal format specifier is redundant.
+(55): ReSharper Dead Code: Passing a provider with a hexadecimal format specifier is redundant.
 (56): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
 (57): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
 (58): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.

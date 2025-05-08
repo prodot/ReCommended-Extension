@@ -29,6 +29,10 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     static void Test<R>(Func<decimal, R> expected, Func<decimal, R> actual)
     {
         Assert.AreEqual(expected(0), actual(0));
+        Assert.AreEqual(expected(-0.0m), actual(-0.0m));
+        Assert.AreEqual(expected(1), actual(1));
+        Assert.AreEqual(expected(2), actual(2));
+        Assert.AreEqual(expected(-1), actual(-1));
         Assert.AreEqual(expected(decimal.MinValue), actual(decimal.MinValue));
         Assert.AreEqual(expected(decimal.MaxValue), actual(decimal.MaxValue));
     }
@@ -195,7 +199,9 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
         Test(
             n => decimal.Parse($"{n}", NumberStyles.Number, NumberFormatInfo.InvariantInfo),
             n => decimal.Parse($"{n}", NumberFormatInfo.InvariantInfo));
-        Test(n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign, null), n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign));
+        Test(
+            n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, null),
+            n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint));
 
         Test(n => MissingDecimalMethods.Parse($"{n}".AsSpan(), null), n => MissingDecimalMethods.Parse($"{n}".AsSpan()));
 
@@ -250,11 +256,7 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
         Test(n => n.ToString(null as string), n => n.ToString());
         Test(n => n.ToString(""), n => n.ToString());
         Test(n => n.ToString("G"), n => n.ToString());
-        Test(n => n.ToString("G0"), n => n.ToString());
-        Test(n => n.ToString("G29"), n => n.ToString());
         Test(n => n.ToString("g"), n => n.ToString());
-        Test(n => n.ToString("g0"), n => n.ToString());
-        Test(n => n.ToString("g29"), n => n.ToString());
         Test(n => n.ToString("E6"), n => n.ToString("E"));
         Test(n => n.ToString("e6"), n => n.ToString("e"));
 
@@ -263,11 +265,7 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
         Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("C", null), n => n.ToString("C"));
         Test(n => n.ToString("G", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("G0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("G29", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("g", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g29", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("E6", NumberFormatInfo.InvariantInfo), n => n.ToString("E", NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("e6", NumberFormatInfo.InvariantInfo), n => n.ToString("e", NumberFormatInfo.InvariantInfo));
 

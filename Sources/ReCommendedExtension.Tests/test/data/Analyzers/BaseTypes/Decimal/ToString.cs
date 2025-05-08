@@ -10,11 +10,7 @@ namespace Test
             var result12 = number.ToString("");
 
             var result21 = number.ToString("G");
-            var result22 = number.ToString("G0");
-            var result23 = number.ToString("G29");
-            var result24 = number.ToString("g");
-            var result25 = number.ToString("g0");
-            var result26 = number.ToString("g29");
+            var result22 = number.ToString("g");
 
             var result31 = number.ToString(null as IFormatProvider);
             var result32 = number.ToString(null, provider);
@@ -23,11 +19,7 @@ namespace Test
             var result35 = number.ToString("", null);
 
             var result41 = number.ToString("G", provider);
-            var result42 = number.ToString("G0", provider);
-            var result43 = number.ToString("G29", provider);
-            var result44 = number.ToString("g", provider);
-            var result45 = number.ToString("g0", provider);
-            var result46 = number.ToString("g29", provider);
+            var result42 = number.ToString("g", provider);
         }
 
         public void RedundantFormatPrecisionSpecifier(decimal number, IFormatProvider provider)
@@ -70,19 +62,27 @@ namespace Test
         public void NoDetection(decimal number, string format, IFormatProvider provider)
         {
             var result11 = number.ToString(format);
-            var result12 = number.ToString("G2");
-            var result13 = number.ToString("E");
-            var result14 = number.ToString("E5");
-            var result15 = number.ToString("C");
-            var result16 = number.ToString("C2");
+            var result12 = number.ToString("G0");
+            var result13 = number.ToString("g0");
+            var result14 = number.ToString("G1");
+            var result15 = number.ToString("g1");
+            var result16 = number.ToString("G2");
+            var result17 = number.ToString("E");
+            var result18 = number.ToString("E5");
+            var result19 = number.ToString("C");
+            var result1A = number.ToString("C2");
 
             var result21 = number.ToString(provider);
             var result22 = number.ToString(format, provider);
-            var result23 = number.ToString("G2", provider);
-            var result24 = number.ToString("E", provider);
-            var result25 = number.ToString("E5", provider);
-            var result26 = number.ToString("C", provider);
-            var result27 = number.ToString("C2", provider);
+            var result23 = number.ToString("G0", provider);
+            var result24 = number.ToString("g0", provider);
+            var result25 = number.ToString("G1", provider);
+            var result26 = number.ToString("g1", provider);
+            var result27 = number.ToString("G2", provider);
+            var result28 = number.ToString("E", provider);
+            var result29 = number.ToString("E5", provider);
+            var result2A = number.ToString("C", provider);
+            var result2B = number.ToString("C2", provider);
         }
     }
 }

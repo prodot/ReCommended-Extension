@@ -29,7 +29,12 @@ public sealed class UIntPtrAnalyzerTests : CSharpHighlightingTestBase
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
-    static void Test<R>(Func<nuint, R> expected, Func<nuint, R> actual) => Assert.AreEqual(expected(0), actual(0));
+    static void Test<R>(Func<nuint, R> expected, Func<nuint, R> actual)
+    {
+        Assert.AreEqual(expected(0), actual(0));
+        Assert.AreEqual(expected(1), actual(1));
+        Assert.AreEqual(expected(2), actual(2));
+    }
 
     static void Test<R>(Func<nuint, nuint, R> expected, Func<nuint, nuint, R> actual) => Assert.AreEqual(expected(0, 0), actual(0, 0));
 

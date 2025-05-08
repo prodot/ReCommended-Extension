@@ -25,7 +25,11 @@ public sealed class HalfAnalyzerTests : CSharpHighlightingTestBase
 
     static void Test<R>(Func<half, R> expected, Func<half, R> actual)
     {
-        Assert.AreEqual(expected((byte)0), actual((byte)0));
+        Assert.AreEqual(expected((sbyte)0), actual((sbyte)0));
+        Assert.AreEqual(expected((sbyte)1), actual((sbyte)1));
+        Assert.AreEqual(expected((sbyte)2), actual((sbyte)2));
+        Assert.AreEqual(expected((sbyte)-1), actual((sbyte)-1));
+        Assert.AreEqual(expected((half)(-0f)), actual((half)(-0f)));
         Assert.AreEqual(expected(half.MinValue), actual(half.MinValue));
         Assert.AreEqual(expected(half.MaxValue), actual(half.MaxValue));
         Assert.AreEqual(expected(half.Epsilon), actual(half.Epsilon));

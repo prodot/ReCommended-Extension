@@ -122,49 +122,49 @@ Remove format precision specifier
 20: The format precision specifier is redundant, 'B' has the same effect.
 QUICKFIXES:
 Remove format precision specifier
-21: Passing a provider with a binary or hexadecimal format specifier is redundant.
+21: Passing a provider with a binary format specifier is redundant.
 QUICKFIXES:
 Remove argument
 22: The format precision specifier is redundant, 'B' has the same effect.
 QUICKFIXES:
 Remove format precision specifier
-23: Passing a provider with a binary or hexadecimal format specifier is redundant.
+23: Passing a provider with a binary format specifier is redundant.
 QUICKFIXES:
 Remove argument
 24: The format precision specifier is redundant, 'b' has the same effect.
 QUICKFIXES:
 Remove format precision specifier
-25: Passing a provider with a binary or hexadecimal format specifier is redundant.
+25: Passing a provider with a binary format specifier is redundant.
 QUICKFIXES:
 Remove argument
 26: The format precision specifier is redundant, 'b' has the same effect.
 QUICKFIXES:
 Remove format precision specifier
-27: Passing a provider with a binary or hexadecimal format specifier is redundant.
+27: Passing a provider with a binary format specifier is redundant.
 QUICKFIXES:
 Remove argument
 28: The format precision specifier is redundant, 'X' has the same effect.
 QUICKFIXES:
 Remove format precision specifier
-29: Passing a provider with a binary or hexadecimal format specifier is redundant.
+29: Passing a provider with a hexadecimal format specifier is redundant.
 QUICKFIXES:
 Remove argument
 30: The format precision specifier is redundant, 'X' has the same effect.
 QUICKFIXES:
 Remove format precision specifier
-31: Passing a provider with a binary or hexadecimal format specifier is redundant.
+31: Passing a provider with a hexadecimal format specifier is redundant.
 QUICKFIXES:
 Remove argument
 32: The format precision specifier is redundant, 'x' has the same effect.
 QUICKFIXES:
 Remove format precision specifier
-33: Passing a provider with a binary or hexadecimal format specifier is redundant.
+33: Passing a provider with a hexadecimal format specifier is redundant.
 QUICKFIXES:
 Remove argument
 34: The format precision specifier is redundant, 'x' has the same effect.
 QUICKFIXES:
 Remove format precision specifier
-35: Passing a provider with a binary or hexadecimal format specifier is redundant.
+35: Passing a provider with a hexadecimal format specifier is redundant.
 QUICKFIXES:
 Remove argument
 36: The format precision specifier is redundant, 'E' has the same effect.

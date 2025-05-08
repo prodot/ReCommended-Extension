@@ -30,6 +30,9 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
     static void Test<R>(Func<long, R> expected, Func<long, R> actual)
     {
         Assert.AreEqual(expected(0), actual(0));
+        Assert.AreEqual(expected(1), actual(1));
+        Assert.AreEqual(expected(2), actual(2));
+        Assert.AreEqual(expected(-1), actual(-1));
         Assert.AreEqual(expected(long.MinValue), actual(long.MinValue));
         Assert.AreEqual(expected(long.MaxValue), actual(long.MaxValue));
     }
@@ -202,9 +205,11 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
         Test(n => n.ToString("G"), n => n.ToString());
         Test(n => n.ToString("G0"), n => n.ToString());
         Test(n => n.ToString("G19"), n => n.ToString());
+        Test(n => n.ToString("G20"), n => n.ToString());
         Test(n => n.ToString("g"), n => n.ToString());
         Test(n => n.ToString("g0"), n => n.ToString());
         Test(n => n.ToString("g19"), n => n.ToString());
+        Test(n => n.ToString("g20"), n => n.ToString());
         Test(n => n.ToString("E6"), n => n.ToString("E"));
         Test(n => n.ToString("e6"), n => n.ToString("e"));
         Test(n => n.ToString("D0"), n => n.ToString("D"));
@@ -223,9 +228,11 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
         Test(n => n.ToString("G", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("G0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("G19", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("G20", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("g", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("g0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("g19", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
+        Test(n => n.ToString("g20", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("E6", NumberFormatInfo.InvariantInfo), n => n.ToString("E", NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("e6", NumberFormatInfo.InvariantInfo), n => n.ToString("e", NumberFormatInfo.InvariantInfo));
         Test(n => n.ToString("D0", NumberFormatInfo.InvariantInfo), n => n.ToString("D", NumberFormatInfo.InvariantInfo));

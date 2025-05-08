@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Numerics;
+using System.Text;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 
@@ -315,6 +316,30 @@ public readonly record struct Int128 // todo: remove when available (used mostly
 
         var value = ToBigInteger();
 
-        return format is { } ? value.ToString(format, provider) ?? value.ToString(provider) : value.ToString(provider);
+        var s = format is { } ? value.ToString(format, provider) ?? value.ToString(provider) : value.ToString(provider);
+
+        if (format is ['G' or 'g' or 'D' or 'd', _, ..]) // remove leading zeros
+        {
+            var builder = new StringBuilder(s);
+
+            if (this < 0)
+            {
+                while (builder is [_, '0', ..])
+                {
+                    builder.Remove(1, 1);
+                }
+            }
+            else
+            {
+                while (builder is ['0', ..])
+                {
+                    builder.Remove(0, 1);
+                }
+            }
+
+            s = builder.ToString();
+        }
+
+        return s;
     }
 }

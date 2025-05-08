@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Numerics;
+using System.Text;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
 
@@ -30,7 +31,7 @@ public readonly record struct UInt128 // todo: remove when available (used mostl
 
     public static bool operator <=(UInt128 x, UInt128 y) => x.upper < y.upper || x.upper == y.upper && x.lower <= y.lower;
 
-    public static bool operator >(UInt128 x, UInt128 y) => x.upper > y.upper || x.upper == y.upper && x.upper > y.upper;
+    public static bool operator >(UInt128 x, UInt128 y) => x.upper > y.upper || x.upper == y.upper && x.lower > y.lower;
 
     public static bool operator >=(UInt128 x, UInt128 y) => x.upper > y.upper || x.upper == y.upper && x.lower >= y.lower;
 
@@ -195,6 +196,20 @@ public readonly record struct UInt128 // todo: remove when available (used mostl
 
         var value = ToBigInteger();
 
-        return format is { } ? value.ToString(format, provider) ?? value.ToString(provider) : value.ToString(provider);
+        var s = format is { } ? value.ToString(format, provider) ?? value.ToString(provider) : value.ToString(provider);
+
+        if (format is ['G' or 'g' or 'D' or 'd', _, ..]) // remove leading zeros
+        {
+            var builder = new StringBuilder(s);
+
+            while (builder is ['0', ..])
+            {
+                builder.Remove(0, 1);
+            }
+
+            s = builder.ToString();
+        }
+
+        return s;
     }
 }

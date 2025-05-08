@@ -30,6 +30,8 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
     static void Test<R>(Func<byte, R> expected, Func<byte, R> actual)
     {
         Assert.AreEqual(expected(0), actual(0));
+        Assert.AreEqual(expected(1), actual(1));
+        Assert.AreEqual(expected(2), actual(2));
         Assert.AreEqual(expected(byte.MaxValue), actual(byte.MaxValue));
     }
 
@@ -157,9 +159,11 @@ public sealed class ByteAnalyzerTests : CSharpHighlightingTestBase
         Test(n => n.ToString("G"), n => n.ToString());
         Test(n => n.ToString("G0"), n => n.ToString());
         Test(n => n.ToString("G3"), n => n.ToString());
+        Test(n => n.ToString("G4"), n => n.ToString());
         Test(n => n.ToString("g"), n => n.ToString());
         Test(n => n.ToString("g0"), n => n.ToString());
         Test(n => n.ToString("g3"), n => n.ToString());
+        Test(n => n.ToString("g4"), n => n.ToString());
         Test(n => n.ToString("E6"), n => n.ToString("E"));
         Test(n => n.ToString("e6"), n => n.ToString("e"));
         Test(n => n.ToString("D0"), n => n.ToString("D"));
