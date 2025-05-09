@@ -2,14 +2,14 @@
 using System.Numerics;
 using System.Text;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
+namespace ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
 /// <remarks>
 /// Original code from <see href="https://github.com/dotnet/dotnet"/><para/>
 /// License: MIT<para/>
 /// Copyright (c) .NET Foundation and Contributors
 /// </remarks>
-public readonly record struct Int128 // todo: remove when available (used mostly for testing)
+public readonly record struct Int128 : IFormattable // todo: remove when available (used mostly for testing)
 {
     public static Int128 MinValue => new(0x8000_0000_0000_0000, 0);
 
@@ -306,7 +306,6 @@ public readonly record struct Int128 // todo: remove when available (used mostly
     [Pure]
     public string ToString(IFormatProvider? provider) => ToString(null, provider);
 
-    [Pure]
     public string ToString(string? format, IFormatProvider? provider)
     {
         if (upper == 0)

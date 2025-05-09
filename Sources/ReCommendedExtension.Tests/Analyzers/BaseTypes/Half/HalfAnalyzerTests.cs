@@ -12,7 +12,7 @@ using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Half;
 
-using half = ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos.Half;
+using half = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Half;
 
 [TestFixture]
 [TestNet50]

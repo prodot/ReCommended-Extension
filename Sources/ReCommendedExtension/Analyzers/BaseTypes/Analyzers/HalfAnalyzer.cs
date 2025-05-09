@@ -1,6 +1,6 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
+using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -10,4 +10,4 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
     HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint), typeof(RedundantFormatPrecisionSpecifierHint)])]
-public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<Half>(NumberInfos.NumberInfo.Half);
+public sealed class HalfAnalyzer() : FloatingPointNumberAnalyzer<Half>(BaseTypes.NumberInfos.NumberInfo.Half);

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace ReCommendedExtension.Tests.Missing;
 
-internal static class MissingUIntPtrMethods
+internal static class MissingUIntPtrMethods // todo: consider implementing IFormattable
 {
     [Pure]
     public static nuint Clamp(nuint value, nuint min, nuint max)

@@ -12,7 +12,7 @@ using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int128;
 
-using int128 = ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos.Int128;
+using int128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Int128;
 
 [TestFixture]
 [TestNet70]

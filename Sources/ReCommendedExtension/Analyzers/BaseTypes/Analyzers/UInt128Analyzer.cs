@@ -1,6 +1,6 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
+using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -17,4 +17,4 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(SuspiciousFormatSpecifierWarning),
         typeof(RedundantFormatPrecisionSpecifierHint),
     ])]
-public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128>(NumberInfos.NumberInfo.UInt128);
+public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128>(BaseTypes.NumberInfos.NumberInfo.UInt128);

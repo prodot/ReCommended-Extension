@@ -1,4 +1,4 @@
-﻿using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
+﻿using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 

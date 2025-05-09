@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
-using ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
+using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
 namespace ReCommendedExtension.Tests.Missing;
 

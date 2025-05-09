@@ -3,7 +3,7 @@ using System.Text;
 
 namespace ReCommendedExtension.Tests.Missing;
 
-internal static class MissingIntPtrMethods
+internal static class MissingIntPtrMethods // todo: consider implementing IFormattable
 {
     [Pure]
     public static nint Clamp(nint value, nint min, nint max)

@@ -1,13 +1,13 @@
 ﻿using System.Globalization;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers.NumberInfos;
+namespace ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
 /// <remarks>
 /// Original code from <see href="https://github.com/dotnet/dotnet"/><para/>
 /// License: MIT<para/>
 /// Copyright (c) .NET Foundation and Contributors
 /// </remarks>
-public readonly record struct Half // todo: remove when available (used mostly for testing)
+public readonly record struct Half : IFormattable // todo: remove when available (used mostly for testing)
 {
     public static Half Epsilon => new(0x0001);
 
@@ -166,6 +166,5 @@ public readonly record struct Half // todo: remove when available (used mostly f
     [Pure]
     public string ToString(IFormatProvider? provider) => ToString(null, provider);
 
-    [Pure]
     public string ToString(string? format, IFormatProvider? provider) => ((float)this).ToString(format, provider);
 }
