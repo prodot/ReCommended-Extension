@@ -1,0 +1,74 @@
+﻿using System;
+
+namespace Test
+{
+    public class InterpolatedStringItems
+    {
+        public void RedundantFormatSpecifier(Half number)
+        {
+            var result1 = $"{number|:G|(0)}";
+            var result2 = $"{number|:G0|(1)}";
+        }
+
+        public void RedundantFormatSpecifier(Half? number)
+        {
+            var result1 = $"{number|:G|(2)}";
+            var result2 = $"{number|:G0|(3)}";
+        }
+
+        public void RedundantFormatPrecisionSpecifier(Half number)
+        {
+            var result11 = $"{number:E|6|(4)}";
+            var result12 = $"{number:e|6|(5)}";
+
+            var result21 = $"{number:R|3|(6)}";
+            var result22 = $"{number:r|3|(7)}";
+        }
+
+        public void RedundantFormatPrecisionSpecifier(Half? number)
+        {
+            var result11 = $"{number:E|6|(8)}";
+            var result12 = $"{number:e|6|(9)}";
+
+            var result21 = $"{number:R|3|(10)}";
+            var result22 = $"{number:r|3|(11)}";
+        }
+
+        public void NoDetection(Half number)
+        {
+            var result1 = $"{number:G1}";
+            var result2 = $"{number:g}";
+            var result3 = $"{number:g0}";
+            var result4 = $"{number:g1}";
+            var result5 = $"{number:E}";
+            var result6 = $"{number:E5}";
+            var result7 = $"{number:R}";
+            var result8 = $"{number:r}";
+        }
+
+        public void NoDetection(Half? number)
+        {
+            var result1 = $"{number:G1}";
+            var result2 = $"{number:g}";
+            var result3 = $"{number:g0}";
+            var result4 = $"{number:g1}";
+            var result5 = $"{number:E}";
+            var result6 = $"{number:E5}";
+            var result7 = $"{number:R}";
+            var result8 = $"{number:r}";
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'G' is redundant.
+(1): ReSharper Dead Code: Specifying 'G0' is redundant.
+(2): ReSharper Dead Code: Specifying 'G' is redundant.
+(3): ReSharper Dead Code: Specifying 'G0' is redundant.
+(4): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(5): ReSharper Dead Code: The format precision specifier is redundant, 'e' has the same effect.
+(6): ReSharper Dead Code: The format precision specifier is redundant, 'R' has the same effect.
+(7): ReSharper Dead Code: The format precision specifier is redundant, 'r' has the same effect.
+(8): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(9): ReSharper Dead Code: The format precision specifier is redundant, 'e' has the same effect.
+(10): ReSharper Dead Code: The format precision specifier is redundant, 'R' has the same effect.
+(11): ReSharper Dead Code: The format precision specifier is redundant, 'r' has the same effect.

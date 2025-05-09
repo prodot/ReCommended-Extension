@@ -21,56 +21,72 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantFormatPrecisionSpecifierHint(string message, ICSharpArgument formatArgument) : Highlighting(message)
+public sealed class RedundantFormatPrecisionSpecifierHint : Highlighting
 {
     const string SeverityId = "RedundantFormatPrecisionSpecifier";
 
-    internal ICSharpArgument FormatArgument => formatArgument;
+    public RedundantFormatPrecisionSpecifierHint(string message, ICSharpArgument formatArgument) : base(message) => FormatArgument = formatArgument;
+
+    public RedundantFormatPrecisionSpecifierHint(string message, IInterpolatedStringInsert insert) : base(message) => Insert = insert;
+
+    internal ICSharpArgument? FormatArgument { get; }
+
+    internal IInterpolatedStringInsert? Insert { get; }
 
     public override DocumentRange CalculateRange()
     {
-        var range = formatArgument.Value.GetDocumentRange();
-
-        if (formatArgument.Value is ICSharpLiteralExpression or IInterpolatedStringExpression)
+        if (FormatArgument is { })
         {
-            var format = formatArgument.Value.TryGetStringConstant();
-            Debug.Assert(format is { Length: >= 2 });
+            var range = FormatArgument.Value.GetDocumentRange();
 
-            var expression = formatArgument.Value.GetText();
-            Debug.Assert(expression.Length >= 4);
-
-            var formatSpecifier = 0;
-            var digits = 0;
-
-            for (var i = 1; i < expression.Length - 1; i++)
+            if (FormatArgument.Value is ICSharpLiteralExpression or IInterpolatedStringExpression)
             {
-                if (formatSpecifier == 0)
+                var expression = FormatArgument.Value.GetText();
+                Debug.Assert(expression.Length >= 4);
+
+                var format = FormatArgument.Value.TryGetStringConstant();
+                Debug.Assert(format is { Length: >= 2 });
+
+                var formatSpecifier = 0;
+                var digits = 0;
+
+                for (var i = 1; i < expression.Length - 1; i++)
                 {
-                    if (expression[i] == format[0])
+                    if (formatSpecifier == 0)
                     {
-                        formatSpecifier = i;
-                    }
-                }
-                else
-                {
-                    if (expression[i] is >= '0' and <= '9')
-                    {
-                        digits++;
+                        if (expression[i] == format[0])
+                        {
+                            formatSpecifier = i;
+                        }
                     }
                     else
                     {
-                        break;
+                        if (expression[i] is >= '0' and <= '9')
+                        {
+                            digits++;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
+
+                Debug.Assert(formatSpecifier > 0);
+                Debug.Assert(digits > 0);
+
+                range = range.ExtendLeft(-1 - formatSpecifier);
+                return new DocumentRange(range.Document, new TextRange(range.TextRange.StartOffset, range.TextRange.StartOffset + digits));
             }
 
-            Debug.Assert(formatSpecifier > 0);
-            Debug.Assert(digits > 0);
-
-            range = range.ExtendLeft(-1 - formatSpecifier);
-            return new DocumentRange(range.Document, new TextRange(range.TextRange.StartOffset, range.TextRange.StartOffset + digits));
+            return range;
         }
 
-        return range;
+        if (Insert is { })
+        {
+            return Insert.FormatSpecifier.GetDocumentRange().ExtendLeft(-2);
+        }
+
+        throw new NotSupportedException();
     }
 }

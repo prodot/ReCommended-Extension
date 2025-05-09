@@ -19,18 +19,32 @@ public sealed class PassOtherFormatSpecifierFix(PassOtherFormatSpecifierSuggesti
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
-        using (WriteLockCookie.Create())
+        if (highlighting.FormatArgument is { })
         {
-            var factory = CSharpElementFactory.GetInstance(highlighting.FormatArgument);
+            using (WriteLockCookie.Create())
+            {
+                var factory = CSharpElementFactory.GetInstance(highlighting.FormatArgument);
 
-            ModificationUtil.ReplaceChild(
-                highlighting.FormatArgument,
-                factory.CreateArgument(
-                    ParameterKind.UNKNOWN,
-                    highlighting.FormatArgument.NameIdentifier?.Name,
-                    factory.CreateExpression($"\"{highlighting.Replacement}\"")));
+                ModificationUtil.ReplaceChild(
+                    highlighting.FormatArgument,
+                    factory.CreateArgument(
+                        ParameterKind.UNKNOWN,
+                        highlighting.FormatArgument.NameIdentifier?.Name,
+                        factory.CreateExpression($"\"{highlighting.Replacement}\"")));
+            }
         }
 
-        return _ => { };
+        return _ =>
+        {
+            if (highlighting.Insert is { })
+            {
+                using (WriteLockCookie.Create())
+                {
+                    var documentRange = highlighting.CalculateRange();
+
+                    documentRange.Document.ReplaceText(documentRange.TextRange, highlighting.Replacement);
+                }
+            }
+        };
     }
 }

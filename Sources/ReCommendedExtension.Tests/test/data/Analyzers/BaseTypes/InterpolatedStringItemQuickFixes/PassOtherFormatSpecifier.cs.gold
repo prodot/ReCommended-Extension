@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class InterpolatedStringItems
+    {
+        public void Double(double number)
+        {
+            var result = $"{number:G17{caret}}";
+        }
+    }
+}

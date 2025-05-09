@@ -14,9 +14,29 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
     "",
     Severity.WARNING)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class SuspiciousFormatSpecifierWarning(string message, ICSharpArgument formatArgument) : Highlighting(message)
+public sealed class SuspiciousFormatSpecifierWarning : Highlighting
 {
     const string SeverityId = "SuspiciousFormatSpecifier";
 
-    public override DocumentRange CalculateRange() => formatArgument.Value.GetDocumentRange();
+    readonly ICSharpArgument? formatArgument;
+    readonly IInterpolatedStringInsert? insert;
+
+    public SuspiciousFormatSpecifierWarning(string message, ICSharpArgument formatArgument) : base(message) => this.formatArgument = formatArgument;
+
+    public SuspiciousFormatSpecifierWarning(string message, IInterpolatedStringInsert insert) : base(message) => this.insert = insert;
+
+    public override DocumentRange CalculateRange()
+    {
+        if (formatArgument is { })
+        {
+            return formatArgument.Value.GetDocumentRange();
+        }
+
+        if (insert is { })
+        {
+            return insert.FormatSpecifier.GetDocumentRange().ExtendLeft(-1);
+        }
+
+        throw new NotSupportedException();
+    }
 }

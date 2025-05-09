@@ -14,13 +14,40 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class PassOtherFormatSpecifierSuggestion(string message, ICSharpArgument formatArgument, string replacement) : Highlighting(message)
+public sealed class PassOtherFormatSpecifierSuggestion : Highlighting
 {
     const string SeverityId = "PassOtherFormatSpecifier";
 
-    internal ICSharpArgument FormatArgument => formatArgument;
+    public PassOtherFormatSpecifierSuggestion(string message, ICSharpArgument formatArgument, string replacement) : base(message)
+    {
+        FormatArgument = formatArgument;
+        Replacement = replacement;
+    }
 
-    internal string Replacement => replacement;
+    public PassOtherFormatSpecifierSuggestion(string message, IInterpolatedStringInsert insert, string replacement) : base(message)
+    {
+        Insert = insert;
+        Replacement = replacement;
+    }
 
-    public override DocumentRange CalculateRange() => formatArgument.Value.GetDocumentRange();
+    internal ICSharpArgument? FormatArgument { get; }
+
+    internal IInterpolatedStringInsert? Insert { get; }
+
+    internal string Replacement { get; }
+
+    public override DocumentRange CalculateRange()
+    {
+        if (FormatArgument is { })
+        {
+            return FormatArgument.Value.GetDocumentRange();
+        }
+
+        if (Insert is { })
+        {
+            return Insert.FormatSpecifier.GetDocumentRange().ExtendLeft(-1);
+        }
+
+        throw new NotSupportedException();
+    }
 }
