@@ -2,12 +2,12 @@
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
 
-namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringItem;
+namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringExpression;
 
 [TestFixture]
 public sealed class PassOtherFormatSpecifierFixTests : QuickFixTestBase<PassOtherFormatSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringItemQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringExpressionQuickFixes";
 
     [Test]
     public void TestPassOtherFormatSpecifier() => DoNamedTest2();

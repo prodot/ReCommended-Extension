@@ -1,0 +1,17 @@
+﻿using System;
+
+namespace Test
+{
+    public class InterpolatedStringItems
+    {
+        public void FallbackFormatters(int number)
+        {
+            var result1 = $"{number|:G|(0)}";
+
+            FormattableString result2 = $"{number|:G|(1)}";
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'G' is redundant.
+(1): ReSharper Dead Code: Specifying 'G' is redundant.

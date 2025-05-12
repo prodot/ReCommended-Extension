@@ -97,6 +97,23 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName Half = new ClrTypeName("System.Half");
 
+    public static readonly IClrTypeName AppendInterpolatedStringHandler =
+        new ClrTypeName("System.Text.StringBuilder.AppendInterpolatedStringHandler");
+
+    public static readonly IClrTypeName MemoryExtensions_TryWriteInterpolatedStringHandler =
+        new ClrTypeName("System.MemoryExtensions.TryWriteInterpolatedStringHandler");
+
+    public static readonly IClrTypeName Utf8_TryWriteInterpolatedStringHandler =
+        new ClrTypeName("System.Text.Unicode.Utf8.TryWriteInterpolatedStringHandler");
+
+    public static readonly IClrTypeName AssertInterpolatedStringHandler = new ClrTypeName("System.Diagnostics.Debug.AssertInterpolatedStringHandler");
+
+    public static readonly IClrTypeName WriteIfInterpolatedStringHandler =
+        new ClrTypeName("System.Diagnostics.Debug.WriteIfInterpolatedStringHandler");
+
+    public static readonly IClrTypeName TraceVerboseInterpolatedStringHandler =
+        new ClrTypeName("System.Diagnostics.TraceSwitchExtensions.TraceVerboseInterpolatedStringHandler");
+
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsClrType([NotNullWhen(true)] this ITypeElement? typeElement, IClrTypeName clrName)

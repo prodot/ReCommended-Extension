@@ -1,0 +1,48 @@
+﻿using System;
+using System.Diagnostics;
+using System.Text;
+using System.Text.Unicode;
+using System.Runtime.CompilerServices;
+
+namespace Test
+{
+    public class InterpolatedStringItems
+    {
+        public void DefaultInterpolatedStringHandler(
+            int number,
+            StringBuilder builder,
+            Span<char> destination,
+            Span<byte> destinationBytes,
+            out int written)
+        {
+            var result = $"{number|:G|(0)}";
+            builder.Append($"{number|:G|(1)}");
+            destination.TryWrite($"{number|:G|(2)}", out written);
+            Utf8.TryWrite(destinationBytes, $"{number|:G|(3)}", out written);
+            Debug.Assert(number > 0, $"{number|:G|(4)}");
+            Debug.WriteIf(number > 0, $"{number|:G|(5)}");
+        }
+
+        [InterpolatedStringHandler]
+        public ref struct CustomInterpolatedStringHandler
+        {
+            public CustomInterpolatedStringHandler(int literalLength, int formattedCount) { }
+
+            public void AppendFormatted<T>(T value, string? format) { }
+        }
+
+        public static void Custom(ref CustomInterpolatedStringHandler handler) { }
+
+        public void NoDetection(int number)
+        {
+            Custom($"{number:G}");
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'G' is redundant.
+(1): ReSharper Dead Code: Specifying 'G' is redundant.
+(2): ReSharper Dead Code: Specifying 'G' is redundant.
+(3): ReSharper Dead Code: Specifying 'G' is redundant.
+(4):<overlapped> ReSharper Dead Code: Specifying 'G' is redundant.
+(5):<overlapped> ReSharper Dead Code: Specifying 'G' is redundant.

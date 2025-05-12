@@ -1,0 +1,167 @@
+﻿using System.Runtime.CompilerServices;
+using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+
+namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
+
+[ElementProblemAnalyzer(
+    typeof(IInterpolatedStringExpression),
+    HighlightingTypes =
+    [
+        typeof(RedundantFormatSpecifierHint),
+        typeof(RedundantFormatPrecisionSpecifierHint),
+        typeof(PassOtherFormatSpecifierSuggestion),
+        typeof(SuspiciousFormatSpecifierWarning),
+    ])]
+public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyzer<IInterpolatedStringExpression>
+{
+    [Pure]
+    static bool IsWellKnownImplementation(IInterpolatedStringExpression interpolatedStringExpression)
+    {
+        if (interpolatedStringExpression.HandlerConstructorReference.Resolve().DeclaredElement is IConstructor { ContainingType: var type })
+        {
+            return type.IsClrType(PredefinedType.DEFAULT_INTERPOLATED_STRING_HANDLER_FQN)
+                || type.IsClrType(ClrTypeNames.AppendInterpolatedStringHandler)
+                || type.IsClrType(ClrTypeNames.MemoryExtensions_TryWriteInterpolatedStringHandler)
+                || type.IsClrType(ClrTypeNames.Utf8_TryWriteInterpolatedStringHandler)
+                || type.IsClrType(ClrTypeNames.AssertInterpolatedStringHandler)
+                || type.IsClrType(ClrTypeNames.WriteIfInterpolatedStringHandler)
+                || type.IsClrType(ClrTypeNames.TraceVerboseInterpolatedStringHandler);
+        }
+
+        if (interpolatedStringExpression.FormatReference.Resolve().DeclaredElement is IMethod { IsStatic: true } method)
+        {
+            return method.ShortName switch
+            {
+                nameof(string.Format) or nameof(string.Concat) when method.ContainingType.IsSystemString() => true,
+                nameof(FormattableStringFactory.Create) when method.ContainingType.IsClrType(PredefinedType.FORMATTABLE_STRING_FACTORY_FQN) => true,
+
+                _ => false,
+            };
+        }
+
+        return false;
+    }
+
+    protected override void Run(IInterpolatedStringExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+    {
+        if (IsWellKnownImplementation(element))
+        {
+            foreach (var insert in element.Inserts)
+            {
+                var format = insert.FormatSpecifier?.GetText();
+
+                switch (format)
+                {
+                    case [':', 'G', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                        && (precisionSpecifier == ""
+                            || int.TryParse(precisionSpecifier, out var precision)
+                            && (precision == 0 && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralZeroPrecisionRedundant) != 0
+                                || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength)):
+                    {
+                        consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying 'G{precisionSpecifier}' is redundant.", insert));
+                        break;
+                    }
+
+                    case [':', 'g', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                        && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision) != 0
+                        && (precisionSpecifier == ""
+                            || int.TryParse(precisionSpecifier, out var precision)
+                            && (precision == 0 && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralZeroPrecisionRedundant) != 0
+                                || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength)):
+                    {
+                        consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying 'g{precisionSpecifier}' is redundant.", insert));
+                        break;
+                    }
+
+                    case [':', 'E' or 'e', .. var precisionSpecifier] when precisionSpecifier != ""
+                        && int.TryParse(precisionSpecifier, out var precision)
+                        && precision == 6:
+                    {
+                        consumer.AddHighlighting(
+                            new RedundantFormatPrecisionSpecifierHint(
+                                $"The format precision specifier is redundant, '{format[1].ToString()}' has the same effect.",
+                                insert));
+                        break;
+                    }
+
+                    case [':', 'D' or 'd', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                        && (numberInfo.FormatSpecifiers & FormatSpecifiers.Decimal) != 0
+                        && precisionSpecifier != ""
+                        && int.TryParse(precisionSpecifier, out var precision)
+                        && precision is 0 or 1:
+                    {
+                        consumer.AddHighlighting(
+                            new RedundantFormatPrecisionSpecifierHint(
+                                $"The format precision specifier is redundant, '{format[1].ToString()}' has the same effect.",
+                                insert));
+                        break;
+                    }
+
+                    case [':', 'B' or 'b', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                        && (numberInfo.FormatSpecifiers & FormatSpecifiers.Binary) != 0
+                        && precisionSpecifier != ""
+                        && int.TryParse(precisionSpecifier, out var precision)
+                        && precision is 0 or 1:
+                    {
+                        consumer.AddHighlighting(
+                            new RedundantFormatPrecisionSpecifierHint(
+                                $"The format precision specifier is redundant, '{format[1].ToString()}' has the same effect.",
+                                insert));
+                        break;
+                    }
+
+                    case [':', 'X' or 'x', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                        && (numberInfo.FormatSpecifiers & FormatSpecifiers.Hexadecimal) != 0
+                        && precisionSpecifier != ""
+                        && int.TryParse(precisionSpecifier, out var precision)
+                        && precision is 0 or 1:
+                    {
+                        consumer.AddHighlighting(
+                            new RedundantFormatPrecisionSpecifierHint(
+                                $"The format precision specifier is redundant, '{format[1].ToString()}' has the same effect.",
+                                insert));
+                        break;
+                    }
+
+                    case [':', 'R' or 'r', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo:
+                    {
+                        Debug.Assert(
+                            (numberInfo.FormatSpecifiers & (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant))
+                            != (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant));
+
+                        if ((numberInfo.FormatSpecifiers & FormatSpecifiers.RoundtripToBeReplaced) != 0)
+                        {
+                            Debug.Assert(numberInfo.RoundTripFormatSpecifierReplacement is { });
+
+                            consumer.AddHighlighting(
+                                new PassOtherFormatSpecifierSuggestion(
+                                    $"Pass the '{numberInfo.RoundTripFormatSpecifierReplacement}' format specifier (string length may vary).",
+                                    insert,
+                                    numberInfo.RoundTripFormatSpecifierReplacement));
+                        }
+
+                        if ((numberInfo.FormatSpecifiers & FormatSpecifiers.RoundtripPrecisionRedundant) != 0 && precisionSpecifier != "")
+                        {
+                            consumer.AddHighlighting(
+                                new RedundantFormatPrecisionSpecifierHint(
+                                    $"The format precision specifier is redundant, '{format[1].ToString()}' has the same effect.",
+                                    insert));
+                        }
+
+                        if ((numberInfo.FormatSpecifiers & (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant))
+                            == 0)
+                        {
+                            consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", insert));
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}

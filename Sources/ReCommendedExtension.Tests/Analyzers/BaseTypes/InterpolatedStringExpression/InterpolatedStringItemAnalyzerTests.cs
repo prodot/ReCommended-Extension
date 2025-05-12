@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -7,7 +8,7 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
 
-namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringItem;
+namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringExpression;
 
 using int128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Int128;
 using uint128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.UInt128;
@@ -15,9 +16,9 @@ using half = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Half;
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-public sealed class InterpolatedStringItemAnalyzerTests : CSharpHighlightingTestBase
+public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlightingTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringItem";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringExpression";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantFormatSpecifierHint
@@ -435,4 +436,13 @@ public sealed class InterpolatedStringItemAnalyzerTests : CSharpHighlightingTest
 
         DoNamedTest2();
     }
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80]
+    public void TestInterpolatedStringHandler() => DoNamedTest2();
+
+    [Test]
+    [TestNetFramework46]
+    public void TestStringFormatters() => DoNamedTest2();
 }

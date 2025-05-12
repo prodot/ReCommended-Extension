@@ -7,13 +7,13 @@ using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
 
-namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringItem;
+namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringExpression;
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringItemQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringExpressionQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantFormatSpecifierHint
