@@ -12,7 +12,9 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
 public sealed class RemoveFormatPrecisionSpecifierFix(RedundantFormatPrecisionSpecifierHint highlighting) : QuickFixBase
 {
     public override bool IsAvailable(IUserDataHolder cache)
-        => highlighting is { FormatArgument.Value: ICSharpLiteralExpression or IInterpolatedStringExpression } or { Insert: { } };
+        => highlighting is { FormatArgument.Value: ICSharpLiteralExpression or IInterpolatedStringExpression }
+            or { Insert: { } }
+            or { FormatStringExpression: { }, FormatItem: { } };
 
     public override string Text => "Remove format precision specifier";
 

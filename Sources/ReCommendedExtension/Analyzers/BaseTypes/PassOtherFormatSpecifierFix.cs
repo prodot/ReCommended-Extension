@@ -36,7 +36,7 @@ public sealed class PassOtherFormatSpecifierFix(PassOtherFormatSpecifierSuggesti
 
         return _ =>
         {
-            if (highlighting.Insert is { })
+            if (highlighting is { Insert: { } } or { FormatStringExpression: { }, FormatItem: { } })
             {
                 using (WriteLockCookie.Create())
                 {

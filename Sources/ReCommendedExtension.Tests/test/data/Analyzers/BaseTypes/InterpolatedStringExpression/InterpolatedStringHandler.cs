@@ -8,7 +8,7 @@ namespace Test
 {
     public class InterpolatedStringItems
     {
-        public void DefaultInterpolatedStringHandler(
+        public void Handlers(
             int number,
             StringBuilder builder,
             Span<char> destination,

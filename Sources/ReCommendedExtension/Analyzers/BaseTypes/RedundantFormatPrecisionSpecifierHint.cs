@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
 using ReCommendedExtension.Extensions;
 
@@ -25,13 +26,26 @@ public sealed class RedundantFormatPrecisionSpecifierHint : Highlighting
 {
     const string SeverityId = "RedundantFormatPrecisionSpecifier";
 
-    public RedundantFormatPrecisionSpecifierHint(string message, ICSharpArgument formatArgument) : base(message) => FormatArgument = formatArgument;
+    internal RedundantFormatPrecisionSpecifierHint(string message, ICSharpArgument formatArgument) : base(message) => FormatArgument = formatArgument;
 
-    public RedundantFormatPrecisionSpecifierHint(string message, IInterpolatedStringInsert insert) : base(message) => Insert = insert;
+    internal RedundantFormatPrecisionSpecifierHint(string message, IInterpolatedStringInsert insert) : base(message) => Insert = insert;
+
+    internal RedundantFormatPrecisionSpecifierHint(
+        string message,
+        ICSharpLiteralExpression formatStringExpression,
+        FormatStringParser.FormatItem formatItem) : base(message)
+    {
+        FormatStringExpression = formatStringExpression;
+        FormatItem = formatItem;
+    }
 
     internal ICSharpArgument? FormatArgument { get; }
 
     internal IInterpolatedStringInsert? Insert { get; }
+
+    internal ICSharpLiteralExpression? FormatStringExpression { get; }
+
+    internal FormatStringParser.FormatItem? FormatItem { get; }
 
     public override DocumentRange CalculateRange()
     {
@@ -84,7 +98,18 @@ public sealed class RedundantFormatPrecisionSpecifierHint : Highlighting
 
         if (Insert is { })
         {
-            return Insert.FormatSpecifier.GetDocumentRange().ExtendLeft(-2);
+            return Insert.FormatSpecifier.GetDocumentRange().ExtendLeft(-2); // to exclude the ':' character and the format specifier (one character)
+        }
+
+        if (FormatStringExpression is { } && FormatItem is { })
+        {
+            var documentRange = FormatStringExpression.GetDocumentRange();
+
+            return new DocumentRange(
+                documentRange.Document,
+                new TextRange(
+                    documentRange.StartOffset.Offset + FormatItem.FormatStringRange.StartOffset + 1, // to exclude the format specifier (one character)
+                    documentRange.StartOffset.Offset + FormatItem.FormatStringRange.StartOffset + FormatItem.FormatStringRange.Length));
         }
 
         throw new NotSupportedException();

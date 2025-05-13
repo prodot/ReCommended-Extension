@@ -114,6 +114,8 @@ internal static class ClrTypeNames
     public static readonly IClrTypeName TraceVerboseInterpolatedStringHandler =
         new ClrTypeName("System.Diagnostics.TraceSwitchExtensions.TraceVerboseInterpolatedStringHandler");
 
+    public static readonly IClrTypeName TextWriter = GetClrTypeName<TextWriter>();
+
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsClrType([NotNullWhen(true)] this ITypeElement? typeElement, IClrTypeName clrName)

@@ -17,11 +17,25 @@ public sealed class RemoveFormatSpecifierFix(RedundantFormatSpecifierHint highli
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
-        using (WriteLockCookie.Create())
+        if (highlighting.Insert is { })
         {
-            ModificationUtil.DeleteChild(highlighting.Insert.FormatSpecifier);
+            using (WriteLockCookie.Create())
+            {
+                ModificationUtil.DeleteChild(highlighting.Insert.FormatSpecifier);
+            }
         }
 
-        return _ => { };
+        return _ =>
+        {
+            if (highlighting is { FormatStringExpression: { }, FormatItem: { } })
+            {
+                using (WriteLockCookie.Create())
+                {
+                    var documentRange = highlighting.CalculateRange();
+
+                    documentRange.Document.DeleteText(documentRange.TextRange);
+                }
+            }
+        };
     }
 }

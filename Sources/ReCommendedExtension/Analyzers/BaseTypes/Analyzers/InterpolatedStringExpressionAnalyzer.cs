@@ -34,13 +34,9 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
 
         if (interpolatedStringExpression.FormatReference.Resolve().DeclaredElement is IMethod { IsStatic: true } method)
         {
-            return method.ShortName switch
-            {
-                nameof(string.Format) or nameof(string.Concat) when method.ContainingType.IsSystemString() => true,
-                nameof(FormattableStringFactory.Create) when method.ContainingType.IsClrType(PredefinedType.FORMATTABLE_STRING_FACTORY_FQN) => true,
-
-                _ => false,
-            };
+            return method.ShortName is nameof(string.Format) or nameof(string.Concat) && method.ContainingType.IsSystemString()
+                || method.ShortName == nameof(FormattableStringFactory.Create)
+                && method.ContainingType.IsClrType(PredefinedType.FORMATTABLE_STRING_FACTORY_FQN);
         }
 
         return false;
@@ -77,7 +73,8 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                         break;
                     }
 
-                    case [':', 'E' or 'e', .. var precisionSpecifier] when precisionSpecifier != ""
+                    case [':', 'E' or 'e', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { }
+                        && precisionSpecifier != ""
                         && int.TryParse(precisionSpecifier, out var precision)
                         && precision == 6:
                     {

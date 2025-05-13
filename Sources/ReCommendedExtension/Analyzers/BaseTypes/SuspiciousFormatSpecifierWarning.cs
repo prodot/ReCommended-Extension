@@ -3,6 +3,8 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes;
 
@@ -20,10 +22,21 @@ public sealed class SuspiciousFormatSpecifierWarning : Highlighting
 
     readonly ICSharpArgument? formatArgument;
     readonly IInterpolatedStringInsert? insert;
+    readonly ICSharpLiteralExpression? formatStringExpression;
+    readonly FormatStringParser.FormatItem? formatItem;
 
-    public SuspiciousFormatSpecifierWarning(string message, ICSharpArgument formatArgument) : base(message) => this.formatArgument = formatArgument;
+    internal SuspiciousFormatSpecifierWarning(string message, ICSharpArgument formatArgument) : base(message) => this.formatArgument = formatArgument;
 
-    public SuspiciousFormatSpecifierWarning(string message, IInterpolatedStringInsert insert) : base(message) => this.insert = insert;
+    internal SuspiciousFormatSpecifierWarning(string message, IInterpolatedStringInsert insert) : base(message) => this.insert = insert;
+
+    internal SuspiciousFormatSpecifierWarning(
+        string message,
+        ICSharpLiteralExpression formatStringExpression,
+        FormatStringParser.FormatItem formatItem) : base(message)
+    {
+        this.formatStringExpression = formatStringExpression;
+        this.formatItem = formatItem;
+    }
 
     public override DocumentRange CalculateRange()
     {
@@ -34,7 +47,18 @@ public sealed class SuspiciousFormatSpecifierWarning : Highlighting
 
         if (insert is { })
         {
-            return insert.FormatSpecifier.GetDocumentRange().ExtendLeft(-1);
+            return insert.FormatSpecifier.GetDocumentRange().ExtendLeft(-1); // to exclude the ':' character
+        }
+
+        if (formatStringExpression is { } && formatItem is { })
+        {
+            var documentRange = formatStringExpression.GetDocumentRange();
+
+            return new DocumentRange(
+                documentRange.Document,
+                new TextRange(
+                    documentRange.StartOffset.Offset + formatItem.FormatStringRange.StartOffset, // the ':' character already excluded
+                    documentRange.StartOffset.Offset + formatItem.FormatStringRange.StartOffset + formatItem.FormatStringRange.Length));
         }
 
         throw new NotSupportedException();

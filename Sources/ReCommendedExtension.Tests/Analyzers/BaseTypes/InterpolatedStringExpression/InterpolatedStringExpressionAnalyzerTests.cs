@@ -271,7 +271,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
         Test(n => $"{n:G40}", n => $"{n}", values);
         Test(n => $"{n:g}", n => $"{n}", values);
         Test(n => $"{n:g0}", n => $"{n}", values);
-        Test(n => $"{n:g36}", n => $"{n}", values);
+        Test(n => $"{n:g39}", n => $"{n}", values);
         Test(n => $"{n:g40}", n => $"{n}", values);
         Test(n => $"{n:E6}", n => $"{n:E}", values);
         Test(n => $"{n:e6}", n => $"{n:e}", values);
