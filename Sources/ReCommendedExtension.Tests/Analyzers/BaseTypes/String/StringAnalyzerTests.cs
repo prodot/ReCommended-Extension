@@ -75,7 +75,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Pure]
-    static IEnumerable<E> GetEnumValues<E>() where E : struct, Enum
+    static IEnumerable<E> GetEnumValues<E>() where E : struct, System.Enum
     {
         [Pure]
         static IEnumerable<MissingStringSplitOptions> GetMissingStringSplitOptions()
@@ -96,10 +96,11 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             throw new NotSupportedException();
         }
 
-        return Enum.GetValues(typeof(E)).Cast<E>();
+        return System.Enum.GetValues(typeof(E)).Cast<E>();
     }
 
-    static void Test<E, R>(string text, Func<string, E, R> expected, Func<string, E, R> actual, bool emptyThrows = false) where E : struct, Enum
+    static void Test<E, R>(string text, Func<string, E, R> expected, Func<string, E, R> actual, bool emptyThrows = false)
+        where E : struct, System.Enum
     {
         foreach (var value in GetEnumValues<E>())
         {
@@ -120,7 +121,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     static void TestNullable<E, R>(string text, Func<string?, E, R> expected, Func<string?, E, R> actual, bool emptyThrows = false)
-        where E : struct, Enum
+        where E : struct, System.Enum
     {
         foreach (var value in GetEnumValues<E>())
         {

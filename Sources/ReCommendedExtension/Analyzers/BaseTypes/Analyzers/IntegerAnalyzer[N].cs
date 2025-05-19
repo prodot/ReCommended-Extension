@@ -10,8 +10,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyzer<N>(numberInfo) where N : struct
 {
     /// <remarks>
-    /// <c>T.DivRem(0, right)</c> → <c>(0, 0)</c><para/>
-    /// <c>T.DivRem(left, 1)</c> → <c>(left, 0)</c>
+    /// <c>T.DivRem(0, right)</c> → <c>(0, 0)</c>
     /// </remarks>
     void AnalyzeDivRem(
         IHighlightingConsumer consumer,

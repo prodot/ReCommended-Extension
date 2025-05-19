@@ -6,17 +6,22 @@ namespace ReCommendedExtension.Extensions.MethodFinding;
 
 internal record ParameterType
 {
-    public required IClrTypeName ClrTypeName { get; init; }
+    public IClrTypeName? ClrTypeName { get; init; }
 
     [Pure]
     protected virtual IType? TryGetType(IPsiModule psiModule)
     {
-        if (ClrTypeName.TryGetTypeElement(psiModule) is { } typeElement)
+        if (ClrTypeName is { })
         {
-            return TypeFactory.CreateType(typeElement);
+            if (ClrTypeName.TryGetTypeElement(psiModule) is { } typeElement)
+            {
+                return TypeFactory.CreateType(typeElement);
+            }
+
+            return null;
         }
 
-        return null;
+        return TypeFactory.CreateUnknownType(psiModule);
     }
 
     [Pure]
@@ -24,7 +29,9 @@ internal record ParameterType
     {
         if (TryGetType(psiModule) is { } type)
         {
-            return TypeEqualityComparer.Default.Equals(type, otherType);
+            return type.IsUnknown
+                ? TypeEqualityComparer.DefaultOrUnknown.Equals(type, otherType)
+                : TypeEqualityComparer.Default.Equals(type, otherType);
         }
 
         return false;

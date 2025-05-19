@@ -1,0 +1,39 @@
+﻿namespace Test
+{
+    public class InterpolatedStringItems
+    {
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void RedundantFormatSpecifier(SampleEnum value)
+        {
+            var result1 = $"{value|:G|(0)}";
+            var result2 = $"{value|:g|(1)}";
+        }
+
+        public void RedundantFormatSpecifier(SampleEnum? value)
+        {
+            var result1 = $"{value|:G|(2)}";
+            var result2 = $"{value|:g|(3)}";
+        }
+
+        public void NoDetection(SampleEnum value)
+        {
+            var result = $"{value:F}";
+        }
+
+        public void NoDetection(SampleEnum? value)
+        {
+            var result = $"{value:F}";
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'G' is redundant.
+(1): ReSharper Dead Code: Specifying 'g' is redundant.
+(2): ReSharper Dead Code: Specifying 'G' is redundant.
+(3): ReSharper Dead Code: Specifying 'g' is redundant.

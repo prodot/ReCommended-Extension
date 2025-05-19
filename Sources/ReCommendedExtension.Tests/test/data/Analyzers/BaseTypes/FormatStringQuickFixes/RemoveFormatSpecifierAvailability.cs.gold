@@ -323,6 +323,25 @@ namespace Test
             var result1 = string.Format("{0|:G|(190)}", number);
             var result2 = string.Format("{0|:G0|(191)}", number);
         }
+
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void Enum_(SampleEnum value)
+        {
+            var result1 = string.Format("{0|:G|(192)}", value);
+            var result2 = string.Format("{0|:g|(193)}", value);
+        }
+
+        public void Enum_(SampleEnum? value)
+        {
+            var result1 = string.Format("{0|:G|(194)}", value);
+            var result2 = string.Format("{0|:g|(195)}", value);
+        }
     }
 }
 ------------------------------------------------
@@ -900,5 +919,17 @@ Remove format specifier
 QUICKFIXES:
 Remove format specifier
 191: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+192: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+193: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+194: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+195: Specifying 'g' is redundant.
 QUICKFIXES:
 Remove format specifier

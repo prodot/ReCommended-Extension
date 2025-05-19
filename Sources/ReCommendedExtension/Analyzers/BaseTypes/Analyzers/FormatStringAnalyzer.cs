@@ -59,10 +59,11 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                     && formattingFunctionInvocationInfo.FormattingExpressions[index] is { } formattingExpression)
                 {
                     var format = formatString.Substring(formatItem.FormatStringRange);
+                    var expressionType = formattingExpression.Type();
 
                     switch (format)
                     {
-                        case ['G', .. var precisionSpecifier] when NumberInfo.TryGet(formattingExpression.Type()) is { } numberInfo
+                        case ['G', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                             && (precisionSpecifier == ""
                                 || int.TryParse(precisionSpecifier, out var precision)
                                 && (precision == 0 && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralZeroPrecisionRedundant) != 0
@@ -76,7 +77,7 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                             break;
                         }
 
-                        case ['g', .. var precisionSpecifier] when NumberInfo.TryGet(formattingExpression.Type()) is { } numberInfo
+                        case ['g', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                             && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision) != 0
                             && (precisionSpecifier == ""
                                 || int.TryParse(precisionSpecifier, out var precision)
@@ -91,7 +92,17 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                             break;
                         }
 
-                        case ['E' or 'e', .. var precisionSpecifier] when NumberInfo.TryGet(formattingExpression.Type()) is { }
+                        case ['G' or 'g'] when expressionType.IsEnumType() || expressionType.IsNullable() && expressionType.Unlift().IsEnumType():
+                        {
+                            consumer.AddHighlighting(
+                                new RedundantFormatSpecifierHint(
+                                    $"Specifying '{format[0].ToString()}' is redundant.",
+                                    formatStringExpression,
+                                    formatItem));
+                            break;
+                        }
+
+                        case ['E' or 'e', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { }
                             && precisionSpecifier != ""
                             && int.TryParse(precisionSpecifier, out var precision)
                             && precision == 6:
@@ -104,7 +115,7 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                             break;
                         }
 
-                        case ['D' or 'd', .. var precisionSpecifier] when NumberInfo.TryGet(formattingExpression.Type()) is { } numberInfo
+                        case ['D' or 'd', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                             && (numberInfo.FormatSpecifiers & FormatSpecifiers.Decimal) != 0
                             && precisionSpecifier != ""
                             && int.TryParse(precisionSpecifier, out var precision)
@@ -118,7 +129,7 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                             break;
                         }
 
-                        case ['B' or 'b', .. var precisionSpecifier] when NumberInfo.TryGet(formattingExpression.Type()) is { } numberInfo
+                        case ['B' or 'b', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                             && (numberInfo.FormatSpecifiers & FormatSpecifiers.Binary) != 0
                             && precisionSpecifier != ""
                             && int.TryParse(precisionSpecifier, out var precision)
@@ -132,7 +143,7 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                             break;
                         }
 
-                        case ['X' or 'x', .. var precisionSpecifier] when NumberInfo.TryGet(formattingExpression.Type()) is { } numberInfo
+                        case ['X' or 'x', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                             && (numberInfo.FormatSpecifiers & FormatSpecifiers.Hexadecimal) != 0
                             && precisionSpecifier != ""
                             && int.TryParse(precisionSpecifier, out var precision)
@@ -146,7 +157,7 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                             break;
                         }
 
-                        case ['R' or 'r', .. var precisionSpecifier] when NumberInfo.TryGet(formattingExpression.Type()) is { } numberInfo:
+                        case ['R' or 'r', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo:
                         {
                             Debug.Assert(
                                 (numberInfo.FormatSpecifiers

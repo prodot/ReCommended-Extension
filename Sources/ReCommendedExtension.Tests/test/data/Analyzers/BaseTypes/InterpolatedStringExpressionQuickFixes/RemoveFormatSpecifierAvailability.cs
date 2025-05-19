@@ -323,5 +323,24 @@ namespace Test
             var result1 = $"{number:G}";
             var result2 = $"{number:G0}";
         }
+
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void Enum_(SampleEnum value)
+        {
+            var result1 = $"{value:G}";
+            var result2 = $"{value:g}";
+        }
+
+        public void Enum_(SampleEnum? value)
+        {
+            var result1 = $"{value:G}";
+            var result2 = $"{value:g}";
+        }
     }
 }

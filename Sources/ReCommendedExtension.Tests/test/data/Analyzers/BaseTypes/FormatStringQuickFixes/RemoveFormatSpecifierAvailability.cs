@@ -323,5 +323,24 @@ namespace Test
             var result1 = string.Format("{0:G}", number);
             var result2 = string.Format("{0:G0}", number);
         }
+
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void Enum_(SampleEnum value)
+        {
+            var result1 = string.Format("{0:G}", value);
+            var result2 = string.Format("{0:g}", value);
+        }
+
+        public void Enum_(SampleEnum? value)
+        {
+            var result1 = string.Format("{0:G}", value);
+            var result2 = string.Format("{0:g}", value);
+        }
     }
 }

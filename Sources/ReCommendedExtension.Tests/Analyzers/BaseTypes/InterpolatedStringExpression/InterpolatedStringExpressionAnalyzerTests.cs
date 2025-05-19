@@ -437,6 +437,39 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
         DoNamedTest2();
     }
 
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
+    enum SampleEnum
+    {
+        Red,
+        Green,
+        Blue,
+    }
+
+    [Flags]
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
+    enum SampleFlags
+    {
+        Red = 1 << 0,
+        Green = 1 << 1,
+        Blue = 1 << 2,
+    }
+
+    [Test]
+    [TestNet50]
+    public void TestEnum()
+    {
+        var enumValues = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
+        var flagValues = new[] { SampleFlags.Red, SampleFlags.Red | SampleFlags.Blue, (SampleFlags)3, (SampleFlags)0, (SampleFlags)9 };
+
+        Test(e => $"{e:G}", e => $"{e}", enumValues);
+        Test(e => $"{e:g}", e => $"{e}", enumValues);
+
+        Test(e => $"{e:G}", e => $"{e}", flagValues);
+        Test(e => $"{e:g}", e => $"{e}", flagValues);
+
+        DoNamedTest2();
+    }
+
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]

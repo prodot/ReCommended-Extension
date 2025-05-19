@@ -49,10 +49,11 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
             foreach (var insert in element.Inserts)
             {
                 var format = insert.FormatSpecifier?.GetText();
+                var expressionType = insert.Expression.Type();
 
                 switch (format)
                 {
-                    case [':', 'G', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                    case [':', 'G', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                         && (precisionSpecifier == ""
                             || int.TryParse(precisionSpecifier, out var precision)
                             && (precision == 0 && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralZeroPrecisionRedundant) != 0
@@ -62,7 +63,7 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                         break;
                     }
 
-                    case [':', 'g', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                    case [':', 'g', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                         && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision) != 0
                         && (precisionSpecifier == ""
                             || int.TryParse(precisionSpecifier, out var precision)
@@ -73,7 +74,13 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                         break;
                     }
 
-                    case [':', 'E' or 'e', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { }
+                    case [':', 'G' or 'g'] when expressionType.IsEnumType() || expressionType.IsNullable() && expressionType.Unlift().IsEnumType():
+                    {
+                        consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying '{format[1].ToString()}' is redundant.", insert));
+                        break;
+                    }
+
+                    case [':', 'E' or 'e', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { }
                         && precisionSpecifier != ""
                         && int.TryParse(precisionSpecifier, out var precision)
                         && precision == 6:
@@ -85,7 +92,7 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                         break;
                     }
 
-                    case [':', 'D' or 'd', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                    case [':', 'D' or 'd', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                         && (numberInfo.FormatSpecifiers & FormatSpecifiers.Decimal) != 0
                         && precisionSpecifier != ""
                         && int.TryParse(precisionSpecifier, out var precision)
@@ -98,7 +105,7 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                         break;
                     }
 
-                    case [':', 'B' or 'b', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                    case [':', 'B' or 'b', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                         && (numberInfo.FormatSpecifiers & FormatSpecifiers.Binary) != 0
                         && precisionSpecifier != ""
                         && int.TryParse(precisionSpecifier, out var precision)
@@ -111,7 +118,7 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                         break;
                     }
 
-                    case [':', 'X' or 'x', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo
+                    case [':', 'X' or 'x', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo
                         && (numberInfo.FormatSpecifiers & FormatSpecifiers.Hexadecimal) != 0
                         && precisionSpecifier != ""
                         && int.TryParse(precisionSpecifier, out var precision)
@@ -124,7 +131,7 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                         break;
                     }
 
-                    case [':', 'R' or 'r', .. var precisionSpecifier] when NumberInfo.TryGet(insert.Expression.Type()) is { } numberInfo:
+                    case [':', 'R' or 'r', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { } numberInfo:
                     {
                         Debug.Assert(
                             (numberInfo.FormatSpecifiers & (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant))

@@ -323,6 +323,25 @@ namespace Test
             var result1 = $"{number|:G|(190)}";
             var result2 = $"{number|:G0|(191)}";
         }
+
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void Enum_(SampleEnum value)
+        {
+            var result1 = $"{value|:G|(192)}";
+            var result2 = $"{value|:g|(193)}";
+        }
+
+        public void Enum_(SampleEnum? value)
+        {
+            var result1 = $"{value|:G|(194)}";
+            var result2 = $"{value|:g|(195)}";
+        }
     }
 }
 ------------------------------------------------
@@ -900,5 +919,17 @@ Remove format specifier
 QUICKFIXES:
 Remove format specifier
 191: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+192: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+193: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+194: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+195: Specifying 'g' is redundant.
 QUICKFIXES:
 Remove format specifier
