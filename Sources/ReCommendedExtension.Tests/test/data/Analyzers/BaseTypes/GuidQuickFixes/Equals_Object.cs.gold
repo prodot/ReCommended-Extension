@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Guids
+    {
+        public void Equals(Guid guid)
+        {
+            var result = fal{caret}se;
+        }
+    }
+}

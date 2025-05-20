@@ -342,6 +342,18 @@ namespace Test
             var result1 = string.Format("{0|:G|(194)}", value);
             var result2 = string.Format("{0|:g|(195)}", value);
         }
+
+        public void Guid_(Guid value)
+        {
+            var result1 = string.Format("{0|:D|(196)}", value);
+            var result2 = string.Format("{0|:d|(197)}", value);
+        }
+
+        public void Guid_(Guid? value)
+        {
+            var result1 = string.Format("{0|:D|(198)}", value);
+            var result2 = string.Format("{0|:d|(199)}", value);
+        }
     }
 }
 ------------------------------------------------
@@ -931,5 +943,17 @@ Remove format specifier
 QUICKFIXES:
 Remove format specifier
 195: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+196: Specifying 'D' is redundant.
+QUICKFIXES:
+Remove format specifier
+197: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+198: Specifying 'D' is redundant.
+QUICKFIXES:
+Remove format specifier
+199: Specifying 'd' is redundant.
 QUICKFIXES:
 Remove format specifier

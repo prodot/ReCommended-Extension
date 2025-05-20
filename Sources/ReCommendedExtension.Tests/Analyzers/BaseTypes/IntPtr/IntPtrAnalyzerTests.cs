@@ -178,6 +178,7 @@ public sealed class IntPtrAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantCast")]
     public void TestToString()
     {
         Test(n => n.ToString(null as string), n => n.ToString());

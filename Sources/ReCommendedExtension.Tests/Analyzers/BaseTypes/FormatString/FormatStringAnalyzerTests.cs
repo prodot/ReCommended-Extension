@@ -484,6 +484,18 @@ public sealed class FormatStringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseStringInterpolation")]
+    public void TestGuid()
+    {
+        var values = new[] { System.Guid.Empty, new System.Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
+
+        Test(guid => string.Format("{0:D}", guid), guid => string.Format("{0}", guid), values);
+        Test(guid => string.Format("{0:d}", guid), guid => string.Format("{0}", guid), values);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [TestNet70]
     public void TestStringFormatters() => DoNamedTest2();
 }

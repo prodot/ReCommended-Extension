@@ -1,0 +1,28 @@
+﻿using System;
+
+namespace Test
+{
+    public class Guids
+    {
+        public void RedundantArgument(Guid guid, string format, IFormatProvider provider)
+        {
+            var result11 = guid.ToString(|null|(0));
+            var result12 = guid.ToString(|""|(1));
+            var result13 = guid.ToString(|"D"|(2));
+            var result14 = guid.ToString(|"d"|(3));
+
+            var result21 = guid.ToString(format, |provider|(4));
+        }
+
+        public void NoDetection(Guid guid)
+        {
+            var result = guid.ToString("N");
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing null or an empty string is redundant.
+(1): ReSharper Dead Code: Passing null or an empty string is redundant.
+(2): ReSharper Dead Code: Passing "D" is redundant.
+(3): ReSharper Dead Code: Passing "d" is redundant.
+(4): ReSharper Dead Code: Passing a format provider is redundant.

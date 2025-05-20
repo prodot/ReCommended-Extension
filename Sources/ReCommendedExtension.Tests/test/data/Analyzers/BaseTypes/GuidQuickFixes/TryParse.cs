@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Guids
+    {
+        public void TryParse(string s, IFormatProvider provider, out Guid result)
+        {
+            var result1 = Guid.TryParse(s, provider{caret}, out result);
+        }
+    }
+}

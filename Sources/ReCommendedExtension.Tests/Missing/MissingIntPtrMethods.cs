@@ -3,6 +3,7 @@ using System.Text;
 
 namespace ReCommendedExtension.Tests.Missing;
 
+[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 internal static class MissingIntPtrMethods // todo: consider implementing IFormattable
 {
     [Pure]

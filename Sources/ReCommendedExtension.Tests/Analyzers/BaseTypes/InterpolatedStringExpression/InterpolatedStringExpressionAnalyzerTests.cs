@@ -455,7 +455,6 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
-    [TestNet50]
     public void TestEnum()
     {
         var enumValues = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
@@ -466,6 +465,17 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
         Test(e => $"{e:G}", e => $"{e}", flagValues);
         Test(e => $"{e:g}", e => $"{e}", flagValues);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    public void TestGuid()
+    {
+        var values = new[] { System.Guid.Empty, new System.Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
+
+        Test(guid => $"{guid:D}", guid => $"{guid}", values);
+        Test(guid => $"{guid:d}", guid => $"{guid}", values);
 
         DoNamedTest2();
     }

@@ -137,7 +137,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     /// <c>enum.ToString("")</c> → <c>enum.ToString()</c><para/>
     /// <c>enum.ToString("G")</c> → <c>enum.ToString()</c>
     /// </remarks>
-    static void AnalyzeToString(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
+    static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
     {
         var format = formatArgument.Value.TryGetStringConstant();
 
@@ -250,7 +250,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                             switch (method.Parameters, element.Arguments)
                             {
                                 case ([{ Type: var formatType }], [var formatArgument]) when formatType.IsString():
-                                    AnalyzeToString(consumer, element, formatArgument);
+                                    AnalyzeToString_String(consumer, element, formatArgument);
                                     break;
                             }
                             break;

@@ -45,9 +45,9 @@ public sealed class CharAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestEquals()
     {
-        Test((character, obj) => character.Equals(obj), (character, obj) => character == obj);
+        Test((c, obj) => c.Equals(obj), (c, obj) => c == obj);
 
-        Test(number => number.Equals(null), _ => false);
+        Test(c => c.Equals(null), _ => false);
 
         DoNamedTest2();
     }

@@ -2,7 +2,7 @@
 
 namespace Test
 {
-    public class Bytes
+    public class Enums
     {
         public enum SampleEnum
         {

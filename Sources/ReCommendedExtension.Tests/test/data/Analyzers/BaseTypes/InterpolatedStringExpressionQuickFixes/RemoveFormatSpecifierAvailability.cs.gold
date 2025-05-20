@@ -342,6 +342,18 @@ namespace Test
             var result1 = $"{value|:G|(194)}";
             var result2 = $"{value|:g|(195)}";
         }
+
+        public void Guid_(Guid value)
+        {
+            var result1 = $"{value|:D|(196)}";
+            var result2 = $"{value|:d|(197)}";
+        }
+
+        public void Guid_(Guid? value)
+        {
+            var result1 = $"{value|:D|(198)}";
+            var result2 = $"{value|:d|(199)}";
+        }
     }
 }
 ------------------------------------------------
@@ -931,5 +943,17 @@ Remove format specifier
 QUICKFIXES:
 Remove format specifier
 195: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+196: Specifying 'D' is redundant.
+QUICKFIXES:
+Remove format specifier
+197: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+198: Specifying 'D' is redundant.
+QUICKFIXES:
+Remove format specifier
+199: Specifying 'd' is redundant.
 QUICKFIXES:
 Remove format specifier

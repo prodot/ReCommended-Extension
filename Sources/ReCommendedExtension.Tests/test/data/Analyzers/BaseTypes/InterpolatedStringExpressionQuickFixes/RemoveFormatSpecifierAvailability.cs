@@ -342,5 +342,17 @@ namespace Test
             var result1 = $"{value:G}";
             var result2 = $"{value:g}";
         }
+
+        public void Guid_(Guid value)
+        {
+            var result1 = $"{value:D}";
+            var result2 = $"{value:d}";
+        }
+
+        public void Guid_(Guid? value)
+        {
+            var result1 = $"{value:D}";
+            var result2 = $"{value:d}";
+        }
     }
 }

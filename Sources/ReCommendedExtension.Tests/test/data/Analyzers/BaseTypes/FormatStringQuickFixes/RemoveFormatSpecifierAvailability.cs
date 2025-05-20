@@ -342,5 +342,17 @@ namespace Test
             var result1 = string.Format("{0:G}", value);
             var result2 = string.Format("{0:g}", value);
         }
+
+        public void Guid_(Guid value)
+        {
+            var result1 = string.Format("{0:D}", value);
+            var result2 = string.Format("{0:d}", value);
+        }
+
+        public void Guid_(Guid? value)
+        {
+            var result1 = string.Format("{0:D}", value);
+            var result2 = string.Format("{0:d}", value);
+        }
     }
 }
