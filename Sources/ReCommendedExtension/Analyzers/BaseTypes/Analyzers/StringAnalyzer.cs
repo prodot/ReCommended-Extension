@@ -2383,7 +2383,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
             }
 
-            case [{ Value: var argumentExpression }] when CollectionCreation.TryFrom(argumentExpression) is { Count: > 0 } collectionCreation:
+            case [{ Value: var argumentExpression }] when CollectionCreation.TryFrom(argumentExpression) is { Count: > 1 } collectionCreation:
             {
                 var set = new HashSet<char>(collectionCreation.Count);
 
@@ -2438,7 +2438,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                 break;
 
-            case (_, _) when CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0 } collectionCreation:
+            case (_, _) when CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 1 } collectionCreation:
             {
                 var set = new HashSet<char>(collectionCreation.Count);
 
@@ -2460,7 +2460,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// </remarks>
     static void AnalyzeSplit_CharArray_StringSplitOptions(IHighlightingConsumer consumer, ICSharpArgument separatorArgument)
     {
-        if (CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0 } collectionCreation)
+        if (CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 1 } collectionCreation)
         {
             var set = new HashSet<char>(collectionCreation.Count);
 
@@ -2530,7 +2530,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 break;
 
-            case (_, _) when CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0 } collectionCreation:
+            case (_, _) when CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 1 } collectionCreation:
             {
                 var set = new HashSet<char>(collectionCreation.Count);
 
@@ -2767,13 +2767,16 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 else
                 {
-                    var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-                    foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                    if (collectionCreation.Count > 1)
                     {
-                        if (!set.Add(s))
+                        var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                        foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
                         {
-                            consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                            if (!set.Add(s))
+                            {
+                                consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                            }
                         }
                     }
                 }
@@ -2867,13 +2870,16 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 }
                 else
                 {
-                    var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-                    foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                    if (collectionCreation.Count > 1)
                     {
-                        if (!set.Add(s))
+                        var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                        foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
                         {
-                            consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                            if (!set.Add(s))
+                            {
+                                consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                            }
                         }
                     }
                 }
@@ -3058,40 +3064,42 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
             }
 
-            case [{ } argument] when CollectionCreation.TryFrom(argument.Value) is { } collectionCreation:
+            case [{ } argument]:
             {
-                if (collectionCreation.Count > 0)
+                switch (CollectionCreation.TryFrom(argument.Value))
                 {
-                    var set = new HashSet<char>(collectionCreation.Count);
-
-                    foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                    {
-                        if (!set.Add(character))
+                    case { Count: 0 }:
+                        if (PredefinedType.STRING_FQN.HasMethod(
+                            new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
+                            invocationExpression.PsiModule))
                         {
-                            consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                            consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
                         }
-                    }
+                        break;
+
+                    case { Count: > 1 } collectionCreation:
+                        var set = new HashSet<char>(collectionCreation.Count);
+
+                        foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
+                        {
+                            if (!set.Add(character))
+                            {
+                                consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                            }
+                        }
+                        break;
                 }
-                else
-                {
-                    if (PredefinedType.STRING_FQN.HasMethod(
+
+                if (argument.Value.IsDefaultValue()
+                    && PredefinedType.STRING_FQN.HasMethod(
                         new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
                         invocationExpression.PsiModule))
-                    {
-                        consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
-                    }
+                {
+                    consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
                 }
 
                 break;
             }
-
-            case [{ } argument] when argument.Value.IsDefaultValue()
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
-                    invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
-                break;
         }
     }
 
@@ -3108,24 +3116,34 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         switch (arguments)
         {
             case [_, _, ..]:
+            {
+                var set = new HashSet<char>(arguments.Count);
+
+                foreach (var argument in arguments)
                 {
-                    var set = new HashSet<char>(arguments.Count);
-
-                    foreach (var argument in arguments)
+                    if (argument.Value.TryGetCharConstant() is { } character && !set.Add(character))
                     {
-                        if (argument.Value.TryGetCharConstant() is { } character && !set.Add(character))
-                        {
-                            consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
-                        }
+                        consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
                     }
-
-                    break;
                 }
 
-            case [{ } argument] when CollectionCreation.TryFrom(argument.Value) is { } collectionCreation:
+                break;
+            }
+
+            case [{ } argument]:
+            {
+                switch (CollectionCreation.TryFrom(argument.Value))
                 {
-                    if (collectionCreation.Count > 0)
-                    {
+                    case { Count: 0 }:
+                        if (PredefinedType.STRING_FQN.HasMethod(
+                            new MethodSignature { Name = nameof(string.TrimEnd), ParameterTypes = [] },
+                            invocationExpression.PsiModule))
+                        {
+                            consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
+                        }
+                        break;
+
+                    case { Count: > 1 } collectionCreation:
                         var set = new HashSet<char>(collectionCreation.Count);
 
                         foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
@@ -3135,27 +3153,19 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                 consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
                             }
                         }
-                    }
-                    else
-                    {
-                        if (PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.TrimEnd), ParameterTypes = [] },
-                            invocationExpression.PsiModule))
-                        {
-                            consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
-                        }
-                    }
-
-                    break;
+                        break;
                 }
 
-            case [{ } argument] when argument.Value.IsDefaultValue()
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.TrimEnd), ParameterTypes = [] },
-                    invocationExpression.PsiModule):
+                if (argument.Value.IsDefaultValue()
+                    && PredefinedType.STRING_FQN.HasMethod(
+                        new MethodSignature { Name = nameof(string.TrimEnd), ParameterTypes = [] },
+                        invocationExpression.PsiModule))
+                {
+                    consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
+                }
 
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
                 break;
+            }
         }
     }
 
@@ -3172,54 +3182,56 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         switch (arguments)
         {
             case [_, _, ..]:
-                {
-                    var set = new HashSet<char>(arguments.Count);
-
-                    foreach (var argument in arguments)
-                    {
-                        if (argument.Value.TryGetCharConstant() is { } character && !set.Add(character))
-                        {
-                            consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
-                        }
-                    }
-
-                    break;
-                }
-
-            case [{ } argument] when CollectionCreation.TryFrom(argument.Value) is { } collectionCreation:
             {
-                if (collectionCreation.Count > 0)
-                {
-                    var set = new HashSet<char>(collectionCreation.Count);
+                var set = new HashSet<char>(arguments.Count);
 
-                    foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                    {
-                        if (!set.Add(character))
-                        {
-                            consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                        }
-                    }
-                }
-                else
+                foreach (var argument in arguments)
                 {
-                    if (PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.TrimStart), ParameterTypes = [] },
-                        invocationExpression.PsiModule))
+                    if (argument.Value.TryGetCharConstant() is { } character && !set.Add(character))
                     {
-                        consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
+                        consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
                     }
                 }
 
                 break;
             }
 
-            case [{ } argument] when argument.Value.IsDefaultValue()
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.TrimStart), ParameterTypes = [] },
-                    invocationExpression.PsiModule):
+            case [{ } argument]:
+            {
+                switch (CollectionCreation.TryFrom(argument.Value))
+                {
+                    case { Count: 0 }:
+                        if (PredefinedType.STRING_FQN.HasMethod(
+                            new MethodSignature { Name = nameof(string.TrimStart), ParameterTypes = [] },
+                            invocationExpression.PsiModule))
+                        {
+                            consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
+                        }
+                        break;
 
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
+                    case { Count: > 1 } collectionCreation:
+                        var set = new HashSet<char>(collectionCreation.Count);
+
+                        foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
+                        {
+                            if (!set.Add(character))
+                            {
+                                consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
+                            }
+                        }
+                        break;
+                }
+
+                if (argument.Value.IsDefaultValue()
+                    && PredefinedType.STRING_FQN.HasMethod(
+                        new MethodSignature { Name = nameof(string.TrimStart), ParameterTypes = [] },
+                        invocationExpression.PsiModule))
+                {
+                    consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
+                }
+
                 break;
+            }
         }
     }
 
