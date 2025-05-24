@@ -102,6 +102,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
                 new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Char },
                 invocationExpression.PsiModule):
+
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", repeatCountArgument));
                 break;
         }
@@ -350,6 +351,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                invocationExpression.PsiModule);
+
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             switch (valuesArguments)
@@ -375,10 +382,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression));
                                 return;
 
-                            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
-                                invocationExpression.PsiModule):
-
+                            case 1 when MethodExists():
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
                                         $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -394,9 +398,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, argument)
-                            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
-                                invocationExpression.PsiModule))
+                            && MethodExists())
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -446,6 +448,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                invocationExpression.PsiModule);
+
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             switch (valuesArguments)
@@ -471,10 +479,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression));
                                 return;
 
-                            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
-                                invocationExpression.PsiModule):
-
+                            case 1 when MethodExists():
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
                                         $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -490,9 +495,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsReadOnlySpanOfObject()
-                            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
-                                invocationExpression.PsiModule))
+                            && MethodExists())
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -601,6 +604,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
+                invocationExpression.PsiModule);
+
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             switch (valuesArguments)
@@ -626,10 +635,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression));
                                 return;
 
-                            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
-                                invocationExpression.PsiModule):
-
+                            case 1 when MethodExists():
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
                                         $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -645,9 +651,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsGenericArrayOf(PredefinedType.STRING_FQN, argument)
-                            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
-                                invocationExpression.PsiModule))
+                            && MethodExists())
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -697,6 +701,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
+                invocationExpression.PsiModule);
+
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
             switch (valuesArguments)
@@ -722,10 +732,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression));
                                 return;
 
-                            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
-                                invocationExpression.PsiModule):
-
+                            case 1 when MethodExists():
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
                                         $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -741,9 +748,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsReadOnlySpanOfString()
-                            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
-                                invocationExpression.PsiModule))
+                            && MethodExists())
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -790,6 +795,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                invocationExpression.PsiModule);
+
         if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
@@ -815,10 +826,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression));
                                 break;
 
-                            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
-                                invocationExpression.PsiModule):
-
+                            case 1 when MethodExists():
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
                                         $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -834,9 +842,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, argument)
-                            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
-                                invocationExpression.PsiModule))
+                            && MethodExists())
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -865,6 +871,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                invocationExpression.PsiModule);
+
         if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
@@ -890,10 +902,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression));
                                 break;
 
-                            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
-                                invocationExpression.PsiModule):
-
+                            case 1 when MethodExists():
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
                                         $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -909,9 +918,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsReadOnlySpanOfObject()
-                            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
-                                invocationExpression.PsiModule))
+                            && MethodExists())
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -977,6 +984,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
+                invocationExpression.PsiModule);
+
         if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
@@ -1002,10 +1015,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression));
                                 break;
 
-                            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
-                                invocationExpression.PsiModule):
-
+                            case 1 when MethodExists():
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
                                         $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -1021,9 +1031,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsGenericArrayOf(PredefinedType.STRING_FQN, argument)
-                            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
-                                invocationExpression.PsiModule))
+                            && MethodExists())
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -1052,6 +1060,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
+                invocationExpression.PsiModule);
+
         if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
@@ -1077,10 +1091,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                         invokedExpression));
                                 break;
 
-                            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
-                                invocationExpression.PsiModule):
-
+                            case 1 when MethodExists():
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
                                         $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -1096,9 +1107,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
                             && !argumentType.IsReadOnlySpanOfString()
-                            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
-                                invocationExpression.PsiModule))
+                            && MethodExists())
                         {
                             consumer.AddHighlighting(
                                 new UseOtherMethodSuggestion(
@@ -1130,6 +1139,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             case (null, 1) when PredefinedType.STRING_BUILDER_FQN.HasMethod(
                 new MethodSignature { Name = nameof(StringBuilder.Insert), ParameterTypes = ParameterTypes.Int32_String },
                 invocationExpression.PsiModule):
+
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", countArgument));
                 break;
 
@@ -1138,6 +1148,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
+
                 consumer.AddHighlighting(
                     new PassSingleCharacterSuggestion(
                         "Pass the single character.",

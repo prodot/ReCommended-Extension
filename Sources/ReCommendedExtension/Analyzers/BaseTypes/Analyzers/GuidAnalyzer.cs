@@ -108,20 +108,20 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     /// </remarks>
     static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.GUID_FQN.HasMethod(
+                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
+                invocationExpression.PsiModule);
+
         var format = formatArgument.Value.TryGetStringConstant();
 
-        if ((formatArgument.Value.IsDefaultValue() || format == "")
-            && PredefinedType.GUID_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule))
+        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodExists())
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
         }
 
-        if (format is "D" or "d"
-            && PredefinedType.GUID_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule))
+        if (format is "D" or "d" && MethodExists())
         {
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
         }

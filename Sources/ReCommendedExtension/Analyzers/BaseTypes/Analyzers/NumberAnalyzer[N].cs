@@ -277,10 +277,13 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
     /// </remarks>
     void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
     {
+        [Pure]
+        bool MethodExists()
+            => numberInfo.ClrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule);
+
         var format = formatArgument.Value.TryGetStringConstant();
 
-        if ((formatArgument.Value.IsDefaultValue() || format == "")
-            && numberInfo.ClrTypeName.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }, invocationExpression.PsiModule))
+        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodExists())
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
         }
@@ -291,9 +294,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     || int.TryParse(precisionSpecifier, out var precision)
                     && (precision == 0 && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralZeroPrecisionRedundant) != 0
                         || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
-                && numberInfo.ClrTypeName.HasMethod(
-                    new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                    invocationExpression.PsiModule):
+                && MethodExists():
             {
                 consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
                 break;
@@ -304,9 +305,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     || int.TryParse(precisionSpecifier, out var precision)
                     && (precision == 0 && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralZeroPrecisionRedundant) != 0
                         || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
-                && numberInfo.ClrTypeName.HasMethod(
-                    new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                    invocationExpression.PsiModule):
+                && MethodExists():
             {
                 consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
                 break;
@@ -430,26 +429,32 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
         ICSharpArgument formatArgument,
         ICSharpArgument providerArgument)
     {
+        [Pure]
+        bool MethodWithProviderExists()
+            => numberInfo.ClrTypeName.HasMethod(
+                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
+                invocationExpression.PsiModule);
+
+        [Pure]
+        bool MethodWithFormatExists()
+            => numberInfo.ClrTypeName.HasMethod(
+                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
+                invocationExpression.PsiModule);
+
         var format = formatArgument.Value.TryGetStringConstant();
 
-        if ((formatArgument.Value.IsDefaultValue() || format == "")
-            && numberInfo.ClrTypeName.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
-                invocationExpression.PsiModule))
+        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodWithProviderExists())
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
         }
 
         switch (format)
         {
-            case ['G', .. var precisionSpecifier]
-                when (precisionSpecifier == ""
+            case ['G', .. var precisionSpecifier] when (precisionSpecifier == ""
                     || int.TryParse(precisionSpecifier, out var precision)
                     && (precision == 0 && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralZeroPrecisionRedundant) != 0
                         || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
-                && numberInfo.ClrTypeName.HasMethod(
-                    new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
-                    invocationExpression.PsiModule):
+                && MethodWithProviderExists():
             {
                 consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
                 break;
@@ -460,9 +465,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     || int.TryParse(precisionSpecifier, out var precision)
                     && (precision == 0 && (numberInfo.FormatSpecifiers & FormatSpecifiers.GeneralZeroPrecisionRedundant) != 0
                         || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
-                && numberInfo.ClrTypeName.HasMethod(
-                    new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
-                    invocationExpression.PsiModule):
+                && MethodWithProviderExists():
             {
                 consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
                 break;
@@ -501,10 +504,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             formatArgument));
                 }
 
-                if (!providerArgument.Value.IsDefaultValue()
-                    && numberInfo.ClrTypeName.HasMethod(
-                        new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
-                        invocationExpression.PsiModule))
+                if (!providerArgument.Value.IsDefaultValue() && MethodWithFormatExists())
                 {
                     consumer.AddHighlighting(
                         new RedundantArgumentHint("Passing a provider with a binary format specifier is redundant.", providerArgument));
@@ -523,10 +523,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             formatArgument));
                 }
 
-                if (!providerArgument.Value.IsDefaultValue()
-                    && numberInfo.ClrTypeName.HasMethod(
-                        new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
-                        invocationExpression.PsiModule))
+                if (!providerArgument.Value.IsDefaultValue() && MethodWithFormatExists())
                 {
                     consumer.AddHighlighting(
                         new RedundantArgumentHint("Passing a provider with a hexadecimal format specifier is redundant.", providerArgument));
@@ -568,14 +565,9 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
             }
         }
 
-        if (providerArgument.Value.IsDefaultValue())
+        if (providerArgument.Value.IsDefaultValue() && MethodWithFormatExists())
         {
-            if (numberInfo.ClrTypeName.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
-                invocationExpression.PsiModule))
-            {
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-            }
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
         }
     }
 

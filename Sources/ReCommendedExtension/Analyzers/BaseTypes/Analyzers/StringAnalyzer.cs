@@ -366,6 +366,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char },
+                invocationExpression.PsiModule);
+
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
         switch (invocationExpression.Parent)
@@ -397,9 +403,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                     case (EqualityExpressionType.NE, -1)
                         when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-                        && PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char },
-                            invocationExpression.PsiModule):
+                        && MethodExists():
 
                         consumer.AddHighlighting(
                             new UseOtherMethodSuggestion(
@@ -414,9 +418,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                     case (EqualityExpressionType.EQEQ, -1)
                         when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-                        && PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char },
-                            invocationExpression.PsiModule):
+                        && MethodExists():
 
                         consumer.AddHighlighting(
                             new UseOtherMethodSuggestion(
@@ -434,14 +436,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
                 && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
-                && valueArgument.Value is { }
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char },
-                    invocationExpression.PsiModule):
+                && valueArgument.Value is { }:
 
                 var tokenType = relationalExpression.OperatorSign.GetTokenType();
 
-                if (tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
+                if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0) && MethodExists())
                 {
                     consumer.AddHighlighting(
                         new UseOtherMethodSuggestion(
@@ -454,7 +453,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             relationalExpression));
                 }
 
-                if (tokenType == CSharpTokenType.LT && value == 0)
+                if (tokenType == CSharpTokenType.LT && value == 0 && MethodExists())
                 {
                     consumer.AddHighlighting(
                         new UseOtherMethodSuggestion(
@@ -498,58 +497,26 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char_StringComparison },
+                invocationExpression.PsiModule);
+
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        if (PredefinedType.STRING_FQN.HasMethod(
-            new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char_StringComparison },
-            invocationExpression.PsiModule))
+        switch (invocationExpression.Parent)
         {
-            switch (invocationExpression.Parent)
-            {
-                case IEqualityExpression equalityExpression when equalityExpression.LeftOperand == invocationExpression
-                    && valueArgument.Value is { }
-                    && comparisonTypeArgument.Value is { }:
+            case IEqualityExpression equalityExpression when equalityExpression.LeftOperand == invocationExpression
+                && valueArgument.Value is { }
+                && comparisonTypeArgument.Value is { }:
 
-                    switch (equalityExpression.EqualityType, equalityExpression.RightOperand.TryGetInt32Constant())
-                    {
-                        case (EqualityExpressionType.NE, -1)
-                            when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(string.Contains),
-                                    false,
-                                    [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                    equalityExpression));
-                            break;
+                switch (equalityExpression.EqualityType, equalityExpression.RightOperand.TryGetInt32Constant())
+                {
+                    case (EqualityExpressionType.NE, -1)
+                        when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+                        && MethodExists():
 
-                        case (EqualityExpressionType.EQEQ, -1)
-                            when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(string.Contains)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(string.Contains),
-                                    true,
-                                    [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                    equalityExpression));
-                            break;
-                    }
-                    break;
-
-                case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
-                    && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-                    && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
-                    && valueArgument.Value is { }
-                    && comparisonTypeArgument.Value is { }:
-
-                    var tokenType = relationalExpression.OperatorSign.GetTokenType();
-
-                    if (tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
-                    {
                         consumer.AddHighlighting(
                             new UseOtherMethodSuggestion(
                                 $"Use the '{nameof(string.Contains)}' method.",
@@ -558,11 +525,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                 nameof(string.Contains),
                                 false,
                                 [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                relationalExpression));
-                    }
+                                equalityExpression));
+                        break;
 
-                    if (tokenType == CSharpTokenType.LT && value == 0)
-                    {
+                    case (EqualityExpressionType.EQEQ, -1)
+                        when invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+                        && MethodExists():
+
                         consumer.AddHighlighting(
                             new UseOtherMethodSuggestion(
                                 $"Use the '{nameof(string.Contains)}' method.",
@@ -571,11 +540,46 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                 nameof(string.Contains),
                                 true,
                                 [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
-                                relationalExpression));
-                    }
+                                equalityExpression));
+                        break;
+                }
+                break;
 
-                    break;
-            }
+            case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
+                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+                && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
+                && valueArgument.Value is { }
+                && comparisonTypeArgument.Value is { }:
+
+                var tokenType = relationalExpression.OperatorSign.GetTokenType();
+
+                if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0) && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(string.Contains)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(string.Contains),
+                            false,
+                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                            relationalExpression));
+                }
+
+                if (tokenType == CSharpTokenType.LT && value == 0 && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(string.Contains)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(string.Contains),
+                            true,
+                            [valueArgument.Value.GetText(), comparisonTypeArgument.Value.GetText()],
+                            relationalExpression));
+                }
+
+                break;
         }
     }
 
@@ -596,6 +600,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IReferenceExpression invokedExpression,
         ICSharpArgument valueArgument)
     {
+        [Pure]
+        bool MethodStartsWithExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.StartsWith), ParameterTypes = ParameterTypes.String },
+                invocationExpression.PsiModule);
+
+        [Pure]
+        bool MethodContainsExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
+                invocationExpression.PsiModule);
+
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
         switch (valueArgument.Value.TryGetStringConstant())
@@ -631,10 +647,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                             switch (equalityExpression.EqualityType, equalityExpression.RightOperand.TryGetInt32Constant())
                             {
-                                case (EqualityExpressionType.EQEQ, 0) when PredefinedType.STRING_FQN.HasMethod(
-                                    new MethodSignature { Name = nameof(string.StartsWith), ParameterTypes = ParameterTypes.String },
-                                    invocationExpression.PsiModule):
-
+                                case (EqualityExpressionType.EQEQ, 0) when MethodStartsWithExists():
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
                                             $"Use the '{nameof(string.StartsWith)}' method.",
@@ -646,10 +659,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.NE, 0) when PredefinedType.STRING_FQN.HasMethod(
-                                    new MethodSignature { Name = nameof(string.StartsWith), ParameterTypes = ParameterTypes.String },
-                                    invocationExpression.PsiModule):
-
+                                case (EqualityExpressionType.NE, 0) when MethodStartsWithExists():
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
                                             $"Use the '{nameof(string.StartsWith)}' method.",
@@ -661,10 +671,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.NE, -1) when PredefinedType.STRING_FQN.HasMethod(
-                                    new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
-                                    invocationExpression.PsiModule):
-
+                                case (EqualityExpressionType.NE, -1) when MethodContainsExists():
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
                                             $"Use the '{nameof(string.Contains)}' method.",
@@ -676,10 +683,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.EQEQ, -1) when PredefinedType.STRING_FQN.HasMethod(
-                                    new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
-                                    invocationExpression.PsiModule):
-
+                                case (EqualityExpressionType.EQEQ, -1) when MethodContainsExists():
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
                                             $"Use the '{nameof(string.Contains)}' method.",
@@ -695,14 +699,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                         case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
                             && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
-                            && valueArgument.Value is { }
-                            && PredefinedType.STRING_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
-                                invocationExpression.PsiModule):
+                            && valueArgument.Value is { }:
 
                             var tokenType = relationalExpression.OperatorSign.GetTokenType();
 
-                            if (tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
+                            if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
+                                && MethodContainsExists())
                             {
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
@@ -715,7 +717,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                         relationalExpression));
                             }
 
-                            if (tokenType == CSharpTokenType.LT && value == 0)
+                            if (tokenType == CSharpTokenType.LT && value == 0 && MethodContainsExists())
                             {
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
@@ -770,6 +772,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument valueArgument,
         ICSharpArgument comparisonTypeArgument)
     {
+        [Pure]
+        bool MethodStartsWithExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.StartsWith), ParameterTypes = ParameterTypes.String_StringComparison },
+                invocationExpression.PsiModule);
+
+        [Pure]
+        bool MethodContainsExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
+                invocationExpression.PsiModule);
+
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
         switch (valueArgument.Value.TryGetStringConstant())
@@ -805,10 +819,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                             switch (equalityExpression.EqualityType, equalityExpression.RightOperand.TryGetInt32Constant())
                             {
-                                case (EqualityExpressionType.EQEQ, 0) when PredefinedType.STRING_FQN.HasMethod(
-                                    new MethodSignature { Name = nameof(string.StartsWith), ParameterTypes = ParameterTypes.String_StringComparison },
-                                    invocationExpression.PsiModule):
-
+                                case (EqualityExpressionType.EQEQ, 0) when MethodStartsWithExists():
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
                                             $"Use the '{nameof(string.StartsWith)}' method.",
@@ -820,10 +831,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.NE, 0) when PredefinedType.STRING_FQN.HasMethod(
-                                    new MethodSignature { Name = nameof(string.StartsWith), ParameterTypes = ParameterTypes.String_StringComparison },
-                                    invocationExpression.PsiModule):
-
+                                case (EqualityExpressionType.NE, 0) when MethodStartsWithExists():
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
                                             $"Use the '{nameof(string.StartsWith)}' method.",
@@ -835,10 +843,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.NE, -1) when PredefinedType.STRING_FQN.HasMethod(
-                                    new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
-                                    invocationExpression.PsiModule):
-
+                                case (EqualityExpressionType.NE, -1) when MethodContainsExists():
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
                                             $"Use the '{nameof(string.Contains)}' method.",
@@ -850,10 +855,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                             equalityExpression));
                                     break;
 
-                                case (EqualityExpressionType.EQEQ, -1) when PredefinedType.STRING_FQN.HasMethod(
-                                    new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
-                                    invocationExpression.PsiModule):
-
+                                case (EqualityExpressionType.EQEQ, -1) when MethodContainsExists():
                                     consumer.AddHighlighting(
                                         new UseOtherMethodSuggestion(
                                             $"Use the '{nameof(string.Contains)}' method.",
@@ -870,14 +872,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case IRelationalExpression relationalExpression when relationalExpression.LeftOperand == invocationExpression
                             && relationalExpression.RightOperand.TryGetInt32Constant() is { } value
                             && valueArgument.Value is { }
-                            && comparisonTypeArgument.Value is { }
-                            && PredefinedType.STRING_FQN.HasMethod(
-                                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
-                                invocationExpression.PsiModule):
+                            && comparisonTypeArgument.Value is { }:
 
                             var tokenType = relationalExpression.OperatorSign.GetTokenType();
 
-                            if (tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
+                            if ((tokenType == CSharpTokenType.GT && value == -1 || tokenType == CSharpTokenType.GE && value == 0)
+                                && MethodContainsExists())
                             {
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
@@ -890,7 +890,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                         relationalExpression));
                             }
 
-                            if (tokenType == CSharpTokenType.LT && value == 0)
+                            if (tokenType == CSharpTokenType.LT && value == 0 && MethodContainsExists())
                             {
                                 consumer.AddHighlighting(
                                     new UseOtherMethodSuggestion(
@@ -3047,6 +3047,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
+                invocationExpression.PsiModule);
+
         switch (arguments)
         {
             case [_, _, ..]:
@@ -3069,9 +3075,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 switch (CollectionCreation.TryFrom(argument.Value))
                 {
                     case { Count: 0 }:
-                        if (PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
-                            invocationExpression.PsiModule))
+                        if (MethodExists())
                         {
                             consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
                         }
@@ -3090,10 +3094,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
                 }
 
-                if (argument.Value.IsDefaultValue()
-                    && PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
-                        invocationExpression.PsiModule))
+                if (argument.Value.IsDefaultValue() && MethodExists())
                 {
                     consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
                 }
@@ -3113,6 +3114,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.TrimEnd), ParameterTypes = [] },
+                invocationExpression.PsiModule);
+
         switch (arguments)
         {
             case [_, _, ..]:
@@ -3135,9 +3142,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 switch (CollectionCreation.TryFrom(argument.Value))
                 {
                     case { Count: 0 }:
-                        if (PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.TrimEnd), ParameterTypes = [] },
-                            invocationExpression.PsiModule))
+                        if (MethodExists())
                         {
                             consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
                         }
@@ -3156,10 +3161,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
                 }
 
-                if (argument.Value.IsDefaultValue()
-                    && PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.TrimEnd), ParameterTypes = [] },
-                        invocationExpression.PsiModule))
+                if (argument.Value.IsDefaultValue() && MethodExists())
                 {
                     consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
                 }
@@ -3179,6 +3181,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         IInvocationExpression invocationExpression,
         TreeNodeCollection<ICSharpArgument> arguments)
     {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.TrimStart), ParameterTypes = [] },
+                invocationExpression.PsiModule);
+
         switch (arguments)
         {
             case [_, _, ..]:
@@ -3201,9 +3209,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 switch (CollectionCreation.TryFrom(argument.Value))
                 {
                     case { Count: 0 }:
-                        if (PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.TrimStart), ParameterTypes = [] },
-                            invocationExpression.PsiModule))
+                        if (MethodExists())
                         {
                             consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
                         }
@@ -3222,10 +3228,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
                 }
 
-                if (argument.Value.IsDefaultValue()
-                    && PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.TrimStart), ParameterTypes = [] },
-                        invocationExpression.PsiModule))
+                if (argument.Value.IsDefaultValue() && MethodExists())
                 {
                     consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
                 }
