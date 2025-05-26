@@ -92,6 +92,29 @@ internal static class CSharpExpressionExtensions
     }
 
     [Pure]
+    public static long? TryGetInt64Constant(this ICSharpExpression? expression)
+    {
+        if (expression is IConstantValueOwner constantValueOwner)
+        {
+            return constantValueOwner.ConstantValue switch
+            {
+                { Kind: ConstantValueKind.Long, LongValue: var value } => value,
+                { Kind: ConstantValueKind.Int, IntValue: var value } => value,
+                { Kind: ConstantValueKind.Uint, UintValue: var value } => value,
+                { Kind: ConstantValueKind.Byte, ByteValue: var value } => value,
+                { Kind: ConstantValueKind.Sbyte, SbyteValue: var value } => value,
+                { Kind: ConstantValueKind.Short, ShortValue: var value } => value,
+                { Kind: ConstantValueKind.Ushort, UshortValue: var value } => value,
+                { Kind: ConstantValueKind.Nint, IntValue: var value } => value,
+                { Kind: ConstantValueKind.Char, CharValue: var value } => value,
+                _ => (long?)null,
+            };
+        }
+
+        return null;
+    }
+
+    [Pure]
     public static bool? TryGetBooleanConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: var value } } ? value : null;
 

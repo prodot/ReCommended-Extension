@@ -1,0 +1,92 @@
+﻿using System;
+
+namespace Test
+{
+    public class Randoms
+    {
+        public void Next(Random random, int maxValue)
+        {
+            var result11 = random.Next(|int.MaxValue|(0));
+            var result12 = random.Next(|2_147_483_647|(1));
+            var result13 = random.Next(|0x7fff_ffff|(2));
+
+            var result21 = random.Next(|0|(3), maxValue);
+        }
+
+        public void Next_Nullable(Random? random, int maxValue)
+        {
+            var result11 = random?.Next(|int.MaxValue|(4));
+            var result12 = random?.Next(|2_147_483_647|(5));
+            var result13 = random?.Next(|0x7fff_ffff|(6));
+
+            var result21 = random?.Next(|0|(7), maxValue);
+        }
+
+        public void NextInt64(Random random, long maxValue)
+        {
+            var result11 = random.NextInt64(|long.MaxValue|(8));
+            var result12 = random.NextInt64(|9_223_372_036_854_775_807|(9));
+            var result13 = random.NextInt64(|0x7fff_ffff_ffff_ffff|(10));
+
+            var result21 = random.NextInt64(|0|(11), maxValue);
+        }
+
+        public void NextInt64_Nullable(Random? random, int maxValue)
+        {
+            var result11 = random?.NextInt64(|long.MaxValue|(12));
+            var result12 = random?.NextInt64(|9_223_372_036_854_775_807|(13));
+            var result13 = random?.NextInt64(|0x7fff_ffff_ffff_ffff|(14));
+
+            var result21 = random?.NextInt64(|0|(15), maxValue);
+        }
+    }
+}
+------------------------------------------------
+0: Passing the int.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+1: Passing the int.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+2: Passing the int.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+3: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+4: Passing the int.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+5: Passing the int.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+6: Passing the int.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+7: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+8: Passing the long.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+9: Passing the long.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+10: Passing the long.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+11: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument
+12: Passing the long.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+13: Passing the long.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+14: Passing the long.MaxValue is redundant.
+QUICKFIXES:
+Remove argument
+15: Passing 0 is redundant.
+QUICKFIXES:
+Remove argument

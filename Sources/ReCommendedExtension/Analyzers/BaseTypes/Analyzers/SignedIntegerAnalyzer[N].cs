@@ -59,8 +59,8 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
 
-            var replacementX = GetReplacementFromArgument(invocationExpression, xArgument.Value);
-            var replacementY = GetReplacementFromArgument(invocationExpression, yArgument.Value);
+            var replacementX = NumberInfo.GetReplacementFromArgument(invocationExpression, xArgument.Value);
+            var replacementY = NumberInfo.GetReplacementFromArgument(invocationExpression, yArgument.Value);
 
             consumer.AddHighlighting(
                 new UseExpressionResultSuggestion(
@@ -88,8 +88,8 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
 
-            var replacementX = GetReplacementFromArgument(invocationExpression, xArgument.Value);
-            var replacementY = GetReplacementFromArgument(invocationExpression, yArgument.Value);
+            var replacementX = NumberInfo.GetReplacementFromArgument(invocationExpression, xArgument.Value);
+            var replacementY = NumberInfo.GetReplacementFromArgument(invocationExpression, yArgument.Value);
 
             consumer.AddHighlighting(
                 new UseExpressionResultSuggestion(

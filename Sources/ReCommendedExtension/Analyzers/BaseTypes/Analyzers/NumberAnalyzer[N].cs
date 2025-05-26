@@ -34,8 +34,8 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 Debug.Assert(minArgument.Value is { });
                 Debug.Assert(maxArgument.Value is { });
 
-                var replacementMin = GetReplacementFromArgument(invocationExpression, minArgument.Value);
-                var replacementMax = GetReplacementFromArgument(invocationExpression, maxArgument.Value);
+                var replacementMin = numberInfo.GetReplacementFromArgument(invocationExpression, minArgument.Value);
+                var replacementMax = numberInfo.GetReplacementFromArgument(invocationExpression, maxArgument.Value);
 
                 consumer.AddHighlighting(
                     new UseExpressionResultSuggestion(
@@ -51,7 +51,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     new UseExpressionResultSuggestion(
                         "The expression is always the same as the first argument.",
                         invocationExpression,
-                        GetReplacementFromArgument(invocationExpression, value)));
+                        numberInfo.GetReplacementFromArgument(invocationExpression, value)));
             }
         }
     }
@@ -117,8 +117,8 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
 
-            var replacementX = GetReplacementFromArgument(invocationExpression, xArgument.Value);
-            var replacementY = GetReplacementFromArgument(invocationExpression, yArgument.Value);
+            var replacementX = numberInfo.GetReplacementFromArgument(invocationExpression, xArgument.Value);
+            var replacementY = numberInfo.GetReplacementFromArgument(invocationExpression, yArgument.Value);
 
             consumer.AddHighlighting(
                 new UseExpressionResultSuggestion(
@@ -142,8 +142,8 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
             Debug.Assert(xArgument.Value is { });
             Debug.Assert(yArgument.Value is { });
 
-            var replacementX = GetReplacementFromArgument(invocationExpression, xArgument.Value);
-            var replacementY = GetReplacementFromArgument(invocationExpression, yArgument.Value);
+            var replacementX = numberInfo.GetReplacementFromArgument(invocationExpression, xArgument.Value);
+            var replacementY = numberInfo.GetReplacementFromArgument(invocationExpression, yArgument.Value);
 
             consumer.AddHighlighting(
                 new UseExpressionResultSuggestion(
@@ -707,26 +707,6 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
         }
-    }
-
-    [Pure]
-    private protected string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue)
-    {
-        if (invocationExpression.TryGetTargetType().IsClrType(numberInfo.ClrTypeName) || argumentValue.Type().IsClrType(numberInfo.ClrTypeName))
-        {
-            return argumentValue.GetText();
-        }
-
-        if (numberInfo.TryGetConstant(argumentValue, out var valueImplicitlyConverted) is { } && valueImplicitlyConverted)
-        {
-            Debug.Assert(numberInfo.CastConstant is { });
-
-            return numberInfo.CastConstant(argumentValue, valueImplicitlyConverted);
-        }
-
-        Debug.Assert(numberInfo.Cast is { });
-
-        return numberInfo.Cast(argumentValue);
     }
 
     private protected NumberInfo<N> NumberInfo => numberInfo;

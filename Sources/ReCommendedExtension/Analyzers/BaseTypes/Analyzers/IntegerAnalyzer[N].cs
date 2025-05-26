@@ -58,7 +58,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
                 new UseExpressionResultSuggestion(
                     "The expression is always the same as the first argument.",
                     invocationExpression,
-                    GetReplacementFromArgument(invocationExpression, value)));
+                    NumberInfo.GetReplacementFromArgument(invocationExpression, value)));
         }
     }
 
@@ -77,7 +77,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
                 new UseExpressionResultSuggestion(
                     "The expression is always the same as the first argument.",
                     invocationExpression,
-                    GetReplacementFromArgument(invocationExpression, value)));
+                    NumberInfo.GetReplacementFromArgument(invocationExpression, value)));
         }
     }
 
