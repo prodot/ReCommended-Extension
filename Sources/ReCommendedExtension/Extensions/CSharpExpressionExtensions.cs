@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util.Literals;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 using IObjectCreationExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IObjectCreationExpression;
 
 namespace ReCommendedExtension.Extensions;
@@ -72,47 +73,10 @@ internal static class CSharpExpressionExtensions
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Char, CharValue: var value } } ? value : null;
 
     [Pure]
-    public static int? TryGetInt32Constant(this ICSharpExpression? expression)
-    {
-        if (expression is IConstantValueOwner constantValueOwner)
-        {
-            return constantValueOwner.ConstantValue switch
-            {
-                { Kind: ConstantValueKind.Int, IntValue: var value } => value,
-                { Kind: ConstantValueKind.Byte, ByteValue: var value } => value,
-                { Kind: ConstantValueKind.Sbyte, SbyteValue: var value } => value,
-                { Kind: ConstantValueKind.Short, ShortValue: var value } => value,
-                { Kind: ConstantValueKind.Ushort, UshortValue: var value } => value,
-                { Kind: ConstantValueKind.Char, CharValue: var value } => value,
-                _ => null,
-            };
-        }
-
-        return null;
-    }
+    public static int? TryGetInt32Constant(this ICSharpExpression? expression) => NumberInfo.Int32.TryGetConstant(expression, out _);
 
     [Pure]
-    public static long? TryGetInt64Constant(this ICSharpExpression? expression)
-    {
-        if (expression is IConstantValueOwner constantValueOwner)
-        {
-            return constantValueOwner.ConstantValue switch
-            {
-                { Kind: ConstantValueKind.Long, LongValue: var value } => value,
-                { Kind: ConstantValueKind.Int, IntValue: var value } => value,
-                { Kind: ConstantValueKind.Uint, UintValue: var value } => value,
-                { Kind: ConstantValueKind.Byte, ByteValue: var value } => value,
-                { Kind: ConstantValueKind.Sbyte, SbyteValue: var value } => value,
-                { Kind: ConstantValueKind.Short, ShortValue: var value } => value,
-                { Kind: ConstantValueKind.Ushort, UshortValue: var value } => value,
-                { Kind: ConstantValueKind.Nint, IntValue: var value } => value,
-                { Kind: ConstantValueKind.Char, CharValue: var value } => value,
-                _ => (long?)null,
-            };
-        }
-
-        return null;
-    }
+    public static long? TryGetInt64Constant(this ICSharpExpression? expression) => NumberInfo.Int64.TryGetConstant(expression, out _);
 
     [Pure]
     public static bool? TryGetBooleanConstant(this ICSharpExpression? expression)
