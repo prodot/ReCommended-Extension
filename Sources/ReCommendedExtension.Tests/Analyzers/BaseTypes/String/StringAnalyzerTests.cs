@@ -189,6 +189,15 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    public void TestGetTypeCode()
+    {
+        Test("abcde", text => text.GetTypeCode(), _ => TypeCode.String);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet70]

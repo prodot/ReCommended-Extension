@@ -20,186 +20,191 @@ namespace Test
             var result3 = |$"{someObject}".EndsWith(value: "", StringComparison.OrdinalIgnoreCase)|(5);
         }
 
+        public void GetTypeCode(string text)
+        {
+            var result = |text.GetTypeCode()|(6);
+        }
+
         public void IndexOf(string text, object someObject)
         {
-            var result1 = |text.IndexOf("")|(6);
-            var result2 = |text.IndexOf("", StringComparison.OrdinalIgnoreCase)|(7);
+            var result1 = |text.IndexOf("")|(7);
+            var result2 = |text.IndexOf("", StringComparison.OrdinalIgnoreCase)|(8);
 
-            var result3 = |$"{someObject}".IndexOf("", StringComparison.OrdinalIgnoreCase)|(8);
+            var result3 = |$"{someObject}".IndexOf("", StringComparison.OrdinalIgnoreCase)|(9);
         }
 
         public void IndexOfAny(string text)
         {
-            var result = |text.IndexOfAny([])|(9);
+            var result = |text.IndexOfAny([])|(10);
         }
 
         public void LastIndexOf(string text, char c)
         {
-            var result = |text.LastIndexOf(c, 0)|(10);
+            var result = |text.LastIndexOf(c, 0)|(11);
         }
 
         public void LastIndexOfAny(string text, char[] c)
         {
-            var result1 = |text.LastIndexOfAny([])|(11);
-            var result2 = |text.LastIndexOfAny(c, 0)|(12);
-            var result3 = |text.LastIndexOfAny(c, 0, 0)|(13);
-            var result4 = |text.LastIndexOfAny(c, 0, 1)|(14);
+            var result1 = |text.LastIndexOfAny([])|(12);
+            var result2 = |text.LastIndexOfAny(c, 0)|(13);
+            var result3 = |text.LastIndexOfAny(c, 0, 0)|(14);
+            var result4 = |text.LastIndexOfAny(c, 0, 1)|(15);
         }
 
         public void Remove(string text)
         {
-            var result = |text.Remove(0)|(15);
+            var result = |text.Remove(0)|(16);
         }
 
         public void Split(string text, string s, int count, StringSplitOptions options)
         {
-            var result11 = |text.Split('a', 0)|(16);
-            var result12 = |text.Split('a', 0, options)|(17);
-            var result13 = |text.Split('a', 1)|(18);
-            var result14 = |text.Split('a', 1, StringSplitOptions.None)|(19);
-            var result15 = |text.Split('a', 1, StringSplitOptions.TrimEntries)|(20);
+            var result11 = |text.Split('a', 0)|(17);
+            var result12 = |text.Split('a', 0, options)|(18);
+            var result13 = |text.Split('a', 1)|(19);
+            var result14 = |text.Split('a', 1, StringSplitOptions.None)|(20);
+            var result15 = |text.Split('a', 1, StringSplitOptions.TrimEntries)|(21);
 
-            var result21 = |text.Split(['a'], 0)|(21);
-            var result22 = |text.Split(['a'], 1)|(22);
+            var result21 = |text.Split(['a'], 0)|(22);
+            var result22 = |text.Split(['a'], 1)|(23);
 
-            var result31 = |text.Split(['a'], 0, options)|(23);
-            var result32 = |text.Split(['a'], 1, StringSplitOptions.None)|(24);
-            var result33 = |text.Split(['a'], 1, StringSplitOptions.TrimEntries)|(25);
+            var result31 = |text.Split(['a'], 0, options)|(24);
+            var result32 = |text.Split(['a'], 1, StringSplitOptions.None)|(25);
+            var result33 = |text.Split(['a'], 1, StringSplitOptions.TrimEntries)|(26);
 
-            var result41 = |text.Split(null as string)|(26);
-            var result42 = |text.Split((string?)null)|(27);
-            var result43 = |text.Split("")|(28);
-            var result44 = |text.Split(null as string, StringSplitOptions.None)|(29);
-            var result45 = |text.Split((string?)null, StringSplitOptions.None)|(30);
-            var result46 = |text.Split("", StringSplitOptions.None)|(31);
-            var result47 = |text.Split(null as string, StringSplitOptions.TrimEntries)|(32);
-            var result48 = |text.Split((string?)null, StringSplitOptions.TrimEntries)|(33);
-            var result49 = |text.Split("", StringSplitOptions.TrimEntries)|(34);
+            var result41 = |text.Split(null as string)|(27);
+            var result42 = |text.Split((string?)null)|(28);
+            var result43 = |text.Split("")|(29);
+            var result44 = |text.Split(null as string, StringSplitOptions.None)|(30);
+            var result45 = |text.Split((string?)null, StringSplitOptions.None)|(31);
+            var result46 = |text.Split("", StringSplitOptions.None)|(32);
+            var result47 = |text.Split(null as string, StringSplitOptions.TrimEntries)|(33);
+            var result48 = |text.Split((string?)null, StringSplitOptions.TrimEntries)|(34);
+            var result49 = |text.Split("", StringSplitOptions.TrimEntries)|(35);
 
-            var result51 = |text.Split(s, 0)|(35);
-            var result52 = |text.Split(s, 0, options)|(36);
-            var result53 = |text.Split(s, 1)|(37);
-            var result54 = |text.Split(s, 1, StringSplitOptions.None)|(38);
-            var result55 = |text.Split(s, 1, StringSplitOptions.TrimEntries)|(39);
-            var result56 = |text.Split(null as string, count)|(40);
-            var result57 = |text.Split(null as string, count, StringSplitOptions.None)|(41);
-            var result58 = |text.Split(null as string, count, StringSplitOptions.TrimEntries)|(42);
-            var result59 = |text.Split("", count)|(43);
-            var result50 = |text.Split("", count, StringSplitOptions.None)|(44);
-            var result5A = |text.Split("", count, StringSplitOptions.TrimEntries)|(45);
+            var result51 = |text.Split(s, 0)|(36);
+            var result52 = |text.Split(s, 0, options)|(37);
+            var result53 = |text.Split(s, 1)|(38);
+            var result54 = |text.Split(s, 1, StringSplitOptions.None)|(39);
+            var result55 = |text.Split(s, 1, StringSplitOptions.TrimEntries)|(40);
+            var result56 = |text.Split(null as string, count)|(41);
+            var result57 = |text.Split(null as string, count, StringSplitOptions.None)|(42);
+            var result58 = |text.Split(null as string, count, StringSplitOptions.TrimEntries)|(43);
+            var result59 = |text.Split("", count)|(44);
+            var result50 = |text.Split("", count, StringSplitOptions.None)|(45);
+            var result5A = |text.Split("", count, StringSplitOptions.TrimEntries)|(46);
 
-            var result61 = |text.Split([""], StringSplitOptions.None)|(46);
-            var result62 = |text.Split([""], StringSplitOptions.TrimEntries)|(47);
-            var result63 = |text.Split(new[] { "" }, StringSplitOptions.None)|(48);
-            var result64 = |text.Split(new[] { "" }, StringSplitOptions.TrimEntries)|(49);
+            var result61 = |text.Split([""], StringSplitOptions.None)|(47);
+            var result62 = |text.Split([""], StringSplitOptions.TrimEntries)|(48);
+            var result63 = |text.Split(new[] { "" }, StringSplitOptions.None)|(49);
+            var result64 = |text.Split(new[] { "" }, StringSplitOptions.TrimEntries)|(50);
 
-            var result71 = |text.Split([s], 0, options)|(50);
-            var result72 = |text.Split([s], 1, StringSplitOptions.None)|(51);
-            var result73 = |text.Split([s], 1, StringSplitOptions.TrimEntries)|(52);
-            var result74 = |text.Split([""], count, StringSplitOptions.None)|(53);
-            var result75 = |text.Split([""], count, StringSplitOptions.TrimEntries)|(54);
-            var result76 = |text.Split(new[] { "" }, count, StringSplitOptions.None)|(55);
-            var result77 = |text.Split(new[] { "" }, count, StringSplitOptions.TrimEntries)|(56);
+            var result71 = |text.Split([s], 0, options)|(51);
+            var result72 = |text.Split([s], 1, StringSplitOptions.None)|(52);
+            var result73 = |text.Split([s], 1, StringSplitOptions.TrimEntries)|(53);
+            var result74 = |text.Split([""], count, StringSplitOptions.None)|(54);
+            var result75 = |text.Split([""], count, StringSplitOptions.TrimEntries)|(55);
+            var result76 = |text.Split(new[] { "" }, count, StringSplitOptions.None)|(56);
+            var result77 = |text.Split(new[] { "" }, count, StringSplitOptions.TrimEntries)|(57);
         }
 
         public void StartsWith(string text, object someObject)
         {
-            var result1 = |text.StartsWith("")|(57);
-            var result2 = |text.StartsWith("", StringComparison.OrdinalIgnoreCase)|(58);
+            var result1 = |text.StartsWith("")|(58);
+            var result2 = |text.StartsWith("", StringComparison.OrdinalIgnoreCase)|(59);
 
-            var result3 = |$"{someObject}".StartsWith(value: "", StringComparison.OrdinalIgnoreCase)|(59);
+            var result3 = |$"{someObject}".StartsWith(value: "", StringComparison.OrdinalIgnoreCase)|(60);
         }
 
         public void Join_Empty(string s, char c, string?[] stringItems, string stringItem)
         {
-            var result11 = |string.Join(s, (object?[])[])|(60);
-            var result12 = |string.Join(s, new object?[0])|(61);
-            var result13 = |string.Join(s, new object?[] { })|(62);
-            var result14 = |string.Join(s, Array.Empty<object?>())|(63);
+            var result11 = |string.Join(s, (object?[])[])|(61);
+            var result12 = |string.Join(s, new object?[0])|(62);
+            var result13 = |string.Join(s, new object?[] { })|(63);
+            var result14 = |string.Join(s, Array.Empty<object?>())|(64);
 
-            var result21 = |string.Join(s, (int[])[])|(64);
-            var result22 = |string.Join(s, new int[0])|(65);
-            var result23 = |string.Join(s, new int[] { })|(66);
-            var result24 = |string.Join(s, Array.Empty<int>())|(67);
+            var result21 = |string.Join(s, (int[])[])|(65);
+            var result22 = |string.Join(s, new int[0])|(66);
+            var result23 = |string.Join(s, new int[] { })|(67);
+            var result24 = |string.Join(s, Array.Empty<int>())|(68);
 
-            var result31 = |string.Join(s, (string?[])[])|(68);
-            var result32 = |string.Join(s, new string?[0])|(69);
-            var result33 = |string.Join(s, new string?[] { })|(70);
-            var result34 = |string.Join(s, Array.Empty<string?>())|(71);
+            var result31 = |string.Join(s, (string?[])[])|(69);
+            var result32 = |string.Join(s, new string?[0])|(70);
+            var result33 = |string.Join(s, new string?[] { })|(71);
+            var result34 = |string.Join(s, Array.Empty<string?>())|(72);
 
-            var result41 = |string.Join(c, (object?[])[])|(72);
-            var result42 = |string.Join(c, new object?[0])|(73);
-            var result43 = |string.Join(c, new object?[] { })|(74);
-            var result44 = |string.Join(c, Array.Empty<object?>())|(75);
+            var result41 = |string.Join(c, (object?[])[])|(73);
+            var result42 = |string.Join(c, new object?[0])|(74);
+            var result43 = |string.Join(c, new object?[] { })|(75);
+            var result44 = |string.Join(c, Array.Empty<object?>())|(76);
 
-            var result51 = |string.Join(c, (int[])[])|(76);
-            var result52 = |string.Join(c, new int[0])|(77);
-            var result53 = |string.Join(c, new int[] { })|(78);
-            var result54 = |string.Join(c, Array.Empty<int>())|(79);
+            var result51 = |string.Join(c, (int[])[])|(77);
+            var result52 = |string.Join(c, new int[0])|(78);
+            var result53 = |string.Join(c, new int[] { })|(79);
+            var result54 = |string.Join(c, Array.Empty<int>())|(80);
 
-            var result61 = |string.Join(c, (string?[])[])|(80);
-            var result62 = |string.Join(c, new string?[0])|(81);
-            var result63 = |string.Join(c, new string?[] { })|(82);
-            var result64 = |string.Join(c, Array.Empty<string?>())|(83);
+            var result61 = |string.Join(c, (string?[])[])|(81);
+            var result62 = |string.Join(c, new string?[0])|(82);
+            var result63 = |string.Join(c, new string?[] { })|(83);
+            var result64 = |string.Join(c, Array.Empty<string?>())|(84);
 
-            var result71 = |string.Join(s, default(ReadOnlySpan<object?>))|(84);
-            var result72 = |string.Join(s, new ReadOnlySpan<object?>())|(85);
-            var result73 = |string.Join(s, (ReadOnlySpan<object?>)[])|(86);
+            var result71 = |string.Join(s, default(ReadOnlySpan<object?>))|(85);
+            var result72 = |string.Join(s, new ReadOnlySpan<object?>())|(86);
+            var result73 = |string.Join(s, (ReadOnlySpan<object?>)[])|(87);
 
-            var result81 = |string.Join(s, default(ReadOnlySpan<string?>))|(87);
-            var result82 = |string.Join(s, new ReadOnlySpan<string?>())|(88);
-            var result83 = |string.Join(s, (ReadOnlySpan<string?>)[])|(89);
+            var result81 = |string.Join(s, default(ReadOnlySpan<string?>))|(88);
+            var result82 = |string.Join(s, new ReadOnlySpan<string?>())|(89);
+            var result83 = |string.Join(s, (ReadOnlySpan<string?>)[])|(90);
 
-            var result91 = |string.Join(c, default(ReadOnlySpan<object?>))|(90);
-            var result92 = |string.Join(c, new ReadOnlySpan<object?>())|(91);
-            var result93 = |string.Join(c, (ReadOnlySpan<object?>)[])|(92);
+            var result91 = |string.Join(c, default(ReadOnlySpan<object?>))|(91);
+            var result92 = |string.Join(c, new ReadOnlySpan<object?>())|(92);
+            var result93 = |string.Join(c, (ReadOnlySpan<object?>)[])|(93);
 
-            var resultA1 = |string.Join(c, default(ReadOnlySpan<string?>))|(93);
-            var resultA2 = |string.Join(c, new ReadOnlySpan<string?>())|(94);
-            var resultA3 = |string.Join(c, (ReadOnlySpan<string?>)[])|(95);
+            var resultA1 = |string.Join(c, default(ReadOnlySpan<string?>))|(94);
+            var resultA2 = |string.Join(c, new ReadOnlySpan<string?>())|(95);
+            var resultA3 = |string.Join(c, (ReadOnlySpan<string?>)[])|(96);
 
-            var resultB1 = |string.Join(s, stringItems, 0, 0)|(96);
-            var resultB2 = |string.Join(s, [stringItem], 1, 0)|(97);
+            var resultB1 = |string.Join(s, stringItems, 0, 0)|(97);
+            var resultB2 = |string.Join(s, [stringItem], 1, 0)|(98);
 
-            var resultC1 = |string.Join(c, stringItems, 0, 0)|(98);
-            var resultC2 = |string.Join(c, [stringItem], 1, 0)|(99);
+            var resultC1 = |string.Join(c, stringItems, 0, 0)|(99);
+            var resultC2 = |string.Join(c, [stringItem], 1, 0)|(100);
         }
 
         public void Join_Item(string s, char c, object objectItem, int intItem, string stringItem, string?[] stringItems)
         {
-            var result11 = |string.Join(s, (object?[])[objectItem])|(100);
-            var result12 = |string.Join(s, new[] { objectItem })|(101);
+            var result11 = |string.Join(s, (object?[])[objectItem])|(101);
+            var result12 = |string.Join(s, new[] { objectItem })|(102);
 
-            var result21 = |string.Join(s, (int[])[intItem])|(102);
-            var result22 = |string.Join(s, new[] { intItem })|(103);
+            var result21 = |string.Join(s, (int[])[intItem])|(103);
+            var result22 = |string.Join(s, new[] { intItem })|(104);
 
-            var result31 = |string.Join(s, (string?[])[stringItem])|(104);
-            var result32 = |string.Join(s, new[] { stringItem })|(105);
+            var result31 = |string.Join(s, (string?[])[stringItem])|(105);
+            var result32 = |string.Join(s, new[] { stringItem })|(106);
 
-            var result41 = |string.Join(c, (object?[])[objectItem])|(106);
-            var result43 = |string.Join(c, new[] { objectItem })|(107);
+            var result41 = |string.Join(c, (object?[])[objectItem])|(107);
+            var result43 = |string.Join(c, new[] { objectItem })|(108);
 
-            var result51 = |string.Join(c, (int[])[intItem])|(108);
-            var result52 = |string.Join(c, new[] { intItem })|(109);
+            var result51 = |string.Join(c, (int[])[intItem])|(109);
+            var result52 = |string.Join(c, new[] { intItem })|(110);
 
-            var result61 = |string.Join(c, (string?[])[stringItem])|(110);
-            var result62 = |string.Join(c, new[] { stringItem })|(111);
+            var result61 = |string.Join(c, (string?[])[stringItem])|(111);
+            var result62 = |string.Join(c, new[] { stringItem })|(112);
 
-            var result71 = |string.Join(s, [objectItem])|(112);
-            var result72 = |string.Join(s, objectItem)|(113);
+            var result71 = |string.Join(s, [objectItem])|(113);
+            var result72 = |string.Join(s, objectItem)|(114);
 
-            var result81 = |string.Join(s, (ReadOnlySpan<string?>)[stringItem])|(114);
-            var result82 = |string.Join(s, stringItem)|(115);
+            var result81 = |string.Join(s, (ReadOnlySpan<string?>)[stringItem])|(115);
+            var result82 = |string.Join(s, stringItem)|(116);
 
-            var result91 = |string.Join(c, [objectItem])|(116);
-            var result92 = |string.Join(c, objectItem)|(117);
+            var result91 = |string.Join(c, [objectItem])|(117);
+            var result92 = |string.Join(c, objectItem)|(118);
 
-            var resultA1 = |string.Join(c, (ReadOnlySpan<string?>)[stringItem])|(118);
-            var resultA2 = |string.Join(c, stringItem)|(119);
+            var resultA1 = |string.Join(c, (ReadOnlySpan<string?>)[stringItem])|(119);
+            var resultA2 = |string.Join(c, stringItem)|(120);
 
-            var resultB1 = |string.Join(s, [stringItem], 0, 1)|(120);
+            var resultB1 = |string.Join(s, [stringItem], 0, 1)|(121);
 
-            var resultC1 = |string.Join(c, [stringItem], 0, 1)|(121);
+            var resultC1 = |string.Join(c, [stringItem], 0, 1)|(122);
         }
     }
 }
@@ -222,18 +227,18 @@ Replace with 'true'
 5: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-6: The expression is always 0.
+6: The expression is always TypeCode.String.
 QUICKFIXES:
-Replace with '0'
+Replace with 'TypeCode.String'
 7: The expression is always 0.
 QUICKFIXES:
 Replace with '0'
 8: The expression is always 0.
 QUICKFIXES:
 Replace with '0'
-9: The expression is always -1.
+9: The expression is always 0.
 QUICKFIXES:
-Replace with '-1'
+Replace with '0'
 10: The expression is always -1.
 QUICKFIXES:
 Replace with '-1'
@@ -249,42 +254,42 @@ Replace with '-1'
 14: The expression is always -1.
 QUICKFIXES:
 Replace with '-1'
-15: The expression is always an empty string.
+15: The expression is always -1.
+QUICKFIXES:
+Replace with '-1'
+16: The expression is always an empty string.
 QUICKFIXES:
 Replace with '""'
-16: The expression is always an empty array.
-QUICKFIXES:
-Replace with 'Array.Empty<string>()'
 17: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-18: The expression is always an array with a single element.
+18: The expression is always an empty array.
 QUICKFIXES:
-Replace with 'new[] { text }'
+Replace with 'Array.Empty<string>()'
 19: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-20: The expression is always an array with a single trimmed element.
+20: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+21: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-21: The expression is always an empty array.
+22: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-22: The expression is always an array with a single element.
+23: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-23: The expression is always an empty array.
+24: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-24: The expression is always an array with a single element.
+25: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-25: The expression is always an array with a single trimmed element.
+26: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-26: The expression is always an array with a single element.
-QUICKFIXES:
-Replace with 'new[] { text }'
 27: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
@@ -300,93 +305,93 @@ Replace with 'new[] { text }'
 31: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-32: The expression is always an array with a single trimmed element.
+32: The expression is always an array with a single element.
 QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
+Replace with 'new[] { text }'
 33: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
 34: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-35: The expression is always an empty array.
+35: The expression is always an array with a single trimmed element.
 QUICKFIXES:
-Replace with 'Array.Empty<string>()'
+Replace with 'new[] { text.Trim() }'
 36: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-37: The expression is always an array with a single element.
+37: The expression is always an empty array.
 QUICKFIXES:
-Replace with 'new[] { text }'
+Replace with 'Array.Empty<string>()'
 38: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-39: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
-40: The expression is always an array with a single element.
+39: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
+40: The expression is always an array with a single trimmed element.
+QUICKFIXES:
+Replace with 'new[] { text.Trim() }'
 41: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-42: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
-43: The expression is always an array with a single element.
+42: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
+43: The expression is always an array with a single trimmed element.
+QUICKFIXES:
+Replace with 'new[] { text.Trim() }'
 44: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-45: The expression is always an array with a single trimmed element.
-QUICKFIXES:
-Replace with 'new[] { text.Trim() }'
-46: The expression is always an array with a single element.
+45: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-47: The expression is always an array with a single trimmed element.
+46: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-48: The expression is always an array with a single element.
+47: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-49: The expression is always an array with a single trimmed element.
+48: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-50: The expression is always an empty array.
+49: The expression is always an array with a single element.
+QUICKFIXES:
+Replace with 'new[] { text }'
+50: The expression is always an array with a single trimmed element.
+QUICKFIXES:
+Replace with 'new[] { text.Trim() }'
+51: The expression is always an empty array.
 QUICKFIXES:
 Replace with 'Array.Empty<string>()'
-51: The expression is always an array with a single element.
+52: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-52: The expression is always an array with a single trimmed element.
+53: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-53: The expression is always an array with a single element.
+54: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-54: The expression is always an array with a single trimmed element.
+55: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-55: The expression is always an array with a single element.
+56: The expression is always an array with a single element.
 QUICKFIXES:
 Replace with 'new[] { text }'
-56: The expression is always an array with a single trimmed element.
+57: The expression is always an array with a single trimmed element.
 QUICKFIXES:
 Replace with 'new[] { text.Trim() }'
-57: The expression is always true.
-QUICKFIXES:
-Replace with 'true'
 58: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
 59: The expression is always true.
 QUICKFIXES:
 Replace with 'true'
-60: The expression is always an empty string.
+60: The expression is always true.
 QUICKFIXES:
-Replace with '""'
+Replace with 'true'
 61: The expression is always an empty string.
 QUICKFIXES:
 Replace with '""'
@@ -504,63 +509,63 @@ Replace with '""'
 99: The expression is always an empty string.
 QUICKFIXES:
 Replace with '""'
-100: The expression is always the same as the passed element converted to string.
+100: The expression is always an empty string.
 QUICKFIXES:
-Replace with '$"{objectItem}"'
+Replace with '""'
 101: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
 Replace with '$"{objectItem}"'
 102: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
-Replace with '$"{intItem}"'
+Replace with '$"{objectItem}"'
 103: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
 Replace with '$"{intItem}"'
-104: The expression is always the same as the passed element.
+104: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
-Replace with 'stringItem'
+Replace with '$"{intItem}"'
 105: The expression is always the same as the passed element.
 QUICKFIXES:
 Replace with 'stringItem'
-106: The expression is always the same as the passed element converted to string.
+106: The expression is always the same as the passed element.
 QUICKFIXES:
-Replace with '$"{objectItem}"'
+Replace with 'stringItem'
 107: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
 Replace with '$"{objectItem}"'
 108: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
-Replace with '$"{intItem}"'
+Replace with '$"{objectItem}"'
 109: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
 Replace with '$"{intItem}"'
-110: The expression is always the same as the passed element.
+110: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
-Replace with 'stringItem'
+Replace with '$"{intItem}"'
 111: The expression is always the same as the passed element.
 QUICKFIXES:
 Replace with 'stringItem'
-112: The expression is always the same as the passed element converted to string.
+112: The expression is always the same as the passed element.
 QUICKFIXES:
-Replace with '$"{objectItem}"'
+Replace with 'stringItem'
 113: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
 Replace with '$"{objectItem}"'
-114: The expression is always the same as the passed element.
+114: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
-Replace with 'stringItem'
+Replace with '$"{objectItem}"'
 115: The expression is always the same as the passed element.
 QUICKFIXES:
 Replace with 'stringItem'
-116: The expression is always the same as the passed element converted to string.
+116: The expression is always the same as the passed element.
 QUICKFIXES:
-Replace with '$"{objectItem}"'
+Replace with 'stringItem'
 117: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
 Replace with '$"{objectItem}"'
-118: The expression is always the same as the passed element.
+118: The expression is always the same as the passed element converted to string.
 QUICKFIXES:
-Replace with 'stringItem'
+Replace with '$"{objectItem}"'
 119: The expression is always the same as the passed element.
 QUICKFIXES:
 Replace with 'stringItem'
@@ -568,5 +573,8 @@ Replace with 'stringItem'
 QUICKFIXES:
 Replace with 'stringItem'
 121: The expression is always the same as the passed element.
+QUICKFIXES:
+Replace with 'stringItem'
+122: The expression is always the same as the passed element.
 QUICKFIXES:
 Replace with 'stringItem'

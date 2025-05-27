@@ -39,6 +39,9 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
     public void TestEndsWith_Empty_StringComparison() => DoNamedTest2();
 
     [Test]
+    public void TestGetTypeCode() => DoNamedTest2();
+
+    [Test]
     public void TestIndexOf_Empty() => DoNamedTest2();
 
     [Test]

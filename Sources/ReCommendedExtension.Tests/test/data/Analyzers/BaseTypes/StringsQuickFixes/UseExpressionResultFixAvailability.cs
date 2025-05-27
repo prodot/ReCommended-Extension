@@ -20,6 +20,11 @@ namespace Test
             var result3 = $"{someObject}".EndsWith(value: "", StringComparison.OrdinalIgnoreCase);
         }
 
+        public void GetTypeCode(string text)
+        {
+            var result = text.GetTypeCode();
+        }
+
         public void IndexOf(string text, object someObject)
         {
             var result1 = text.IndexOf("");

@@ -33,12 +33,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
     : ElementProblemAnalyzer<IInvocationExpression>
 {
-    [Pure]
-    static bool IsStringComparison(IType type) => type.IsClrType(PredefinedType.STRING_COMPARISON_CLASS);
-
-    [Pure]
-    static bool IsStringSplitOptions(IType type) => type.IsClrType(ClrTypeNames.StringSplitOptions);
-
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
@@ -129,6 +123,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
         public static IReadOnlyList<ParameterType> Int32 { get; } = [new() { ClrTypeName = PredefinedType.INT_FQN }];
     }
+
+    [Pure]
+    static bool IsStringComparison(IType type) => type.IsClrType(PredefinedType.STRING_COMPARISON_CLASS);
+
+    [Pure]
+    static bool IsStringSplitOptions(IType type) => type.IsClrType(ClrTypeNames.StringSplitOptions);
 
     [Pure]
     static string CreateStringArray(string[] items, ICSharpExpression context)
@@ -346,6 +346,24 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     }
                     break;
             }
+        }
+    }
+
+    /// <remarks>
+    /// <c>text.GetTypeCode()</c> → <c>TypeCode.String</c>
+    /// </remarks>
+    void AnalyzeGetTypeCode(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
+    {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
+        if (!invocationExpression.IsUsedAsStatement()
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
+        {
+            consumer.AddHighlighting(
+                new UseExpressionResultSuggestion(
+                    $"The expression is always {nameof(TypeCode)}.{nameof(TypeCode.String)}.",
+                    invocationExpression,
+                    $"{nameof(TypeCode)}.{nameof(TypeCode.String)}"));
         }
     }
 
@@ -3283,6 +3301,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                                     AnalyzeEndsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                                     break;
+                            }
+                            break;
+
+                        case nameof(string.GetTypeCode):
+                            switch (method.Parameters, element.Arguments)
+                            {
+                                case ([], []): AnalyzeGetTypeCode(consumer, element, invokedExpression); break;
                             }
                             break;
 

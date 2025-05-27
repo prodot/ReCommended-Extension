@@ -1,0 +1,23 @@
+﻿namespace Test
+{
+    public class Strings
+    {
+        public void ExpressionResult(string text)
+        {
+            var result = |text.GetTypeCode()|(0);
+        }
+
+        public void NoDetection(string text)
+        {
+            text.|GetTypeCode|(1)();
+        }
+
+        public void NoDetection_Nullable(string? text)
+        {
+            var result = text?.GetTypeCode();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always TypeCode.String.
+(1): ReSharper Warning: Return value of pure method is not used
