@@ -94,7 +94,7 @@ QUICKFIXES:
 Replace with 'switch { [] => '\0', [var item] => item, _ => throw new InvalidOperationException(...) }'
 9: Use switch expression.
 QUICKFIXES:
-Replace with 'switch { [] => new CancellationToken(), [var item] => item, _ => throw new InvalidOperationException(...) }'
+Replace with 'switch { [] => CancellationToken.None, [var item] => item, _ => throw new InvalidOperationException(...) }'
 10: Use switch expression.
 QUICKFIXES:
 Replace with 'switch { [] => DayOfWeek.Sunday, [var item] => item, _ => throw new InvalidOperationException(...) }'

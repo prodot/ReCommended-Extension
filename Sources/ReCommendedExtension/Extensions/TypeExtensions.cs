@@ -1,6 +1,9 @@
 ﻿using JetBrains.Metadata.Reader.API;
+using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Conversions;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
@@ -125,5 +128,58 @@ internal static class TypeExtensions
         t1TypeArgument = null;
         t2TypeArgument = null;
         return false;
+    }
+
+    [Pure]
+    public static bool IsValueTuple([NotNullWhen(true)] this IType? type, [NonNegativeValue] out int tupleLength)
+    {
+        if (type is IDeclaredType declaredType && declaredType.AsTupleType() is { } tupleType)
+        {
+            tupleLength = tupleType.GetComponents().Count;
+            return true;
+        }
+
+        tupleLength = 0;
+        return false;
+    }
+
+    [Pure]
+    public static string? TryGetDefaultValue(this IType type, ITreeNode context)
+    {
+        if (type is IDeclaredType declaredType && declaredType.AsTupleType() is { } tupleType)
+        {
+            var tupleTypes = string.Join(", ", from c in tupleType.GetComponents() select c.Type.TryGetDefaultValue(context) ?? "default");
+
+            return $"({tupleTypes})";
+        }
+
+        Debug.Assert(CSharpLanguage.Instance is { });
+
+        var defaultValue = DefaultValueUtil.GetClrDefaultValue(type, CSharpLanguage.Instance, context);
+
+        if (type.IsEnumType() && defaultValue is { } and not ICastExpression)
+        {
+            return $"{type.GetPresentableName(CSharpLanguage.Instance)}.{defaultValue.GetText()}";
+        }
+
+        if (defaultValue is IObjectCreationExpression)
+        {
+            if (type.IsClrType(ClrTypeNames.Int128) || type.IsClrType(ClrTypeNames.UInt128))
+            {
+                return "0";
+            }
+
+            if (type.IsClrType(ClrTypeNames.Half))
+            {
+                return "(Half)0"; // todo: use "nameof(Half)"
+            }
+
+            if (type.IsClrType(PredefinedType.CANCELLATION_TOKEN_FQN))
+            {
+                return $"{nameof(CancellationToken)}.{nameof(CancellationToken.None)}";
+            }
+        }
+
+        return defaultValue?.GetText();
     }
 }

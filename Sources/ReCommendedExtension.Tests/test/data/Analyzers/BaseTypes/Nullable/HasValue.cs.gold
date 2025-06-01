@@ -1,0 +1,27 @@
+﻿namespace Test
+{
+    public class Nullables
+    {
+        public void HasValueAlternative(int? nullable)
+        {
+            var result = nullable.|HasValue|(0);
+        }
+
+        public void HasValueAlternative<T>(T? nullable) where T : struct
+        {
+            var result = nullable.|HasValue|(1);
+        }
+
+        public void NoDetection(int? nullable)
+        {
+            nullable.|HasValue|(2) = true;
+
+            (nullable.|HasValue|(3), var x) = (true, 1);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use pattern or null check.
+(1): ReSharper Suggestion: Use pattern or null check.
+(2): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.HasValue' has no setter
+(3): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.HasValue' has no setter

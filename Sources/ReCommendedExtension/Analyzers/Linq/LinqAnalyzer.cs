@@ -1,5 +1,4 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
@@ -92,8 +91,10 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                 if (typeElement is ITypeParameter typeParameter)
                 {
                     var hasAccessibleIndexerIfIndexableCollection = false;
-                    if (typeParameter.TypeConstraints.Any(
-                        t => IsIndexableCollectionOrString(t, expression, out hasAccessibleIndexerIfIndexableCollection)))
+                    if (typeParameter.TypeConstraints.Any(t => IsIndexableCollectionOrString(
+                        t,
+                        expression,
+                        out hasAccessibleIndexerIfIndexableCollection)))
                     {
                         hasAccessibleIndexer = hasAccessibleIndexerIfIndexableCollection;
                         return true;
@@ -106,10 +107,10 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     : null;
 
                 hasAccessibleIndexer = GetIndexers(GetAllProperties(typeElement))
-                    .Any(
-                        indexer => (listIndexer is { } && indexer.OverridesOrImplements(listIndexer)
-                                || readOnlyListIndexer is { } && indexer.OverridesOrImplements(readOnlyListIndexer))
-                            && AccessUtil.IsSymbolAccessible(indexer, new ElementAccessContext(expression)));
+                    .Any(indexer
+                        => (listIndexer is { } && indexer.OverridesOrImplements(listIndexer)
+                            || readOnlyListIndexer is { } && indexer.OverridesOrImplements(readOnlyListIndexer))
+                        && AccessUtil.IsSymbolAccessible(indexer, new ElementAccessContext(expression)));
                 return true;
             }
         }
@@ -144,16 +145,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     {
         if (collectionType is IDeclaredType declaredType && declaredType.TryGetGenericParameterTypes() is [{ } itemType])
         {
-            Debug.Assert(CSharpLanguage.Instance is { });
-
-            var defaultValue = DefaultValueUtil.GetClrDefaultValue(itemType, CSharpLanguage.Instance, context);
-
-            if (itemType.IsEnumType() && defaultValue is { } and not ICastExpression)
-            {
-                return $"{itemType.GetPresentableName(CSharpLanguage.Instance)}.{defaultValue.GetText()}";
-            }
-
-            return defaultValue?.GetText();
+            return itemType.TryGetDefaultValue(context);
         }
 
         return null;

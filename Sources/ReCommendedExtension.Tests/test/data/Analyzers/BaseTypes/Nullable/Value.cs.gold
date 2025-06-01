@@ -1,0 +1,29 @@
+﻿namespace Test
+{
+    public class Nullables
+    {
+        public void ReplaceNullableValueWithCast(int? nullable)
+        {
+            var result = nullable.|Value|(0);
+        }
+
+        public void ReplaceNullableValueWithCast<T>(T? nullable) where T : struct
+        {
+            var result = nullable.|Value|(1);
+        }
+
+        public void NoDetection(int? nullable, (int a, bool b)? tuple)
+        {
+            var result = tuple.Value;
+
+            nullable.|Value|(2) = true;            
+
+            (nullable.|Value|(3), var x) = (1, true);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use type cast.
+(1): ReSharper Suggestion: Use type cast.
+(2): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.Value' has no setter
+(3): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.Value' has no setter

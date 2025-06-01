@@ -1,0 +1,57 @@
+﻿using System;
+
+namespace Test
+{
+    public class Nullables
+    {
+        public void HasValue(int? nullable, ValueTuple<int>? tuple1, (int, bool)? tuple2, (int, bool, string)? tuple3, (int, int, int, int, int, int, int, int, int, int)? tuple10)
+        {
+            var result11 = nullable.|HasValue|(0);
+
+            var result21 = tuple1.|HasValue|(1);
+            var result22 = tuple2.|HasValue|(2);
+            var result23 = tuple3.|HasValue|(3);
+
+            var result31 = tuple10.|HasValue|(4);
+        }
+
+        public void HasValue<T>(T? nullable) where T : struct
+        {
+            var result = nullable.|HasValue|(5);
+        }
+    }
+}
+------------------------------------------------
+0: Use pattern or null check.
+QUICKFIXES:
+Replace with 'nullable != null'
+Replace with 'nullable is not null'
+Replace with 'nullable is { }'
+1: Use pattern or null check.
+QUICKFIXES:
+Replace with 'tuple1 != null'
+Replace with 'tuple1 is not null'
+Replace with 'tuple1 is { }'
+2: Use pattern or null check.
+QUICKFIXES:
+Replace with 'tuple2 != null'
+Replace with 'tuple2 is not null'
+Replace with 'tuple2 is { }'
+Replace with 'tuple2 is (_, _)'
+3: Use pattern or null check.
+QUICKFIXES:
+Replace with 'tuple3 != null'
+Replace with 'tuple3 is not null'
+Replace with 'tuple3 is { }'
+Replace with 'tuple3 is (_, _, _)'
+4: Use pattern or null check.
+QUICKFIXES:
+Replace with 'tuple10 != null'
+Replace with 'tuple10 is not null'
+Replace with 'tuple10 is { }'
+Replace with 'tuple10 is (_, _, _, _, _, _, _, _, _, _)'
+5: Use pattern or null check.
+QUICKFIXES:
+Replace with 'nullable != null'
+Replace with 'nullable is not null'
+Replace with 'nullable is { }'

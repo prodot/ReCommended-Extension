@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes;
@@ -19,7 +20,8 @@ public sealed class UseBinaryOperatorSuggestion(
     IInvocationExpression invocationExpression,
     string @operator,
     string leftOperand,
-    string rightOperand) : Highlighting(message)
+    string rightOperand,
+    IReferenceExpression? invokedExpression = null) : Highlighting(message)
 {
     const string SeverityId = "ReCommendedExtension.UseBinaryOperator";
 
@@ -31,5 +33,15 @@ public sealed class UseBinaryOperatorSuggestion(
 
     internal string RightOperand => rightOperand;
 
-    public override DocumentRange CalculateRange() => invocationExpression.GetDocumentRange();
+    public override DocumentRange CalculateRange()
+    {
+        var documentRange = invocationExpression.GetDocumentRange();
+
+        if (invokedExpression is { })
+        {
+            return documentRange.SetStartTo(invokedExpression.Reference.GetDocumentRange().StartOffset);
+        }
+
+        return documentRange;
+    }
 }

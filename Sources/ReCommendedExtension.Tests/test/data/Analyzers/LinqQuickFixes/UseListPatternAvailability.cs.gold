@@ -117,7 +117,7 @@ QUICKFIXES:
 Replace with 'is [.., var last] ? last : '\0''
 12: Use list pattern.
 QUICKFIXES:
-Replace with 'is [.., var last] ? last : new CancellationToken()'
+Replace with 'is [.., var last] ? last : CancellationToken.None'
 13: Use list pattern.
 QUICKFIXES:
 Replace with 'is [.., var last] ? last : DayOfWeek.Sunday'
