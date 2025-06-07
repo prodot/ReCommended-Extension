@@ -18,7 +18,11 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseIndexerSuggestion or UseLinqListPatternSuggestion or UseSwitchExpressionSuggestion or UseCollectionPropertySuggestion
+        => highlighting is UseIndexerSuggestion
+                or UseLinqListPatternSuggestion
+                or UseSwitchExpressionSuggestion
+                or UseCollectionPropertySuggestion
+                or RedundantLinqQueryHint
             || highlighting.IsError();
 
     [Test]
@@ -40,4 +44,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     [Test]
     public void TestUsePropertyAvailability() => DoNamedTest2();
+
+    [Test]
+    public void TestRemoveLinqQueryFixAvailability() => DoNamedTest2();
 }

@@ -1,0 +1,81 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class LinqQueries
+    {
+        public void RedundantLinqQuery(IEnumerable<int> items, int[] array)
+        {
+            var result11 = |from item in|(0) items |select item|(1);
+            var result12 = (|from item in|(2) items |select item|(3)).ToList();
+            var result13 = (|from item in|(4) array |select item|(5)).ToList();
+
+            List<int> result21 = [..|from item in|(6) items |select item|(7)];
+            List<int> result22 = [..|from item in|(8) array |select item|(9)];
+
+            var result31 = |from item in|(10) array.AsEnumerable() |select item|(11);
+            IEnumerable<int> result32 = |from item in|(12) array |select item|(13);
+        }
+
+        public void RedundantLinqQuery<T>(IEnumerable<T> items, T[] array)
+        {
+            var result11 = |from item in|(14) items |select item|(15);
+            var result12 = (|from item in|(16) items |select item|(17)).ToList();
+            var result13 = (|from item in|(18) array |select item|(19)).ToList();
+
+            List<T> result21 = [..|from item in|(20) items |select item|(21)];
+            List<T> result22 = [..|from item in|(22) array |select item|(23)];
+
+            var result31 = |from item in|(24) array.AsEnumerable() |select item|(25);
+            IEnumerable<T> result32 = |from item in|(26) array |select item|(27);
+        }
+
+        public void NoDetection(IEnumerable<int> items, int[] array)
+        {
+            var result11 = from int item in items select item;
+            var result12 = from item in items where item > 0 select item;
+            var result13 = from item in items select item.ToString();
+
+            var result21 = from item in array select item;
+        }
+
+        public void NoDetection<T>(IEnumerable<T> items, T[] array)
+        {
+            var result11 = from T item in items select item;
+            var result12 = from item in items where item.ToString()?.Length > 0 select item;
+            var result13 = from item in items select item.ToString();
+
+            var result21 = from item in array select item;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: No-op LINQ query is redundant.
+(1): ReSharper Dead Code: No-op LINQ query is redundant.
+(2): ReSharper Dead Code: No-op LINQ query is redundant.
+(3): ReSharper Dead Code: No-op LINQ query is redundant.
+(4): ReSharper Dead Code: No-op LINQ query is redundant.
+(5): ReSharper Dead Code: No-op LINQ query is redundant.
+(6): ReSharper Dead Code: No-op LINQ query is redundant.
+(7): ReSharper Dead Code: No-op LINQ query is redundant.
+(8): ReSharper Dead Code: No-op LINQ query is redundant.
+(9): ReSharper Dead Code: No-op LINQ query is redundant.
+(10): ReSharper Dead Code: No-op LINQ query is redundant.
+(11): ReSharper Dead Code: No-op LINQ query is redundant.
+(12): ReSharper Dead Code: No-op LINQ query is redundant.
+(13): ReSharper Dead Code: No-op LINQ query is redundant.
+(14): ReSharper Dead Code: No-op LINQ query is redundant.
+(15): ReSharper Dead Code: No-op LINQ query is redundant.
+(16): ReSharper Dead Code: No-op LINQ query is redundant.
+(17): ReSharper Dead Code: No-op LINQ query is redundant.
+(18): ReSharper Dead Code: No-op LINQ query is redundant.
+(19): ReSharper Dead Code: No-op LINQ query is redundant.
+(20): ReSharper Dead Code: No-op LINQ query is redundant.
+(21): ReSharper Dead Code: No-op LINQ query is redundant.
+(22): ReSharper Dead Code: No-op LINQ query is redundant.
+(23): ReSharper Dead Code: No-op LINQ query is redundant.
+(24): ReSharper Dead Code: No-op LINQ query is redundant.
+(25): ReSharper Dead Code: No-op LINQ query is redundant.
+(26): ReSharper Dead Code: No-op LINQ query is redundant.
+(27): ReSharper Dead Code: No-op LINQ query is redundant.
