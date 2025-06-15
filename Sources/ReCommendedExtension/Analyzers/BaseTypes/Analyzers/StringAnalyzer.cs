@@ -133,7 +133,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     [Pure]
     static string CreateStringArray(string[] items, ICSharpExpression context)
     {
-        if (context.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120 && context.TryGetTargetType() is { })
+        if (context.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120 && context.TryGetTargetType(true) is { })
         {
             return $"[{string.Join(", ", items)}]";
         }

@@ -53,7 +53,7 @@ internal static class TypeExtensions
     public static bool IsReadOnlySpanOfString(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsString();
 
     [Pure]
-    public static bool IsGenericEnumerableOrDescendant(this IType type)
+    public static bool IsGenericIEnumerableOrDescendant(this IType type)
     {
         if (type.IsGenericIEnumerable())
         {
@@ -62,6 +62,23 @@ internal static class TypeExtensions
 
         if (type.GetTypeElement<ITypeElement>() is { } typeElement
             && typeElement.IsDescendantOf(typeElement.Module.GetPredefinedType().GenericIEnumerable.GetTypeElement()))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    [Pure]
+    public static bool IsGenericListOrDescendant(this IType type)
+    {
+        if (type.IsGenericList())
+        {
+            return true;
+        }
+
+        if (type.GetTypeElement<ITypeElement>() is { } typeElement
+            && typeElement.IsDescendantOf(typeElement.Module.GetPredefinedType().GenericList.GetTypeElement()))
         {
             return true;
         }

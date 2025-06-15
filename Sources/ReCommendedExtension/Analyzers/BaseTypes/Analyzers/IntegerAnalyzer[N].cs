@@ -29,7 +29,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
             Debug.Assert(NumberInfo.CastZero is { });
 
             var replacement =
-                invocationExpression.TryGetTargetType().IsValueTuple(out var t1TypeArgument, out var t2TypeArgument)
+                invocationExpression.TryGetTargetType(false).IsValueTuple(out var t1TypeArgument, out var t2TypeArgument)
                 && t1TypeArgument.IsClrType(NumberInfo.ClrTypeName)
                 && t2TypeArgument.IsClrType(NumberInfo.ClrTypeName)
                     ? "(0, 0)"

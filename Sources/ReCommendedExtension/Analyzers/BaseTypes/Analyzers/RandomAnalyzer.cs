@@ -27,7 +27,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     [Pure]
     static string CreateEmptyArray(IType itemType, IInvocationExpression context)
     {
-        if (context.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120 && context.TryGetTargetType() is { })
+        if (context.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120 && context.TryGetTargetType(true) is { })
         {
             return "[]";
         }

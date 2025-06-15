@@ -437,7 +437,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 var itemType = arrayCreationExpression.GetElementType();
 
-                if (arrayCreationExpression.TryGetTargetType() is { } targetType)
+                if (arrayCreationExpression.TryGetTargetType(true) is { } targetType)
                 {
                     // new T[] { }      ->  []
                     // new T[] { ... }  ->  [...]
@@ -614,7 +614,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     static void AnalyzeObjectCreationExpression(IHighlightingConsumer consumer, IObjectCreationExpression objectCreationExpression)
     {
         if (objectCreationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120
-            && objectCreationExpression.TryGetTargetType() is { } targetType)
+            && objectCreationExpression.TryGetTargetType(true) is { } targetType)
         {
             switch (objectCreationExpression.Type())
             {
@@ -955,7 +955,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         Debug.Assert(arrayEmptyInvocationExpression.TypeArguments is [_]);
 
         if (arrayEmptyInvocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120
-            && arrayEmptyInvocationExpression.TryGetTargetType() is { } targetType)
+            && arrayEmptyInvocationExpression.TryGetTargetType(true) is { } targetType)
         {
             var psiModule = arrayEmptyInvocationExpression.GetPsiModule();
 

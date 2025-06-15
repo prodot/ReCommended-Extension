@@ -16,7 +16,7 @@ public sealed record NumberInfo<N> : NumberInfo where N : struct
     [Pure]
     internal string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue)
     {
-        if (invocationExpression.TryGetTargetType().IsClrType(ClrTypeName) || argumentValue.Type().IsClrType(ClrTypeName))
+        if (invocationExpression.TryGetTargetType(false).IsClrType(ClrTypeName) || argumentValue.Type().IsClrType(ClrTypeName))
         {
             return argumentValue.GetText();
         }

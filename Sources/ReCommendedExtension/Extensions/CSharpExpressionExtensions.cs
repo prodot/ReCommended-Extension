@@ -12,21 +12,13 @@ using JetBrains.ReSharper.Psi.CSharp.Util.Literals;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
-using IObjectCreationExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IObjectCreationExpression;
 
 namespace ReCommendedExtension.Extensions;
 
 internal static class CSharpExpressionExtensions
 {
     [Pure]
-    static bool AreParenthesesRedundant(this IParenthesizedExpression parenthesizedExpression)
-        => CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(parenthesizedExpression, LanguageManager.Instance, null) is
-        {
-            NeedsToRemove: true,
-        };
-
-    [Pure]
-    public static IType? TryGetTargetType(this ICSharpExpression expression)
+    public static IType? TryGetTargetType(this ICSharpExpression expression, bool forCollectionExpressions)
     {
         var targetType = expression.GetImplicitlyConvertedTo();
 
@@ -35,11 +27,14 @@ internal static class CSharpExpressionExtensions
             return null;
         }
 
-        switch (expression.Parent)
+        if (forCollectionExpressions)
         {
-            case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
-            case IQueryFirstFrom or IQueryParameterPlatform:
-                return null;
+            switch (expression.Parent)
+            {
+                case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
+                case IQueryFirstFrom or IQueryParameterPlatform:
+                    return null;
+            }
         }
 
         return targetType;
@@ -110,6 +105,13 @@ internal static class CSharpExpressionExtensions
                 ? (MidpointRounding)constantValue.IntValue
                 : null;
 
+    [Pure]
+    public static bool AreParenthesesRedundant(this IParenthesizedExpression parenthesizedExpression)
+        => CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(parenthesizedExpression, LanguageManager.Instance, null) is
+        {
+            NeedsToRemove: true,
+        };
+
     /// <returns>The inner expression (regardless if parentheses have been removed).</returns>
     public static ICSharpExpression TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
     {
@@ -176,12 +178,9 @@ internal static class CSharpExpressionExtensions
             {
                 NullableAnnotation.NotAnnotated or NullableAnnotation.NotNullable => CSharpControlFlowNullReferenceState.NOT_NULL,
 
-                NullableAnnotation.RuntimeNotNullable when expression is IObjectCreationExpression
-                    || expression.Parent is not IReferenceExpression
-                    {
-                        Reference: var reference,
-                    } // the nullability detection doesn't work well for extension method invocations
-                    || reference.Resolve().DeclaredElement is not IMethod { IsExtensionMethod: true } => CSharpControlFlowNullReferenceState.NOT_NULL,
+                // the nullability detection doesn't work well for extension method invocations
+                NullableAnnotation.RuntimeNotNullable when expression.Parent is not IReferenceExpression referenceExpression
+                    || referenceExpression.ConditionalAccessSign == null => CSharpControlFlowNullReferenceState.NOT_NULL,
 
                 NullableAnnotation.Annotated or NullableAnnotation.Nullable =>
                     CSharpControlFlowNullReferenceState.MAY_BE_NULL, // todo: distinguish if the expression is "null" or just "may be null" here

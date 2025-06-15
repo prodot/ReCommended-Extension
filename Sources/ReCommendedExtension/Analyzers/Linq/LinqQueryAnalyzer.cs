@@ -12,7 +12,9 @@ public sealed class LinqQueryAnalyzer : ElementProblemAnalyzer<IQueryExpression>
     protected override void Run(IQueryExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element.From is { CastType: null, Declaration: var declaration, Expression: var expression }
-            && (expression.Type().IsGenericIEnumerable() || element.TryGetTargetType().IsGenericIEnumerable() || element.Parent is ISpreadElement)
+            && (expression.Type().IsGenericIEnumerable()
+                || element.TryGetTargetType(false).IsGenericIEnumerable()
+                || element.Parent is ISpreadElement)
             && element.Clauses is [IQuerySelectClause { Expression.Value: IReferenceExpression referenceExpression } selectClause]
             && referenceExpression.Reference.Resolve().DeclaredElement?.GetSingleDeclaration() == declaration)
         {

@@ -1,0 +1,12 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class ConvertToLinqQuery
+    {
+        public void Method(HashSet<int> source)
+        {
+            var result = (from item in sour{caret}ce select item).ToHashSet(source.Comparer);
+        }
+    }
+}

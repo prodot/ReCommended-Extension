@@ -1,0 +1,12 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class ConvertToLinqQuery
+    {
+        public void Method<T>(IEnumerable<T> source)
+        {
+            var result = from item in sour{caret}ce select item;
+        }
+    }
+}
