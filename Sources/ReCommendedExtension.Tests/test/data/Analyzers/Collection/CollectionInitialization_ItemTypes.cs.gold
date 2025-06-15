@@ -53,8 +53,8 @@ namespace Test
             IReadOnlyCollection<A> var4 = Array.|Empty<B>()|(16);
             IReadOnlyList<A> var5 = Array.|Empty<B>()|(17);
 
-            ICollection<A> var6 = Array.|Empty<B>()|(18);
-            IList<A> var7 = Array.|Empty<B>()|(19);
+            ICollection<A> var6 = |Array.Empty<B>()|(18);
+            IList<A> var7 = |Array.Empty<B>()|(19);
 
             IList<C> var8 = Array.Empty<B>();
 
@@ -160,8 +160,8 @@ namespace Test
 (15): ReSharper Suggestion: Use collection expression
 (16): ReSharper Suggestion: Use collection expression
 (17): ReSharper Suggestion: Use collection expression
-(18): ReSharper Suggestion: Use collection expression
-(19): ReSharper Suggestion: Use collection expression
+(18): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
+(19): ReSharper Suggestion: Use collection expression ('List<A>' will be used).
 (20): ReSharper Suggestion: Use collection expression
 (21): ReSharper Suggestion: Use collection expression
 (22): ReSharper Suggestion: Use collection expression
