@@ -1003,11 +1003,9 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         methodReferenceToSetInferredTypeArguments));
             }
 
-            // target-typed to ICollection<T> or IList<T> - inferred, but not covariant
+            // target-typed to ICollection<T> or IList<T>
             if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN)) is var (
-                collectionItemType, _)
-                && arrayEmptyInvocationExpression.Parent is ICSharpArgument
-                && methodReferenceToSetInferredTypeArguments is { })
+                collectionItemType, _))
             {
                 Debug.Assert(CSharpLanguage.Instance is { });
 
