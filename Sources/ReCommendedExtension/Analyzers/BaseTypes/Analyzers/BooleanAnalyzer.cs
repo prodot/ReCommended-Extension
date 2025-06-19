@@ -142,7 +142,7 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
             switch (method.ShortName)
             {
                 case nameof(bool.Equals):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var objType }], [var objArgument]) when objType.IsBool():
                             AnalyzeEquals_Boolean(consumer, element, invokedExpression, objArgument);
@@ -155,14 +155,14 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
                     break;
 
                 case nameof(bool.GetTypeCode):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([], []): AnalyzeGetTypeCode(consumer, element); break;
                     }
                     break;
 
                 case nameof(bool.ToString):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var providerType }], [var providerArgument]) when providerType.IsIFormatProvider():
                             AnalyzeToString_IFormatProvider(consumer, element, providerArgument);

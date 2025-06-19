@@ -247,7 +247,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                     switch (method.ShortName)
                     {
                         case nameof(Enum.ToString):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var formatType }], [var formatArgument]) when formatType.IsString():
                                     AnalyzeToString_String(consumer, element, formatArgument);
@@ -261,7 +261,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                     switch (method.ShortName)
                     {
                         case nameof(Enum.Parse):
-                            switch (method.TypeParameters, method.Parameters, element.Arguments)
+                            switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([_], [{ Type: var valueType }, { Type: var ignoreCaseType }], [_, var ignoreCaseArgument])
                                     when valueType.IsString() && ignoreCaseType.IsBool():
@@ -295,7 +295,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                             break;
 
                         case nameof(Enum.TryParse):
-                            switch (method.TypeParameters, method.Parameters, element.Arguments)
+                            switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([var typeParameter], [{ Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType }], [
                                         _, var ignoreCaseArgument, _,

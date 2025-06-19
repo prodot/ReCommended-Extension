@@ -1317,7 +1317,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             switch (method.ShortName, method.TypeParameters)
             {
                 case (nameof(StringBuilder.Append), []):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }, { Type: var repeatCountType }], [_, var repeatCountArgument])
                             when valueType.IsChar() && repeatCountType.IsInt():
@@ -1374,15 +1374,15 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     break;
 
                 case ("AppendJoin", _): // todo: use 'nameof(StringBuilder.AppendJoin)' when available
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
+                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
                             when separatorType.IsString() && valuesType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, element):
 
                             AnalyzeAppendJoin_String_ObjectArray(consumer, element, invokedExpression, arguments);
                             break;
 
-                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
+                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
                             when separatorType.IsString() && valuesType.IsReadOnlySpanOfObject():
 
                             AnalyzeAppendJoin_String_ReadOnlySpanOfObject(consumer, element, invokedExpression, arguments);
@@ -1395,25 +1395,25 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             AnalyzeAppendJoin_String_IEnumerableOfT(consumer, element, invokedExpression, separatorArgument, valuesArgument);
                             break;
 
-                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
+                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
                             when separatorType.IsString() && valuesType.IsGenericArrayOf(PredefinedType.STRING_FQN, element):
 
                             AnalyzeAppendJoin_String_StringArray(consumer, element, invokedExpression, arguments);
                             break;
 
-                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
+                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
                             when separatorType.IsString() && valuesType.IsReadOnlySpanOfString():
 
                             AnalyzeAppendJoin_String_ReadOnlySpanOfString(consumer, element, invokedExpression, arguments);
                             break;
 
-                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
+                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
                             when separatorType.IsChar() && valuesType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, element):
 
                             AnalyzeAppendJoin_Char_ObjectArray(consumer, element, invokedExpression, arguments);
                             break;
 
-                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
+                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
                             when separatorType.IsChar() && valuesType.IsReadOnlySpanOfObject():
 
                             AnalyzeAppendJoin_Char_ReadOnlySpanOfObject(consumer, element, invokedExpression, arguments);
@@ -1425,13 +1425,13 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             AnalyzeAppendJoin_Char_IEnumerableOfT(consumer, element, invokedExpression, valuesArgument);
                             break;
 
-                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
+                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
                             when separatorType.IsChar() && valuesType.IsGenericArrayOf(PredefinedType.STRING_FQN, element):
 
                             AnalyzeAppendJoin_Char_StringArray(consumer, element, invokedExpression, arguments);
                             break;
 
-                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], var arguments)
+                        case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
                             when separatorType.IsChar() && valuesType.IsReadOnlySpanOfString():
 
                             AnalyzeAppendJoin_Char_ReadOnlySpanOfString(consumer, element, invokedExpression, arguments);
@@ -1440,7 +1440,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     break;
 
                 case (nameof(StringBuilder.Insert), []):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var indexType }, { Type: var valueType }, { Type: var countType }], [_, var valueArgument, var countArgument])
                             when indexType.IsInt() && valueType.IsString() && countType.IsInt():
@@ -1463,7 +1463,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     break;
 
                 case (nameof(StringBuilder.Replace), []):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var oldValueType }, { Type: var newValueType }], [var oldValueArgument, var newValueArgument])
                             when oldValueType.IsString() && newValueType.IsString():

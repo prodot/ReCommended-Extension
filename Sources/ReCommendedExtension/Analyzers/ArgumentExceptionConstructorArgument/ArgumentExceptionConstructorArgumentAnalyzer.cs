@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument;
 
@@ -33,7 +34,7 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProble
 
                 case IInvocationExpression invocationExpression:
                     if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == "nameof"
-                        && invocationExpression.Arguments is [{ Value: IReferenceExpression referenceExpression }]
+                        && invocationExpression.TryGetArgumentsInDeclarationOrder() is [{ Value: IReferenceExpression referenceExpression }]
                         && referenceExpression.Reference.Resolve().DeclaredElement is IParameter parameter
                         && parameters.Contains(parameter))
                     {

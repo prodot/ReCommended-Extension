@@ -198,7 +198,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             var attributeType = attribute.GetAttributeType();
 
             if (attributeType.IsClrType(ClrTypeNames.SuppressMessageAttribute)
-                && attribute.Arguments is
+                && attribute.TryGetArgumentsInDeclarationOrder() is
                 [
                     { Value.ConstantValue: { Kind: ConstantValueKind.String, StringValue: var category } },
                     { Value.ConstantValue: { Kind: ConstantValueKind.String, StringValue: var checkId } },
@@ -441,10 +441,8 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         void HighlightRedundantMustDisposeResourceTrueArgument(string message)
         {
             if (TryGetAttributeNameIfAnnotationProvided(PurityOrDisposabilityKind.MustDisposeResource) is { } attributeName
-                && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is
-                {
-                    Arguments: [var argument],
-                } attribute)
+                && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute
+                && attribute.TryGetArgumentsInDeclarationOrder() is [var argument])
             {
                 consumer.AddHighlighting(new RedundantAnnotationArgumentSuggestion(message, element, attribute, argument));
             }
@@ -1145,7 +1143,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     case nameof(ValueRangeAttribute):
                         decimal from, to;
 
-                        switch (attribute.Arguments)
+                        switch (attribute.TryGetArgumentsInDeclarationOrder())
                         {
                             case
                             [

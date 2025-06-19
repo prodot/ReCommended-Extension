@@ -22,8 +22,9 @@
         public void Divide(decimal d1, decimal d2, int a, int b)
         {
             var result11 = decimal.Divide(d1, d2);
-            var result12 = decimal.Divide(d1, b);
-            var result13 = decimal.Divide(a, d2);
+            var result12 = decimal.Divide(d2: d2, d1: d1);
+            var result13 = decimal.Divide(d1, b);
+            var result14 = decimal.Divide(a, d2);
 
             var result21 = decimal.Divide(1m, 2m);
             var result22 = decimal.Divide(1, b);

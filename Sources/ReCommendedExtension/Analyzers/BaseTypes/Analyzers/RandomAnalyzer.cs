@@ -259,7 +259,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             switch (method.ShortName)
             {
                 case "GetItems": // todo: nameof(Random.GetItems) when available
-                    switch (method.TypeParameters, method.Parameters, element.TypeArguments, element.Arguments)
+                    switch (method.TypeParameters, method.Parameters, element.TypeArguments, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], [{ Type: var choicesType }, { Type: var lengthType }], [_] or [], [var choicesArgument, var lengthArgument])
                             when choicesType.IsGenericArray(element) && lengthType.IsInt():
@@ -290,7 +290,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
 
                 case nameof(Random.Next):
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([], [{ Type: var maxValueType }], [var maxValueArgument]) when maxValueType.IsInt():
                             AnalyzeNext_Int32(consumer, element, invokedExpression, maxValueArgument);
@@ -305,7 +305,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     break;
 
                 case "NextInt64": // todo: nameof(Random.NextInt64) when available
-                    switch (method.TypeParameters, method.Parameters, element.Arguments)
+                    switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([], [{ Type: var maxValueType }], [var maxValueArgument]) when maxValueType.IsLong():
                             AnalyzeNextInt64_Int64(consumer, element, invokedExpression, maxValueArgument);

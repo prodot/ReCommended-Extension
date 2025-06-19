@@ -725,7 +725,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     switch (method.ShortName)
                     {
                         case nameof(Equals):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var objType }], [var objArgument]) when objType.IsClrType(numberInfo.ClrTypeName):
                                     AnalyzeEquals_N(consumer, element, invokedExpression, objArgument);
@@ -738,14 +738,14 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             break;
 
                         case nameof(IConvertible.GetTypeCode):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([], []): AnalyzeGetTypeCode(consumer, element); break;
                             }
                             break;
 
                         case nameof(ToString):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var formatType }], [var formatArgument]) when formatType.IsString():
                                     AnalyzeToString_String(consumer, element, formatArgument);
@@ -769,7 +769,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     switch (method.ShortName)
                     {
                         case "Clamp": // todo: nameof(INumber<T>.Clamp) when available
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var valueType }, { Type: var minType }, { Type: var maxType }], [
                                         var valueArgument, var minArgument, var maxArgument,
@@ -783,7 +783,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             break;
 
                         case "Max": // todo: nameof(INumber<T>.Max) when available
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
                                     when xType.IsClrType(numberInfo.ClrTypeName) && yType.IsClrType(numberInfo.ClrTypeName):
@@ -794,7 +794,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             break;
 
                         case "Min": // todo: nameof(INumber<T>.Min) when available
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
                                     when xType.IsClrType(numberInfo.ClrTypeName) && yType.IsClrType(numberInfo.ClrTypeName):
@@ -805,7 +805,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             break;
 
                         case nameof(int.Parse):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var sType }, { Type: var styleType }], [_, var styleArgument])
                                     when sType.IsString() && IsNumberStyles(styleType):
@@ -844,7 +844,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             break;
 
                         case nameof(int.TryParse):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
                                         _, var styleArgument, _, _,
@@ -913,7 +913,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
             switch (method.ShortName)
             {
                 case "Clamp": // todo: nameof(Math.Clamp) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }, { Type: var minType }, { Type: var maxType }], [
                                 var valueArgument, var minArgument, var maxArgument,
@@ -927,7 +927,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     break;
 
                 case nameof(Math.Max):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var val1Type }, { Type: var val2Type }], [var val1Argument, var val2Argument])
                             when val1Type.IsClrType(numberInfo.ClrTypeName) && val2Type.IsClrType(numberInfo.ClrTypeName):
@@ -938,7 +938,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     break;
 
                 case nameof(Math.Min):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var val1Type }, { Type: var val2Type }], [var val1Argument, var val2Argument])
                             when val1Type.IsClrType(numberInfo.ClrTypeName) && val2Type.IsClrType(numberInfo.ClrTypeName):

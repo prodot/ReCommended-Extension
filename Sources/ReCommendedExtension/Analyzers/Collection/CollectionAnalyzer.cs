@@ -652,12 +652,13 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         AssertListConstructors(listCreationExpression.GetPsiModule());
 
-        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } itemType)
+        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } itemType
+            && listCreationExpression.TryGetArgumentsInDeclarationOrder() is { } constructorArguments)
         {
-            var parameterType = listCreationExpression.Arguments is [{ MatchingParameter.Type: var t }] ? t : null;
+            var parameterType = constructorArguments is [{ MatchingParameter.Type: var t }] ? t : null;
             var arguments =
                 (parameterType.IsInt()
-                    && listCreationExpression.Arguments[0].Expression is { } arg
+                    && constructorArguments[0].Expression is { } arg
                     && arg.IsConstantValue()
                     && arg.ConstantValue.IntValue > (listCreationExpression.Initializer?.InitializerElements.Count ?? 0)
                         ? ListArguments.Capacity
@@ -691,7 +692,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                             : "Use collection expression (a compiler-synthesized read-only collection will be used).",
                         isEmptyList ? $"'{typeName}' will be used" : "a compiler-synthesized read-only collection will be used",
                         listCreationExpression,
-                        parameterType.IsGenericIEnumerable() ? listCreationExpression.Arguments[0].Value : null,
+                        parameterType.IsGenericIEnumerable() ? constructorArguments[0].Value : null,
                         listCreationExpression.Initializer?.InitializerElements,
                         methodReferenceToSetInferredTypeArguments));
             }
@@ -706,7 +707,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         "Use collection expression.",
                         null,
                         listCreationExpression,
-                        parameterType.IsGenericIEnumerable() ? listCreationExpression.Arguments[0].Value : null,
+                        parameterType.IsGenericIEnumerable() ? constructorArguments[0].Value : null,
                         listCreationExpression.Initializer?.InitializerElements,
                         methodReferenceToSetInferredTypeArguments));
             }
@@ -738,9 +739,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         AssertHashSetConstructors(hashSetCreationExpression.GetPsiModule());
 
-        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } itemType)
+        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } itemType
+            && hashSetCreationExpression.TryGetArgumentsInDeclarationOrder() is { } constructorArguments)
         {
-            var parameterTypes = hashSetCreationExpression.Arguments switch
+            var parameterTypes = constructorArguments switch
             {
                 [{ MatchingParameter.Type: var t }] => [t, null],
                 [{ MatchingParameter.Type: var t0 }, { MatchingParameter.Type: var t1 }] => [t0, t1],
@@ -748,17 +750,17 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             };
             var arguments =
                 (parameterTypes[0].IsInt()
-                    && hashSetCreationExpression.Arguments[0].Expression is { } arg
+                    && constructorArguments[0].Expression is { } arg
                     && arg.IsConstantValue()
                     && arg.ConstantValue.IntValue > (hashSetCreationExpression.Initializer?.InitializerElements.Count ?? 0)
                         ? HashSetArguments.Capacity
                         : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? HashSetArguments.Collection : 0)
                 | (parameterTypes[0].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-                    && hashSetCreationExpression.Arguments[0].Expression is { } a0
+                    && constructorArguments[0].Expression is { } a0
                     && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
                     || parameterTypes[1].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-                    && hashSetCreationExpression.Arguments[1].Expression is { } a1
+                    && constructorArguments[1].Expression is { } a1
                     && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
                         ? HashSetArguments.Comparer
                         : 0);
@@ -822,9 +824,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         AssertDictionaryConstructors(psiModule);
 
-        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } keyType && TypesUtil.GetTypeArgumentValue(type, 1) is { } valueType)
+        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } keyType
+            && TypesUtil.GetTypeArgumentValue(type, 1) is { } valueType
+            && dictionaryCreationExpression.TryGetArgumentsInDeclarationOrder() is { } constructorArguments)
         {
-            var parameterTypes = dictionaryCreationExpression.Arguments switch
+            var parameterTypes = constructorArguments switch
             {
                 [{ MatchingParameter.Type: var t }] => [t, null],
                 [{ MatchingParameter.Type: var t0 }, { MatchingParameter.Type: var t1 }] => [t0, t1],
@@ -832,7 +836,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             };
             var arguments =
                 (parameterTypes[0].IsInt()
-                    && dictionaryCreationExpression.Arguments[0].Expression is { } arg
+                    && constructorArguments[0].Expression is { } arg
                     && arg.IsConstantValue()
                     && arg.ConstantValue.IntValue > (dictionaryCreationExpression.Initializer?.InitializerElements.Count ?? 0)
                         ? DictionaryArguments.Capacity
@@ -840,10 +844,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 | (parameterTypes[0].IsIDictionary() ? DictionaryArguments.Dictionary : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? DictionaryArguments.Pairs : 0)
                 | (parameterTypes[0].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-                    && dictionaryCreationExpression.Arguments[0].Expression is { } a0
+                    && constructorArguments[0].Expression is { } a0
                     && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
                     || parameterTypes[1].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-                    && dictionaryCreationExpression.Arguments[1].Expression is { } a1
+                    && constructorArguments[1].Expression is { } a1
                     && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
                         ? DictionaryArguments.Comparer
                         : 0);

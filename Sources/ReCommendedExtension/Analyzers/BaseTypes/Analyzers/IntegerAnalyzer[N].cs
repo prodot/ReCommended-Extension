@@ -94,7 +94,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
             switch (method.ShortName)
             {
                 case "DivRem": // todo: nameof(IBinaryInteger<T>.DivRem) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
                             when leftType.IsClrType(NumberInfo.ClrTypeName) && rightType.IsClrType(NumberInfo.ClrTypeName):
@@ -105,7 +105,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
                     break;
 
                 case "RotateLeft": // todo: nameof(IBinaryInteger<T>.RotateLeft) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
                             when valueType.IsClrType(NumberInfo.ClrTypeName) && rotateAmountType.IsInt():
@@ -116,7 +116,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
                     break;
 
                 case "RotateRight": // todo: nameof(IBinaryInteger<T>.RotateRight) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
                             when valueType.IsClrType(NumberInfo.ClrTypeName) && rotateAmountType.IsInt():
@@ -133,7 +133,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
             switch (method.ShortName)
             {
                 case nameof(Math.DivRem):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
                             when leftType.IsClrType(NumberInfo.ClrTypeName) && rightType.IsClrType(NumberInfo.ClrTypeName):

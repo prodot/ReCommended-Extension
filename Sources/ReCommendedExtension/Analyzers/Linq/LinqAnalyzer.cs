@@ -475,7 +475,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
             switch (method.ShortName)
             {
                 case nameof(Enumerable.ElementAt):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_, { Type: IDeclaredType indexType }], [{ Value: { } } indexArgument])
                             when indexType.IsInt() || indexType.IsSystemIndex():
@@ -485,23 +485,23 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     break;
 
                 case nameof(Enumerable.ElementAtOrDefault):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([_, { Type: IDeclaredType indexType }], _) when indexType.IsInt() || indexType.IsSystemIndex():
+                        case ([_, { Type: IDeclaredType indexType }], [_]) when indexType.IsInt() || indexType.IsSystemIndex():
                             AnalyzeElementAtOrDefault(consumer, element, invokedExpression);
                             break;
                     }
                     break;
 
                 case nameof(Enumerable.First):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeFirst(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.FirstOrDefault):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeFirstOrDefault(consumer, element, invokedExpression); break;
 
@@ -513,14 +513,14 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     break;
 
                 case nameof(Enumerable.Last):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeLast(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.LastOrDefault):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeLastOrDefault(consumer, element, invokedExpression); break;
 
@@ -533,21 +533,21 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     break;
 
                 case nameof(Enumerable.LongCount):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeLongCount(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.Single):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeSingle(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.SingleOrDefault):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeSingleOrDefault(consumer, element, invokedExpression); break;
 

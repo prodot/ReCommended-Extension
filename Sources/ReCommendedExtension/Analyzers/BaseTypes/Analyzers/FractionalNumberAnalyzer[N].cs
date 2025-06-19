@@ -109,7 +109,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
             switch (method.ShortName)
             {
                 case "Round": // todo: nameof(IFloatingPoint<T>.Round) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var xType }, { Type: var digitsType }], [_, var digitsArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt():
@@ -138,7 +138,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
             switch (method.ShortName)
             {
                 case nameof(Math.Round):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }, { Type: var digitsOrDecimalsType }], [_, var digitsOrDecimalsArgument])
                             when valueType.IsClrType(NumberInfo.ClrTypeName) && digitsOrDecimalsType.IsInt():
@@ -167,7 +167,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
             switch (method.ShortName)
             {
                 case "Round": // todo: nameof(MathF.Round) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }, { Type: var digitsOrDecimalsType }], [_, var digitsOrDecimalsArgument])
                             when valueType.IsClrType(NumberInfo.ClrTypeName) && digitsOrDecimalsType.IsInt():

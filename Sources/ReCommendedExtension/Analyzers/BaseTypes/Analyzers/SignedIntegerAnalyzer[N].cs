@@ -113,7 +113,7 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
             switch (method.ShortName)
             {
                 case "IsNegative": // todo: nameof(INumberBase<T>.IsNegative) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
                             AnalyzeIsNegative(consumer, element, valueArgument);
@@ -122,7 +122,7 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
                     break;
 
                 case "IsPositive": // todo: nameof(INumberBase<T>.IsPositive) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
                             AnalyzeIsPositive(consumer, element, valueArgument);
@@ -131,7 +131,7 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
                     break;
 
                 case "MaxMagnitude": // todo: nameof(INumberBase<T>.MaxMagnitude) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && yType.IsClrType(NumberInfo.ClrTypeName):
@@ -142,7 +142,7 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
                     break;
 
                 case "MinMagnitude": // todo: nameof(INumberBase<T>.MinMagnitude) when available
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && yType.IsClrType(NumberInfo.ClrTypeName):

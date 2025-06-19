@@ -130,7 +130,7 @@ public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpressi
                     switch (method.ShortName)
                     {
                         case nameof(Nullable<int>.GetValueOrDefault):
-                            switch (method.Parameters, invocationExpression.Arguments)
+                            switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([], []): AnalyzeGetValueOrDefault(consumer, invocationExpression, element); break;
 

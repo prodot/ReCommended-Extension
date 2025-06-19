@@ -190,7 +190,7 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                     switch (method.ShortName)
                     {
                         case nameof(Guid.Equals):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var gType }], [var gArgument]) when gType.IsGuid():
                                     AnalyzeEquals_Guid(consumer, element, invokedExpression, gArgument);
@@ -203,7 +203,7 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                             break;
 
                         case nameof(Guid.ToString):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var formatType }], [var formatArgument]) when formatType.IsString():
                                     AnalyzeToString_String(consumer, element, formatArgument);
@@ -223,7 +223,7 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                     switch (method.ShortName)
                     {
                         case nameof(Guid.Parse):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var sType }, { Type: var providerType }], [_, var providerArgument])
                                     when sType.IsString() && providerType.IsIFormatProvider():
@@ -242,7 +242,7 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                             break;
 
                         case nameof(Guid.TryParse):
-                            switch (method.Parameters, element.Arguments)
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
                                     when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsGuid():

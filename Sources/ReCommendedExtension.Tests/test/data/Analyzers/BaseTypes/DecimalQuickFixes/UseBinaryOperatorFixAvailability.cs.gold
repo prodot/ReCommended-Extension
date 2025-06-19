@@ -22,49 +22,50 @@
         public void Divide(decimal d1, decimal d2, int a, int b)
         {
             var result11 = |decimal.Divide(d1, d2)|(8);
-            var result12 = |decimal.Divide(d1, b)|(9);
-            var result13 = |decimal.Divide(a, d2)|(10);
+            var result12 = |decimal.Divide(d2: d2, d1: d1)|(9);
+            var result13 = |decimal.Divide(d1, b)|(10);
+            var result14 = |decimal.Divide(a, d2)|(11);
 
-            var result21 = |decimal.Divide(1m, 2m)|(11);
-            var result22 = |decimal.Divide(1, b)|(12);
-            var result23 = |decimal.Divide(a, 1)|(13);
-            var result24 = |decimal.Divide(a, b)|(14);
+            var result21 = |decimal.Divide(1m, 2m)|(12);
+            var result22 = |decimal.Divide(1, b)|(13);
+            var result23 = |decimal.Divide(a, 1)|(14);
+            var result24 = |decimal.Divide(a, b)|(15);
         }
 
         public void Multiply(decimal d1, decimal d2, int a, int b)
         {
-            var result11 = |decimal.Multiply(d1, d2)|(15);
-            var result12 = |decimal.Multiply(d1, b)|(16);
-            var result13 = |decimal.Multiply(a, d2)|(17);
+            var result11 = |decimal.Multiply(d1, d2)|(16);
+            var result12 = |decimal.Multiply(d1, b)|(17);
+            var result13 = |decimal.Multiply(a, d2)|(18);
 
-            var result21 = |decimal.Multiply(1m, 2m)|(18);
-            var result22 = |decimal.Multiply(1, b)|(19);
-            var result23 = |decimal.Multiply(a, 1)|(20);
-            var result24 = |decimal.Multiply(a, b)|(21);
+            var result21 = |decimal.Multiply(1m, 2m)|(19);
+            var result22 = |decimal.Multiply(1, b)|(20);
+            var result23 = |decimal.Multiply(a, 1)|(21);
+            var result24 = |decimal.Multiply(a, b)|(22);
         }
 
         public void Remainder(decimal d1, decimal d2, int a, int b)
         {
-            var result11 = |decimal.Remainder(d1, d2)|(22);
-            var result12 = |decimal.Remainder(d1, b)|(23);
-            var result13 = |decimal.Remainder(a, d2)|(24);
+            var result11 = |decimal.Remainder(d1, d2)|(23);
+            var result12 = |decimal.Remainder(d1, b)|(24);
+            var result13 = |decimal.Remainder(a, d2)|(25);
 
-            var result21 = |decimal.Remainder(1m, 2m)|(25);
-            var result22 = |decimal.Remainder(1, b)|(26);
-            var result23 = |decimal.Remainder(a, 1)|(27);
-            var result24 = |decimal.Remainder(a, b)|(28);
+            var result21 = |decimal.Remainder(1m, 2m)|(26);
+            var result22 = |decimal.Remainder(1, b)|(27);
+            var result23 = |decimal.Remainder(a, 1)|(28);
+            var result24 = |decimal.Remainder(a, b)|(29);
         }
 
         public void Subtract(decimal d1, decimal d2, int a, int b)
         {
-            var result11 = |decimal.Subtract(d1, d2)|(29);
-            var result12 = |decimal.Subtract(d1, b)|(30);
-            var result13 = |decimal.Subtract(a, d2)|(31);
+            var result11 = |decimal.Subtract(d1, d2)|(30);
+            var result12 = |decimal.Subtract(d1, b)|(31);
+            var result13 = |decimal.Subtract(a, d2)|(32);
 
-            var result21 = |decimal.Subtract(1m, 2m)|(32);
-            var result22 = |decimal.Subtract(1, b)|(33);
-            var result23 = |decimal.Subtract(a, 1)|(34);
-            var result24 = |decimal.Subtract(a, b)|(35);
+            var result21 = |decimal.Subtract(1m, 2m)|(33);
+            var result22 = |decimal.Subtract(1, b)|(34);
+            var result23 = |decimal.Subtract(a, 1)|(35);
+            var result24 = |decimal.Subtract(a, b)|(36);
         }
     }
 }
@@ -98,82 +99,85 @@ QUICKFIXES:
 Replace with 'd1 / d2'
 9: Use the '/' operator.
 QUICKFIXES:
-Replace with 'd1 / b'
+Replace with 'd1 / d2'
 10: Use the '/' operator.
 QUICKFIXES:
-Replace with 'a / d2'
+Replace with 'd1 / b'
 11: Use the '/' operator.
 QUICKFIXES:
-Replace with '1m / 2m'
+Replace with 'a / d2'
 12: Use the '/' operator.
 QUICKFIXES:
-Replace with '1m / b'
+Replace with '1m / 2m'
 13: Use the '/' operator.
 QUICKFIXES:
-Replace with 'a / 1m'
+Replace with '1m / b'
 14: Use the '/' operator.
 QUICKFIXES:
-Replace with '(decimal)a / b'
-15: Use the '*' operator.
+Replace with 'a / 1m'
+15: Use the '/' operator.
 QUICKFIXES:
-Replace with 'd1 * d2'
+Replace with '(decimal)a / b'
 16: Use the '*' operator.
 QUICKFIXES:
-Replace with 'd1 * b'
+Replace with 'd1 * d2'
 17: Use the '*' operator.
 QUICKFIXES:
-Replace with 'a * d2'
+Replace with 'd1 * b'
 18: Use the '*' operator.
 QUICKFIXES:
-Replace with '1m * 2m'
+Replace with 'a * d2'
 19: Use the '*' operator.
 QUICKFIXES:
-Replace with '1m * b'
+Replace with '1m * 2m'
 20: Use the '*' operator.
 QUICKFIXES:
-Replace with 'a * 1m'
+Replace with '1m * b'
 21: Use the '*' operator.
 QUICKFIXES:
-Replace with '(decimal)a * b'
-22: Use the '%' operator.
+Replace with 'a * 1m'
+22: Use the '*' operator.
 QUICKFIXES:
-Replace with 'd1 % d2'
+Replace with '(decimal)a * b'
 23: Use the '%' operator.
 QUICKFIXES:
-Replace with 'd1 % b'
+Replace with 'd1 % d2'
 24: Use the '%' operator.
 QUICKFIXES:
-Replace with 'a % d2'
+Replace with 'd1 % b'
 25: Use the '%' operator.
 QUICKFIXES:
-Replace with '1m % 2m'
+Replace with 'a % d2'
 26: Use the '%' operator.
 QUICKFIXES:
-Replace with '1m % b'
+Replace with '1m % 2m'
 27: Use the '%' operator.
 QUICKFIXES:
-Replace with 'a % 1m'
+Replace with '1m % b'
 28: Use the '%' operator.
 QUICKFIXES:
-Replace with '(decimal)a % b'
-29: Use the '-' operator.
+Replace with 'a % 1m'
+29: Use the '%' operator.
 QUICKFIXES:
-Replace with 'd1 - d2'
+Replace with '(decimal)a % b'
 30: Use the '-' operator.
 QUICKFIXES:
-Replace with 'd1 - b'
+Replace with 'd1 - d2'
 31: Use the '-' operator.
 QUICKFIXES:
-Replace with 'a - d2'
+Replace with 'd1 - b'
 32: Use the '-' operator.
 QUICKFIXES:
-Replace with '1m - 2m'
+Replace with 'a - d2'
 33: Use the '-' operator.
 QUICKFIXES:
-Replace with '1m - b'
+Replace with '1m - 2m'
 34: Use the '-' operator.
 QUICKFIXES:
-Replace with 'a - 1m'
+Replace with '1m - b'
 35: Use the '-' operator.
+QUICKFIXES:
+Replace with 'a - 1m'
+36: Use the '-' operator.
 QUICKFIXES:
 Replace with '(decimal)a - b'
