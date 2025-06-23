@@ -34,54 +34,43 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
         Blue = 1 << 2,
     }
 
+    static readonly SampleEnum[] testValues = [SampleEnum.Red, (SampleEnum)1, (SampleEnum)10];
+    static readonly SampleFlags[] testFlags = [SampleFlags.Red, SampleFlags.Red | SampleFlags.Blue, (SampleFlags)3, 0, (SampleFlags)9];
+
     static void TestEnum<R>(Func<SampleEnum, R> expected, Func<SampleEnum, R> actual)
     {
-        Assert.AreEqual(expected(SampleEnum.Red), actual(SampleEnum.Red));
-        Assert.AreEqual(expected((SampleEnum)1), actual((SampleEnum)1));
-        Assert.AreEqual(expected((SampleEnum)10), actual((SampleEnum)10));
+        foreach (var value in testValues)
+        {
+            Assert.AreEqual(expected(value), actual(value));
+        }
     }
 
     static void TestFlags<R>(Func<SampleFlags, R> expected, Func<SampleFlags, R> actual)
     {
-        Assert.AreEqual(expected(SampleFlags.Red), actual(SampleFlags.Red));
-        Assert.AreEqual(expected(SampleFlags.Red | SampleFlags.Blue), actual(SampleFlags.Red | SampleFlags.Blue));
-        Assert.AreEqual(expected((SampleFlags)3), actual((SampleFlags)3));
-        Assert.AreEqual(expected(0), actual(0));
-        Assert.AreEqual(expected((SampleFlags)9), actual((SampleFlags)9));
+        foreach (var value in testFlags)
+        {
+            Assert.AreEqual(expected(value), actual(value));
+        }
     }
 
     delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
 
     static void TestEnum<R>(FuncWithOut<SampleEnum, R, bool> expected, FuncWithOut<SampleEnum, R, bool> actual)
     {
-        Assert.AreEqual(expected(SampleEnum.Red, out var expectedResult), actual(SampleEnum.Red, out var actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected((SampleEnum)1, out expectedResult), actual((SampleEnum)1, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected((SampleEnum)10, out expectedResult), actual((SampleEnum)10, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
+        foreach (var value in testValues)
+        {
+            Assert.AreEqual(expected(value, out var expectedResult), actual(value, out var actualResult));
+            Assert.AreEqual(expectedResult, actualResult);
+        }
     }
 
     static void TestFlags<R>(FuncWithOut<SampleFlags, R, bool> expected, FuncWithOut<SampleFlags, R, bool> actual)
     {
-        Assert.AreEqual(expected(SampleFlags.Red, out var expectedResult), actual(SampleFlags.Red, out var actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(
-            expected(SampleFlags.Red | SampleFlags.Blue, out expectedResult),
-            actual(SampleFlags.Red | SampleFlags.Blue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected((SampleFlags)3, out expectedResult), actual((SampleFlags)3, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(0, out expectedResult), actual(0, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected((SampleFlags)9, out expectedResult), actual((SampleFlags)9, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
+        foreach (var value in testFlags)
+        {
+            Assert.AreEqual(expected(value, out var expectedResult), actual(value, out var actualResult));
+            Assert.AreEqual(expectedResult, actualResult);
+        }
     }
 
     [Test]

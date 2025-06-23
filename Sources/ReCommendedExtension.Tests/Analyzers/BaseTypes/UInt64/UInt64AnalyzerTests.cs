@@ -2,7 +2,6 @@
 using System.Text;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
@@ -13,7 +12,7 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UInt64;
 
 [TestFixture]
-public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
+public sealed class UInt64AnalyzerTests : BaseTypeAnalyzerTests<ulong>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt64";
 
@@ -25,33 +24,7 @@ public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
                 or RedundantFormatPrecisionSpecifierHint
             || highlighting.IsError();
 
-    static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
-
-    static void Test<R>(Func<ulong, R> expected, Func<ulong, R> actual)
-    {
-        Assert.AreEqual(expected(0), actual(0));
-        Assert.AreEqual(expected(1), actual(1));
-        Assert.AreEqual(expected(2), actual(2));
-        Assert.AreEqual(expected(ulong.MaxValue), actual(ulong.MaxValue));
-    }
-
-    static void Test<R>(Func<ulong, ulong, R> expected, Func<ulong, ulong, R> actual)
-    {
-        Assert.AreEqual(expected(0, 0), actual(0, 0));
-        Assert.AreEqual(expected(0, ulong.MaxValue), actual(0, ulong.MaxValue));
-        Assert.AreEqual(expected(ulong.MaxValue, ulong.MaxValue), actual(ulong.MaxValue, ulong.MaxValue));
-    }
-
-    delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
-
-    static void Test(FuncWithOut<ulong, ulong, bool> expected, FuncWithOut<ulong, ulong, bool> actual)
-    {
-        Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(ulong.MaxValue, out expectedResult), actual(ulong.MaxValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-    }
+    protected override ulong[] TestValues { get; } = [0, 1, 2, ulong.MaxValue];
 
     [Test]
     [TestNet70]
@@ -80,7 +53,7 @@ public sealed class UInt64AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj);
+        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
 
         Test(number => number.Equals(null), _ => false);
 

@@ -2,7 +2,6 @@
 using System.Text;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
@@ -13,7 +12,7 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int64;
 
 [TestFixture]
-public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
+public sealed class Int64AnalyzerTests : BaseTypeAnalyzerTests<long>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int64";
 
@@ -25,41 +24,7 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
                 or RedundantFormatPrecisionSpecifierHint
             || highlighting.IsError();
 
-    static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
-
-    static void Test<R>(Func<long, R> expected, Func<long, R> actual)
-    {
-        Assert.AreEqual(expected(0), actual(0));
-        Assert.AreEqual(expected(1), actual(1));
-        Assert.AreEqual(expected(2), actual(2));
-        Assert.AreEqual(expected(-1), actual(-1));
-        Assert.AreEqual(expected(long.MinValue), actual(long.MinValue));
-        Assert.AreEqual(expected(long.MaxValue), actual(long.MaxValue));
-    }
-
-    static void Test<R>(Func<long, long, R> expected, Func<long, long, R> actual)
-    {
-        Assert.AreEqual(expected(0, 0), actual(0, 0));
-        Assert.AreEqual(expected(0, long.MaxValue), actual(0, long.MaxValue));
-        Assert.AreEqual(expected(long.MinValue, 0), actual(long.MinValue, 0));
-        Assert.AreEqual(expected(long.MinValue, long.MinValue), actual(long.MinValue, long.MinValue));
-        Assert.AreEqual(expected(long.MaxValue, long.MaxValue), actual(long.MaxValue, long.MaxValue));
-        Assert.AreEqual(expected(long.MinValue, long.MaxValue), actual(long.MinValue, long.MaxValue));
-    }
-
-    delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
-
-    static void Test(FuncWithOut<long, long, bool> expected, FuncWithOut<long, long, bool> actual)
-    {
-        Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(long.MaxValue, out expectedResult), actual(long.MaxValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(long.MinValue, out expectedResult), actual(long.MinValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-    }
+    protected override long[] TestValues { get; } = [0, 1, 2, -1, long.MinValue, long.MaxValue];
 
     [Test]
     [TestNet70]
@@ -88,7 +53,7 @@ public sealed class Int64AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj);
+        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
 
         Test(number => number.Equals(null), _ => false);
 

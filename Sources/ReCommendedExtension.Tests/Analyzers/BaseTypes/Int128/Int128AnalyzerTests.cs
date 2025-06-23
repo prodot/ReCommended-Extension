@@ -2,7 +2,6 @@
 using System.Text;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
@@ -16,7 +15,7 @@ using int128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Int128;
 
 [TestFixture]
 [TestNet70]
-public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
+public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128";
 
@@ -28,41 +27,7 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
                 or RedundantFormatPrecisionSpecifierHint
             || highlighting.IsError();
 
-    static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
-
-    static void Test<R>(Func<int128, R> expected, Func<int128, R> actual)
-    {
-        Assert.AreEqual(expected(0), actual(0));
-        Assert.AreEqual(expected(1), actual(1));
-        Assert.AreEqual(expected(2), actual(2));
-        Assert.AreEqual(expected(-1), actual(-1));
-        Assert.AreEqual(expected(int128.MinValue), actual(int128.MinValue));
-        Assert.AreEqual(expected(int128.MaxValue), actual(int128.MaxValue));
-    }
-
-    static void Test<R>(Func<int128, int128, R> expected, Func<int128, int128, R> actual)
-    {
-        Assert.AreEqual(expected(0, 0), actual(0, 0));
-        Assert.AreEqual(expected(0, int128.MaxValue), actual(0, int128.MaxValue));
-        Assert.AreEqual(expected(int128.MinValue, 0), actual(int128.MinValue, 0));
-        Assert.AreEqual(expected(int128.MinValue, int128.MinValue), actual(int128.MinValue, int128.MinValue));
-        Assert.AreEqual(expected(int128.MaxValue, int128.MaxValue), actual(int128.MaxValue, int128.MaxValue));
-        Assert.AreEqual(expected(int128.MinValue, int128.MaxValue), actual(int128.MinValue, int128.MaxValue));
-    }
-
-    delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
-
-    static void Test(FuncWithOut<int128, int128, bool> expected, FuncWithOut<int128, int128, bool> actual)
-    {
-        Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(int128.MaxValue, out expectedResult), actual(int128.MaxValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(int128.MinValue, out expectedResult), actual(int128.MinValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-    }
+    protected override int128[] TestValues { get; } = [0, 1, 2, -1, int128.MinValue, int128.MaxValue];
 
     [Test]
     public void TestClamp()
@@ -84,7 +49,7 @@ public sealed class Int128AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj);
+        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
 
         Test(number => number.Equals(null), _ => false);
 

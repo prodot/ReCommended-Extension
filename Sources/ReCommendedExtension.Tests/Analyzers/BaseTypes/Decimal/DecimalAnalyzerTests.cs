@@ -2,7 +2,6 @@
 using System.Text;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
@@ -13,7 +12,7 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Decimal;
 
 [TestFixture]
-public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
+public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal";
 
@@ -26,88 +25,13 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
                 or RedundantFormatPrecisionSpecifierHint
             || highlighting.IsError();
 
-    static void Test<R>(Func<decimal, R> expected, Func<decimal, R> actual)
-    {
-        Assert.AreEqual(expected(0), actual(0));
-        Assert.AreEqual(expected(-0.0m), actual(-0.0m));
-        Assert.AreEqual(expected(1), actual(1));
-        Assert.AreEqual(expected(2), actual(2));
-        Assert.AreEqual(expected(-1), actual(-1));
-        Assert.AreEqual(expected(decimal.MinValue), actual(decimal.MinValue));
-        Assert.AreEqual(expected(decimal.MaxValue), actual(decimal.MaxValue));
-    }
-
-    static void Test<R>(Func<decimal, decimal, R> expected, Func<decimal, decimal, R> actual)
-    {
-        Assert.AreEqual(expected(0, 0), actual(0, 0));
-        Assert.AreEqual(expected(0, decimal.MaxValue), actual(0, decimal.MaxValue));
-        Assert.AreEqual(expected(decimal.MinValue, 0), actual(decimal.MinValue, 0));
-        Assert.AreEqual(expected(decimal.MinValue, decimal.MinValue), actual(decimal.MinValue, decimal.MinValue));
-        Assert.AreEqual(expected(decimal.MaxValue, decimal.MaxValue), actual(decimal.MaxValue, decimal.MaxValue));
-        Assert.AreEqual(expected(decimal.MinValue, decimal.MaxValue), actual(decimal.MinValue, decimal.MaxValue));
-    }
-
-    static void TestArithmetic<R>(Func<decimal, decimal, R> expected, Func<decimal, decimal, R> actual)
-    {
-        Assert.AreEqual(expected(0, 1), actual(0, 1));
-        Assert.AreEqual(expected(0, -1), actual(0, -1));
-        Assert.AreEqual(expected(-0.0m, 1), actual(-0.0m, 1));
-        Assert.AreEqual(expected(-0.0m, -1), actual(-0.0m, -1));
-    }
-
-    delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
-
-    static void Test(FuncWithOut<decimal, decimal, bool> expected, FuncWithOut<decimal, decimal, bool> actual)
-    {
-        Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(decimal.MaxValue, out expectedResult), actual(decimal.MaxValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(decimal.MinValue, out expectedResult), actual(decimal.MinValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-    }
-
-    static void Test(Func<decimal, MidpointRounding, decimal> expected, Func<decimal, MidpointRounding, decimal> actual)
-    {
-        Assert.AreEqual(expected(0, MidpointRounding.ToEven), actual(0, MidpointRounding.ToEven));
-        Assert.AreEqual(expected(0, MidpointRounding.AwayFromZero), actual(0, MidpointRounding.AwayFromZero));
-
-        Assert.AreEqual(expected(-0.0m, MidpointRounding.ToEven), actual(-0.0m, MidpointRounding.ToEven));
-        Assert.AreEqual(expected(-0.0m, MidpointRounding.AwayFromZero), actual(-0.0m, MidpointRounding.AwayFromZero));
-
-        Assert.AreEqual(expected(decimal.MaxValue, MidpointRounding.ToEven), actual(decimal.MaxValue, MidpointRounding.ToEven));
-        Assert.AreEqual(expected(decimal.MaxValue, MidpointRounding.AwayFromZero), actual(decimal.MaxValue, MidpointRounding.AwayFromZero));
-
-        Assert.AreEqual(expected(decimal.MinValue, MidpointRounding.ToEven), actual(decimal.MinValue, MidpointRounding.ToEven));
-        Assert.AreEqual(expected(decimal.MinValue, MidpointRounding.AwayFromZero), actual(decimal.MinValue, MidpointRounding.AwayFromZero));
-    }
-
-    static void Test(Func<decimal, int, decimal> expected, Func<decimal, int, decimal> actual)
-    {
-        Assert.AreEqual(expected(0, 0), actual(0, 0));
-        Assert.AreEqual(expected(0, 1), actual(0, 1));
-        Assert.AreEqual(expected(0, 2), actual(0, 2));
-
-        Assert.AreEqual(expected(-0.0m, 0), actual(-0.0m, 0));
-        Assert.AreEqual(expected(-0.0m, 1), actual(-0.0m, 1));
-        Assert.AreEqual(expected(-0.0m, 2), actual(-0.0m, 2));
-
-        Assert.AreEqual(expected(decimal.MaxValue, 0), actual(decimal.MaxValue, 0));
-        Assert.AreEqual(expected(decimal.MaxValue, 1), actual(decimal.MaxValue, 1));
-        Assert.AreEqual(expected(decimal.MaxValue, 2), actual(decimal.MaxValue, 2));
-
-        Assert.AreEqual(expected(decimal.MinValue, 0), actual(decimal.MinValue, 0));
-        Assert.AreEqual(expected(decimal.MinValue, 1), actual(decimal.MinValue, 1));
-        Assert.AreEqual(expected(decimal.MinValue, 2), actual(decimal.MinValue, 2));
-    }
+    protected override decimal[] TestValues { get; } = [0, -0.0m, 1, 2, -1, decimal.MinValue, decimal.MaxValue];
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestAdd()
     {
-        TestArithmetic((d1, d2) => decimal.Add(d1, d2), (d1, d2) => d1 + d2);
+        Test((d1, d2) => decimal.Add(d1, d2), (d1, d2) => d1 + d2, [0, 1, -1, -0.0m], [0, 1, -1, -0.0m]);
 
         DoNamedTest2();
     }
@@ -129,7 +53,7 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestDivide()
     {
-        TestArithmetic((d1, d2) => decimal.Divide(d1, d2), (d1, d2) => d1 / d2);
+        Test((d1, d2) => decimal.Divide(d1, d2), (d1, d2) => d1 / d2, [0, 1, -1, -0.0m], [1, -1]);
 
         DoNamedTest2();
     }
@@ -137,7 +61,7 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj);
+        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
 
         Test(number => number.Equals(null), _ => false);
 
@@ -176,7 +100,7 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestMultiply()
     {
-        TestArithmetic((d1, d2) => decimal.Multiply(d1, d2), (d1, d2) => d1 * d2);
+        Test((d1, d2) => decimal.Multiply(d1, d2), (d1, d2) => d1 * d2, [0, 1, -1, -0.0m], [0, 1, -1, -0.0m]);
 
         DoNamedTest2();
     }
@@ -216,7 +140,7 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestRemainder()
     {
-        TestArithmetic((d1, d2) => decimal.Remainder(d1, d2), (d1, d2) => d1 % d2);
+        Test((d1, d2) => decimal.Remainder(d1, d2), (d1, d2) => d1 % d2, [0, 1, -1, -0.0m], [1, -1]);
 
         DoNamedTest2();
     }
@@ -226,15 +150,22 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestRound()
     {
+        var roundings = new[] { MidpointRounding.ToEven, MidpointRounding.AwayFromZero };
+        var digitsValues = new[] { 0, 1, 2 };
+
         Test(n => decimal.Round(n, 0), n => decimal.Round(n));
         Test(n => decimal.Round(n, MidpointRounding.ToEven), n => decimal.Round(n));
-        Test((n, mode) => decimal.Round(n, 0, mode), (n, mode) => decimal.Round(n, mode));
-        Test((n, decimals) => decimal.Round(n, decimals, MidpointRounding.ToEven), (n, decimals) => decimal.Round(n, decimals));
+        Test((n, mode) => decimal.Round(n, 0, mode), (n, mode) => decimal.Round(n, mode), TestValues, roundings);
+        Test(
+            (n, decimals) => decimal.Round(n, decimals, MidpointRounding.ToEven),
+            (n, decimals) => decimal.Round(n, decimals),
+            TestValues,
+            digitsValues);
 
         Test(n => Math.Round(n, 0), n => Math.Round(n));
         Test(n => Math.Round(n, MidpointRounding.ToEven), n => Math.Round(n));
-        Test((n, mode) => Math.Round(n, 0, mode), (n, mode) => Math.Round(n, mode));
-        Test((n, decimals) => Math.Round(n, decimals, MidpointRounding.ToEven), (n, decimals) => Math.Round(n, decimals));
+        Test((n, mode) => Math.Round(n, 0, mode), (n, mode) => Math.Round(n, mode), TestValues, roundings);
+        Test((n, decimals) => Math.Round(n, decimals, MidpointRounding.ToEven), (n, decimals) => Math.Round(n, decimals), TestValues, digitsValues);
 
         DoNamedTest2();
     }
@@ -243,7 +174,7 @@ public sealed class DecimalAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestSubtract()
     {
-        TestArithmetic((d1, d2) => decimal.Subtract(d1, d2), (d1, d2) => d1 - d2);
+        Test((d1, d2) => decimal.Subtract(d1, d2), (d1, d2) => d1 - d2, [0, 1, -1, -0.0m], [0, 1, -1, -0.0m]);
 
         DoNamedTest2();
     }

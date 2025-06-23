@@ -2,7 +2,6 @@
 using System.Text;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
@@ -16,75 +15,17 @@ using half = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Half;
 
 [TestFixture]
 [TestNet50]
-public sealed class HalfAnalyzerTests : CSharpHighlightingTestBase
+public sealed class HalfAnalyzerTests : BaseTypeAnalyzerTests<half>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Half";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint or RedundantFormatPrecisionSpecifierHint || highlighting.IsError();
 
-    static void Test<R>(Func<half, R> expected, Func<half, R> actual)
-    {
-        Assert.AreEqual(expected((sbyte)0), actual((sbyte)0));
-        Assert.AreEqual(expected((sbyte)1), actual((sbyte)1));
-        Assert.AreEqual(expected((sbyte)2), actual((sbyte)2));
-        Assert.AreEqual(expected((sbyte)-1), actual((sbyte)-1));
-        Assert.AreEqual(expected((half)(-0f)), actual((half)(-0f)));
-        Assert.AreEqual(expected(half.MinValue), actual(half.MinValue));
-        Assert.AreEqual(expected(half.MaxValue), actual(half.MaxValue));
-        Assert.AreEqual(expected(half.Epsilon), actual(half.Epsilon));
-        Assert.AreEqual(expected(half.NaN), actual(half.NaN));
-        Assert.AreEqual(expected(half.PositiveInfinity), actual(half.PositiveInfinity));
-        Assert.AreEqual(expected(half.NegativeInfinity), actual(half.NegativeInfinity));
-    }
-
-    delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
-
-    static void Test(FuncWithOut<half, half, bool> expected, FuncWithOut<half, half, bool> actual)
-    {
-        Assert.AreEqual(expected((byte)0, out var expectedResult), actual((byte)0, out var actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(half.MaxValue, out expectedResult), actual(half.MaxValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(half.MinValue, out expectedResult), actual(half.MinValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-    }
-
-    static void Test(Func<half, MidpointRounding, half> expected, Func<half, MidpointRounding, half> actual)
-    {
-        Assert.AreEqual(expected((byte)0, MidpointRounding.ToEven), actual((byte)0, MidpointRounding.ToEven));
-        Assert.AreEqual(expected((byte)0, MidpointRounding.AwayFromZero), actual((byte)0, MidpointRounding.AwayFromZero));
-
-        Assert.AreEqual(expected((half)(-0f), MidpointRounding.ToEven), actual((half)(-0f), MidpointRounding.ToEven));
-        Assert.AreEqual(expected((half)(-0f), MidpointRounding.AwayFromZero), actual((half)(-0f), MidpointRounding.AwayFromZero));
-
-        Assert.AreEqual(expected(half.MaxValue, MidpointRounding.ToEven), actual(half.MaxValue, MidpointRounding.ToEven));
-        Assert.AreEqual(expected(half.MaxValue, MidpointRounding.AwayFromZero), actual(half.MaxValue, MidpointRounding.AwayFromZero));
-
-        Assert.AreEqual(expected(half.MinValue, MidpointRounding.ToEven), actual(half.MinValue, MidpointRounding.ToEven));
-        Assert.AreEqual(expected(half.MinValue, MidpointRounding.AwayFromZero), actual(half.MinValue, MidpointRounding.AwayFromZero));
-    }
-
-    static void Test(Func<half, int, half> expected, Func<half, int, half> actual)
-    {
-        Assert.AreEqual(expected((byte)0, 0), actual((byte)0, 0));
-        Assert.AreEqual(expected((byte)0, 1), actual((byte)0, 1));
-        Assert.AreEqual(expected((byte)0, 2), actual((byte)0, 2));
-
-        Assert.AreEqual(expected((half)(-0f), 0), actual((half)(-0f), 0));
-        Assert.AreEqual(expected((half)(-0f), 1), actual((half)(-0f), 1));
-        Assert.AreEqual(expected((half)(-0f), 2), actual((half)(-0f), 2));
-
-        Assert.AreEqual(expected(half.MaxValue, 0), actual(half.MaxValue, 0));
-        Assert.AreEqual(expected(half.MaxValue, 1), actual(half.MaxValue, 1));
-        Assert.AreEqual(expected(half.MaxValue, 2), actual(half.MaxValue, 2));
-
-        Assert.AreEqual(expected(half.MinValue, 0), actual(half.MinValue, 0));
-        Assert.AreEqual(expected(half.MinValue, 1), actual(half.MinValue, 1));
-        Assert.AreEqual(expected(half.MinValue, 2), actual(half.MinValue, 2));
-    }
+    protected override half[] TestValues { get; } =
+    [
+        (sbyte)0, (sbyte)1, (sbyte)2, -1, (half)(-0f), half.MaxValue, half.Epsilon, half.NaN, half.PositiveInfinity, half.NegativeInfinity,
+    ];
 
     [Test]
     public void TestEquals()
@@ -119,10 +60,18 @@ public sealed class HalfAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestRound()
     {
+        var xValues = new[] { (byte)0, (half)(-0f), half.MaxValue, half.MinValue };
+        var roundings = new[] { MidpointRounding.ToEven, MidpointRounding.AwayFromZero };
+        var digitsValues = new[] { 0, 1, 2 };
+
         Test(n => MissingHalfMethods.Round(n, 0), n => MissingHalfMethods.Round(n));
         Test(n => MissingHalfMethods.Round(n, MidpointRounding.ToEven), n => MissingHalfMethods.Round(n));
-        Test((n, mode) => MissingHalfMethods.Round(n, 0, mode), (n, mode) => MissingHalfMethods.Round(n, mode));
-        Test((n, digits) => MissingHalfMethods.Round(n, digits, MidpointRounding.ToEven), (n, digits) => MissingHalfMethods.Round(n, digits));
+        Test((n, mode) => MissingHalfMethods.Round(n, 0, mode), (n, mode) => MissingHalfMethods.Round(n, mode), xValues, roundings);
+        Test(
+            (n, digits) => MissingHalfMethods.Round(n, digits, MidpointRounding.ToEven),
+            (n, digits) => MissingHalfMethods.Round(n, digits),
+            xValues,
+            digitsValues);
 
         DoNamedTest2();
     }

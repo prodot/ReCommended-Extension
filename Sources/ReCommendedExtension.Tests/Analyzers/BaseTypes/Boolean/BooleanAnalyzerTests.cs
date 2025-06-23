@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
@@ -9,7 +8,7 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Boolean;
 
 [TestFixture]
-public sealed class BooleanAnalyzerTests : CSharpHighlightingTestBase
+public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Boolean";
 
@@ -17,19 +16,7 @@ public sealed class BooleanAnalyzerTests : CSharpHighlightingTestBase
         => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantMethodInvocationHint or RedundantArgumentHint
             || highlighting.IsError();
 
-    static void Test<R>(Func<bool, R> expected, Func<bool, R> actual)
-    {
-        Assert.AreEqual(expected(true), actual(true));
-        Assert.AreEqual(expected(false), actual(false));
-    }
-
-    static void Test<R>(Func<bool, bool, R> expected, Func<bool, bool, R> actual)
-    {
-        Assert.AreEqual(expected(true, true), actual(true, true));
-        Assert.AreEqual(expected(true, false), actual(true, false));
-        Assert.AreEqual(expected(false, true), actual(false, true));
-        Assert.AreEqual(expected(false, false), actual(false, false));
-    }
+    protected override bool[] TestValues { get; } = [true, false];
 
     [Test]
     public void TestEquals()
@@ -38,7 +25,7 @@ public sealed class BooleanAnalyzerTests : CSharpHighlightingTestBase
         Test(flag => flag.Equals(false), flag => !flag);
         Test(obj => true.Equals(obj), obj => obj);
         Test(obj => false.Equals(obj), obj => !obj);
-        Test((flag, obj) => flag.Equals(obj), (flag, obj) => flag == obj);
+        Test((flag, obj) => flag.Equals(obj), (flag, obj) => flag == obj, TestValues, TestValues);
 
         Test(flag => flag.Equals(null), _ => false);
 

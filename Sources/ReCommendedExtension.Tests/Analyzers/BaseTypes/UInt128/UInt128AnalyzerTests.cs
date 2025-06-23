@@ -2,7 +2,6 @@
 using System.Text;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
@@ -16,7 +15,7 @@ using uint128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.UInt128;
 
 [TestFixture]
 [TestNet70]
-public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
+public sealed class UInt128AnalyzerTests : BaseTypeAnalyzerTests<uint128>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt128";
 
@@ -28,33 +27,7 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
                 or RedundantFormatPrecisionSpecifierHint
             || highlighting.IsError();
 
-    static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
-
-    static void Test<R>(Func<uint128, R> expected, Func<uint128, R> actual)
-    {
-        Assert.AreEqual(expected(0), actual(0));
-        Assert.AreEqual(expected(1), actual(1));
-        Assert.AreEqual(expected(2), actual(2));
-        Assert.AreEqual(expected(uint128.MaxValue), actual(uint128.MaxValue));
-    }
-
-    static void Test<R>(Func<uint128, uint128, R> expected, Func<uint128, uint128, R> actual)
-    {
-        Assert.AreEqual(expected(0, 0), actual(0, 0));
-        Assert.AreEqual(expected(0, uint128.MaxValue), actual(0, uint128.MaxValue));
-        Assert.AreEqual(expected(uint128.MaxValue, uint128.MaxValue), actual(uint128.MaxValue, uint128.MaxValue));
-    }
-
-    delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
-
-    static void Test(FuncWithOut<uint128, uint128, bool> expected, FuncWithOut<uint128, uint128, bool> actual)
-    {
-        Assert.AreEqual(expected(0, out var expectedResult), actual(0, out var actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-
-        Assert.AreEqual(expected(uint128.MaxValue, out expectedResult), actual(uint128.MaxValue, out actualResult));
-        Assert.AreEqual(expectedResult, actualResult);
-    }
+    protected override uint128[] TestValues { get; } = [0, 1, 2, uint128.MaxValue];
 
     [Test]
     public void TestClamp()
@@ -76,7 +49,7 @@ public sealed class UInt128AnalyzerTests : CSharpHighlightingTestBase
     [Test]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj);
+        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
 
         Test(number => number.Equals(null), _ => false);
 

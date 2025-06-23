@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
@@ -12,7 +11,7 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Char;
 
 [TestFixture]
-public sealed class CharAnalyzerTests : CSharpHighlightingTestBase
+public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Char";
 
@@ -20,32 +19,12 @@ public sealed class CharAnalyzerTests : CSharpHighlightingTestBase
         => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion or UseCharRangePatternSuggestion or RedundantArgumentHint
             || highlighting.IsError();
 
-    static void Test<R>(Func<char, R> expected, Func<char, R> actual)
-    {
-        Assert.AreEqual(expected('a'), actual('a'));
-        Assert.AreEqual(expected('A'), actual('A'));
-        Assert.AreEqual(expected('1'), actual('1'));
-        Assert.AreEqual(expected(' '), actual(' '));
-        Assert.AreEqual(expected('€'), actual('€'));
-        Assert.AreEqual(expected(char.MinValue), actual(char.MinValue));
-        Assert.AreEqual(expected(char.MaxValue), actual(char.MaxValue));
-    }
-
-    static void Test<R>(Func<char, char, R> expected, Func<char, char, R> actual)
-    {
-        Assert.AreEqual(expected('a', 'a'), actual('a', 'a'));
-        Assert.AreEqual(expected('a', 'A'), actual('a', 'A'));
-        Assert.AreEqual(expected('€', ' '), actual('€', ' '));
-        Assert.AreEqual(expected(char.MinValue, char.MinValue), actual(char.MinValue, char.MinValue));
-        Assert.AreEqual(expected(char.MinValue, char.MaxValue), actual(char.MinValue, char.MaxValue));
-        Assert.AreEqual(expected(char.MaxValue, char.MaxValue), actual(char.MaxValue, char.MaxValue));
-        Assert.AreEqual(expected(char.MaxValue, char.MinValue), actual(char.MaxValue, char.MinValue));
-    }
+    protected override char[] TestValues { get; } = ['a', 'A', '1', ' ', '€', char.MinValue, char.MaxValue];
 
     [Test]
     public void TestEquals()
     {
-        Test((c, obj) => c.Equals(obj), (c, obj) => c == obj);
+        Test((c, obj) => c.Equals(obj), (c, obj) => c == obj, TestValues, TestValues);
 
         Test(c => c.Equals(null), _ => false);
 
