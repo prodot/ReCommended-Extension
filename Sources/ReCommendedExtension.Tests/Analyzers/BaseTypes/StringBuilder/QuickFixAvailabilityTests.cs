@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.StringBuilder;
 [TestFixture]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilderQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilder\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is PassSingleCharacterSuggestion

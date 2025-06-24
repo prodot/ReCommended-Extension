@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Enum;
 [TestFixture]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\EnumQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Enum\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantArgumentHint || highlighting.IsError();

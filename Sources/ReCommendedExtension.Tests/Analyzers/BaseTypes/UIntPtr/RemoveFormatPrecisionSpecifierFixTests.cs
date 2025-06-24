@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UIntPtr;
 [TestNet50]
 public sealed class RemoveFormatPrecisionSpecifierFixTests : QuickFixTestBase<RemoveFormatPrecisionSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UIntPtrQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UIntPtr\QuickFixes";
 
     [Test]
     public void TestToString() => DoNamedTest2();

@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Single;
 [TestFixture]
 public sealed class UseFloatingPointPatternFixTests : QuickFixTestBase<UseFloatingPointPatternFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\SingleQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Single\QuickFixes";
 
     [Test]
     public void TestIsNaN() => DoNamedTest2();

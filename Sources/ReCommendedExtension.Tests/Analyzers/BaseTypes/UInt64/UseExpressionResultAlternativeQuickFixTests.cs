@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UInt64;
 [TestNet70]
 public sealed class UseExpressionResultAlternativeQuickFixTests : QuickFixTestBase<UseExpressionResultAlternativeFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt64QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt64\QuickFixes";
 
     [Test]
     public void TestClamp_Alternative() => DoNamedTest2();

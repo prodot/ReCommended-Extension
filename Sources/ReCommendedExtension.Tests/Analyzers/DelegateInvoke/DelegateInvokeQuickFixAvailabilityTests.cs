@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.DelegateInvoke;
 [TestNetFramework4]
 public sealed class DelegateInvokeQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\DelegateInvokeQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\DelegateInvoke\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantDelegateInvokeHint || highlighting.IsError();

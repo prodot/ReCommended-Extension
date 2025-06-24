@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.String;
 [TestNet50]
 public sealed class UseStringPropertyQuickFixTests : QuickFixTestBase<UseStringPropertyFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringsQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Strings\QuickFixes";
 
     [Test]
     public void TestLastIndexOf_Empty() => DoNamedTest2();

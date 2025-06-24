@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.String;
 [TestNetCore30]
 public sealed class UseRangeIndexerFixTests : QuickFixTestBase<UseRangeIndexerFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringsQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Strings\QuickFixes";
 
     [Test]
     public void TestRemove_Int32() => DoNamedTest2();

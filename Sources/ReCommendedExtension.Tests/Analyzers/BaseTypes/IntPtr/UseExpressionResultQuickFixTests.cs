@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.IntPtr;
 [TestNet50]
 public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\IntPtrQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\IntPtr\QuickFixes";
 
     [Test]
     [TestNet70]

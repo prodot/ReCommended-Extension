@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Decimal;
 [TestFixture]
 public sealed class RemoveFormatPrecisionSpecifierFixTests : QuickFixTestBase<RemoveFormatPrecisionSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DecimalQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal\QuickFixes";
 
     [Test]
     public void TestToString() => DoNamedTest2();

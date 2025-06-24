@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UInt64;
 [TestFixture]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt64QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt64\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion

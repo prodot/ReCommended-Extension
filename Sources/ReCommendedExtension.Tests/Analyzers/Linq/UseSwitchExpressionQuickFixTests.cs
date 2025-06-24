@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Linq;
 [TestNet70]
 public sealed class UseSwitchExpressionQuickFixTests : QuickFixTestBase<UseSwitchExpressionFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Linq\QuickFixes";
 
     [Test]
     public void TestUseSwitchExpression_SingleOrDefault() => DoNamedTest2();

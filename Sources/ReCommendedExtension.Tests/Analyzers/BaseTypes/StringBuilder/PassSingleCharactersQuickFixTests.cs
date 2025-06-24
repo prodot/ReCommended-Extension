@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.StringBuilder;
 [TestFixture]
 public sealed class PassSingleCharactersQuickFixTests : QuickFixTestBase<PassSingleCharactersFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilderQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilder\QuickFixes";
 
     [Test]
     public void TestReplace_String_String_SingleChar() => DoNamedTest2();

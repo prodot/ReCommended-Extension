@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseType;
 [TestNet80]
 public sealed class BaseTypeQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypeQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseType\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RemoveRedundantBaseTypeDeclarationHint || highlighting.IsError();

@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 [TestFixture]
 public sealed class ReplaceWithArrayEmptyQuickFixTests : QuickFixTestBase<ReplaceWithArrayEmptyFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     [Test]
     public void TestEmptyArrayInitialization() => DoNamedTest2();

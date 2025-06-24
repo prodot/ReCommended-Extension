@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UIntPtr;
 [TestNet70]
 public sealed class UseExpressionResultAlternativeQuickFixTests : QuickFixTestBase<UseExpressionResultAlternativeFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UIntPtrQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UIntPtr\QuickFixes";
 
     [Test]
     public void TestClamp_Alternative() => DoNamedTest2();

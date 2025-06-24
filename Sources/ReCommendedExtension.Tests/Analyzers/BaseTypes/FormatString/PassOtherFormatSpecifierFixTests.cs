@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.FormatString;
 [TestFixture]
 public sealed class PassOtherFormatSpecifierFixTests : QuickFixTestBase<PassOtherFormatSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\FormatStringQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\FormatString\QuickFixes";
 
     [Test]
     public void TestPassOtherFormatSpecifier() => DoNamedTest2();

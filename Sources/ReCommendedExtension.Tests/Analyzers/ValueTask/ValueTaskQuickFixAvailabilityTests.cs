@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.ValueTask;
 [TestNetCore30]
 public sealed class ValueTaskQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\ValueTaskQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\ValueTask\QuickFixes";
 
     protected override bool HighlightingPredicate(
         IHighlighting highlighting,

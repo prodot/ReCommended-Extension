@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.String;
 [TestFixture]
 public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMethodInvocationFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringsQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Strings\QuickFixes";
 
     [Test]
     public void TestPadLeft_0() => DoNamedTest2();

@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Nullable;
 [TestFixture]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\NullableQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Nullable\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseNullableHasValueAlternativeSuggestion or ReplaceNullableValueWithTypeCastSuggestion or UseBinaryOperatorSuggestion

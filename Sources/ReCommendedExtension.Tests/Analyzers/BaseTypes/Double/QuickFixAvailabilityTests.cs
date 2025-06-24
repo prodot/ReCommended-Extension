@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Double;
 [TestFixture]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DoubleQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Double\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion

@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int32;
 [TestFixture]
 public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperatorFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int32QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int32\QuickFixes";
 
     [Test]
     public void TestEquals_Int32() => DoNamedTest2();

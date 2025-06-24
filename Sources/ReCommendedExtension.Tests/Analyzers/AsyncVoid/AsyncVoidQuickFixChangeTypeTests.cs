@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.AsyncVoid;
 [TestNetFramework45]
 public sealed class AsyncVoidQuickFixChangeTypeTests : QuickFixTestBase<ChangeToAsyncTaskFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid\QuickFixes";
 
     [Test]
     public void TestAsyncVoidMethod() => DoNamedTest2();

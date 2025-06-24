@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.DelegateInvoke;
 [TestFixture]
 public sealed class DelegateInvokeQuickFixTests : QuickFixTestBase<RemoveDelegateInvokeFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\DelegateInvokeQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\DelegateInvoke\QuickFixes";
 
     [Test]
     public void TestDelegateInvoke() => DoNamedTest2();

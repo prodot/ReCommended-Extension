@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.String;
 [TestFixture]
 public sealed class PassSingleCharacterQuickFixTests : QuickFixTestBase<PassSingleCharacterFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringsQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Strings\QuickFixes";
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]

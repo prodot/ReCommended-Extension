@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Nullable;
 [TestFixture]
 public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperatorFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\NullableQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Nullable\QuickFixes";
 
     [Test]
     public void TestGetValueOrDefault() => DoNamedTest2();

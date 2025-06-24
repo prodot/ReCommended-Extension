@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Half;
 [TestNet50]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\HalfQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Half\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint or RedundantFormatPrecisionSpecifierHint || highlighting.IsError();

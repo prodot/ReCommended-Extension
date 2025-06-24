@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int64;
 [TestNet70]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int64QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int64\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion

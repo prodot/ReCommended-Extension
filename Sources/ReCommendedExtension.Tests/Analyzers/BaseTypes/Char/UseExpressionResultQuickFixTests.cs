@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Char;
 [TestFixture]
 public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\CharQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Char\QuickFixes";
 
     [Test]
     public void TestEquals_Object() => DoNamedTest2();

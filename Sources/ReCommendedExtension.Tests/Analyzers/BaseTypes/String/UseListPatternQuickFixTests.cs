@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.String;
 [TestNet70]
 public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseStringListPatternFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringsQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Strings\QuickFixes";
 
     [Test]
     public void TestEndsWith_Char() => DoNamedTest2();

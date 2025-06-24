@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Half;
 [TestNet50]
 public sealed class RemoveFormatPrecisionSpecifierFixTests : QuickFixTestBase<RemoveFormatPrecisionSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\HalfQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Half\QuickFixes";
 
     [Test]
     public void TestToString() => DoNamedTest2();

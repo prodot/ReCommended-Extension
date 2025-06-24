@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringExpre
 [TestFixture]
 public sealed class PassOtherFormatSpecifierFixTests : QuickFixTestBase<PassOtherFormatSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringExpressionQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringExpression\QuickFixes";
 
     [Test]
     public void TestPassOtherFormatSpecifier() => DoNamedTest2();

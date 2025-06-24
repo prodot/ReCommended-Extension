@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Byte;
 [TestFixture]
 public sealed class RemoveFormatPrecisionSpecifierFixTests : QuickFixTestBase<RemoveFormatPrecisionSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\ByteQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Byte\QuickFixes";
 
     [Test]
     public void TestToString() => DoNamedTest2();

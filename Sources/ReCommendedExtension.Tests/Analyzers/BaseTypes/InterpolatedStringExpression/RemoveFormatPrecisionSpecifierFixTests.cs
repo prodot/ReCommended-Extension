@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringExpre
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
 public sealed class RemoveFormatPrecisionSpecifierFixTests : QuickFixTestBase<RemoveFormatPrecisionSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringExpressionQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringExpression\QuickFixes";
 
     [Test]
     public void TestRemoveFormatPrecisionSpecifier() => DoNamedTest2();

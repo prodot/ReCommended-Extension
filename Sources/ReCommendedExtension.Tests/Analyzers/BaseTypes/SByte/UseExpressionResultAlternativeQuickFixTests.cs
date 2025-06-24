@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.SByte;
 [TestNet70]
 public sealed class UseExpressionResultAlternativeQuickFixTests : QuickFixTestBase<UseExpressionResultAlternativeFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\SByteQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\SByte\QuickFixes";
 
     [Test]
     public void TestClamp_Alternative() => DoNamedTest2();

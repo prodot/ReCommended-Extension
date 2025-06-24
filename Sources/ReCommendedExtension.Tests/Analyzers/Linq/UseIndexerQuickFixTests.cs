@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Linq;
 [TestNet50]
 public sealed class UseIndexerQuickFixTests : QuickFixTestBase<UseIndexerFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Linq\QuickFixes";
 
     [Test]
     public void TestUseIndexer_First() => DoNamedTest2();

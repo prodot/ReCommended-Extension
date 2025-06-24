@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int128;
 [TestNet70]
 public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128\QuickFixes";
 
     [Test]
     public void TestDivRem() => DoNamedTest2();

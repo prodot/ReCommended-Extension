@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UInt32;
 [TestFixture]
 public sealed class RemoveFormatPrecisionSpecifierFixTests : QuickFixTestBase<RemoveFormatPrecisionSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt32QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt32\QuickFixes";
 
     [Test]
     public void TestToString() => DoNamedTest2();

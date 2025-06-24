@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Nullable;
 [TestFixture]
 public sealed class ReplaceNullableValueWithTypeCastFixTests : QuickFixTestBase<ReplaceNullableValueWithTypeCastFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\NullableQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Nullable\QuickFixes";
 
     [Test]
     public void TestValue() => DoNamedTest2();

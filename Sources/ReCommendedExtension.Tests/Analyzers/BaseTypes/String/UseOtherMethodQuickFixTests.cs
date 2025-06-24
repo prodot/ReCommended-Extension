@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.String;
 [TestNetCore30]
 public sealed class UseOtherMethodQuickFixTests : QuickFixTestBase<UseOtherMethodFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringsQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Strings\QuickFixes";
 
     [Test]
     public void TestIndexOf_Char_gt_m1() => DoNamedTest2();

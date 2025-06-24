@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.StringBuilder;
 [TestNetCore21]
 public sealed class UseOtherMethodQuickFixTests : QuickFixTestBase<UseOtherMethodFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilderQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilder\QuickFixes";
 
     [Test]
     public void TestAppendJoin_OneItemArray() => DoNamedTest2();

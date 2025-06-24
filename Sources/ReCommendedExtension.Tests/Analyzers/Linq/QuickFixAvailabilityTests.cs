@@ -15,7 +15,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Linq;
 [TestNet50]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Linq\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseIndexerSuggestion

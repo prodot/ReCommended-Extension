@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.Analyzers.CatchClauseWithoutVariable;
 [TestFixture]
 public sealed class CatchClauseWithoutVariableQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariableQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariable\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is CatchClauseWithoutVariableHint || highlighting.IsError();

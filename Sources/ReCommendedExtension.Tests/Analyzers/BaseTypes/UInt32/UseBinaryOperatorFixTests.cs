@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UInt32;
 [TestFixture]
 public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperatorFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt32QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt32\QuickFixes";
 
     [Test]
     public void TestEquals_UInt32() => DoNamedTest2();

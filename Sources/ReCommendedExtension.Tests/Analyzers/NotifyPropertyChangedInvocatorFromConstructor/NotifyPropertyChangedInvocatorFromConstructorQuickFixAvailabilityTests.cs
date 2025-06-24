@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.NotifyPropertyChangedInvocatorFro
 [TestPackagesWithAnnotations]
 public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructor\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning || highlighting.IsError();

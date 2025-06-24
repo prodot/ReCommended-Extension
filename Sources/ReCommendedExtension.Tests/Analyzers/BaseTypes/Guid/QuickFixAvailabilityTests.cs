@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Guid;
 [TestFixture]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\GuidQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Guid\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion or RedundantArgumentHint || highlighting.IsError();

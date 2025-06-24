@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int32;
 [TestFixture]
 public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int32QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int32\QuickFixes";
 
     [Test]
     [TestNet70]

@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Double;
 [TestFixture]
 public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DoubleQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Double\QuickFixes";
 
     [Test]
     public void TestEquals_Object() => DoNamedTest2();

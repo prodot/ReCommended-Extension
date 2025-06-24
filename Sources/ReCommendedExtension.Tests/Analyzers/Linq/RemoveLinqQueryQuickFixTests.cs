@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Linq;
 [TestFixture]
 public sealed class RemoveLinqQueryQuickFixTests : QuickFixTestBase<RemoveLinqQueryFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Linq\QuickFixes";
 
     [Test]
     public void TestNoOpQuery() => DoNamedTest2();

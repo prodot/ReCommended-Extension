@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int128;
 [TestNet70]
 public sealed class RemoveFormatPrecisionSpecifierFixTests : QuickFixTestBase<RemoveFormatPrecisionSpecifierFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128\QuickFixes";
 
     [Test]
     public void TestToString() => DoNamedTest2();

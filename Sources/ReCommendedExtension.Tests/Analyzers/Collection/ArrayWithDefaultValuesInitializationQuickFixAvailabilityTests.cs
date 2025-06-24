@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
 public sealed class ArrayWithDefaultValuesInitializationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is ArrayWithDefaultValuesInitializationSuggestion || highlighting.IsError();

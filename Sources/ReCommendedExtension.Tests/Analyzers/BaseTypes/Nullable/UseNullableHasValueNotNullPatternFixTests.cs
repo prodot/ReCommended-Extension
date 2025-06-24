@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Nullable;
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
 public sealed class UseNullableHasValueNotNullPatternFixTests : QuickFixTestBase<UseNullableHasValueNotNullPatternFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\NullableQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Nullable\QuickFixes";
 
     [Test]
     public void TestHasValue_NotNullPattern() => DoNamedTest2();

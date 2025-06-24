@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Decimal;
 [TestFixture]
 public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DecimalQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal\QuickFixes";
 
     [Test]
     [TestNet70]

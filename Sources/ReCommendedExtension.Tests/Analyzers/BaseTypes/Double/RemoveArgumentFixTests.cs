@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Double;
 [TestFixture]
 public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DoubleQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Double\QuickFixes";
 
     [Test]
     public void TestParse() => DoNamedTest2();

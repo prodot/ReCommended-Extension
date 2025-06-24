@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Half;
 [TestNet50]
 public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\HalfQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Half\QuickFixes";
 
     [Test]
     public void TestEquals_Object() => DoNamedTest2();

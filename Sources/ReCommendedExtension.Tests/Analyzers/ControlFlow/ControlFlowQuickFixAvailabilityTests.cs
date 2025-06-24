@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.ControlFlow;
 [TestFixture]
 public sealed class ControlFlowQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\ControlFlowQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\ControlFlow\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantAssertionStatementSuggestion || highlighting.IsError();

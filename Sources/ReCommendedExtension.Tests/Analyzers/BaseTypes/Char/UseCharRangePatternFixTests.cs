@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Char;
 [TestNet70]
 public sealed class UseCharRangePatternFixTests : QuickFixTestBase<UseCharRangePatternFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\CharQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Char\QuickFixes";
 
     [Test]
     public void TestIsAsciiDigit() => DoNamedTest2();

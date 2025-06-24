@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Nullable;
 [TestNetCore20]
 public sealed class UseNullableHasValueTuplePatternFixTests : QuickFixTestBase<UseNullableHasValueTuplePatternFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\NullableQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Nullable\QuickFixes";
 
     [Test]
     public void TestHasValue_TuplePattern() => DoNamedTest2();

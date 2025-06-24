@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Guid;
 [TestFixture]
 public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\GuidQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Guid\QuickFixes";
 
     [Test]
     [TestNet70]

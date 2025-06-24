@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Random;
 [TestFixture]
 public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\RandomQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Random\QuickFixes";
 
     [Test]
     public void TestNext_Argument() => DoNamedTest2();

@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Boolean;
 [TestFixture]
 public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\BooleanQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Boolean\QuickFixes";
 
     [Test]
     public void TestToString_IFormatProvider() => DoNamedTest2();

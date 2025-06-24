@@ -14,7 +14,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 [TestNet80(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotationArgumentQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantAnnotationArgumentSuggestion || highlighting.IsError();

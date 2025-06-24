@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Enum;
 [TestFixture]
 public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\EnumQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Enum\QuickFixes";
 
     [Test]
     [TestNetCore20]

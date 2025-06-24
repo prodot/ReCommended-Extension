@@ -12,7 +12,7 @@ namespace ReCommendedExtension.Tests.Analyzers.AsyncVoid;
 [TestNetFramework45]
 public sealed class AsyncVoidQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning || highlighting.IsError();

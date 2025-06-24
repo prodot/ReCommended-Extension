@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Char;
 [TestFixture]
 public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\CharQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Char\QuickFixes";
 
     [Test]
     public void TestToString_IFormatProvider() => DoNamedTest2();
