@@ -115,7 +115,7 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
                 case "IsNegative": // todo: nameof(INumberBase<T>.IsNegative) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
                             AnalyzeIsNegative(consumer, element, valueArgument);
                             break;
                     }
@@ -124,7 +124,7 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
                 case "IsPositive": // todo: nameof(INumberBase<T>.IsPositive) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
                             AnalyzeIsPositive(consumer, element, valueArgument);
                             break;
                     }
@@ -133,7 +133,7 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
                 case "MaxMagnitude": // todo: nameof(INumberBase<T>.MaxMagnitude) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
+                        case ([{ Type: var xType }, { Type: var yType }], [{ } xArgument, { } yArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && yType.IsClrType(NumberInfo.ClrTypeName):
 
                             AnalyzeMaxMagnitude(consumer, element, xArgument, yArgument);
@@ -144,7 +144,7 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
                 case "MinMagnitude": // todo: nameof(INumberBase<T>.MinMagnitude) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
+                        case ([{ Type: var xType }, { Type: var yType }], [{ } xArgument, { } yArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && yType.IsClrType(NumberInfo.ClrTypeName):
 
                             AnalyzeMinMagnitude(consumer, element, xArgument, yArgument);

@@ -38,7 +38,7 @@ public abstract class FloatingPointNumberAnalyzer<N>(NumberInfo<N> numberInfo) :
                 case "IsNaN": // todo: nameof(INumberBase<T>.IsNaN) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
                             AnalyzeIsNaN(consumer, element, valueArgument);
                             break;
                     }

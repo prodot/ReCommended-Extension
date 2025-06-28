@@ -1098,7 +1098,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeJoin_String_ObjectArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
@@ -1174,7 +1174,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeJoin_String_ReadOnlySpanOfObject(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
@@ -1304,7 +1304,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeJoin_String_StringArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
@@ -1440,7 +1440,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeJoin_String_ReadOnlySpanOfString(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
         {
@@ -1517,7 +1517,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeJoin_Char_ObjectArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         if (arguments.TrySplit(out _, out var valuesArguments) && !invocationExpression.IsUsedAsStatement())
         {
@@ -1573,7 +1573,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeJoin_Char_ReadOnlySpanOfObject(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         if (arguments.TrySplit(out _, out var valuesArguments) && !invocationExpression.IsUsedAsStatement())
         {
@@ -1655,7 +1655,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeJoin_Char_StringArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         if (arguments.TrySplit(out _, out var valuesArguments) && !invocationExpression.IsUsedAsStatement())
         {
@@ -1744,7 +1744,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeJoin_Char_ReadOnlySpanOfString(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         if (arguments.TrySplit(out _, out var valuesArguments) && !invocationExpression.IsUsedAsStatement())
         {
@@ -2382,7 +2382,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <remarks>
     /// <c>text.Split('a', 'a', 'b')</c> → <c>text.Split('a', 'b')</c>
     /// </remarks>
-    static void AnalyzeSplit_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument> arguments)
+    static void AnalyzeSplit_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
     {
         switch (arguments)
         {
@@ -2392,7 +2392,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                 foreach (var argument in arguments)
                 {
-                    if (argument.Value.TryGetCharConstant() is { } character && !set.Add(character))
+                    if (argument?.Value.TryGetCharConstant() is { } character && !set.Add(character))
                     {
                         consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
                     }
@@ -3063,7 +3063,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeTrim_CharArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -3079,7 +3079,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                 foreach (var argument in arguments)
                 {
-                    if (argument.Value.TryGetCharConstant() is { } character && !set.Add(character))
+                    if (argument?.Value.TryGetCharConstant() is { } character && !set.Add(character))
                     {
                         consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
                     }
@@ -3130,7 +3130,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeTrimEnd_CharArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -3146,7 +3146,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                 foreach (var argument in arguments)
                 {
-                    if (argument.Value.TryGetCharConstant() is { } character && !set.Add(character))
+                    if (argument?.Value.TryGetCharConstant() is { } character && !set.Add(character))
                     {
                         consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
                     }
@@ -3197,7 +3197,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static void AnalyzeTrimStart_CharArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -3213,7 +3213,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                 foreach (var argument in arguments)
                 {
-                    if (argument.Value.TryGetCharConstant() is { } character && !set.Add(character))
+                    if (argument?.Value.TryGetCharConstant() is { } character && !set.Add(character))
                     {
                         consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
                     }
@@ -3273,11 +3273,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.Contains):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsString():
                                     AnalyzeContains_String(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, _])
+                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [{ } valueArgument, _])
                                     when valueType.IsString() && IsStringComparison(stringComparisonType):
 
                                     AnalyzeContains_String_StringComparison(consumer, element, invokedExpression, valueArgument);
@@ -3288,15 +3288,15 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.EndsWith):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsChar():
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsChar():
                                     AnalyzeEndsWith_Char(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsString():
                                     AnalyzeEndsWith_String(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [{ } valueArgument, { } comparisonTypeArgument])
                                     when valueType.IsString() && IsStringComparison(stringComparisonType):
 
                                     AnalyzeEndsWith_String_StringComparison(
@@ -3319,40 +3319,40 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.IndexOf):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsChar():
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsChar():
                                     AnalyzeIndexOf_Char(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument])
+                                case ([{ Type: var valueType }, { Type: var startIndexType }], [_, { } startIndexArgument])
                                     when valueType.IsChar() && startIndexType.IsInt():
 
                                     AnalyzeIndexOf_Char_Int32(consumer, element, startIndexArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [{ } valueArgument, { } comparisonTypeArgument])
                                     when valueType.IsChar() && IsStringComparison(stringComparisonType):
 
                                     AnalyzeIndexOf_Char_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                                     break;
 
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsString():
                                     AnalyzeIndexOf_String(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument])
+                                case ([{ Type: var valueType }, { Type: var startIndexType }], [_, { } startIndexArgument])
                                     when valueType.IsString() && startIndexType.IsInt():
 
                                     AnalyzeIndexOf_String_Int32(consumer, element, startIndexArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [{ } valueArgument, { } comparisonTypeArgument])
                                     when valueType.IsString() && IsStringComparison(stringComparisonType):
 
                                     AnalyzeIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
                                     break;
 
                                 case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var stringComparisonType }], [
-                                    _, var startIndexArgument, _,
+                                    _, { } startIndexArgument, _,
                                 ]) when valueType.IsString() && startIndexType.IsInt() && IsStringComparison(stringComparisonType):
                                     AnalyzeIndexOf_String_Int32_StringComparison(consumer, element, startIndexArgument);
                                     break;
@@ -3362,20 +3362,20 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.IndexOfAny):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var anyOfType }], [var anyOfArgument])
+                                case ([{ Type: var anyOfType }], [{ } anyOfArgument])
                                     when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
 
                                     AnalyzeIndexOfAny_CharArray(consumer, element, invokedExpression, anyOfArgument);
                                     break;
 
-                                case ([{ Type: var anyOfType }, { Type: var startIndexType }], [var anyOfArgument, var startIndexArgument])
+                                case ([{ Type: var anyOfType }, { Type: var startIndexType }], [{ } anyOfArgument, { } startIndexArgument])
                                     when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt():
 
                                     AnalyzeIndexOfAny_CharArray_Int32(consumer, element, invokedExpression, anyOfArgument, startIndexArgument);
                                     break;
 
                                 case ([{ Type: var anyOfType }, { Type: var startIndexType }, { Type: var countType }], [
-                                    var anyOfArgument, var startIndexArgument, var valueArgument,
+                                    { } anyOfArgument, { } startIndexArgument, { } valueArgument,
                                 ]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && countType.IsInt():
 
                                     AnalyzeIndexOfAny_CharArray_Int32_Int32(
@@ -3392,17 +3392,17 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.LastIndexOf):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var valueType }, { Type: var startIndexType }], [_, var startIndexArgument])
+                                case ([{ Type: var valueType }, { Type: var startIndexType }], [_, { } startIndexArgument])
                                     when valueType.IsChar() && startIndexType.IsInt():
 
                                     AnalyzeLastIndexOf_Char_Int32(consumer, element, invokedExpression, startIndexArgument);
                                     break;
 
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsString():
                                     AnalyzeLastIndexOf_String(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [{ } valueArgument, { } comparisonTypeArgument])
                                     when valueType.IsString() && IsStringComparison(stringComparisonType):
 
                                     AnalyzeLastIndexOf_String_StringComparison(
@@ -3418,18 +3418,18 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.LastIndexOfAny):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var anyOfType }], [var anyOfArgument]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
+                                case ([{ Type: var anyOfType }], [{ } anyOfArgument]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
                                     AnalyzeLastIndexOfAny_CharArray(consumer, element, invokedExpression, anyOfArgument);
                                     break;
 
-                                case ([{ Type: var anyOfType }, { Type: var startIndexType }], [var anyOfArgument, var startIndexArgument])
+                                case ([{ Type: var anyOfType }, { Type: var startIndexType }], [{ } anyOfArgument, { } startIndexArgument])
                                     when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt():
 
                                     AnalyzeLastIndexOfAny_CharArray_Int32(consumer, element, invokedExpression, anyOfArgument, startIndexArgument);
                                     break;
 
                                 case ([{ Type: var anyOfType }, { Type: var startIndexType }, { Type: var countType }], [
-                                    var anyOfArgument, var startIndexArgument, var valueArgument,
+                                    { } anyOfArgument, { } startIndexArgument, { } valueArgument,
                                 ]) when anyOfType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && countType.IsInt():
 
                                     AnalyzeLastIndexOfAny_CharArray_Int32_Int32(
@@ -3446,11 +3446,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.PadLeft):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var totalWidthType }], [var totalWidthArgument]) when totalWidthType.IsInt():
+                                case ([{ Type: var totalWidthType }], [{ } totalWidthArgument]) when totalWidthType.IsInt():
                                     AnalyzePadLeft_Int32(consumer, element, invokedExpression, totalWidthArgument);
                                     break;
 
-                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument])
+                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [{ } totalWidthArgument, { } paddingCharArgument])
                                     when totalWidthType.IsInt() && paddingCharType.IsChar():
 
                                     AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
@@ -3461,11 +3461,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.PadRight):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var totalWidthType }], [var totalWidthArgument]) when totalWidthType.IsInt():
+                                case ([{ Type: var totalWidthType }], [{ } totalWidthArgument]) when totalWidthType.IsInt():
                                     AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
                                     break;
 
-                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [var totalWidthArgument, var paddingCharArgument])
+                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [{ } totalWidthArgument, { } paddingCharArgument])
                                     when totalWidthType.IsInt() && paddingCharType.IsChar():
 
                                     AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
@@ -3476,11 +3476,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.Remove):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var startIndexType }], [var startIndexArgument]) when startIndexType.IsInt():
+                                case ([{ Type: var startIndexType }], [{ } startIndexArgument]) when startIndexType.IsInt():
                                     AnalyzeRemove_Int32(consumer, element, invokedExpression, startIndexArgument);
                                     break;
 
-                                case ([{ Type: var startIndexType }, { Type: var countType }], [var startIndexArgument, var countArgument])
+                                case ([{ Type: var startIndexType }, { Type: var countType }], [{ } startIndexArgument, { } countArgument])
                                     when startIndexType.IsInt() && countType.IsInt():
 
                                     AnalyzeRemove_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, countArgument);
@@ -3492,7 +3492,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var oldValueType }, { Type: var newValueType }, { Type: var stringComparisonType }], [
-                                    var oldValueArgument, var newValueArgument, var comparisonTypeArgument,
+                                    { } oldValueArgument, { } newValueArgument, { } comparisonTypeArgument,
                                 ]) when oldValueType.IsString() && newValueType.IsString() && IsStringComparison(stringComparisonType):
                                     AnalyzeReplace_String_String_StringComparison(
                                         consumer,
@@ -3503,13 +3503,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                         comparisonTypeArgument);
                                     break;
 
-                                case ([{ Type: var oldCharType }, { Type: var newCharType }], [var oldCharArgument, var newCharArgument])
+                                case ([{ Type: var oldCharType }, { Type: var newCharType }], [{ } oldCharArgument, { } newCharArgument])
                                     when oldCharType.IsChar() && newCharType.IsChar():
 
                                     AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
                                     break;
 
-                                case ([{ Type: var oldValueType }, { Type: var newValueType }], [var oldValueArgument, var newValueArgument])
+                                case ([{ Type: var oldValueType }, { Type: var newValueType }], [{ } oldValueArgument, { } newValueArgument])
                                     when oldValueType.IsString() && newValueType.IsString():
 
                                     AnalyzeReplace_String_String(consumer, element, invokedExpression, oldValueArgument, newValueArgument);
@@ -3520,15 +3520,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.Split):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], { Count: 2 or 3 } arguments)
-                                    when separatorType.IsChar() && countType.IsInt() && IsStringSplitOptions(optionsType):
+                                case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], [
+                                    _, { } countArgument, var optionsArgument,
+                                ]) when separatorType.IsChar() && countType.IsInt() && IsStringSplitOptions(optionsType):
 
-                                    AnalyzeSplit_Char_Int32_StringSplitOptions(
-                                        consumer,
-                                        element,
-                                        invokedExpression,
-                                        arguments[1],
-                                        arguments.Count == 3 ? arguments[^1] : null);
+                                    AnalyzeSplit_Char_Int32_StringSplitOptions(consumer, element, invokedExpression, countArgument, optionsArgument);
                                     break;
 
                                 case ([{ Type: var separatorType }], { } arguments)
@@ -3537,20 +3533,20 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     AnalyzeSplit_CharArray(consumer, arguments);
                                     break;
 
-                                case ([{ Type: var separatorType }, { Type: var countType }], [var separatorArgument, var countArgument])
+                                case ([{ Type: var separatorType }, { Type: var countType }], [{ } separatorArgument, { } countArgument])
                                     when separatorType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && countType.IsInt():
 
                                     AnalyzeSplit_CharArray_Int32(consumer, element, invokedExpression, separatorArgument, countArgument);
                                     break;
 
-                                case ([{ Type: var separatorType }, { Type: var optionsType }], [var separatorArgument, _])
+                                case ([{ Type: var separatorType }, { Type: var optionsType }], [{ } separatorArgument, _])
                                     when separatorType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && IsStringSplitOptions(optionsType):
 
                                     AnalyzeSplit_CharArray_StringSplitOptions(consumer, separatorArgument);
                                     break;
 
                                 case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], [
-                                        var separatorArgument, var countArgument, var optionsArgument,
+                                        { } separatorArgument, { } countArgument, { } optionsArgument,
                                     ]) when separatorType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element)
                                     && countType.IsInt()
                                     && IsStringSplitOptions(optionsType):
@@ -3564,37 +3560,33 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                         optionsArgument);
                                     break;
 
-                                case ([{ Type: var separatorType }, { Type: var optionsType }], { Count: 1 or 2 } arguments)
+                                case ([{ Type: var separatorType }, { Type: var optionsType }], [{ } separatorArgument, var optionsArgument])
                                     when separatorType.IsString() && IsStringSplitOptions(optionsType):
 
-                                    AnalyzeSplit_String_StringSplitOptions(
-                                        consumer,
-                                        element,
-                                        invokedExpression,
-                                        arguments[0],
-                                        arguments.Count == 2 ? arguments[^1] : null);
+                                    AnalyzeSplit_String_StringSplitOptions(consumer, element, invokedExpression, separatorArgument, optionsArgument);
                                     break;
 
-                                case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], { Count: 2 or 3 } arguments)
-                                    when separatorType.IsString() && countType.IsInt() && IsStringSplitOptions(optionsType):
+                                case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], [
+                                    { } separatorArgument, { } countArgument, var optionsArgument,
+                                ]) when separatorType.IsString() && countType.IsInt() && IsStringSplitOptions(optionsType):
 
                                     AnalyzeSplit_String_Int32_StringSplitOptions(
                                         consumer,
                                         element,
                                         invokedExpression,
-                                        arguments[0],
-                                        arguments[1],
-                                        arguments.Count == 3 ? arguments[^1] : null);
+                                        separatorArgument,
+                                        countArgument,
+                                        optionsArgument);
                                     break;
 
-                                case ([{ Type: var separatorType }, { Type: var optionsType }], [var separatorArgument, var optionsArgument])
+                                case ([{ Type: var separatorType }, { Type: var optionsType }], [{ } separatorArgument, { } optionsArgument])
                                     when separatorType.IsGenericArrayOf(PredefinedType.STRING_FQN, element) && IsStringSplitOptions(optionsType):
 
                                     AnalyzeSplit_StringArray_StringSplitOptions(consumer, element, invokedExpression, separatorArgument, optionsArgument);
                                     break;
 
                                 case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], [
-                                        var separatorArgument, var countArgument, var optionsArgument,
+                                        { } separatorArgument, { } countArgument, { } optionsArgument,
                                     ]) when separatorType.IsGenericArrayOf(PredefinedType.STRING_FQN, element)
                                     && countType.IsInt()
                                     && IsStringSplitOptions(optionsType):
@@ -3613,18 +3605,23 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.StartsWith):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsChar():
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsChar():
                                     AnalyzeStartsWith_Char(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsString():
                                     AnalyzeStartsWith_String(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [var valueArgument, var comparisonTypeArgument])
+                                case ([{ Type: var valueType }, { Type: var stringComparisonType }], [{ } valueArgument, { } comparisonTypeArgument])
                                     when valueType.IsString() && IsStringComparison(stringComparisonType):
 
-                                    AnalyzeStartsWith_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
+                                    AnalyzeStartsWith_String_StringComparison(
+                                        consumer,
+                                        element,
+                                        invokedExpression,
+                                        valueArgument,
+                                        comparisonTypeArgument);
                                     break;
                             }
                             break;
@@ -3632,7 +3629,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         case nameof(string.Substring):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var startIndexType }], [var startIndexArgument]) when startIndexType.IsInt():
+                                case ([{ Type: var startIndexType }], [{ } startIndexArgument]) when startIndexType.IsInt():
                                     AnalyzeSubstring_Int32(consumer, element, invokedExpression, startIndexArgument);
                                     break;
                             }
@@ -3700,7 +3697,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     AnalyzeJoin_String_ReadOnlySpanOfObject(consumer, element, arguments);
                                     break;
 
-                                case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [var separatorArgument, var valuesArgument])
+                                case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [{ } separatorArgument, { } valuesArgument])
                                     when separatorType.IsString() && valuesType.IsGenericIEnumerable():
 
                                     AnalyzeJoin_String_IEnumerableOfT(consumer, element, separatorArgument, valuesArgument);
@@ -3714,7 +3711,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                                 case ([], [
                                         { Type: var separatorType }, { Type: var valuesType }, { Type: var startIndexType }, { Type: var countType },
-                                    ], [var separatorArgument, var valuesArgument, var startIndexArgument, var countArgument])
+                                    ], [{ } separatorArgument, { } valuesArgument, { } startIndexArgument, { } countArgument])
                                     when separatorType.IsString()
                                     && valuesType.IsGenericArrayOf(PredefinedType.STRING_FQN, element)
                                     && startIndexType.IsInt()
@@ -3747,7 +3744,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     AnalyzeJoin_Char_ReadOnlySpanOfObject(consumer, element, arguments);
                                     break;
 
-                                case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [_, var valuesArgument])
+                                case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [_, { } valuesArgument])
                                     when separatorType.IsChar() && valuesType.IsGenericIEnumerable():
 
                                     AnalyzeJoin_Char_IEnumerableOfT(consumer, element, valuesArgument);
@@ -3761,7 +3758,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                                 case ([], [
                                         { Type: var separatorType }, { Type: var valuesType }, { Type: var startIndexType }, { Type: var countType },
-                                    ], [_, var valuesArgument, var startIndexArgument, var countArgument])
+                                    ], [_, { } valuesArgument, { } startIndexArgument, { } countArgument])
                                     when separatorType.IsChar()
                                     && valuesType.IsGenericArrayOf(PredefinedType.STRING_FQN, element)
                                     && startIndexType.IsInt()

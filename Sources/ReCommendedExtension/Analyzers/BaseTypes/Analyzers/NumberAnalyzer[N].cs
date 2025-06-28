@@ -727,11 +727,11 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                         case nameof(Equals):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var objType }], [var objArgument]) when objType.IsClrType(numberInfo.ClrTypeName):
+                                case ([{ Type: var objType }], [{ } objArgument]) when objType.IsClrType(numberInfo.ClrTypeName):
                                     AnalyzeEquals_N(consumer, element, invokedExpression, objArgument);
                                     break;
 
-                                case ([{ Type: var objType }], [var objArgument]) when objType.IsObject():
+                                case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, objArgument);
                                     break;
                             }
@@ -747,15 +747,15 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                         case nameof(ToString):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var formatType }], [var formatArgument]) when formatType.IsString():
+                                case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
                                     AnalyzeToString_String(consumer, element, formatArgument);
                                     break;
 
-                                case ([{ Type: var providerType }], [var providerArgument]) when providerType.IsIFormatProvider():
+                                case ([{ Type: var providerType }], [{ } providerArgument]) when providerType.IsIFormatProvider():
                                     AnalyzeToString_IFormatProvider(consumer, element, providerArgument);
                                     break;
 
-                                case ([{ Type: var formatType }, { Type: var providerType }], [var formatArgument, var providerArgument])
+                                case ([{ Type: var formatType }, { Type: var providerType }], [{ } formatArgument, { } providerArgument])
                                     when formatType.IsString() && providerType.IsIFormatProvider():
 
                                     AnalyzeToString_String_IFormatProvider(consumer, element, formatArgument, providerArgument);
@@ -772,7 +772,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var valueType }, { Type: var minType }, { Type: var maxType }], [
-                                        var valueArgument, var minArgument, var maxArgument,
+                                        { } valueArgument, { } minArgument, { } maxArgument,
                                     ]) when valueType.IsClrType(numberInfo.ClrTypeName)
                                     && minType.IsClrType(numberInfo.ClrTypeName)
                                     && maxType.IsClrType(numberInfo.ClrTypeName):
@@ -785,7 +785,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                         case "Max": // todo: nameof(INumber<T>.Max) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
+                                case ([{ Type: var xType }, { Type: var yType }], [{ } xArgument, { } yArgument])
                                     when xType.IsClrType(numberInfo.ClrTypeName) && yType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeMax(consumer, element, xArgument, yArgument);
@@ -796,7 +796,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                         case "Min": // todo: nameof(INumber<T>.Min) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var xType }, { Type: var yType }], [var xArgument, var yArgument])
+                                case ([{ Type: var xType }, { Type: var yType }], [{ } xArgument, { } yArgument])
                                     when xType.IsClrType(numberInfo.ClrTypeName) && yType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeMin(consumer, element, xArgument, yArgument);
@@ -807,25 +807,25 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                         case nameof(int.Parse):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var sType }, { Type: var styleType }], [_, var styleArgument])
+                                case ([{ Type: var sType }, { Type: var styleType }], [_, { } styleArgument])
                                     when sType.IsString() && IsNumberStyles(styleType):
 
                                     AnalyzeParse_String_NumberStyles(consumer, element, styleArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, var providerArgument])
+                                case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
                                     when sType.IsString() && providerType.IsIFormatProvider():
 
                                     AnalyzeParse_String_IFormatProvider(consumer, element, providerArgument);
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }], [
-                                    _, var styleArgument, var providerArgument,
+                                    _, { } styleArgument, { } providerArgument,
                                 ]) when sType.IsString() && IsNumberStyles(styleType) && providerType.IsIFormatProvider():
                                     AnalyzeParse_String_NumberStyles_IFormatProvider(consumer, element, styleArgument, providerArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, var providerArgument])
+                                case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
                                     when sType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsChar()
                                     && providerType.IsIFormatProvider():
@@ -833,7 +833,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                                     AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, element, providerArgument);
                                     break;
 
-                                case ([{ Type: var utf8TextType }, { Type: var providerType }], [_, var providerArgument])
+                                case ([{ Type: var utf8TextType }, { Type: var providerType }], [_, { } providerArgument])
                                     when utf8TextType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsByte()
                                     && providerType.IsIFormatProvider():
@@ -847,7 +847,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
-                                        _, var styleArgument, _, _,
+                                        _, { } styleArgument, _, _,
                                     ]) when sType.IsString()
                                     && IsNumberStyles(styleType)
                                     && providerType.IsIFormatProvider()
@@ -856,14 +856,14 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                                     AnalyzeTryParse_String_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
+                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
                                     when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsClrType(numberInfo.ClrTypeName):
 
                                     AnalyzeTryParse_String_IFormatProvider_N(consumer, element, providerArgument);
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
-                                        _, var styleArgument, _, _,
+                                        _, { } styleArgument, _, _,
                                     ]) when sType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsChar()
                                     && IsNumberStyles(styleType)
@@ -873,7 +873,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                                     AnalyzeTryParse_ReadOnlySpanOfChar_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
+                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
                                     when sType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsChar()
                                     && providerType.IsIFormatProvider()
@@ -883,7 +883,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                                     break;
 
                                 case ([{ Type: var utf8TextType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
-                                        _, var styleArgument, _, _,
+                                        _, { } styleArgument, _, _,
                                     ]) when utf8TextType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsByte()
                                     && IsNumberStyles(styleType)
@@ -893,7 +893,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                                     AnalyzeTryParse_ReadOnlySpanOfByte_NumberStyles_IFormatProvider_N(consumer, element, styleArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
+                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
                                     when sType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsByte()
                                     && providerType.IsIFormatProvider()
@@ -916,7 +916,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([{ Type: var valueType }, { Type: var minType }, { Type: var maxType }], [
-                                var valueArgument, var minArgument, var maxArgument,
+                                { } valueArgument, { } minArgument, { } maxArgument,
                             ]) when valueType.IsClrType(numberInfo.ClrTypeName)
                             && minType.IsClrType(numberInfo.ClrTypeName)
                             && maxType.IsClrType(numberInfo.ClrTypeName):
@@ -929,7 +929,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 case nameof(Math.Max):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var val1Type }, { Type: var val2Type }], [var val1Argument, var val2Argument])
+                        case ([{ Type: var val1Type }, { Type: var val2Type }], [{ } val1Argument, { } val2Argument])
                             when val1Type.IsClrType(numberInfo.ClrTypeName) && val2Type.IsClrType(numberInfo.ClrTypeName):
 
                             AnalyzeMax(consumer, element, val1Argument, val2Argument);
@@ -940,7 +940,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 case nameof(Math.Min):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var val1Type }, { Type: var val2Type }], [var val1Argument, var val2Argument])
+                        case ([{ Type: var val1Type }, { Type: var val2Type }], [{ } val1Argument, { } val2Argument])
                             when val1Type.IsClrType(numberInfo.ClrTypeName) && val2Type.IsClrType(numberInfo.ClrTypeName):
 
                             AnalyzeMin(consumer, element, val1Argument, val2Argument);

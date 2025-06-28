@@ -9,14 +9,17 @@ internal static class TreeNodeCollectionExtensions
     /// </remarks>
     [Pure]
     public static bool TrySplit<T>(
-        this TreeNodeCollection<T> treeNodeCollection,
+        this TreeNodeCollection<T?> treeNodeCollection,
         [NotNullWhen(true)] out T? firstItem,
         [NotNullWhen(true)] out T[]? restItems) where T : ITreeNode
     {
-        if (treeNodeCollection.Count >= 1)
+        if (treeNodeCollection.Count >= 1 && treeNodeCollection.All(item => item is { }))
         {
-            firstItem = treeNodeCollection[0];
-            restItems = treeNodeCollection.Count >= 2 ? treeNodeCollection.Skip(1).ToArray() : [];
+            var collection = (TreeNodeCollection<T>)treeNodeCollection!;
+
+            firstItem = collection[0];
+            restItems = collection.Count >= 2 ? collection.Skip(1).ToArray() : [];
+
             return true;
         }
 

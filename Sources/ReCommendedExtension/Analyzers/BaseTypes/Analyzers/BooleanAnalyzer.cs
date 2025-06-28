@@ -144,11 +144,11 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
                 case nameof(bool.Equals):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var objType }], [var objArgument]) when objType.IsBool():
+                        case ([{ Type: var objType }], [{ } objArgument]) when objType.IsBool():
                             AnalyzeEquals_Boolean(consumer, element, invokedExpression, objArgument);
                             break;
 
-                        case ([{ Type: var objType }], [var objArgument]) when objType.IsObject():
+                        case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                             AnalyzeEquals_Object(consumer, element, objArgument);
                             break;
                     }
@@ -164,7 +164,7 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
                 case nameof(bool.ToString):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var providerType }], [var providerArgument]) when providerType.IsIFormatProvider():
+                        case ([{ Type: var providerType }], [{ } providerArgument]) when providerType.IsIFormatProvider():
                             AnalyzeToString_IFormatProvider(consumer, element, providerArgument);
                             break;
                     }

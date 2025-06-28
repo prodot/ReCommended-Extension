@@ -169,7 +169,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
                 case nameof(decimal.Add):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [{ } d1Argument, { } d2Argument])
                             when d1Type.IsDecimal() && d2Type.IsDecimal():
 
                             AnalyzeAdd(consumer, element, d1Argument, d2Argument);
@@ -180,7 +180,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
                 case nameof(decimal.Divide):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [{ } d1Argument, { } d2Argument])
                             when d1Type.IsDecimal() && d2Type.IsDecimal():
 
                             AnalyzeDivide(consumer, element, d1Argument, d2Argument);
@@ -191,7 +191,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
                 case nameof(decimal.Multiply):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [{ } d1Argument, { } d2Argument])
                             when d1Type.IsDecimal() && d2Type.IsDecimal():
 
                             AnalyzeMultiply(consumer, element, d1Argument, d2Argument);
@@ -202,14 +202,14 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
                 case nameof(decimal.Negate):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var dType }], [var dArgument]) when dType.IsDecimal(): AnalyzeNegate(consumer, element, dArgument); break;
+                        case ([{ Type: var dType }], [{ } dArgument]) when dType.IsDecimal(): AnalyzeNegate(consumer, element, dArgument); break;
                     }
                     break;
 
                 case nameof(decimal.Remainder):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [{ } d1Argument, { } d2Argument])
                             when d1Type.IsDecimal() && d2Type.IsDecimal():
 
                             AnalyzeRemainder(consumer, element, d1Argument, d2Argument);
@@ -220,7 +220,7 @@ public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(Number
                 case nameof(decimal.Subtract):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var d1Type }, { Type: var d2Type }], [var d1Argument, var d2Argument])
+                        case ([{ Type: var d1Type }, { Type: var d2Type }], [{ } d1Argument, { } d2Argument])
                             when d1Type.IsDecimal() && d2Type.IsDecimal():
 
                             AnalyzeSubtract(consumer, element, d1Argument, d2Argument);

@@ -2,7 +2,6 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument;
 
@@ -32,10 +31,13 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProble
                     }
                     break;
 
-                case IInvocationExpression invocationExpression:
-                    if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == "nameof"
-                        && invocationExpression.TryGetArgumentsInDeclarationOrder() is [{ Value: IReferenceExpression referenceExpression }]
-                        && referenceExpression.Reference.Resolve().DeclaredElement is IParameter parameter
+                case IInvocationExpression
+                {
+                    InvokedExpression: IReferenceExpression { Reference: var reference },
+                    Arguments: [{ Value: IReferenceExpression argumentReferenceExpression }],
+                }:
+                    if (reference.GetName() == "nameof"
+                        && argumentReferenceExpression.Reference.Resolve().DeclaredElement is IParameter parameter
                         && parameters.Contains(parameter))
                     {
                         consumer.AddHighlighting(

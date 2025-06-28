@@ -107,7 +107,7 @@ namespace Test
             var result6 = string.Join(",", stringItems, startIndex, count);
         }
 
-        public void NoDetection(StringBuilder builder, string s, char c, object objectItem, object?[] objectItems, int intItem, int[] intItems, string stringItem, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings)
+        public void NoDetection(string s, char c, object objectItem, object?[] objectItems, int intItem, int[] intItems, string stringItem, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings)
         {
             var result11 = string.Join(s, (object?[])[objectItem, objectItem]);
             var result12 = string.Join(s, new[] { objectItem, objectItem });
@@ -117,37 +117,38 @@ namespace Test
             var result22 = string.Join(s, new[] { intItem, intItem });
             var result23 = string.Join(s, intItems);
 
-            var result31 = builder.AppendJoin(s, (string?[])[stringItem, stringItem]);
-            var result32 = builder.AppendJoin(s, new[] { stringItem, stringItem });
-            var result33 = builder.AppendJoin(s, stringItems);
+            var result31 = string.Join(s, (string?[])[stringItem, stringItem]);
+            var result32 = string.Join(s, new[] { stringItem, stringItem });
+            var result33 = string.Join(s, stringItems);
+            var result34 = string.Join(separator: s, stringItem, stringItem);
 
-            var result41 = builder.AppendJoin(c, (object?[])[objectItem, objectItem]);
-            var result42 = builder.AppendJoin(c, new[] { objectItem, objectItem });
-            var result43 = builder.AppendJoin(c, objectItems);
+            var result41 = string.Join(c, (object?[])[objectItem, objectItem]);
+            var result42 = string.Join(c, new[] { objectItem, objectItem });
+            var result43 = string.Join(c, objectItems);
 
-            var result51 = builder.AppendJoin(c, (int[])[intItem, intItem]);
-            var result52 = builder.AppendJoin(c, new[] { intItem, intItem });
-            var result53 = builder.AppendJoin(c, intItems);
+            var result51 = string.Join(c, (int[])[intItem, intItem]);
+            var result52 = string.Join(c, new[] { intItem, intItem });
+            var result53 = string.Join(c, intItems);
 
-            var result61 = builder.AppendJoin(c, (string?[])[stringItem, stringItem]);
-            var result62 = builder.AppendJoin(c, new[] { stringItem, stringItem });
-            var result63 = builder.AppendJoin(c, stringItems);
+            var result61 = string.Join(c, (string?[])[stringItem, stringItem]);
+            var result62 = string.Join(c, new[] { stringItem, stringItem });
+            var result63 = string.Join(c, stringItems);
 
             var result71 = string.Join(s, objectItem, objectItem);
             var result72 = string.Join(s, [objectItem, objectItem]);
             var result73 = string.Join(s, spanOfObjects);
 
-            var result81 = builder.AppendJoin(s, stringItem, stringItem);
-            var result82 = builder.AppendJoin(s, (ReadOnlySpan<string?>)[stringItem, stringItem]);
-            var result83 = builder.AppendJoin(s, spanOfStrings);
+            var result81 = string.Join(s, stringItem, stringItem);
+            var result82 = string.Join(s, (ReadOnlySpan<string?>)[stringItem, stringItem]);
+            var result83 = string.Join(s, spanOfStrings);
 
-            var result91 = builder.AppendJoin(c, objectItem, objectItem);
-            var result92 = builder.AppendJoin(c, [objectItem, objectItem]);
-            var result93 = builder.AppendJoin(c, spanOfObjects);
+            var result91 = string.Join(c, objectItem, objectItem);
+            var result92 = string.Join(c, [objectItem, objectItem]);
+            var result93 = string.Join(c, spanOfObjects);
 
-            var resultA1 = builder.AppendJoin(c, stringItem, stringItem);
-            var resultA2 = builder.AppendJoin(c, (ReadOnlySpan<string?>)[stringItem, stringItem]);
-            var resultA3 = builder.AppendJoin(c, spanOfStrings);
+            var resultA1 = string.Join(c, stringItem, stringItem);
+            var resultA2 = string.Join(c, (ReadOnlySpan<string?>)[stringItem, stringItem]);
+            var resultA3 = string.Join(c, spanOfStrings);
 
             string.Join(s, (object?[])[]);
             string.Join(s, new object?[0]);

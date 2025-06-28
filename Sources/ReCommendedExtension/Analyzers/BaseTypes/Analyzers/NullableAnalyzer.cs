@@ -134,7 +134,7 @@ public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpressi
                             {
                                 case ([], []): AnalyzeGetValueOrDefault(consumer, invocationExpression, element); break;
 
-                                case ([_], [var defaultValueArgument]):
+                                case ([_], [{ } defaultValueArgument]):
                                     AnalyzeGetValueOrDefault_T(consumer, invocationExpression, element, defaultValueArgument);
                                     break;
                             }

@@ -442,7 +442,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         {
             if (TryGetAttributeNameIfAnnotationProvided(PurityOrDisposabilityKind.MustDisposeResource) is { } attributeName
                 && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute
-                && attribute.TryGetArgumentsInDeclarationOrder() is [var argument])
+                && attribute.TryGetArgumentsInDeclarationOrder() is [{ } argument])
             {
                 consumer.AddHighlighting(new RedundantAnnotationArgumentSuggestion(message, element, attribute, argument));
             }

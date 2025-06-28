@@ -111,19 +111,19 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                 case "Round": // todo: nameof(IFloatingPoint<T>.Round) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var xType }, { Type: var digitsType }], [_, var digitsArgument])
+                        case ([{ Type: var xType }, { Type: var digitsType }], [_, { } digitsArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt():
 
                             AnalyzeRound_N_Int32(consumer, element, digitsArgument, NumberInfo.ClrTypeName);
                             break;
 
-                        case ([{ Type: var xType }, { Type: var modeType }], [_, var modeArgument])
+                        case ([{ Type: var xType }, { Type: var modeType }], [_, { } modeArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && IsMidpointRounding(modeType):
 
                             AnalyzeRound_N_MidpointRounding(consumer, element, modeArgument, NumberInfo.ClrTypeName);
                             break;
 
-                        case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, var digitsArgument, var modeArgument])
+                        case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, { } digitsArgument, { } modeArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && IsMidpointRounding(modeType):
 
                             AnalyzeRound_N_Int32_MidpointRounding(consumer, element, digitsArgument, modeArgument, NumberInfo.ClrTypeName);
@@ -140,19 +140,19 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                 case nameof(Math.Round):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var valueType }, { Type: var digitsOrDecimalsType }], [_, var digitsOrDecimalsArgument])
+                        case ([{ Type: var valueType }, { Type: var digitsOrDecimalsType }], [_, { } digitsOrDecimalsArgument])
                             when valueType.IsClrType(NumberInfo.ClrTypeName) && digitsOrDecimalsType.IsInt():
 
                             AnalyzeRound_N_Int32(consumer, element, digitsOrDecimalsArgument, ClrTypeNames.Math);
                             break;
 
-                        case ([{ Type: var xType }, { Type: var modeType }], [_, var modeArgument])
+                        case ([{ Type: var xType }, { Type: var modeType }], [_, { } modeArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && IsMidpointRounding(modeType):
 
                             AnalyzeRound_N_MidpointRounding(consumer, element, modeArgument, ClrTypeNames.Math);
                             break;
 
-                        case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, var digitsArgument, var modeArgument])
+                        case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, { } digitsArgument, { } modeArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && IsMidpointRounding(modeType):
 
                             AnalyzeRound_N_Int32_MidpointRounding(consumer, element, digitsArgument, modeArgument, ClrTypeNames.Math);
@@ -169,19 +169,19 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                 case "Round": // todo: nameof(MathF.Round) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var valueType }, { Type: var digitsOrDecimalsType }], [_, var digitsOrDecimalsArgument])
+                        case ([{ Type: var valueType }, { Type: var digitsOrDecimalsType }], [_, { } digitsOrDecimalsArgument])
                             when valueType.IsClrType(NumberInfo.ClrTypeName) && digitsOrDecimalsType.IsInt():
 
                             AnalyzeRound_N_Int32(consumer, element, digitsOrDecimalsArgument, ClrTypeNames.MathF);
                             break;
 
-                        case ([{ Type: var xType }, { Type: var modeType }], [_, var modeArgument])
+                        case ([{ Type: var xType }, { Type: var modeType }], [_, { } modeArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && IsMidpointRounding(modeType):
 
                             AnalyzeRound_N_MidpointRounding(consumer, element, modeArgument, ClrTypeNames.MathF);
                             break;
 
-                        case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, var digitsArgument, var modeArgument])
+                        case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, { } digitsArgument, { } modeArgument])
                             when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && IsMidpointRounding(modeType):
 
                             AnalyzeRound_N_Int32_MidpointRounding(consumer, element, digitsArgument, modeArgument, ClrTypeNames.MathF);

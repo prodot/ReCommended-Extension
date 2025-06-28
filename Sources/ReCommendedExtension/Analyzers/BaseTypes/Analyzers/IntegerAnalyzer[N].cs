@@ -96,7 +96,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
                 case "DivRem": // todo: nameof(IBinaryInteger<T>.DivRem) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
+                        case ([{ Type: var leftType }, { Type: var rightType }], [{ } leftArgument, { } rightArgument])
                             when leftType.IsClrType(NumberInfo.ClrTypeName) && rightType.IsClrType(NumberInfo.ClrTypeName):
 
                             AnalyzeDivRem(consumer, element, leftArgument, rightArgument);
@@ -107,7 +107,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
                 case "RotateLeft": // todo: nameof(IBinaryInteger<T>.RotateLeft) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
+                        case ([{ Type: var valueType }, { Type: var rotateAmountType }], [{ } valueArgument, { } rotateAmountArgument])
                             when valueType.IsClrType(NumberInfo.ClrTypeName) && rotateAmountType.IsInt():
 
                             AnalyzeRotateLeft(consumer, element, valueArgument, rotateAmountArgument);
@@ -118,7 +118,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
                 case "RotateRight": // todo: nameof(IBinaryInteger<T>.RotateRight) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var valueType }, { Type: var rotateAmountType }], [var valueArgument, var rotateAmountArgument])
+                        case ([{ Type: var valueType }, { Type: var rotateAmountType }], [{ } valueArgument, { } rotateAmountArgument])
                             when valueType.IsClrType(NumberInfo.ClrTypeName) && rotateAmountType.IsInt():
 
                             AnalyzeRotateRight(consumer, element, valueArgument, rotateAmountArgument);
@@ -135,7 +135,7 @@ public abstract class IntegerAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnaly
                 case nameof(Math.DivRem):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var leftType }, { Type: var rightType }], [var leftArgument, var rightArgument])
+                        case ([{ Type: var leftType }, { Type: var rightType }], [{ } leftArgument, { } rightArgument])
                             when leftType.IsClrType(NumberInfo.ClrTypeName) && rightType.IsClrType(NumberInfo.ClrTypeName):
 
                             AnalyzeDivRem(consumer, element, leftArgument, rightArgument);

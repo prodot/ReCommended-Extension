@@ -349,7 +349,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -446,7 +446,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -602,7 +602,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -699,7 +699,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -793,7 +793,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -869,7 +869,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -982,7 +982,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -1058,7 +1058,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        TreeNodeCollection<ICSharpArgument> arguments)
+        TreeNodeCollection<ICSharpArgument?> arguments)
     {
         [Pure]
         bool MethodExists()
@@ -1319,18 +1319,18 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 case (nameof(StringBuilder.Append), []):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var valueType }, { Type: var repeatCountType }], [_, var repeatCountArgument])
+                        case ([{ Type: var valueType }, { Type: var repeatCountType }], [_, { } repeatCountArgument])
                             when valueType.IsChar() && repeatCountType.IsInt():
 
                             AnalyzeAppend_Char_Int32(consumer, element, invokedExpression, repeatCountArgument);
                             break;
 
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
                             AnalyzeAppend_CharArray(consumer, element, invokedExpression, valueArgument);
                             break;
 
                         case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var charCountType }], [
-                            var valueArgument, var startIndexArgument, var charCountArgument,
+                            { } valueArgument, { } startIndexArgument, { } charCountArgument,
                         ]) when valueType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && charCountType.IsInt():
                             AnalyzeAppend_CharArray_Int32_Int32(
                                 consumer,
@@ -1341,22 +1341,22 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 charCountArgument);
                             break;
 
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsString():
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsString():
                             AnalyzeAppend_String(consumer, element, invokedExpression, valueArgument);
                             break;
 
                         case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
-                            var valueArgument, var startIndexArgument, var countArgument,
+                            { } valueArgument, { } startIndexArgument, { } countArgument,
                         ]) when valueType.IsString() && startIndexType.IsInt() && countType.IsInt():
                             AnalyzeAppend_String_Int32_Int32(consumer, element, invokedExpression, valueArgument, startIndexArgument, countArgument);
                             break;
 
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsClrType(PredefinedType.STRING_BUILDER_FQN):
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsClrType(PredefinedType.STRING_BUILDER_FQN):
                             AnalyzeAppend_StringBuilder(consumer, element, invokedExpression, valueArgument);
                             break;
 
                         case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
-                            var valueArgument, var startIndexArgument, var countArgument,
+                            { } valueArgument, { } startIndexArgument, { } countArgument,
                         ]) when valueType.IsClrType(PredefinedType.STRING_BUILDER_FQN) && startIndexType.IsInt() && countType.IsInt():
                             AnalyzeAppend_StringBuilder_Int32_Int32(
                                 consumer,
@@ -1367,7 +1367,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                 countArgument);
                             break;
 
-                        case ([{ Type: var valueType }], [var valueArgument]) when valueType.IsObject():
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsObject():
                             AnalyzeAppend_Object(consumer, element, invokedExpression, valueArgument);
                             break;
                     }
@@ -1389,7 +1389,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             break;
 
                         case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [
-                            var separatorArgument, var valuesArgument,
+                            { } separatorArgument, { } valuesArgument,
                         ]) when separatorType.IsString() && valuesType.IsGenericIEnumerable():
 
                             AnalyzeAppendJoin_String_IEnumerableOfT(consumer, element, invokedExpression, separatorArgument, valuesArgument);
@@ -1419,7 +1419,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             AnalyzeAppendJoin_Char_ReadOnlySpanOfObject(consumer, element, invokedExpression, arguments);
                             break;
 
-                        case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [_, var valuesArgument])
+                        case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [_, { } valuesArgument])
                             when separatorType.IsChar() && valuesType.IsGenericIEnumerable():
 
                             AnalyzeAppendJoin_Char_IEnumerableOfT(consumer, element, invokedExpression, valuesArgument);
@@ -1442,19 +1442,19 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 case (nameof(StringBuilder.Insert), []):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var indexType }, { Type: var valueType }, { Type: var countType }], [_, var valueArgument, var countArgument])
+                        case ([{ Type: var indexType }, { Type: var valueType }, { Type: var countType }], [_, { } valueArgument, { } countArgument])
                             when indexType.IsInt() && valueType.IsString() && countType.IsInt():
 
                             AnalyzeInsert_Int32_String_Int32(consumer, element, valueArgument, countArgument);
                             break;
 
-                        case ([{ Type: var indexType }, { Type: var valueType }], [_, var valueArgument])
+                        case ([{ Type: var indexType }, { Type: var valueType }], [_, { } valueArgument])
                             when indexType.IsInt() && valueType.IsString():
 
                             AnalyzeInsert_Int32_String(consumer, element, valueArgument);
                             break;
 
-                        case ([{ Type: var indexType }, { Type: var valueType }], [_, var valueArgument])
+                        case ([{ Type: var indexType }, { Type: var valueType }], [_, { } valueArgument])
                             when indexType.IsInt() && valueType.IsObject():
 
                             AnalyzeInsert_Int32_Object(consumer, element, invokedExpression, valueArgument);
@@ -1465,20 +1465,20 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 case (nameof(StringBuilder.Replace), []):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var oldValueType }, { Type: var newValueType }], [var oldValueArgument, var newValueArgument])
+                        case ([{ Type: var oldValueType }, { Type: var newValueType }], [{ } oldValueArgument, { } newValueArgument])
                             when oldValueType.IsString() && newValueType.IsString():
 
                             AnalyzeReplace_String_String(consumer, element, invokedExpression, oldValueArgument, newValueArgument);
                             break;
 
-                        case ([{ Type: var oldCharType }, { Type: var newCharType }], [var oldCharArgument, var newCharArgument])
+                        case ([{ Type: var oldCharType }, { Type: var newCharType }], [{ } oldCharArgument, { } newCharArgument])
                             when oldCharType.IsChar() && newCharType.IsChar():
 
                             AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
                             break;
 
                         case ([{ Type: var oldValueType }, { Type: var newValueType }, { Type: var startIndexType }, { Type: var countType }], [
-                            var oldValueArgument, var newValueArgument, _, _,
+                            { } oldValueArgument, { } newValueArgument, _, _,
                         ]) when oldValueType.IsString() && newValueType.IsString() && startIndexType.IsInt() && countType.IsInt():
                             AnalyzeReplace_String_String_Int32_Int32(consumer, element, oldValueArgument, newValueArgument);
                             break;

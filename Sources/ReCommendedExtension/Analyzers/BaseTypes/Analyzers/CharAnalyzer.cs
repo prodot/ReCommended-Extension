@@ -262,11 +262,11 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case nameof(char.Equals):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var objType }], [var objArgument]) when objType.IsChar():
+                                case ([{ Type: var objType }], [{ } objArgument]) when objType.IsChar():
                                     AnalyzeEquals_Char(consumer, element, invokedExpression, objArgument);
                                     break;
 
-                                case ([{ Type: var objType }], [var objArgument]) when objType.IsObject():
+                                case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, objArgument);
                                     break;
                             }
@@ -282,7 +282,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case nameof(char.ToString):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var providerType }], [var providerArgument]) when providerType.IsIFormatProvider():
+                                case ([{ Type: var providerType }], [{ } providerArgument]) when providerType.IsIFormatProvider():
                                     AnalyzeToString_IFormatProvider(consumer, element, providerArgument);
                                     break;
                             }
@@ -296,7 +296,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case "IsAsciiDigit": // todo: nameof(char.IsAsciiDigit) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var cType }], [var cArgument]) when cType.IsChar():
+                                case ([{ Type: var cType }], [{ } cArgument]) when cType.IsChar():
                                     AnalyzeIsAsciiDigit(consumer, element, cArgument);
                                     break;
                             }
@@ -305,7 +305,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case "IsAsciiHexDigit": // todo: nameof(char.IsAsciiHexDigit) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var cType }], [var cArgument]) when cType.IsChar():
+                                case ([{ Type: var cType }], [{ } cArgument]) when cType.IsChar():
                                     AnalyzeIsAsciiHexDigit(consumer, element, cArgument);
                                     break;
                             }
@@ -314,7 +314,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case "IsAsciiHexDigitLower": // todo: nameof(char.IsAsciiHexDigitLower) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var cType }], [var cArgument]) when cType.IsChar():
+                                case ([{ Type: var cType }], [{ } cArgument]) when cType.IsChar():
                                     AnalyzeIsAsciiHexDigitLower(consumer, element, cArgument);
                                     break;
                             }
@@ -323,7 +323,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case "IsAsciiHexDigitUpper": // todo: nameof(char.IsAsciiHexDigitUpper) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var cType }], [var cArgument]) when cType.IsChar():
+                                case ([{ Type: var cType }], [{ } cArgument]) when cType.IsChar():
                                     AnalyzeIsAsciiHexDigitUpper(consumer, element, cArgument);
                                     break;
                             }
@@ -332,7 +332,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case "IsAsciiLetter": // todo: nameof(char.IsAsciiLetter) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var cType }], [var cArgument]) when cType.IsChar():
+                                case ([{ Type: var cType }], [{ } cArgument]) when cType.IsChar():
                                     AnalyzeIsAsciiLetter(consumer, element, cArgument);
                                     break;
                             }
@@ -341,7 +341,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case "IsAsciiLetterLower": // todo: nameof(char.IsAsciiLetterLower) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var cType }], [var cArgument]) when cType.IsChar():
+                                case ([{ Type: var cType }], [{ } cArgument]) when cType.IsChar():
                                     AnalyzeIsAsciiLetterLower(consumer, element, cArgument);
                                     break;
                             }
@@ -350,7 +350,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case "IsAsciiLetterOrDigit": // todo: nameof(char.IsAsciiLetterOrDigit) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var cType }], [var cArgument]) when cType.IsChar():
+                                case ([{ Type: var cType }], [{ } cArgument]) when cType.IsChar():
                                     AnalyzeIsAsciiLetterOrDigit(consumer, element, cArgument);
                                     break;
                             }
@@ -359,7 +359,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case "IsAsciiLetterUpper": // todo: nameof(char.IsAsciiLetterUpper) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var cType }], [var cArgument]) when cType.IsChar():
+                                case ([{ Type: var cType }], [{ } cArgument]) when cType.IsChar():
                                     AnalyzeIsAsciiLetterUpper(consumer, element, cArgument);
                                     break;
                             }
@@ -369,7 +369,7 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var cType }, { Type: var minInclusiveType }, { Type: var maxInclusiveType }], [
-                                    var cArgument, var minInclusiveArgument, var maxInclusiveArgument,
+                                    { } cArgument, { } minInclusiveArgument, { } maxInclusiveArgument,
                                 ]) when cType.IsChar() && minInclusiveType.IsChar() && maxInclusiveType.IsChar():
                                     AnalyzeIsBetween(consumer, element, cArgument, minInclusiveArgument, maxInclusiveArgument);
                                     break;

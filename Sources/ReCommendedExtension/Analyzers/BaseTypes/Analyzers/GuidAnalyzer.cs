@@ -192,11 +192,11 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case nameof(Guid.Equals):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var gType }], [var gArgument]) when gType.IsGuid():
+                                case ([{ Type: var gType }], [{ } gArgument]) when gType.IsGuid():
                                     AnalyzeEquals_Guid(consumer, element, invokedExpression, gArgument);
                                     break;
 
-                                case ([{ Type: var objType }], [var objArgument]) when objType.IsObject():
+                                case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, objArgument);
                                     break;
                             }
@@ -205,11 +205,11 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case nameof(Guid.ToString):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var formatType }], [var formatArgument]) when formatType.IsString():
+                                case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
                                     AnalyzeToString_String(consumer, element, formatArgument);
                                     break;
 
-                                case ([{ Type: var formatType }, { Type: var providerType }], [_, var providerArgument])
+                                case ([{ Type: var formatType }, { Type: var providerType }], [_, { } providerArgument])
                                     when formatType.IsString() && providerType.IsIFormatProvider():
 
                                     AnalyzeToString_String_IFormatProvider(consumer, element, providerArgument);
@@ -225,13 +225,13 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case nameof(Guid.Parse):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, var providerArgument])
+                                case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
                                     when sType.IsString() && providerType.IsIFormatProvider():
 
                                     AnalyzeParse_String_IFormatProvider(consumer, element, providerArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, var providerArgument])
+                                case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
                                     when sType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsChar()
                                     && providerType.IsIFormatProvider():
@@ -244,13 +244,13 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case nameof(Guid.TryParse):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
+                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
                                     when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsGuid():
 
                                     AnalyzeTryParse_String_IFormatProvider_Guid(consumer, element, providerArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, var providerArgument, _])
+                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
                                     when sType.IsReadOnlySpan(out var spanTypeArgument)
                                     && spanTypeArgument.IsChar()
                                     && providerType.IsIFormatProvider()
