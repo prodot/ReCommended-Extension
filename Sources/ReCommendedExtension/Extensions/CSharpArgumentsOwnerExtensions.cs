@@ -95,16 +95,27 @@ internal static class CSharpArgumentsOwnerExtensions
 
             for (var i = 0; i < parametersOwner.Parameters.Count; i++)
             {
+                int resultIndex;
+
                 if (isExtensionMethodInvocation)
                 {
-                    continue;
+                    if (i == 0)
+                    {
+                        continue;
+                    }
+
+                    resultIndex = i - 1;
+                }
+                else
+                {
+                    resultIndex = i;
                 }
 
                 var parameter = parametersOwner.Parameters[i];
 
                 if (parameterArguments.TryGetValue(parameter, out var argument))
                 {
-                    result[i] = argument;
+                    result[resultIndex] = argument;
 
                     if (parameter.IsParams && additionalParamsArguments is { })
                     {
@@ -112,7 +123,7 @@ internal static class CSharpArgumentsOwnerExtensions
 
                         for (var j = 0; j < additionalParamsArguments.Count; j++)
                         {
-                            result[i + 1 + j] = additionalParamsArguments[j];
+                            result[resultIndex + 1 + j] = additionalParamsArguments[j];
                         }
 
                         break; // no more parameters to process

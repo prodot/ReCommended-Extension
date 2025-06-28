@@ -67,7 +67,7 @@ namespace Test
     {
         public void NonGenericMethod(IList<int> list)
         {
-            var third = list.|ElementAt(2)|(0);
+            var third = list.|ElementAt(index: 2)|(0);
             var secondFromEnd = list.|ElementAt(^2)|(1);
         }
         
