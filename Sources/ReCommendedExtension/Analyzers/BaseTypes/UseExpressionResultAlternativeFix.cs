@@ -30,10 +30,10 @@ public sealed class UseExpressionResultAlternativeFix(UseExpressionResultSuggest
     {
         using (WriteLockCookie.Create())
         {
-            var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
+            var factory = CSharpElementFactory.GetInstance(highlighting.Expression);
 
             var expression = ModificationUtil
-                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"({highlighting.AlternativeReplacement})"))
+                .ReplaceChild(highlighting.Expression, factory.CreateExpression($"({highlighting.AlternativeReplacement})"))
                 .TryRemoveParentheses(factory);
 
             if (expression is IUnaryOperatorExpression unaryOperatorExpression)

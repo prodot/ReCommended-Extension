@@ -16,17 +16,17 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
 public sealed class UseExpressionResultSuggestion(
     string message,
-    IInvocationExpression invocationExpression,
+    ICSharpTreeNode expression,
     string replacement,
     string? alternativeReplacement = null) : Highlighting(message)
 {
     const string SeverityId = "UseExpressionResult";
 
-    internal IInvocationExpression InvocationExpression => invocationExpression;
+    internal ICSharpTreeNode Expression => expression;
 
     internal string Replacement => replacement;
 
     internal string? AlternativeReplacement => alternativeReplacement;
 
-    public override DocumentRange CalculateRange() => invocationExpression.GetDocumentRange();
+    public override DocumentRange CalculateRange() => expression.GetDocumentRange();
 }

@@ -22,10 +22,10 @@ public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlig
     {
         using (WriteLockCookie.Create())
         {
-            var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
+            var factory = CSharpElementFactory.GetInstance(highlighting.Expression);
 
             var expression = ModificationUtil
-                .ReplaceChild(highlighting.InvocationExpression, factory.CreateExpression($"({highlighting.Replacement})"))
+                .ReplaceChild(highlighting.Expression, factory.CreateExpression($"({highlighting.Replacement})"))
                 .TryRemoveParentheses(factory);
 
             if (expression is IUnaryOperatorExpression unaryOperatorExpression)
