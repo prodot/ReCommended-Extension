@@ -106,6 +106,13 @@ internal static class CSharpExpressionExtensions
                 : null;
 
     [Pure]
+    public static TimeSpanStyles? TryGetTimeSpanStylesConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(ClrTypeNames.TimeSpanStyles)
+                ? (TimeSpanStyles)constantValue.IntValue
+                : null;
+
+    [Pure]
     public static bool AreParenthesesRedundant(this IParenthesizedExpression parenthesizedExpression)
         => CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(parenthesizedExpression, LanguageManager.Instance, null) is
         {

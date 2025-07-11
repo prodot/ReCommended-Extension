@@ -1,7 +1,9 @@
-﻿using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using System.Globalization;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReCommendedExtension.Analyzers.BaseTypes.Collections;
 using ReCommendedExtension.Extensions;
 using ReCommendedExtension.Extensions.MethodFinding;
 
@@ -12,17 +14,101 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(ICSharpInvocationInfo),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint), typeof(UseBinaryOperatorSuggestion)])]
+    HighlightingTypes =
+    [
+        typeof(UseExpressionResultSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(UseBinaryOperatorSuggestion),
+        typeof(UseUnaryOperatorSuggestion),
+        typeof(UseOtherArgumentSuggestion),
+        typeof(RedundantElementHint),
+    ])]
 public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
+        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
+
+        public static IReadOnlyList<ParameterType> String_TimeSpan { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_TimeSpan { get; } =
+        [
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+        ];
+
         public static IReadOnlyList<ParameterType> Int32_Int32_Int32 { get; } =
         [
             new() { ClrTypeName = PredefinedType.INT_FQN },
             new() { ClrTypeName = PredefinedType.INT_FQN },
             new() { ClrTypeName = PredefinedType.INT_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> String_String_IFormatProvider { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_TimeSpan { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_ReadOnlySpanOfT_IFormatProvider_TimeSpan { get; } =
+        [
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> String_StringArray_IFormatProvider { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> String_StringArray_IFormatProvider_TimeSpan { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_StringArray_IFormatProvider_TimeSpan { get; } =
+        [
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_TimeSpanStyles { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = ClrTypeNames.TimeSpanStyles },
+        ];
+
+        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_TimeSpanStyles_TimeSpan { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = ClrTypeNames.TimeSpanStyles },
+            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
         ];
 
         public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32 { get; } =
@@ -42,6 +128,9 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             new() { ClrTypeName = PredefinedType.INT_FQN },
         ];
     }
+
+    [Pure]
+    static bool IsTimeSpanStyles(IType type) => type.IsClrType(ClrTypeNames.TimeSpanStyles);
 
     /// <remarks>
     /// <c>new TimeSpan(0)</c> → <c>TimeSpan.Zero</c><para/>
@@ -588,6 +677,655 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         }
     }
 
+    /// <remarks>
+    /// <c>timeSpan.Multiply(factor)</c> → <c>timeSpan * factor</c> (.NET Core 2.0)
+    /// </remarks>
+    static void AnalyzeMultiply_Double(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument factorArgument)
+    {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
+        if (!invocationExpression.IsUsedAsStatement() && factorArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperatorSuggestion(
+                    "Use the '*' operator.",
+                    invocationExpression,
+                    "*",
+                    invokedExpression.QualifierExpression.GetText(),
+                    factorArgument.Value.GetText()));
+        }
+    }
+
+    /// <remarks>
+    /// <c>timeSpan.Negate()</c> → <c>-timeSpan</c>
+    /// </remarks>
+    static void AnalyzeNegate(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
+    {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
+        if (!invocationExpression.IsUsedAsStatement())
+        {
+            consumer.AddHighlighting(
+                new UseUnaryOperatorSuggestion("Use the '-' operator.", invocationExpression, "-", invokedExpression.QualifierExpression.GetText()));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.Parse(input, null)</c> → <c>TimeSpan.Parse(input)</c>
+    /// </remarks>
+    static void AnalyzeParse_String_IFormatProvider(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatProviderArgument)
+    {
+        if (formatProviderArgument.Value.IsDefaultValue()
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature { Name = nameof(TimeSpan.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.ParseExact(input, "c", formatProvider)</c> → <c>TimeSpan.ParseExact(input, "c", null)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, "t", formatProvider)</c> → <c>TimeSpan.ParseExact(input, "t", null)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, "T", formatProvider)</c> → <c>TimeSpan.ParseExact(input, "T", null)</c>
+    /// </remarks>
+    static void AnalyzeParseExact_String_String_IFormatProvider(
+        IHighlightingConsumer consumer,
+        ICSharpArgument formatArgument,
+        ICSharpArgument formatProviderArgument)
+    {
+        if (formatArgument.Value.TryGetStringConstant() is "c" or "t" or "T"
+            && !formatProviderArgument.Value.IsDefaultValue()
+            && formatProviderArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The format provider is ignored (pass null instead).",
+                    formatProviderArgument,
+                    formatProviderArgument.NameIdentifier?.Name,
+                    "null"));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.ParseExact(input, format, formatProvider, TimeSpanStyles.None)</c> → <c>TimeSpan.ParseExact(input, format, formatProvider)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, "c", formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, "c", null, styles)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, "t", formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, "t", null, styles)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, "T", formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, "T", null, styles)</c>
+    /// </remarks>
+    static void AnalyzeParseExact_String_String_IFormatProvider_TimeSpanStyles(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatArgument,
+        ICSharpArgument formatProviderArgument,
+        ICSharpArgument stylesArgument)
+    {
+        if (formatArgument.Value.TryGetStringConstant() is "c" or "t" or "T"
+            && !formatProviderArgument.Value.IsDefaultValue()
+            && formatProviderArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The format provider is ignored (pass null instead).",
+                    formatProviderArgument,
+                    formatProviderArgument.NameIdentifier?.Name,
+                    "null"));
+        }
+
+        if (stylesArgument.Value.TryGetTimeSpanStylesConstant() == TimeSpanStyles.None
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.ParseExact), ParameterTypes = ParameterTypes.String_String_IFormatProvider, IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentHint($"Passing {nameof(TimeSpanStyles)}.{nameof(TimeSpanStyles.None)} is redundant.", stylesArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.ParseExact(input, ["c"], formatProvider)</c> → <c>TimeSpan.ParseExact(input, "c", formatProvider)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, ["c", "t", "T"], formatProvider)</c> → <c>TimeSpan.ParseExact(input, ["c"], formatProvider)</c>
+    /// </remarks>
+    static void AnalyzeParseExact_String_StringArray_IFormatProvider(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument)
+    {
+        switch (CollectionCreation.TryFrom(formatsArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.ParseExact), ParameterTypes = ParameterTypes.String_String_IFormatProvider, IsStatic = true,
+                },
+                formatsArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The only collection element should be passed directly.",
+                        formatsArgument,
+                        parameterNames is [_, var formatParameterName, _] ? formatParameterName : null,
+                        collectionCreation.SingleElement.GetText()));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                {
+                    if (s is "c" or "t" or "T" && (set.Contains("c") || set.Contains("t") || set.Contains("T")))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                        continue;
+                    }
+
+                    if (s != "" && !set.Add(s))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                    }
+                }
+
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.ParseExact(input, formats, formatProvider, TimeSpanStyles.None)</c> → <c>TimeSpan.ParseExact(input, formats, formatProvider)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, ["c"], formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, "c", formatProvider, styles)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, ["c", "t", "T"], formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, ["c"], formatProvider, styles)</c>
+    /// </remarks>
+    static void AnalyzeParseExact_String_StringArray_IFormatProvider_TimeSpanStyles(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument stylesArgument)
+    {
+        switch (CollectionCreation.TryFrom(formatsArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.ParseExact),
+                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_TimeSpanStyles,
+                    IsStatic = true,
+                },
+                formatsArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The only collection element should be passed directly.",
+                        formatsArgument,
+                        parameterNames is [_, var formatParameterName, _, _] ? formatParameterName : null,
+                        collectionCreation.SingleElement.GetText()));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                {
+                    if (s is "c" or "t" or "T" && (set.Contains("c") || set.Contains("t") || set.Contains("T")))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                        continue;
+                    }
+
+                    if (s != "" && !set.Add(s))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                    }
+                }
+
+                break;
+        }
+
+        if (stylesArgument.Value.TryGetTimeSpanStylesConstant() == TimeSpanStyles.None
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.ParseExact),
+                    ParameterTypes = ParameterTypes.String_StringArray_IFormatProvider,
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentHint($"Passing {nameof(TimeSpanStyles)}.{nameof(TimeSpanStyles.None)} is redundant.", stylesArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.ParseExact(input, ["c", "t", "T"], formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, ["c"], formatProvider, styles)</c>
+    /// </remarks>
+    static void AnalyzeParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpanStyles(
+        IHighlightingConsumer consumer,
+        ICSharpArgument formatsArgument)
+    {
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+        {
+            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            {
+                if (s is "c" or "t" or "T" && (set.Contains("c") || set.Contains("t") || set.Contains("T")))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                    continue;
+                }
+
+                if (s != "" && !set.Add(s))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                }
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>timeSpan.Subtract(ts)</c> → <c>timeSpan - ts</c>
+    /// </remarks>
+    static void AnalyzeSubtract_TimeSpan(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument tsArgument)
+    {
+        Debug.Assert(invokedExpression.QualifierExpression is { });
+
+        if (!invocationExpression.IsUsedAsStatement() && tsArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseBinaryOperatorSuggestion(
+                    "Use the '-' operator.",
+                    invocationExpression,
+                    "-",
+                    invokedExpression.QualifierExpression.GetText(),
+                    tsArgument.Value.GetText()));
+        }
+    }
+
+    /// <remarks>
+    /// <c>timeSpan.ToString(null)</c> → <c>timeSpan.ToString()</c><para/>
+    /// <c>timeSpan.ToString("")</c> → <c>timeSpan.ToString()</c><para/>
+    /// <c>timeSpan.ToString("c")</c> → <c>timeSpan.ToString()</c><para/>
+    /// <c>timeSpan.ToString("t")</c> → <c>timeSpan.ToString()</c><para/>
+    /// <c>timeSpan.ToString("T")</c> → <c>timeSpan.ToString()</c>
+    /// </remarks>
+    static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
+    {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
+                invocationExpression.PsiModule);
+
+        var format = formatArgument.Value.TryGetStringConstant();
+
+        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodExists())
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
+        }
+
+        if (format is "c" or "t" or "T" && MethodExists())
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>timeSpan.ToString(format, null)</c> → <c>timeSpan.ToString(format)</c><para/>
+    /// <c>timeSpan.ToString(null, formatProvider)</c> → <c>timeSpan.ToString(null)</c><para/>
+    /// <c>timeSpan.ToString("", formatProvider)</c> → <c>timeSpan.ToString("")</c><para/>
+    /// <c>timeSpan.ToString("c", formatProvider)</c> → <c>timeSpan.ToString("c")</c><para/>
+    /// <c>timeSpan.ToString("t", formatProvider)</c> → <c>timeSpan.ToString("t")</c><para/>
+    /// <c>timeSpan.ToString("T", formatProvider)</c> → <c>timeSpan.ToString("T")</c>
+    /// </remarks>
+    static void AnalyzeToString_String_IFormatProvider(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatArgument,
+        ICSharpArgument formatProviderArgument)
+    {
+        [Pure]
+        bool MethodExists()
+            => PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
+                invocationExpression.PsiModule);
+
+        if (formatProviderArgument.Value.IsDefaultValue() && MethodExists())
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
+        }
+
+        if ((formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() is "" or "c" or "t" or "T") && MethodExists())
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", formatProviderArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParse(input, null, out result)</c> → <c>TimeSpan.TryParse(input, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParse_String_IFormatProvider_TimeSpan(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatProviderArgument)
+    {
+        if (formatProviderArgument.Value.IsDefaultValue()
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature { Name = nameof(TimeSpan.TryParse), ParameterTypes = ParameterTypes.String_TimeSpan, IsStatic = true },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParse(input, null, out result)</c> → <c>TimeSpan.TryParse(input, out result)</c> (.NET Core 2.1)
+    /// </remarks>
+    static void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_TimeSpan(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatProviderArgument)
+    {
+        if (formatProviderArgument.Value.IsDefaultValue()
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature { Name = nameof(TimeSpan.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT_TimeSpan, IsStatic = true },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParseExact(input, "c", formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, "c", null, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, "t", formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, "t", null, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, "T", formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, "T", null, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_String_IFormatProvider_TimeSpan(
+        IHighlightingConsumer consumer,
+        ICSharpArgument formatArgument,
+        ICSharpArgument formatProviderArgument)
+    {
+        if (formatArgument.Value.TryGetStringConstant() is "c" or "t" or "T"
+            && !formatProviderArgument.Value.IsDefaultValue()
+            && formatProviderArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The format provider is ignored (pass null instead).",
+                    formatProviderArgument,
+                    formatProviderArgument.NameIdentifier?.Name,
+                    "null"));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParseExact(input, format, formatProvider, TimeSpanStyles.None, out result)</c> → <c>TimeSpan.TryParseExact(input, format, formatProvider, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, "c", formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, "c", null, styles, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, "t", formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, "t", null, styles, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, "t", formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, "T", null, styles, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_String_IFormatProvider_TimeSpanStyles_TimeSpan(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatArgument,
+        ICSharpArgument formatProviderArgument,
+        ICSharpArgument stylesArgument)
+    {
+        if (formatArgument.Value.TryGetStringConstant() is "c" or "t" or "T"
+            && !formatProviderArgument.Value.IsDefaultValue()
+            && formatProviderArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The format provider is ignored (pass null instead).",
+                    formatProviderArgument,
+                    formatProviderArgument.NameIdentifier?.Name,
+                    "null"));
+        }
+
+        if (stylesArgument.Value.TryGetTimeSpanStylesConstant() == TimeSpanStyles.None
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.TryParseExact),
+                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_TimeSpan,
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentHint($"Passing {nameof(TimeSpanStyles)}.{nameof(TimeSpanStyles.None)} is redundant.", stylesArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParseExact(input, format, formatProvider, TimeSpanStyles.None, out result)</c> → <c>TimeSpan.TryParseExact(input, format, formatProvider, out result)</c> (.NET Core 2.1)
+    /// </remarks>
+    static void AnalyzeTryParseExact_ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_TimeSpanStyles_TimeSpan(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument stylesArgument)
+    {
+        if (stylesArgument.Value.TryGetTimeSpanStylesConstant() == TimeSpanStyles.None
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.TryParseExact),
+                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT_ReadOnlySpanOfT_IFormatProvider_TimeSpan,
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentHint($"Passing {nameof(TimeSpanStyles)}.{nameof(TimeSpanStyles.None)} is redundant.", stylesArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, "c", formatProvider, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, ["c", "t", "T"], formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_TimeSpan(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument)
+    {
+        switch (CollectionCreation.TryFrom(formatsArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.TryParseExact),
+                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_TimeSpan,
+                    IsStatic = true,
+                },
+                formatsArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The only collection element should be passed directly.",
+                        formatsArgument,
+                        parameterNames is [_, var formatParameterName, _] ? formatParameterName : null,
+                        collectionCreation.SingleElement.GetText()));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                {
+                    if (s is "c" or "t" or "T" && (set.Contains("c") || set.Contains("t") || set.Contains("T")))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                        continue;
+                    }
+
+                    if (s != "" && !set.Add(s))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                    }
+                }
+
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParseExact(input, formats, formatProvider, TimeSpanStyles.None, out result)</c> → <c>TimeSpan.TryParseExact(input, formats, formatProvider, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, "c", formatProvider, styles, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, ["c", "t", "T"], formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, styles, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_TimeSpanStyles_TimeSpan(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument stylesArgument)
+    {
+        switch (CollectionCreation.TryFrom(formatsArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.TryParseExact),
+                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_TimeSpanStyles_TimeSpan,
+                    IsStatic = true,
+                },
+                formatsArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The only collection element should be passed directly.",
+                        formatsArgument,
+                        parameterNames is [_, var formatParameterName, _, _] ? formatParameterName : null,
+                        collectionCreation.SingleElement.GetText()));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                {
+                    if (s is "c" or "t" or "T" && (set.Contains("c") || set.Contains("t") || set.Contains("T")))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                        continue;
+                    }
+
+                    if (s != "" && !set.Add(s))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                    }
+                }
+
+                break;
+        }
+
+        if (stylesArgument.Value.TryGetTimeSpanStylesConstant() == TimeSpanStyles.None
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.TryParseExact),
+                    ParameterTypes = ParameterTypes.String_StringArray_IFormatProvider_TimeSpan,
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentHint($"Passing {nameof(TimeSpanStyles)}.{nameof(TimeSpanStyles.None)} is redundant.", stylesArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParseExact(input, ["c", "t", "T"], formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpan(
+        IHighlightingConsumer consumer,
+        ICSharpArgument formatsArgument)
+    {
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+        {
+            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            {
+                if (s is "c" or "t" or "T" && (set.Contains("c") || set.Contains("t") || set.Contains("T")))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                    continue;
+                }
+
+                if (s != "" && !set.Add(s))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                }
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>TimeSpan.TryParseExact(input, formats, formatProvider, TimeSpanStyles.None, out result)</c> → <c>TimeSpan.TryParseExact(input, formats, formatProvider, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, ["c", "t", "T"], formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, styles, out result)</c> (.NET Core 2.1)
+    /// </remarks>
+    static void AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpanStyles_TimeSpan(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument stylesArgument)
+    {
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+        {
+            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            {
+                if (s is "c" or "t" or "T" && (set.Contains("c") || set.Contains("t") || set.Contains("T")))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                    continue;
+                }
+
+                if (s != "" && !set.Add(s))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                }
+            }
+        }
+
+        if (stylesArgument.Value.TryGetTimeSpanStylesConstant() == TimeSpanStyles.None
+            && PredefinedType.TIMESPAN_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(TimeSpan.TryParseExact),
+                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT_StringArray_IFormatProvider_TimeSpan,
+                    IsStatic = true,
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentHint($"Passing {nameof(TimeSpanStyles)}.{nameof(TimeSpanStyles.None)} is redundant.", stylesArgument));
+        }
+    }
+
     protected override void Run(ICSharpInvocationInfo element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         switch (element)
@@ -720,6 +1458,50 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
                                     case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                         AnalyzeEquals_Object(consumer, invocationExpression, objArgument);
+                                        break;
+                                }
+                                break;
+
+                            case "Multiply": // todo: nameof(TimeSpan.Multiply) when available
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([{ Type: var factorType }], [{ } factorArgument]) when factorType.IsDouble():
+                                        AnalyzeMultiply_Double(consumer, invocationExpression, invokedExpression, factorArgument);
+                                        break;
+                                }
+                                break;
+
+                            case nameof(TimeSpan.Negate):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([], []): AnalyzeNegate(consumer, invocationExpression, invokedExpression); break;
+                                }
+                                break;
+
+                            case nameof(TimeSpan.Subtract):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([{ Type: var tsType }], [{ } tsArgument]) when tsType.IsTimeSpan():
+                                        AnalyzeSubtract_TimeSpan(consumer, invocationExpression, invokedExpression, tsArgument);
+                                        break;
+                                }
+                                break;
+
+                            case nameof(TimeSpan.ToString):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
+                                        AnalyzeToString_String(consumer, invocationExpression, formatArgument);
+                                        break;
+
+                                    case ([{ Type: var formatType }, { Type: var formatProviderType }], [
+                                        { } formatArgument, { } formatProviderArgument,
+                                    ]) when formatType.IsString() && formatProviderType.IsIFormatProvider():
+                                        AnalyzeToString_String_IFormatProvider(
+                                            consumer,
+                                            invocationExpression,
+                                            formatArgument,
+                                            formatProviderArgument);
                                         break;
                                 }
                                 break;
@@ -892,6 +1674,247 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                 {
                                     case ([{ Type: var ticksType }], [{ } ticksArgument]) when ticksType.IsLong():
                                         AnalyzeFromTicks_Int64(consumer, invocationExpression, ticksArgument);
+                                        break;
+                                }
+                                break;
+
+                            case nameof(TimeSpan.Parse):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([{ Type: var inputType }, { Type: var formatProviderType }], [_, { } formatProviderArgument])
+                                        when inputType.IsString() && formatProviderType.IsIFormatProvider():
+
+                                        AnalyzeParse_String_IFormatProvider(consumer, invocationExpression, formatProviderArgument);
+                                        break;
+                                }
+                                break;
+
+                            case nameof(TimeSpan.ParseExact):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([{ Type: var inputType }, { Type: var formatType }, { Type: var formatProviderType }], [
+                                        _, { } formatArgument, { } formatProviderArgument,
+                                    ]) when inputType.IsString() && formatType.IsString() && formatProviderType.IsIFormatProvider():
+                                        AnalyzeParseExact_String_String_IFormatProvider(consumer, formatArgument, formatProviderArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                        ], [_, { } formatArgument, { } formatProviderArgument, { } stylesArgument])
+                                        when inputType.IsString()
+                                        && formatType.IsString()
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsTimeSpanStyles(stylesType):
+
+                                        AnalyzeParseExact_String_String_IFormatProvider_TimeSpanStyles(
+                                            consumer,
+                                            invocationExpression,
+                                            formatArgument,
+                                            formatProviderArgument,
+                                            stylesArgument);
+                                        break;
+
+                                    case ([{ Type: var inputType }, { Type: var formatsType }, { Type: var formatProviderType }], [
+                                            _, { } formatsArgument, _,
+                                        ]) when inputType.IsString()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider():
+
+                                        AnalyzeParseExact_String_StringArray_IFormatProvider(consumer, invocationExpression, formatsArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatsType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                        ], [_, { } formatsArgument, _, { } stylesArgument])
+                                        when inputType.IsString()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsTimeSpanStyles(stylesType):
+
+                                        AnalyzeParseExact_String_StringArray_IFormatProvider_TimeSpanStyles(
+                                            consumer,
+                                            invocationExpression,
+                                            formatsArgument,
+                                            stylesArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatsType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                        ], [_, { } formatsArgument, _, _])
+                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
+                                        && spanTypeArgument.IsChar()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsTimeSpanStyles(stylesType):
+
+                                        AnalyzeParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpanStyles(consumer, formatsArgument);
+                                        break;
+                                }
+                                break;
+
+                            case nameof(TimeSpan.TryParse):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([{ Type: var inputType }, { Type: var formatProviderType }, { Type: var resultType }], [
+                                        _, { } formatProviderArgument, _,
+                                    ]) when inputType.IsString() && formatProviderType.IsIFormatProvider() && resultType.IsTimeSpan():
+                                        AnalyzeTryParse_String_IFormatProvider_TimeSpan(consumer, invocationExpression, formatProviderArgument);
+                                        break;
+
+                                    case ([{ Type: var inputType }, { Type: var formatProviderType }, { Type: var resultType }], [
+                                            _, { } formatProviderArgument, _,
+                                        ]) when inputType.IsReadOnlySpan(out var spanTypeArgument)
+                                        && spanTypeArgument.IsChar()
+                                        && formatProviderType.IsIFormatProvider()
+                                        && resultType.IsTimeSpan():
+
+                                        AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_TimeSpan(
+                                            consumer,
+                                            invocationExpression,
+                                            formatProviderArgument);
+                                        break;
+                                }
+                                break;
+
+                            case nameof(TimeSpan.TryParseExact):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatType },
+                                            { Type: var formatProviderType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatArgument, { } formatProviderArgument, _])
+                                        when inputType.IsString()
+                                        && formatType.IsString()
+                                        && formatProviderType.IsIFormatProvider()
+                                        && resultType.IsTimeSpan():
+
+                                        AnalyzeTryParseExact_String_String_IFormatProvider_TimeSpan(consumer, formatArgument, formatProviderArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatArgument, { } formatProviderArgument, { } stylesArgument, _])
+                                        when inputType.IsString()
+                                        && formatType.IsString()
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsTimeSpanStyles(stylesType)
+                                        && resultType.IsTimeSpan():
+
+                                        AnalyzeTryParseExact_String_String_IFormatProvider_TimeSpanStyles_TimeSpan(
+                                            consumer,
+                                            invocationExpression,
+                                            formatArgument,
+                                            formatProviderArgument,
+                                            stylesArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                            { Type: var resultType },
+                                        ], [_, _, _, { } stylesArgument, _])
+                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
+                                        && spanTypeArgument.IsChar()
+                                        && formatType.IsReadOnlySpan(out spanTypeArgument)
+                                        && spanTypeArgument.IsChar()
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsTimeSpanStyles(stylesType)
+                                        && resultType.IsTimeSpan():
+
+                                        AnalyzeTryParseExact_ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_TimeSpanStyles_TimeSpan(
+                                            consumer,
+                                            invocationExpression,
+                                            stylesArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatsType },
+                                            { Type: var formatProviderType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatsArgument, _, _])
+                                        when inputType.IsString()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider()
+                                        && resultType.IsTimeSpan():
+
+                                        AnalyzeTryParseExact_String_StringArray_IFormatProvider_TimeSpan(
+                                            consumer,
+                                            invocationExpression,
+                                            formatsArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatsType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatsArgument, _, { } stylesArgument, _])
+                                        when inputType.IsString()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsTimeSpanStyles(stylesType)
+                                        && resultType.IsTimeSpan():
+
+                                        AnalyzeTryParseExact_String_StringArray_IFormatProvider_TimeSpanStyles_TimeSpan(
+                                            consumer,
+                                            invocationExpression,
+                                            formatsArgument,
+                                            stylesArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatsType },
+                                            { Type: var formatProviderType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatsArgument, _, _])
+                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
+                                        && spanTypeArgument.IsChar()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider()
+                                        && resultType.IsTimeSpan():
+
+                                        AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpan(consumer, formatsArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatsType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatsArgument, _, { } stylesArgument, _])
+                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
+                                        && spanTypeArgument.IsChar()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsTimeSpanStyles(stylesType)
+                                        && resultType.IsTimeSpan():
+
+                                        AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpanStyles_TimeSpan(
+                                            consumer,
+                                            invocationExpression,
+                                            formatsArgument,
+                                            stylesArgument);
                                         break;
                                 }
                                 break;

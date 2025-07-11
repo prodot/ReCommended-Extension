@@ -481,6 +481,30 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    public void TestTimeSpan()
+    {
+        var values = new[]
+        {
+            System.TimeSpan.Zero,
+            System.TimeSpan.MinValue,
+            System.TimeSpan.MaxValue,
+            new(0, 0, 1),
+            new(0, 1, 0),
+            new(1, 0, 0),
+            new(1, 0, 0, 0, 0),
+            new(0, 0, 0, 0, 1),
+            new(1, 2, 3, 4),
+            new(-1, 2, 3, 4),
+        };
+
+        Test(timeSpan => $"{timeSpan:c}", timeSpan => $"{timeSpan}", values);
+        Test(timeSpan => $"{timeSpan:t}", timeSpan => $"{timeSpan}", values);
+        Test(timeSpan => $"{timeSpan:T}", timeSpan => $"{timeSpan}", values);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestInterpolatedStringHandler() => DoNamedTest2();

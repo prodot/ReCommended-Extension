@@ -496,6 +496,31 @@ public sealed class FormatStringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseStringInterpolation")]
+    public void TestTimeSpan()
+    {
+        var values = new[]
+        {
+            System.TimeSpan.Zero,
+            System.TimeSpan.MinValue,
+            System.TimeSpan.MaxValue,
+            new(0, 0, 1),
+            new(0, 1, 0),
+            new(1, 0, 0),
+            new(1, 0, 0, 0, 0),
+            new(0, 0, 0, 0, 1),
+            new(1, 2, 3, 4),
+            new(-1, 2, 3, 4),
+        };
+
+        Test(timeSpan => string.Format("{0:c}", timeSpan), timeSpan => string.Format("{0}", timeSpan), values);
+        Test(timeSpan => string.Format("{0:t}", timeSpan), timeSpan => string.Format("{0}", timeSpan), values);
+        Test(timeSpan => string.Format("{0:T}", timeSpan), timeSpan => string.Format("{0}", timeSpan), values);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [TestNet70]
     public void TestStringFormatters() => DoNamedTest2();
 }

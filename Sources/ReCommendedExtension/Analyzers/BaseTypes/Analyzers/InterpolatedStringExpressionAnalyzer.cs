@@ -86,6 +86,13 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                         break;
                     }
 
+                    case [':', 'c' or 't' or 'T']
+                        when expressionType.IsTimeSpan() || expressionType.IsNullable() && expressionType.Unlift().IsTimeSpan():
+                    {
+                        consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying '{format[1].ToString()}' is redundant.", insert));
+                        break;
+                    }
+
                     case [':', 'E' or 'e', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { }
                         && precisionSpecifier != ""
                         && int.TryParse(precisionSpecifier, out var precision)

@@ -112,6 +112,17 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                             break;
                         }
 
+                        case ['c' or 't' or 'T']
+                            when expressionType.IsTimeSpan() || expressionType.IsNullable() && expressionType.Unlift().IsTimeSpan():
+                        {
+                            consumer.AddHighlighting(
+                                new RedundantFormatSpecifierHint(
+                                    $"Specifying '{format[0].ToString()}' is redundant.",
+                                    formatStringExpression,
+                                    formatItem));
+                            break;
+                        }
+
                         case ['E' or 'e', .. var precisionSpecifier] when NumberInfo.TryGet(expressionType) is { }
                             && precisionSpecifier != ""
                             && int.TryParse(precisionSpecifier, out var precision)

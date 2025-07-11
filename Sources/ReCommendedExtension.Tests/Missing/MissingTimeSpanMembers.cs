@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Globalization;
+using System.Numerics;
 
 namespace ReCommendedExtension.Tests.Missing;
 
@@ -13,10 +14,10 @@ internal static class MissingTimeSpanMembers
     }
 
     [Pure]
-    public static TimeSpan Divide(this TimeSpan timeSpan, double divisor) => op_Divide(timeSpan, divisor);
+    public static TimeSpan Divide(this TimeSpan timeSpan, double divisor) => op_Division(timeSpan, divisor);
 
     [Pure]
-    public static TimeSpan op_Divide(TimeSpan timeSpan, double divisor) // todo: use extension operator when available
+    public static TimeSpan op_Division(TimeSpan timeSpan, double divisor) // todo: use extension operator when available
     {
         if (divisor is double.NaN)
         {
@@ -27,10 +28,10 @@ internal static class MissingTimeSpanMembers
     }
 
     [Pure]
-    public static double Divide(this TimeSpan timeSpan, TimeSpan ts) => op_Divide(timeSpan, ts);
+    public static double Divide(this TimeSpan timeSpan, TimeSpan ts) => op_Division(timeSpan, ts);
 
     [Pure]
-    public static double op_Divide(TimeSpan timeSpan, TimeSpan ts) => timeSpan.Ticks / (double)ts.Ticks; // todo: use extension operator when available
+    public static double op_Division(TimeSpan timeSpan, TimeSpan ts) => timeSpan.Ticks / (double)ts.Ticks; // todo: use extension operator when available
 
     [Pure]
     public static TimeSpan FromDays(int days)
@@ -171,4 +172,59 @@ internal static class MissingTimeSpanMembers
 
         return TimeSpan.FromTicks((long)ticks);
     }
+
+    [Pure]
+    public static TimeSpan Multiply(this TimeSpan timeSpan, double factor) => op_Multiply(timeSpan, factor);
+
+    [Pure]
+    public static TimeSpan op_Multiply(TimeSpan timeSpan, double factor) // todo: use extension operator when available
+    {
+        if (factor is double.NaN)
+        {
+            throw new ArgumentException($"Cannot multiply by {nameof(double.NaN)}.", nameof(factor));
+        }
+
+        return TimeSpan.FromTicks(checked((long)Math.Round(timeSpan.Ticks * factor)));
+    }
+
+    [Pure]
+    public static TimeSpan ParseExact(
+        ReadOnlySpan<char> input,
+        string[] formats,
+        IFormatProvider? formatProvider,
+        TimeSpanStyles styles = TimeSpanStyles.None)
+        => TimeSpan.ParseExact(input.ToString(), formats, formatProvider, styles);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> input, IFormatProvider? formatProvider, out TimeSpan result)
+        => TimeSpan.TryParse(input.ToString(), formatProvider, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> input, out TimeSpan result) => TimeSpan.TryParse(input.ToString(), out result);
+
+    [Pure]
+    public static bool TryParseExact(
+        ReadOnlySpan<char> input,
+        ReadOnlySpan<char> format,
+        IFormatProvider? formatProvider,
+        TimeSpanStyles styles,
+        out TimeSpan result)
+        => TimeSpan.TryParseExact(input.ToString(), format.ToString(), formatProvider, styles, out result);
+
+    [Pure]
+    public static bool TryParseExact(ReadOnlySpan<char> input, ReadOnlySpan<char> format, IFormatProvider? formatProvider, out TimeSpan result)
+        => TimeSpan.TryParseExact(input.ToString(), format.ToString(), formatProvider, out result);
+
+    [Pure]
+    public static bool TryParseExact(ReadOnlySpan<char> input, string?[]? formats, IFormatProvider? formatProvider, out TimeSpan result)
+        => TimeSpan.TryParseExact(input.ToString(), formats, formatProvider, out result);
+
+    [Pure]
+    public static bool TryParseExact(
+        ReadOnlySpan<char> input,
+        string?[]? formats,
+        IFormatProvider? formatProvider,
+        TimeSpanStyles styles,
+        out TimeSpan result)
+        => TimeSpan.TryParseExact(input.ToString(), formats, formatProvider, styles, out result);
 }

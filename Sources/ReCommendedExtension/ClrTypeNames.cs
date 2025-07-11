@@ -89,6 +89,8 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName MidpointRounding = GetClrTypeName<MidpointRounding>();
 
+    public static readonly IClrTypeName TimeSpanStyles = GetClrTypeName<TimeSpanStyles>();
+
     public static readonly IClrTypeName Random = GetClrTypeName<Random>();
 
     public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");
