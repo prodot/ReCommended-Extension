@@ -354,6 +354,20 @@ namespace Test
             var result1 = string.Format("{0|:D|(198)}", value);
             var result2 = string.Format("{0|:d|(199)}", value);
         }
+
+        public void TimeSpan_(TimeSpan value)
+        {
+            var result1 = string.Format("{0|:c|(200)}", value);
+            var result2 = string.Format("{0|:t|(201)}", value);
+            var result3 = string.Format("{0|:T|(202)}", value);
+        }
+
+        public void TimeSpan_(TimeSpan? value)
+        {
+            var result1 = string.Format("{0|:c|(203)}", value);
+            var result2 = string.Format("{0|:t|(204)}", value);
+            var result3 = string.Format("{0|:T|(205)}", value);
+        }
     }
 }
 ------------------------------------------------
@@ -955,5 +969,23 @@ Remove format specifier
 QUICKFIXES:
 Remove format specifier
 199: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+200: Specifying 'c' is redundant.
+QUICKFIXES:
+Remove format specifier
+201: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier
+202: Specifying 'T' is redundant.
+QUICKFIXES:
+Remove format specifier
+203: Specifying 'c' is redundant.
+QUICKFIXES:
+Remove format specifier
+204: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier
+205: Specifying 'T' is redundant.
 QUICKFIXES:
 Remove format specifier

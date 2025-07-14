@@ -354,5 +354,19 @@ namespace Test
             var result1 = string.Format("{0:D}", value);
             var result2 = string.Format("{0:d}", value);
         }
+
+        public void TimeSpan_(TimeSpan value)
+        {
+            var result1 = string.Format("{0:c}", value);
+            var result2 = string.Format("{0:t}", value);
+            var result3 = string.Format("{0:T}", value);
+        }
+
+        public void TimeSpan_(TimeSpan? value)
+        {
+            var result1 = string.Format("{0:c}", value);
+            var result2 = string.Format("{0:t}", value);
+            var result3 = string.Format("{0:T}", value);
+        }
     }
 }

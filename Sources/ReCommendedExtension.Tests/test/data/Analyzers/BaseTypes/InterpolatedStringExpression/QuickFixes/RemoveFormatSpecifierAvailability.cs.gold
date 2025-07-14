@@ -354,6 +354,20 @@ namespace Test
             var result1 = $"{value|:D|(198)}";
             var result2 = $"{value|:d|(199)}";
         }
+
+        public void TimeSpan_(TimeSpan value)
+        {
+            var result1 = $"{value|:c|(200)}";
+            var result2 = $"{value|:t|(201)}";
+            var result3 = $"{value|:T|(202)}";
+        }
+
+        public void TimeSpan_(TimeSpan? value)
+        {
+            var result1 = $"{value|:c|(203)}";
+            var result2 = $"{value|:t|(204)}";
+            var result3 = $"{value|:T|(205)}";
+        }
     }
 }
 ------------------------------------------------
@@ -955,5 +969,23 @@ Remove format specifier
 QUICKFIXES:
 Remove format specifier
 199: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+200: Specifying 'c' is redundant.
+QUICKFIXES:
+Remove format specifier
+201: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier
+202: Specifying 'T' is redundant.
+QUICKFIXES:
+Remove format specifier
+203: Specifying 'c' is redundant.
+QUICKFIXES:
+Remove format specifier
+204: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier
+205: Specifying 'T' is redundant.
 QUICKFIXES:
 Remove format specifier

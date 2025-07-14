@@ -4,7 +4,7 @@ namespace Test
 {
     public class TimeSpans
     {
-        public void Operator(TimeSpan timeSpan, string format, IFormatProvider formatProvider)
+        public void RedundantArgument(TimeSpan timeSpan, string format, IFormatProvider formatProvider)
         {
             var result11 = timeSpan.ToString(null);
             var result12 = timeSpan.ToString("");

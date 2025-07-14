@@ -793,7 +793,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>TimeSpan.ParseExact(input, ["c"], formatProvider)</c> → <c>TimeSpan.ParseExact(input, "c", formatProvider)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, [format], formatProvider)</c> → <c>TimeSpan.ParseExact(input, format, formatProvider)</c><para/>
     /// <c>TimeSpan.ParseExact(input, ["c", "t", "T"], formatProvider)</c> → <c>TimeSpan.ParseExact(input, ["c"], formatProvider)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray_IFormatProvider(
@@ -843,7 +843,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
     /// <remarks>
     /// <c>TimeSpan.ParseExact(input, formats, formatProvider, TimeSpanStyles.None)</c> → <c>TimeSpan.ParseExact(input, formats, formatProvider)</c><para/>
-    /// <c>TimeSpan.ParseExact(input, ["c"], formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, "c", formatProvider, styles)</c><para/>
+    /// <c>TimeSpan.ParseExact(input, [format], formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, format, formatProvider, styles)</c><para/>
     /// <c>TimeSpan.ParseExact(input, ["c", "t", "T"], formatProvider, styles)</c> → <c>TimeSpan.ParseExact(input, ["c"], formatProvider, styles)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray_IFormatProvider_TimeSpanStyles(
@@ -1138,7 +1138,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, "c", formatProvider, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, [format], formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, format, formatProvider, out result)</c><para/>
     /// <c>TimeSpan.TryParseExact(input, ["c", "t", "T"], formatProvider, out result)</c> → <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_TimeSpan(
@@ -1190,7 +1190,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
     /// <remarks>
     /// <c>TimeSpan.TryParseExact(input, formats, formatProvider, TimeSpanStyles.None, out result)</c> → <c>TimeSpan.TryParseExact(input, formats, formatProvider, out result)</c><para/>
-    /// <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, "c", formatProvider, styles, out result)</c><para/>
+    /// <c>TimeSpan.TryParseExact(input, [format], formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, format, formatProvider, styles, out result)</c><para/>
     /// <c>TimeSpan.TryParseExact(input, ["c", "t", "T"], formatProvider, styles, out result)</c> → <c>TimeSpan.TryParseExact(input, ["c"], formatProvider, styles, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_TimeSpanStyles_TimeSpan(

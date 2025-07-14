@@ -354,5 +354,19 @@ namespace Test
             var result1 = $"{value:D}";
             var result2 = $"{value:d}";
         }
+
+        public void TimeSpan_(TimeSpan value)
+        {
+            var result1 = $"{value:c}";
+            var result2 = $"{value:t}";
+            var result3 = $"{value:T}";
+        }
+
+        public void TimeSpan_(TimeSpan? value)
+        {
+            var result1 = $"{value:c}";
+            var result2 = $"{value:t}";
+            var result3 = $"{value:T}";
+        }
     }
 }

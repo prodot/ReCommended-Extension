@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void Divide(TimeSpan timeSpan, TimeSpan ts)
+        {
+            var result = timeSpan.Divide{caret}(ts);
+        }
+    }
+}

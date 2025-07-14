@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void TryParse(string input, out TimeSpan result)
+        {
+            var result_ = TimeSpan.TryParse(input, {caret}null, out result);
+        }
+    }
+}
