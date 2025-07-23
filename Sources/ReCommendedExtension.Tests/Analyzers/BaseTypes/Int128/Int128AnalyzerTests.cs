@@ -27,7 +27,7 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
                 or RedundantFormatPrecisionSpecifierHint
             || highlighting.IsError();
 
-    protected override int128[] TestValues { get; } = [0, 1, 2, -1, int128.MinValue, int128.MaxValue];
+    protected override int128[] TestValues { get; } = [0, 1, 2, -1, -2, int128.MinValue, int128.MaxValue];
 
     [Test]
     public void TestClamp()
@@ -113,8 +113,10 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
         Test(n => int128.Parse($"{n}", NumberStyles.Integer), n => int128.Parse($"{n}"));
         Test(n => int128.Parse($"{n}", null), n => int128.Parse($"{n}"));
         Test(
-            n => int128.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo),
-            n => int128.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+            (n, provider) => int128.Parse($"{n}", NumberStyles.Integer, provider),
+            (n, provider) => int128.Parse($"{n}", provider),
+            TestValues,
+            FormatProviders);
         Test(n => int128.Parse($"{n}", NumberStyles.AllowLeadingSign, null), n => int128.Parse($"{n}", NumberStyles.AllowLeadingSign));
 
         Test(n => MissingInt128Methods.Parse($"{n}".AsSpan(), null), n => MissingInt128Methods.Parse($"{n}".AsSpan()));
@@ -145,51 +147,49 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
     [TestNet80]
     public void TestToString()
     {
-        Test(n => n.ToString(null as string), n => n.ToString());
-        Test(n => n.ToString(""), n => n.ToString());
-        Test(n => n.ToString("G"), n => n.ToString());
-        Test(n => n.ToString("G0"), n => n.ToString());
-        Test(n => n.ToString("G39"), n => n.ToString());
-        Test(n => n.ToString("G40"), n => n.ToString());
-        Test(n => n.ToString("g"), n => n.ToString());
-        Test(n => n.ToString("g0"), n => n.ToString());
-        Test(n => n.ToString("g39"), n => n.ToString());
-        Test(n => n.ToString("g40"), n => n.ToString());
-        Test(n => n.ToString("E6"), n => n.ToString("E"));
-        Test(n => n.ToString("e6"), n => n.ToString("e"));
-        Test(n => n.ToString("D0"), n => n.ToString("D"));
-        Test(n => n.ToString("D1"), n => n.ToString("D"));
-        Test(n => n.ToString("d0"), n => n.ToString("d"));
-        Test(n => n.ToString("d1"), n => n.ToString("d"));
-        Test(n => n.ToString("X0"), n => n.ToString("X"));
-        Test(n => n.ToString("X1"), n => n.ToString("X"));
-        Test(n => n.ToString("x0"), n => n.ToString("x"));
-        Test(n => n.ToString("x1"), n => n.ToString("x"));
+        var formatsRedundant = new[] { null, "", "G", "G0", "G39", "G40", "g", "g0", "g39", "g40" };
+        var formatsRedundantSpecifier = new[] { "E6", "e6", "D0", "D1", "d0", "d1" };
+        var formatsRedundantProvider = new[] { "X2", "x2" };
+        var formatsRedundantSpecifierAndProvider = new[] { "X0", "X1", "x0", "x1" };
+
+        Test((n, format) => n.ToString(format), (n, _) => n.ToString(), TestValues, formatsRedundant);
+        Test(
+            (n, format) => n.ToString(format),
+            (n, format) => n.ToString($"{format[0]}"),
+            TestValues,
+            [..formatsRedundantSpecifier, ..formatsRedundantSpecifierAndProvider]);
 
         Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
-        Test(n => n.ToString(null, NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("D", null), n => n.ToString("D"));
-        Test(n => n.ToString("G", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("G0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("G39", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("G40", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g39", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g40", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("E6", NumberFormatInfo.InvariantInfo), n => n.ToString("E", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("e6", NumberFormatInfo.InvariantInfo), n => n.ToString("e", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("D0", NumberFormatInfo.InvariantInfo), n => n.ToString("D", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("D1", NumberFormatInfo.InvariantInfo), n => n.ToString("D", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("d0", NumberFormatInfo.InvariantInfo), n => n.ToString("d", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("d1", NumberFormatInfo.InvariantInfo), n => n.ToString("d", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("X0", NumberFormatInfo.InvariantInfo), n => n.ToString("X"));
-        Test(n => n.ToString("X1", NumberFormatInfo.InvariantInfo), n => n.ToString("X"));
-        Test(n => n.ToString("X2", NumberFormatInfo.InvariantInfo), n => n.ToString("X2"));
-        Test(n => n.ToString("x0", NumberFormatInfo.InvariantInfo), n => n.ToString("x"));
-        Test(n => n.ToString("x1", NumberFormatInfo.InvariantInfo), n => n.ToString("x"));
-        Test(n => n.ToString("x2", NumberFormatInfo.InvariantInfo), n => n.ToString("x2"));
+
+        Test(
+            (n, format) => n.ToString(format, null),
+            (n, format) => n.ToString(format),
+            TestValues,
+            [..formatsRedundant, ..formatsRedundantSpecifier, ..formatsRedundantProvider, ..formatsRedundantSpecifierAndProvider]);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, _, provider) => n.ToString(provider),
+            TestValues,
+            formatsRedundant,
+            FormatProviders);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, format, provider) => n.ToString($"{format[0]}", provider),
+            TestValues,
+            formatsRedundantSpecifier,
+            FormatProviders);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, format, _) => n.ToString($"{format[0]}"),
+            TestValues,
+            formatsRedundantSpecifierAndProvider,
+            FormatProviders);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, format, _) => n.ToString(format),
+            TestValues,
+            formatsRedundantProvider,
+            FormatProviders);
 
         DoNamedTest2();
     }
@@ -199,33 +199,39 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
     public void TestTryParse()
     {
         Test(
-            (int128 n, out int128 result) => int128.TryParse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out result),
-            (int128 n, out int128 result) => int128.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+            (int128 n, IFormatProvider? provider, out int128 result) => int128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
+            (int128 n, IFormatProvider? provider, out int128 result) => int128.TryParse($"{n}", provider, out result),
+            TestValues,
+            FormatProviders);
         Test(
             (int128 n, out int128 result) => int128.TryParse($"{n}", null, out result),
             (int128 n, out int128 result) => int128.TryParse($"{n}", out result));
 
         Test(
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse(
+            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse(
                 $"{n}".AsSpan(),
                 NumberStyles.Integer,
-                NumberFormatInfo.InvariantInfo,
+                provider,
                 out result),
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), provider, out result),
+            TestValues,
+            FormatProviders);
         Test(
             (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
             (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), out result));
 
         Test(
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse(
+            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse(
                 Encoding.UTF8.GetBytes($"{n}"),
                 NumberStyles.Integer,
-                NumberFormatInfo.InvariantInfo,
+                provider,
                 out result),
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse(
+            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse(
                 Encoding.UTF8.GetBytes($"{n}"),
-                NumberFormatInfo.InvariantInfo,
-                out result));
+                provider,
+                out result),
+            TestValues,
+            FormatProviders);
         Test(
             (int128 n, out int128 result) => MissingInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
             (int128 n, out int128 result) => MissingInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));

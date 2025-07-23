@@ -1516,6 +1516,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                 {
                                     case ([{ Type: var t1Type }, { Type: var t2Type }], [{ } t1Argument, { } t2Argument])
                                         when t1Type.IsTimeSpan() && t2Type.IsTimeSpan():
+
                                         AnalyzeEquals_TimeSpan_TimeSpan(consumer, invocationExpression, t1Argument, t2Argument);
                                         break;
                                 }

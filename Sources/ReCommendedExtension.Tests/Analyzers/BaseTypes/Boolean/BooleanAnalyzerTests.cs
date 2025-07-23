@@ -44,7 +44,7 @@ public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
     public void TestToString()
     {
         Test(flag => flag.ToString(null), flag => flag.ToString());
-        Test(flag => flag.ToString(CultureInfo.CurrentCulture), flag => flag.ToString());
+        Test((flag, provider) => flag.ToString(provider), (flag, _) => flag.ToString(), TestValues, FormatProviders);
 
         DoNamedTest2();
     }

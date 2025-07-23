@@ -19,7 +19,7 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
         => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion or UseCharRangePatternSuggestion or RedundantArgumentHint
             || highlighting.IsError();
 
-    protected override char[] TestValues { get; } = ['a', 'A', '1', ' ', '€', char.MinValue, char.MaxValue];
+    protected override char[] TestValues { get; } = ['a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue];
 
     [Test]
     public void TestEquals()
@@ -141,7 +141,7 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     public void TestToString()
     {
         Test(character => character.ToString(null), character => character.ToString());
-        Test(character => character.ToString(CultureInfo.CurrentCulture), character => character.ToString());
+        Test((character, provider) => character.ToString(provider), (character, _) => character.ToString(), TestValues, FormatProviders);
 
         DoNamedTest2();
     }

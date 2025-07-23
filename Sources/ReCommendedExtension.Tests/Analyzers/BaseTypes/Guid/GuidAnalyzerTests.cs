@@ -33,10 +33,16 @@ public sealed class GuidAnalyzerTests : BaseTypeAnalyzerTests<System.Guid>
     [TestNet70]
     public void TestParse()
     {
-        Test(guid => MissingGuidMethods.Parse(guid.ToString(), CultureInfo.CurrentCulture), guid => System.Guid.Parse(guid.ToString()));
         Test(
-            guid => MissingGuidMethods.Parse(guid.ToString().AsSpan(), CultureInfo.CurrentCulture),
-            guid => MissingGuidMethods.Parse(guid.ToString().AsSpan()));
+            (guid, provider) => MissingGuidMethods.Parse(guid.ToString(), provider),
+            (guid, _) => System.Guid.Parse(guid.ToString()),
+            TestValues,
+            FormatProviders);
+        Test(
+            (guid, provider) => MissingGuidMethods.Parse(guid.ToString().AsSpan(), provider),
+            (guid, _) => MissingGuidMethods.Parse(guid.ToString().AsSpan()),
+            TestValues,
+            FormatProviders);
 
         DoNamedTest2();
     }
@@ -44,12 +50,16 @@ public sealed class GuidAnalyzerTests : BaseTypeAnalyzerTests<System.Guid>
     [Test]
     public void TestToString()
     {
-        Test(guid => guid.ToString(null), guid => guid.ToString());
-        Test(guid => guid.ToString(""), guid => guid.ToString());
-        Test(guid => guid.ToString("D"), guid => guid.ToString());
-        Test(guid => guid.ToString("d"), guid => guid.ToString());
+        var formatsRedundant = new[] { null, "", "D", "d" };
 
-        Test(guid => guid.ToString("N", CultureInfo.CurrentCulture), guid => guid.ToString("N"));
+        Test((guid, format) => guid.ToString(format), (n, _) => n.ToString(), TestValues, formatsRedundant);
+
+        Test(
+            (guid, format, provider) => guid.ToString(format, provider),
+            (guid, format, _) => guid.ToString(format),
+            TestValues,
+            [..formatsRedundant, "N"],
+            FormatProviders);
 
         DoNamedTest2();
     }
@@ -59,12 +69,17 @@ public sealed class GuidAnalyzerTests : BaseTypeAnalyzerTests<System.Guid>
     public void TestTryParse()
     {
         Test(
-            (System.Guid value, out System.Guid result) => MissingGuidMethods.TryParse($"{value}", CultureInfo.CurrentCulture, out result),
-            (System.Guid value, out System.Guid result) => System.Guid.TryParse($"{value}", out result));
+            (System.Guid value, IFormatProvider? provider, out System.Guid result) => MissingGuidMethods.TryParse($"{value}", provider, out result),
+            (System.Guid value, IFormatProvider? _, out System.Guid result) => System.Guid.TryParse($"{value}", out result),
+            TestValues,
+            FormatProviders);
 
         Test(
-            (System.Guid value, out System.Guid result) => MissingGuidMethods.TryParse($"{value}".AsSpan(), CultureInfo.CurrentCulture, out result),
-            (System.Guid value, out System.Guid result) => MissingGuidMethods.TryParse($"{value}".AsSpan(), out result));
+            (System.Guid value, IFormatProvider? provider, out System.Guid result)
+                => MissingGuidMethods.TryParse($"{value}".AsSpan(), provider, out result),
+            (System.Guid value, IFormatProvider? _, out System.Guid result) => MissingGuidMethods.TryParse($"{value}".AsSpan(), out result),
+            TestValues,
+            FormatProviders);
 
         DoNamedTest2();
     }

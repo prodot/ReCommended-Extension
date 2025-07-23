@@ -197,54 +197,80 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
         var constantFormatSpecifiers = new[] { "c", "t", "T" };
         var formatSpecifiers = new[] { "c", "t", "T", "g", "G" };
         var timeSpanStyles = new[] { TimeSpanStyles.None, TimeSpanStyles.AssumeNegative };
-        var formatProvider = new CultureInfo("en");
 
         Test(
-            (timeSpan, format) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider),
-            (timeSpan, format) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null),
-            TestValues,
-            constantFormatSpecifiers);
-
-        Test(
-            (timeSpan, format) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider, TimeSpanStyles.None),
-            (timeSpan, format) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider),
-            TestValues,
-            formatSpecifiers);
-        Test(
-            (timeSpan, format, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider, styles),
-            (timeSpan, format, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null, styles),
+            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider),
+            (timeSpan, format, _) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null),
             TestValues,
             constantFormatSpecifiers,
-            timeSpanStyles);
+            FormatProviders);
 
         Test(
-            (timeSpan, format) => System.TimeSpan.ParseExact(timeSpan.ToString(format), [format], formatProvider),
-            (timeSpan, format) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider),
-            TestValues,
-            formatSpecifiers);
-        Test(
-            timeSpan => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "G"], formatProvider),
-            timeSpan => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider));
-
-        Test(
-            timeSpan => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, TimeSpanStyles.None),
-            timeSpan => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider));
-        Test(
-            (timeSpan, format, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), [format], formatProvider, styles),
-            (timeSpan, format, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider, styles),
+            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(
+                timeSpan.ToString(format, formatProvider),
+                format,
+                formatProvider,
+                TimeSpanStyles.None),
+            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, formatProvider), format, formatProvider),
             TestValues,
             formatSpecifiers,
-            timeSpanStyles);
+            FormatProviders);
         Test(
-            (timeSpan, styles) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "G"], formatProvider, styles),
-            (timeSpan, styles) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, styles),
+            (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider, styles),
+            (timeSpan, format, _, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null, styles),
             TestValues,
+            constantFormatSpecifiers,
+            FormatProviders,
             timeSpanStyles);
 
         Test(
-            (timeSpan, styles) => MissingTimeSpanMembers.ParseExact($"{timeSpan}".AsSpan(), ["c", "t", "T", "g", "G"], formatProvider, styles),
-            (timeSpan, styles) => MissingTimeSpanMembers.ParseExact($"{timeSpan}".AsSpan(), ["c", "g", "G"], formatProvider, styles),
+            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, formatProvider), [format], formatProvider),
+            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, formatProvider), format, formatProvider),
             TestValues,
+            formatSpecifiers,
+            FormatProviders);
+        Test(
+            (timeSpan, formatProvider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "G"], formatProvider),
+            (timeSpan, formatProvider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider),
+            TestValues,
+            FormatProviders);
+
+        Test(
+            (timeSpan, formatProvider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, TimeSpanStyles.None),
+            (timeSpan, formatProvider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider),
+            TestValues,
+            FormatProviders);
+        Test(
+            (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(
+                timeSpan.ToString(format, formatProvider),
+                [format],
+                formatProvider,
+                styles),
+            (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(
+                timeSpan.ToString(format, formatProvider),
+                format,
+                formatProvider,
+                styles),
+            TestValues,
+            formatSpecifiers,
+            FormatProviders,
+            timeSpanStyles);
+        Test(
+            (timeSpan, formatProvider, styles) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "G"], formatProvider, styles),
+            (timeSpan, formatProvider, styles) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, styles),
+            TestValues,
+            FormatProviders,
+            timeSpanStyles);
+
+        Test(
+            (timeSpan, formatProvider, styles) => MissingTimeSpanMembers.ParseExact(
+                $"{timeSpan}".AsSpan(),
+                ["c", "t", "T", "g", "G"],
+                formatProvider,
+                styles),
+            (timeSpan, formatProvider, styles) => MissingTimeSpanMembers.ParseExact($"{timeSpan}".AsSpan(), ["c", "g", "G"], formatProvider, styles),
+            TestValues,
+            FormatProviders,
             timeSpanStyles);
 
         DoNamedTest2();
@@ -263,21 +289,21 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     [Test]
     public void TestToString()
     {
-        var formatSpecifiers = new[] { "c", "t", "T", "g", "G" };
-        var formatProvider = new CultureInfo("en");
+        var formatsRedundant = new[] { null, "", "c", "t", "T" };
 
-        Test(timeSpan => timeSpan.ToString(null), timeSpan => timeSpan.ToString());
-        Test(timeSpan => timeSpan.ToString(""), timeSpan => timeSpan.ToString());
-        Test(timeSpan => timeSpan.ToString("c"), timeSpan => timeSpan.ToString());
-        Test(timeSpan => timeSpan.ToString("t"), timeSpan => timeSpan.ToString());
-        Test(timeSpan => timeSpan.ToString("T"), timeSpan => timeSpan.ToString());
+        Test((timeSpan, format) => timeSpan.ToString(format), (timeSpan, _) => timeSpan.ToString(), TestValues, formatsRedundant);
 
-        Test((timeSpan, format) => timeSpan.ToString(format, null), (timeSpan, format) => timeSpan.ToString(format), TestValues, formatSpecifiers);
-        Test(timeSpan => timeSpan.ToString(null, formatProvider), timeSpan => timeSpan.ToString(null));
-        Test(timeSpan => timeSpan.ToString("", formatProvider), timeSpan => timeSpan.ToString(""));
-        Test(timeSpan => timeSpan.ToString("c", formatProvider), timeSpan => timeSpan.ToString("c"));
-        Test(timeSpan => timeSpan.ToString("t", formatProvider), timeSpan => timeSpan.ToString("t"));
-        Test(timeSpan => timeSpan.ToString("T", formatProvider), timeSpan => timeSpan.ToString("T"));
+        Test(
+            (timeSpan, format) => timeSpan.ToString(format, null),
+            (timeSpan, format) => timeSpan.ToString(format),
+            TestValues,
+            ["c", "t", "T", "g", "G"]);
+        Test(
+            (timeSpan, format, formatProvider) => timeSpan.ToString(format, formatProvider),
+            (timeSpan, _, _) => timeSpan.ToString(),
+            TestValues,
+            formatsRedundant,
+            FormatProviders);
 
         DoNamedTest2();
     }
@@ -297,145 +323,167 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
     public void TestTryParseExact()
     {
         var constantFormatSpecifiers = new[] { "c", "t", "T" };
         var formatSpecifiers = new[] { "c", "t", "T", "g", "G" };
         var timeSpanStyles = new[] { TimeSpanStyles.None, TimeSpanStyles.AssumeNegative };
-        var formatProvider = new CultureInfo("en");
 
         Test(
-            (System.TimeSpan timeSpan, string format, out System.TimeSpan result)
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
                 => System.TimeSpan.TryParseExact($"{timeSpan}", format, formatProvider, out result),
-            (System.TimeSpan timeSpan, string format, out System.TimeSpan result)
+            (System.TimeSpan timeSpan, string format, IFormatProvider? _, out System.TimeSpan result)
                 => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, out result),
             TestValues,
-            constantFormatSpecifiers);
+            constantFormatSpecifiers,
+            FormatProviders);
 
         Test(
-            (System.TimeSpan timeSpan, string format, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                $"{timeSpan}",
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
+                timeSpan.ToString(format, formatProvider),
                 format,
                 formatProvider,
                 TimeSpanStyles.None,
                 out result),
-            (System.TimeSpan timeSpan, string format, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, out result),
-            TestValues,
-            formatSpecifiers);
-        Test(
-            (System.TimeSpan timeSpan, string format, TimeSpanStyles styles, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                $"{timeSpan}",
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
+                timeSpan.ToString(format, formatProvider),
                 format,
                 formatProvider,
-                styles,
                 out result),
-            (System.TimeSpan timeSpan, string format, TimeSpanStyles styles, out System.TimeSpan result)
+            TestValues,
+            formatSpecifiers,
+            FormatProviders);
+        Test(
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
+                => System.TimeSpan.TryParseExact($"{timeSpan}", format, formatProvider, styles, out result),
+            (System.TimeSpan timeSpan, string format, IFormatProvider? _, TimeSpanStyles styles, out System.TimeSpan result)
                 => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, styles, out result),
             TestValues,
             constantFormatSpecifiers,
+            FormatProviders,
             timeSpanStyles);
 
         Test(
-            (System.TimeSpan timeSpan, string format, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                $"{timeSpan}".AsSpan(),
-                format.AsSpan(),
-                formatProvider,
-                TimeSpanStyles.None,
-                out result),
-            (System.TimeSpan timeSpan, string format, out System.TimeSpan result)
-                => MissingTimeSpanMembers.TryParseExact($"{timeSpan}".AsSpan(), format.AsSpan(), null, out result),
-            TestValues,
-            formatSpecifiers);
-
-        Test(
-            (System.TimeSpan timeSpan, string format, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", [format], formatProvider, out result),
-            (System.TimeSpan timeSpan, string format, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, out result),
-            TestValues,
-            constantFormatSpecifiers);
-        Test(
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                $"{timeSpan}",
-                ["c", "t", "T", "g", "G"],
-                formatProvider,
-                out result),
-            (System.TimeSpan timeSpan, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, out result));
-
-        Test(
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                $"{timeSpan}",
-                ["c", "g", "G"],
-                formatProvider,
-                TimeSpanStyles.None,
-                out result),
-            (System.TimeSpan timeSpan, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, out result));
-        Test(
-            (System.TimeSpan timeSpan, string format, TimeSpanStyles styles, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", [format], formatProvider, styles, out result),
-            (System.TimeSpan timeSpan, string format, TimeSpanStyles styles, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", format, formatProvider, styles, out result),
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
+                => MissingTimeSpanMembers.TryParseExact(
+                    timeSpan.ToString(format, formatProvider).AsSpan(),
+                    format.AsSpan(),
+                    formatProvider,
+                    TimeSpanStyles.None,
+                    out result),
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
+                => MissingTimeSpanMembers.TryParseExact(
+                    timeSpan.ToString(format, formatProvider).AsSpan(),
+                    format.AsSpan(),
+                    formatProvider,
+                    out result),
             TestValues,
             formatSpecifiers,
-            timeSpanStyles);
+            FormatProviders);
+
         Test(
-            (System.TimeSpan timeSpan, TimeSpanStyles styles, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                $"{timeSpan}",
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
+                => System.TimeSpan.TryParseExact($"{timeSpan}", [format], formatProvider, out result),
+            (System.TimeSpan timeSpan, string format, IFormatProvider? _, out System.TimeSpan result)
+                => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, out result),
+            TestValues,
+            constantFormatSpecifiers,
+            FormatProviders);
+        Test(
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
+                timeSpan.ToString("c", formatProvider),
                 ["c", "t", "T", "g", "G"],
                 formatProvider,
-                styles,
                 out result),
-            (System.TimeSpan timeSpan, TimeSpanStyles styles, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                $"{timeSpan}",
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
+                timeSpan.ToString("c", formatProvider),
                 ["c", "g", "G"],
                 formatProvider,
-                styles,
                 out result),
             TestValues,
+            FormatProviders);
+
+        Test(
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
+                $"{timeSpan}",
+                ["c", "g", "G"],
+                formatProvider,
+                TimeSpanStyles.None,
+                out result),
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result)
+                => System.TimeSpan.TryParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, out result),
+            TestValues,
+            FormatProviders);
+        Test(
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
+                => System.TimeSpan.TryParseExact(timeSpan.ToString(format, formatProvider), [format], formatProvider, styles, out result),
+            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
+                => System.TimeSpan.TryParseExact(timeSpan.ToString(format, formatProvider), format, formatProvider, styles, out result),
+            TestValues,
+            formatSpecifiers,
+            FormatProviders,
+            timeSpanStyles);
+        Test(
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
+                => System.TimeSpan.TryParseExact(
+                    timeSpan.ToString("c", formatProvider),
+                    ["c", "t", "T", "g", "G"],
+                    formatProvider,
+                    styles,
+                    out result),
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
+                => System.TimeSpan.TryParseExact(timeSpan.ToString("c", formatProvider), ["c", "g", "G"], formatProvider, styles, out result),
+            TestValues,
+            FormatProviders,
             timeSpanStyles);
 
         Test(
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                $"{timeSpan}".AsSpan(),
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
+                timeSpan.ToString("c", formatProvider).AsSpan(),
                 ["c", "t", "T", "g", "G"],
                 formatProvider,
                 out result),
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                $"{timeSpan}".AsSpan(),
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
+                timeSpan.ToString("c", formatProvider).AsSpan(),
                 ["c", "g", "G"],
                 formatProvider,
-                out result));
+                out result),
+            TestValues,
+            FormatProviders);
 
         Test(
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                $"{timeSpan}".AsSpan(),
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
+                timeSpan.ToString("c", formatProvider).AsSpan(),
                 ["c", "t", "T", "g", "G"],
                 formatProvider,
                 TimeSpanStyles.None,
                 out result),
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                $"{timeSpan}".AsSpan(),
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
+                timeSpan.ToString("c", formatProvider).AsSpan(),
                 ["c", "t", "T", "g", "G"],
                 formatProvider,
-                out result));
-        Test(
-            (System.TimeSpan timeSpan, TimeSpanStyles styles, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                $"{timeSpan}".AsSpan(),
-                ["c", "t", "T", "g", "G"],
-                formatProvider,
-                styles,
-                out result),
-            (System.TimeSpan timeSpan, TimeSpanStyles styles, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                $"{timeSpan}".AsSpan(),
-                ["c", "g", "G"],
-                formatProvider,
-                styles,
                 out result),
             TestValues,
+            FormatProviders);
+        Test(
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
+                => MissingTimeSpanMembers.TryParseExact(
+                    timeSpan.ToString("c", formatProvider).AsSpan(),
+                    ["c", "t", "T", "g", "G"],
+                    formatProvider,
+                    styles,
+                    out result),
+            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
+                => MissingTimeSpanMembers.TryParseExact(
+                    timeSpan.ToString("c", formatProvider).AsSpan(),
+                    ["c", "g", "G"],
+                    formatProvider,
+                    styles,
+                    out result),
+            TestValues,
+            FormatProviders,
             timeSpanStyles);
 
         DoNamedTest2();

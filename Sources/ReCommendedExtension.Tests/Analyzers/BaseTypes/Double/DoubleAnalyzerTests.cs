@@ -26,7 +26,20 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
 
     protected override double[] TestValues { get; } =
     [
-        0d, -0d, 1d, 2d, double.MaxValue, double.MinValue, double.Epsilon, double.NaN, double.PositiveInfinity, double.NegativeInfinity,
+        0,
+        -0d,
+        1,
+        2,
+        -1,
+        -2,
+        1.2,
+        -1.2,
+        double.MaxValue,
+        double.MinValue,
+        double.Epsilon,
+        double.NaN,
+        double.PositiveInfinity,
+        double.NegativeInfinity,
     ];
 
     [Test]
@@ -59,17 +72,15 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     [TestNet80]
     public void TestParse()
     {
-        var values = new[]
-        {
-            0d, -0d, 1d, 2d, float.MinValue, float.MaxValue, double.Epsilon, double.NaN, double.PositiveInfinity, double.NegativeInfinity,
-        };
+        double[] values = [..TestValues.Except([double.MinValue, double.MaxValue]), float.MinValue, float.MaxValue];
 
         Test(n => double.Parse($"{n}", NumberStyles.Float | NumberStyles.AllowThousands), n => double.Parse($"{n}"), values);
         Test(n => double.Parse($"{n}", null), n => double.Parse($"{n}"), values);
         Test(
-            n => double.Parse($"{n}", NumberStyles.Float | NumberStyles.AllowThousands, new CultureInfo("en")),
-            n => double.Parse($"{n}", new CultureInfo("en")),
-            values);
+            (n, provider) => double.Parse(n.ToString(provider), NumberStyles.Float | NumberStyles.AllowThousands, provider),
+            (n, provider) => double.Parse(n.ToString(provider), provider),
+            values,
+            FormatProviders);
         Test(
             n => double.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, null),
             n => double.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint),
@@ -90,23 +101,22 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestRound()
     {
-        var xValues = new[] { 0, -0d, double.MaxValue, double.MinValue };
         var roundings = new[] { MidpointRounding.ToEven, MidpointRounding.AwayFromZero };
         var digitsValues = new[] { 0, 1, 2 };
 
         Test(n => MissingDoubleMethods.Round(n, 0), n => MissingDoubleMethods.Round(n));
         Test(n => MissingDoubleMethods.Round(n, MidpointRounding.ToEven), n => MissingDoubleMethods.Round(n));
-        Test((n, mode) => MissingDoubleMethods.Round(n, 0, mode), (n, mode) => MissingDoubleMethods.Round(n, mode), xValues, roundings);
+        Test((n, mode) => MissingDoubleMethods.Round(n, 0, mode), (n, mode) => MissingDoubleMethods.Round(n, mode), TestValues, roundings);
         Test(
             (n, digits) => MissingDoubleMethods.Round(n, digits, MidpointRounding.ToEven),
             (n, digits) => MissingDoubleMethods.Round(n, digits),
-            xValues,
+            TestValues, 
             digitsValues);
 
         Test(n => Math.Round(n, 0), n => Math.Round(n));
         Test(n => Math.Round(n, MidpointRounding.ToEven), n => Math.Round(n));
-        Test((n, mode) => Math.Round(n, 0, mode), (n, mode) => Math.Round(n, mode), xValues, roundings);
-        Test((n, digits) => Math.Round(n, digits, MidpointRounding.ToEven), (n, digits) => Math.Round(n, digits), xValues, digitsValues);
+        Test((n, mode) => Math.Round(n, 0, mode), (n, mode) => Math.Round(n, mode), TestValues, roundings);
+        Test((n, digits) => Math.Round(n, digits, MidpointRounding.ToEven), (n, digits) => Math.Round(n, digits), TestValues, digitsValues);
 
         DoNamedTest2();
     }
@@ -116,21 +126,29 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
     public void TestToString()
     {
-        Test(n => n.ToString(null as string), n => n.ToString());
-        Test(n => n.ToString(""), n => n.ToString());
-        Test(n => n.ToString("G"), n => n.ToString());
-        Test(n => n.ToString("G0"), n => n.ToString());
-        Test(n => n.ToString("E6"), n => n.ToString("E"));
-        Test(n => n.ToString("e6"), n => n.ToString("e"));
+        var formatsRedundant = new[] { null, "", "G", "G0" };
+        var formatsRedundantSpecifier = new[] { "E6", "e6" };
 
-        Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
-        Test(n => n.ToString(null, NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("F", null), n => n.ToString("F"));
-        Test(n => n.ToString("G", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("G0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("E6", NumberFormatInfo.InvariantInfo), n => n.ToString("E", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("e6", NumberFormatInfo.InvariantInfo), n => n.ToString("e", NumberFormatInfo.InvariantInfo));
+        Test((n, format) => n.ToString(format), (n, _) => n.ToString(), TestValues, formatsRedundant);
+        Test((n, format) => n.ToString(format), (n, format) => n.ToString($"{format[0]}"), TestValues, formatsRedundantSpecifier);
+
+        Test(
+            (n, format) => n.ToString(format, null),
+            (n, format) => n.ToString(format),
+            TestValues,
+            [..formatsRedundant, ..formatsRedundantSpecifier]);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, _, provider) => n.ToString(provider),
+            TestValues,
+            formatsRedundant,
+            FormatProviders);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, format, provider) => n.ToString($"{format[0]}", provider),
+            TestValues,
+            formatsRedundantSpecifier,
+            FormatProviders);
 
         DoNamedTest2();
     }
@@ -139,45 +157,46 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     [TestNet80]
     public void TestTryParse()
     {
-        var values = new[]
-        {
-            0d, -0d, 1d, 2d, float.MinValue, float.MaxValue, double.Epsilon, double.NaN, double.PositiveInfinity, double.NegativeInfinity,
-        };
+        double[] values = [..TestValues.Except([double.MinValue, double.MaxValue]), float.MinValue, float.MaxValue];
 
         Test(
-            (double n, out double result) => double.TryParse(
+            (double n, IFormatProvider? provider, out double result) => double.TryParse(
                 $"{n}",
                 NumberStyles.Float | NumberStyles.AllowThousands,
-                new CultureInfo("en"),
+                provider,
                 out result),
-            (double n, out double result) => MissingDoubleMethods.TryParse($"{n}", new CultureInfo("en"), out result),
-            values);
+            (double n, IFormatProvider? provider, out double result) => MissingDoubleMethods.TryParse($"{n}", provider, out result),
+            values,
+            FormatProviders);
         Test(
             (double n, out double result) => MissingDoubleMethods.TryParse($"{n}", null, out result),
             (double n, out double result) => double.TryParse($"{n}", out result),
             values);
 
         Test(
-            (double n, out double result) => MissingDoubleMethods.TryParse(
+            (double n, IFormatProvider? provider, out double result) => MissingDoubleMethods.TryParse(
                 $"{n}".AsSpan(),
                 NumberStyles.Float | NumberStyles.AllowThousands,
-                new CultureInfo("en"),
+                provider,
                 out result),
-            (double n, out double result) => MissingDoubleMethods.TryParse($"{n}".AsSpan(), new CultureInfo("en"), out result),
-            values);
+            (double n, IFormatProvider? provider, out double result) => MissingDoubleMethods.TryParse($"{n}".AsSpan(), provider, out result),
+            values,
+            FormatProviders);
         Test(
             (double n, out double result) => MissingDoubleMethods.TryParse($"{n}".AsSpan(), null, out result),
             (double n, out double result) => MissingDoubleMethods.TryParse($"{n}".AsSpan(), out result),
             values);
 
         Test(
-            (double n, out double result) => MissingDoubleMethods.TryParse(
+            (double n, IFormatProvider? provider, out double result) => MissingDoubleMethods.TryParse(
                 Encoding.UTF8.GetBytes($"{n}"),
                 NumberStyles.Float | NumberStyles.AllowThousands,
-                new CultureInfo("en"),
+                provider,
                 out result),
-            (double n, out double result) => MissingDoubleMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), new CultureInfo("en"), out result),
-            values);
+            (double n, IFormatProvider? provider, out double result)
+                => MissingDoubleMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), provider, out result),
+            values,
+            FormatProviders);
         Test(
             (double n, out double result) => MissingDoubleMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
             (double n, out double result) => MissingDoubleMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result),

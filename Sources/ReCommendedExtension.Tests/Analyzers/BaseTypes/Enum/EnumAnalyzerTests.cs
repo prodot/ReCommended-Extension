@@ -41,7 +41,7 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
     {
         foreach (var value in testValues)
         {
-            Assert.AreEqual(expected(value), actual(value));
+            Assert.AreEqual(expected(value), actual(value), $"with values: {value}");
         }
     }
 
@@ -49,7 +49,7 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
     {
         foreach (var value in testFlags)
         {
-            Assert.AreEqual(expected(value), actual(value));
+            Assert.AreEqual(expected(value), actual(value), $"with values: {value}");
         }
     }
 
@@ -59,8 +59,8 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
     {
         foreach (var value in testValues)
         {
-            Assert.AreEqual(expected(value, out var expectedResult), actual(value, out var actualResult));
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expected(value, out var expectedResult), actual(value, out var actualResult), $"with values: {value}");
+            Assert.AreEqual(expectedResult, actualResult, $"with values: {value}");
         }
     }
 
@@ -68,8 +68,8 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
     {
         foreach (var value in testFlags)
         {
-            Assert.AreEqual(expected(value, out var expectedResult), actual(value, out var actualResult));
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expected(value, out var expectedResult), actual(value, out var actualResult), $"with values: {value}");
+            Assert.AreEqual(expectedResult, actualResult, $"with values: {value}");
         }
     }
 

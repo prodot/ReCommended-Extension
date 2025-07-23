@@ -22,10 +22,10 @@ public sealed class NullableAnalyzerTests : CSharpHighlightingTestBase
     {
         if (useNull)
         {
-            Assert.AreEqual(expected(null), actual(null));
+            Assert.AreEqual(expected(null), actual(null), "with values: null");
         }
 
-        Assert.AreEqual(expected(value), actual(value));
+        Assert.AreEqual(expected(value), actual(value), $"with values: {value}");
     }
 
     [Test]

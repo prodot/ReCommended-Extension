@@ -25,13 +25,17 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
                 or RedundantFormatPrecisionSpecifierHint
             || highlighting.IsError();
 
-    protected override decimal[] TestValues { get; } = [0, -0.0m, 1, 2, -1, decimal.MinValue, decimal.MaxValue];
+    protected override decimal[] TestValues { get; } = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MinValue, decimal.MaxValue];
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestAdd()
     {
-        Test((d1, d2) => decimal.Add(d1, d2), (d1, d2) => d1 + d2, [0, 1, -1, -0.0m], [0, 1, -1, -0.0m]);
+        Test(
+            (d1, d2) => decimal.Add(d1, d2),
+            (d1, d2) => d1 + d2,
+            [..TestValues.Except([decimal.MinValue, decimal.MaxValue])],
+            [..TestValues.Except([decimal.MinValue, decimal.MaxValue])]);
 
         DoNamedTest2();
     }
@@ -53,7 +57,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestDivide()
     {
-        Test((d1, d2) => decimal.Divide(d1, d2), (d1, d2) => d1 / d2, [0, 1, -1, -0.0m], [1, -1]);
+        Test((d1, d2) => decimal.Divide(d1, d2), (d1, d2) => d1 / d2, [..TestValues.Except([decimal.MinValue, decimal.MaxValue])], [1, -1, 2, -2]);
 
         DoNamedTest2();
     }
@@ -100,7 +104,11 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestMultiply()
     {
-        Test((d1, d2) => decimal.Multiply(d1, d2), (d1, d2) => d1 * d2, [0, 1, -1, -0.0m], [0, 1, -1, -0.0m]);
+        Test(
+            (d1, d2) => decimal.Multiply(d1, d2),
+            (d1, d2) => d1 * d2,
+            [..TestValues.Except([decimal.MinValue, decimal.MaxValue])],
+            [..TestValues.Except([decimal.MinValue, decimal.MaxValue])]);
 
         DoNamedTest2();
     }
@@ -121,8 +129,10 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
         Test(n => decimal.Parse($"{n}", NumberStyles.Number), n => decimal.Parse($"{n}"));
         Test(n => decimal.Parse($"{n}", null), n => decimal.Parse($"{n}"));
         Test(
-            n => decimal.Parse($"{n}", NumberStyles.Number, NumberFormatInfo.InvariantInfo),
-            n => decimal.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+            (n, provider) => decimal.Parse($"{n}", NumberStyles.Number, provider),
+            (n, provider) => decimal.Parse($"{n}", provider),
+            TestValues,
+            FormatProviders);
         Test(
             n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, null),
             n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint));
@@ -140,7 +150,11 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestRemainder()
     {
-        Test((d1, d2) => decimal.Remainder(d1, d2), (d1, d2) => d1 % d2, [0, 1, -1, -0.0m], [1, -1]);
+        Test(
+            (d1, d2) => decimal.Remainder(d1, d2),
+            (d1, d2) => d1 % d2,
+            [..TestValues.Except([decimal.MinValue, decimal.MaxValue])],
+            [1, -1, 2, -2]);
 
         DoNamedTest2();
     }
@@ -174,7 +188,11 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestSubtract()
     {
-        Test((d1, d2) => decimal.Subtract(d1, d2), (d1, d2) => d1 - d2, [0, 1, -1, -0.0m], [0, 1, -1, -0.0m]);
+        Test(
+            (d1, d2) => decimal.Subtract(d1, d2),
+            (d1, d2) => d1 - d2,
+            [..TestValues.Except([decimal.MinValue, decimal.MaxValue])],
+            [..TestValues.Except([decimal.MinValue, decimal.MaxValue])]);
 
         DoNamedTest2();
     }
@@ -184,21 +202,31 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
     public void TestToString()
     {
-        Test(n => n.ToString(null as string), n => n.ToString());
-        Test(n => n.ToString(""), n => n.ToString());
-        Test(n => n.ToString("G"), n => n.ToString());
-        Test(n => n.ToString("g"), n => n.ToString());
-        Test(n => n.ToString("E6"), n => n.ToString("E"));
-        Test(n => n.ToString("e6"), n => n.ToString("e"));
+        var formatsRedundant = new[] { null, "", "G", "g" };
+        var formatsRedundantSpecifier = new[] { "E6", "e6" };
+
+        Test((n, format) => n.ToString(format), (n, _) => n.ToString(), TestValues, formatsRedundant);
+        Test((n, format) => n.ToString(format), (n, format) => n.ToString($"{format[0]}"), TestValues, formatsRedundantSpecifier);
 
         Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
-        Test(n => n.ToString(null, NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("C", null), n => n.ToString("C"));
-        Test(n => n.ToString("G", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("E6", NumberFormatInfo.InvariantInfo), n => n.ToString("E", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("e6", NumberFormatInfo.InvariantInfo), n => n.ToString("e", NumberFormatInfo.InvariantInfo));
+
+        Test(
+            (n, format) => n.ToString(format, null),
+            (n, format) => n.ToString(format),
+            TestValues,
+            [..formatsRedundant, ..formatsRedundantSpecifier]);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, _, provider) => n.ToString(provider),
+            TestValues,
+            formatsRedundant,
+            FormatProviders);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, format, provider) => n.ToString($"{format[0]}", provider),
+            TestValues,
+            formatsRedundantSpecifier,
+            FormatProviders);
 
         DoNamedTest2();
     }
@@ -208,33 +236,39 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     public void TestTryParse()
     {
         Test(
-            (decimal n, out decimal result) => decimal.TryParse($"{n}", NumberStyles.Number, NumberFormatInfo.InvariantInfo, out result),
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+            (decimal n, IFormatProvider? provider, out decimal result) => decimal.TryParse($"{n}", NumberStyles.Number, provider, out result),
+            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse($"{n}", provider, out result),
+            TestValues,
+            FormatProviders);
         Test(
             (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}", null, out result),
             (decimal n, out decimal result) => decimal.TryParse($"{n}", out result));
 
         Test(
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(
+            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse(
                 $"{n}".AsSpan(),
                 NumberStyles.Number,
-                NumberFormatInfo.InvariantInfo,
+                provider,
                 out result),
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), provider, out result),
+            TestValues,
+            FormatProviders);
         Test(
             (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), null, out result),
             (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), out result));
 
         Test(
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(
+            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse(
                 Encoding.UTF8.GetBytes($"{n}"),
                 NumberStyles.Number,
-                NumberFormatInfo.InvariantInfo,
+                provider,
                 out result),
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(
+            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse(
                 Encoding.UTF8.GetBytes($"{n}"),
-                NumberFormatInfo.InvariantInfo,
-                out result));
+                provider,
+                out result),
+            TestValues,
+            FormatProviders);
         Test(
             (decimal n, out decimal result) => MissingDecimalMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
             (decimal n, out decimal result) => MissingDecimalMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));

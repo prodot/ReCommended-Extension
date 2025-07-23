@@ -31,7 +31,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     {
         foreach (var value in values)
         {
-            Assert.AreEqual(expected(value), actual(value));
+            Assert.AreEqual(expected(value), actual(value), $"with values: {value}");
         }
     }
 
@@ -39,7 +39,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestByte()
     {
-        var values = new[] { (byte)0, (byte)1, (byte)2, byte.MaxValue };
+        var values = new byte[] { 0, 1, 2, byte.MaxValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -67,7 +67,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestSByte()
     {
-        var values = new[] { (sbyte)0, (sbyte)1, (sbyte)2, (sbyte)-1, sbyte.MaxValue, sbyte.MinValue };
+        var values = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -95,7 +95,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestInt16()
     {
-        var values = new[] { (short)0, (short)1, (short)2, (short)-1, short.MaxValue, short.MinValue };
+        var values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -123,7 +123,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestUInt16()
     {
-        var values = new[] { (ushort)0, (ushort)1, (ushort)2, ushort.MaxValue };
+        var values = new ushort[] { 0, 1, 2, ushort.MaxValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -151,7 +151,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestInt32()
     {
-        var values = new[] { 0, 1, 2, -1, int.MaxValue, int.MinValue };
+        var values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -179,7 +179,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestUInt32()
     {
-        var values = new[] { 0u, 1u, 2u, uint.MaxValue };
+        var values = new uint[] { 0, 1, 2, uint.MaxValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -207,7 +207,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestInt64()
     {
-        var values = new[] { 0, 1, 2, -1, long.MaxValue, long.MinValue };
+        var values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -235,7 +235,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestUInt64()
     {
-        var values = new[] { 0ul, 1ul, 2ul, ulong.MaxValue };
+        var values = new ulong[] { 0, 1, 2, ulong.MaxValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -263,7 +263,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [TestNet80]
     public void TestInt128()
     {
-        var values = new[] { 0, 1, 2, -1, int128.MaxValue, int128.MinValue };
+        var values = new[] { 0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -320,7 +320,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [SuppressMessage("ReSharper", "InterpolatedStringExpressionIsNotIFormattable")] // todo: remove when IntPtr implements IFormattable
     public void TestIntPtr()
     {
-        var values = new[] { (nint)0, 1, 2, -1 };
+        var values = new[] { (nint)0, 1, 2, -1, -2 };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -345,7 +345,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [SuppressMessage("ReSharper", "InterpolatedStringExpressionIsNotIFormattable")] // todo: remove when UIntPtr implements IFormattable
     public void TestUIntPtr()
     {
-        var values = new[] { (nuint)0, (nuint)1, (nuint)2 };
+        var values = new nuint[] { 0, 1, 2 };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -368,7 +368,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [Test]
     public void TestDecimal()
     {
-        var values = new[] { 0, -0.0m, 1, 2, -1, decimal.MaxValue, decimal.MinValue };
+        var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:g}", n => $"{n}", values);
@@ -383,7 +383,20 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     {
         var values = new[]
         {
-            0, -0d, 1, 2, -1, double.MaxValue, double.MinValue, double.Epsilon, double.NaN, double.PositiveInfinity, double.NegativeInfinity,
+            0,
+            -0d,
+            1,
+            2,
+            -1,
+            -2,
+            1.2,
+            -1.2,
+            double.MaxValue,
+            double.MinValue,
+            double.Epsilon,
+            double.NaN,
+            double.PositiveInfinity,
+            double.NegativeInfinity,
         };
 
         Test(n => $"{n:G}", n => $"{n}", values);
@@ -399,7 +412,20 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     {
         var values = new[]
         {
-            0, -0f, 1, 2, -1, float.MaxValue, float.MinValue, float.Epsilon, float.NaN, float.PositiveInfinity, float.NegativeInfinity,
+            0,
+            -0f,
+            1,
+            2,
+            -1,
+            -2,
+            1.2f,
+            -1.2f,
+            float.MaxValue,
+            float.MinValue,
+            float.Epsilon,
+            float.NaN,
+            float.PositiveInfinity,
+            float.NegativeInfinity,
         };
 
         Test(n => $"{n:G}", n => $"{n}", values);
@@ -420,7 +446,10 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
             (sbyte)1,
             (sbyte)2,
             (sbyte)-1,
+            (sbyte)-2,
             (half)(-0f),
+            (half)1.2f,
+            (half)(-1.2f),
             half.MaxValue,
             half.MinValue,
             half.Epsilon,

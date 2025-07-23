@@ -24,6 +24,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
             || highlighting.IsError();
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet90]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
 

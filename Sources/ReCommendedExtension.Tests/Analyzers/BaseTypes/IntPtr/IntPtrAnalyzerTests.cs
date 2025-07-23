@@ -26,7 +26,7 @@ public sealed class IntPtrAnalyzerTests : BaseTypeAnalyzerTests<nint>
                 or RedundantFormatPrecisionSpecifierHint
             || highlighting.IsError();
 
-    protected override nint[] TestValues { get; } = [0, 1, 2, -1];
+    protected override nint[] TestValues { get; } = [0, 1, 2, -1, -2];
 
     [Test]
     [TestNet70]
@@ -125,8 +125,10 @@ public sealed class IntPtrAnalyzerTests : BaseTypeAnalyzerTests<nint>
         Test(n => MissingIntPtrMethods.Parse($"{n}", NumberStyles.Integer), n => MissingIntPtrMethods.Parse($"{n}"));
         Test(n => MissingIntPtrMethods.Parse($"{n}", null), n => MissingIntPtrMethods.Parse($"{n}"));
         Test(
-            n => MissingIntPtrMethods.Parse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo),
-            n => MissingIntPtrMethods.Parse($"{n}", NumberFormatInfo.InvariantInfo));
+            (n, provider) => MissingIntPtrMethods.Parse($"{n}", NumberStyles.Integer, provider),
+            (n, provider) => MissingIntPtrMethods.Parse($"{n}", provider),
+            TestValues,
+            FormatProviders);
         Test(
             n => MissingIntPtrMethods.Parse($"{n}", NumberStyles.AllowLeadingSign, null),
             n => MissingIntPtrMethods.Parse($"{n}", NumberStyles.AllowLeadingSign));
@@ -162,43 +164,49 @@ public sealed class IntPtrAnalyzerTests : BaseTypeAnalyzerTests<nint>
     [SuppressMessage("ReSharper", "RedundantCast")]
     public void TestToString()
     {
-        Test(n => n.ToString(null as string), n => n.ToString());
-        Test(n => n.ToString(""), n => n.ToString());
-        Test(n => n.ToString("G"), n => n.ToString());
-        Test(n => n.ToString("G0"), n => n.ToString());
-        Test(n => n.ToString("g"), n => n.ToString());
-        Test(n => n.ToString("g0"), n => n.ToString());
-        Test(n => n.ToString("E6"), n => n.ToString("E"));
-        Test(n => n.ToString("e6"), n => n.ToString("e"));
-        Test(n => n.ToString("D0"), n => n.ToString("D"));
-        Test(n => n.ToString("D1"), n => n.ToString("D"));
-        Test(n => n.ToString("d0"), n => n.ToString("d"));
-        Test(n => n.ToString("d1"), n => n.ToString("d"));
-        Test(n => n.ToString("X0"), n => n.ToString("X"));
-        Test(n => n.ToString("X1"), n => n.ToString("X"));
-        Test(n => n.ToString("x0"), n => n.ToString("x"));
-        Test(n => n.ToString("x1"), n => n.ToString("x"));
+        var formatsRedundant = new[] { null, "", "G", "G0", "g", "g0" };
+        var formatsRedundantSpecifier = new[] { "E6", "e6", "D0", "D1", "d0", "d1" };
+        var formatsRedundantProvider = new[] { "X2", "x2" };
+        var formatsRedundantSpecifierAndProvider = new[] { "X0", "X1", "x0", "x1" };
+
+        Test((n, format) => n.ToString(format), (n, _) => n.ToString(), TestValues, formatsRedundant);
+        Test(
+            (n, format) => n.ToString(format),
+            (n, format) => n.ToString($"{format[0]}"),
+            TestValues,
+            [..formatsRedundantSpecifier, ..formatsRedundantSpecifierAndProvider]);
 
         Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
-        Test(n => n.ToString(null, NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("D", null), n => n.ToString("D"));
-        Test(n => n.ToString("G", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("G0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("g0", NumberFormatInfo.InvariantInfo), n => n.ToString(NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("E6", NumberFormatInfo.InvariantInfo), n => n.ToString("E", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("e6", NumberFormatInfo.InvariantInfo), n => n.ToString("e", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("D0", NumberFormatInfo.InvariantInfo), n => n.ToString("D", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("D1", NumberFormatInfo.InvariantInfo), n => n.ToString("D", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("d0", NumberFormatInfo.InvariantInfo), n => n.ToString("d", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("d1", NumberFormatInfo.InvariantInfo), n => n.ToString("d", NumberFormatInfo.InvariantInfo));
-        Test(n => n.ToString("X0", NumberFormatInfo.InvariantInfo), n => n.ToString("X"));
-        Test(n => n.ToString("X1", NumberFormatInfo.InvariantInfo), n => n.ToString("X"));
-        Test(n => n.ToString("X2", NumberFormatInfo.InvariantInfo), n => n.ToString("X2"));
-        Test(n => n.ToString("x0", NumberFormatInfo.InvariantInfo), n => n.ToString("x"));
-        Test(n => n.ToString("x1", NumberFormatInfo.InvariantInfo), n => n.ToString("x"));
-        Test(n => n.ToString("x2", NumberFormatInfo.InvariantInfo), n => n.ToString("x2"));
+
+        Test(
+            (n, format) => n.ToString(format, null),
+            (n, format) => n.ToString(format),
+            TestValues,
+            [..formatsRedundant, ..formatsRedundantSpecifier, ..formatsRedundantProvider, ..formatsRedundantSpecifierAndProvider]);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, _, provider) => n.ToString(provider),
+            TestValues,
+            formatsRedundant,
+            FormatProviders);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, format, provider) => n.ToString($"{format[0]}", provider),
+            TestValues,
+            formatsRedundantSpecifier,
+            FormatProviders);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, format, _) => n.ToString($"{format[0]}"),
+            TestValues,
+            formatsRedundantSpecifierAndProvider,
+            FormatProviders);
+        Test(
+            (n, format, provider) => n.ToString(format, provider),
+            (n, format, _) => n.ToString(format),
+            TestValues,
+            formatsRedundantProvider,
+            FormatProviders);
 
         DoNamedTest2();
     }
@@ -208,30 +216,37 @@ public sealed class IntPtrAnalyzerTests : BaseTypeAnalyzerTests<nint>
     public void TestTryParse()
     {
         Test(
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}", NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out result),
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}", NumberFormatInfo.InvariantInfo, out result));
+            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse($"{n}", NumberStyles.Integer, provider, out result),
+            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse($"{n}", provider, out result),
+            TestValues,
+            FormatProviders);
         Test(
             (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}", null, out result),
             (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}", out result));
 
         Test(
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse(
+            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse(
                 $"{n}".AsSpan(),
                 NumberStyles.Integer,
-                NumberFormatInfo.InvariantInfo,
+                provider,
                 out result),
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}".AsSpan(), NumberFormatInfo.InvariantInfo, out result));
+            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse($"{n}".AsSpan(), provider, out result),
+            TestValues,
+            FormatProviders);
         Test(
             (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}".AsSpan(), null, out result),
             (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}".AsSpan(), out result));
 
         Test(
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse(
+            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse(
                 Encoding.UTF8.GetBytes($"{n}"),
                 NumberStyles.Integer,
-                NumberFormatInfo.InvariantInfo,
+                provider,
                 out result),
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), NumberFormatInfo.InvariantInfo, out result));
+            (nint n, IFormatProvider? provider, out nint result)
+                => MissingIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), provider, out result),
+            TestValues,
+            FormatProviders);
         Test(
             (nint n, out nint result) => MissingIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
             (nint n, out nint result) => MissingIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
