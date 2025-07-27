@@ -23,6 +23,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 or UseBinaryOperatorSuggestion
                 or UseOtherArgumentSuggestion
                 or RedundantElementHint
+                or RedundantMethodInvocationHint
             || highlighting.IsError();
 
     protected override System.DateTime[] TestValues { get; } =
@@ -264,6 +265,14 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
         var value = new System.TimeSpan(1, 2, 3, 4, 5);
 
         Test(dateTime => dateTime.Add(value), dateTime => dateTime + value, [..TestValues.Except([System.DateTime.MaxValue])]);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    public void TestAddTicks()
+    {
+        Test(dateTime => dateTime.AddTicks(0), dateTime => dateTime);
 
         DoNamedTest2();
     }
