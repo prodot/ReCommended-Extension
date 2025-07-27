@@ -1,0 +1,37 @@
+﻿using System;
+
+namespace Test
+{
+    public class DateTimes
+    {
+        public void _Constructors()
+        {
+            var result1 = |new DateTime(0)|(0);
+
+            DateTime result2 = |new(0)|(1);
+        }
+
+        public void Equals(DateTime dateTime)
+        {
+            var result = |dateTime.Equals(null)|(2);
+        }
+
+        public void GetTypeCode(DateTime dateTime)
+        {
+            var result = |dateTime.GetTypeCode()|(3);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always DateTime.MinValue.
+QUICKFIXES:
+Replace with 'DateTime.MinValue'
+1: The expression is always DateTime.MinValue.
+QUICKFIXES:
+Replace with 'DateTime.MinValue'
+2: The expression is always false.
+QUICKFIXES:
+Replace with 'false'
+3: The expression is always TypeCode.DateTime.
+QUICKFIXES:
+Replace with 'TypeCode.DateTime'

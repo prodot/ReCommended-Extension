@@ -91,6 +91,12 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName TimeSpanStyles = GetClrTypeName<TimeSpanStyles>();
 
+    public static readonly IClrTypeName DateTimeKind = GetClrTypeName<DateTimeKind>();
+
+    public static readonly IClrTypeName DateTimeStyles = GetClrTypeName<DateTimeStyles>();
+
+    public static readonly IClrTypeName Calendar = GetClrTypeName<Calendar>();
+
     public static readonly IClrTypeName Random = GetClrTypeName<Random>();
 
     public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");

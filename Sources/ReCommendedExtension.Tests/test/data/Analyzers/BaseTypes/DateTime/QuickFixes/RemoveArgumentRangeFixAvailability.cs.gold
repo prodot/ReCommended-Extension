@@ -1,0 +1,30 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DateTimes
+    {
+        public void _Constructors(int year, int month, int day, Calendar calendar)
+        {
+            var result11 = new DateTime(year, month, day, |0, 0, 0|(0));
+            var result12 = new DateTime(year, month, day, |0, 0, 0|(1), calendar);
+
+            DateTime result21 = new(year, month, day, |0, 0, 0|(2));
+            DateTime result22 = new(year, month, day, |0, 0, 0|(3), calendar);
+        }
+    }
+}
+------------------------------------------------
+0: Passing '0, 0, 0' is redundant.
+QUICKFIXES:
+Remove arguments
+1: Passing '0, 0, 0' is redundant.
+QUICKFIXES:
+Remove arguments
+2: Passing '0, 0, 0' is redundant.
+QUICKFIXES:
+Remove arguments
+3: Passing '0, 0, 0' is redundant.
+QUICKFIXES:
+Remove arguments

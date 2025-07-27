@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class DateTimes
+    {
+        public void GetDateTimeFormats(DateTime dateTime, char format)
+        {
+            var result = dateTime.GetDateTimeFormats({caret});
+        }
+    }
+}

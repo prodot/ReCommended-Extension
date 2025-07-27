@@ -1,0 +1,113 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DateTimes
+    {
+        public void ParseExact(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style)
+        {
+            var result11 = DateTime.ParseExact(s, "o", |provider|(0));
+            var result12 = DateTime.ParseExact(s, "O", |provider|(1));
+            var result13 = DateTime.ParseExact(s, "r", |provider|(2));
+            var result14 = DateTime.ParseExact(s, "R", |provider|(3));
+            var result15 = DateTime.ParseExact(s, "s", |provider|(4));
+            var result16 = DateTime.ParseExact(s, "u", |provider|(5));
+
+            var result21 = DateTime.ParseExact(s, "o", |provider|(6), style);
+            var result22 = DateTime.ParseExact(s, "O", |provider|(7), style);
+            var result23 = DateTime.ParseExact(s, "r", |provider|(8), style);
+            var result24 = DateTime.ParseExact(s, "R", |provider|(9), style);
+            var result25 = DateTime.ParseExact(s, "s", |provider|(10), style);
+            var result26 = DateTime.ParseExact(s, "u", |provider|(11), style);
+
+            var result31 = DateTime.ParseExact(s, |[format]|(12), provider, style);
+            var result32 = DateTime.ParseExact(s, |(string[])[format]|(13), provider, style);
+            var result33 = DateTime.ParseExact(s, |new[] { format }|(14), provider, style);
+            var result34 = DateTime.ParseExact(s, |new string[] { format }|(15), provider, style);
+
+            var result41 = DateTime.ParseExact(s, ["o", "r", "s", "u"], |provider|(16), style);
+            var result42 = DateTime.ParseExact(s, (string[])["o", "r", "s", "u"], |provider|(17), style);
+            var result43 = DateTime.ParseExact(s, new[] { "o", "r", "s", "u" }, |provider|(18), style);
+            var result44 = DateTime.ParseExact(s, new string[] { "o", "r", "s", "u" }, |provider|(19), style);
+
+            var result51 = DateTime.ParseExact(s1, ["o", "r", "s", "u"], |provider|(20), style);
+            var result52 = DateTime.ParseExact(s1, (string[])["o", "r", "s", "u"], |provider|(21), style);
+            var result53 = DateTime.ParseExact(s1, new[] { "o", "r", "s", "u" }, |provider|(22), style);
+            var result54 = DateTime.ParseExact(s1, new string[] { "o", "r", "s", "u" }, |provider|(23), style);
+        }
+    }
+}
+------------------------------------------------
+0: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+1: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+2: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+3: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+4: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+5: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+6: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+7: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+8: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+9: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+10: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+11: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+12: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+13: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+14: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+15: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+16: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+17: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+18: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+19: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+20: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+21: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+22: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+23: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'

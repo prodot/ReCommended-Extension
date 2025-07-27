@@ -9,7 +9,7 @@ internal static class MemberFinder
     [Pure]
     static bool HasMember(
         this IClrTypeName clrTypeName,
-        Func<ITypeElement, IEnumerable<IFunction>> getMembers,
+        Func<ITypeElement, IEnumerable<IParametersOwner>> getMembers,
         IReadOnlyList<ParameterType> parameterTypes,
         bool returnParameterNames,
         out string[] parameterNames,
@@ -26,7 +26,7 @@ internal static class MemberFinder
                     return true;
                 }
 
-                var continueWithNextConstructor = false;
+                var continueWithNextMember = false;
 
                 if (returnParameterNames)
                 {
@@ -44,11 +44,11 @@ internal static class MemberFinder
                         continue;
                     }
 
-                    continueWithNextConstructor = true;
+                    continueWithNextMember = true;
                     break;
                 }
 
-                if (continueWithNextConstructor)
+                if (continueWithNextMember)
                 {
                     parameterNames = [];
                     continue;
@@ -82,6 +82,20 @@ internal static class MemberFinder
     [Pure]
     public static bool HasConstructor(this IClrTypeName clrTypeName, ConstructorSignature signature, IPsiModule psiModule)
         => clrTypeName.HasConstructor(signature, false, out _, psiModule);
+
+    [Pure]
+    public static bool HasProperty(this IClrTypeName clrTypeName, PropertySignature signature, IPsiModule psiModule)
+        => clrTypeName.HasMember(
+            typeElement =>
+                from property in typeElement.Properties
+                where property is { AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC }
+                    && property.IsStatic == signature.IsStatic
+                    && property.ShortName == signature.Name
+                select property,
+            [],
+            false,
+            out _,
+            psiModule);
 
     [Pure]
     public static bool HasMethod(

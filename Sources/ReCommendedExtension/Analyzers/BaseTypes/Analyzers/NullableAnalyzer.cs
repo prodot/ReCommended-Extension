@@ -17,29 +17,13 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     ])]
 public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpression>
 {
-    [Pure]
-    static bool IsPropertyAssignment(IReferenceExpression referenceExpression)
-        => referenceExpression.Parent switch
-        {
-            // direct property assignment
-            IAssignmentExpression assignmentExpression when assignmentExpression.Dest == referenceExpression => true,
-
-            // tuple component assignment
-            ITupleComponent
-            {
-                Parent: ITupleComponentList { Parent: ITupleExpression { Parent: IAssignmentExpression assignmentExpression } tupleExpression },
-            } when assignmentExpression.Dest == tupleExpression => true,
-
-            _ => false,
-        };
-
     /// <remarks>
     /// <c>nullable.HasValue</c> → <c>nullable is { }</c> (C# 7) or <c>nullable is not null</c> (C# 9) or <c>nullable != null</c><para/>
     /// <c>nullable.HasValue</c> → <c>nullable is { }</c> (C# 7) or <c>nullable is (_, _, ...)</c> (C# 8) or <c>nullable is not null</c> (C# 9) or <c>nullable != null</c>
     /// </remarks>
     static void AnalyzeHasValue(IHighlightingConsumer consumer, IReferenceExpression referenceExpression)
     {
-        if (!IsPropertyAssignment(referenceExpression))
+        if (!referenceExpression.IsPropertyAssignment())
         {
             consumer.AddHighlighting(new UseNullableHasValueAlternativeSuggestion("Use pattern or null check.", referenceExpression));
         }
@@ -52,7 +36,7 @@ public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpressi
     {
         Debug.Assert(referenceExpression.QualifierExpression is { });
 
-        if (!IsPropertyAssignment(referenceExpression) && !referenceExpression.QualifierExpression.Type().Unlift().IsValueTuple(out _))
+        if (!referenceExpression.IsPropertyAssignment() && !referenceExpression.QualifierExpression.Type().Unlift().IsValueTuple(out _))
         {
             consumer.AddHighlighting(new ReplaceNullableValueWithTypeCastSuggestion("Use type cast.", referenceExpression));
         }

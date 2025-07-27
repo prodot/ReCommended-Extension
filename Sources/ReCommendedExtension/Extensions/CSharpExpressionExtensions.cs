@@ -113,6 +113,20 @@ internal static class CSharpExpressionExtensions
                 : null;
 
     [Pure]
+    public static DateTimeKind? TryGetDateTimeKindConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(ClrTypeNames.DateTimeKind)
+                ? (DateTimeKind)constantValue.IntValue
+                : null;
+
+    [Pure]
+    public static DateTimeStyles? TryGetDateTimeStylesConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsClrType(ClrTypeNames.DateTimeStyles)
+                ? (DateTimeStyles)constantValue.IntValue
+                : null;
+
+    [Pure]
     public static bool AreParenthesesRedundant(this IParenthesizedExpression parenthesizedExpression)
         => CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(parenthesizedExpression, LanguageManager.Instance, null) is
         {

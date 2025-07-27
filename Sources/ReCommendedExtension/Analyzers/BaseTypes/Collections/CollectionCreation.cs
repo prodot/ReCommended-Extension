@@ -71,6 +71,7 @@ internal abstract class CollectionCreation
         };
 
     IReadOnlyList<string?>? stringConstants;
+    bool? allElementsAreStringConstants;
 
     protected abstract IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions { get; }
 
@@ -101,13 +102,44 @@ internal abstract class CollectionCreation
     {
         get
         {
+            var allElementsAreStringConstants = true;
+
             foreach (var (element, expression) in ElementsWithExpressions)
             {
                 if (expression.TryGetStringConstant() is { } stringConstant)
                 {
                     yield return (element, stringConstant);
                 }
+                else
+                {
+                    allElementsAreStringConstants = false;
+                }
             }
+
+            this.allElementsAreStringConstants = allElementsAreStringConstants;
+        }
+    }
+
+    public bool AllElementsAreStringConstants
+    {
+        get
+        {
+            if (this.allElementsAreStringConstants is not { } allElementsAreStringConstants)
+            {
+                allElementsAreStringConstants = true;
+
+                foreach (var (_, expression) in ElementsWithExpressions)
+                {
+                    if (expression.TryGetStringConstant() == null)
+                    {
+                        allElementsAreStringConstants = false;
+                    }
+                }
+
+                this.allElementsAreStringConstants = allElementsAreStringConstants;
+            }
+
+            return allElementsAreStringConstants;
         }
     }
 

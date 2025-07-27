@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DateTimes
+    {
+        public void ParseExact(string s, string format, IFormatProvider provider)
+        {
+            var result = DateTime.ParseExact(s, format, provider, DateTime{caret}Styles.None);
+        }
+    }
+}
