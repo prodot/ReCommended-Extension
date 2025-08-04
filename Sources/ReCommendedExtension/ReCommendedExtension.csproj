@@ -12,6 +12,8 @@
 
         <FileVersion>7.0.11</FileVersion>
         <Version>$(FileVersion).0</Version>
+
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='DebugReSharper'">
