@@ -1,0 +1,17 @@
+﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.TestFramework;
+using NUnit.Framework;
+using ReCommendedExtension.Analyzers.BaseTypes;
+
+namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.DateTimeOffset;
+
+[TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+public sealed class RemoveElementQuickFixTests : QuickFixTestBase<RemoveElementFix>
+{
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTimeOffset\QuickFixes";
+
+    [Test]
+    public void TestParseExact_RedundantElement() => DoNamedTest2();
+}

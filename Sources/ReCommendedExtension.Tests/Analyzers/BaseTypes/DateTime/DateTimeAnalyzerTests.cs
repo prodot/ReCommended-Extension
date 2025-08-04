@@ -40,7 +40,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     [TestNet80]
     public void Test_Constructors()
     {
-        var calendar = new GregorianCalendar();
+        var calendars = new Calendar[] { new GregorianCalendar(), new JulianCalendar(), new JapaneseCalendar() };
 
         Test(() => new System.DateTime(0), () => System.DateTime.MinValue);
 
@@ -68,8 +68,10 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
             dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second));
 
         Test(
-            dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, calendar),
-            dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, calendar));
+            (dateTime, calendar) => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, calendar),
+            (dateTime, calendar) => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, calendar),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            calendars);
 
         Test(
             dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, 0),
@@ -113,7 +115,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Kind));
 
         Test(
-            dateTime => new System.DateTime(
+            (dateTime, calendar) => new System.DateTime(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -122,10 +124,19 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Second,
                 0,
                 calendar),
-            dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, calendar));
+            (dateTime, calendar) => new System.DateTime(
+                dateTime.Year,
+                dateTime.Month,
+                dateTime.Day,
+                dateTime.Hour,
+                dateTime.Minute,
+                dateTime.Second,
+                calendar),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            calendars);
 
         Test(
-            dateTime => new System.DateTime(
+            (dateTime, calendar) => new System.DateTime(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -135,7 +146,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Millisecond,
                 calendar,
                 DateTimeKind.Unspecified),
-            dateTime => new System.DateTime(
+            (dateTime, calendar) => new System.DateTime(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -143,7 +154,9 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Minute,
                 dateTime.Second,
                 dateTime.Millisecond,
-                calendar));
+                calendar),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            calendars);
 
         Test(
             dateTime => MissingDateTimeMembers._Ctor(
@@ -187,7 +200,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Kind));
 
         Test(
-            dateTime => MissingDateTimeMembers._Ctor(
+            (dateTime, calendar) => MissingDateTimeMembers._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -197,7 +210,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Millisecond,
                 0,
                 calendar),
-            dateTime => new System.DateTime(
+            (dateTime, calendar) => new System.DateTime(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -205,10 +218,12 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Minute,
                 dateTime.Second,
                 dateTime.Millisecond,
-                calendar));
+                calendar),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            calendars);
 
         Test(
-            dateTime => MissingDateTimeMembers._Ctor(
+            (dateTime, calendar) => MissingDateTimeMembers._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -219,7 +234,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.GetMicrosecond(),
                 calendar,
                 DateTimeKind.Unspecified),
-            dateTime => MissingDateTimeMembers._Ctor(
+            (dateTime, calendar) => MissingDateTimeMembers._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -228,9 +243,11 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Second,
                 dateTime.Millisecond,
                 dateTime.GetMicrosecond(),
-                calendar));
+                calendar),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            calendars);
         Test(
-            dateTime => MissingDateTimeMembers._Ctor(
+            (dateTime, calendar) => MissingDateTimeMembers._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -241,7 +258,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 0,
                 calendar,
                 dateTime.Kind),
-            dateTime => new System.DateTime(
+            (dateTime, calendar) => new System.DateTime(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -250,7 +267,9 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
                 dateTime.Second,
                 dateTime.Millisecond,
                 calendar,
-                dateTime.Kind));
+                dateTime.Kind),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            calendars);
 
         DoNamedTest2();
     }

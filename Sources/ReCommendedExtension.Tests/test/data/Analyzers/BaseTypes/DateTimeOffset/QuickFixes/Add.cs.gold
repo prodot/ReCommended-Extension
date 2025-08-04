@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class DateTimeOffsets
+    {
+        public void Operator(DateTimeOffset dateTimeOffset, TimeSpan timeSpan)
+        {
+            var result = dateTimeOffset + {caret}timeSpan;
+        }
+    }
+}

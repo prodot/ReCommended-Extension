@@ -93,7 +93,7 @@ internal static class MissingDateTimeMembers
         => DateTime.Parse(s.ToString(), DateTimeFormatInfo.GetInstance(provider), styles);
 
     [Pure]
-    public static DateTime ParseExact(ReadOnlySpan<char> s, string[] formats, IFormatProvider? provider, DateTimeStyles style)
+    public static DateTime ParseExact(ReadOnlySpan<char> s, string[] formats, IFormatProvider? provider, DateTimeStyles style = DateTimeStyles.None)
         => DateTime.ParseExact(s.ToString(), formats, provider, style);
 
     [Pure]

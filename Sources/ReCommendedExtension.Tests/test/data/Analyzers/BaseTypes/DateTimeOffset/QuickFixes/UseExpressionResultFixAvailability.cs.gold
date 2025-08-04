@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Test
+{
+    public class DateTimeOffsets
+    {
+        public void Equals(DateTimeOffset dateTimeOffset)
+        {
+            var result = |dateTimeOffset.Equals(null)|(0);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

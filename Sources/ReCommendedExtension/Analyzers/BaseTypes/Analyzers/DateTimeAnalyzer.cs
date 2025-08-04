@@ -927,7 +927,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     }
 
     /// <remarks>
-    /// <c>dateTime.Subtract(timeSpan)</c> → <c>dateTime - timeSpan</c>
+    /// <c>dateTime.Subtract(value)</c> → <c>dateTime - value</c>
     /// </remarks>
     static void AnalyzeSubtract_DateTime(
         IHighlightingConsumer consumer,
