@@ -1,4 +1,4 @@
-import com.jetbrains.plugin.structure.base.utils.isFile
+﻿import com.jetbrains.plugin.structure.base.utils.isFile
 import groovy.ant.FileNameFinder
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.intellij.platform.gradle.Constants
@@ -155,15 +155,19 @@ tasks.runIde {
     maxHeapSize = "1500m"
 }
 
-//tasks.patchPluginXml {
-//    // TODO: See also org.jetbrains.changelog: https://github.com/JetBrains/gradle-changelog-plugin
-//    val changelogText = file("${rootDir}/CHANGELOG.md").readText()
-//    val changelogMatches = Regex("(?s)(-.+?)(?=##|\$)").findAll(changelogText)
-//
-//    changeNotes.set(changelogMatches.map {
-//        it.groups[1]!!.value.replace("(?s)\r?\n".toRegex(), "<br />\n")
-//    }.take(1).joinToString())
-//}
+tasks.patchPluginXml {
+    // TODO: See also org.jetbrains.changelog: https://github.com/JetBrains/gradle-changelog-plugin
+    //val changelogText = file("${rootDir}/CHANGELOG.md").readText()
+    //val changelogMatches = Regex("(?s)(-.+?)(?=##|\$)").findAll(changelogText)
+    //
+    //changeNotes.set(changelogMatches.map {
+    //    it.groups[1]!!.value.replace("(?s)\r?\n".toRegex(), "<br />\n")
+    //}.take(1).joinToString())
+
+    val sinceBuildValue = sinceBuild.get()
+    val majorVersion = Regex("""^(\d+)\.""").find(sinceBuildValue)?.groupValues?.get(1)
+    untilBuild.set("$majorVersion.*")
+}
 
 //tasks.prepareSandbox {
 //    dependsOn(compileDotNet)
