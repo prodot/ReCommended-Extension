@@ -36,6 +36,31 @@ namespace Test
             var result53 = DateTimeOffset.ParseExact(input1, new[] { "o", "r", "s", "u" }, |formatProvider|(22), styles);
             var result54 = DateTimeOffset.ParseExact(input1, new string[] { "o", "r", "s", "u" }, |formatProvider|(23), styles);
         }
+
+        public void TryParseExact(string input, ReadOnlySpan<char> input1, string format, IFormatProvider formatProvider, DateTimeStyles styles, out DateTimeOffset result)
+        {
+            var result11 = DateTimeOffset.TryParseExact(input, "o", |formatProvider|(24), styles, out result);
+            var result12 = DateTimeOffset.TryParseExact(input, "O", |formatProvider|(25), styles, out result);
+            var result13 = DateTimeOffset.TryParseExact(input, "r", |formatProvider|(26), styles, out result);
+            var result14 = DateTimeOffset.TryParseExact(input, "R", |formatProvider|(27), styles, out result);
+            var result15 = DateTimeOffset.TryParseExact(input, "s", |formatProvider|(28), styles, out result);
+            var result16 = DateTimeOffset.TryParseExact(input, "u", |formatProvider|(29), styles, out result);
+
+            var result21 = DateTimeOffset.TryParseExact(input, |[format]|(30), formatProvider, styles, out result);
+            var result22 = DateTimeOffset.TryParseExact(input, |(string[])[format]|(31), formatProvider, styles, out result);
+            var result23 = DateTimeOffset.TryParseExact(input, |new[] { format }|(32), formatProvider, styles, out result);
+            var result24 = DateTimeOffset.TryParseExact(input, |new string[] { format }|(33), formatProvider, styles, out result);
+
+            var result31 = DateTimeOffset.TryParseExact(input, ["o", "r", "s", "u"], |formatProvider|(34), styles, out result);
+            var result32 = DateTimeOffset.TryParseExact(input, (string[])["o", "r", "s", "u"], |formatProvider|(35), styles, out result);
+            var result33 = DateTimeOffset.TryParseExact(input, new[] { "o", "r", "s", "u" }, |formatProvider|(36), styles, out result);
+            var result34 = DateTimeOffset.TryParseExact(input, new string[] { "o", "r", "s", "u" }, |formatProvider|(37), styles, out result);
+
+            var result41 = DateTimeOffset.TryParseExact(input1, ["o", "r", "s", "u"], |formatProvider|(38), styles, out result);
+            var result42 = DateTimeOffset.TryParseExact(input1, (string[])["o", "r", "s", "u"], |formatProvider|(39), styles, out result);
+            var result43 = DateTimeOffset.TryParseExact(input1, new[] { "o", "r", "s", "u" }, |formatProvider|(40), styles, out result);
+            var result44 = DateTimeOffset.TryParseExact(input1, new string[] { "o", "r", "s", "u" }, |formatProvider|(41), styles, out result);
+        }
     }
 }
 ------------------------------------------------
@@ -109,5 +134,59 @@ Replace with 'null'
 QUICKFIXES:
 Replace with 'null'
 23: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+24: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+25: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+26: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+27: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+28: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+29: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+30: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+31: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+32: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+33: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+34: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+35: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+36: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+37: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+38: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+39: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+40: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+41: The format provider is ignored (pass null instead).
 QUICKFIXES:
 Replace with 'null'

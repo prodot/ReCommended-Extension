@@ -36,5 +36,30 @@ namespace Test
             var result53 = DateTimeOffset.ParseExact(input1, new[] { "o", "r", "s", "u" }, formatProvider, styles);
             var result54 = DateTimeOffset.ParseExact(input1, new string[] { "o", "r", "s", "u" }, formatProvider, styles);
         }
+
+        public void TryParseExact(string input, ReadOnlySpan<char> input1, string format, IFormatProvider formatProvider, DateTimeStyles styles, out DateTimeOffset result)
+        {
+            var result11 = DateTimeOffset.TryParseExact(input, "o", formatProvider, styles, out result);
+            var result12 = DateTimeOffset.TryParseExact(input, "O", formatProvider, styles, out result);
+            var result13 = DateTimeOffset.TryParseExact(input, "r", formatProvider, styles, out result);
+            var result14 = DateTimeOffset.TryParseExact(input, "R", formatProvider, styles, out result);
+            var result15 = DateTimeOffset.TryParseExact(input, "s", formatProvider, styles, out result);
+            var result16 = DateTimeOffset.TryParseExact(input, "u", formatProvider, styles, out result);
+
+            var result21 = DateTimeOffset.TryParseExact(input, [format], formatProvider, styles, out result);
+            var result22 = DateTimeOffset.TryParseExact(input, (string[])[format], formatProvider, styles, out result);
+            var result23 = DateTimeOffset.TryParseExact(input, new[] { format }, formatProvider, styles, out result);
+            var result24 = DateTimeOffset.TryParseExact(input, new string[] { format }, formatProvider, styles, out result);
+
+            var result31 = DateTimeOffset.TryParseExact(input, ["o", "r", "s", "u"], formatProvider, styles, out result);
+            var result32 = DateTimeOffset.TryParseExact(input, (string[])["o", "r", "s", "u"], formatProvider, styles, out result);
+            var result33 = DateTimeOffset.TryParseExact(input, new[] { "o", "r", "s", "u" }, formatProvider, styles, out result);
+            var result34 = DateTimeOffset.TryParseExact(input, new string[] { "o", "r", "s", "u" }, formatProvider, styles, out result);
+
+            var result41 = DateTimeOffset.TryParseExact(input1, ["o", "r", "s", "u"], formatProvider, styles, out result);
+            var result42 = DateTimeOffset.TryParseExact(input1, (string[])["o", "r", "s", "u"], formatProvider, styles, out result);
+            var result43 = DateTimeOffset.TryParseExact(input1, new[] { "o", "r", "s", "u" }, formatProvider, styles, out result);
+            var result44 = DateTimeOffset.TryParseExact(input1, new string[] { "o", "r", "s", "u" }, formatProvider, styles, out result);
+        }
     }
 }

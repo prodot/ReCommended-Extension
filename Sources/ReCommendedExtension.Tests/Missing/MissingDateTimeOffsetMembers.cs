@@ -69,4 +69,13 @@ internal static class MissingDateTimeOffsetMembers
     [Pure]
     public static bool TryParse(ReadOnlySpan<char> input, IFormatProvider? formatProvider, DateTimeStyles styles, out DateTimeOffset result)
         => DateTimeOffset.TryParse(input.ToString(), formatProvider, styles, out result);
+
+    [Pure]
+    public static bool TryParseExact(
+        ReadOnlySpan<char> input,
+        [NotNullWhen(true)] string?[]? formats,
+        IFormatProvider? formatProvider,
+        DateTimeStyles styles,
+        out DateTimeOffset result)
+        => DateTimeOffset.TryParseExact(input.ToString(), formats, formatProvider, styles, out result);
 }

@@ -7,11 +7,14 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.DateTime;
 
 [TestFixture]
-[CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 public sealed class UseOtherArgumentFixTests : QuickFixTestBase<UseOtherArgumentFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTime\QuickFixes";
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     public void TestParseExact_Single_Named() => DoNamedTest2();
+
+    [Test]
+    public void TestTryParseExact() => DoNamedTest2();
 }

@@ -515,4 +515,101 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
         DoNamedTest2();
     }
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNetCore21]
+    public void TestTryParseExact()
+    {
+        var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y" };
+        var invariantFormats = new[] { "o", "O", "r", "R", "s", "u" };
+        var styles = new[]
+        {
+            DateTimeStyles.None,
+            DateTimeStyles.AllowInnerWhite
+            | DateTimeStyles.AllowLeadingWhite
+            | DateTimeStyles.AllowTrailingWhite
+            | DateTimeStyles.AllowWhiteSpaces,
+            DateTimeStyles.AssumeLocal,
+            DateTimeStyles.AssumeUniversal,
+            DateTimeStyles.AdjustToUniversal,
+        };
+
+        Test(
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), format, provider, style, out result),
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), format, null, style, out result),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            invariantFormats,
+            FormatProviders,
+            styles);
+        Test(
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), [format], provider, style, out result),
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), format, provider, style, out result),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            formats,
+            FormatProviders,
+            styles);
+        Test(
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => System.DateTime.TryParseExact(
+                    dateTime.ToString(format, provider),
+                    ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"],
+                    provider,
+                    style,
+                    out result),
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => System.DateTime.TryParseExact(
+                    dateTime.ToString(format, provider),
+                    ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"],
+                    provider,
+                    style,
+                    out result),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            formats,
+            FormatProviders,
+            styles);
+        Test(
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), invariantFormats, provider, style, out result),
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), invariantFormats, null, style, out result),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            formats,
+            FormatProviders,
+            styles);
+        Test(
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => MissingDateTimeMembers.TryParseExact(
+                    dateTime.ToString(format, provider).AsSpan(),
+                    ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"],
+                    provider,
+                    style,
+                    out result),
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => MissingDateTimeMembers.TryParseExact(
+                    dateTime.ToString(format, provider).AsSpan(),
+                    ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"],
+                    provider,
+                    style,
+                    out result),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            formats,
+            FormatProviders,
+            styles);
+        Test(
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => MissingDateTimeMembers.TryParseExact(dateTime.ToString(format, provider).AsSpan(), invariantFormats, provider, style, out result),
+            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
+                => MissingDateTimeMembers.TryParseExact(dateTime.ToString(format, provider).AsSpan(), invariantFormats, null, style, out result),
+            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
+            formats,
+            FormatProviders,
+            styles);
+
+        DoNamedTest2();
+    }
 }

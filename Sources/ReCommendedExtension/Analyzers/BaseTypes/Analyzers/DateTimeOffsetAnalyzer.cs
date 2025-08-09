@@ -84,6 +84,15 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
             new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
         ];
 
+        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles_DateTimeOffset { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
+            new() { ClrTypeName = PredefinedType.DATETIMEOFFSET_FQN },
+        ];
+
         public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
         [
             new() { ClrTypeName = PredefinedType.INT_FQN },
@@ -394,7 +403,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     /// <remarks>
     /// <c>DateTimeOffset.ParseExact(input, [format], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, format, formatProvider, styles)</c><para/>
     /// <c>DateTimeOffset.ParseExact(input, ["R", "r"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R"], formatProvider, styles)</c><para/>
-    /// <c>DateTimeOffset.ParseExact(input, ["R", "s"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R"], null, styles)</c>
+    /// <c>DateTimeOffset.ParseExact(input, ["R", "s"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R", "s"], null, styles)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray_IFormatProvider_DateTimeStyles(
         IHighlightingConsumer consumer,
@@ -469,7 +478,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
 
     /// <remarks>
     /// <c>DateTimeOffset.ParseExact(input, ["R", "r"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R"], formatProvider, styles)</c> (.NET Core 2.1)<para/>
-    /// <c>DateTimeOffset.ParseExact(input, ["R", "s"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R"], null, style)</c> (.NET Core 2.1)
+    /// <c>DateTimeOffset.ParseExact(input, ["R", "s"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R", "s"], null, style)</c> (.NET Core 2.1)
     /// </remarks>
     static void AnalyzeParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles(
         IHighlightingConsumer consumer,
@@ -725,6 +734,155 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
         {
             consumer.AddHighlighting(
                 new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", stylesArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateTimeOffset.TryParseExact(input, "R", formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, "R", null, styles, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateTimeOffset(
+        IHighlightingConsumer consumer,
+        ICSharpArgument formatArgument,
+        ICSharpArgument formatProviderArgument)
+    {
+        if (formatArgument.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" or "s" or "u"
+            && !formatProviderArgument.Value.IsDefaultValue()
+            && formatProviderArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The format provider is ignored (pass null instead).",
+                    formatProviderArgument,
+                    formatProviderArgument.NameIdentifier?.Name,
+                    "null"));
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateTimeOffset.TryParseExact(input, [format], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, format, formatProvider, styles, out result)</c><para/>
+    /// <c>DateTimeOffset.TryParseExact(input, ["R", "r"], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, ["R"], formatProvider, styles, out result)</c><para/>
+    /// <c>DateTimeOffset.TryParseExact(input, ["R", "s"], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, ["R", "s"], null, styles, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateTimeOffset(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument formatProviderArgument)
+    {
+        switch (CollectionCreation.TryFrom(formatsArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(DateTime.TryParseExact),
+                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles_DateTimeOffset,
+                    IsStatic = true,
+                },
+                formatsArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The only collection element should be passed directly.",
+                        formatsArgument,
+                        parameterNames is [_, var formatParameterName, _, _, _] ? formatParameterName : null,
+                        collectionCreation.SingleElement.GetText()));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                {
+                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
+                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
+                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
+                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                        continue;
+                    }
+
+                    if (s != "" && !set.Add(s))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                    }
+                }
+
+                if (collectionCreation.AllElementsAreStringConstants)
+                {
+                    set.Remove("o");
+                    set.Remove("O");
+                    set.Remove("r");
+                    set.Remove("R");
+                    set.Remove("s");
+                    set.Remove("u");
+
+                    if (set.Count == 0)
+                    {
+                        consumer.AddHighlighting(
+                            new UseOtherArgumentSuggestion(
+                                "The format provider is ignored (pass null instead).",
+                                formatProviderArgument,
+                                formatProviderArgument.NameIdentifier?.Name,
+                                "null"));
+                    }
+                }
+
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateTimeOffset.TryParseExact(input, ["R", "r"], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, ["R"], formatProvider, styles, out result)</c> (.NET Core 2.1)<para/>
+    /// <c>DateTimeOffset.TryParseExact(input, ["R", "s"], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, ["R", "s"], null, styles, out result)</c> (.NET Core 2.1)
+    /// </remarks>
+    static void AnalyzeTryParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateTimeOffset(
+        IHighlightingConsumer consumer,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument formatProviderArgument)
+    {
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+        {
+            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            {
+                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
+                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
+                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
+                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                    continue;
+                }
+
+                if (s != "" && !set.Add(s))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                }
+            }
+
+            if (collectionCreation.AllElementsAreStringConstants)
+            {
+                set.Remove("o");
+                set.Remove("O");
+                set.Remove("r");
+                set.Remove("R");
+                set.Remove("s");
+                set.Remove("u");
+
+                if (set.Count == 0)
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherArgumentSuggestion(
+                            "The format provider is ignored (pass null instead).",
+                            formatProviderArgument,
+                            formatProviderArgument.NameIdentifier?.Name,
+                            "null"));
+                }
+            }
         }
     }
 
@@ -1066,6 +1224,70 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                             consumer,
                                             invocationExpression,
                                             stylesArgument);
+                                        break;
+                                }
+                                break;
+
+                            case nameof(DateTimeOffset.TryParseExact):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatArgument, { } formatProviderArgument, _, _])
+                                        when inputType.IsString()
+                                        && formatType.IsString()
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsDateTimeStyles(stylesType)
+                                        && resultType.IsDateTimeOffset():
+
+                                        AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateTimeOffset(
+                                            consumer,
+                                            formatArgument,
+                                            formatProviderArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatsType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatsArgument, { } formatProviderArgument, _, _])
+                                        when inputType.IsString()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsDateTimeStyles(stylesType)
+                                        && resultType.IsDateTimeOffset():
+
+                                        AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateTimeOffset(
+                                            consumer,
+                                            invocationExpression,
+                                            formatsArgument,
+                                            formatProviderArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var inputType },
+                                            { Type: var formatsType },
+                                            { Type: var formatProviderType },
+                                            { Type: var stylesType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatsArgument, { } formatProviderArgument, _, _])
+                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
+                                        && spanTypeArgument.IsChar()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatProviderType.IsIFormatProvider()
+                                        && IsDateTimeStyles(stylesType)
+                                        && resultType.IsDateTimeOffset():
+
+                                        AnalyzeTryParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateTimeOffset(
+                                            consumer,
+                                            formatsArgument,
+                                            formatProviderArgument);
                                         break;
                                 }
                                 break;

@@ -109,6 +109,15 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
             new() { ClrTypeName = ClrTypeNames.Calendar },
         ];
 
+        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles_DateTime { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
+            new() { ClrTypeName = PredefinedType.DATETIME_FQN },
+        ];
+
         public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
             new() { ClrTypeName = PredefinedType.INT_FQN },
@@ -801,7 +810,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     /// <remarks>
     /// <c>DateTime.ParseExact(s, [format], provider, style)</c> → <c>DateTime.ParseExact(s, format, provider, style)</c><para/>
     /// <c>DateTime.ParseExact(s, ["R", "r"], provider, style)</c> → <c>DateTime.ParseExact(s, ["R"], provider, style)</c><para/>
-    /// <c>DateTime.ParseExact(s, ["R", "s"], provider, style)</c> → <c>DateTime.ParseExact(s, ["R"], null, style)</c>
+    /// <c>DateTime.ParseExact(s, ["R", "s"], provider, style)</c> → <c>DateTime.ParseExact(s, ["R", "s"], null, style)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray_IFormatProvider_DateTimeStyles(
         IHighlightingConsumer consumer,
@@ -876,7 +885,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
     /// <remarks>
     /// <c>DateTime.ParseExact(s, ["R", "r"], provider, style)</c> → <c>DateTime.ParseExact(s, ["R"], provider, style)</c> (.NET Core 2.1)<para/>
-    /// <c>DateTime.ParseExact(s, ["R", "s"], provider, style)</c> → <c>DateTime.ParseExact(s, ["R"], null, style)</c> (.NET Core 2.1)
+    /// <c>DateTime.ParseExact(s, ["R", "s"], provider, style)</c> → <c>DateTime.ParseExact(s, ["R", "s"], null, style)</c> (.NET Core 2.1)
     /// </remarks>
     static void AnalyzeParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles(
         IHighlightingConsumer consumer,
@@ -1124,6 +1133,155 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         {
             consumer.AddHighlighting(
                 new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", stylesArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateTime.TryParseExact(s, "R", provider, style, out result)</c> → <c>DateTime.TryParseExact(s, "R", null, style, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateTime(
+        IHighlightingConsumer consumer,
+        ICSharpArgument formatArgument,
+        ICSharpArgument providerArgument)
+    {
+        if (formatArgument.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" or "s" or "u"
+            && !providerArgument.Value.IsDefaultValue()
+            && providerArgument.Value is { })
+        {
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The format provider is ignored (pass null instead).",
+                    providerArgument,
+                    providerArgument.NameIdentifier?.Name,
+                    "null"));
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateTime.TryParseExact(s, [format], provider, style, out result)</c> → <c>DateTime.TryParseExact(s, format, provider, style, out result)</c><para/>
+    /// <c>DateTime.TryParseExact(s, ["R", "r"], provider, style, out result)</c> → <c>DateTime.TryParseExact(s, ["R"], provider, style, out result)</c><para/>
+    /// <c>DateTime.TryParseExact(s, ["R", "s"], provider, style, out result)</c> → <c>DateTime.TryParseExact(s, ["R", "s"], null, style, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateTime(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument providerArgument)
+    {
+        switch (CollectionCreation.TryFrom(formatsArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when PredefinedType.DATETIME_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(DateTime.TryParseExact),
+                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles_DateTime,
+                    IsStatic = true,
+                },
+                formatsArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The only collection element should be passed directly.",
+                        formatsArgument,
+                        parameterNames is [_, var formatParameterName, _, _, _] ? formatParameterName : null,
+                        collectionCreation.SingleElement.GetText()));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                {
+                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
+                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
+                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
+                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                        continue;
+                    }
+
+                    if (s != "" && !set.Add(s))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                    }
+                }
+
+                if (collectionCreation.AllElementsAreStringConstants)
+                {
+                    set.Remove("o");
+                    set.Remove("O");
+                    set.Remove("r");
+                    set.Remove("R");
+                    set.Remove("s");
+                    set.Remove("u");
+
+                    if (set.Count == 0)
+                    {
+                        consumer.AddHighlighting(
+                            new UseOtherArgumentSuggestion(
+                                "The format provider is ignored (pass null instead).",
+                                providerArgument,
+                                providerArgument.NameIdentifier?.Name,
+                                "null"));
+                    }
+                }
+
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateTime.TryParseExact(s, ["R", "r"], provider, style, out result)</c> → <c>DateTime.TryParseExact(s, ["R"], provider, style, out result)</c> (.NET Core 2.1)<para/>
+    /// <c>DateTime.TryParseExact(s, ["R", "s"], provider, style, out result)</c> → <c>DateTime.TryParseExact(s, ["R", "s"], null, style, out result)</c> (.NET Core 2.1)
+    /// </remarks>
+    static void AnalyzeTryParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateTime(
+        IHighlightingConsumer consumer,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument providerArgument)
+    {
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+        {
+            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            {
+                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
+                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
+                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
+                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                    continue;
+                }
+
+                if (s != "" && !set.Add(s))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                }
+            }
+
+            if (collectionCreation.AllElementsAreStringConstants)
+            {
+                set.Remove("o");
+                set.Remove("O");
+                set.Remove("r");
+                set.Remove("R");
+                set.Remove("s");
+                set.Remove("u");
+
+                if (set.Count == 0)
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherArgumentSuggestion(
+                            "The format provider is ignored (pass null instead).",
+                            providerArgument,
+                            providerArgument.NameIdentifier?.Name,
+                            "null"));
+                }
+            }
         }
     }
 
@@ -1661,6 +1819,70 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                             consumer,
                                             invocationExpression,
                                             stylesArgument);
+                                        break;
+                                }
+                                break;
+
+                            case nameof(DateTime.TryParseExact):
+                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
+                                {
+                                    case ([
+                                            { Type: var sType },
+                                            { Type: var formatType },
+                                            { Type: var providerType },
+                                            { Type: var styleType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatArgument, { } providerArgument, _, _])
+                                        when sType.IsString()
+                                        && formatType.IsString()
+                                        && providerType.IsIFormatProvider()
+                                        && IsDateTimeStyles(styleType)
+                                        && resultType.IsDateTime():
+
+                                        AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateTime(
+                                            consumer,
+                                            formatArgument,
+                                            providerArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var sType },
+                                            { Type: var formatsType },
+                                            { Type: var providerType },
+                                            { Type: var styleType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatsArgument, { } providerArgument, _, _])
+                                        when sType.IsString()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && providerType.IsIFormatProvider()
+                                        && IsDateTimeStyles(styleType)
+                                        && resultType.IsDateTime():
+
+                                        AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateTime(
+                                            consumer,
+                                            invocationExpression,
+                                            formatsArgument,
+                                            providerArgument);
+                                        break;
+
+                                    case ([
+                                            { Type: var sType },
+                                            { Type: var formatsType },
+                                            { Type: var providerType },
+                                            { Type: var styleType },
+                                            { Type: var resultType },
+                                        ], [_, { } formatsArgument, { } providerArgument, _, _])
+                                        when sType.IsReadOnlySpan(out var spanTypeArgument)
+                                        && spanTypeArgument.IsChar()
+                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && providerType.IsIFormatProvider()
+                                        && IsDateTimeStyles(styleType)
+                                        && resultType.IsDateTime():
+
+                                        AnalyzeTryParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateTime(
+                                            consumer,
+                                            formatsArgument,
+                                            providerArgument);
                                         break;
                                 }
                                 break;

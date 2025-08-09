@@ -110,4 +110,13 @@ internal static class MissingDateTimeMembers
 
     [Pure]
     public static bool TryParse(ReadOnlySpan<char> s, out DateTime result) => DateTime.TryParse(s.ToString(), out result);
+
+    [Pure]
+    public static bool TryParseExact(
+        ReadOnlySpan<char> s,
+        [NotNullWhen(true)] string?[]? formats,
+        IFormatProvider? provider,
+        DateTimeStyles style,
+        out DateTime result)
+        => DateTime.TryParseExact(s.ToString(), formats, provider, style, out result);
 }
