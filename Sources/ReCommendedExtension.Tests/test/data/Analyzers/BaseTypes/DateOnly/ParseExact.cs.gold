@@ -1,0 +1,166 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DatesOnly
+    {
+        public void RedundantArgumentRange(string s, ReadOnlySpan<char> s1, string format, string[] formats)
+        {
+            var result1 = DateOnly.ParseExact(s, format, |null, DateTimeStyles.None|(0));
+            var result2 = DateOnly.ParseExact(s, formats, |null, DateTimeStyles.None|(1));
+            var result3 = DateOnly.ParseExact(s1, formats, |null, DateTimeStyles.None|(2));
+        }
+
+        public void RedundantArgument(string s, ReadOnlySpan<char> s1, string format, string[] formats)
+        {
+            var result1 = DateOnly.ParseExact(s, format, |null|(3));
+            var result2 = DateOnly.ParseExact(s, formats, |null|(4));
+            var result3 = DateOnly.ParseExact(s1, formats, |null|(5));
+        }
+
+        public void OtherArgument(string s, string format, IFormatProvider provider, DateTimeStyles style)
+        {
+            var result11 = DateOnly.ParseExact(s, "R", |provider|(6), style);
+            var result12 = DateOnly.ParseExact(s, "R", |provider|(7));
+
+            var result21 = DateOnly.ParseExact(s, |[format]|(8));
+
+            var result31 = DateOnly.ParseExact(s, |[format]|(9), provider, style);
+            var result32 = DateOnly.ParseExact(s, ["o", "r"], |provider|(10), style);
+        }
+
+        public void RedundantElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style)
+        {
+            var result11 = DateOnly.ParseExact(s, ["d", |"d"|(11), "D", "m", |"M"|(12), "o", |"O"|(13), "r", |"R"|(14), "y", |"Y"|(15)]);
+            var result12 = DateOnly.ParseExact(s, (string[])["d", |"d"|(16), "D", "m", |"M"|(17), "o", |"O"|(18), "r", |"R"|(19), "y", |"Y"|(20)]);
+            var result13 = DateOnly.ParseExact(s, new[] { "d", |"d"|(21), "D", "m", |"M"|(22), "o", |"O"|(23), "r", |"R"|(24), "y", |"Y"|(25) });
+            var result14 = DateOnly.ParseExact(s, new string[] { "d", |"d"|(26), "D", "m", |"M"|(27), "o", |"O"|(28), "r", |"R"|(29), "y", |"Y"|(30) });
+
+            var result21 = DateOnly.ParseExact(s, ["d", |"d"|(31), "D", "m", |"M"|(32), "o", |"O"|(33), "r", |"R"|(34), "y", |"Y"|(35)], provider, style);
+            var result22 = DateOnly.ParseExact(s, (string[])["d", |"d"|(36), "D", "m", |"M"|(37), "o", |"O"|(38), "r", |"R"|(39), "y", |"Y"|(40)], provider, style);
+            var result23 = DateOnly.ParseExact(s, new[] { "d", |"d"|(41), "D", "m", |"M"|(42), "o", |"O"|(43), "r", |"R"|(44), "y", |"Y"|(45) }, provider, style);
+            var result24 = DateOnly.ParseExact(s, new string[] { "d", |"d"|(46), "D", "m", |"M"|(47), "o", |"O"|(48), "r", |"R"|(49), "y", |"Y"|(50) }, provider, style);
+
+            var result31 = DateOnly.ParseExact(s1, ["d", |"d"|(51), "D", "m", |"M"|(52), "o", |"O"|(53), "r", |"R"|(54), "y", |"Y"|(55)]);
+            var result32 = DateOnly.ParseExact(s1, (string[])["d", |"d"|(56), "D", "m", |"M"|(57), "o", |"O"|(58), "r", |"R"|(59), "y", |"Y"|(60)]);
+            var result33 = DateOnly.ParseExact(s1, new[] { "d", |"d"|(61), "D", "m", |"M"|(62), "o", |"O"|(63), "r", |"R"|(64), "y", |"Y"|(65) });
+            var result34 = DateOnly.ParseExact(s1, new string[] { "d", |"d"|(66), "D", "m", |"M"|(67), "o", |"O"|(68), "r", |"R"|(69), "y", |"Y"|(70) });
+
+            var result41 = DateOnly.ParseExact(s1, ["d", |"d"|(71), "D", "m", |"M"|(72), "o", |"O"|(73), "r", |"R"|(74), "y", |"Y"|(75)], provider, style);
+            var result42 = DateOnly.ParseExact(s1, (string[])["d", |"d"|(76), "D", "m", |"M"|(77), "o", |"O"|(78), "r", |"R"|(79), "y", |"Y"|(80)], provider, style);
+            var result43 = DateOnly.ParseExact(s1, new[] { "d", |"d"|(81), "D", "m", |"M"|(82), "o", |"O"|(83), "r", |"R"|(84), "y", |"Y"|(85) }, provider, style);
+            var result44 = DateOnly.ParseExact(s1, new string[] { "d", |"d"|(86), "D", "m", |"M"|(87), "o", |"O"|(88), "r", |"R"|(89), "y", |"Y"|(90) }, provider, style);
+        }
+
+        public void NoDetection(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style)
+        {
+            var result11 = DateOnly.ParseExact(s, format, provider, style);
+            var result12 = DateOnly.ParseExact(s, format, provider);
+
+            var result21 = DateOnly.ParseExact(s, [format, format]);
+            var result22 = DateOnly.ParseExact(s, ["d", "D", "m", "o", "r", "y"]);
+
+            var result31 = DateOnly.ParseExact(s, [format, format], provider, style);
+            var result32 = DateOnly.ParseExact(s, ["d", "D", "m", "o", "r", "y"], provider, style);
+
+            var result41 = DateOnly.ParseExact(s1, [format, format]);
+            var result42 = DateOnly.ParseExact(s1, ["d", "D", "m", "o", "r", "y"]);
+
+            var result51 = DateOnly.ParseExact(s1, [format, format], provider, style);
+            var result52 = DateOnly.ParseExact(s1, ["d", "D", "m", "o", "r", "y"], provider, style);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing 'null, DateTimeStyles.None' is redundant.
+(1): ReSharper Dead Code: Passing 'null, DateTimeStyles.None' is redundant.
+(2): ReSharper Dead Code: Passing 'null, DateTimeStyles.None' is redundant.
+(3): ReSharper Dead Code: Passing null is redundant.
+(4): ReSharper Dead Code: Passing null is redundant.
+(5): ReSharper Dead Code: Passing null is redundant.
+(6): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(7): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(8): ReSharper Suggestion: The only collection element should be passed directly.
+(9): ReSharper Suggestion: The only collection element should be passed directly.
+(10): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(11): ReSharper Dead Code: The string is already passed.
+(12): ReSharper Dead Code: The equivalent string is already passed.
+(13): ReSharper Dead Code: The equivalent string is already passed.
+(14): ReSharper Dead Code: The equivalent string is already passed.
+(15): ReSharper Dead Code: The equivalent string is already passed.
+(16): ReSharper Dead Code: The string is already passed.
+(17): ReSharper Dead Code: The equivalent string is already passed.
+(18): ReSharper Dead Code: The equivalent string is already passed.
+(19): ReSharper Dead Code: The equivalent string is already passed.
+(20): ReSharper Dead Code: The equivalent string is already passed.
+(21): ReSharper Dead Code: The string is already passed.
+(22): ReSharper Dead Code: The equivalent string is already passed.
+(23): ReSharper Dead Code: The equivalent string is already passed.
+(24): ReSharper Dead Code: The equivalent string is already passed.
+(25): ReSharper Dead Code: The equivalent string is already passed.
+(26): ReSharper Dead Code: The string is already passed.
+(27): ReSharper Dead Code: The equivalent string is already passed.
+(28): ReSharper Dead Code: The equivalent string is already passed.
+(29): ReSharper Dead Code: The equivalent string is already passed.
+(30): ReSharper Dead Code: The equivalent string is already passed.
+(31): ReSharper Dead Code: The string is already passed.
+(32): ReSharper Dead Code: The equivalent string is already passed.
+(33): ReSharper Dead Code: The equivalent string is already passed.
+(34): ReSharper Dead Code: The equivalent string is already passed.
+(35): ReSharper Dead Code: The equivalent string is already passed.
+(36): ReSharper Dead Code: The string is already passed.
+(37): ReSharper Dead Code: The equivalent string is already passed.
+(38): ReSharper Dead Code: The equivalent string is already passed.
+(39): ReSharper Dead Code: The equivalent string is already passed.
+(40): ReSharper Dead Code: The equivalent string is already passed.
+(41): ReSharper Dead Code: The string is already passed.
+(42): ReSharper Dead Code: The equivalent string is already passed.
+(43): ReSharper Dead Code: The equivalent string is already passed.
+(44): ReSharper Dead Code: The equivalent string is already passed.
+(45): ReSharper Dead Code: The equivalent string is already passed.
+(46): ReSharper Dead Code: The string is already passed.
+(47): ReSharper Dead Code: The equivalent string is already passed.
+(48): ReSharper Dead Code: The equivalent string is already passed.
+(49): ReSharper Dead Code: The equivalent string is already passed.
+(50): ReSharper Dead Code: The equivalent string is already passed.
+(51): ReSharper Dead Code: The string is already passed.
+(52): ReSharper Dead Code: The equivalent string is already passed.
+(53): ReSharper Dead Code: The equivalent string is already passed.
+(54): ReSharper Dead Code: The equivalent string is already passed.
+(55): ReSharper Dead Code: The equivalent string is already passed.
+(56): ReSharper Dead Code: The string is already passed.
+(57): ReSharper Dead Code: The equivalent string is already passed.
+(58): ReSharper Dead Code: The equivalent string is already passed.
+(59): ReSharper Dead Code: The equivalent string is already passed.
+(60): ReSharper Dead Code: The equivalent string is already passed.
+(61): ReSharper Dead Code: The string is already passed.
+(62): ReSharper Dead Code: The equivalent string is already passed.
+(63): ReSharper Dead Code: The equivalent string is already passed.
+(64): ReSharper Dead Code: The equivalent string is already passed.
+(65): ReSharper Dead Code: The equivalent string is already passed.
+(66): ReSharper Dead Code: The string is already passed.
+(67): ReSharper Dead Code: The equivalent string is already passed.
+(68): ReSharper Dead Code: The equivalent string is already passed.
+(69): ReSharper Dead Code: The equivalent string is already passed.
+(70): ReSharper Dead Code: The equivalent string is already passed.
+(71): ReSharper Dead Code: The string is already passed.
+(72): ReSharper Dead Code: The equivalent string is already passed.
+(73): ReSharper Dead Code: The equivalent string is already passed.
+(74): ReSharper Dead Code: The equivalent string is already passed.
+(75): ReSharper Dead Code: The equivalent string is already passed.
+(76): ReSharper Dead Code: The string is already passed.
+(77): ReSharper Dead Code: The equivalent string is already passed.
+(78): ReSharper Dead Code: The equivalent string is already passed.
+(79): ReSharper Dead Code: The equivalent string is already passed.
+(80): ReSharper Dead Code: The equivalent string is already passed.
+(81): ReSharper Dead Code: The string is already passed.
+(82): ReSharper Dead Code: The equivalent string is already passed.
+(83): ReSharper Dead Code: The equivalent string is already passed.
+(84): ReSharper Dead Code: The equivalent string is already passed.
+(85): ReSharper Dead Code: The equivalent string is already passed.
+(86): ReSharper Dead Code: The string is already passed.
+(87): ReSharper Dead Code: The equivalent string is already passed.
+(88): ReSharper Dead Code: The equivalent string is already passed.
+(89): ReSharper Dead Code: The equivalent string is already passed.
+(90): ReSharper Dead Code: The equivalent string is already passed.

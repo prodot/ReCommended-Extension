@@ -1,0 +1,36 @@
+﻿using System;
+
+namespace Test
+{
+    public class DatesOnly
+    {
+        public void Parse(string s, ReadOnlySpan<char> s1)
+        {
+            var result1 = DateOnly.Parse(s, |null|(0));
+            var result2 = DateOnly.Parse(s1, |null|(1));
+        }
+
+        public void ParseExact(string s, ReadOnlySpan<char> s1, string format, string[] formats)
+        {
+            var result1 = DateOnly.ParseExact(s, format, |null|(2));
+            var result2 = DateOnly.ParseExact(s, formats, |null|(3));
+            var result3 = DateOnly.ParseExact(s1, formats, |null|(4));
+        }
+    }
+}
+------------------------------------------------
+0: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+1: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+2: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+3: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+4: Passing null is redundant.
+QUICKFIXES:
+Remove argument

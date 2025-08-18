@@ -49,8 +49,11 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
         Test(() => new System.DateTime(638_882_119_800_000_000, DateTimeKind.Unspecified), () => new System.DateTime(638_882_119_800_000_000));
 
         Test(
-            dateTime => MissingDateTimeMembers._Ctor(DateOnly.FromDateTime(dateTime), TimeOnly.FromDateTime(dateTime), DateTimeKind.Unspecified),
-            dateTime => MissingDateTimeMembers._Ctor(DateOnly.FromDateTime(dateTime), TimeOnly.FromDateTime(dateTime)));
+            dateTime => MissingDateTimeMembers._Ctor(
+                Missing.DateOnly.FromDateTime(dateTime),
+                TimeOnly.FromDateTime(dateTime),
+                DateTimeKind.Unspecified),
+            dateTime => MissingDateTimeMembers._Ctor(Missing.DateOnly.FromDateTime(dateTime), TimeOnly.FromDateTime(dateTime)));
 
         Test(
             dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0),

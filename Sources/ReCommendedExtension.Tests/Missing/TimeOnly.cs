@@ -2,7 +2,7 @@
 
 namespace ReCommendedExtension.Tests.Missing;
 
-internal readonly record struct TimeOnly
+public readonly record struct TimeOnly
 {
     [Pure]
     public static TimeOnly FromDateTime(DateTime dateTime) => new(dateTime.TimeOfDay);
