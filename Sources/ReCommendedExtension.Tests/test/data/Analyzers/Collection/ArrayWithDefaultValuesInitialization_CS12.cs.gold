@@ -4,63 +4,63 @@ namespace Test
 {
     public class NonGenericClass
     {
-        int[] field_int = ||{|(1) 0, 00, -0, 0x0, 0b0, default, default(int), new int() }|(0);
+        int[] field_int = ||{|(0) 0, 00, -0, 0x0, 0b0, default, default(int), new int() }|(1);
         int[] field_int_ = |{|(2) 0, 1, 2 };
 
-        int?[] field_int_nullable = ||{|(4) null, null as int?, default, default(int?), new int?() }|(3);
+        int?[] field_int_nullable = ||{|(3) null, null as int?, default, default(int?), new int?() }|(4);
         int?[] field_int_nullable_ = |{|(5) null, 0 };
 
-        uint[] field_uint = ||{|(7) 0u, 00u, 0x0u, 0b0u, default, default(uint), new uint() }|(6);
-        uint[] field_uint2 = ||{|(9) 0, 00, 0x0, 0b0, default(int) }|(8);
+        uint[] field_uint = ||{|(6) 0u, 00u, 0x0u, 0b0u, default, default(uint), new uint() }|(7);
+        uint[] field_uint2 = ||{|(8) 0, 00, 0x0, 0b0, default(int) }|(9);
         uint[] field_uint_ = |{|(10) 0, 1, 2 };
 
-        long[] field_long = ||{|(12) 0L, 00L, -0L, 0x0L, 0b0L, default, default(long), new long() }|(11);
-        long[] field_long2 = ||{|(14) 0, 00, -0, 0x0, 0b0, default(int), 0u }|(13);
+        long[] field_long = ||{|(11) 0L, 00L, -0L, 0x0L, 0b0L, default, default(long), new long() }|(12);
+        long[] field_long2 = ||{|(13) 0, 00, -0, 0x0, 0b0, default(int), 0u }|(14);
         long[] field_long_ = |{|(15) 0, 1, 2 };
 
-        ulong[] field_ulong = ||{|(17) 0ul, 00ul, 0x0ul, 0b0ul, default, default(ulong), new ulong() }|(16);
-        ulong[] field_ulong2 = ||{|(19) 0, 00, -0, 0x0, 0b0, default(int), 0L, 0u }|(18);
+        ulong[] field_ulong = ||{|(16) 0ul, 00ul, 0x0ul, 0b0ul, default, default(ulong), new ulong() }|(17);
+        ulong[] field_ulong2 = ||{|(18) 0, 00, -0, 0x0, 0b0, default(int), 0L, 0u }|(19);
         ulong[] field_ulong_ = |{|(20) 0, 1, 2 };
 
-        byte[] field_byte = ||{|(22) 0, 00, 0x0, 0b0, default, default(byte), new byte() }|(21);
+        byte[] field_byte = ||{|(21) 0, 00, 0x0, 0b0, default, default(byte), new byte() }|(22);
         byte[] field_byte_ = |{|(23) 0, 1, 2 };
 
-        sbyte[] field_sbyte = ||{|(25) 0, 00, 0x0, 0b0, default, default(sbyte), new sbyte() }|(24);
+        sbyte[] field_sbyte = ||{|(24) 0, 00, 0x0, 0b0, default, default(sbyte), new sbyte() }|(25);
         sbyte[] field_sbyte_ = |{|(26) 0, 1, 2 };
 
-        short[] field_short = ||{|(28) 0, 00, 0x0, 0b0, default, default(short), new short(), default(byte), default(sbyte) }|(27);
+        short[] field_short = ||{|(27) 0, 00, 0x0, 0b0, default, default(short), new short(), default(byte), default(sbyte) }|(28);
         short[] field_short_ = |{|(29) 0, 1, 2 };
 
-        ushort[] field_ushort = ||{|(31) 0, 00, 0x0, 0b0, default, default(ushort), new ushort(), default(byte) }|(30);
+        ushort[] field_ushort = ||{|(30) 0, 00, 0x0, 0b0, default, default(ushort), new ushort(), default(byte) }|(31);
         ushort[] field_ushort_ = |{|(32) 0, 1, 2 };
 
-        decimal[] field_decimal = ||{|(34) 0m, 00m, -0m, default, default(decimal), new decimal() }|(33);
-        decimal[] field_decimal2 = ||{|(36) 0, 00, 0x0, 0b0, 0u, 0L, 0ul, default(int), default(uint), default(long), default(ulong) }|(35);
+        decimal[] field_decimal = ||{|(33) 0m, 00m, -0m, default, default(decimal), new decimal() }|(34);
+        decimal[] field_decimal2 = ||{|(35) 0, 00, 0x0, 0b0, 0u, 0L, 0ul, default(int), default(uint), default(long), default(ulong) }|(36);
         decimal[] field_decimal_ = |{|(37) 0, 1, 2 };
 
-        float[] field_float = ||{|(39) 0f, 00f, -0f, default, default(float), new float() }|(38);
-        float[] field_float2 = ||{|(41) 0, 00, 0x0, 0b0, 0u, 0L, 0ul, default(int), default(uint), default(long), default(ulong) }|(40);
+        float[] field_float = ||{|(38) 0f, 00f, -0f, default, default(float), new float() }|(39);
+        float[] field_float2 = ||{|(40) 0, 00, 0x0, 0b0, 0u, 0L, 0ul, default(int), default(uint), default(long), default(ulong) }|(41);
         float[] field_float_ = |{|(42) 0, 1, 2 };
 
-        double[] field_double = ||{|(44) 0d, 0.0, 00d, -0d, default, default(double), new double() }|(43);
-        double[] field_double2 = ||{|(46) 0, 00, 0x0, 0b0, 0u, 0L, 0ul, 0f, default(int), default(uint), default(long), default(ulong), default(float) }|(45);
+        double[] field_double = ||{|(43) 0d, 0.0, 00d, -0d, default, default(double), new double() }|(44);
+        double[] field_double2 = ||{|(45) 0, 00, 0x0, 0b0, 0u, 0L, 0ul, 0f, default(int), default(uint), default(long), default(ulong), default(float) }|(46);
         double[] field_double_ = |{|(47) 0, 1, 2 };
 
-        bool[] field_bool = ||{|(49) false, default, default(bool), new bool() }|(48);
+        bool[] field_bool = ||{|(48) false, default, default(bool), new bool() }|(49);
         bool[] field_bool_ = |{|(50) false, true };
 
-        char[] field_char = ||{|(52) '\0', default, default(char), new char() }|(51);
+        char[] field_char = ||{|(51) '\0', default, default(char), new char() }|(52);
         char[] field_char_ = |{|(53) '\0', 'a', 'b', 'c' };
 
-        string[] field_string = ||{|(55) null, null as string, default, default(string) }|(54);
+        string[] field_string = ||{|(54) null, null as string, default, default(string) }|(55);
         string[] field_string_ = |{|(56) null, "", "one", new string('a', 0) };
 
-        object[] field_object = ||{|(58) null, null as object, default, default(object) }|(57);
+        object[] field_object = ||{|(57) null, null as object, default, default(object) }|(58);
         object[] field_object_ = |{|(59) null, new object() };
 
-        int[] Property { get; } = ||{|(61) 0, default }|(60);
+        int[] Property { get; } = ||{|(60) 0, default }|(61);
 
-        int[] Property2 { get; set; } = ||{|(63) 0, default }|(62);
+        int[] Property2 { get; set; } = ||{|(62) 0, default }|(63);
 
         void Method()
         {
@@ -71,7 +71,7 @@ namespace Test
 
     public class GenericClass<T> where T : new()
     {
-        T[] field = ||{|(67) default, default(T) }|(66);
+        T[] field = ||{|(66) default, default(T) }|(67);
         T[] field_ = |{|(68) default, new T() };
 
         void Method(T arg)
@@ -85,10 +85,10 @@ namespace Test
 
     public class GenericClass_ValueType<T> where T : struct
     {
-        T[] field_nonNullable = ||{|(72) default, default(T) }|(71);
+        T[] field_nonNullable = ||{|(71) default, default(T) }|(72);
         T[] field_nonNullable2_ = |{|(73) default, default(T), new T() };
 
-        T?[] field_nullable = ||{|(75) null, null as T?, default, default(T?), new T?() }|(74);
+        T?[] field_nullable = ||{|(74) null, null as T?, default, default(T?), new T?() }|(75);
         T?[] field_nullable2_ = |{|(76) null, default(T) };
 
         void Method(T nonNullable, T? nullable)
@@ -104,7 +104,7 @@ namespace Test
 
     public class GenericClass_ReferenceType<T> where T : class
     {
-        T[] field = ||{|(80) null, null as T, default, default(T) }|(79);
+        T[] field = ||{|(79) null, null as T, default, default(T) }|(80);
 
         void Method(T arg)
         {
@@ -114,85 +114,85 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Use 'new int[8]'.
-(1): ReSharper Suggestion: Use collection expression
+(0): ReSharper Suggestion: Use collection expression
+(1): ReSharper Suggestion: Use 'new int[8]'.
 (2): ReSharper Suggestion: Use collection expression
-(3): ReSharper Suggestion: Use 'new int?[5]'.
-(4): ReSharper Suggestion: Use collection expression
+(3): ReSharper Suggestion: Use collection expression
+(4): ReSharper Suggestion: Use 'new int?[5]'.
 (5): ReSharper Suggestion: Use collection expression
-(6): ReSharper Suggestion: Use 'new uint[7]'.
-(7): ReSharper Suggestion: Use collection expression
-(8): ReSharper Suggestion: Use 'new uint[5]'.
-(9): ReSharper Suggestion: Use collection expression
+(6): ReSharper Suggestion: Use collection expression
+(7): ReSharper Suggestion: Use 'new uint[7]'.
+(8): ReSharper Suggestion: Use collection expression
+(9): ReSharper Suggestion: Use 'new uint[5]'.
 (10): ReSharper Suggestion: Use collection expression
-(11): ReSharper Suggestion: Use 'new long[8]'.
-(12): ReSharper Suggestion: Use collection expression
-(13): ReSharper Suggestion: Use 'new long[7]'.
-(14): ReSharper Suggestion: Use collection expression
+(11): ReSharper Suggestion: Use collection expression
+(12): ReSharper Suggestion: Use 'new long[8]'.
+(13): ReSharper Suggestion: Use collection expression
+(14): ReSharper Suggestion: Use 'new long[7]'.
 (15): ReSharper Suggestion: Use collection expression
-(16): ReSharper Suggestion: Use 'new ulong[7]'.
-(17): ReSharper Suggestion: Use collection expression
-(18): ReSharper Suggestion: Use 'new ulong[8]'.
-(19): ReSharper Suggestion: Use collection expression
+(16): ReSharper Suggestion: Use collection expression
+(17): ReSharper Suggestion: Use 'new ulong[7]'.
+(18): ReSharper Suggestion: Use collection expression
+(19): ReSharper Suggestion: Use 'new ulong[8]'.
 (20): ReSharper Suggestion: Use collection expression
-(21): ReSharper Suggestion: Use 'new byte[7]'.
-(22): ReSharper Suggestion: Use collection expression
+(21): ReSharper Suggestion: Use collection expression
+(22): ReSharper Suggestion: Use 'new byte[7]'.
 (23): ReSharper Suggestion: Use collection expression
-(24): ReSharper Suggestion: Use 'new sbyte[7]'.
-(25): ReSharper Suggestion: Use collection expression
+(24): ReSharper Suggestion: Use collection expression
+(25): ReSharper Suggestion: Use 'new sbyte[7]'.
 (26): ReSharper Suggestion: Use collection expression
-(27): ReSharper Suggestion: Use 'new short[9]'.
-(28): ReSharper Suggestion: Use collection expression
+(27): ReSharper Suggestion: Use collection expression
+(28): ReSharper Suggestion: Use 'new short[9]'.
 (29): ReSharper Suggestion: Use collection expression
-(30): ReSharper Suggestion: Use 'new ushort[8]'.
-(31): ReSharper Suggestion: Use collection expression
+(30): ReSharper Suggestion: Use collection expression
+(31): ReSharper Suggestion: Use 'new ushort[8]'.
 (32): ReSharper Suggestion: Use collection expression
-(33): ReSharper Suggestion: Use 'new decimal[6]'.
-(34): ReSharper Suggestion: Use collection expression
-(35): ReSharper Suggestion: Use 'new decimal[11]'.
-(36): ReSharper Suggestion: Use collection expression
+(33): ReSharper Suggestion: Use collection expression
+(34): ReSharper Suggestion: Use 'new decimal[6]'.
+(35): ReSharper Suggestion: Use collection expression
+(36): ReSharper Suggestion: Use 'new decimal[11]'.
 (37): ReSharper Suggestion: Use collection expression
-(38): ReSharper Suggestion: Use 'new float[6]'.
-(39): ReSharper Suggestion: Use collection expression
-(40): ReSharper Suggestion: Use 'new float[11]'.
-(41): ReSharper Suggestion: Use collection expression
+(38): ReSharper Suggestion: Use collection expression
+(39): ReSharper Suggestion: Use 'new float[6]'.
+(40): ReSharper Suggestion: Use collection expression
+(41): ReSharper Suggestion: Use 'new float[11]'.
 (42): ReSharper Suggestion: Use collection expression
-(43): ReSharper Suggestion: Use 'new double[7]'.
-(44): ReSharper Suggestion: Use collection expression
-(45): ReSharper Suggestion: Use 'new double[13]'.
-(46): ReSharper Suggestion: Use collection expression
+(43): ReSharper Suggestion: Use collection expression
+(44): ReSharper Suggestion: Use 'new double[7]'.
+(45): ReSharper Suggestion: Use collection expression
+(46): ReSharper Suggestion: Use 'new double[13]'.
 (47): ReSharper Suggestion: Use collection expression
-(48): ReSharper Suggestion: Use 'new bool[4]'.
-(49): ReSharper Suggestion: Use collection expression
+(48): ReSharper Suggestion: Use collection expression
+(49): ReSharper Suggestion: Use 'new bool[4]'.
 (50): ReSharper Suggestion: Use collection expression
-(51): ReSharper Suggestion: Use 'new char[4]'.
-(52): ReSharper Suggestion: Use collection expression
+(51): ReSharper Suggestion: Use collection expression
+(52): ReSharper Suggestion: Use 'new char[4]'.
 (53): ReSharper Suggestion: Use collection expression
-(54): ReSharper Suggestion: Use 'new string[4]'.
-(55): ReSharper Suggestion: Use collection expression
+(54): ReSharper Suggestion: Use collection expression
+(55): ReSharper Suggestion: Use 'new string[4]'.
 (56): ReSharper Suggestion: Use collection expression
-(57): ReSharper Suggestion: Use 'new object[4]'.
-(58): ReSharper Suggestion: Use collection expression
+(57): ReSharper Suggestion: Use collection expression
+(58): ReSharper Suggestion: Use 'new object[4]'.
 (59): ReSharper Suggestion: Use collection expression
-(60): ReSharper Suggestion: Use 'new int[2]'.
-(61): ReSharper Suggestion: Use collection expression
-(62): ReSharper Suggestion: Use 'new int[2]'.
-(63): ReSharper Suggestion: Use collection expression
+(60): ReSharper Suggestion: Use collection expression
+(61): ReSharper Suggestion: Use 'new int[2]'.
+(62): ReSharper Suggestion: Use collection expression
+(63): ReSharper Suggestion: Use 'new int[2]'.
 (64): ReSharper Suggestion: Use 'new int[3]'.
 (65): ReSharper Suggestion: Use 'new int[3]'.
-(66): ReSharper Suggestion: Use 'new T[2]'.
-(67): ReSharper Suggestion: Use collection expression
+(66): ReSharper Suggestion: Use collection expression
+(67): ReSharper Suggestion: Use 'new T[2]'.
 (68): ReSharper Suggestion: Use collection expression
 (69): ReSharper Suggestion: Use 'new T[2]'.
 (70): ReSharper Suggestion: Use 'new List<T>[3]'.
-(71): ReSharper Suggestion: Use 'new T[2]'.
-(72): ReSharper Suggestion: Use collection expression
+(71): ReSharper Suggestion: Use collection expression
+(72): ReSharper Suggestion: Use 'new T[2]'.
 (73): ReSharper Suggestion: Use collection expression
-(74): ReSharper Suggestion: Use 'new T?[5]'.
-(75): ReSharper Suggestion: Use collection expression
+(74): ReSharper Suggestion: Use collection expression
+(75): ReSharper Suggestion: Use 'new T?[5]'.
 (76): ReSharper Suggestion: Use collection expression
 (77): ReSharper Suggestion: Use 'new T[2]'.
 (78): ReSharper Suggestion: Use 'new T?[5]'.
-(79): ReSharper Suggestion: Use 'new T[4]'.
-(80): ReSharper Suggestion: Use collection expression
+(79): ReSharper Suggestion: Use collection expression
+(80): ReSharper Suggestion: Use 'new T[4]'.
 (81): ReSharper Suggestion: Use 'new T[4]'.

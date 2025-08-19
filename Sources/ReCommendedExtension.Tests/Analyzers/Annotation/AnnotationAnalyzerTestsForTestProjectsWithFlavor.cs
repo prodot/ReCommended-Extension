@@ -28,7 +28,9 @@ public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpHig
         var projectTypeGuids = project.ProjectProperties.ProjectTypeGuids.ToHashSet();
         if (projectTypeGuids.Add(MsTestProjectFlavor.MsTestProjectFlavorGuid))
         {
-            var field = project.ProjectProperties.GetType().BaseType.GetField("myProjectTypeGuids", BindingFlags.Instance | BindingFlags.NonPublic);
+            var field = project
+                .ProjectProperties.GetType()
+                .BaseType.BaseType.GetField("myProjectTypeGuids", BindingFlags.Instance | BindingFlags.NonPublic);
             field.SetValue(project.ProjectProperties, projectTypeGuids);
         }
 

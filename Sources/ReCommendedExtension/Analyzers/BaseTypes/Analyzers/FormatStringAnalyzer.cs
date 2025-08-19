@@ -43,7 +43,7 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
 
     protected override void Run(ICSharpArgumentsOwner element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (formattingFunctionInvocationInfoProvider.TryGetByArgumentsOwner(element, out _) is
+        if (formattingFunctionInvocationInfoProvider.TryGetByArgumentsOwner(element) is
             {
                 FormatString.Expression: ICSharpLiteralExpression formatStringExpression,
             } formattingFunctionInvocationInfo

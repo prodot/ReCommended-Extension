@@ -25,9 +25,9 @@ internal static class CSharpArgumentsOwnerExtensions
     {
         if (argumentsOwner.Reference?.Resolve().DeclaredElement is IParametersOwner parametersOwner)
         {
-            Debug.Assert(!parametersOwner.IsExtensionMethod() || parametersOwner.Parameters is [_, ..]);
+            Debug.Assert(parametersOwner.GetExtensionMemberKind() != ExtensionMemberKind.CLASSIC_METHOD || parametersOwner.Parameters is [_, ..]);
 
-            var isExtensionMethodInvocation = parametersOwner.IsExtensionMethod()
+            var isExtensionMethodInvocation = parametersOwner.GetExtensionMemberKind() == ExtensionMemberKind.CLASSIC_METHOD
                 && Equals(argumentsOwner.ExtensionQualifier?.MatchingParameter?.Element, parametersOwner.Parameters[0]);
 
             var parameterCount = isExtensionMethodInvocation ? parametersOwner.Parameters.Count - 1 : parametersOwner.Parameters.Count;

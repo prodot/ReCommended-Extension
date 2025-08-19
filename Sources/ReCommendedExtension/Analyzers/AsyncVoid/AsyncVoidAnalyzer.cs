@@ -109,8 +109,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
             {
                 var implicitUseAnnotationProvider = psiServices.GetCodeAnnotationsCache().GetProvider<ImplicitUseAnnotationProvider>();
 
-                var useKindFlags = implicitUseAnnotationProvider.IsImplicitlyUsed(method);
-                if (useKindFlags == null)
+                if (implicitUseAnnotationProvider.CalculateTypeMemberImplicitlyUsedFlags(method).IsEmpty)
                 {
                     // [UsedImplicitly] annotation not applied
                     consumer.AddHighlighting(
