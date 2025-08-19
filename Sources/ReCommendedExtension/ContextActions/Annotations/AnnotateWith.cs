@@ -46,7 +46,8 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
     [MemberNotNullWhen(true, nameof(attributesOwnerDeclaration))]
     protected sealed override bool IsAvailable(IAttributesOwnerDeclaration selectedElement)
     {
-        if (selectedElement.GetNameRange().Contains(SelectedTreeRange)
+        if (CSharpLanguage.Instance is { }
+            && selectedElement.GetNameRange().Contains(SelectedTreeRange)
             && (AllowsInheritedMethods || !selectedElement.OverridesInheritedMember())
             && !selectedElement.IsOnLocalFunctionWithUnsupportedAttributes()
             && !selectedElement.IsOnLambdaExpressionWithUnsupportedAttributes()
@@ -80,6 +81,8 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
                 : typeName;
 
             var annotationArguments = GetAnnotationArguments();
+
+            Debug.Assert(CSharpLanguage.Instance is { });
 
             var arguments = annotationArguments is [] or [{ ConstantValue.Kind: ConstantValueKind.NonCompileTimeConstant }]
                 ? ""

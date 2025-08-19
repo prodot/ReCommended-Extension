@@ -227,6 +227,8 @@ internal abstract record ContractInfo
 
         var declaredElement = methodDeclaration.DeclaredElement;
 
+        Debug.Assert(declaredElement is { });
+
         // todo: find a better way to compare instances (than using hash codes)
 
         var overriddenMethodDeclaration =
@@ -242,8 +244,6 @@ internal abstract record ContractInfo
         {
             return overriddenMethodDeclaration;
         }
-
-        Debug.Assert(declaredElement is { });
 
         var typeParameters = methodDeclaration.TypeParameterDeclarations.Any()
             ? $"<{string.Join(", ", from typeParameter in methodDeclaration.TypeParameterDeclarations select typeParameter.DeclaredName)}>"
@@ -292,6 +292,8 @@ internal abstract record ContractInfo
         IIndexerDeclaration indexerDeclaration,
         IClassDeclaration contractClassDeclaration)
     {
+        Debug.Assert(indexerDeclaration.DeclaredElement is { });
+
         var factory = CSharpElementFactory.GetInstance(indexerDeclaration);
 
         // todo: find a better way to compare instances (than using hash codes)
@@ -307,8 +309,6 @@ internal abstract record ContractInfo
         {
             return overriddenIndexerDeclaration;
         }
-
-        Debug.Assert(indexerDeclaration.DeclaredElement is { });
 
         var getter = indexerDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "";
         var setter = indexerDeclaration.DeclaredElement.IsWritable ? " set { } " : "";
@@ -349,6 +349,8 @@ internal abstract record ContractInfo
         IPropertyDeclaration propertyDeclaration,
         IClassDeclaration contractClassDeclaration)
     {
+        Debug.Assert(propertyDeclaration.DeclaredElement is { });
+
         var factory = CSharpElementFactory.GetInstance(propertyDeclaration);
 
         // todo: find a better way to compare instances (than using hash codes)
@@ -364,8 +366,6 @@ internal abstract record ContractInfo
         {
             return overriddenPropertyDeclaration;
         }
-
-        Debug.Assert(propertyDeclaration.DeclaredElement is { });
 
         var getter = propertyDeclaration.DeclaredElement.IsReadable ? " get { return default($0); } " : "";
         var setter = propertyDeclaration.DeclaredElement.IsWritable ? " set { } " : "";
