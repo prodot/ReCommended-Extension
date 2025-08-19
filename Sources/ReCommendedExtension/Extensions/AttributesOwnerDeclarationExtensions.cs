@@ -13,7 +13,7 @@ internal static class AttributesOwnerDeclarationExtensions
 {
     static readonly HashSet<string> wellKnownUnitTestingAssemblyNames = new(StringComparer.OrdinalIgnoreCase)
     {
-        "Microsoft.VisualStudio.TestPlatform.TestFramework", "nunit.framework", "xunit.core",
+        "MSTest.TestFramework", "Microsoft.VisualStudio.TestPlatform.TestFramework", "nunit.framework", "xunit.core",
     };
 
     [Pure]

@@ -119,7 +119,7 @@ namespace TargetArray
     {
         A[] field1 = |new B[]|(85) { };
         A[] field2 = new B[] { new(1), new(2), new(3) };
-        A[] field3 = ||new B[0]|(87) { }|(86);
+        A[] field3 = ||new B[0]|(86) { }|(87);
         A[] field4 = |new B[3]|(88) { new B(1), new B(2), new B(3) };
         A[] field5 = ||new B[0]|(89)|(90);
         A[] field6 = new B[3];
@@ -130,7 +130,7 @@ namespace TargetArray
         {
             A[] var1 = |new B[]|(93) { };
             A[] var2 = |new B[]|(94) { a, b, c };
-            A[] var3 = ||new B[0]|(96) { }|(95);
+            A[] var3 = ||new B[0]|(95) { }|(96);
             A[] var4 = |new B[3]|(97) { a, b, c };
             A[] var5 = ||new B[0]|(98)|(99);
             A[] var6 = new B[3];
@@ -139,7 +139,7 @@ namespace TargetArray
 
             Consumer(|new B[]|(102) { });
             Consumer(|new B[]|(103) { a, b, c });
-            Consumer(||new B[0]|(105) { }|(104));
+            Consumer(||new B[0]|(104) { }|(105));
             Consumer(|new B[3]|(106) { a, b, c });
             Consumer(||new B[0]|(107)|(108));
             Consumer(new B[3]);
@@ -151,7 +151,7 @@ namespace TargetArray
 
         A[] Property1 { get; } = |new B[]|(111) { };
         A[] Property2 { get; } = new B[] { new(1), new(2), new(3) };
-        A[] Property3 { get; set; } = ||new B[0]|(113) { }|(112);
+        A[] Property3 { get; set; } = ||new B[0]|(112) { }|(113);
         A[] Property4 { get; set; } = |new B[3]|(114) { new B(1), new B(2), new B(3) };
         A[] Property5 => ||new B[0]|(115)|(116);
         A[] Property6 => new B[3];
@@ -246,8 +246,8 @@ namespace TargetArray
 (83): ReSharper Suggestion: Use collection expression
 (84): ReSharper Suggestion: Use collection expression
 (85): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(86):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(87): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(86): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(87):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (88): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (89):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (90): ReSharper Suggestion: Use collection expression ('A[]' will be used).
@@ -255,8 +255,8 @@ namespace TargetArray
 (92): ReSharper Suggestion: Use collection expression
 (93): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (94): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(95):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(96): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(95): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(96):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (97): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (98):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (99): ReSharper Suggestion: Use collection expression ('A[]' will be used).
@@ -264,16 +264,16 @@ namespace TargetArray
 (101): ReSharper Suggestion: Use collection expression
 (102): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (103): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(104):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(105): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(104): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(105):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (106): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (107):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (108): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (109):<overlapped> ReSharper Suggestion: Use collection expression
 (110):<overlapped> ReSharper Suggestion: Use collection expression
 (111): ReSharper Suggestion: Use collection expression ('A[]' will be used).
-(112):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
-(113): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(112): ReSharper Suggestion: Use collection expression ('A[]' will be used).
+(113):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (114): ReSharper Suggestion: Use collection expression ('A[]' will be used).
 (115):<overlapped> ReSharper Suggestion: Use 'Array.Empty<B>()' to avoid array allocation
 (116): ReSharper Suggestion: Use collection expression ('A[]' will be used).
