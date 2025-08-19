@@ -27,10 +27,10 @@ internal static class CSharpArgumentsOwnerExtensions
         {
             Debug.Assert(parametersOwner.GetExtensionMemberKind() != ExtensionMemberKind.CLASSIC_METHOD || parametersOwner.Parameters is [_, ..]);
 
-            var isExtensionMethodInvocation = parametersOwner.GetExtensionMemberKind() == ExtensionMemberKind.CLASSIC_METHOD
+            var isClassicExtensionMethodInvocation = parametersOwner.GetExtensionMemberKind() == ExtensionMemberKind.CLASSIC_METHOD
                 && Equals(argumentsOwner.ExtensionQualifier?.MatchingParameter?.Element, parametersOwner.Parameters[0]);
 
-            var parameterCount = isExtensionMethodInvocation ? parametersOwner.Parameters.Count - 1 : parametersOwner.Parameters.Count;
+            var parameterCount = isClassicExtensionMethodInvocation ? parametersOwner.Parameters.Count - 1 : parametersOwner.Parameters.Count;
 
             if (parameterCount == 0)
             {
@@ -97,7 +97,7 @@ internal static class CSharpArgumentsOwnerExtensions
             {
                 int resultIndex;
 
-                if (isExtensionMethodInvocation)
+                if (isClassicExtensionMethodInvocation)
                 {
                     if (i == 0)
                     {
