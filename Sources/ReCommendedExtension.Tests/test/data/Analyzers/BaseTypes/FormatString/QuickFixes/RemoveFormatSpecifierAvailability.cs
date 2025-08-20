@@ -368,5 +368,15 @@ namespace Test
             var result2 = string.Format("{0:t}", value);
             var result3 = string.Format("{0:T}", value);
         }
+
+        public void DateOnly_(DateOnly value)
+        {
+            var result = string.Format("{0:d}", value);
+        }
+
+        public void DateOnly_(DateOnly? value)
+        {
+            var result = string.Format("{0:d}", value);
+        }
     }
 }

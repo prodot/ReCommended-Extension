@@ -4,20 +4,7 @@ namespace Test
 {
     public class DatesOnly
     {
-        public void Parse(string s, ReadOnlySpan<char> s1)
-        {
-            var result1 = DateOnly.Parse(s, null);
-            var result2 = DateOnly.Parse(s1, null);
-        }
-
-        public void ParseExact(string s, ReadOnlySpan<char> s1, string format, string[] formats)
-        {
-            var result1 = DateOnly.ParseExact(s, format, null);
-            var result2 = DateOnly.ParseExact(s, formats, null);
-            var result3 = DateOnly.ParseExact(s1, formats, null);
-        }
-
-        public void ToString(DateOnly dateOnly, string format, IFormatProvider provider)
+        public void RedundantArgument(DateOnly dateOnly, string format, IFormatProvider provider)
         {
             var result11 = dateOnly.ToString(null as string);
             var result12 = dateOnly.ToString("");
@@ -33,6 +20,13 @@ namespace Test
             var result36 = dateOnly.ToString("O", provider);
             var result37 = dateOnly.ToString("r", provider);
             var result38 = dateOnly.ToString("R", provider);
+        }
+
+        public void NoDetection(DateOnly dateOnly, string format, IFormatProvider provider)
+        {
+            var result1 = dateOnly.ToString(format);
+            var result2 = dateOnly.ToString(provider);
+            var result3 = dateOnly.ToString(format, provider);
         }
     }
 }

@@ -17,4 +17,7 @@ public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 
     [Test]
     public void TestParseExact() => DoNamedTest2();
+
+    [Test]
+    public void TestToString() => DoNamedTest2();
 }

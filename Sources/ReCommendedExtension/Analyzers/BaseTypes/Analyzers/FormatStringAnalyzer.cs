@@ -41,6 +41,9 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
         return false;
     }
 
+    [Pure]
+    static bool IsDateOnly(IType type) => type.IsClrType(PredefinedType.DATE_ONLY_FQN);
+
     protected override void Run(ICSharpArgumentsOwner element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (formattingFunctionInvocationInfoProvider.TryGetByArgumentsOwner(element) is
@@ -103,6 +106,16 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                         }
 
                         case ['D' or 'd'] when expressionType.IsGuid() || expressionType.IsNullable() && expressionType.Unlift().IsGuid():
+                        {
+                            consumer.AddHighlighting(
+                                new RedundantFormatSpecifierHint(
+                                    $"Specifying '{format[0].ToString()}' is redundant.",
+                                    formatStringExpression,
+                                    formatItem));
+                            break;
+                        }
+
+                        case ['d'] when IsDateOnly(expressionType) || expressionType.IsNullable() && IsDateOnly(expressionType.Unlift()):
                         {
                             consumer.AddHighlighting(
                                 new RedundantFormatSpecifierHint(

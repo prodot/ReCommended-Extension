@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace ReCommendedExtension.Tests.Missing;
 
-public readonly record struct DateOnly
+public readonly record struct DateOnly : IFormattable
 {
     public static DateOnly MaxValue => FromDateTime(DateTime.MaxValue);
 
@@ -122,6 +122,8 @@ public readonly record struct DateOnly
     public string ToString(string? format) => ToString(format, null);
 
     [Pure]
+    public string ToString(IFormatProvider? provider) => ToString(null, provider);
+
     public string ToString(string? format, IFormatProvider? provider)
         => format switch
         {

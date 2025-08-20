@@ -16,6 +16,24 @@ namespace Test
             var result2 = DateOnly.ParseExact(s, formats, |null|(3));
             var result3 = DateOnly.ParseExact(s1, formats, |null|(4));
         }
+
+        public void ToString(DateOnly dateOnly, string format, IFormatProvider provider)
+        {
+            var result11 = dateOnly.ToString(|null as string|(5));
+            var result12 = dateOnly.ToString(|""|(6));
+            var result13 = dateOnly.ToString(|"d"|(7));
+
+            var result21 = dateOnly.ToString(|null as IFormatProvider|(8));
+
+            var result31 = dateOnly.ToString(format, |null|(9));
+            var result32 = dateOnly.ToString(|null|(10), provider);
+            var result33 = dateOnly.ToString(|""|(11), provider);
+            var result34 = dateOnly.ToString(|"d"|(12), provider);
+            var result35 = dateOnly.ToString("o", |provider|(13));
+            var result36 = dateOnly.ToString("O", |provider|(14));
+            var result37 = dateOnly.ToString("r", |provider|(15));
+            var result38 = dateOnly.ToString("R", |provider|(16));
+        }
     }
 }
 ------------------------------------------------
@@ -32,5 +50,41 @@ Remove argument
 QUICKFIXES:
 Remove argument
 4: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+5: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+6: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+7: Passing "d" is redundant.
+QUICKFIXES:
+Remove argument
+8: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+9: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+10: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+11: Passing null or an empty string is redundant.
+QUICKFIXES:
+Remove argument
+12: Passing "d" is redundant.
+QUICKFIXES:
+Remove argument
+13: Passing a format provider is redundant.
+QUICKFIXES:
+Remove argument
+14: Passing a format provider is redundant.
+QUICKFIXES:
+Remove argument
+15: Passing a format provider is redundant.
+QUICKFIXES:
+Remove argument
+16: Passing a format provider is redundant.
 QUICKFIXES:
 Remove argument

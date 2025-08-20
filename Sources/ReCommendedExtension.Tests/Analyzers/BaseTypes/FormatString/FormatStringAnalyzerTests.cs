@@ -550,6 +550,18 @@ public sealed class FormatStringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [TestNet60]
+    [SuppressMessage("ReSharper", "UseStringInterpolation")]
+    public void TestDateOnly()
+    {
+        var values = new[] { Missing.DateOnly.MinValue, Missing.DateOnly.MaxValue, new(2025, 7, 15) };
+
+        Test(dateOnly => string.Format("{0:d}", dateOnly), dateOnly => string.Format("{0}", dateOnly), values);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [TestNet70]
     public void TestStringFormatters() => DoNamedTest2();
 }
