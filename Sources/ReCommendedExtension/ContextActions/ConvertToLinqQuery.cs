@@ -95,7 +95,7 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
                 || selectedElement.Parent is ISpreadElement
                 || selectedElement.TryGetTargetType(false) is { } targetType
                 && targetType.IsGenericIEnumerable()
-                && (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArray(selectedElement))
+                && (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArray())
                 || type.IsGenericListOrDescendant()
                 && selectedElement.Parent is IReferenceExpression referenceExpression
                 && referenceExpression.QualifierExpression == selectedElement
@@ -119,8 +119,8 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
                     || targetTypeForCollectionExpressions.IsGenericICollection()
                     || targetTypeForCollectionExpressions.IsGenericIList()
                     || targetTypeForCollectionExpressions.IsGenericList()
-                    || targetTypeForCollectionExpressions.IsGenericArray(selectedElement))
-                && (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArray(selectedElement)))
+                    || targetTypeForCollectionExpressions.IsGenericArray())
+                && (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArray()))
             {
                 replacement = new CollectionExpressionReplacement { SourceExpression = selectedElement };
                 return true;
@@ -132,7 +132,7 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
                 return true;
             }
 
-            if (type.IsGenericArray(selectedElement))
+            if (type.IsGenericArray())
             {
                 replacement = new LinqMethodCallReplacement { SourceExpression = selectedElement, MethodName = nameof(Enumerable.ToArray) };
                 return true;

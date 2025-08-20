@@ -271,7 +271,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     [Pure]
     static (IType? arrayItemType, bool isCovariant)? TryGetIfTargetTypedToGenericArray(ICSharpExpression expression, IType itemType, IType targetType)
     {
-        if (targetType.IsGenericArray(expression) && TypesUtil.GetEnumerableOrArrayElementType(targetType) is { } targetItemType)
+        if (targetType.IsGenericArray() && TypesUtil.GetEnumerableOrArrayElementType(targetType) is { } targetItemType)
         {
             if (itemType.Classify == TypeClassification.REFERENCE_TYPE
                 && targetItemType.Classify == TypeClassification.REFERENCE_TYPE

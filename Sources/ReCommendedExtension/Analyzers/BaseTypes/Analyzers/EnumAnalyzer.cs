@@ -270,7 +270,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                                     break;
 
                                 case ([_], [{ Type: var valueType }, { Type: var ignoreCaseType }], [_, { } ignoreCaseArgument])
-                                    when valueType.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsChar() && ignoreCaseType.IsBool():
+                                    when valueType.IsReadOnlySpanOfChar() && ignoreCaseType.IsBool():
 
                                     AnalyzeParse_ReadOnlySpanOfChar_Boolean(consumer, element, ignoreCaseArgument);
                                     break;
@@ -278,17 +278,12 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                                 case ([], [{ Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }], [
                                     _, _, { } ignoreCaseArgument,
                                 ]) when enumTypeType.IsSystemType() && valueType.IsString() && ignoreCaseType.IsBool():
-
                                     AnalyzeParse_Type_String_Boolean(consumer, element, ignoreCaseArgument);
                                     break;
 
                                 case ([], [{ Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }], [
-                                        _, _, { } ignoreCaseArgument,
-                                    ]) when enumTypeType.IsSystemType()
-                                    && valueType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && ignoreCaseType.IsBool():
-
+                                    _, _, { } ignoreCaseArgument,
+                                ]) when enumTypeType.IsSystemType() && valueType.IsReadOnlySpanOfChar() && ignoreCaseType.IsBool():
                                     AnalyzeParse_Type_ReadOnlySpanOfChar_Boolean(consumer, element, ignoreCaseArgument);
                                     break;
                             }
@@ -308,8 +303,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
                                 case ([var typeParameter], [{ Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType }], [
                                         _, { } ignoreCaseArgument, _,
-                                    ]) when valueType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
+                                    ]) when valueType.IsReadOnlySpanOfChar()
                                     && ignoreCaseType.IsBool()
                                     && TypeEqualityComparer.Default.Equals(TypeFactory.CreateType(typeParameter), resultType):
 
@@ -329,8 +323,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                                 case ([], [
                                         { Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType },
                                     ], [_, _, { } ignoreCaseArgument, _]) when enumTypeType.IsSystemType()
-                                    && valueType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
+                                    && valueType.IsReadOnlySpanOfChar()
                                     && ignoreCaseType.IsBool()
                                     && resultType.IsObject():
 

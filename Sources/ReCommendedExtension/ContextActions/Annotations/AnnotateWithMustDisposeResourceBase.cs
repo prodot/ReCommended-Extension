@@ -28,21 +28,20 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
 
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context) => declaredElement switch
     {
-        IClass type => type.IsDisposable(PsiModule) && !IsAnyBaseTypeAnnotated(type),
+        IClass type => type.IsDisposable() && !IsAnyBaseTypeAnnotated(type),
 
-        IConstructor { ContainingType: IClass or IStruct { IsByRefLike: false } } constructor =>
-            constructor.ContainingType.IsDisposable(PsiModule)
+        IConstructor { ContainingType: IClass or IStruct { IsByRefLike: false } } constructor => constructor.ContainingType.IsDisposable()
             && !IsTypeAnnotated(constructor.ContainingType)
             && !IsAnyBaseTypeAnnotated(constructor.ContainingType),
 
         IConstructor { ContainingType: IStruct { IsByRefLike: true } s } => s.HasDisposeMethods(),
 
-        IMethod method => (method.ReturnType.IsDisposable(context) || method.ReturnType.IsTasklikeOfDisposable(context))
+        IMethod method => (method.ReturnType.IsDisposable() || method.ReturnType.IsTasklikeOfDisposable(context))
             && !IsAnyBaseMethodAnnotated(method),
 
-        ILocalFunction localFunction => localFunction.ReturnType.IsDisposable(context) || localFunction.ReturnType.IsTasklikeOfDisposable(context),
+        ILocalFunction localFunction => localFunction.ReturnType.IsDisposable() || localFunction.ReturnType.IsTasklikeOfDisposable(context),
 
-        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => (parameter.Type.IsDisposable(context)
+        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => (parameter.Type.IsDisposable()
                 || parameter.Type.IsTasklikeOfDisposable(context))
             && !IsParameterOfAnyBaseMethodAnnotated(parameter),
 

@@ -224,21 +224,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         ];
     }
 
-    [Pure]
-    static bool IsDateTimeKind(IType type) => type.IsClrType(ClrTypeNames.DateTimeKind);
-
-    [Pure]
-    static bool IsDateTimeStyles(IType type) => type.IsClrType(ClrTypeNames.DateTimeStyles);
-
-    [Pure]
-    static bool IsDateOnly(IType type) => type.IsClrType(PredefinedType.DATE_ONLY_FQN);
-
-    [Pure]
-    static bool IsTimeOnly(IType type) => type.IsClrType(PredefinedType.TIME_ONLY_FQN);
-
-    [Pure]
-    static bool IsCalendar(IType type) => type.IsClrType(ClrTypeNames.Calendar);
-
     /// <remarks>
     /// <c>new DateTime(0)</c> → <c>DateTime.MinValue</c>
     /// </remarks>
@@ -1303,13 +1288,13 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         break;
 
                     case ([{ Type: var ticksType }, { Type: var kindType }], [_, { } kindArgument])
-                        when ticksType.IsLong() && IsDateTimeKind(kindType):
+                        when ticksType.IsLong() && kindType.IsDateTimeKind():
 
                         Analyze_Ctor_Int64_DateTimeKind(consumer, objectCreationExpression, kindArgument);
                         break;
 
                     case ([{ Type: var dateType }, { Type: var timeType }, { Type: var kindType }], [_, _, { } kindArgument])
-                        when IsDateOnly(dateType) && IsTimeOnly(timeType) && IsDateTimeKind(kindType):
+                        when dateType.IsDateOnly() && timeType.IsTimeOnly() && kindType.IsDateTimeKind():
 
                         Analyze_Ctor_DateOnly_TimeOnly_DateTimeKind(consumer, objectCreationExpression, kindArgument);
                         break;
@@ -1347,7 +1332,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && hourType.IsInt()
                         && minuteType.IsInt()
                         && secondType.IsInt()
-                        && IsDateTimeKind(kindType):
+                        && kindType.IsDateTimeKind():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind(consumer, objectCreationExpression, kindArgument);
                         break;
@@ -1367,7 +1352,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && hourType.IsInt()
                         && minuteType.IsInt()
                         && secondType.IsInt()
-                        && IsCalendar(calendarType):
+                        && calendarType.IsCalendar():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Calendar(
                             consumer,
@@ -1414,7 +1399,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && minuteType.IsInt()
                         && secondType.IsInt()
                         && millisecondType.IsInt()
-                        && IsDateTimeKind(kindType):
+                        && kindType.IsDateTimeKind():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind(
                             consumer,
@@ -1440,7 +1425,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && minuteType.IsInt()
                         && secondType.IsInt()
                         && millisecondType.IsInt()
-                        && IsCalendar(calendarType):
+                        && calendarType.IsCalendar():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar(consumer, objectCreationExpression, millisecondArgument);
                         break;
@@ -1463,8 +1448,8 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && minuteType.IsInt()
                         && secondType.IsInt()
                         && millisecondType.IsInt()
-                        && IsCalendar(calendarType)
-                        && IsDateTimeKind(kindType):
+                        && calendarType.IsCalendar()
+                        && kindType.IsDateTimeKind():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind(
                             consumer,
@@ -1513,7 +1498,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && secondType.IsInt()
                         && millisecondType.IsInt()
                         && microsecondType.IsInt()
-                        && IsDateTimeKind(kindType):
+                        && kindType.IsDateTimeKind():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind(
                             consumer,
@@ -1541,7 +1526,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && secondType.IsInt()
                         && millisecondType.IsInt()
                         && microsecondType.IsInt()
-                        && IsCalendar(calendarType):
+                        && calendarType.IsCalendar():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar(
                             consumer,
@@ -1569,8 +1554,8 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && secondType.IsInt()
                         && millisecondType.IsInt()
                         && microsecondType.IsInt()
-                        && IsCalendar(calendarType)
-                        && IsDateTimeKind(kindType):
+                        && calendarType.IsCalendar()
+                        && kindType.IsDateTimeKind():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind(
                             consumer,
@@ -1707,15 +1692,13 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                         break;
 
                                     case ([{ Type: var sType }, { Type: var providerType }, { Type: var stylesType }], [_, _, { } stylesArgument])
-                                        when sType.IsString() && providerType.IsIFormatProvider() && IsDateTimeStyles(stylesType):
+                                        when sType.IsString() && providerType.IsIFormatProvider() && stylesType.IsDateTimeStyles():
 
                                         AnalyzeParse_String_IFormatProvider_DateTimeStyles(consumer, invocationExpression, stylesArgument);
                                         break;
 
                                     case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                        when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && providerType.IsIFormatProvider():
+                                        when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
 
                                         AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, invocationExpression, providerArgument);
                                         break;
@@ -1736,7 +1719,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                         ]) when sType.IsString()
                                         && formatType.IsString()
                                         && providerType.IsIFormatProvider()
-                                        && IsDateTimeStyles(styleType):
+                                        && styleType.IsDateTimeStyles():
 
                                         AnalyzeParseExact_String_String_IFormatProvider_DateTimeStyles(
                                             consumer,
@@ -1749,9 +1732,9 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     case ([{ Type: var sType }, { Type: var formatsType }, { Type: var providerType }, { Type: var styleType }], [
                                             _, { } formatsArgument, { } providerArgument, _,
                                         ]) when sType.IsString()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        && formatsType.IsGenericArrayOfString()
                                         && providerType.IsIFormatProvider()
-                                        && IsDateTimeStyles(styleType):
+                                        && styleType.IsDateTimeStyles():
 
                                         AnalyzeParseExact_String_StringArray_IFormatProvider_DateTimeStyles(
                                             consumer,
@@ -1762,11 +1745,10 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
                                     case ([{ Type: var sType }, { Type: var formatsType }, { Type: var providerType }, { Type: var styleType }], [
                                             _, { } formatsArgument, { } providerArgument, _,
-                                        ]) when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ]) when sType.IsReadOnlySpanOfChar()
+                                        && formatsType.IsGenericArrayOfString()
                                         && providerType.IsIFormatProvider()
-                                        && IsDateTimeStyles(styleType):
+                                        && styleType.IsDateTimeStyles():
 
                                         AnalyzeParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles(
                                             consumer,
@@ -1786,10 +1768,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                         break;
 
                                     case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                        when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && providerType.IsIFormatProvider()
-                                        && resultType.IsDateTime():
+                                        when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider() && resultType.IsDateTime():
 
                                         AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTime(consumer, invocationExpression, providerArgument);
                                         break;
@@ -1798,7 +1777,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                             _, _, { } stylesArgument, _,
                                         ]) when sType.IsString()
                                         && providerType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType)
+                                        && stylesType.IsDateTimeStyles()
                                         && resultType.IsDateTime():
 
                                         AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_DateTime(
@@ -1809,10 +1788,9 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
                                     case ([{ Type: var sType }, { Type: var providerType }, { Type: var stylesType }, { Type: var resultType }], [
                                             _, _, { } stylesArgument, _,
-                                        ]) when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
+                                        ]) when sType.IsReadOnlySpanOfChar()
                                         && providerType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType)
+                                        && stylesType.IsDateTimeStyles()
                                         && resultType.IsDateTime():
 
                                         AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_DateTime(
@@ -1836,7 +1814,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                         when sType.IsString()
                                         && formatType.IsString()
                                         && providerType.IsIFormatProvider()
-                                        && IsDateTimeStyles(styleType)
+                                        && styleType.IsDateTimeStyles()
                                         && resultType.IsDateTime():
 
                                         AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateTime(
@@ -1851,11 +1829,10 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                             { Type: var providerType },
                                             { Type: var styleType },
                                             { Type: var resultType },
-                                        ], [_, { } formatsArgument, { } providerArgument, _, _])
-                                        when sType.IsString()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, { } providerArgument, _, _]) when sType.IsString()
+                                        && formatsType.IsGenericArrayOfString()
                                         && providerType.IsIFormatProvider()
-                                        && IsDateTimeStyles(styleType)
+                                        && styleType.IsDateTimeStyles()
                                         && resultType.IsDateTime():
 
                                         AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateTime(
@@ -1871,12 +1848,10 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                             { Type: var providerType },
                                             { Type: var styleType },
                                             { Type: var resultType },
-                                        ], [_, { } formatsArgument, { } providerArgument, _, _])
-                                        when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, { } providerArgument, _, _]) when sType.IsReadOnlySpanOfChar()
+                                        && formatsType.IsGenericArrayOfString()
                                         && providerType.IsIFormatProvider()
-                                        && IsDateTimeStyles(styleType)
+                                        && styleType.IsDateTimeStyles()
                                         && resultType.IsDateTime():
 
                                         AnalyzeTryParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateTime(

@@ -11,9 +11,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
 public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyzer where N : struct
 {
-    [Pure]
-    static bool IsNumberStyles(IType type) => type.IsClrType(ClrTypeNames.NumberStyles);
-
     /// <remarks>
     /// <c>T.Clamp(value, n, n)</c> → <c>n</c><para/>
     /// <c>T.Clamp(value, 0, 255)</c> → <c>value</c>
@@ -808,7 +805,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var sType }, { Type: var styleType }], [_, { } styleArgument])
-                                    when sType.IsString() && IsNumberStyles(styleType):
+                                    when sType.IsString() && styleType.IsNumberStyles():
 
                                     AnalyzeParse_String_NumberStyles(consumer, element, styleArgument);
                                     break;
@@ -821,22 +818,18 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
 
                                 case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }], [
                                     _, { } styleArgument, { } providerArgument,
-                                ]) when sType.IsString() && IsNumberStyles(styleType) && providerType.IsIFormatProvider():
+                                ]) when sType.IsString() && styleType.IsNumberStyles() && providerType.IsIFormatProvider():
                                     AnalyzeParse_String_NumberStyles_IFormatProvider(consumer, element, styleArgument, providerArgument);
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && providerType.IsIFormatProvider():
+                                    when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
 
                                     AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, element, providerArgument);
                                     break;
 
                                 case ([{ Type: var utf8TextType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when utf8TextType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsByte()
-                                    && providerType.IsIFormatProvider():
+                                    when utf8TextType.IsReadOnlySpanOfByte() && providerType.IsIFormatProvider():
 
                                     AnalyzeParse_ReadOnlySpanOfByte_IFormatProvider(consumer, element, providerArgument);
                                     break;
@@ -849,7 +842,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                                 case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
                                         _, { } styleArgument, _, _,
                                     ]) when sType.IsString()
-                                    && IsNumberStyles(styleType)
+                                    && styleType.IsNumberStyles()
                                     && providerType.IsIFormatProvider()
                                     && resultType.IsClrType(numberInfo.ClrTypeName):
 
@@ -864,9 +857,8 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
 
                                 case ([{ Type: var sType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
                                         _, { } styleArgument, _, _,
-                                    ]) when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && IsNumberStyles(styleType)
+                                    ]) when sType.IsReadOnlySpanOfChar()
+                                    && styleType.IsNumberStyles()
                                     && providerType.IsIFormatProvider()
                                     && resultType.IsClrType(numberInfo.ClrTypeName):
 
@@ -874,8 +866,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
+                                    when sType.IsReadOnlySpanOfChar()
                                     && providerType.IsIFormatProvider()
                                     && resultType.IsClrType(numberInfo.ClrTypeName):
 
@@ -884,9 +875,8 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
 
                                 case ([{ Type: var utf8TextType }, { Type: var styleType }, { Type: var providerType }, { Type: var resultType }], [
                                         _, { } styleArgument, _, _,
-                                    ]) when utf8TextType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsByte()
-                                    && IsNumberStyles(styleType)
+                                    ]) when utf8TextType.IsReadOnlySpanOfByte()
+                                    && styleType.IsNumberStyles()
                                     && providerType.IsIFormatProvider()
                                     && resultType.IsClrType(numberInfo.ClrTypeName):
 
@@ -894,8 +884,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsByte()
+                                    when sType.IsReadOnlySpanOfByte()
                                     && providerType.IsIFormatProvider()
                                     && resultType.IsClrType(numberInfo.ClrTypeName):
 

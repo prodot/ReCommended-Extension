@@ -64,12 +64,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         ];
     }
 
-    [Pure]
-    static bool IsDateOnly(IType type) => type.IsClrType(PredefinedType.DATE_ONLY_FQN);
-
-    [Pure]
-    static bool IsDateTimeStyles(IType type) => type.IsClrType(ClrTypeNames.DateTimeStyles);
-
     /// <remarks>
     /// <c>dateOnly.AddDays(0)</c> → <c>dateOnly</c>
     /// </remarks>
@@ -578,7 +572,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                         case "Equals": // todo: nameof(DateOnly.Equals) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var valueType }], [{ } valueArgument]) when IsDateOnly(valueType):
+                                case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsDateOnly():
                                     AnalyzeEquals_DateOnly(consumer, element, invokedExpression, valueArgument);
                                     break;
 
@@ -617,7 +611,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                             {
                                 case ([{ Type: var sType }, { Type: var providerType }, { Type: var styleType }], [
                                     _, { } providerArgument, var styleArgument,
-                                ]) when sType.IsString() && providerType.IsIFormatProvider() && IsDateTimeStyles(styleType):
+                                ]) when sType.IsString() && providerType.IsIFormatProvider() && styleType.IsDateTimeStyles():
                                     AnalyzeParse_String_IFormatProvider_DateTimeStyles(consumer, element, providerArgument, styleArgument);
                                     break;
 
@@ -628,9 +622,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && providerType.IsIFormatProvider():
+                                    when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
 
                                     AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, element, providerArgument);
                                     break;
@@ -642,7 +634,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                             {
                                 case ([{ Type: var sType }, { Type: var formatType }, { Type: var providerType }, { Type: var styleType }], [
                                     _, { } formatArgument, { } providerArgument, var styleArgument,
-                                ]) when sType.IsString() && formatType.IsString() && providerType.IsIFormatProvider() && IsDateTimeStyles(styleType):
+                                ]) when sType.IsString() && formatType.IsString() && providerType.IsIFormatProvider() && styleType.IsDateTimeStyles():
                                     AnalyzeParseExact_String_String_IFormatProvider_DateTimeStyles(
                                         consumer,
                                         element,
@@ -652,7 +644,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var formatsType }], [_, { } formatsArgument])
-                                    when sType.IsString() && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, element):
+                                    when sType.IsString() && formatsType.IsGenericArrayOfString():
 
                                     AnalyzeParseExact_String_StringArray(consumer, element, formatsArgument);
                                     break;
@@ -660,9 +652,9 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                 case ([{ Type: var sType }, { Type: var formatsType }, { Type: var providerType }, { Type: var styleType }], [
                                         _, { } formatsArgument, { } providerArgument, var styleArgument,
                                     ]) when sType.IsString()
-                                    && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, element)
+                                    && formatsType.IsGenericArrayOfString()
                                     && providerType.IsIFormatProvider()
-                                    && IsDateTimeStyles(styleType):
+                                    && styleType.IsDateTimeStyles():
 
                                     AnalyzeParseExact_String_StringArray_IFormatProvider_DateTimeStyles(
                                         consumer,
@@ -672,21 +664,18 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                         styleArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var formatsType }], [_, { } formatsArgument])
-                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, element):
+                                case ([{ Type: var sType }, { Type: var formatsType }], [_, { } formatsArgument]) when sType.IsReadOnlySpanOfChar()
+                                    && formatsType.IsGenericArrayOfString():
 
                                     AnalyzeParseExact_ReadOnlySpanOfChar_StringArray(consumer, formatsArgument);
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var formatsType }, { Type: var providerType }, { Type: var styleType }], [
                                         _, { } formatsArgument, { } providerArgument, var styleArgument,
-                                    ]) when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, element)
+                                    ]) when sType.IsReadOnlySpanOfChar()
+                                    && formatsType.IsGenericArrayOfString()
                                     && providerType.IsIFormatProvider()
-                                    && IsDateTimeStyles(styleType):
+                                    && styleType.IsDateTimeStyles():
 
                                     AnalyzeParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_DateTimeStyles(
                                         consumer,

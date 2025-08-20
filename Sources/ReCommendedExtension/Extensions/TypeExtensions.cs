@@ -1,8 +1,6 @@
-﻿using JetBrains.Metadata.Reader.API;
-using JetBrains.ReSharper.Feature.Services.Util;
+﻿using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Conversions;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
@@ -13,44 +11,61 @@ namespace ReCommendedExtension.Extensions;
 internal static class TypeExtensions
 {
     [Pure]
-    public static bool IsGenericArray(this IType type, ITreeNode context)
-        => CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType
-            && type.IsImplicitlyConvertibleTo(
-                TypeFactory.CreateArrayType(elementType, 1, NullableAnnotation.Unknown),
-                context.GetTypeConversionRule());
+    public static bool IsGenericArray(this IType type) => type is IArrayType { Rank: 1 };
 
     [Pure]
-    public static bool IsGenericArrayOfAnyRank(this IType type, ITreeNode context)
-    {
-        if (CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType)
-        {
-            for (var i = 1; i <= 16; i++)
-            {
-                if (type.IsImplicitlyConvertibleTo(
-                    TypeFactory.CreateArrayType(elementType, i, NullableAnnotation.Unknown),
-                    context.GetTypeConversionRule()))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
+    public static bool IsGenericArrayOfAnyRank(this IType type) => type is IArrayType;
 
     [Pure]
-    public static bool IsGenericArrayOf(this IType type, IClrTypeName elementTypeName, ITreeNode context)
-        => CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType
-            && elementType.IsClrType(elementTypeName)
-            && type.IsImplicitlyConvertibleTo(
-                TypeFactory.CreateArrayType(elementType, 1, NullableAnnotation.Unknown),
-                context.GetTypeConversionRule());
+    public static bool IsGenericArrayOfObject(this IType type) => type is IArrayType(var elementType, 1) && elementType.IsObject();
+
+    [Pure]
+    public static bool IsGenericArrayOfString(this IType type) => type is IArrayType(var elementType, 1) && elementType.IsString();
+
+    [Pure]
+    public static bool IsGenericArrayOfChar(this IType type) => type is IArrayType(var elementType, 1) && elementType.IsChar();
 
     [Pure]
     public static bool IsReadOnlySpanOfObject(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsObject();
 
     [Pure]
     public static bool IsReadOnlySpanOfString(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsString();
+
+    [Pure]
+    public static bool IsReadOnlySpanOfChar(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsChar();
+
+    [Pure]
+    public static bool IsReadOnlySpanOfByte(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsByte();
+
+    [Pure]
+    public static bool IsDateOnly(this IType type) => type.IsClrType(PredefinedType.DATE_ONLY_FQN);
+
+    [Pure]
+    public static bool IsTimeOnly(this IType type) => type.IsClrType(PredefinedType.TIME_ONLY_FQN);
+
+    [Pure]
+    public static bool IsTimeSpanStyles(this IType type) => type.IsClrType(ClrTypeNames.TimeSpanStyles);
+
+    [Pure]
+    public static bool IsDateTimeStyles(this IType type) => type.IsClrType(ClrTypeNames.DateTimeStyles);
+
+    [Pure]
+    public static bool IsDateTimeKind(this IType type) => type.IsClrType(ClrTypeNames.DateTimeKind);
+
+    [Pure]
+    public static bool IsCalendar(this IType type) => type.IsClrType(ClrTypeNames.Calendar);
+
+    [Pure]
+    public static bool IsNumberStyles(this IType type) => type.IsClrType(ClrTypeNames.NumberStyles);
+
+    [Pure]
+    public static bool IsMidpointRounding(this IType type) => type.IsClrType(ClrTypeNames.MidpointRounding);
+
+    [Pure]
+    public static bool IsStringComparison(this IType type) => type.IsClrType(PredefinedType.STRING_COMPARISON_CLASS);
+
+    [Pure]
+    public static bool IsStringSplitOptions(this IType type) => type.IsClrType(ClrTypeNames.StringSplitOptions);
 
     [Pure]
     public static bool IsGenericIEnumerableOrDescendant(this IType type)
@@ -87,39 +102,23 @@ internal static class TypeExtensions
     }
 
     [Pure]
-    public static bool IsDisposable(this IType type, ITreeNode context)
-    {
-        if (type.GetTypeElement() is { } typeElement)
-        {
-            var psiModule = context.GetPsiModule();
-
-            return typeElement.IsDisposable(psiModule) && !type.IsTask() && !type.IsGenericTask()
+    public static bool IsDisposable(this IType type)
+        => type.GetTypeElement() is { } typeElement
+            && (typeElement.IsDisposable() && !type.IsTask() && !type.IsGenericTask()
                 || typeElement.IsNullableOfT()
                 && TypesUtil.GetTypeArgumentValue(type, 0).GetTypeElement() is { } structType
-                && structType.IsDisposable(psiModule)
-                || typeElement is IStruct { IsByRefLike: true } s && s.HasDisposeMethods();
-        }
-
-        return false;
-    }
+                && structType.IsDisposable()
+                || typeElement is IStruct { IsByRefLike: true } s && s.HasDisposeMethods());
 
     [Pure]
     public static bool IsTasklikeOfDisposable(this IType type, ITreeNode context)
-    {
-        if (type.IsTasklike(context)
+        => type.IsTasklike(context)
             && type.GetTasklikeUnderlyingType(context) is { } awaitedType
-            && awaitedType.GetTypeElement() is { } awaitedTypeElement)
-        {
-            var psiModule = context.GetPsiModule();
-
-            return awaitedTypeElement.IsDisposable(psiModule) && !awaitedType.IsTask() && !awaitedType.IsGenericTask()
+            && awaitedType.GetTypeElement() is { } awaitedTypeElement
+            && (awaitedTypeElement.IsDisposable() && !awaitedType.IsTask() && !awaitedType.IsGenericTask()
                 || awaitedTypeElement.IsNullableOfT()
                 && TypesUtil.GetTypeArgumentValue(awaitedType, 0).GetTypeElement() is { } structType
-                && structType.IsDisposable(psiModule);
-        }
-
-        return false;
-    }
+                && structType.IsDisposable());
 
     [Pure]
     public static bool IsGenericType(this IType type) => (type as IDeclaredType)?.GetTypeElement() is { TypeParameters: [_, ..] };

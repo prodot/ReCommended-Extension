@@ -7,6 +7,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
 using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -40,9 +41,6 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
 
         return false;
     }
-
-    [Pure]
-    static bool IsDateOnly(IType type) => type.IsClrType(PredefinedType.DATE_ONLY_FQN);
 
     protected override void Run(ICSharpArgumentsOwner element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
@@ -115,7 +113,7 @@ public sealed class FormatStringAnalyzer(FormattingFunctionInvocationInfoProvide
                             break;
                         }
 
-                        case ['d'] when IsDateOnly(expressionType) || expressionType.IsNullable() && IsDateOnly(expressionType.Unlift()):
+                        case ['d'] when expressionType.IsDateOnly() || expressionType.IsNullable() && expressionType.Unlift().IsDateOnly():
                         {
                             consumer.AddHighlighting(
                                 new RedundantFormatSpecifierHint(

@@ -460,7 +460,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     _ => throw new NotSupportedException(),
                 };
 
-                if (type.IsDisposable(element.GetPsiModule()))
+                if (type.IsDisposable())
                 {
                     if (!IsAnnotatedWithAnyOf(type, PurityOrDisposabilityKind.MustDisposeResource, PurityOrDisposabilityKind.MustDisposeResourceFalse)
                         && !IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
@@ -507,7 +507,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             case IClassLikeDeclaration { DeclaredElement: { } type }
                 and (IStructDeclaration { IsByRefLike: false } or IRecordDeclaration { IsStruct: true }):
             {
-                if (type.IsDisposable(element.GetPsiModule()) && type.Constructors.All(c => c.IsImplicit))
+                if (type.IsDisposable() && type.Constructors.All(c => c.IsImplicit))
                 {
                     var typeDescription = element switch
                     {
@@ -556,8 +556,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 switch (typeDeclaration)
                 {
                     case IClassLikeDeclaration { DeclaredElement: { } type }
-                        and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration)
-                        when type.IsDisposable(element.GetPsiModule()):
+                        and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration) when type.IsDisposable():
                     {
                         if (!IsAnnotatedWithAnyOf(
                                 constructor,
@@ -611,8 +610,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     }
 
                     case IClassLikeDeclaration { DeclaredElement: { } type }
-                        and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration)
-                        when !type.IsDisposable(element.GetPsiModule()):
+                        and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration) when !type.IsDisposable():
                     {
                         if (IsAnnotatedWithAnyOf(
                             constructor,
@@ -680,7 +678,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     _ => throw new NotSupportedException(),
                 };
 
-                if (returnType.IsDisposable(element) || returnType.IsTasklikeOfDisposable(element))
+                if (returnType.IsDisposable() || returnType.IsTasklikeOfDisposable(element))
                 {
                     if (IsAnnotated(methodOrLocalFunction, PurityOrDisposabilityKind.Pure))
                     {
@@ -849,7 +847,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             case IParameterDeclaration { DeclaredElement: { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter }:
             {
-                if (parameter.Type.IsDisposable(element) || parameter.Type.IsTasklikeOfDisposable(element))
+                if (parameter.Type.IsDisposable() || parameter.Type.IsTasklikeOfDisposable(element))
                 {
                     if (TryGetAnnotation(parameter, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {
@@ -978,7 +976,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         HighlightNotAllowed("Annotation is not valid for private methods.");
                     }
 
-                    if (method.ContainingType.IsDisposable(element.GetPsiModule()) || method.ContainingType is IStruct { IsByRefLike: true })
+                    if (method.ContainingType.IsDisposable() || method.ContainingType is IStruct { IsByRefLike: true })
                     {
                         if (method.IsDisposeMethod())
                         {
@@ -1022,7 +1020,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 {
                     if (parameter.Kind is ParameterKind.VALUE or ParameterKind.INPUT or ParameterKind.READONLY_REFERENCE or ParameterKind.REFERENCE)
                     {
-                        if (parameter.Type.IsDisposable(element))
+                        if (parameter.Type.IsDisposable())
                         {
                             if (IsParameterOfAnyBaseMethodAnnotated(parameter))
                             {
@@ -1047,7 +1045,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             case IPropertyDeclaration { DeclaredElement: { } property }:
                 if (IsAnnotated(property))
                 {
-                    if (property.Type.IsDisposable(element))
+                    if (property.Type.IsDisposable())
                     {
                         if (IsAnyBasePropertyAnnotated(property))
                         {
@@ -1064,7 +1062,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 break;
 
             case IFieldDeclaration { DeclaredElement: { } field }:
-                if (IsAnnotated(field) && !field.Type.IsDisposable(element))
+                if (IsAnnotated(field) && !field.Type.IsDisposable())
                 {
                     HighlightNotAllowed("Annotation is not valid because the field is not disposable.");
                 }
@@ -1540,7 +1538,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             if (type is { })
             {
-                if (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArrayOfAnyRank(attributesOwnerDeclaration))
+                if (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArrayOfAnyRank())
                 {
                     var elementType = CollectionTypeUtil.ElementTypeByCollectionType(type, attributesOwnerDeclaration, false);
                     if (elementType is { Classify: not TypeClassification.REFERENCE_TYPE })

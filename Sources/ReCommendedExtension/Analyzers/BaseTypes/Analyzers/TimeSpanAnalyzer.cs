@@ -129,9 +129,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         ];
     }
 
-    [Pure]
-    static bool IsTimeSpanStyles(IType type) => type.IsClrType(ClrTypeNames.TimeSpanStyles);
-
     /// <remarks>
     /// <c>new TimeSpan(0)</c> → <c>TimeSpan.Zero</c><para/>
     /// <c>new TimeSpan(long.MinValue)</c> → <c>TimeSpan.MinValue</c><para/>
@@ -1708,7 +1705,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                         when inputType.IsString()
                                         && formatType.IsString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsTimeSpanStyles(stylesType):
+                                        && stylesType.IsTimeSpanStyles():
 
                                         AnalyzeParseExact_String_String_IFormatProvider_TimeSpanStyles(
                                             consumer,
@@ -1719,11 +1716,8 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                         break;
 
                                     case ([{ Type: var inputType }, { Type: var formatsType }, { Type: var formatProviderType }], [
-                                            _, { } formatsArgument, _,
-                                        ]) when inputType.IsString()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
-                                        && formatProviderType.IsIFormatProvider():
-
+                                        _, { } formatsArgument, _,
+                                    ]) when inputType.IsString() && formatsType.IsGenericArrayOfString() && formatProviderType.IsIFormatProvider():
                                         AnalyzeParseExact_String_StringArray_IFormatProvider(consumer, invocationExpression, formatsArgument);
                                         break;
 
@@ -1732,11 +1726,10 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             { Type: var formatsType },
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
-                                        ], [_, { } formatsArgument, _, { } stylesArgument])
-                                        when inputType.IsString()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, _, { } stylesArgument]) when inputType.IsString()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsTimeSpanStyles(stylesType):
+                                        && stylesType.IsTimeSpanStyles():
 
                                         AnalyzeParseExact_String_StringArray_IFormatProvider_TimeSpanStyles(
                                             consumer,
@@ -1750,12 +1743,10 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             { Type: var formatsType },
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
-                                        ], [_, { } formatsArgument, _, _])
-                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, _, _]) when inputType.IsReadOnlySpanOfChar()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsTimeSpanStyles(stylesType):
+                                        && stylesType.IsTimeSpanStyles():
 
                                         AnalyzeParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpanStyles(consumer, formatsArgument);
                                         break;
@@ -1772,12 +1763,8 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                         break;
 
                                     case ([{ Type: var inputType }, { Type: var formatProviderType }, { Type: var resultType }], [
-                                            _, { } formatProviderArgument, _,
-                                        ]) when inputType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatProviderType.IsIFormatProvider()
-                                        && resultType.IsTimeSpan():
-
+                                        _, { } formatProviderArgument, _,
+                                    ]) when inputType.IsReadOnlySpanOfChar() && formatProviderType.IsIFormatProvider() && resultType.IsTimeSpan():
                                         AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_TimeSpan(
                                             consumer,
                                             invocationExpression,
@@ -1813,7 +1800,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                         when inputType.IsString()
                                         && formatType.IsString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsTimeSpanStyles(stylesType)
+                                        && stylesType.IsTimeSpanStyles()
                                         && resultType.IsTimeSpan():
 
                                         AnalyzeTryParseExact_String_String_IFormatProvider_TimeSpanStyles_TimeSpan(
@@ -1830,13 +1817,10 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
                                             { Type: var resultType },
-                                        ], [_, _, _, { } stylesArgument, _])
-                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatType.IsReadOnlySpan(out spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
+                                        ], [_, _, _, { } stylesArgument, _]) when inputType.IsReadOnlySpanOfChar()
+                                        && formatType.IsReadOnlySpanOfChar()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsTimeSpanStyles(stylesType)
+                                        && stylesType.IsTimeSpanStyles()
                                         && resultType.IsTimeSpan():
 
                                         AnalyzeTryParseExact_ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_TimeSpanStyles_TimeSpan(
@@ -1850,9 +1834,8 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             { Type: var formatsType },
                                             { Type: var formatProviderType },
                                             { Type: var resultType },
-                                        ], [_, { } formatsArgument, _, _])
-                                        when inputType.IsString()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, _, _]) when inputType.IsString()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
                                         && resultType.IsTimeSpan():
 
@@ -1868,11 +1851,10 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
                                             { Type: var resultType },
-                                        ], [_, { } formatsArgument, _, { } stylesArgument, _])
-                                        when inputType.IsString()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, _, { } stylesArgument, _]) when inputType.IsString()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsTimeSpanStyles(stylesType)
+                                        && stylesType.IsTimeSpanStyles()
                                         && resultType.IsTimeSpan():
 
                                         AnalyzeTryParseExact_String_StringArray_IFormatProvider_TimeSpanStyles_TimeSpan(
@@ -1887,10 +1869,8 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             { Type: var formatsType },
                                             { Type: var formatProviderType },
                                             { Type: var resultType },
-                                        ], [_, { } formatsArgument, _, _])
-                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, _, _]) when inputType.IsReadOnlySpanOfChar()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
                                         && resultType.IsTimeSpan():
 
@@ -1903,12 +1883,10 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
                                             { Type: var resultType },
-                                        ], [_, { } formatsArgument, _, { } stylesArgument, _])
-                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, _, { } stylesArgument, _]) when inputType.IsReadOnlySpanOfChar()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsTimeSpanStyles(stylesType)
+                                        && stylesType.IsTimeSpanStyles()
                                         && resultType.IsTimeSpan():
 
                                         AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpanStyles_TimeSpan(

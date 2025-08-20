@@ -397,7 +397,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     else
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, argument)
+                            && !argumentType.IsGenericArrayOfObject()
                             && MethodExists())
                         {
                             consumer.AddHighlighting(
@@ -650,7 +650,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     else
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsGenericArrayOf(PredefinedType.STRING_FQN, argument)
+                            && !argumentType.IsGenericArrayOfString()
                             && MethodExists())
                         {
                             consumer.AddHighlighting(
@@ -841,7 +841,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     else
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, argument)
+                            && !argumentType.IsGenericArrayOfObject()
                             && MethodExists())
                         {
                             consumer.AddHighlighting(
@@ -1030,7 +1030,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     else
                     {
                         if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsGenericArrayOf(PredefinedType.STRING_FQN, argument)
+                            && !argumentType.IsGenericArrayOfString()
                             && MethodExists())
                         {
                             consumer.AddHighlighting(
@@ -1325,13 +1325,13 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             AnalyzeAppend_Char_Int32(consumer, element, invokedExpression, repeatCountArgument);
                             break;
 
-                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element):
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsGenericArrayOfChar():
                             AnalyzeAppend_CharArray(consumer, element, invokedExpression, valueArgument);
                             break;
 
                         case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var charCountType }], [
                             { } valueArgument, { } startIndexArgument, { } charCountArgument,
-                        ]) when valueType.IsGenericArrayOf(PredefinedType.CHAR_FQN, element) && startIndexType.IsInt() && charCountType.IsInt():
+                        ]) when valueType.IsGenericArrayOfChar() && startIndexType.IsInt() && charCountType.IsInt():
                             AnalyzeAppend_CharArray_Int32_Int32(
                                 consumer,
                                 element,
@@ -1377,7 +1377,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
-                            when separatorType.IsString() && valuesType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, element):
+                            when separatorType.IsString() && valuesType.IsGenericArrayOfObject():
 
                             AnalyzeAppendJoin_String_ObjectArray(consumer, element, invokedExpression, arguments);
                             break;
@@ -1396,7 +1396,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             break;
 
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
-                            when separatorType.IsString() && valuesType.IsGenericArrayOf(PredefinedType.STRING_FQN, element):
+                            when separatorType.IsString() && valuesType.IsGenericArrayOfString():
 
                             AnalyzeAppendJoin_String_StringArray(consumer, element, invokedExpression, arguments);
                             break;
@@ -1408,7 +1408,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             break;
 
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
-                            when separatorType.IsChar() && valuesType.IsGenericArrayOf(PredefinedType.OBJECT_FQN, element):
+                            when separatorType.IsChar() && valuesType.IsGenericArrayOfObject():
 
                             AnalyzeAppendJoin_Char_ObjectArray(consumer, element, invokedExpression, arguments);
                             break;
@@ -1426,7 +1426,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             break;
 
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
-                            when separatorType.IsChar() && valuesType.IsGenericArrayOf(PredefinedType.STRING_FQN, element):
+                            when separatorType.IsChar() && valuesType.IsGenericArrayOfString():
 
                             AnalyzeAppendJoin_Char_StringArray(consumer, element, invokedExpression, arguments);
                             break;

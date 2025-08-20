@@ -50,7 +50,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     [Pure]
     static bool IsIndexableCollectionOrString(IType type, ITreeNode context)
     {
-        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray(context) || type.IsString())
+        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray() || type.IsString())
         {
             return true;
         }
@@ -69,7 +69,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     [Pure]
     static bool IsIndexableCollectionOrString(IType type, ICSharpExpression expression, out bool hasAccessibleIndexer)
     {
-        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray(expression) || type.IsString())
+        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray() || type.IsString())
         {
             hasAccessibleIndexer = true;
             return true;
@@ -177,7 +177,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                         invocationExpression,
                         invokedExpression,
                         indexArgument.Value.GetText(),
-                        type.IsGenericArray(invocationExpression) || type.IsString()));
+                        type.IsGenericArray() || type.IsString()));
             }
 
             return;
@@ -384,7 +384,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (type.IsString() || type.IsGenericArray(invokedExpression))
+        if (type.IsString() || type.IsGenericArray())
         {
             consumer.AddHighlighting(
                 new UseCollectionPropertySuggestion(

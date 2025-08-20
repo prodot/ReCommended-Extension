@@ -130,12 +130,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
         ];
     }
 
-    [Pure]
-    static bool IsCalendar(IType type) => type.IsClrType(ClrTypeNames.Calendar);
-
-    [Pure]
-    static bool IsDateTimeStyles(IType type) => type.IsClrType(ClrTypeNames.DateTimeStyles);
-
     /// <remarks>
     /// <c>new DateTimeOffset(year, month, day, hour, minute, second, 0, offset)</c> → <c>new DateTimeOffset(year, month, day, hour, minute, second, offset)</c>
     /// </remarks>
@@ -968,7 +962,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                         && secondType.IsInt()
                         && millisecondType.IsInt()
                         && microsecondType.IsInt()
-                        && IsCalendar(calendarType)
+                        && calendarType.IsCalendar()
                         && offsetType.IsTimeSpan():
 
                         Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_TimeSpan(
@@ -1090,14 +1084,12 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
 
                                     case ([{ Type: var inputType }, { Type: var formatProviderType }, { Type: var stylesType }], [
                                         _, _, { } stylesArgument,
-                                    ]) when inputType.IsString() && formatProviderType.IsIFormatProvider() && IsDateTimeStyles(stylesType):
+                                    ]) when inputType.IsString() && formatProviderType.IsIFormatProvider() && stylesType.IsDateTimeStyles():
                                         AnalyzeParse_String_IFormatProvider_DateTimeStyles(consumer, invocationExpression, stylesArgument);
                                         break;
 
                                     case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                        when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && providerType.IsIFormatProvider():
+                                        when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
 
                                         AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, invocationExpression, providerArgument);
                                         break;
@@ -1122,7 +1114,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                         when inputType.IsString()
                                         && formatType.IsString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType):
+                                        && stylesType.IsDateTimeStyles():
 
                                         AnalyzeParseExact_String_String_IFormatProvider_DateTimeStyles(
                                             consumer,
@@ -1137,11 +1129,10 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                             { Type: var formatsType },
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
-                                        ], [_, { } formatsArgument, { } formatProviderArgument, _])
-                                        when inputType.IsString()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, { } formatProviderArgument, _]) when inputType.IsString()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType):
+                                        && stylesType.IsDateTimeStyles():
 
                                         AnalyzeParseExact_String_StringArray_IFormatProvider_DateTimeStyles(
                                             consumer,
@@ -1155,12 +1146,10 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                             { Type: var formatsType },
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
-                                        ], [_, { } formatsArgument, { } formatProviderArgument, _])
-                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, { } formatProviderArgument, _]) when inputType.IsReadOnlySpanOfChar()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType):
+                                        && stylesType.IsDateTimeStyles():
 
                                         AnalyzeParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles(
                                             consumer,
@@ -1180,10 +1169,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                         break;
 
                                     case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                        when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && providerType.IsIFormatProvider()
-                                        && resultType.IsDateTimeOffset():
+                                        when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider() && resultType.IsDateTimeOffset():
 
                                         AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeOffset(
                                             consumer,
@@ -1199,7 +1185,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                         ], [_, _, { } stylesArgument, _])
                                         when inputType.IsString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType)
+                                        && stylesType.IsDateTimeStyles()
                                         && resultType.IsDateTimeOffset():
 
                                         AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_DateTimeOffset(
@@ -1213,11 +1199,9 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
                                             { Type: var resultType },
-                                        ], [_, _, { } stylesArgument, _])
-                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
+                                        ], [_, _, { } stylesArgument, _]) when inputType.IsReadOnlySpanOfChar()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType)
+                                        && stylesType.IsDateTimeStyles()
                                         && resultType.IsDateTimeOffset():
 
                                         AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_DateTimeOffset(
@@ -1241,7 +1225,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                         when inputType.IsString()
                                         && formatType.IsString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType)
+                                        && stylesType.IsDateTimeStyles()
                                         && resultType.IsDateTimeOffset():
 
                                         AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateTimeOffset(
@@ -1256,11 +1240,10 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
                                             { Type: var resultType },
-                                        ], [_, { } formatsArgument, { } formatProviderArgument, _, _])
-                                        when inputType.IsString()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, { } formatProviderArgument, _, _]) when inputType.IsString()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType)
+                                        && stylesType.IsDateTimeStyles()
                                         && resultType.IsDateTimeOffset():
 
                                         AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateTimeOffset(
@@ -1276,12 +1259,10 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
                                             { Type: var resultType },
-                                        ], [_, { } formatsArgument, { } formatProviderArgument, _, _])
-                                        when inputType.IsReadOnlySpan(out var spanTypeArgument)
-                                        && spanTypeArgument.IsChar()
-                                        && formatsType.IsGenericArrayOf(PredefinedType.STRING_FQN, invocationExpression)
+                                        ], [_, { } formatsArgument, { } formatProviderArgument, _, _]) when inputType.IsReadOnlySpanOfChar()
+                                        && formatsType.IsGenericArrayOfString()
                                         && formatProviderType.IsIFormatProvider()
-                                        && IsDateTimeStyles(stylesType)
+                                        && stylesType.IsDateTimeStyles()
                                         && resultType.IsDateTimeOffset():
 
                                         AnalyzeTryParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateTimeOffset(

@@ -57,7 +57,7 @@ public sealed class AnnotateWithHandlesResourceDisposal(ICSharpContextActionData
         {
             IMethod { IsStatic: false, ContainingType: { } } method => method.GetAccessRights() is not (AccessRights.PRIVATE or AccessRights.NONE)
                 && (!IsAnyBaseMethodAnnotated(method)
-                    && method.ContainingType.IsDisposable(PsiModule)
+                    && method.ContainingType.IsDisposable()
                     && !method.IsDisposeMethod()
                     && !method.IsDisposeAsyncMethod()
                     || method.ContainingType is IStruct { IsByRefLike: true }
@@ -65,11 +65,11 @@ public sealed class AnnotateWithHandlesResourceDisposal(ICSharpContextActionData
                     && !method.IsDisposeAsyncMethodByConvention()),
 
             IParameter { Kind: ParameterKind.VALUE or ParameterKind.INPUT or ParameterKind.READONLY_REFERENCE or ParameterKind.REFERENCE } parameter
-                => parameter.Type.IsDisposable(context) && !IsParameterOfAnyBaseMethodAnnotated(parameter),
+                => parameter.Type.IsDisposable() && !IsParameterOfAnyBaseMethodAnnotated(parameter),
 
-            IProperty property => property.Type.IsDisposable(context) && !IsAnyBasePropertyAnnotated(property),
+            IProperty property => property.Type.IsDisposable() && !IsAnyBasePropertyAnnotated(property),
 
-            IField field => field.Type.IsDisposable(context),
+            IField field => field.Type.IsDisposable(),
 
             _ => false,
         };

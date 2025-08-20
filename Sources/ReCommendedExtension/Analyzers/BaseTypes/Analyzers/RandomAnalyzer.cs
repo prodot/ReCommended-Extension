@@ -262,7 +262,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     switch (method.TypeParameters, method.Parameters, element.TypeArguments, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], [{ Type: var choicesType }, { Type: var lengthType }], [_] or [], [{ } choicesArgument, { } lengthArgument])
-                            when choicesType.IsGenericArray(element) && lengthType.IsInt():
+                            when choicesType.IsGenericArray() && lengthType.IsInt():
                         {
                             AnalyzeGetItems_Array(
                                 consumer,

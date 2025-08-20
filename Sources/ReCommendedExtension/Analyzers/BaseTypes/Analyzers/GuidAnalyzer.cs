@@ -232,9 +232,7 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && providerType.IsIFormatProvider():
+                                    when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
 
                                     AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, element, providerArgument);
                                     break;
@@ -251,10 +249,7 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                                     break;
 
                                 case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                    when sType.IsReadOnlySpan(out var spanTypeArgument)
-                                    && spanTypeArgument.IsChar()
-                                    && providerType.IsIFormatProvider()
-                                    && resultType.IsGuid():
+                                    when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider() && resultType.IsGuid():
 
                                     AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_Guid(consumer, element, providerArgument);
                                     break;

@@ -11,9 +11,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
 public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyzer<N>(numberInfo) where N : struct
 {
-    [Pure]
-    static bool IsMidpointRounding(IType type) => type.IsClrType(ClrTypeNames.MidpointRounding);
-
     /// <remarks>
     /// <c>T.Round(value, 0)</c> → <c>T.Round(value)</c> (.NET 7 for floating-point types or .NET Core 2.0 for <see cref="decimal"/>)
     /// </remarks>
@@ -118,13 +115,13 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                             break;
 
                         case ([{ Type: var xType }, { Type: var modeType }], [_, { } modeArgument])
-                            when xType.IsClrType(NumberInfo.ClrTypeName) && IsMidpointRounding(modeType):
+                            when xType.IsClrType(NumberInfo.ClrTypeName) && modeType.IsMidpointRounding():
 
                             AnalyzeRound_N_MidpointRounding(consumer, element, modeArgument, NumberInfo.ClrTypeName);
                             break;
 
                         case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, { } digitsArgument, { } modeArgument])
-                            when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && IsMidpointRounding(modeType):
+                            when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && modeType.IsMidpointRounding():
 
                             AnalyzeRound_N_Int32_MidpointRounding(consumer, element, digitsArgument, modeArgument, NumberInfo.ClrTypeName);
                             break;
@@ -147,13 +144,13 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                             break;
 
                         case ([{ Type: var xType }, { Type: var modeType }], [_, { } modeArgument])
-                            when xType.IsClrType(NumberInfo.ClrTypeName) && IsMidpointRounding(modeType):
+                            when xType.IsClrType(NumberInfo.ClrTypeName) && modeType.IsMidpointRounding():
 
                             AnalyzeRound_N_MidpointRounding(consumer, element, modeArgument, ClrTypeNames.Math);
                             break;
 
                         case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, { } digitsArgument, { } modeArgument])
-                            when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && IsMidpointRounding(modeType):
+                            when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && modeType.IsMidpointRounding():
 
                             AnalyzeRound_N_Int32_MidpointRounding(consumer, element, digitsArgument, modeArgument, ClrTypeNames.Math);
                             break;
@@ -176,13 +173,13 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                             break;
 
                         case ([{ Type: var xType }, { Type: var modeType }], [_, { } modeArgument])
-                            when xType.IsClrType(NumberInfo.ClrTypeName) && IsMidpointRounding(modeType):
+                            when xType.IsClrType(NumberInfo.ClrTypeName) && modeType.IsMidpointRounding():
 
                             AnalyzeRound_N_MidpointRounding(consumer, element, modeArgument, ClrTypeNames.MathF);
                             break;
 
                         case ([{ Type: var xType }, { Type: var digitsType }, { Type: var modeType }], [_, { } digitsArgument, { } modeArgument])
-                            when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && IsMidpointRounding(modeType):
+                            when xType.IsClrType(NumberInfo.ClrTypeName) && digitsType.IsInt() && modeType.IsMidpointRounding():
 
                             AnalyzeRound_N_Int32_MidpointRounding(consumer, element, digitsArgument, modeArgument, ClrTypeNames.MathF);
                             break;
