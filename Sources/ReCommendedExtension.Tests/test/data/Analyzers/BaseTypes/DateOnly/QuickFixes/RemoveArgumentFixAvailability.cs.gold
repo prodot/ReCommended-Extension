@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Test
 {
@@ -33,6 +34,15 @@ namespace Test
             var result36 = dateOnly.ToString("O", |provider|(14));
             var result37 = dateOnly.ToString("r", |provider|(15));
             var result38 = dateOnly.ToString("R", |provider|(16));
+        }
+
+        public void TryParse(string s, ReadOnlySpan<char> s1, IFormatProvider? provider, out DateOnly result)
+        {
+            var result11 = DateOnly.TryParse(s, provider, |DateTimeStyles.None|(17), out result);
+            var result12 = DateOnly.TryParse(s, |null|(18), out result);
+
+            var result21 = DateOnly.TryParse(s1, provider, |DateTimeStyles.None|(19), out result);
+            var result22 = DateOnly.TryParse(s1, |null|(20), out result);
         }
     }
 }
@@ -86,5 +96,17 @@ Remove argument
 QUICKFIXES:
 Remove argument
 16: Passing a format provider is redundant.
+QUICKFIXES:
+Remove argument
+17: Passing DateTimeStyles.None is redundant.
+QUICKFIXES:
+Remove argument
+18: Passing null is redundant.
+QUICKFIXES:
+Remove argument
+19: Passing DateTimeStyles.None is redundant.
+QUICKFIXES:
+Remove argument
+20: Passing null is redundant.
 QUICKFIXES:
 Remove argument

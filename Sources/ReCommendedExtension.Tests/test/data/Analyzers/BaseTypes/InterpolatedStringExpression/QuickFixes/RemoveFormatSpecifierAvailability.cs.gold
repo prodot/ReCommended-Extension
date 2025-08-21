@@ -368,6 +368,16 @@ namespace Test
             var result2 = $"{value|:t|(204)}";
             var result3 = $"{value|:T|(205)}";
         }
+
+        public void DateOnly_(DateOnly value)
+        {
+            var result = $"{value|:d|(206)}";
+        }
+
+        public void DateOnly_(DateOnly? value)
+        {
+            var result = $"{value|:d|(207)}";
+        }
     }
 }
 ------------------------------------------------
@@ -987,5 +997,11 @@ Remove format specifier
 QUICKFIXES:
 Remove format specifier
 205: Specifying 'T' is redundant.
+QUICKFIXES:
+Remove format specifier
+206: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+207: Specifying 'd' is redundant.
 QUICKFIXES:
 Remove format specifier

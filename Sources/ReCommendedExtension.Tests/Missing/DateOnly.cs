@@ -65,6 +65,37 @@ public readonly record struct DateOnly : IFormattable
         => ParseExact(s.ToString(), formats, provider, style);
 
     [Pure]
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, DateTimeStyles style, out DateOnly result)
+    {
+        if (DateTime.TryParse(s, provider, style, out var dateTime))
+        {
+            result = FromDateTime(dateTime);
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    [Pure]
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out DateOnly result)
+        => TryParse(s, provider, DateTimeStyles.None, out result);
+
+    [Pure]
+    public static bool TryParse([NotNullWhen(true)] string? s, out DateOnly result) => TryParse(s, null, DateTimeStyles.None, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, DateTimeStyles style, out DateOnly result)
+        => TryParse(s.ToString(), provider, style, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out DateOnly result)
+        => TryParse(s.ToString(), provider, DateTimeStyles.None, out result);
+
+    [Pure]
+    public static bool TryParse(ReadOnlySpan<char> s, out DateOnly result) => TryParse(s.ToString(), null, DateTimeStyles.None, out result);
+
+    [Pure]
     public static bool TryParseExact(
         [NotNullWhen(true)] string? s,
         [NotNullWhen(true)] string?[]? formats,

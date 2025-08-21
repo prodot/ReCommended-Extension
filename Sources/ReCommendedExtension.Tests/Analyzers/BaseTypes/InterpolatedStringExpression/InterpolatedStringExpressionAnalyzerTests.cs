@@ -534,6 +534,17 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [TestNet60]
+    public void TestDateOnly()
+    {
+        var values = new[] { Missing.DateOnly.MinValue, Missing.DateOnly.MaxValue, new(2025, 7, 15) };
+
+        Test(dateOnly => $"{dateOnly:d}", dateOnly => $"{dateOnly}", values);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestInterpolatedStringHandler() => DoNamedTest2();

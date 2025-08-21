@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Test
 {
@@ -33,6 +34,15 @@ namespace Test
             var result36 = dateOnly.ToString("O", provider);
             var result37 = dateOnly.ToString("r", provider);
             var result38 = dateOnly.ToString("R", provider);
+        }
+
+        public void TryParse(string s, ReadOnlySpan<char> s1, IFormatProvider? provider, out DateOnly result)
+        {
+            var result11 = DateOnly.TryParse(s, provider, DateTimeStyles.None, out result);
+            var result12 = DateOnly.TryParse(s, null, out result);
+
+            var result21 = DateOnly.TryParse(s1, provider, DateTimeStyles.None, out result);
+            var result22 = DateOnly.TryParse(s1, null, out result);
         }
     }
 }

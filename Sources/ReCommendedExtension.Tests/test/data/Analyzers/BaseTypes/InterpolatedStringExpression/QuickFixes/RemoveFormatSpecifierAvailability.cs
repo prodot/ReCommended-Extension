@@ -368,5 +368,15 @@ namespace Test
             var result2 = $"{value:t}";
             var result3 = $"{value:T}";
         }
+
+        public void DateOnly_(DateOnly value)
+        {
+            var result = $"{value:d}";
+        }
+
+        public void DateOnly_(DateOnly? value)
+        {
+            var result = $"{value:d}";
+        }
     }
 }

@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -81,6 +82,12 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                     }
 
                     case [':', 'D' or 'd'] when expressionType.IsGuid() || expressionType.IsNullable() && expressionType.Unlift().IsGuid():
+                    {
+                        consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying '{format[1].ToString()}' is redundant.", insert));
+                        break;
+                    }
+
+                    case [':', 'd'] when expressionType.IsDateOnly() || expressionType.IsNullable() && expressionType.Unlift().IsDateOnly():
                     {
                         consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying '{format[1].ToString()}' is redundant.", insert));
                         break;

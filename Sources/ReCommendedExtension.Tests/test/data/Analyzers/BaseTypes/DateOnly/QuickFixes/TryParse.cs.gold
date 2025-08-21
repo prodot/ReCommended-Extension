@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DatesOnly
+    {
+        public void RedundantArgument(ReadOnlySpan<char> s, IFormatProvider? provider, out DateOnly result)
+        {
+            var result1 = DateOnly.TryParse(s, provider{caret}, out result);
+        }
+    }
+}
