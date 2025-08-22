@@ -19,7 +19,7 @@ namespace Test
             var result3 = DateOnly.ParseExact(s1, formats, null);
         }
 
-        public void OtherArgument(string s, string format, IFormatProvider provider, DateTimeStyles style)
+        public void OtherArgument(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style)
         {
             var result11 = DateOnly.ParseExact(s, "R", provider, style);
             var result12 = DateOnly.ParseExact(s, "R", provider);
@@ -28,6 +28,8 @@ namespace Test
 
             var result31 = DateOnly.ParseExact(s, [format], provider, style);
             var result32 = DateOnly.ParseExact(s, ["o", "r"], provider, style);
+
+            var result41 = DateOnly.ParseExact(s1, ["o", "r"], provider, style);
         }
 
         public void RedundantElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style)

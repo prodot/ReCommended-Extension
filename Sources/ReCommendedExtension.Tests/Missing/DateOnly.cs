@@ -98,6 +98,23 @@ public readonly record struct DateOnly : IFormattable
     [Pure]
     public static bool TryParseExact(
         [NotNullWhen(true)] string? s,
+        [NotNullWhen(true)] string? format,
+        IFormatProvider? provider,
+        DateTimeStyles style,
+        out DateOnly result)
+        => TryParseExact(s, [format], provider, style, out result);
+
+    [Pure]
+    public static bool TryParseExact([NotNullWhen(true)] string? s, [NotNullWhen(true)] string? format, out DateOnly result)
+        => TryParseExact(s, [format], null, DateTimeStyles.None, out result);
+
+    [Pure]
+    public static bool TryParseExact([NotNullWhen(true)] string? s, [NotNullWhen(true)] string?[]? formats, out DateOnly result)
+        => TryParseExact(s, formats, null, DateTimeStyles.None, out result);
+
+    [Pure]
+    public static bool TryParseExact(
+        [NotNullWhen(true)] string? s,
         [NotNullWhen(true)] string?[]? formats,
         IFormatProvider? provider,
         DateTimeStyles style,
@@ -128,6 +145,32 @@ public readonly record struct DateOnly : IFormattable
         result = default;
         return false;
     }
+
+    [Pure]
+    public static bool TryParseExact(
+        ReadOnlySpan<char> s,
+        ReadOnlySpan<char> format,
+        IFormatProvider? provider,
+        DateTimeStyles style,
+        out DateOnly result)
+        => TryParseExact(s.ToString(), [format.ToString()], provider, style, out result);
+
+    [Pure]
+    public static bool TryParseExact(ReadOnlySpan<char> s, ReadOnlySpan<char> format, out DateOnly result)
+        => TryParseExact(s.ToString(), [format.ToString()], null, DateTimeStyles.None, out result);
+
+    [Pure]
+    public static bool TryParseExact(
+        ReadOnlySpan<char> s,
+        [NotNullWhen(true)] string?[]? formats,
+        IFormatProvider? provider,
+        DateTimeStyles style,
+        out DateOnly result)
+        => TryParseExact(s.ToString(), formats, provider, style, out result);
+
+    [Pure]
+    public static bool TryParseExact(ReadOnlySpan<char> s, [NotNullWhen(true)] string?[]? formats, out DateOnly result)
+        => TryParseExact(s.ToString(), formats, null, DateTimeStyles.None, out result);
 
     readonly DateTime date;
 

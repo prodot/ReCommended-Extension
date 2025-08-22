@@ -59,6 +59,34 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
         ];
 
+        public static IReadOnlyList<ParameterType> String_String_DateOnly { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> String_StringArray_DateOnly { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_ReadOnlySpanOfT_DateOnly { get; } =
+        [
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+        ];
+
+        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_StringArray_DateOnly { get; } =
+        [
+            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+        ];
+
         public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider_DateTimeStyles { get; } =
         [
             new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
@@ -86,6 +114,15 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             new() { ClrTypeName = PredefinedType.STRING_FQN },
             new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
             new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
+        ];
+
+        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles_DateOnly { get; } =
+        [
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.STRING_FQN },
+            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
+            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
         ];
     }
 
@@ -641,6 +678,303 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         }
     }
 
+    /// <remarks>
+    /// <c>DateOnly.TryParseExact(s, format, null, DateTimeStyles.None, out result)</c> → <c>DateOnly.TryParseExact(s, format, out result)</c><para/>
+    /// <c>DateOnly.TryParseExact(s, "R", provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, "R", null, style, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateOnly(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatArgument,
+        ICSharpArgument providerArgument,
+        ICSharpArgument styleArgument)
+    {
+        if (providerArgument.Value.IsDefaultValue())
+        {
+            if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
+                && PredefinedType.DATE_ONLY_FQN.HasMethod(
+                    new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_String_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                    invocationExpression.PsiModule))
+            {
+                consumer.AddHighlighting(
+                    new RedundantArgumentRangeHint(
+                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                        providerArgument,
+                        styleArgument));
+            }
+        }
+        else
+        {
+            if (formatArgument.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" && providerArgument.Value is { })
+            {
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The format provider is ignored (pass null instead).",
+                        providerArgument,
+                        providerArgument.NameIdentifier?.Name,
+                        "null"));
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateOnly.TryParseExact(s, format, null, DateTimeStyles.None, out result)</c> → <c>DateOnly.TryParseExact(s, format, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_DateOnly(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument providerArgument,
+        ICSharpArgument styleArgument)
+    {
+        if (providerArgument.Value.IsDefaultValue()
+            && styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
+            && PredefinedType.DATE_ONLY_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfT_ReadOnlySpanOfT_DateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParseExact) when available
+                },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateOnly.TryParseExact(s, [format], out result)</c> → <c>DateOnly.TryParseExact(s, format, out result)</c><para/>
+    /// <c>DateOnly.TryParseExact(s, ["m", "M"], out result)</c> → <c>DateOnly.TryParseExact(s, ["m"], out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_StringArray_DateOnly(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument)
+    {
+        switch (CollectionCreation.TryFrom(formatsArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when PredefinedType.DATE_ONLY_FQN.HasMethod(
+                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_String_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                formatsArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The only collection element should be passed directly.",
+                        formatsArgument,
+                        parameterNames is [_, var formatParameterName, _] ? formatParameterName : null,
+                        collectionCreation.SingleElement.GetText()));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                {
+                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
+                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
+                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
+                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                        continue;
+                    }
+
+                    if (s != "" && !set.Add(s))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                    }
+                }
+
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateOnly.TryParseExact(s, ["m", "M"], out result)</c> → <c>DateOnly.TryParseExact(s, ["m"], out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_DateOnly(IHighlightingConsumer consumer, ICSharpArgument formatsArgument)
+    {
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+        {
+            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            {
+                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
+                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
+                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
+                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                    continue;
+                }
+
+                if (s != "" && !set.Add(s))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                }
+            }
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateOnly.TryParseExact(s, [format], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, format, provider, style, out result)</c><para/>
+    /// <c>DateOnly.TryParseExact(s, ["m", "M"], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, ["m"], provider, style, out result)</c><para/>
+    /// <c>DateOnly.TryParseExact(s, ["o", "R"], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, ["o", "R"], null, style, out result)</c><para/>
+    /// <c>DateOnly.TryParseExact(s, formats, null, DateTimeStyles.None, out result)</c> → <c>DateOnly.TryParseExact(s, formats, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateOnly(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument providerArgument,
+        ICSharpArgument styleArgument)
+    {
+        if (providerArgument.Value.IsDefaultValue()
+            && styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
+            && PredefinedType.DATE_ONLY_FQN.HasMethod(
+                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_StringArray_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
+        }
+
+        switch (CollectionCreation.TryFrom(formatsArgument.Value))
+        {
+            case { Count: 1 } collectionCreation when PredefinedType.DATE_ONLY_FQN.HasMethod(
+                new MethodSignature
+                {
+                    Name = "TryParseExact",
+                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles_DateOnly, // todo: nameof(DateOnly.TryParseExact) when available
+                    IsStatic = true,
+                },
+                formatsArgument.NameIdentifier is { },
+                out var parameterNames,
+                invocationExpression.PsiModule):
+
+                consumer.AddHighlighting(
+                    new UseOtherArgumentSuggestion(
+                        "The only collection element should be passed directly.",
+                        formatsArgument,
+                        parameterNames is [_, var formatParameterName, _, _, _] ? formatParameterName : null,
+                        collectionCreation.SingleElement.GetText()));
+                break;
+
+            case { Count: > 1 } collectionCreation:
+                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                {
+                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
+                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
+                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
+                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                        continue;
+                    }
+
+                    if (s != "" && !set.Add(s))
+                    {
+                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                    }
+                }
+
+                if (collectionCreation.AllElementsAreStringConstants)
+                {
+                    set.Remove("o");
+                    set.Remove("O");
+                    set.Remove("r");
+                    set.Remove("R");
+
+                    if (set.Count == 0)
+                    {
+                        consumer.AddHighlighting(
+                            new UseOtherArgumentSuggestion(
+                                "The format provider is ignored (pass null instead).",
+                                providerArgument,
+                                providerArgument.NameIdentifier?.Name,
+                                "null"));
+                    }
+                }
+
+                break;
+        }
+    }
+
+    /// <remarks>
+    /// <c>DateOnly.TryParseExact(s, ["m", "M"], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, ["m"], provider, style, out result)</c><para/>
+    /// <c>DateOnly.TryParseExact(s, ["o", "R"], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, ["o", "R"], null, style, out result)</c><para/>
+    /// <c>DateOnly.TryParseExact(s, formats, null, DateTimeStyles.None, out result)</c> → <c>DateOnly.TryParseExact(s, formats, out result)</c>
+    /// </remarks>
+    static void AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateOnly(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        ICSharpArgument formatsArgument,
+        ICSharpArgument providerArgument,
+        ICSharpArgument styleArgument)
+    {
+        if (providerArgument.Value.IsDefaultValue()
+            && styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
+            && PredefinedType.DATE_ONLY_FQN.HasMethod(
+                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfT_StringArray_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
+        }
+
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+        {
+            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
+
+            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            {
+                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
+                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
+                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
+                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
+                    continue;
+                }
+
+                if (s != "" && !set.Add(s))
+                {
+                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
+                }
+            }
+
+            if (collectionCreation.AllElementsAreStringConstants)
+            {
+                set.Remove("o");
+                set.Remove("O");
+                set.Remove("r");
+                set.Remove("R");
+
+                if (set.Count == 0)
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherArgumentSuggestion(
+                            "The format provider is ignored (pass null instead).",
+                            providerArgument,
+                            providerArgument.NameIdentifier?.Name,
+                            "null"));
+                }
+            }
+        }
+    }
+
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { Reference: var reference } invokedExpression }
@@ -815,6 +1149,102 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                     when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider() && resultType.IsDateOnly():
 
                                     AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateOnly(consumer, element, providerArgument);
+                                    break;
+                            }
+                            break;
+
+                        case "TryParseExact": // todo: nameof(DateOnly.TryParseExact) when available
+                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
+                            {
+                                case ([
+                                        { Type: var sType },
+                                        { Type: var formatType },
+                                        { Type: var providerType },
+                                        { Type: var styleType },
+                                        { Type: var resultType },
+                                    ], [_, { } formatArgument, { } providerArgument, { } styleArgument, _]) when sType.IsString()
+                                    && formatType.IsString()
+                                    && providerType.IsIFormatProvider()
+                                    && styleType.IsDateTimeStyles()
+                                    && resultType.IsDateOnly():
+
+                                    AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateOnly(
+                                        consumer,
+                                        element,
+                                        formatArgument,
+                                        providerArgument,
+                                        styleArgument);
+                                    break;
+
+                                case ([
+                                        { Type: var sType },
+                                        { Type: var formatType },
+                                        { Type: var providerType },
+                                        { Type: var styleType },
+                                        { Type: var resultType },
+                                    ], [_, _, { } providerArgument, { } styleArgument, _]) when sType.IsReadOnlySpanOfChar()
+                                    && formatType.IsReadOnlySpanOfChar()
+                                    && providerType.IsIFormatProvider()
+                                    && styleType.IsDateTimeStyles()
+                                    && resultType.IsDateOnly():
+
+                                    AnalyzeTryParseExact_ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_DateOnly(
+                                        consumer,
+                                        element,
+                                        providerArgument,
+                                        styleArgument);
+                                    break;
+
+                                case ([{ Type: var sType }, { Type: var formatsType }, { Type: var resultType }], [_, { } formatsArgument, _])
+                                    when sType.IsString() && formatsType.IsGenericArrayOfString() && resultType.IsDateOnly():
+
+                                    AnalyzeTryParseExact_String_StringArray_DateOnly(consumer, element, formatsArgument);
+                                    break;
+
+                                case ([{ Type: var sType }, { Type: var formatsType }, { Type: var resultType }], [_, { } formatsArgument, _])
+                                    when sType.IsReadOnlySpanOfChar() && formatsType.IsGenericArrayOfString() && resultType.IsDateOnly():
+
+                                    AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_DateOnly(consumer, formatsArgument);
+                                    break;
+
+                                case ([
+                                        { Type: var sType },
+                                        { Type: var formatsType },
+                                        { Type: var providerType },
+                                        { Type: var styleType },
+                                        { Type: var resultType },
+                                    ], [_, { } formatsArgument, { } providerArgument, { } styleArgument, _]) when sType.IsString()
+                                    && formatsType.IsGenericArrayOfString()
+                                    && providerType.IsIFormatProvider()
+                                    && styleType.IsDateTimeStyles()
+                                    && resultType.IsDateOnly():
+
+                                    AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateOnly(
+                                        consumer,
+                                        element,
+                                        formatsArgument,
+                                        providerArgument,
+                                        styleArgument);
+                                    break;
+
+                                case ([
+                                        { Type: var sType },
+                                        { Type: var formatsType },
+                                        { Type: var providerType },
+                                        { Type: var styleType },
+                                        { Type: var resultType },
+                                    ], [_, { } formatsArgument, { } providerArgument, { } styleArgument, _]) when sType.IsReadOnlySpanOfChar()
+                                    && formatsType.IsGenericArrayOfString()
+                                    && providerType.IsIFormatProvider()
+                                    && styleType.IsDateTimeStyles()
+                                    && resultType.IsDateOnly():
+
+                                    AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateOnly(
+                                        consumer,
+                                        element,
+                                        formatsArgument,
+                                        providerArgument,
+                                        styleArgument);
                                     break;
                             }
                             break;

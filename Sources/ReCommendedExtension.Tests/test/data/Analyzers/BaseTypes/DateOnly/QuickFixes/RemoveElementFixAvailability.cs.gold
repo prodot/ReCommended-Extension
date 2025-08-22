@@ -27,6 +27,29 @@ namespace Test
             var result43 = DateOnly.ParseExact(s1, new[] { "d", |"d"|(70), "D", "m", |"M"|(71), "o", |"O"|(72), "r", |"R"|(73), "y", |"Y"|(74) }, provider, style);
             var result44 = DateOnly.ParseExact(s1, new string[] { "d", |"d"|(75), "D", "m", |"M"|(76), "o", |"O"|(77), "r", |"R"|(78), "y", |"Y"|(79) }, provider, style);
         }
+
+        public void TryParseExact(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, out DateOnly result)
+        {
+            var result11 = DateOnly.TryParseExact(s, ["d", |"d"|(80), "D", "m", |"M"|(81), "o", |"O"|(82), "r", |"R"|(83), "y", |"Y"|(84)], out result);
+            var result12 = DateOnly.TryParseExact(s, (string[])["d", |"d"|(85), "D", "m", |"M"|(86), "o", |"O"|(87), "r", |"R"|(88), "y", |"Y"|(89)], out result);
+            var result13 = DateOnly.TryParseExact(s, new[] { "d", |"d"|(90), "D", "m", |"M"|(91), "o", |"O"|(92), "r", |"R"|(93), "y", |"Y"|(94) }, out result);
+            var result14 = DateOnly.TryParseExact(s, new string[] { "d", |"d"|(95), "D", "m", |"M"|(96), "o", |"O"|(97), "r", |"R"|(98), "y", |"Y"|(99) }, out result);
+
+            var result21 = DateOnly.TryParseExact(s1, ["d", |"d"|(100), "D", "m", |"M"|(101), "o", |"O"|(102), "r", |"R"|(103), "y", |"Y"|(104)], out result);
+            var result22 = DateOnly.TryParseExact(s1, (string[])["d", |"d"|(105), "D", "m", |"M"|(106), "o", |"O"|(107), "r", |"R"|(108), "y", |"Y"|(109)], out result);
+            var result23 = DateOnly.TryParseExact(s1, new[] { "d", |"d"|(110), "D", "m", |"M"|(111), "o", |"O"|(112), "r", |"R"|(113), "y", |"Y"|(114) }, out result);
+            var result24 = DateOnly.TryParseExact(s1, new string[] { "d", |"d"|(115), "D", "m", |"M"|(116), "o", |"O"|(117), "r", |"R"|(118), "y", |"Y"|(119) }, out result);
+
+            var result31 = DateOnly.TryParseExact(s, ["d", |"d"|(120), "D", "m", |"M"|(121), "o", |"O"|(122), "r", |"R"|(123), "y", |"Y"|(124)], provider, style, out result);
+            var result32 = DateOnly.TryParseExact(s, (string[])["d", |"d"|(125), "D", "m", |"M"|(126), "o", |"O"|(127), "r", |"R"|(128), "y", |"Y"|(129)], provider, style, out result);
+            var result33 = DateOnly.TryParseExact(s, new[] { "d", |"d"|(130), "D", "m", |"M"|(131), "o", |"O"|(132), "r", |"R"|(133), "y", |"Y"|(134) }, provider, style, out result);
+            var result34 = DateOnly.TryParseExact(s, new string[] { "d", |"d"|(135), "D", "m", |"M"|(136), "o", |"O"|(137), "r", |"R"|(138), "y", |"Y"|(139) }, provider, style, out result);
+
+            var result41 = DateOnly.TryParseExact(s1, ["d", |"d"|(140), "D", "m", |"M"|(141), "o", |"O"|(142), "r", |"R"|(143), "y", |"Y"|(144)], provider, style, out result);
+            var result42 = DateOnly.TryParseExact(s1, (string[])["d", |"d"|(145), "D", "m", |"M"|(146), "o", |"O"|(147), "r", |"R"|(148), "y", |"Y"|(149)], provider, style, out result);
+            var result43 = DateOnly.TryParseExact(s1, new[] { "d", |"d"|(150), "D", "m", |"M"|(151), "o", |"O"|(152), "r", |"R"|(153), "y", |"Y"|(154) }, provider, style, out result);
+            var result44 = DateOnly.TryParseExact(s1, new string[] { "d", |"d"|(155), "D", "m", |"M"|(156), "o", |"O"|(157), "r", |"R"|(158), "y", |"Y"|(159) }, provider, style, out result);
+        }
     }
 }
 ------------------------------------------------
@@ -268,5 +291,245 @@ Remove element
 QUICKFIXES:
 Remove element
 79: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+80: The string is already passed.
+QUICKFIXES:
+Remove element
+81: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+82: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+83: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+84: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+85: The string is already passed.
+QUICKFIXES:
+Remove element
+86: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+87: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+88: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+89: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+90: The string is already passed.
+QUICKFIXES:
+Remove element
+91: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+92: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+93: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+94: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+95: The string is already passed.
+QUICKFIXES:
+Remove element
+96: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+97: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+98: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+99: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+100: The string is already passed.
+QUICKFIXES:
+Remove element
+101: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+102: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+103: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+104: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+105: The string is already passed.
+QUICKFIXES:
+Remove element
+106: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+107: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+108: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+109: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+110: The string is already passed.
+QUICKFIXES:
+Remove element
+111: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+112: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+113: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+114: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+115: The string is already passed.
+QUICKFIXES:
+Remove element
+116: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+117: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+118: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+119: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+120: The string is already passed.
+QUICKFIXES:
+Remove element
+121: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+122: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+123: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+124: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+125: The string is already passed.
+QUICKFIXES:
+Remove element
+126: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+127: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+128: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+129: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+130: The string is already passed.
+QUICKFIXES:
+Remove element
+131: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+132: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+133: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+134: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+135: The string is already passed.
+QUICKFIXES:
+Remove element
+136: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+137: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+138: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+139: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+140: The string is already passed.
+QUICKFIXES:
+Remove element
+141: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+142: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+143: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+144: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+145: The string is already passed.
+QUICKFIXES:
+Remove element
+146: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+147: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+148: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+149: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+150: The string is already passed.
+QUICKFIXES:
+Remove element
+151: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+152: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+153: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+154: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+155: The string is already passed.
+QUICKFIXES:
+Remove element
+156: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+157: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+158: The equivalent string is already passed.
+QUICKFIXES:
+Remove element
+159: The equivalent string is already passed.
 QUICKFIXES:
 Remove element
