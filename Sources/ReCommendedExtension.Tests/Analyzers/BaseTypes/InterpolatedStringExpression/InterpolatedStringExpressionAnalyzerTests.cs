@@ -545,6 +545,17 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [TestNet60]
+    public void TestTimeOnly()
+    {
+        var values = new[] { Missing.TimeOnly.MinValue, Missing.TimeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
+
+        Test(timeOnly => $"{timeOnly:t}", timeOnly => $"{timeOnly}", values);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestInterpolatedStringHandler() => DoNamedTest2();

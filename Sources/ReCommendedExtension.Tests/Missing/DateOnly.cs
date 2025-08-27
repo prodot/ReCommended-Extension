@@ -190,7 +190,7 @@ public readonly record struct DateOnly : IFormattable
     [Pure]
     public DateOnly AddDays(int value) => FromDateTime(date.AddDays(value));
 
-    public override string ToString() => date.ToString("d");
+    public override string ToString() => ToString("d", null);
 
     [Pure]
     public string ToString(string? format) => ToString(format, null);

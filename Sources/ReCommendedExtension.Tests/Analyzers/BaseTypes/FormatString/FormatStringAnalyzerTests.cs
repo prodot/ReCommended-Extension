@@ -562,6 +562,18 @@ public sealed class FormatStringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [TestNet60]
+    [SuppressMessage("ReSharper", "UseStringInterpolation")]
+    public void TestTimeOnly()
+    {
+        var values = new[] { Missing.TimeOnly.MinValue, Missing.TimeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
+
+        Test(timeOnly => string.Format("{0:t}", timeOnly), timeOnly => string.Format("{0}", timeOnly), values);
+
+        DoNamedTest2();
+    }
+
+    [Test]
     [TestNet70]
     public void TestStringFormatters() => DoNamedTest2();
 }

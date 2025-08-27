@@ -378,5 +378,15 @@ namespace Test
         {
             var result = $"{value:d}";
         }
+
+        public void TimeOnly_(TimeOnly value)
+        {
+            var result = $"{value:t}";
+        }
+
+        public void TimeOnly_(TimeOnly? value)
+        {
+            var result = $"{value:t}";
+        }
     }
 }

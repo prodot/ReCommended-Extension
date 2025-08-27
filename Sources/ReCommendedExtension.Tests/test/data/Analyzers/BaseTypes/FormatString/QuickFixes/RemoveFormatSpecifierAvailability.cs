@@ -378,5 +378,15 @@ namespace Test
         {
             var result = string.Format("{0:d}", value);
         }
+
+        public void TimeOnly_(TimeOnly value)
+        {
+            var result = string.Format("{0:t}", value);
+        }
+
+        public void TimeOnly_(TimeOnly? value)
+        {
+            var result = string.Format("{0:t}", value);
+        }
     }
 }

@@ -378,6 +378,16 @@ namespace Test
         {
             var result = string.Format("{0|:d|(207)}", value);
         }
+
+        public void TimeOnly_(TimeOnly value)
+        {
+            var result = string.Format("{0|:t|(208)}", value);
+        }
+
+        public void TimeOnly_(TimeOnly? value)
+        {
+            var result = string.Format("{0|:t|(209)}", value);
+        }
     }
 }
 ------------------------------------------------
@@ -1003,5 +1013,11 @@ Remove format specifier
 QUICKFIXES:
 Remove format specifier
 207: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+208: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier
+209: Specifying 't' is redundant.
 QUICKFIXES:
 Remove format specifier

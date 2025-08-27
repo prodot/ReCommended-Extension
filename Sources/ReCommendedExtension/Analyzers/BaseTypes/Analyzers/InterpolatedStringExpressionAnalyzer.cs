@@ -76,23 +76,9 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                     }
 
                     case [':', 'G' or 'g'] when expressionType.IsEnumType() || expressionType.IsNullable() && expressionType.Unlift().IsEnumType():
-                    {
-                        consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying '{format[1].ToString()}' is redundant.", insert));
-                        break;
-                    }
-
                     case [':', 'D' or 'd'] when expressionType.IsGuid() || expressionType.IsNullable() && expressionType.Unlift().IsGuid():
-                    {
-                        consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying '{format[1].ToString()}' is redundant.", insert));
-                        break;
-                    }
-
                     case [':', 'd'] when expressionType.IsDateOnly() || expressionType.IsNullable() && expressionType.Unlift().IsDateOnly():
-                    {
-                        consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying '{format[1].ToString()}' is redundant.", insert));
-                        break;
-                    }
-
+                    case [':', 't'] when expressionType.IsTimeOnly() || expressionType.IsNullable() && expressionType.Unlift().IsTimeOnly():
                     case [':', 'c' or 't' or 'T']
                         when expressionType.IsTimeSpan() || expressionType.IsNullable() && expressionType.Unlift().IsTimeSpan():
                     {

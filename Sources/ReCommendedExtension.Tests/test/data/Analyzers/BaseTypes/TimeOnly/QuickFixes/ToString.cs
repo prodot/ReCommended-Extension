@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimesOnly
+    {
+        public void ToString(TimeOnly timeOnly)
+        {
+            var result = timeOnly.ToString("{caret}");
+        }
+    }
+}
