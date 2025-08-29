@@ -1,0 +1,15 @@
+﻿using System;
+using System.ComponentModel;
+
+namespace Test
+{
+    public class SomeClass
+    {
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void Deconstruc{caret}t(out int x, out bool y)
+        {
+            x = 1;
+            y = true;
+        }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using JetBrains.Metadata.Reader.API;
+﻿using System.ComponentModel;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -1298,6 +1299,28 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         }
     }
 
+    static void AnalyzeMissingEditorBrowsableAnnotations(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
+    {
+        if (attributesOwnerDeclaration is IMethodDeclaration { DeclaredElement: { ShortName: "Deconstruct" } method }
+            && method.ReturnType.IsVoid()
+            && (method is { IsStatic: false, Parameters: [_, _, ..] } && method.Parameters.All(p => p.Kind == ParameterKind.OUTPUT)
+                || method is { IsExtensionMethod: true, Parameters: [_, _, _, ..] }
+                && method.Parameters.Skip(1).All(p => p.Kind == ParameterKind.OUTPUT))
+            && !method.HasAttributeInstance(PredefinedType.EDITOR_BROWSABLE_ATTRIBUTE_CLASS, true))
+        {
+            consumer.AddHighlighting(
+                new MissingAnnotationWarning(
+                    $"Annotate the deconstruction method with [{
+                        nameof(EditorBrowsableAttribute).WithoutSuffix()
+                    }({
+                        nameof(EditorBrowsableState)
+                    }.{
+                        nameof(EditorBrowsableState.Never)
+                    })].",
+                    attributesOwnerDeclaration));
+        }
+    }
+
     static void AnalyzeConditional(IHighlightingConsumer consumer, IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
         var conditions = null as List<string>;
@@ -1637,6 +1660,9 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
         // [AttributeUsage] annotations
         AnalyzeMissingAttributeUsageAnnotations(consumer, element);
+
+        // [EditorBrowsable] annotations
+        AnalyzeMissingEditorBrowsableAnnotations(consumer, element);
 
         // attributes annotated as [Conditional]
         AnalyzeConditional(consumer, element);

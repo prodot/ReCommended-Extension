@@ -9,7 +9,6 @@ namespace ReCommendedExtension.ContextActions.Annotations;
     GroupType = typeof(CSharpContextActions),
     Name = "Annotate attribute type with [AttributeUsage] attribute" + ZoneMarker.Suffix,
     Description = "Annotates an attribute type with the [AttributeUsage] attribute.")]
-
 public sealed class AnnotateWithAttributeUsage(ICSharpContextActionDataProvider provider) : AnnotateWith<AttributeUsageAttribute>(provider)
 {
     protected override bool CanBeAnnotated(IDeclaredElement? declaredElement)

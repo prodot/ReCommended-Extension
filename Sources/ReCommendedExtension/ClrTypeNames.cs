@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Reflection;
@@ -98,6 +99,8 @@ internal static class ClrTypeNames
     public static readonly IClrTypeName Calendar = GetClrTypeName<Calendar>();
 
     public static readonly IClrTypeName Random = GetClrTypeName<Random>();
+
+    public static readonly IClrTypeName EditorBrowsableState = GetClrTypeName<EditorBrowsableState>();
 
     public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");
 

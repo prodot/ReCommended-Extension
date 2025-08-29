@@ -77,6 +77,10 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
     public void TestAttributeUsage() => DoNamedTest2();
 
     [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    public void TestEditorBrowsable() => DoNamedTest2();
+
+    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
