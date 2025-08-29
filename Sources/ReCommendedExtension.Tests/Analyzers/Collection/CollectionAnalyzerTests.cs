@@ -217,4 +217,8 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestCollectionExpressionWithDefaultValuesInitialization() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    public void TestCausingExpression() => DoNamedTest2();
 }
