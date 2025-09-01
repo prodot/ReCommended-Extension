@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Conversions;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
@@ -16,6 +17,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(RedundantFormatPrecisionSpecifierHint),
         typeof(PassOtherFormatSpecifierSuggestion),
         typeof(SuspiciousFormatSpecifierWarning),
+        typeof(ReplaceTypeCastWithFormatSpecifierSuggestion),
     ])]
 public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyzer<IInterpolatedStringExpression>
 {
@@ -168,6 +170,47 @@ public sealed class InterpolatedStringExpressionAnalyzer : ElementProblemAnalyze
                             consumer.AddHighlighting(new SuspiciousFormatSpecifierWarning("The format specifier might be unsupported.", insert));
                         }
 
+                        break;
+                    }
+
+                    case null when insert.Expression is ICastExpression castExpression:
+                    {
+                        var type = castExpression.Op.Type();
+
+                        const string formatSpecifier = "D";
+
+                        if (type.IsEnumType(out var enumBaseType)
+                            && (castExpression.TargetType is IPredefinedTypeUsage { ScalarPredefinedTypeName.PredefinedType: var castType }
+                                && enumBaseType.IsImplicitlyConvertibleTo(castType, insert.GetPsiModule().GetTypeConversionRule())
+                                || castExpression.TargetType is INullableTypeUsage
+                                {
+                                    UnderlyingType: IPredefinedTypeUsage { ScalarPredefinedTypeName.PredefinedType: var castType2 },
+                                }
+                                && enumBaseType.IsImplicitlyConvertibleTo(castType2, insert.GetPsiModule().GetTypeConversionRule())))
+                        {
+                            consumer.AddHighlighting(
+                                new ReplaceTypeCastWithFormatSpecifierSuggestion(
+                                    $"Use the '{formatSpecifier}' format specifier instead of the type cast.",
+                                    insert,
+                                    castExpression.Op,
+                                    formatSpecifier));
+                        }
+
+                        if (type.IsNullable()
+                            && type.Unlift().IsEnumType(out enumBaseType)
+                            && castExpression.TargetType is INullableTypeUsage
+                            {
+                                UnderlyingType: IPredefinedTypeUsage { ScalarPredefinedTypeName.PredefinedType: var castType3 },
+                            }
+                            && enumBaseType.IsImplicitlyConvertibleTo(castType3, insert.GetPsiModule().GetTypeConversionRule()))
+                        {
+                            consumer.AddHighlighting(
+                                new ReplaceTypeCastWithFormatSpecifierSuggestion(
+                                    $"Use the '{formatSpecifier}' format specifier instead of the type cast.",
+                                    insert,
+                                    castExpression.Op,
+                                    formatSpecifier));
+                        }
                         break;
                     }
                 }

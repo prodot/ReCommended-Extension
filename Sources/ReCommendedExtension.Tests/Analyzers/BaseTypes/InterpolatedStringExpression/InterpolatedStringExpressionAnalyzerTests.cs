@@ -25,6 +25,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
                 or RedundantFormatPrecisionSpecifierHint
                 or PassOtherFormatSpecifierSuggestion
                 or SuspiciousFormatSpecifierWarning
+                or ReplaceTypeCastWithFormatSpecifierSuggestion
             || highlighting.IsError();
 
     static void Test<T>(Func<T, string> expected, Func<T, string> actual, T[] values)
@@ -551,6 +552,18 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
         var values = new[] { Missing.TimeOnly.MinValue, Missing.TimeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
 
         Test(timeOnly => $"{timeOnly:t}", timeOnly => $"{timeOnly}", values);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    public void TestCastEnum()
+    {
+        var values = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
+
+        Test(e => $"{(int)e}", e => $"{e:D}", values);
+        Test(e => $"{(int?)e}", e => $"{e:D}", values);
+        Test<SampleEnum?>(e => $"{(int?)e}", e => $"{e:D}", [..values, null]);
 
         DoNamedTest2();
     }

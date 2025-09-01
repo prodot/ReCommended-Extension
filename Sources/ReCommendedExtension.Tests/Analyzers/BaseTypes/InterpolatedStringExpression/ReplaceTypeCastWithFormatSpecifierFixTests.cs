@@ -8,10 +8,10 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.InterpolatedStringExpre
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-public sealed class PassOtherFormatSpecifierFixTests : QuickFixTestBase<PassOtherFormatSpecifierFix>
+public sealed class ReplaceTypeCastWithFormatSpecifierFixTests : QuickFixTestBase<ReplaceTypeCastWithFormatSpecifierFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\InterpolatedStringExpression\QuickFixes";
 
     [Test]
-    public void TestPassOtherFormatSpecifier() => DoNamedTest2();
+    public void TestReplaceTypeCastWithFormatSpecifier() => DoNamedTest2();
 }

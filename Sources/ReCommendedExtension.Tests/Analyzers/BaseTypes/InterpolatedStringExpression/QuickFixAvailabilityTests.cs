@@ -20,6 +20,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
                 or RedundantFormatPrecisionSpecifierHint
                 or PassOtherFormatSpecifierSuggestion
                 or SuspiciousFormatSpecifierWarning
+                or ReplaceTypeCastWithFormatSpecifierSuggestion
             || highlighting.IsError();
 
     [Test]
@@ -32,4 +33,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     [Test]
     public void TestPassOtherFormatSpecifierAvailability() => DoNamedTest2();
+
+    [Test]
+    public void TestReplaceTypeCastWithFormatSpecifierAvailability() => DoNamedTest2();
 }

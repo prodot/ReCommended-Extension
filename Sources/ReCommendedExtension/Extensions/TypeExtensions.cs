@@ -84,6 +84,23 @@ internal static class TypeExtensions
         => type.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN);
 
     [Pure]
+    public static bool IsEnumType(this IType type, [NotNullWhen(true)] out IType? enumBaseType)
+    {
+        if (type is IDeclaredType declaredType)
+        {
+            var (typeElement, _) = declaredType;
+            if (typeElement is IEnum enumType)
+            {
+                enumBaseType = enumType.GetUnderlyingType();
+                return true;
+            }
+        }
+
+        enumBaseType = null;
+        return false;
+    }
+
+    [Pure]
     public static bool IsGenericIEnumerableOrDescendant(this IType type)
     {
         if (type.IsGenericIEnumerable())
