@@ -143,6 +143,9 @@ internal abstract class CollectionCreation
         }
     }
 
+    /// <remarks>
+    /// Contains <c>null</c> if some elements is not string constants.
+    /// </remarks>
     public IReadOnlyList<string?> StringConstants
     {
         get
