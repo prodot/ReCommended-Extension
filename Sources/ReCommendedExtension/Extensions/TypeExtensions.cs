@@ -38,34 +38,50 @@ internal static class TypeExtensions
     public static bool IsReadOnlySpanOfByte(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsByte();
 
     [Pure]
+    public static bool IsInt128(this IType type) => type.IsClrType(ClrTypeNames.Int128);
+
+    [Pure]
+    public static bool IsUInt128(this IType type) => type.IsClrType(ClrTypeNames.UInt128);
+
+    [Pure]
+    public static bool IsHalf(this IType type) => type.IsClrType(ClrTypeNames.Half);
+
+    [Pure]
     public static bool IsDateOnly(this IType type) => type.IsClrType(PredefinedType.DATE_ONLY_FQN);
 
     [Pure]
     public static bool IsTimeOnly(this IType type) => type.IsClrType(PredefinedType.TIME_ONLY_FQN);
 
     [Pure]
-    public static bool IsTimeSpanStyles(this IType type) => type.IsClrType(ClrTypeNames.TimeSpanStyles);
+    public static bool IsTimeSpanStyles([NotNullWhen(true)] this IType? type) => type.IsClrType(ClrTypeNames.TimeSpanStyles);
 
     [Pure]
-    public static bool IsDateTimeStyles(this IType type) => type.IsClrType(ClrTypeNames.DateTimeStyles);
+    public static bool IsDateTimeStyles([NotNullWhen(true)] this IType? type) => type.IsClrType(ClrTypeNames.DateTimeStyles);
 
     [Pure]
-    public static bool IsDateTimeKind(this IType type) => type.IsClrType(ClrTypeNames.DateTimeKind);
+    public static bool IsDateTimeKind([NotNullWhen(true)] this IType? type) => type.IsClrType(ClrTypeNames.DateTimeKind);
 
     [Pure]
     public static bool IsCalendar(this IType type) => type.IsClrType(ClrTypeNames.Calendar);
 
     [Pure]
-    public static bool IsNumberStyles(this IType type) => type.IsClrType(ClrTypeNames.NumberStyles);
+    public static bool IsNumberStyles([NotNullWhen(true)] this IType? type) => type.IsClrType(ClrTypeNames.NumberStyles);
 
     [Pure]
-    public static bool IsMidpointRounding(this IType type) => type.IsClrType(ClrTypeNames.MidpointRounding);
+    public static bool IsMidpointRounding([NotNullWhen(true)] this IType? type) => type.IsClrType(ClrTypeNames.MidpointRounding);
 
     [Pure]
-    public static bool IsStringComparison(this IType type) => type.IsClrType(PredefinedType.STRING_COMPARISON_CLASS);
+    public static bool IsStringComparison([NotNullWhen(true)] this IType? type) => type.IsClrType(PredefinedType.STRING_COMPARISON_CLASS);
 
     [Pure]
-    public static bool IsStringSplitOptions(this IType type) => type.IsClrType(ClrTypeNames.StringSplitOptions);
+    public static bool IsStringSplitOptions([NotNullWhen(true)] this IType? type) => type.IsClrType(ClrTypeNames.StringSplitOptions);
+
+    [Pure]
+    public static bool IsStringBuilder(this IType type) => type.IsClrType(PredefinedType.STRING_BUILDER_FQN);
+
+    [Pure]
+    public static bool IsGenericEqualityComparer([NotNullWhen(true)] this IType? type)
+        => type.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN);
 
     [Pure]
     public static bool IsGenericIEnumerableOrDescendant(this IType type)
@@ -180,12 +196,12 @@ internal static class TypeExtensions
 
         if (defaultValue is IObjectCreationExpression)
         {
-            if (type.IsClrType(ClrTypeNames.Int128) || type.IsClrType(ClrTypeNames.UInt128))
+            if (type.IsInt128() || type.IsUInt128())
             {
                 return "0";
             }
 
-            if (type.IsClrType(ClrTypeNames.Half))
+            if (type.IsHalf())
             {
                 return "(Half)0"; // todo: use "nameof(Half)"
             }

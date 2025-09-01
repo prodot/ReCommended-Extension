@@ -1196,14 +1196,14 @@ public abstract record NumberInfo
             var t when t.IsUint() || t.IsNullable() && t.Unlift().IsUint() => UInt32,
             var t when t.IsLong() || t.IsNullable() && t.Unlift().IsLong() => Int64,
             var t when t.IsUlong() || t.IsNullable() && t.Unlift().IsUlong() => UInt64,
-            var t when t.IsClrType(ClrTypeNames.Int128) || t.IsNullable() && t.Unlift().IsClrType(ClrTypeNames.Int128) => Int128,
-            var t when t.IsClrType(ClrTypeNames.UInt128) || t.IsNullable() && t.Unlift().IsClrType(ClrTypeNames.UInt128) => UInt128,
+            var t when t.IsInt128() || t.IsNullable() && t.Unlift().IsInt128() => Int128,
+            var t when t.IsUInt128() || t.IsNullable() && t.Unlift().IsUInt128() => UInt128,
             var t when t.IsIntPtr() || t.IsNullable() && t.Unlift().IsIntPtr() => IntPtr,
             var t when t.IsUIntPtr() || t.IsNullable() && t.Unlift().IsUIntPtr() => UIntPtr,
             var t when t.IsDecimal() || t.IsNullable() && t.Unlift().IsDecimal() => Decimal,
             var t when t.IsDouble() || t.IsNullable() && t.Unlift().IsDouble() => Double,
             var t when t.IsFloat() || t.IsNullable() && t.Unlift().IsFloat() => Single,
-            var t when t.IsClrType(ClrTypeNames.Half) || t.IsNullable() && t.Unlift().IsClrType(ClrTypeNames.Half) => Half,
+            var t when t.IsHalf() || t.IsNullable() && t.Unlift().IsHalf() => Half,
             _ => null,
         };
 

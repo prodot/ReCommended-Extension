@@ -80,49 +80,49 @@ internal static class CSharpExpressionExtensions
     [Pure]
     public static StringComparison? TryGetStringComparisonConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
+            && enumType.IsStringComparison()
                 ? (StringComparison)constantValue.IntValue
                 : null;
 
     [Pure]
     public static StringSplitOptions? TryGetStringSplitOptionsConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(ClrTypeNames.StringSplitOptions)
+            && enumType.IsStringSplitOptions()
                 ? (StringSplitOptions)constantValue.IntValue
                 : null;
 
     [Pure]
     public static NumberStyles? TryGetNumberStylesConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(ClrTypeNames.NumberStyles)
+            && enumType.IsNumberStyles()
                 ? (NumberStyles)constantValue.IntValue
                 : null;
 
     [Pure]
     public static MidpointRounding? TryGetMidpointRoundingConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(ClrTypeNames.MidpointRounding)
+            && enumType.IsMidpointRounding()
                 ? (MidpointRounding)constantValue.IntValue
                 : null;
 
     [Pure]
     public static TimeSpanStyles? TryGetTimeSpanStylesConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(ClrTypeNames.TimeSpanStyles)
+            && enumType.IsTimeSpanStyles()
                 ? (TimeSpanStyles)constantValue.IntValue
                 : null;
 
     [Pure]
     public static DateTimeKind? TryGetDateTimeKindConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(ClrTypeNames.DateTimeKind)
+            && enumType.IsDateTimeKind()
                 ? (DateTimeKind)constantValue.IntValue
                 : null;
 
     [Pure]
     public static DateTimeStyles? TryGetDateTimeStylesConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(ClrTypeNames.DateTimeStyles)
+            && enumType.IsDateTimeStyles()
                 ? (DateTimeStyles)constantValue.IntValue
                 : null;
 

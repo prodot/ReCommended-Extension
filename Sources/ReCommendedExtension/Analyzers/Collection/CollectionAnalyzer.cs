@@ -124,7 +124,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 _ when parameterType.IsInt() => 0,
                 _ when parameterType.IsGenericIEnumerable() => 1,
-                _ when parameterType.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN) => 2,
+                _ when parameterType.IsGenericEqualityComparer() => 2,
 
                 _ => -1,
             };
@@ -150,10 +150,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             && intParameter2.IsInt()
             && enumerableParameter1.IsGenericIEnumerable()
             && enumerableParameter2.IsGenericIEnumerable()
-            && comparerParameter1.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter3.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN));
+            && comparerParameter1.IsGenericEqualityComparer()
+            && comparerParameter2.IsGenericEqualityComparer()
+            && comparerParameter2.IsGenericEqualityComparer()
+            && comparerParameter3.IsGenericEqualityComparer());
     }
 
     [Conditional("DEBUG")]
@@ -169,7 +169,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 _ when parameterType.IsInt() => 0,
                 _ when parameterType.IsIDictionary() => 1,
                 _ when parameterType.IsGenericIEnumerable() => 2,
-                _ when parameterType.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN) => 3,
+                _ when parameterType.IsGenericEqualityComparer() => 3,
 
                 _ => -1,
             };
@@ -199,11 +199,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             && dictionaryParameter2.IsIDictionary()
             && enumerableParameter1.IsGenericIEnumerable()
             && enumerableParameter2.IsGenericIEnumerable()
-            && comparerParameter.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter3.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter4.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN));
+            && comparerParameter.IsGenericEqualityComparer()
+            && comparerParameter2.IsGenericEqualityComparer()
+            && comparerParameter2.IsGenericEqualityComparer()
+            && comparerParameter3.IsGenericEqualityComparer()
+            && comparerParameter4.IsGenericEqualityComparer());
     }
 
     [Pure]
@@ -694,11 +694,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     AnalyzeListCreationExpression(consumer, objectCreationExpression, type, targetType);
                     break;
 
-                case var type when type.IsClrType(PredefinedType.HASHSET_FQN):
+                case var type when type.IsGenericHashSet():
                     AnalyzeHashSetCreationExpression(consumer, objectCreationExpression, type, targetType);
                     break;
 
-                case var type when type.IsClrType(PredefinedType.GENERIC_DICTIONARY_FQN):
+                case var type when type.IsGenericDictionary():
                     AnalyzeDictionaryCreationExpression(consumer, objectCreationExpression, type, targetType);
                     break;
 
@@ -831,10 +831,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         ? HashSetArguments.Capacity
                         : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? HashSetArguments.Collection : 0)
-                | (parameterTypes[0].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+                | (parameterTypes[0].IsGenericEqualityComparer()
                     && constructorArguments[0] is { Expression: { } a0 }
                     && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
-                    || parameterTypes[1].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+                    || parameterTypes[1].IsGenericEqualityComparer()
                     && constructorArguments[1] is { Expression: { } a1 }
                     && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
                         ? HashSetArguments.Comparer
@@ -920,10 +920,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         : 0)
                 | (parameterTypes[0].IsIDictionary() ? DictionaryArguments.Dictionary : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? DictionaryArguments.Pairs : 0)
-                | (parameterTypes[0].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+                | (parameterTypes[0].IsGenericEqualityComparer()
                     && constructorArguments[0] is { Expression: { } a0 }
                     && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
-                    || parameterTypes[1].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
+                    || parameterTypes[1].IsGenericEqualityComparer()
                     && constructorArguments[1] is { Expression: { } a1 }
                     && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
                         ? DictionaryArguments.Comparer

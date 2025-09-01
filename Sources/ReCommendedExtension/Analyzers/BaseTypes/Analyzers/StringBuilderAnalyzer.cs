@@ -1351,13 +1351,13 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             AnalyzeAppend_String_Int32_Int32(consumer, element, invokedExpression, valueArgument, startIndexArgument, countArgument);
                             break;
 
-                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsClrType(PredefinedType.STRING_BUILDER_FQN):
+                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsStringBuilder():
                             AnalyzeAppend_StringBuilder(consumer, element, invokedExpression, valueArgument);
                             break;
 
                         case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
                             { } valueArgument, { } startIndexArgument, { } countArgument,
-                        ]) when valueType.IsClrType(PredefinedType.STRING_BUILDER_FQN) && startIndexType.IsInt() && countType.IsInt():
+                        ]) when valueType.IsStringBuilder() && startIndexType.IsInt() && countType.IsInt():
                             AnalyzeAppend_StringBuilder_Int32_Int32(
                                 consumer,
                                 element,
