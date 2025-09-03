@@ -56,7 +56,7 @@ namespace DisposableWithNearestTypeAnnotated
 
     internal class Parent : GrandParent { }
 
-    internal class Chil{on}d : Parent { }
+    internal class Chil{off}d : Parent { }
 
     internal record GrandParentRecord : IDisposable
     {
@@ -66,7 +66,7 @@ namespace DisposableWithNearestTypeAnnotated
     [MustDisposeResource(true)]
     internal record ParentRecord : GrandParentRecord { }
 
-    internal record Child{on}Record : ParentRecord { }
+    internal record Child{off}Record : ParentRecord { }
 }
 
 namespace DisposableWithNearestTypeAnnotatedAgain
@@ -80,7 +80,7 @@ namespace DisposableWithNearestTypeAnnotatedAgain
     internal class Parent : GrandParent { }
 
     [MustDisposeResource]
-    internal class Chil{on}d : Parent { }
+    internal class Chil{off}d : Parent { }
 
     internal record GrandParentRecord : IDisposable
     {
@@ -91,43 +91,25 @@ namespace DisposableWithNearestTypeAnnotatedAgain
     internal record ParentRecord : GrandParentRecord { }
 
     [MustDisposeResource]
-    internal record Child{on}Record : ParentRecord { }
+    internal record Child{off}Record : ParentRecord { }
 }
 
 namespace DisposableAnnotated
 {
     [MustDisposeResource]
-    internal class Without{on}Parameters : IDisposable
+    internal class Without{off}Parameters : IDisposable
     {
         public void Dispose() { }
     }
 
     [MustDisposeResource(false)]
-    internal class With{off}False : IDisposable
+    internal class With{on}False : IDisposable
     {
         public void Dispose() { }
     }
 
     [MustDisposeResource(true)]
-    internal class With{on}True : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    [MustDisposeResource]
-    internal struct SWithout{on}Parameters : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    [MustDisposeResource(false)]
-    internal struct SWith{off}False : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    [MustDisposeResource(true)]
-    internal struct SWith{on}True : IDisposable
+    internal class With{off}True : IDisposable
     {
         public void Dispose() { }
     }
@@ -138,42 +120,38 @@ namespace NonDisposable
     internal class Cl{off}ass { }
 
     internal record Re{off}cord { }
-
-    internal struct Str{off}uct { }
-
-    internal record struct Re{off}cordStruct { }
 }
 
 namespace Structs
 {
-    internal struct Disposable{on}Struct : IDisposable
+    internal struct Disposable{off}Struct : IDisposable
     {
         public void Dispose() { }
     }
 
-    internal record struct DisposableStruct{on}Record : IDisposable
+    internal record struct DisposableStruct{off}Record : IDisposable
     {
         public void Dispose() { }
     }
 
-    internal struct DisposableStruct{on}WithCtor : IDisposable
+    internal struct DisposableStruct{off}WithCtor : IDisposable
     {
         public DisposableStructWithCtor() { }
         public void Dispose() { }
     }
 
-    internal record struct DisposableStruct{on}RecordWithCtor : IDisposable
+    internal record struct DisposableStruct{off}RecordWithCtor : IDisposable
     {
         public DisposableStructRecordWithCtor() { }
         public void Dispose() { }
     }
 
-    internal struct DisposableStructWith{on}PrimaryCtor() : IDisposable
+    internal struct DisposableStructWith{off}PrimaryCtor() : IDisposable
     {
         public void Dispose() { }
     }
 
-    internal record struct DisposableStructRecord{on}WithPrimaryCtor() : IDisposable
+    internal record struct DisposableStructRecord{off}WithPrimaryCtor() : IDisposable
     {
         public void Dispose() { }
     }
@@ -184,34 +162,34 @@ namespace Structs
 
     internal ref struct Ref{off}Struct { }
 
-    internal ref struct RefStruct{on}WithDispose
+    internal ref struct RefStruct{off}WithDispose
     {
         public void Dispose() { }
     }
 
-    internal ref struct RefStructWith{on}DisposeAsync
+    internal ref struct RefStructWith{off}DisposeAsync
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
-    internal ref struct RefStructWith{on}DisposeAndCtor
+    internal ref struct RefStructWith{off}DisposeAndCtor
     {
         public RefStructWithDisposeAndCtor() { }
         public void Dispose() { }
     }
 
-    internal ref struct RefStructWithDispose{on}AsyncAndCtor
+    internal ref struct RefStructWithDispose{off}AsyncAndCtor
     {
         public RefStructWithDisposeAsyncAndCtor() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
-    internal ref struct RefStructWithDisposeAnd{on}PrimaryCtor()
+    internal ref struct RefStructWithDisposeAnd{off}PrimaryCtor()
     {
         public void Dispose() { }
     }
 
-    internal ref struct RefStructWithDisposeAsync{on}AndAndPrimaryCtor()
+    internal ref struct RefStructWithDisposeAsync{off}AndAndPrimaryCtor()
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }

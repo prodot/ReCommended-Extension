@@ -7,28 +7,35 @@ namespace DisposableAnnotated
     [MustDisposeResource]
     internal class Class : IDisposable
     {
-        public Cla{off}ss() { }
+        public Class() { }
         public void Dispose() { }    
     }
 
     [MustDisposeResource]
     internal record Record : IAsyncDisposable
     {
-        public Reco{off}rd() { }
+        public Record() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+}
 
+namespace DisposableAnnotatedAgain
+{
     [MustDisposeResource]
-    internal struct Struct : IDisposable
+    internal class Class : IDisposable
     {
-        public Str{off}uct() { }
-        public void Dispose() { }    
+        [MustDisposeResource]
+        public Class() { }
+
+        public void Dispose() { }
     }
 
     [MustDisposeResource]
-    internal record struct RecordStruct : IAsyncDisposable
+    internal record Record : IAsyncDisposable
     {
-        public Reco{off}rdStruct() { }
+        [MustDisposeResource]
+        public Record() { }
+
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
@@ -38,28 +45,35 @@ namespace DisposableAnnotatedWithFalse
     [MustDisposeResource(false)]
     internal class Class : IDisposable
     {
-        public Cla{on}ss() { }
+        public Class() { }
         public void Dispose() { }
     }
 
     [MustDisposeResource(false)]
     internal record Record : IAsyncDisposable
     {
-        public Rec{on}ord() { }
+        public Record() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+}
 
+namespace DisposableAnnotatedWithFalseAgain
+{
     [MustDisposeResource(false)]
-    internal struct Struct : IDisposable
+    internal class Class : IDisposable
     {
-        public Str{on}uct() { }
+        [MustDisposeResource(false)]
+        public Class() { }
+
         public void Dispose() { }
     }
 
     [MustDisposeResource(false)]
-    internal record struct RecordStruct : IAsyncDisposable
+    internal record Record : IAsyncDisposable
     {
-        public Rec{on}ordStruct() { }
+        [MustDisposeResource(false)]
+        public Record() { }
+
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
@@ -75,7 +89,7 @@ namespace DisposableWithNoBaseTypeAnnotated
 
     internal class Child : Parent
     {
-        public Chi{on}ld() { }
+        public Child() { }
     }
 
     internal record GrandParentRecord : IDisposable
@@ -87,7 +101,7 @@ namespace DisposableWithNoBaseTypeAnnotated
 
     internal record ChildRecord : ParentRecord
     {
-        public Child{on}Record() { }
+        public ChildRecord() { }
     }
 }
 
@@ -103,7 +117,7 @@ namespace DisposableWithNearestBaseTypeAnnotatedWithFalse
 
     internal class Child : Parent
     {
-        public Ch{on}ild() { }
+        public Child() { }
     }
 
     internal record GrandParentRecord : IAsyncDisposable
@@ -116,7 +130,7 @@ namespace DisposableWithNearestBaseTypeAnnotatedWithFalse
 
     internal record ChildRecord : ParentRecord
     {
-        public Child{on}Record() { }
+        public ChildRecord() { }
     }
 }
 
@@ -132,7 +146,7 @@ namespace DisposableWithNearestTypeAnnotated
 
     internal class Child : Parent
     {
-        public Chi{off}ld() { }
+        public Child() { }
     }
 
     internal record GrandParentRecord : IDisposable
@@ -145,7 +159,38 @@ namespace DisposableWithNearestTypeAnnotated
 
     internal record ChildRecord : ParentRecord
     {
-        public Child{off}Record() { }
+        public ChildRecord() { }
+    }
+}
+
+namespace DisposableWithNearestTypeAnnotatedAgain
+{
+    [MustDisposeResource]
+    internal class GrandParent : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    internal class Parent : GrandParent { }
+
+    internal class Child : Parent
+    {
+        [MustDisposeResource]
+        public Child() { }
+    }
+
+    internal record GrandParentRecord : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource]
+    internal record ParentRecord : GrandParentRecord { }
+
+    internal record ChildRecord : ParentRecord
+    {
+        [MustDisposeResource]
+        public ChildRecord() { }
     }
 }
 
@@ -153,22 +198,44 @@ namespace NonDisposable
 {
     internal class Class
     {
-        public Cla{off}ss() { }
+        [MustDisposeResource]
+        public Class() { }
     }
 
     internal record Record
     {
-        public Rec{off}ord() { }
+        [MustDisposeResource(false)]
+        public Record() { }
+    }
+}
+
+namespace DisposableStructs
+{
+    internal struct DisposableStruct : IDisposable
+    {
+        public DisposableStruct() { }
+        public void Dispose() { }
     }
 
-    internal struct Struct
+    internal record struct DisposableStructRecord : IDisposable
     {
-        public Stru{off}ct() { }
+        public DisposableStructRecord() { }
+        public void Dispose() { }
+    }
+}
+
+namespace NonDisposableStructs
+{
+    internal struct NonDisposableStruct
+    {
+        [MustDisposeResource]
+        public NonDisposableStruct() { }
     }
 
-    internal record struct RecordStruct
+    internal record struct NonDisposableStructRecord
     {
-        public Rec{off}ordStruct() { }
+        [MustDisposeResource(false)]
+        public NonDisposableStructRecord() { }
     }
 }
 
@@ -176,24 +243,25 @@ namespace RefStructs
 {
     internal ref struct RefStruct
     {
-        public Ref{off}Struct() { }
+        [MustDisposeResource]
+        public RefStruct() { }
     }
 
     internal ref struct RefStructWithDispose
     {
-        public RefStructWith{on}Dispose() { }
+        public RefStructWithDispose() { }
         public void Dispose() { }
     }
 
     internal ref struct RefStructWithDisposeAsync
     {
-        public RefStructWith{on}DisposeAsync() { }
+        public RefStructWithDisposeAsync() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
     internal ref struct RefStructWithClose
     {
-        public RefStructWith{on}Close() { }
+        public RefStructWithClose() { }
 
         [HandlesResourceDisposal]
         public void Close() { }

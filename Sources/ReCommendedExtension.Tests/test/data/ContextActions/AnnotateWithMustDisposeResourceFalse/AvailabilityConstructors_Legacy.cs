@@ -7,28 +7,14 @@ namespace DisposableAnnotated
     [MustDisposeResource]
     internal class Class : IDisposable
     {
-        public Cla{off}ss() { }
+        public Cla{on}ss() { }
         public void Dispose() { }    
     }
 
     [MustDisposeResource]
     internal record Record : IAsyncDisposable
     {
-        public Reco{off}rd() { }
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
-    }
-
-    [MustDisposeResource]
-    internal struct Struct : IDisposable
-    {
-        public Str{off}uct() { }
-        public void Dispose() { }    
-    }
-
-    [MustDisposeResource]
-    internal record struct RecordStruct : IAsyncDisposable
-    {
-        public Reco{off}rdStruct() { }
+        public Reco{on}rd() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
@@ -46,20 +32,6 @@ namespace DisposableAnnotatedWithFalse
     internal record Record : IAsyncDisposable
     {
         public Rec{on}ord() { }
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
-    }
-
-    [MustDisposeResource(false)]
-    internal struct Struct : IDisposable
-    {
-        public Str{on}uct() { }
-        public void Dispose() { }
-    }
-
-    [MustDisposeResource(false)]
-    internal record struct RecordStruct : IAsyncDisposable
-    {
-        public Rec{on}ordStruct() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
@@ -132,7 +104,7 @@ namespace DisposableWithNearestTypeAnnotated
 
     internal class Child : Parent
     {
-        public Chi{off}ld() { }
+        public Chi{on}ld() { }
     }
 
     internal record GrandParentRecord : IDisposable
@@ -145,7 +117,7 @@ namespace DisposableWithNearestTypeAnnotated
 
     internal record ChildRecord : ParentRecord
     {
-        public Child{off}Record() { }
+        public Child{on}Record() { }
     }
 }
 
@@ -158,17 +130,35 @@ namespace NonDisposable
 
     internal record Record
     {
-        public Rec{off}ord() { }
+        public Reco{off}rd() { }
+    }
+}
+
+namespace DisposableStructs
+{
+    internal struct DisposableStruct : IDisposable
+    {
+        public Disposable{on}Struct() { }
+        public void Dispose() { }
     }
 
-    internal struct Struct
+    internal record struct DisposableStructRecord : IDisposable
     {
-        public Stru{off}ct() { }
+        public DisposableStruct{on}Record() { }
+        public void Dispose() { }
+    }
+}
+
+namespace NonDisposableStructs
+{
+    internal struct NonDisposableStruct
+    {
+        public NonDisposable{off}Struct() { }
     }
 
-    internal record struct RecordStruct
+    internal record struct NonDisposableStructRecord
     {
-        public Rec{off}ordStruct() { }
+        public NonDisposableStruct{off}Record() { }
     }
 }
 
@@ -192,7 +182,7 @@ namespace RefStructs
     }
 
     internal ref struct RefStructWithClose
-    {
+{
         public RefStructWith{on}Close() { }
 
         [HandlesResourceDisposal]

@@ -136,7 +136,7 @@ namespace Structs
         public void Dispose() { }
     }
 
-    internal struct |DisposableStructWithCtor|(18) : IDisposable
+    internal struct DisposableStructWithCtor : IDisposable
     {
         [MustDisposeResource]
         public DisposableStructWithCtor() { }
@@ -144,7 +144,7 @@ namespace Structs
         public void Dispose() { }
     }
 
-    internal record struct |DisposableStructRecordWithCtor|(19) : IDisposable
+    internal record struct DisposableStructRecordWithCtor : IDisposable
     {
         [MustDisposeResource]
         public DisposableStructRecordWithCtor() { }
@@ -153,13 +153,13 @@ namespace Structs
     }
 
     [method: MustDisposeResource]
-    internal struct |DisposableStructWithPrimaryCtor|(20)() : IDisposable
+    internal struct DisposableStructWithPrimaryCtor() : IDisposable
     {
         public void Dispose() { }
     }
 
     [method: MustDisposeResource]
-    internal record struct |DisposableStructRecordWithPrimaryCtor|(21)() : IDisposable
+    internal record struct DisposableStructRecordWithPrimaryCtor() : IDisposable
     {
         public void Dispose() { }
     }
@@ -170,17 +170,17 @@ namespace Structs
 
     internal ref struct RefStruct { }
 
-    internal ref struct |RefStructWithDispose|(22)
+    internal ref struct |RefStructWithDispose|(18)
     {
         public void Dispose() { }
     }
 
-    internal ref struct |RefStructWithDisposeAsync|(23)
+    internal ref struct |RefStructWithDisposeAsync|(19)
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
-    internal ref struct |RefStructWithDisposeAndCtor|(24)
+    internal ref struct RefStructWithDisposeAndCtor
     {
         [MustDisposeResource]
         public RefStructWithDisposeAndCtor() { }
@@ -188,7 +188,7 @@ namespace Structs
         public void Dispose() { }
     }
 
-    internal ref struct |RefStructWithDisposeAsyncAndCtor|(25)
+    internal ref struct RefStructWithDisposeAsyncAndCtor
     {
         [MustDisposeResource]
         public RefStructWithDisposeAsyncAndCtor() { }
@@ -197,20 +197,20 @@ namespace Structs
     }
 
     [method: MustDisposeResource]
-    internal ref struct |RefStructWithDisposeAndPrimaryCtor|(26)()
+    internal ref struct RefStructWithDisposeAndPrimaryCtor()
     {
         public void Dispose() { }
     }
 
     [method: MustDisposeResource]
-    internal ref struct |RefStructWithDisposeAsyncAndAndPrimaryCtor|(27)()
+    internal ref struct RefStructWithDisposeAsyncAndAndPrimaryCtor()
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
     public class PublicContainer
     {
-        ref struct |NestedRefStructWithDispose|(28)
+        ref struct |NestedRefStructWithDispose|(20)
         {
             public void Dispose() { }
         }
@@ -218,7 +218,7 @@ namespace Structs
 
     internal class InternalContainer
     {
-        ref struct |NestedRefStructWithDispose|(29)
+        ref struct |NestedRefStructWithDispose|(21)
         {
             public void Dispose() { }
         }
@@ -235,13 +235,13 @@ namespace PartialTypes
         public void Dispose() { }
     }
 
-    internal partial struct |DisposableStruct|(30)
+    internal partial struct DisposableStruct
     {
         [MustDisposeResource]
         public DisposableStruct(int x) { }
     }
 
-    internal partial struct |DisposableStruct|(31) : IDisposable
+    internal partial struct DisposableStruct : IDisposable
     {
         public void Dispose() { }
     }
@@ -272,19 +272,9 @@ namespace Other
 (13): ReSharper Suggestion: Annotation is redundant because a base record is already annotated with [MustDisposeResource].
 (14): ReSharper Warning: Annotation is not valid because the class is not disposable.
 (15): ReSharper Warning: Annotation is not valid because the record is not disposable.
-(16): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(17): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(18): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(19): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(20): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(21): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(22): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(23): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(24): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(25): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(26): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(27): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(28): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(29): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(30): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(31): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(16): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(17): ReSharper Warning: Record is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(18): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(19): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(20): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(21): ReSharper Warning: Struct is disposable, but it doesn't have any constructor to be annotated with [MustDisposeResource] or [MustDisposeResource(false)].

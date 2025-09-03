@@ -326,21 +326,20 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             return attributesSet
                 .GetAttributeInstances(AttributesSource.Self)
-                .FirstOrDefault(
-                    a => kind1 switch
-                        {
-                            PurityOrDisposabilityKind.MustDisposeResource => IsMustDisposeResourceAttribute(a),
-                            PurityOrDisposabilityKind.MustDisposeResourceFalse => IsMustDisposeResourceFalseAttribute(a),
+                .FirstOrDefault(a => kind1 switch
+                    {
+                        PurityOrDisposabilityKind.MustDisposeResource => IsMustDisposeResourceAttribute(a),
+                        PurityOrDisposabilityKind.MustDisposeResourceFalse => IsMustDisposeResourceFalseAttribute(a),
 
-                            _ => throw new NotSupportedException(),
-                        }
-                        || kind2 switch
-                        {
-                            PurityOrDisposabilityKind.MustDisposeResource => IsMustDisposeResourceAttribute(a),
-                            PurityOrDisposabilityKind.MustDisposeResourceFalse => IsMustDisposeResourceFalseAttribute(a),
+                        _ => throw new NotSupportedException(),
+                    }
+                    || kind2 switch
+                    {
+                        PurityOrDisposabilityKind.MustDisposeResource => IsMustDisposeResourceAttribute(a),
+                        PurityOrDisposabilityKind.MustDisposeResourceFalse => IsMustDisposeResourceFalseAttribute(a),
 
-                            _ => throw new NotSupportedException(),
-                        });
+                        _ => throw new NotSupportedException(),
+                    });
         }
 
         [Pure]
@@ -384,6 +383,17 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             return false;
         }
+
+        [Pure]
+        static string GetTypeDescription(IClassLikeDeclaration typeDeclaration)
+            => typeDeclaration switch
+            {
+                IClassDeclaration => "class",
+                IStructDeclaration => "struct",
+                IRecordDeclaration => "record",
+
+                _ => throw new NotSupportedException(),
+            };
 
         [Pure]
         string? TryGetAttributeNameIfAnnotationProvided(PurityOrDisposabilityKind kind)
@@ -451,32 +461,27 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
         switch (element)
         {
-            case IClassLikeDeclaration { DeclaredElement: { } type } and (IClassDeclaration or IRecordDeclaration { IsStruct: false }):
+            case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
+                and (IClassDeclaration or IRecordDeclaration { IsStruct: false }):
             {
-                var typeDescription = element switch
-                {
-                    IClassDeclaration => "class",
-                    IRecordDeclaration => "record",
-
-                    _ => throw new NotSupportedException(),
-                };
-
                 if (type.IsDisposable())
                 {
                     if (!IsAnnotatedWithAnyOf(type, PurityOrDisposabilityKind.MustDisposeResource, PurityOrDisposabilityKind.MustDisposeResourceFalse)
                         && !IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
                     {
+                        var typeDescription = GetTypeDescription(typeDeclaration).WithFirstCharacterUpperCased();
                         var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
                         HighlightMissing(
                             PurityOrDisposabilityKind.MustDisposeResource,
-                            $"{typeDescription.WithFirstCharacterUpperCased()} is disposable, but not annotated with [{name}] or [{name}(false)].");
+                            $"{typeDescription} is disposable, but not annotated with [{name}] or [{name}(false)].");
                     }
 
                     if (TryGetAnnotation(type, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                     {
                         if (IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
                         {
+                            var typeDescription = GetTypeDescription(typeDeclaration);
                             var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
                             HighlightRedundant(
@@ -497,6 +502,8 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 {
                     if (IsAnnotatedWithAnyOf(type, PurityOrDisposabilityKind.MustDisposeResource, PurityOrDisposabilityKind.MustDisposeResourceFalse))
                     {
+                        var typeDescription = GetTypeDescription(typeDeclaration);
+
                         HighlightNotAllowed(
                             PurityOrDisposabilityKind.MustDisposeResource,
                             $"Annotation is not valid because the {typeDescription} is not disposable.");
@@ -505,37 +512,107 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 break;
             }
 
-            case IClassLikeDeclaration { DeclaredElement: { } type }
+            case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
                 and (IStructDeclaration { IsByRefLike: false } or IRecordDeclaration { IsStruct: true }):
             {
-                if (type.IsDisposable() && type.Constructors.All(c => c.IsImplicit))
+                if (type.IsDisposable())
                 {
-                    var typeDescription = element switch
+                    if (element.MustDisposeResourceAttributeSupportsStructs())
                     {
-                        IStructDeclaration => "Struct",
-                        IRecordDeclaration => "Record",
+                        if (!IsAnnotatedWithAnyOf(
+                            type,
+                            PurityOrDisposabilityKind.MustDisposeResource,
+                            PurityOrDisposabilityKind.MustDisposeResourceFalse))
+                        {
+                            var typeDescription = GetTypeDescription(typeDeclaration).WithFirstCharacterUpperCased();
+                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                        _ => throw new NotSupportedException(),
-                    };
+                            HighlightMissing(
+                                PurityOrDisposabilityKind.MustDisposeResource,
+                                $"{typeDescription} is disposable, but not annotated with [{name}] or [{name}(false)].");
+                        }
 
-                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+                        if (TryGetAnnotation(type, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation
+                            && IsMustDisposeResourceTrueAttribute(annotation))
+                        {
+                            HighlightRedundantMustDisposeResourceTrueArgument(
+                                $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                        }
+                    }
+                    else
+                    {
+                        if (type.Constructors.All(c => c.IsImplicit))
+                        {
+                            var typeDescription = GetTypeDescription(typeDeclaration).WithFirstCharacterUpperCased();
+                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                    HighlightMissing(
-                        PurityOrDisposabilityKind.MustDisposeResource,
-                        $"{typeDescription} is disposable, but it doesn't have any constructor to be annotated with [{name}] or [{name}(false)].");
+                            HighlightMissing(
+                                PurityOrDisposabilityKind.MustDisposeResource,
+                                $"{typeDescription} is disposable, but it doesn't have any constructor to be annotated with [{name}] or [{name}(false)].");
+                        }
+                    }
+                }
+                else
+                {
+                    if (IsAnnotatedWithAnyOf(type, PurityOrDisposabilityKind.MustDisposeResource, PurityOrDisposabilityKind.MustDisposeResourceFalse)
+                        && element.MustDisposeResourceAttributeSupportsStructs())
+                    {
+                        var typeDescription = GetTypeDescription(typeDeclaration);
+
+                        HighlightNotAllowed(
+                            PurityOrDisposabilityKind.MustDisposeResource,
+                            $"Annotation is not valid because the {typeDescription} is not disposable.");
+                    }
                 }
                 break;
             }
 
             case IStructDeclaration { IsByRefLike: true, DeclaredElement: { } type }:
             {
-                if (type.HasDisposeMethods() && type.Constructors.All(c => c.IsImplicit))
+                if (type.IsDisposable() || type.HasDisposeMethods())
                 {
-                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+                    if (element.MustDisposeResourceAttributeSupportsStructs())
+                    {
+                        if (!IsAnnotatedWithAnyOf(
+                            type,
+                            PurityOrDisposabilityKind.MustDisposeResource,
+                            PurityOrDisposabilityKind.MustDisposeResourceFalse))
+                        {
+                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                    HighlightMissing(
-                        PurityOrDisposabilityKind.MustDisposeResource,
-                        $"Struct is disposable, but it doesn't have any constructor to be annotated with [{name}] or [{name}(false)].");
+                            HighlightMissing(
+                                PurityOrDisposabilityKind.MustDisposeResource,
+                                $"Struct is disposable, but not annotated with [{name}] or [{name}(false)].");
+                        }
+
+                        if (TryGetAnnotation(type, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation
+                            && IsMustDisposeResourceTrueAttribute(annotation))
+                        {
+                            HighlightRedundantMustDisposeResourceTrueArgument(
+                                $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                        }
+                    }
+                    else
+                    {
+                        if (type.Constructors.All(c => c.IsImplicit))
+                        {
+                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                            HighlightMissing(
+                                PurityOrDisposabilityKind.MustDisposeResource,
+                                $"Struct is disposable, but it doesn't have any constructor to be annotated with [{name}] or [{name}(false)].");
+                        }
+                    }
+                }
+                else
+                {
+                    if (IsAnnotatedWithAnyOf(type, PurityOrDisposabilityKind.MustDisposeResource, PurityOrDisposabilityKind.MustDisposeResourceFalse)
+                        && element.MustDisposeResourceAttributeSupportsStructs())
+                    {
+                        HighlightNotAllowed(
+                            PurityOrDisposabilityKind.MustDisposeResource,
+                            "Annotation is not valid because the struct is not disposable.");
+                    }
                 }
                 break;
             }
@@ -543,124 +620,159 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             case ICSharpTypeMemberDeclaration { DeclaredElement: { } constructor } constructorDeclaration
                 and (IConstructorDeclaration or IPrimaryConstructorDeclaration):
             {
-                var typeDeclaration = constructorDeclaration.GetContainingTypeDeclaration();
-
-                var typeDescription = typeDeclaration switch
+                switch (constructorDeclaration.GetContainingTypeDeclaration())
                 {
-                    IClassDeclaration => "class",
-                    IStructDeclaration => "struct",
-                    IRecordDeclaration => "record",
-
-                    _ => throw new NotSupportedException(),
-                };
-
-                switch (typeDeclaration)
-                {
-                    case IClassLikeDeclaration { DeclaredElement: { } type }
-                        and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration) when type.IsDisposable():
+                    case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
+                        and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration):
                     {
-                        if (!IsAnnotatedWithAnyOf(
+                        if (type.IsDisposable())
+                        {
+                            if (!IsAnnotatedWithAnyOf(
+                                    constructor,
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    PurityOrDisposabilityKind.MustDisposeResourceFalse)
+                                && IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResourceFalse)
+                                && (element.MustDisposeResourceAttributeSupportsStructs()
+                                    || typeDeclaration is IClassDeclaration or IRecordDeclaration { IsStruct: false }))
+                            {
+                                var typeDescription = GetTypeDescription(typeDeclaration);
+                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                HighlightMissing(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"Constructor of the disposable {typeDescription} (with the [{name}(false)] annotation) is not annotated with [{name}] or [{name}(false)].");
+                            }
+
+                            if (TryGetAnnotation(constructor, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
+                            {
+                                if ((IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource)
+                                        || IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
+                                    && (element.MustDisposeResourceAttributeSupportsStructs()
+                                        || typeDeclaration is IClassDeclaration or IRecordDeclaration { IsStruct: false }))
+                                {
+                                    var typeDescription = GetTypeDescription(typeDeclaration);
+                                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                    switch (typeDeclaration)
+                                    {
+                                        case IClassDeclaration or IRecordDeclaration { IsStruct: false }:
+                                            HighlightRedundant(
+                                                PurityOrDisposabilityKind.MustDisposeResource,
+                                                $"Annotation is redundant because the {typeDescription} or a base {typeDescription} is already annotated with [{name}].");
+                                            break;
+
+                                        case IStructDeclaration or IRecordDeclaration { IsStruct: true }:
+                                            HighlightRedundant(
+                                                PurityOrDisposabilityKind.MustDisposeResource,
+                                                $"Annotation is redundant because the {typeDescription} is already annotated with [{name}].");
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    if (IsMustDisposeResourceTrueAttribute(annotation))
+                                    {
+                                        HighlightRedundantMustDisposeResourceTrueArgument(
+                                            $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                    }
+                                }
+                            }
+
+                            if (!element.MustDisposeResourceAttributeSupportsStructs()
+                                && !IsAnnotatedWithAnyOf(
+                                    constructor,
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    PurityOrDisposabilityKind.MustDisposeResourceFalse)
+                                && typeDeclaration is IStructDeclaration or IRecordDeclaration { IsStruct: true })
+                            {
+                                var typeDescription = GetTypeDescription(typeDeclaration);
+                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                HighlightMissing(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"Constructor of the disposable {typeDescription} is not annotated with [{name}] or [{name}(false)].");
+                            }
+                        }
+                        else
+                        {
+                            if (IsAnnotatedWithAnyOf(
                                 constructor,
                                 PurityOrDisposabilityKind.MustDisposeResource,
-                                PurityOrDisposabilityKind.MustDisposeResourceFalse)
-                            && IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResourceFalse)
-                            && typeDeclaration is IClassDeclaration or IRecordDeclaration { IsStruct: false })
-                        {
-                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+                                PurityOrDisposabilityKind.MustDisposeResourceFalse))
+                            {
+                                var typeDescription = GetTypeDescription(typeDeclaration);
 
-                            HighlightMissing(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Constructor of the disposable {typeDescription} (with the [{name}(false)] annotation) is not annotated with [{name}] or [{name}(false)].");
+                                HighlightNotAllowed(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"Annotation is not valid because the {typeDescription} is not disposable.");
+                            }
                         }
+                        break;
+                    }
 
-                        if (TryGetAnnotation(constructor, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
+                    case IStructDeclaration { IsByRefLike: true, DeclaredElement: { } type }:
+                    {
+                        if (type.IsDisposable() || type.HasDisposeMethods())
                         {
-                            if ((IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource)
-                                    || IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
-                                && typeDeclaration is IClassDeclaration or IRecordDeclaration { IsStruct: false })
+                            if (!IsAnnotatedWithAnyOf(
+                                    constructor,
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    PurityOrDisposabilityKind.MustDisposeResourceFalse)
+                                && IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResourceFalse)
+                                && element.MustDisposeResourceAttributeSupportsStructs())
                             {
                                 var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
 
-                                HighlightRedundant(
+                                HighlightMissing(
                                     PurityOrDisposabilityKind.MustDisposeResource,
-                                    $"Annotation is redundant because the {typeDescription} or a base {typeDescription} is already annotated with [{name}].");
+                                    $"Constructor of the disposable struct (with the [{name}(false)] annotation) is not annotated with [{name}] or [{name}(false)].");
                             }
-                            else
+
+                            if (TryGetAnnotation(constructor, PurityOrDisposabilityKind.MustDisposeResource) is { } annotation)
                             {
-                                if (IsMustDisposeResourceTrueAttribute(annotation))
+                                if (IsAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource)
+                                    && element.MustDisposeResourceAttributeSupportsStructs())
                                 {
-                                    HighlightRedundantMustDisposeResourceTrueArgument(
-                                        $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                    var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                    HighlightRedundant(
+                                        PurityOrDisposabilityKind.MustDisposeResource,
+                                        $"Annotation is redundant because the struct is already annotated with [{name}].");
+                                }
+                                else
+                                {
+                                    if (IsMustDisposeResourceTrueAttribute(annotation))
+                                    {
+                                        HighlightRedundantMustDisposeResourceTrueArgument(
+                                            $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
+                                    }
                                 }
                             }
+
+                            if (!element.MustDisposeResourceAttributeSupportsStructs()
+                                && !IsAnnotatedWithAnyOf(
+                                    constructor,
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    PurityOrDisposabilityKind.MustDisposeResourceFalse))
+                            {
+                                var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
+
+                                HighlightMissing(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    $"Constructor of the disposable struct is not annotated with [{name}] or [{name}(false)].");
+                            }
                         }
-
-                        if (!IsAnnotatedWithAnyOf(
-                                constructor,
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                PurityOrDisposabilityKind.MustDisposeResourceFalse)
-                            && typeDeclaration is IStructDeclaration or IRecordDeclaration { IsStruct: true })
+                        else
                         {
-                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                            HighlightMissing(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Constructor of the disposable {typeDescription} is not annotated with [{name}] or [{name}(false)].");
-                        }
-                        break;
-                    }
-
-                    case IClassLikeDeclaration { DeclaredElement: { } type }
-                        and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration) when !type.IsDisposable():
-                    {
-                        if (IsAnnotatedWithAnyOf(
-                            constructor,
-                            PurityOrDisposabilityKind.MustDisposeResource,
-                            PurityOrDisposabilityKind.MustDisposeResourceFalse))
-                        {
-                            HighlightNotAllowed(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Annotation is not valid because the {typeDescription} is not disposable.");
-                        }
-                        break;
-                    }
-
-                    case IStructDeclaration { IsByRefLike: true, DeclaredElement: { } type } when type.HasDisposeMethods():
-                    {
-                        if (!IsAnnotatedWithAnyOf(
-                            constructor,
-                            PurityOrDisposabilityKind.MustDisposeResource,
-                            PurityOrDisposabilityKind.MustDisposeResourceFalse))
-                        {
-                            var name = nameof(MustDisposeResourceAttribute).WithoutSuffix();
-
-                            HighlightMissing(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                $"Constructor of the disposable struct is not annotated with [{name}] or [{name}(false)].");
-                        }
-
-                        if (TryGetAnnotationAnyOf(
-                                constructor,
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                PurityOrDisposabilityKind.MustDisposeResourceFalse) is { } annotation
-                            && IsMustDisposeResourceTrueAttribute(annotation))
-                        {
-                            HighlightRedundantMustDisposeResourceTrueArgument(
-                                $"Passing 'true' to the [{nameof(MustDisposeResourceAttribute).WithoutSuffix()}] annotation is redundant.");
-                        }
-                        break;
-                    }
-
-                    case IStructDeclaration { IsByRefLike: true, DeclaredElement: { } type } when !type.HasDisposeMethods():
-                    {
-                        if (TryGetAnnotationAnyOf(
-                                constructor,
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                PurityOrDisposabilityKind.MustDisposeResourceFalse) is { })
-                        {
-                            HighlightNotAllowed(
-                                PurityOrDisposabilityKind.MustDisposeResource,
-                                "Annotation is not valid because the struct is not disposable.");
+                            if (TryGetAnnotationAnyOf(
+                                    constructor,
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    PurityOrDisposabilityKind.MustDisposeResourceFalse) is { })
+                            {
+                                HighlightNotAllowed(
+                                    PurityOrDisposabilityKind.MustDisposeResource,
+                                    "Annotation is not valid because the struct is not disposable.");
+                            }
                         }
                         break;
                     }

@@ -15,6 +15,18 @@ namespace DisposableAnnotated
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    [MustDisposeResource]
+    internal struct Struct() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource]
+    internal record struct RecordStruct() : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
 }
 
 namespace DisposableAnnotatedAgain
@@ -32,18 +44,44 @@ namespace DisposableAnnotatedAgain
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    [MustDisposeResource]
+    [method: |MustDisposeResource|(2)]
+    internal struct Struct() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource]
+    [method: |MustDisposeResource|(3)]
+    internal record struct RecordStruct() : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
 }
 
 namespace DisposableAnnotatedWithFalse
 {
     [MustDisposeResource(false)]
-    internal class Class|()|(2) : IDisposable
+    internal class Class|()|(4) : IDisposable
     {
         public void Dispose() { }
     }
 
     [MustDisposeResource(false)]
-    internal record Record|()|(3) : IAsyncDisposable
+    internal record Record|()|(5) : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
+    [MustDisposeResource(false)]
+    internal struct Struct|()|(6) : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource(false)]
+    internal record struct RecordStruct|()|(7) : IAsyncDisposable
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
@@ -64,50 +102,20 @@ namespace DisposableAnnotatedWithFalseAgain
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
-}
 
-namespace DisposableWithNoBaseTypeAnnotated
-{
-    internal class |GrandParent|(4) : IDisposable
+    [MustDisposeResource(false)]
+    [method: MustDisposeResource(false)]
+    internal struct Struct() : IDisposable
     {
         public void Dispose() { }
     }
 
-    internal class |Parent|(5) : GrandParent { }
-
-    internal class |Child|(6)() : Parent { }
-
-    internal record |GrandParentRecord|(7) : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    internal record |ParentRecord|(8) : GrandParentRecord { }
-
-    internal record |ChildRecord|(9)() : ParentRecord { }
-}
-
-namespace DisposableWithNearestBaseTypeAnnotatedWithFalse
-{
     [MustDisposeResource(false)]
-    internal class GrandParent : IAsyncDisposable
+    [method: MustDisposeResource(false)]
+    internal record struct RecordStruct() : IAsyncDisposable
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
-
-    internal class |Parent|(10) : GrandParent { }
-
-    internal class |Child|(11)() : Parent { }
-
-    internal record |GrandParentRecord|(12) : IAsyncDisposable
-    {
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
-    }
-
-    [MustDisposeResource(false)]
-    internal record ParentRecord : GrandParentRecord { }
-
-    internal record |ChildRecord|(13)() : ParentRecord { }
 }
 
 namespace DisposableWithNearestTypeAnnotated
@@ -122,7 +130,7 @@ namespace DisposableWithNearestTypeAnnotated
 
     internal class Child() : Parent { }
 
-    internal record |GrandParentRecord|(14) : IDisposable
+    internal record |GrandParentRecord|(8) : IDisposable
     {
         public void Dispose() { }
     }
@@ -143,10 +151,10 @@ namespace DisposableWithNearestTypeAnnotatedAgain
 
     internal class Parent : GrandParent { }
 
-    [method: |MustDisposeResource|(15)]
+    [method: |MustDisposeResource|(9)]
     internal class Child() : Parent { }
 
-    internal record |GrandParentRecord|(16) : IDisposable
+    internal record |GrandParentRecord|(10) : IDisposable
     {
         public void Dispose() { }
     }
@@ -154,88 +162,56 @@ namespace DisposableWithNearestTypeAnnotatedAgain
     [MustDisposeResource]
     internal record ParentRecord : GrandParentRecord { }
 
-    [method: |MustDisposeResource|(17)]
+    [method: |MustDisposeResource|(11)]
     internal record ChildRecord() : ParentRecord { }
 }
 
 namespace NonDisposable
 {
-    [method: |MustDisposeResource|(18)]
+    [method: |MustDisposeResource|(12)]
     internal class Class() { }
 
-    [method: |MustDisposeResource(false)|(19)]
+    [method: |MustDisposeResource(false)|(13)]
     internal record Record() { }
-}
 
-namespace DisposableStructs
-{
-    internal struct DisposableStruct|()|(20) : IDisposable
-    {
-        public void Dispose() { }
-    }
+    [method: |MustDisposeResource|(14)]
+    internal struct Struct() { }
 
-    internal record struct DisposableStructRecord|()|(21) : IDisposable
-    {
-        public void Dispose() { }
-    }
+    [method: |MustDisposeResource(false)|(15)]
+    internal record struct RecordStruct() { }
 }
 
 namespace NonDisposableStructs
 {
-    [method: |MustDisposeResource|(22)]
+    [method: |MustDisposeResource|(16)]
     internal struct NonDisposableStruct() { }
 
-    [method: |MustDisposeResource(false)|(23)]
+    [method: |MustDisposeResource(false)|(17)]
     internal record struct NonDisposableStructRecord() { }
 }
 
 namespace RefStructs
 {
-    [method: |MustDisposeResource|(24)]
+    [method: |MustDisposeResource|(18)]
     internal ref struct RefStruct() { }
-
-    internal ref struct RefStructWithDispose|()|(25)
-    {
-        public void Dispose() { }
-    }
-
-    internal ref struct RefStructWithDisposeAsync|()|(26)
-    {
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
-    }
-
-    internal ref struct RefStructWithClose|()|(27)
-    {
-        [HandlesResourceDisposal]
-        public void Close() { }
-    }
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: Annotation is redundant because the class or a base class is already annotated with [MustDisposeResource].
 (1): ReSharper Suggestion: Annotation is redundant because the record or a base record is already annotated with [MustDisposeResource].
-(2): ReSharper Warning: Constructor of the disposable class (with the [MustDisposeResource(false)] annotation) is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(3): ReSharper Warning: Constructor of the disposable record (with the [MustDisposeResource(false)] annotation) is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(4): ReSharper Warning: Class is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(5): ReSharper Warning: Class is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(6): ReSharper Warning: Class is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(7): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(2): ReSharper Suggestion: Annotation is redundant because the struct is already annotated with [MustDisposeResource].
+(3): ReSharper Suggestion: Annotation is redundant because the record is already annotated with [MustDisposeResource].
+(4): ReSharper Warning: Constructor of the disposable class (with the [MustDisposeResource(false)] annotation) is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(5): ReSharper Warning: Constructor of the disposable record (with the [MustDisposeResource(false)] annotation) is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(6): ReSharper Warning: Constructor of the disposable struct (with the [MustDisposeResource(false)] annotation) is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(7): ReSharper Warning: Constructor of the disposable record (with the [MustDisposeResource(false)] annotation) is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (8): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(9): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(10): ReSharper Warning: Class is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(11): ReSharper Warning: Class is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(12): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(13): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(14): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(15): ReSharper Suggestion: Annotation is redundant because the class or a base class is already annotated with [MustDisposeResource].
-(16): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(17): ReSharper Suggestion: Annotation is redundant because the record or a base record is already annotated with [MustDisposeResource].
-(18): ReSharper Warning: Annotation is not valid because the class is not disposable.
-(19): ReSharper Warning: Annotation is not valid because the record is not disposable.
-(20): ReSharper Warning: Constructor of the disposable struct is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(21): ReSharper Warning: Constructor of the disposable record is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(22): ReSharper Warning: Annotation is not valid because the struct is not disposable.
-(23): ReSharper Warning: Annotation is not valid because the record is not disposable.
-(24): ReSharper Warning: Annotation is not valid because the struct is not disposable.
-(25): ReSharper Warning: Constructor of the disposable struct is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(26): ReSharper Warning: Constructor of the disposable struct is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(27): ReSharper Warning: Constructor of the disposable struct is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(9): ReSharper Suggestion: Annotation is redundant because the class or a base class is already annotated with [MustDisposeResource].
+(10): ReSharper Warning: Record is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(11): ReSharper Suggestion: Annotation is redundant because the record or a base record is already annotated with [MustDisposeResource].
+(12): ReSharper Warning: Annotation is not valid because the class is not disposable.
+(13): ReSharper Warning: Annotation is not valid because the record is not disposable.
+(14): ReSharper Warning: Annotation is not valid because the struct is not disposable.
+(15): ReSharper Warning: Annotation is not valid because the record is not disposable.
+(16): ReSharper Warning: Annotation is not valid because the struct is not disposable.
+(17): ReSharper Warning: Annotation is not valid because the record is not disposable.
+(18): ReSharper Warning: Annotation is not valid because the struct is not disposable.

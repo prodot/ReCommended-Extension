@@ -23,26 +23,6 @@ namespace Test
         public void Dispose() { }
     }
 
-    [MustDisposeResource(true)]
-    internal struct Struct : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    internal struct StructWithConstructor : IDisposable
-    {
-        [MustDisposeResource(true)]
-        public StructWithConstructor() { }
-
-        public void Dispose() { }
-    }
-
-    [method: MustDisposeResource(true)]
-    internal struct StructWithPrimaryConstructor() : IDisposable
-    {
-        public void Dispose() { }
-    }
-
     internal class Methods
     {
         [MustDisposeResource(true)]

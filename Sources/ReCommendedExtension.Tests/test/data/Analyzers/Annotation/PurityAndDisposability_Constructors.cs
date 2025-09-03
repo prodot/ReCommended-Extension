@@ -17,6 +17,20 @@ namespace DisposableAnnotated
         public Record() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    [MustDisposeResource]
+    internal struct Struct : IDisposable
+    {
+        public Struct() { }
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource]
+    internal record struct RecordStruct : IAsyncDisposable
+    {
+        public RecordStruct() { }
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
 }
 
 namespace DisposableAnnotatedAgain
@@ -38,6 +52,24 @@ namespace DisposableAnnotatedAgain
 
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    [MustDisposeResource]
+    internal struct Struct : IDisposable
+    {
+        [MustDisposeResource]
+        public Struct() { }
+
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource]
+    internal record struct RecordStruct : IAsyncDisposable
+    {
+        [MustDisposeResource]
+        public RecordStruct() { }
+
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
 }
 
 namespace DisposableAnnotatedWithFalse
@@ -53,6 +85,20 @@ namespace DisposableAnnotatedWithFalse
     internal record Record : IAsyncDisposable
     {
         public Record() { }
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
+    [MustDisposeResource(false)]
+    internal struct Struct : IDisposable
+    {
+        public Struct() { }
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource(false)]
+    internal record struct RecordStruct : IAsyncDisposable
+    {
+        public RecordStruct() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
@@ -76,90 +122,23 @@ namespace DisposableAnnotatedWithFalseAgain
 
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
-}
 
-namespace DisposableWithNoBaseTypeAnnotated
-{
-    internal class GrandParent : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    internal class Parent : GrandParent { }
-
-    internal class Child : Parent
-    {
-        public Child() { }
-    }
-
-    internal record GrandParentRecord : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    internal record ParentRecord : GrandParentRecord { }
-
-    internal record ChildRecord : ParentRecord
-    {
-        public ChildRecord() { }
-    }
-}
-
-namespace DisposableWithNearestBaseTypeAnnotatedWithFalse
-{
     [MustDisposeResource(false)]
-    internal class GrandParent : IAsyncDisposable
+    internal struct Struct : IDisposable
     {
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
-    }
+        [MustDisposeResource(false)]
+        public Struct() { }
 
-    internal class Parent : GrandParent { }
-
-    internal class Child : Parent
-    {
-        public Child() { }
-    }
-
-    internal record GrandParentRecord : IAsyncDisposable
-    {
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+        public void Dispose() { }
     }
 
     [MustDisposeResource(false)]
-    internal record ParentRecord : GrandParentRecord { }
-
-    internal record ChildRecord : ParentRecord
+    internal record struct RecordStruct : IAsyncDisposable
     {
-        public ChildRecord() { }
-    }
-}
+        [MustDisposeResource(false)]
+        public RecordStruct() { }
 
-namespace DisposableWithNearestTypeAnnotated
-{
-    [MustDisposeResource]
-    internal class GrandParent : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    internal class Parent : GrandParent { }
-
-    internal class Child : Parent
-    {
-        public Child() { }
-    }
-
-    internal record GrandParentRecord : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    [MustDisposeResource]
-    internal record ParentRecord : GrandParentRecord { }
-
-    internal record ChildRecord : ParentRecord
-    {
-        public ChildRecord() { }
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
 
@@ -207,35 +186,17 @@ namespace NonDisposable
         [MustDisposeResource(false)]
         public Record() { }
     }
-}
 
-namespace DisposableStructs
-{
-    internal struct DisposableStruct : IDisposable
-    {
-        public DisposableStruct() { }
-        public void Dispose() { }
-    }
-
-    internal record struct DisposableStructRecord : IDisposable
-    {
-        public DisposableStructRecord() { }
-        public void Dispose() { }
-    }
-}
-
-namespace NonDisposableStructs
-{
-    internal struct NonDisposableStruct
+    internal struct Struct
     {
         [MustDisposeResource]
-        public NonDisposableStruct() { }
+        public Struct() { }
     }
 
-    internal record struct NonDisposableStructRecord
+    internal record struct RecordStruct
     {
         [MustDisposeResource(false)]
-        public NonDisposableStructRecord() { }
+        public RecordStruct() { }
     }
 }
 
@@ -245,25 +206,5 @@ namespace RefStructs
     {
         [MustDisposeResource]
         public RefStruct() { }
-    }
-
-    internal ref struct RefStructWithDispose
-    {
-        public RefStructWithDispose() { }
-        public void Dispose() { }
-    }
-
-    internal ref struct RefStructWithDisposeAsync
-    {
-        public RefStructWithDisposeAsync() { }
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
-    }
-
-    internal ref struct RefStructWithClose
-    {
-        public RefStructWithClose() { }
-
-        [HandlesResourceDisposal]
-        public void Close() { }
     }
 }

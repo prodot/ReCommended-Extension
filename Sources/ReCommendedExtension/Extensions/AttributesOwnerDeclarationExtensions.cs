@@ -1,7 +1,6 @@
 ﻿using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
@@ -69,8 +68,7 @@ internal static class AttributesOwnerDeclarationExtensions
     public static ITypeElement? TryGetAnnotationAttributeType(this IAttributesOwnerDeclaration attributesOwnerDeclaration, string attributeShortName)
         => attributesOwnerDeclaration
             .GetPsiServices()
-            .GetComponent<CodeAnnotationsConfiguration>()
-            .GetAttributeTypeForElement(attributesOwnerDeclaration, attributeShortName);
+            .CodeAnnotationsConfiguration.GetAttributeTypeForElement(attributesOwnerDeclaration, attributeShortName);
 
     [Pure]
     public static bool IsAnnotationProvided(this IAttributesOwnerDeclaration attributesOwnerDeclaration, string attributeShortName)

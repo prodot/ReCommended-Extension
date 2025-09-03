@@ -26,27 +26,33 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
 
     protected sealed override bool AllowsInheritedMethods => true;
 
-    protected override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context) => declaredElement switch
-    {
-        IClass type => type.IsDisposable() && !IsAnyBaseTypeAnnotated(type),
+    protected sealed override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
+        => declaredElement switch
+        {
+            IClass type => type.IsDisposable() && !IsAnyBaseTypeAnnotated(type),
 
-        IConstructor { ContainingType: IClass or IStruct { IsByRefLike: false } } constructor => constructor.ContainingType.IsDisposable()
-            && !IsTypeAnnotated(constructor.ContainingType)
-            && !IsAnyBaseTypeAnnotated(constructor.ContainingType),
+            IStruct { IsByRefLike: false } type when context.MustDisposeResourceAttributeSupportsStructs() => type.IsDisposable(),
 
-        IConstructor { ContainingType: IStruct { IsByRefLike: true } s } => s.HasDisposeMethods(),
+            IStruct { IsByRefLike: true } type when context.MustDisposeResourceAttributeSupportsStructs() => type.IsDisposable()
+                || type.HasDisposeMethods(),
 
-        IMethod method => (method.ReturnType.IsDisposable() || method.ReturnType.IsTasklikeOfDisposable(context))
-            && !IsAnyBaseMethodAnnotated(method),
+            IConstructor { ContainingType: IClass or IStruct { IsByRefLike: false } } constructor => constructor.ContainingType.IsDisposable()
+                && !IsTypeAnnotated(constructor.ContainingType)
+                && !IsAnyBaseTypeAnnotated(constructor.ContainingType),
 
-        ILocalFunction localFunction => localFunction.ReturnType.IsDisposable() || localFunction.ReturnType.IsTasklikeOfDisposable(context),
+            IConstructor { ContainingType: IStruct { IsByRefLike: true } s } => s.IsDisposable() || s.HasDisposeMethods(),
 
-        IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => (parameter.Type.IsDisposable()
-                || parameter.Type.IsTasklikeOfDisposable(context))
-            && !IsParameterOfAnyBaseMethodAnnotated(parameter),
+            IMethod method => (method.ReturnType.IsDisposable() || method.ReturnType.IsTasklikeOfDisposable(context))
+                && !IsAnyBaseMethodAnnotated(method),
 
-        _ => false,
-    };
+            ILocalFunction localFunction => localFunction.ReturnType.IsDisposable() || localFunction.ReturnType.IsTasklikeOfDisposable(context),
+
+            IParameter { Kind: ParameterKind.REFERENCE or ParameterKind.OUTPUT } parameter => (parameter.Type.IsDisposable()
+                    || parameter.Type.IsTasklikeOfDisposable(context))
+                && !IsParameterOfAnyBaseMethodAnnotated(parameter),
+
+            _ => false,
+        };
 
     protected sealed override IAttribute[] GetAttributesToReplace(IAttributesOwnerDeclaration ownerDeclaration)
         =>

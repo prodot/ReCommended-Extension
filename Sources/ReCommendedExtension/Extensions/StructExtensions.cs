@@ -9,11 +9,10 @@ internal static class StructExtensions
     {
         Debug.Assert(type.IsByRefLike);
 
-        return type.Methods.Any(
-            method => method.IsDisposeMethodByConvention()
-                || method.IsDisposeAsyncMethodByConvention()
-                || method.GetAttributeInstances(false).Any(attribute => attribute.GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute))
-                && !method.IsStatic
-                && method.GetAccessRights() is AccessRights.INTERNAL or AccessRights.PUBLIC);
+        return type.Methods.Any(method => method.IsDisposeMethodByConvention()
+            || method.IsDisposeAsyncMethodByConvention()
+            || method.GetAttributeInstances(false).Any(attribute => attribute.GetAttributeShortName() == nameof(HandlesResourceDisposalAttribute))
+            && !method.IsStatic
+            && method.GetAccessRights() is AccessRights.INTERNAL or AccessRights.PUBLIC);
     }
 }
