@@ -1,4 +1,6 @@
-﻿namespace Test
+﻿using System;
+
+namespace Test
 {
     public class Nullables
     {
@@ -17,6 +19,19 @@
             nullable.|HasValue|(2) = true;
 
             (nullable.|HasValue|(3), var x) = (true, 1);
+
+            var result1 = nameof(nullable.HasValue);
+            var result2 = nameof(Nullable<int>.HasValue);
+        }
+
+        public void NoDetection<T>(T? nullable) where T : struct
+        {
+            nullable.|HasValue|(4) = true;
+
+            (nullable.|HasValue|(5), var x) = (true, 1);
+
+            var result1 = nameof(nullable.HasValue);
+            var result2 = nameof(Nullable<T>.HasValue);
         }
     }
 }
@@ -25,3 +40,5 @@
 (1): ReSharper Suggestion: Use pattern or null check.
 (2): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.HasValue' has no setter
 (3): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.HasValue' has no setter
+(4): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.HasValue' has no setter
+(5): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.HasValue' has no setter

@@ -13,7 +13,10 @@ namespace Test
 
         public void NoDetection(DateTime dateTime)
         {
-            var result = dateTime.Date;
+            var result11 = dateTime.Date;
+
+            var result21 = nameof(DateTime.Now.Date);
+            var result22 = nameof(Now.Date);
 
             dateTime.Date = dateTime;
         }

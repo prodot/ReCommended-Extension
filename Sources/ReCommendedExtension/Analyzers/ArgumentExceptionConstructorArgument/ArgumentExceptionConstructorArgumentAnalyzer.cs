@@ -34,6 +34,7 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProble
                 case IInvocationExpression
                 {
                     InvokedExpression: IReferenceExpression { Reference: var reference },
+                    TypeArguments: [],
                     Arguments: [{ Value: IReferenceExpression argumentReferenceExpression }],
                 }:
                     if (reference.GetName() == "nameof"

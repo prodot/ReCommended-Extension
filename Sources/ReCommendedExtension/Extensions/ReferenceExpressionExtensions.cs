@@ -19,4 +19,15 @@ internal static class ReferenceExpressionExtensions
 
             _ => false,
         };
+
+    [Pure]
+    public static bool IsWithinNameofExpression(this IReferenceExpression referenceExpression)
+        => referenceExpression.Parent is ICSharpArgument
+            {
+                Invocation: IInvocationExpression
+                {
+                    InvokedExpression: IReferenceExpression { Reference: var reference }, TypeArguments: [], Arguments: [_],
+                },
+            }
+            && reference.GetName() == "nameof";
 }

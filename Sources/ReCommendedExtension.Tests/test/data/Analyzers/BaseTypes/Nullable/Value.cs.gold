@@ -1,4 +1,6 @@
-﻿namespace Test
+﻿using System;
+
+namespace Test
 {
     public class Nullables
     {
@@ -19,6 +21,15 @@
             nullable.|Value|(2) = true;            
 
             (nullable.|Value|(3), var x) = (1, true);
+
+            var result1 = nameof(nullable.Value);
+            var result2 = nameof(Nullable<int>.Value);
+        }
+
+        public void NoDetection<T>(T? nullable) where T : struct
+        {
+            var result1 = nameof(nullable.Value);
+            var result2 = nameof(Nullable<int>.Value);
         }
     }
 }

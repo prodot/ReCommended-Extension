@@ -23,7 +23,7 @@ public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpressi
     /// </remarks>
     static void AnalyzeHasValue(IHighlightingConsumer consumer, IReferenceExpression referenceExpression)
     {
-        if (!referenceExpression.IsPropertyAssignment())
+        if (!referenceExpression.IsPropertyAssignment() && !referenceExpression.IsWithinNameofExpression())
         {
             consumer.AddHighlighting(new UseNullableHasValueAlternativeSuggestion("Use pattern or null check.", referenceExpression));
         }
@@ -36,7 +36,9 @@ public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpressi
     {
         Debug.Assert(referenceExpression.QualifierExpression is { });
 
-        if (!referenceExpression.IsPropertyAssignment() && !referenceExpression.QualifierExpression.Type().Unlift().IsValueTuple(out _))
+        if (!referenceExpression.IsPropertyAssignment()
+            && !referenceExpression.IsWithinNameofExpression()
+            && !referenceExpression.QualifierExpression.Type().Unlift().IsValueTuple(out _))
         {
             consumer.AddHighlighting(new ReplaceNullableValueWithTypeCastSuggestion("Use type cast.", referenceExpression));
         }

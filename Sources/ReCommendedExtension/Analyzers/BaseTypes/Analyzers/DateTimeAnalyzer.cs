@@ -551,6 +551,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     static void AnalyzeDate(IHighlightingConsumer consumer, IReferenceExpression referenceExpression)
     {
         if (!referenceExpression.IsPropertyAssignment()
+            && !referenceExpression.IsWithinNameofExpression()
             && referenceExpression.QualifierExpression is IReferenceExpression
             {
                 Reference: var reference, QualifierExpression: var qualifierExpression,
