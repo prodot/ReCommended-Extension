@@ -20,7 +20,7 @@ public sealed class UseUnaryOperatorSuggestion(
     string @operator,
     string operand) : Highlighting(message)
 {
-    const string SeverityId = "UseBinaryOperator";
+    const string SeverityId = "UseUnaryOperator";
 
     internal IInvocationExpression InvocationExpression => invocationExpression;
 

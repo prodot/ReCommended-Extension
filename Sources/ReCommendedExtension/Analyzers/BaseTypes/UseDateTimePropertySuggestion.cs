@@ -24,8 +24,6 @@ public sealed class UseDateTimePropertySuggestion(
 {
     const string SeverityId = "UseDateTimeProperty";
 
-    internal IReferenceExpressionReference InvokingReferenceExpression => invokingReference;
-
     internal IReferenceExpression ReferenceExpression => referenceExpression;
 
     internal ICSharpExpression? QualifierExpression => qualifierExpression;

@@ -94,7 +94,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
     {
         if (!invocationExpression.IsUsedAsStatement() && numberInfo.TypeCode is { } typeCode)
         {
-            var replacement = $"{nameof(TypeCode)}.{typeCode:G}";
+            var replacement = $"{nameof(TypeCode)}.{typeCode}";
 
             consumer.AddHighlighting(
                 new UseExpressionResultSuggestion($"The expression is always {replacement}.", invocationExpression, replacement));
@@ -161,7 +161,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature { Name = nameof(int.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -199,7 +199,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature { Name = "Parse", ParameterTypes = ParameterTypes.String_IFormatProvider, IsStatic = true }, // todo: nameof(IParsable<T>.Parse) when available
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -586,7 +586,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 },
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -632,7 +632,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 },
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }
@@ -678,7 +678,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 },
                 invocationExpression.PsiModule))
         {
-            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles:G}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
+            var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
 
             consumer.AddHighlighting(new RedundantArgumentHint($"Passing {styles} is redundant.", styleArgument));
         }

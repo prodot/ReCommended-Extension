@@ -38,7 +38,7 @@ public readonly record struct Half : IFormattable // todo: remove when available
 
             var bitValue = SingleToUInt32Bits(value);
             var sign = (bitValue & 0x8000_0000) >> 16;
-            var realMask = float.IsNaN(value) ? 0u : ~0u;
+            var realMask = value is float.NaN ? 0u : ~0u;
 
             value = Math.Abs(value);
             value = Math.Min(maxHalfValueBelowInfinity, value);

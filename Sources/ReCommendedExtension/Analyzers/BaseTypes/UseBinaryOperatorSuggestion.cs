@@ -23,7 +23,7 @@ public sealed class UseBinaryOperatorSuggestion(
     string rightOperand,
     IReferenceExpression? invokedExpression = null) : Highlighting(message)
 {
-    const string SeverityId = "ReCommendedExtension.UseBinaryOperator";
+    const string SeverityId = "UseBinaryOperator";
 
     internal IInvocationExpression InvocationExpression => invocationExpression;
 

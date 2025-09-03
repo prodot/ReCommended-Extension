@@ -1,8 +1,11 @@
-﻿namespace ReCommendedExtension.Extensions;
+﻿using System.ComponentModel;
+
+namespace ReCommendedExtension.Extensions;
 
 internal static class KeyValuePairExtensions
 {
     [Pure]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static void Deconstruct<K, V>(this KeyValuePair<K, V> pair, out K key, out V value)
     {
         key = pair.Key;
