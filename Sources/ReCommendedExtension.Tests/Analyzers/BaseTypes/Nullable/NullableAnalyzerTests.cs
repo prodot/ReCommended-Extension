@@ -32,6 +32,7 @@ public sealed class NullableAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [SuppressMessage("ReSharper", "ArrangeNullCheckingPattern")]
     [SuppressMessage("ReSharper", "Solution.PatternMatchingNullCheck")]
+    [SuppressMessage("ReSharper", "UseNullableHasValueAlternative")]
     public void TestHasValue()
     {
         Test(nullable => nullable.HasValue, nullable => nullable is { }, 1);
@@ -44,6 +45,7 @@ public sealed class NullableAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
+    [SuppressMessage("ReSharper", "ReplaceNullableValueWithTypeCast")]
     public void TestValue()
     {
         Test(nullable => nullable!.Value, nullable => (int)nullable!, 1, false);
@@ -52,6 +54,7 @@ public sealed class NullableAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestGetValueOrDefault()
     {
         Test(nullable => nullable.GetValueOrDefault(), nullable => nullable ?? 0, 1);

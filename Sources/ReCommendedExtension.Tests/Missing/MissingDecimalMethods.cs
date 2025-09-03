@@ -34,14 +34,14 @@ internal static class MissingDecimalMethods
 
     [Pure]
     public static decimal Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => decimal.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider);
+        => decimal.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
 
     [Pure]
     public static decimal Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Number, IFormatProvider? provider = null)
         => decimal.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
 
     [Pure]
-    public static decimal Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => decimal.Parse(s.ToString(), NumberStyles.Number, provider);
+    public static decimal Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => decimal.Parse(s.ToString(), provider);
 
     [Pure]
     public static decimal Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Number, IFormatProvider? provider = null)

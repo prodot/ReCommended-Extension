@@ -105,14 +105,14 @@ internal static class MissingInt32Methods
 
     [Pure]
     public static int Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => int.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+        => int.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
 
     [Pure]
     public static int Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
         => int.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
 
     [Pure]
-    public static int Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => int.Parse(s.ToString(), NumberStyles.Integer, provider);
+    public static int Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => int.Parse(s.ToString(), provider);
 
     [Pure]
     public static int Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)

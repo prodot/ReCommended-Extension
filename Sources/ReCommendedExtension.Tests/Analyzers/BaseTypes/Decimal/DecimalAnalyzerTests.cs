@@ -29,6 +29,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestAdd()
     {
         Test(
@@ -55,6 +56,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestDivide()
     {
         Test((d1, d2) => decimal.Divide(d1, d2), (d1, d2) => d1 / d2, [..TestValues.Except([decimal.MinValue, decimal.MaxValue])], [1, -1, 2, -2]);
@@ -63,6 +65,8 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
@@ -73,6 +77,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestGetTypeCode()
     {
         Test(number => number.GetTypeCode(), _ => TypeCode.Decimal);
@@ -102,6 +107,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestMultiply()
     {
         Test(
@@ -115,6 +121,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseUnaryOperator")]
     public void TestNegate()
     {
         Test(d => decimal.Negate(d), d => -d);
@@ -124,6 +131,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
         Test(n => decimal.Parse($"{n}", NumberStyles.Number), n => decimal.Parse($"{n}"));
@@ -148,6 +156,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestRemainder()
     {
         Test(
@@ -162,6 +171,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     [Test]
     [TestNetCore20]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestRound()
     {
         var roundings = new[] { MidpointRounding.ToEven, MidpointRounding.AwayFromZero };
@@ -186,6 +196,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestSubtract()
     {
         Test(
@@ -200,6 +211,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         var formatsRedundant = new[] { null, "", "G", "g" };

@@ -43,6 +43,7 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     ];
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test(number => number.Equals(null), _ => false);
@@ -51,6 +52,7 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestGetTypeCode()
     {
         Test(number => number.GetTypeCode(), _ => TypeCode.Double);
@@ -61,6 +63,7 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseFloatingPointPattern")]
     public void TestIsNaN()
     {
         Test(number => double.IsNaN(number), number => number is double.NaN);
@@ -70,6 +73,7 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
         double[] values = [..TestValues.Except([double.MinValue, double.MaxValue]), float.MinValue, float.MaxValue];
@@ -99,6 +103,7 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestRound()
     {
         var roundings = new[] { MidpointRounding.ToEven, MidpointRounding.AwayFromZero };
@@ -124,6 +129,7 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         var formatsRedundant = new[] { null, "", "G", "G0" };

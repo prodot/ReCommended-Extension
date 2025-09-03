@@ -43,6 +43,7 @@ public sealed class SingleAnalyzerTests : BaseTypeAnalyzerTests<float>
     ];
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test(number => number.Equals(null), _ => false);
@@ -51,6 +52,7 @@ public sealed class SingleAnalyzerTests : BaseTypeAnalyzerTests<float>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestGetTypeCode()
     {
         Test(number => number.GetTypeCode(), _ => TypeCode.Single);
@@ -61,6 +63,7 @@ public sealed class SingleAnalyzerTests : BaseTypeAnalyzerTests<float>
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseFloatingPointPattern")]
     public void TestIsNaN()
     {
         Test(number => float.IsNaN(number), number => number is float.NaN);
@@ -70,6 +73,7 @@ public sealed class SingleAnalyzerTests : BaseTypeAnalyzerTests<float>
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
         var values = TestValues.Except([float.MinValue, float.MaxValue]).ToArray();
@@ -128,6 +132,7 @@ public sealed class SingleAnalyzerTests : BaseTypeAnalyzerTests<float>
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         var formatsRedundant = new[] { null, "", "G", "G0" };

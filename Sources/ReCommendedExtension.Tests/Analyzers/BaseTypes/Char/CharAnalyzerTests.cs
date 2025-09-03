@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -22,6 +21,8 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     protected override char[] TestValues { get; } = ['a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue];
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test((c, obj) => c.Equals(obj), (c, obj) => c == obj, TestValues, TestValues);
@@ -32,6 +33,7 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestGetTypeCode()
     {
         Test(character => character.GetTypeCode(), _ => TypeCode.Char);
@@ -138,6 +140,7 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         Test(character => character.ToString(null), character => character.ToString());

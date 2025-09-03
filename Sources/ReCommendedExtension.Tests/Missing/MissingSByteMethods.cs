@@ -105,14 +105,14 @@ internal static class MissingSByteMethods
 
     [Pure]
     public static sbyte Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => sbyte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+        => sbyte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
 
     [Pure]
     public static sbyte Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
         => sbyte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
 
     [Pure]
-    public static sbyte Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => sbyte.Parse(s.ToString(), NumberStyles.Integer, provider);
+    public static sbyte Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => sbyte.Parse(s.ToString(), provider);
 
     [Pure]
     public static sbyte Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)

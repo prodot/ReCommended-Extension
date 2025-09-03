@@ -75,6 +75,7 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet60]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
         TestEnum(e => MissingEnumMethods.Parse<SampleEnum>(e.ToString(), false), e => MissingEnumMethods.Parse<SampleEnum>(e.ToString()));
@@ -99,6 +100,7 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         TestEnum(e => e.ToString(null as string), e => e.ToString());
@@ -116,6 +118,7 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [TestNet60]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestTryParse()
     {
         TestEnum(

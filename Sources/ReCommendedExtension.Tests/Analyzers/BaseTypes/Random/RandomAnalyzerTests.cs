@@ -67,6 +67,7 @@ public sealed class RandomAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestNext()
     {
         Test(random => random.Next(int.MaxValue), random => random.Next(), 1);

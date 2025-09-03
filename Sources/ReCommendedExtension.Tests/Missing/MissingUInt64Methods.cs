@@ -41,14 +41,14 @@ internal static class MissingUInt64Methods
 
     [Pure]
     public static ulong Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => ulong.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+        => ulong.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
 
     [Pure]
     public static ulong Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
         => ulong.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
 
     [Pure]
-    public static ulong Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => ulong.Parse(s.ToString(), NumberStyles.Integer, provider);
+    public static ulong Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => ulong.Parse(s.ToString(), provider);
 
     [Pure]
     public static ulong Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)

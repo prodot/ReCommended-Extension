@@ -32,7 +32,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
         new(0, 0, 1),
         new(0, 1, 0),
         new(1, 0, 0),
-        new(1, 0, 0, 0, 0),
+        new(1, 0, 0, 0, 1),
         new(0, 0, 0, 0, 1),
         new(1, 2, 3, 4),
         new(-1, 2, 3, 4),
@@ -41,6 +41,8 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet70]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Test_Constructors()
     {
         Test(() => new System.TimeSpan(0), () => System.TimeSpan.Zero);
@@ -58,6 +60,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestAdd()
     {
         var values = TestValues.Except([System.TimeSpan.MinValue, System.TimeSpan.MaxValue]).ToArray();
@@ -83,6 +86,8 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test((timeSpan, obj) => timeSpan.Equals(obj), (timeSpan, obj) => timeSpan == obj, TestValues, TestValues);
@@ -151,6 +156,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestFromTicks()
     {
         Test(_ => System.TimeSpan.FromTicks(0), _ => System.TimeSpan.Zero);
@@ -174,6 +180,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseUnaryOperator")]
     public void TestNegate()
     {
         Test(timeSpan => timeSpan.Negate(), timeSpan => -timeSpan, [..TestValues.Except([System.TimeSpan.MinValue])]);
@@ -182,6 +189,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
         Test(timeSpan => System.TimeSpan.Parse($"{timeSpan}", null), timeSpan => System.TimeSpan.Parse($"{timeSpan}"));
@@ -192,6 +200,9 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
+    [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "RedundantElement")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParseExact()
     {
         var constantFormatSpecifiers = new[] { "c", "t", "T" };
@@ -277,6 +288,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestSubtract()
     {
         var values = TestValues.Except([System.TimeSpan.MinValue, System.TimeSpan.MaxValue]).ToArray();
@@ -287,6 +299,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         var formatsRedundant = new[] { null, "", "c", "t", "T" };
@@ -310,6 +323,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
 
     [Test]
     [TestNetCore21]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestTryParse()
     {
         Test(
@@ -325,6 +339,9 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
+    [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
+    [SuppressMessage("ReSharper", "RedundantElement")]
     public void TestTryParseExact()
     {
         var constantFormatSpecifiers = new[] { "c", "t", "T" };

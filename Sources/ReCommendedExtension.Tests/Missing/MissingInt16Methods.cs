@@ -105,14 +105,14 @@ internal static class MissingInt16Methods
 
     [Pure]
     public static short Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+        => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
 
     [Pure]
     public static short Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
         => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
 
     [Pure]
-    public static short Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => short.Parse(s.ToString(), NumberStyles.Integer, provider);
+    public static short Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => short.Parse(s.ToString(), provider);
 
     [Pure]
     public static short Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)

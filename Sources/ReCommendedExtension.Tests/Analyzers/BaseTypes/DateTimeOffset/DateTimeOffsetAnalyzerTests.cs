@@ -36,6 +36,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet70]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Test_Constructors()
     {
         Test(
@@ -105,6 +106,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestAdd()
     {
         var value = new System.TimeSpan(1, 2, 3, 4, 5);
@@ -115,6 +117,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
     public void TestAddTicks()
     {
         Test(dateTimeOffset => dateTimeOffset.AddTicks(0), dateTimeOffset => dateTimeOffset);
@@ -124,6 +127,8 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test((dateTimeOffset, other) => dateTimeOffset.Equals(other), (dateTimeOffset, other) => dateTimeOffset == other, TestValues, TestValues);
@@ -135,6 +140,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
 
     [Test]
     [TestNet70]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
         Test(
@@ -158,6 +164,9 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
+    [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
+    [SuppressMessage("ReSharper", "RedundantElement")]
     public void TestParseExact()
     {
         var testValues = TestValues.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue]).ToArray();
@@ -293,6 +302,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestSubtract()
     {
         var dateTimeOffsetValue = new System.DateTimeOffset(2021, 7, 21, 13, 08, 52, System.TimeSpan.FromHours(2));
@@ -311,6 +321,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         Test((dateTimeOffset, format) => dateTimeOffset.ToString(format), (dateTimeOffset, _) => dateTimeOffset.ToString(), TestValues, [null, ""]);
@@ -374,6 +385,8 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
+    [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "RedundantElement")]
     public void TestTryParseExact()
     {
         var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y" };

@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace ReCommendedExtension.Tests.Missing;
 
+[UsedImplicitly(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Members)]
 public readonly record struct TimeOnly : IFormattable
 {
     public static TimeOnly MinValue => new(0);

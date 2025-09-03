@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
@@ -19,6 +18,9 @@ public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
     protected override bool[] TestValues { get; } = [true, false];
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
+    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestEquals()
     {
         Test(flag => flag.Equals(true), flag => flag);
@@ -33,6 +35,7 @@ public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestGetTypeCode()
     {
         Test(flag => flag.GetTypeCode(), _ => TypeCode.Boolean);
@@ -41,6 +44,7 @@ public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         Test(flag => flag.ToString(null), flag => flag.ToString());

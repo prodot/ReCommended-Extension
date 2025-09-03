@@ -51,6 +51,7 @@ public sealed class IntPtrAnalyzerTests : BaseTypeAnalyzerTests<nint>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);

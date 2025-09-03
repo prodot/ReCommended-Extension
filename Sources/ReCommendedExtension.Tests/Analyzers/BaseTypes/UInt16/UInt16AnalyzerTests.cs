@@ -51,6 +51,8 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
@@ -61,6 +63,7 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestGetTypeCode()
     {
         Test(number => number.GetTypeCode(), _ => TypeCode.UInt16);
@@ -90,6 +93,7 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
         Test(n => ushort.Parse($"{n}", NumberStyles.Integer), n => ushort.Parse($"{n}"));
@@ -129,6 +133,7 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         var formatsRedundant = new[] { null, "", "G", "G0", "G5", "G6", "g", "g0", "g5", "g6" };

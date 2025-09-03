@@ -41,14 +41,14 @@ internal static class MissingUInt32Methods
 
     [Pure]
     public static uint Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => uint.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+        => uint.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
 
     [Pure]
     public static uint Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
         => uint.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
 
     [Pure]
-    public static uint Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => uint.Parse(s.ToString(), NumberStyles.Integer, provider);
+    public static uint Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => uint.Parse(s.ToString(), provider);
 
     [Pure]
     public static uint Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)

@@ -41,14 +41,14 @@ internal static class MissingByteMethods
 
     [Pure]
     public static byte Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => byte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+        => byte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
 
     [Pure]
     public static byte Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
         => byte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
 
     [Pure]
-    public static byte Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => byte.Parse(s.ToString(), NumberStyles.Integer, provider);
+    public static byte Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => byte.Parse(s.ToString(), provider);
 
     [Pure]
     public static byte Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)

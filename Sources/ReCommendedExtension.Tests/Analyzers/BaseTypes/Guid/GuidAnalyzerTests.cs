@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
@@ -20,6 +19,8 @@ public sealed class GuidAnalyzerTests : BaseTypeAnalyzerTests<System.Guid>
     protected override System.Guid[] TestValues { get; } = [System.Guid.Empty, new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])];
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test((guid, g) => guid.Equals(g), (guid, g) => guid == g, TestValues, TestValues);
@@ -48,6 +49,7 @@ public sealed class GuidAnalyzerTests : BaseTypeAnalyzerTests<System.Guid>
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         var formatsRedundant = new[] { null, "", "D", "d" };

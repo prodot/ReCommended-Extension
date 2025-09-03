@@ -38,6 +38,9 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet80]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
+    [SuppressMessage("ReSharper", "RedundantArgumentRange")]
     public void Test_Constructors()
     {
         var calendars = new Calendar[] { new GregorianCalendar(), new JulianCalendar(), new JapaneseCalendar() };
@@ -282,6 +285,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     public void TestDate() => DoNamedTest2();
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestAdd()
     {
         var value = new System.TimeSpan(1, 2, 3, 4, 5);
@@ -292,6 +296,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
     public void TestAddTicks()
     {
         Test(dateTime => dateTime.AddTicks(0), dateTime => dateTime);
@@ -301,6 +306,8 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
         Test((dateTime, value) => dateTime.Equals(value), (dateTime, value) => dateTime == value, TestValues, TestValues);
@@ -311,6 +318,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestGetDateTimeFormats()
     {
         Test(dateTime => dateTime.GetDateTimeFormats(null), dateTime => dateTime.GetDateTimeFormats());
@@ -324,6 +332,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestGetTypeCode()
     {
         Test(dateTime => dateTime.GetTypeCode(), _ => TypeCode.DateTime);
@@ -333,6 +342,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
     [Test]
     [TestNet70]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
         Test(dateTime => System.DateTime.Parse($"{dateTime}", null), dateTime => System.DateTime.Parse($"{dateTime}"));
@@ -351,6 +361,9 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
+    [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
+    [SuppressMessage("ReSharper", "RedundantElement")]
     public void TestParseExact()
     {
         var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y" };
@@ -450,6 +463,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestSubtract()
     {
         var dateTimeValue = new System.DateTime(2021, 7, 21);
@@ -463,6 +477,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
     [Test]
     [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestToString()
     {
         Test((dateTime, format) => dateTime.ToString(format), (dateTime, _) => dateTime.ToString(), TestValues, [null, ""]);
@@ -522,6 +537,8 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
+    [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "RedundantElement")]
     public void TestTryParseExact()
     {
         var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y" };

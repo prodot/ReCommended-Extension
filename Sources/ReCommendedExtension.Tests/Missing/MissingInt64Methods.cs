@@ -105,14 +105,14 @@ internal static class MissingInt64Methods
 
     [Pure]
     public static long Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => long.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Integer, provider);
+        => long.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
 
     [Pure]
     public static long Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
         => long.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
 
     [Pure]
-    public static long Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => long.Parse(s.ToString(), NumberStyles.Integer, provider);
+    public static long Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => long.Parse(s.ToString(), provider);
 
     [Pure]
     public static long Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)

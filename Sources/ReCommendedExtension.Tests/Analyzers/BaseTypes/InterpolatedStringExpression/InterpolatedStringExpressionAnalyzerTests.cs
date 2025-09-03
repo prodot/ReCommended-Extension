@@ -38,6 +38,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestByte()
     {
         var values = new byte[] { 0, 1, 2, byte.MaxValue };
@@ -66,6 +68,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestSByte()
     {
         var values = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
@@ -94,6 +98,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestInt16()
     {
         var values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
@@ -122,6 +128,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestUInt16()
     {
         var values = new ushort[] { 0, 1, 2, ushort.MaxValue };
@@ -150,6 +158,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestInt32()
     {
         var values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
@@ -178,6 +188,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestUInt32()
     {
         var values = new uint[] { 0, 1, 2, uint.MaxValue };
@@ -206,6 +218,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestInt64()
     {
         var values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
@@ -234,6 +248,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
 
     [Test]
     [TestNet80]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestUInt64()
     {
         var values = new ulong[] { 0, 1, 2, ulong.MaxValue };
@@ -319,6 +335,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "InterpolatedStringExpressionIsNotIFormattable")] // todo: remove when IntPtr implements IFormattable
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestIntPtr()
     {
         var values = new[] { (nint)0, 1, 2, -1, -2 };
@@ -344,6 +362,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "InterpolatedStringExpressionIsNotIFormattable")] // todo: remove when UIntPtr implements IFormattable
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestUIntPtr()
     {
         var values = new nuint[] { 0, 1, 2 };
@@ -367,6 +387,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestDecimal()
     {
         var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
@@ -380,6 +402,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestDouble()
     {
         var values = new[]
@@ -409,6 +433,8 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
+    [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     public void TestSingle()
     {
         var values = new[]
@@ -485,6 +511,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     public void TestEnum()
     {
         var enumValues = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
@@ -500,6 +527,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     public void TestGuid()
     {
         var values = new[] { System.Guid.Empty, new System.Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
@@ -511,6 +539,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     public void TestTimeSpan()
     {
         var values = new[]
@@ -521,7 +550,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
             new(0, 0, 1),
             new(0, 1, 0),
             new(1, 0, 0),
-            new(1, 0, 0, 0, 0),
+            new(1, 0, 0, 0, 1),
             new(0, 0, 0, 0, 1),
             new(1, 2, 3, 4),
             new(-1, 2, 3, 4),
@@ -557,6 +586,7 @@ public sealed class InterpolatedStringExpressionAnalyzerTests : CSharpHighlighti
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "ReplaceTypeCastWithFormatSpecifier")]
     public void TestCastEnum()
     {
         var values = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
