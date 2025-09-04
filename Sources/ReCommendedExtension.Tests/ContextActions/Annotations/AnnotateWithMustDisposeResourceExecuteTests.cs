@@ -19,6 +19,9 @@ public sealed class AnnotateWithMustDisposeResourceExecuteTests : CSharpContextA
     public void TestExecuteType() => DoNamedTest2();
 
     [Test]
+    public void TestExecuteType_AnnotatedPrimaryConstructor() => DoNamedTest2();
+
+    [Test]
     public void TestExecuteConstructor() => DoNamedTest2();
 
     [Test]

@@ -154,3 +154,18 @@ namespace RefStructs
         public void Close() { }
     }
 }
+
+namespace AnnotatedPrimaryConstructor
+{
+    [method: MustDisposeResource]
+    internal struct Struct({on}) : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [method: MustDisposeResource(false)]
+    internal record struct recordStruct({off}) : IDisposable
+    {
+        public void Dispose() { }
+    }
+}

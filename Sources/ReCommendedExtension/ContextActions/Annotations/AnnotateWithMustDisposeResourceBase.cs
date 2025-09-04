@@ -36,11 +36,12 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
             IStruct { IsByRefLike: true } type when context.MustDisposeResourceAttributeSupportsStructs() => type.IsDisposable()
                 || type.HasDisposeMethods(),
 
-            IConstructor { ContainingType: IClass or IStruct { IsByRefLike: false } } constructor => constructor.ContainingType.IsDisposable()
-                && !IsTypeAnnotated(constructor.ContainingType)
-                && !IsAnyBaseTypeAnnotated(constructor.ContainingType),
+            IConstructor { ContainingType: (IClass or IStruct { IsByRefLike: false }) and var type } => type.IsDisposable()
+                && !IsTypeAnnotated(type)
+                && !IsAnyBaseTypeAnnotated(type),
 
-            IConstructor { ContainingType: IStruct { IsByRefLike: true } s } => s.IsDisposable() || s.HasDisposeMethods(),
+            IConstructor { ContainingType: IStruct { IsByRefLike: true } type } => type.IsDisposable()
+                || type.HasDisposeMethods() && !IsTypeAnnotated(type),
 
             IMethod method => (method.ReturnType.IsDisposable() || method.ReturnType.IsTasklikeOfDisposable(context))
                 && !IsAnyBaseMethodAnnotated(method),
@@ -59,6 +60,7 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
         [
             ..
             from attribute in ownerDeclaration.Attributes
+            where attribute.Target == AttributeTarget
             let shortName = attribute.GetAttributeType().GetClrName().ShortName
             where shortName == MustDisposeResourceAnnotationProvider.MustDisposeResourceAttributeShortName
                 || shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName

@@ -48,6 +48,7 @@ public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvi
         [
             ..
             from attribute in ownerDeclaration.Attributes
+            where attribute.Target == AttributeTarget
             let shortName = attribute.GetAttributeType().GetClrName().ShortName
             where shortName == PureAnnotationProvider.PureAttributeShortName
                 || shortName == MustDisposeResourceAnnotationProvider.MustDisposeResourceAttributeShortName

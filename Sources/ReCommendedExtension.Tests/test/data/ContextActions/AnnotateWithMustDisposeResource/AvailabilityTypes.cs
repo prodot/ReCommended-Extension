@@ -225,3 +225,18 @@ namespace Other
 
     internal delegate void Dele{off}gate();
 }
+
+namespace AnnotatedPrimaryConstructor
+{
+    [method: MustDisposeResource]
+    internal struct Str{on}uct() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [method: MustDisposeResource(false)]
+    internal record struct RecordStr{on}uct() : IDisposable
+    {
+        public void Dispose() { }
+    }
+}
