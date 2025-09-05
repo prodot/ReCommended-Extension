@@ -159,7 +159,7 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
         {
             Debug.Assert(replacement is { });
 
-            return replacement.TargetExpression.TrimToSingleLineWithMaxLength(120);
+            return $"To LINQ query '{replacement.TargetExpression.TrimToSingleLineWithMaxLength(120)}'";
         }
     }
 
