@@ -12,18 +12,19 @@
 <ul>
     <li>advanced disposable object analysis built around the <code>[MustDisposeResource]</code> and <code>[HandlesResourceDisposal]</code> annotations,</li>
     <li>detection of more cases where collection expressions can be used,</li>
-    <li>detection of redundant assertions,</li>
+    <li>LINQ and base type analyzers (encourage the use of modern language features, detect unused arguments),</li>
+    <li>format specifier analyzers (detect redundant specifiers, redundant precision specifiers),</li>
     <li>inappropriate use of <code>async void</code>,</li>
     <li>exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),</li>
+    <li>detection of redundant assertions,</li>
     <li>array initializers (empty arrays or arrays initialized with default values),</li>
     <li><code>await</code> expression analyzer (add <code>.ConfigureAwait(false)</code> for last expressions),</li>
     <li><code>ValueTask</code>/<code>ValueTask&lt;T&gt;</code> analyzer (possible multiple consumption),</li>
-    <li>LINQ and <code>string</code> method analyzers (to encourage use of modern language features),</li>
     <li>incorrect use of <code>ArgumentException</code> constructor parameters,</li>
     <li>locking on weak identity objects,</li>
     <li>use of <code>yield return</code> inside the <code>lock</code> blocks,</li>
-    <li>incorrect use of ReSharper annotations,</li>
-    <li>and lots more.</li>
+    <li>annotations analyzers (missing annotations, incorrectly used ReSharper annotations),</li>
+    <li>and much more.</li>
 </ul>
 
 <p>Most of the highlightings also have quick fixes for obvious solutions.</p>
