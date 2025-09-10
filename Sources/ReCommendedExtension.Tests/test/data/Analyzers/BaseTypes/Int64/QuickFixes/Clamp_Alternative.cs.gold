@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Int64s
+    {
+        public void Clamp(long number)
+        {
+            var result = {caret}0x01L;
+        }
+    }
+}

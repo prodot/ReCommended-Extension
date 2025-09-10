@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Int64s
+    {
+        public void DivRem()
+        {
+            var result = (Quoti{caret}ent: 0L, Remainder: 0L);
+        }
+    }
+}

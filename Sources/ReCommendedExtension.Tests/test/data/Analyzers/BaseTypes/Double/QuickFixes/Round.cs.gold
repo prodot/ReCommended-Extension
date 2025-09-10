@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Doubles
+    {
+        public void Round(double x, MidpointRounding mode)
+        {
+            var result = double.Round(x{caret}, mode);
+        }
+    }
+}

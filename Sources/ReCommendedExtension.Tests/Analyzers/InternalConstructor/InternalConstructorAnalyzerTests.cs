@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -14,7 +13,7 @@ public sealed class InternalConstructorAnalyzerTests : CSharpHighlightingTestBas
     protected override string RelativeTestDataPath => @"Analyzers\InternalConstructor";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is InternalConstructorVisibilitySuggestion or NotResolvedError;
+        => highlighting is InternalConstructorVisibilitySuggestion || highlighting.IsError();
 
     [Test]
     public void TestInternalConstructor() => DoNamedTest2();

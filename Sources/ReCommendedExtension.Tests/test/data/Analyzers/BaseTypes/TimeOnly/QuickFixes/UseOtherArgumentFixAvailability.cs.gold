@@ -1,0 +1,64 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DatesOnly
+    {
+        public void ParseExact(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style)
+        {
+            var result11 = TimeOnly.ParseExact(s, "R", |provider|(0), style);
+            var result12 = TimeOnly.ParseExact(s, "R", |provider|(1));
+
+            var result21 = TimeOnly.ParseExact(s, |[format]|(2));
+
+            var result31 = TimeOnly.ParseExact(s, |[format]|(3), provider, style);
+            var result32 = TimeOnly.ParseExact(s, ["o", "r"], |provider|(4), style);
+
+            var result41 = TimeOnly.ParseExact(s1, ["o", "r"], |provider|(5), style);
+        }
+
+        public void TryParseExact(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out TimeOnly result)
+        {
+            var result1 = TimeOnly.TryParseExact(s, "R", |provider|(6), style, out result);
+            var result2 = TimeOnly.TryParseExact(s, |[format]|(7), out result);
+            var result3 = TimeOnly.TryParseExact(s, |[format]|(8), provider, style, out result);
+            var result4 = TimeOnly.TryParseExact(s, ["o", "r"], |provider|(9), style, out result);
+            var result5 = TimeOnly.TryParseExact(s1, ["o", "r"], |provider|(10), style, out result);
+        }
+    }
+}
+------------------------------------------------
+0: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+1: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+2: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+3: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+4: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+5: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+6: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+7: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+8: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+9: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+10: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'

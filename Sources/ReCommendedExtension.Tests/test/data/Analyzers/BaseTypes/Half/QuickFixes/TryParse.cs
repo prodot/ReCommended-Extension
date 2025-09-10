@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Halves
+    {
+        public void TryParse(string s)
+        {
+            var result = Half.TryParse(s, {caret}null, out _);
+        }
+    }
+}

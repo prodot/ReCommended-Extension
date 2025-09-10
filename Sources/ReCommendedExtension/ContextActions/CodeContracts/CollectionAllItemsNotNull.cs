@@ -43,7 +43,7 @@ public sealed class CollectionAllItemsNotNull(ICSharpContextActionDataProvider p
         var context = Provider.GetSelectedElement<ITreeNode>();
         Debug.Assert(context is { });
 
-        if ((type.IsCollectionLike() || type.IsGenericArray(context))
+        if ((type.IsCollectionLike() || type.IsGenericArray())
             && !type.IsGenericIEnumerable()
             && !type.IsArray()
             && CollectionTypeUtil.ElementTypeByCollectionType(type, context, false) is { } elementType)

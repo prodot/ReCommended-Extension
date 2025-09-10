@@ -7,12 +7,14 @@ internal sealed record GenericParameterType : ParameterType
 {
     public override bool IsSameAs(IType otherType, IPsiModule psiModule)
     {
-        if (TryGetType(psiModule).IsGenericIEnumerable() && otherType.IsGenericIEnumerable())
+        var type = TryGetType(psiModule);
+
+        if (type.IsGenericIEnumerable() && otherType.IsGenericIEnumerable())
         {
-            return true;
+            return true; // collection type argument intentionally ignored (sufficient for now)
         }
 
-        if (TryGetType(psiModule).IsReadOnlySpan() && otherType.IsReadOnlySpan())
+        if (type.IsReadOnlySpan() && otherType.IsReadOnlySpan())
         {
             return true; // span type argument intentionally ignored (sufficient for now)
         }

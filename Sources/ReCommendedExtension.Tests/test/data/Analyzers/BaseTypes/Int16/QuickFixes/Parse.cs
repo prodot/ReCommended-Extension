@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Int16s
+    {
+        public void Parse(string s, IFormatProvider provider)
+        {
+            var result = short.Parse(s, NumberStyles{caret}.Integer, provider);
+        }
+    }
+}

@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Booleans
+    {
+        public void ToString(bool flag, IFormatProvider provider)
+        {
+            var result = flag.ToString(provider);
+        }
+    }
+}

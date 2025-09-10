@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void Multiply(TimeSpan timeSpan, double factor)
+        {
+            var result = (-timeSpan).{caret}Multiply(factor - 1);
+        }
+    }
+}

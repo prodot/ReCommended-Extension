@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void FromMicroseconds()
+        {
+            var result = TimeSpan.Zero{caret};
+        }
+    }
+}

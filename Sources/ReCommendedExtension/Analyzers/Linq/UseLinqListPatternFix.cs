@@ -3,6 +3,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
@@ -52,11 +53,16 @@ public sealed class UseLinqListPatternFix(UseLinqListPatternSuggestion highlight
                 ? GetReplacement("String is either empty or contains more than one character.")
                 : GetReplacement("List is either empty or contains more than one element.");
 
-            ModificationUtil
+            var expression = ModificationUtil
                 .ReplaceChild(
                     highlighting.InvocationExpression,
-                    factory.CreateExpression($"($0 {replacement})", highlighting.InvokedExpression.QualifierExpression))
+                    factory.CreateExpression($"(($0) {replacement})", highlighting.InvokedExpression.QualifierExpression))
                 .TryRemoveParentheses(factory);
+
+            if (expression is IConditionalTernaryExpression { ConditionOperand: IIsExpression isExpression })
+            {
+                isExpression.Operand.TryRemoveParentheses(factory);
+            }
         }
 
         return _ => { };

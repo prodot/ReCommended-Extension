@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class IntPtrs
+    {
+        public void Operator(nint number)
+        {
+            var result = |nint.IsPositive(number)|(0);
+        }
+
+        public void NoDetection(nint number)
+        {
+            nint.IsPositive(number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '>=' operator to compare to 0.

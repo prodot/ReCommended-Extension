@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class UIntPtrs
+    {
+        public void Clamp(nuint number)
+        {
+            var result = (nuint){caret}0x01;
+        }
+    }
+}

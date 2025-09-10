@@ -204,20 +204,20 @@ namespace NonDisposable
 namespace Disposable
 {
     [method: MustDisposeResource]
-    internal ref struct DisposableRefStruct()
+    internal ref struct |DisposableRefStruct|(38)()
     {
         public void Dispose() { }
     }
 
     internal class Parent
     {
-        public virtual IDisposable |NotAnnotated|(38)() => throw new NotImplementedException();
+        public virtual IDisposable |NotAnnotated|(39)() => throw new NotImplementedException();
 
-        [|Pure|(39)]
-        public virtual IAsyncDisposable |AnnotatedWithPure|(40)() => throw new NotImplementedException();
+        [|Pure|(40)]
+        public virtual IAsyncDisposable |AnnotatedWithPure|(41)() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(41)]
-        public virtual Stream |AnnotatedWithMustUseReturnValue|(42)() => throw new NotImplementedException();
+        [|MustUseReturnValue|(42)]
+        public virtual Stream |AnnotatedWithMustUseReturnValue|(43)() => throw new NotImplementedException();
 
         [MustDisposeResource]
         public virtual Stream AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
@@ -231,67 +231,67 @@ namespace Disposable
 
     internal class ChildNotAnnotated : Parent
     {
-        public override IDisposable |NotAnnotated|(43)() => throw new NotImplementedException();
+        public override IDisposable |NotAnnotated|(44)() => throw new NotImplementedException();
 
-        public override IAsyncDisposable |AnnotatedWithPure|(44)() => throw new NotImplementedException();
+        public override IAsyncDisposable |AnnotatedWithPure|(45)() => throw new NotImplementedException();
 
-        public override Stream |AnnotatedWithMustUseReturnValue|(45)() => throw new NotImplementedException();
+        public override Stream |AnnotatedWithMustUseReturnValue|(46)() => throw new NotImplementedException();
 
         public override Stream AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
-        public override IAsyncDisposable |AnnotatedWithMustDisposeResourceFalse|(46)() => throw new NotImplementedException();
+        public override IAsyncDisposable |AnnotatedWithMustDisposeResourceFalse|(47)() => throw new NotImplementedException();
 
         public override IAsyncDisposable AnnotatedWithMustDisposeResourceTrue() => throw new NotImplementedException();
 
-        public DisposableRefStruct |Other|(47)() => throw new NotImplementedException();
+        public DisposableRefStruct |Other|(48)() => throw new NotImplementedException();
     }
 
     internal class ChildAnnotatedWithPure : Parent
     {
-        [|Pure|(48)]
-        public override IDisposable |NotAnnotated|(49)() => throw new NotImplementedException();
+        [|Pure|(49)]
+        public override IDisposable |NotAnnotated|(50)() => throw new NotImplementedException();
 
-        [|Pure|(50)]
-        public override IAsyncDisposable |AnnotatedWithPure|(51)() => throw new NotImplementedException();
+        [|Pure|(51)]
+        public override IAsyncDisposable |AnnotatedWithPure|(52)() => throw new NotImplementedException();
 
-        [|Pure|(52)]
-        public override Stream |AnnotatedWithMustUseReturnValue|(53)() => throw new NotImplementedException();
-
-        [|Pure|(54)]
-        public override Stream AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
+        [|Pure|(53)]
+        public override Stream |AnnotatedWithMustUseReturnValue|(54)() => throw new NotImplementedException();
 
         [|Pure|(55)]
-        public override IAsyncDisposable |AnnotatedWithMustDisposeResourceFalse|(56)() => throw new NotImplementedException();
+        public override Stream AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
-        [|Pure|(57)]
-        public override IAsyncDisposable AnnotatedWithMustDisposeResourceTrue() => throw new NotImplementedException();
+        [|Pure|(56)]
+        public override IAsyncDisposable |AnnotatedWithMustDisposeResourceFalse|(57)() => throw new NotImplementedException();
 
         [|Pure|(58)]
-        public DisposableRefStruct |Other|(59)() => throw new NotImplementedException();
+        public override IAsyncDisposable AnnotatedWithMustDisposeResourceTrue() => throw new NotImplementedException();
+
+        [|Pure|(59)]
+        public DisposableRefStruct |Other|(60)() => throw new NotImplementedException();
     }
 
     internal class ChildAnnotatedWithMustUseReturnValue : Parent
     {
-        [|MustUseReturnValue|(60)]
-        public override IDisposable |NotAnnotated|(61)() => throw new NotImplementedException();
+        [|MustUseReturnValue|(61)]
+        public override IDisposable |NotAnnotated|(62)() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(62)]
-        public override IAsyncDisposable |AnnotatedWithPure|(63)() => throw new NotImplementedException();
+        [|MustUseReturnValue|(63)]
+        public override IAsyncDisposable |AnnotatedWithPure|(64)() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(64)]
-        public override Stream |AnnotatedWithMustUseReturnValue|(65)() => throw new NotImplementedException();
-
-        [|MustUseReturnValue|(66)]
-        public override Stream AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
+        [|MustUseReturnValue|(65)]
+        public override Stream |AnnotatedWithMustUseReturnValue|(66)() => throw new NotImplementedException();
 
         [|MustUseReturnValue|(67)]
-        public override IAsyncDisposable |AnnotatedWithMustDisposeResourceFalse|(68)() => throw new NotImplementedException();
+        public override Stream AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(69)]
-        public override IAsyncDisposable AnnotatedWithMustDisposeResourceTrue() => throw new NotImplementedException();
+        [|MustUseReturnValue|(68)]
+        public override IAsyncDisposable |AnnotatedWithMustDisposeResourceFalse|(69)() => throw new NotImplementedException();
 
         [|MustUseReturnValue|(70)]
-        public DisposableRefStruct |Other|(71)() => throw new NotImplementedException();
+        public override IAsyncDisposable AnnotatedWithMustDisposeResourceTrue() => throw new NotImplementedException();
+
+        [|MustUseReturnValue|(71)]
+        public DisposableRefStruct |Other|(72)() => throw new NotImplementedException();
     }
 
     internal class ChildAnnotatedWithMustDisposeResource : Parent
@@ -305,13 +305,13 @@ namespace Disposable
         [MustDisposeResource]
         public override Stream AnnotatedWithMustUseReturnValue() => throw new NotImplementedException();
 
-        [|MustDisposeResource|(72)]
+        [|MustDisposeResource|(73)]
         public override Stream AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
         [MustDisposeResource]
         public override IAsyncDisposable AnnotatedWithMustDisposeResourceFalse() => throw new NotImplementedException();
 
-        [|MustDisposeResource|(73)]
+        [|MustDisposeResource|(74)]
         public override IAsyncDisposable AnnotatedWithMustDisposeResourceTrue() => throw new NotImplementedException();
 
         [MustDisposeResource]
@@ -353,13 +353,13 @@ namespace Disposable
         [MustDisposeResource(true)]
         public override Stream AnnotatedWithMustUseReturnValue() => throw new NotImplementedException();
 
-        [|MustDisposeResource(true)|(74)]
+        [|MustDisposeResource(true)|(75)]
         public override Stream AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
         [MustDisposeResource(true)]
         public override IAsyncDisposable AnnotatedWithMustDisposeResourceFalse() => throw new NotImplementedException();
 
-        [|MustDisposeResource(true)|(75)]
+        [|MustDisposeResource(true)|(76)]
         public override IAsyncDisposable AnnotatedWithMustDisposeResourceTrue() => throw new NotImplementedException();
 
         [MustDisposeResource(true)]
@@ -368,13 +368,13 @@ namespace Disposable
 
     internal class ParentTaskLike
     {
-        public virtual Task<IDisposable> |NotAnnotated|(76)() => throw new NotImplementedException();
+        public virtual Task<IDisposable> |NotAnnotated|(77)() => throw new NotImplementedException();
 
-        [|Pure|(77)]
-        public virtual Task<IAsyncDisposable> |AnnotatedWithPure|(78)() => throw new NotImplementedException();
+        [|Pure|(78)]
+        public virtual Task<IAsyncDisposable> |AnnotatedWithPure|(79)() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(79)]
-        public virtual Task<Stream> |AnnotatedWithMustUseReturnValue|(80)() => throw new NotImplementedException();
+        [|MustUseReturnValue|(80)]
+        public virtual Task<Stream> |AnnotatedWithMustUseReturnValue|(81)() => throw new NotImplementedException();
 
         [MustDisposeResource]
         public virtual ValueTask<Stream> AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
@@ -385,59 +385,59 @@ namespace Disposable
 
     internal class ChildTaskLikeNotAnnotated : ParentTaskLike
     {
-        public override Task<IDisposable> |NotAnnotated|(81)() => throw new NotImplementedException();
+        public override Task<IDisposable> |NotAnnotated|(82)() => throw new NotImplementedException();
 
-        public override Task<IAsyncDisposable> |AnnotatedWithPure|(82)() => throw new NotImplementedException();
+        public override Task<IAsyncDisposable> |AnnotatedWithPure|(83)() => throw new NotImplementedException();
 
-        public override Task<Stream> |AnnotatedWithMustUseReturnValue|(83)() => throw new NotImplementedException();
+        public override Task<Stream> |AnnotatedWithMustUseReturnValue|(84)() => throw new NotImplementedException();
 
         public override ValueTask<Stream> AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
-        public override ValueTask<IAsyncDisposable> |AnnotatedWithMustDisposeResourceFalse|(84)() => throw new NotImplementedException();
+        public override ValueTask<IAsyncDisposable> |AnnotatedWithMustDisposeResourceFalse|(85)() => throw new NotImplementedException();
 
-        public ValueTask<IDisposable> |Other|(85)() => throw new NotImplementedException();
+        public ValueTask<IDisposable> |Other|(86)() => throw new NotImplementedException();
     }
 
     internal class ChildTaskLikeAnnotatedWithPure : ParentTaskLike
     {
-        [|Pure|(86)]
-        public override Task<IDisposable> |NotAnnotated|(87)() => throw new NotImplementedException();
+        [|Pure|(87)]
+        public override Task<IDisposable> |NotAnnotated|(88)() => throw new NotImplementedException();
 
-        [|Pure|(88)]
-        public override Task<IAsyncDisposable> |AnnotatedWithPure|(89)() => throw new NotImplementedException();
+        [|Pure|(89)]
+        public override Task<IAsyncDisposable> |AnnotatedWithPure|(90)() => throw new NotImplementedException();
 
-        [|Pure|(90)]
-        public override Task<Stream> |AnnotatedWithMustUseReturnValue|(91)() => throw new NotImplementedException();
-
-        [|Pure|(92)]
-        public override ValueTask<Stream> AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
+        [|Pure|(91)]
+        public override Task<Stream> |AnnotatedWithMustUseReturnValue|(92)() => throw new NotImplementedException();
 
         [|Pure|(93)]
-        public override ValueTask<IAsyncDisposable> |AnnotatedWithMustDisposeResourceFalse|(94)() => throw new NotImplementedException();
+        public override ValueTask<Stream> AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
-        [|Pure|(95)]
-        public ValueTask<IDisposable> |Other|(96)() => throw new NotImplementedException();
+        [|Pure|(94)]
+        public override ValueTask<IAsyncDisposable> |AnnotatedWithMustDisposeResourceFalse|(95)() => throw new NotImplementedException();
+
+        [|Pure|(96)]
+        public ValueTask<IDisposable> |Other|(97)() => throw new NotImplementedException();
     }
 
     internal class ChildTaskLikeAnnotatedWithMustUseReturnValue : ParentTaskLike
     {
-        [|MustUseReturnValue|(97)]
-        public override Task<IDisposable> |NotAnnotated|(98)() => throw new NotImplementedException();
+        [|MustUseReturnValue|(98)]
+        public override Task<IDisposable> |NotAnnotated|(99)() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(99)]
-        public override Task<IAsyncDisposable> |AnnotatedWithPure|(100)() => throw new NotImplementedException();
+        [|MustUseReturnValue|(100)]
+        public override Task<IAsyncDisposable> |AnnotatedWithPure|(101)() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(101)]
-        public override Task<Stream> |AnnotatedWithMustUseReturnValue|(102)() => throw new NotImplementedException();
-
-        [|MustUseReturnValue|(103)]
-        public override ValueTask<Stream> AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
+        [|MustUseReturnValue|(102)]
+        public override Task<Stream> |AnnotatedWithMustUseReturnValue|(103)() => throw new NotImplementedException();
 
         [|MustUseReturnValue|(104)]
-        public override ValueTask<IAsyncDisposable> |AnnotatedWithMustDisposeResourceFalse|(105)() => throw new NotImplementedException();
+        public override ValueTask<Stream> AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(106)]
-        public ValueTask<IDisposable> |Other|(107)() => throw new NotImplementedException();
+        [|MustUseReturnValue|(105)]
+        public override ValueTask<IAsyncDisposable> |AnnotatedWithMustDisposeResourceFalse|(106)() => throw new NotImplementedException();
+
+        [|MustUseReturnValue|(107)]
+        public ValueTask<IDisposable> |Other|(108)() => throw new NotImplementedException();
     }
 
     internal class ChildTaskLikeAnnotatedWithMustDisposeResource : ParentTaskLike
@@ -451,7 +451,7 @@ namespace Disposable
         [MustDisposeResource]
         public override Task<Stream> AnnotatedWithMustUseReturnValue() => throw new NotImplementedException();
 
-        [|MustDisposeResource|(108)]
+        [|MustDisposeResource|(109)]
         public override ValueTask<Stream> AnnotatedWithMustDisposeResource() => throw new NotImplementedException();
 
         [MustDisposeResource]
@@ -484,11 +484,11 @@ namespace Disposable
 
     internal class WithAnnotations
     {
-        [|Pure|(109)]
-        public IDisposable |WithPure|(110)() => throw new NotImplementedException();
+        [|Pure|(110)]
+        public IDisposable |WithPure|(111)() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(111)]
-        public IDisposable |WithMustUseReturnValue|(112)() => throw new NotImplementedException();
+        [|MustUseReturnValue|(112)]
+        public IDisposable |WithMustUseReturnValue|(113)() => throw new NotImplementedException();
 
         [MustDisposeResource]
         public IDisposable WithMustDisposeResource() => throw new NotImplementedException();
@@ -502,40 +502,40 @@ namespace Disposable
 
     internal class WithConflictingAnnotations
     {
-        [|Pure|(113)]
-        [|MustUseReturnValue|(114)]
-        public IDisposable |Pure_MustUseReturnValue|(115)() => throw new NotImplementedException();
+        [|Pure|(114)]
+        [|MustUseReturnValue|(115)]
+        public IDisposable |Pure_MustUseReturnValue|(116)() => throw new NotImplementedException();
 
-        [|Pure|(116)]
+        [|Pure|(117)]
         [MustDisposeResource]
         public IDisposable Pure_MustDisposeResource() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(117)]
+        [|MustUseReturnValue|(118)]
         [MustDisposeResource]
         public IDisposable MustUseReturnValue_MustDisposeResource() => throw new NotImplementedException();
 
-        [|Pure|(118)]
-        [|MustUseReturnValue|(119)]
+        [|Pure|(119)]
+        [|MustUseReturnValue|(120)]
         [MustDisposeResource]
         public IDisposable All() => throw new NotImplementedException();
     }
 
     internal class WithConflictingAnnotationsTaskLike
     {
-        [|Pure|(120)]
-        [|MustUseReturnValue|(121)]
-        public Task<IDisposable> |Pure_MustUseReturnValue|(122)() => throw new NotImplementedException();
+        [|Pure|(121)]
+        [|MustUseReturnValue|(122)]
+        public Task<IDisposable> |Pure_MustUseReturnValue|(123)() => throw new NotImplementedException();
 
-        [|Pure|(123)]
+        [|Pure|(124)]
         [MustDisposeResource]
         public ValueTask<IDisposable> Pure_MustDisposeResource() => throw new NotImplementedException();
 
-        [|MustUseReturnValue|(124)]
+        [|MustUseReturnValue|(125)]
         [MustDisposeResource]
         public Task<IDisposable> MustUseReturnValue_MustDisposeResource() => throw new NotImplementedException();
 
-        [|Pure|(125)]
-        [|MustUseReturnValue|(126)]
+        [|Pure|(126)]
+        [|MustUseReturnValue|(127)]
         [MustDisposeResource]
         public ValueTask<IDisposable> All() => throw new NotImplementedException();
     }
@@ -549,18 +549,18 @@ namespace Disposable
         }
 
         [method: MustDisposeResource]
-        public struct Struct() : IDisposable
+        public struct |Struct|(128)() : IDisposable
         {
             public void Dispose() { }
         }
 
-        public Class|?|(127) |NullableClass|(128)() => throw new NotImplementedException();
+        public Class|?|(129) |NullableClass|(130)() => throw new NotImplementedException();
 
-        public Struct? |NullableStruct|(129)() => throw new NotImplementedException();
+        public Struct? |NullableStruct|(131)() => throw new NotImplementedException();
 
-        public ValueTask<Class?> |NullableClassTaskLike|(130)() => throw new NotImplementedException();
+        public ValueTask<Class?> |NullableClassTaskLike|(132)() => throw new NotImplementedException();
 
-        public ValueTask<Struct?> |NullableStructTaskLike|(131)() => throw new NotImplementedException();
+        public ValueTask<Struct?> |NullableStructTaskLike|(133)() => throw new NotImplementedException();
     }
 }
 ---------------------------------------------------------
@@ -602,97 +602,99 @@ namespace Disposable
 (35): ReSharper Warning: Annotation is conflicting because the method is also annotated with [MustUseReturnValue].
 (36): ReSharper Warning: Annotation is conflicting because the method is also annotated with [Pure].
 (37): ReSharper Warning: Annotation is not valid because the method return type is not disposable.
-(38): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(39): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(40): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(41): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(42): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(38): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(39): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(40): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(41): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(42): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (43): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (44): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (45): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (46): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (47): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(48): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(49): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(50): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(51): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(52): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(53): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(54): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(48): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(49): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(50): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(51): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(52): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(53): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(54): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (55): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(56): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(57): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(56): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(57): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (58): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(59): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(60): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(61): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(62): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(63): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(64): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(65): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(66): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(59): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(60): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(61): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(62): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(63): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(64): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(65): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(66): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (67): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(68): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(69): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(68): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(69): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (70): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(71): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(72): ReSharper Suggestion: Annotation is redundant because a base method is already annotated with [MustDisposeResource].
+(71): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(72): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (73): ReSharper Suggestion: Annotation is redundant because a base method is already annotated with [MustDisposeResource].
 (74): ReSharper Suggestion: Annotation is redundant because a base method is already annotated with [MustDisposeResource].
 (75): ReSharper Suggestion: Annotation is redundant because a base method is already annotated with [MustDisposeResource].
-(76): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(77): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(78): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(79): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(80): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(76): ReSharper Suggestion: Annotation is redundant because a base method is already annotated with [MustDisposeResource].
+(77): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(78): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(79): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(80): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (81): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (82): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (83): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (84): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (85): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(86): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(87): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(88): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(89): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(90): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(91): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(92): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(86): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(87): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(88): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(89): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(90): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(91): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(92): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (93): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(94): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(95): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(96): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(97): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(98): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(99): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(100): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(101): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(102): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(103): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(94): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(95): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(96): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(97): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(98): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(99): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(100): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(101): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(102): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(103): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (104): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(105): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(106): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(107): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(108): ReSharper Suggestion: Annotation is redundant because a base method is already annotated with [MustDisposeResource].
-(109): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(110): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(111): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(112): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(113): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(105): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(106): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(107): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(108): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(109): ReSharper Suggestion: Annotation is redundant because a base method is already annotated with [MustDisposeResource].
+(110): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(111): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(112): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(113): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (114): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(115): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(116): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(115): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(116): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (117): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (118): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (119): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (120): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (121): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(122): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(123): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(122): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(123): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (124): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (125): ReSharper Warning: Annotation is not valid because the method return type is disposable.
 (126): ReSharper Warning: Annotation is not valid because the method return type is disposable.
-(127): ReSharper Dead Code: Return type of 'NullableClass' can be made non-nullable
-(128): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
-(129): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(127): ReSharper Warning: Annotation is not valid because the method return type is disposable.
+(128): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(129): ReSharper Dead Code: Return type of 'NullableClass' can be made non-nullable
 (130): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
 (131): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(132): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(133): ReSharper Warning: Method with the disposable return type is not annotated with [MustDisposeResource] or [MustDisposeResource(false)].

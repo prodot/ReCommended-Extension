@@ -1,0 +1,36 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Int64s
+    {
+        public void RedundantArgument(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
+        {
+            var result11 = long.TryParse(s, |NumberStyles.Integer|(0), provider, out _);
+            var result12 = long.TryParse(s, |null|(1), out _);
+
+            var result21 = long.TryParse(s1, |NumberStyles.Integer|(2), provider, out _);
+            var result22 = long.TryParse(s1, |null|(3), out _);
+
+            var result31 = long.TryParse(utf8Text, |NumberStyles.Integer|(4), provider, out _);
+            var result32 = long.TryParse(utf8Text, |null|(5), out _);
+        }
+
+        public void NoDetection(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
+        {
+            var result11 = long.TryParse(s, style, provider, out _);
+
+            var result21 = long.TryParse(s1, style, provider, out _);
+
+            var result31 = long.TryParse(utf8Text, style, provider, out _);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing NumberStyles.Integer is redundant.
+(1): ReSharper Dead Code: Passing null is redundant.
+(2): ReSharper Dead Code: Passing NumberStyles.Integer is redundant.
+(3): ReSharper Dead Code: Passing null is redundant.
+(4): ReSharper Dead Code: Passing NumberStyles.Integer is redundant.
+(5): ReSharper Dead Code: Passing null is redundant.

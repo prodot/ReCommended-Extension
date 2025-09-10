@@ -17,6 +17,20 @@ namespace DisposableAnnotated
         public Reco{on}rd() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    [MustDisposeResource]
+    internal struct Struct : IDisposable
+    {
+        public Str{on}uct() { }
+        public void Dispose() { }    
+    }
+
+    [MustDisposeResource]
+    internal record struct RecordStruct : IAsyncDisposable
+    {
+        public Reco{on}rdStruct() { }
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
 }
 
 namespace DisposableAnnotatedWithFalse
@@ -32,6 +46,20 @@ namespace DisposableAnnotatedWithFalse
     internal record Record : IAsyncDisposable
     {
         public Rec{on}ord() { }
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
+    [MustDisposeResource(false)]
+    internal struct Struct : IDisposable
+    {
+        public Str{on}uct() { }
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource(false)]
+    internal record struct RecordStruct : IAsyncDisposable
+    {
+        public Reco{on}rdStruct() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
@@ -132,33 +160,15 @@ namespace NonDisposable
     {
         public Reco{off}rd() { }
     }
-}
 
-namespace DisposableStructs
+    internal struct Struct
 {
-    internal struct DisposableStruct : IDisposable
-    {
-        public Disposable{on}Struct() { }
-        public void Dispose() { }
+        public Str{off}uct() { }
     }
 
-    internal record struct DisposableStructRecord : IDisposable
-    {
-        public DisposableStruct{on}Record() { }
-        public void Dispose() { }
-    }
-}
-
-namespace NonDisposableStructs
+    internal record struct RecordStruct
 {
-    internal struct NonDisposableStruct
-    {
-        public NonDisposable{off}Struct() { }
-    }
-
-    internal record struct NonDisposableStructRecord
-    {
-        public NonDisposableStruct{off}Record() { }
+        public Reco{off}rdStruct() { }
     }
 }
 

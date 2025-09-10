@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -15,10 +14,10 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 [TestNetFramework46]
 public sealed class ReplaceWithArrayEmptyQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseEmptyForArrayInitializationWarning or NotResolvedError;
+        => highlighting is UseEmptyForArrayInitializationWarning || highlighting.IsError();
 
     [Test]
     public void TestEmptyArrayInitializationAvailability() => DoNamedTest2();

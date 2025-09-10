@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Test
 {
-    class CustomList<T> : IList<T>
+    public class CustomList<T> : IList<T>
     {
         public int IndexOf(T item) => throw new NotImplementedException();
     
@@ -38,7 +38,7 @@ namespace Test
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    class CustomListUniqueItems<T> : CustomList<T>, ISet<T>
+    public class CustomListUniqueItems<T> : CustomList<T>, ISet<T>
     {
         public bool Add(T item) => throw new NotImplementedException();
 
@@ -67,7 +67,7 @@ namespace Test
     {
         public void NonGenericMethod(IList<int> list)
         {
-            var third = list.ElementAt(2);
+            var third = list.ElementAt(index: 2);
             var secondFromEnd = list.ElementAt(^2);
         }
         

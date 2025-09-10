@@ -1,0 +1,42 @@
+﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.TestFramework;
+using NUnit.Framework;
+using ReCommendedExtension.Analyzers.BaseTypes;
+
+namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.UInt32;
+
+[TestFixture]
+public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
+{
+    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt32\QuickFixes";
+
+    [Test]
+    [TestNet70]
+    public void TestClamp() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestDivRem() => DoNamedTest2();
+
+    [Test]
+    public void TestEquals_Object() => DoNamedTest2();
+
+    [Test]
+    public void TestGetTypeCode() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestMax() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestMin() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestRotateLeft() => DoNamedTest2();
+
+    [Test]
+    [TestNet70]
+    public void TestRotateRight() => DoNamedTest2();
+}

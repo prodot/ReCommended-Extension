@@ -31,10 +31,14 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzer : ElementProble
                     }
                     break;
 
-                case IInvocationExpression invocationExpression:
-                    if ((invocationExpression.InvokedExpression as IReferenceExpression)?.Reference.GetName() == "nameof"
-                        && invocationExpression.Arguments is [{ Value: IReferenceExpression referenceExpression }]
-                        && referenceExpression.Reference.Resolve().DeclaredElement is IParameter parameter
+                case IInvocationExpression
+                {
+                    InvokedExpression: IReferenceExpression { Reference: var reference },
+                    TypeArguments: [],
+                    Arguments: [{ Value: IReferenceExpression argumentReferenceExpression }],
+                }:
+                    if (reference.GetName() == "nameof"
+                        && argumentReferenceExpression.Reference.Resolve().DeclaredElement is IParameter parameter
                         && parameters.Contains(parameter))
                     {
                         consumer.AddHighlighting(

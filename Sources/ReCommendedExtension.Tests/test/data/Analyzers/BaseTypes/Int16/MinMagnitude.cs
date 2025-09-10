@@ -1,0 +1,19 @@
+﻿namespace Test
+{
+    public class Int16s
+    {
+        public void ExpressionResult(short number)
+        {
+            var result = short.MinMagnitude(10, 10);
+        }
+
+        public void NoDetection(short x, short y)
+        {
+            var result11 = short.MinMagnitude(1, 2);
+            var result12 = short.MinMagnitude(x, 2);
+            var result13 = short.MinMagnitude(1, y);
+
+            short.MinMagnitude(10, 10);
+        }
+    }
+}

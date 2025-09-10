@@ -21,6 +21,8 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
     IAttribute[] attributesToReplace = [];
 
+    protected AttributeTarget AttributeTarget { get; private set; } = AttributeTarget.None;
+
     protected abstract string AnnotationAttributeTypeName { get; }
 
     [Pure]
@@ -51,18 +53,43 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
             && (AllowsInheritedMethods || !selectedElement.OverridesInheritedMember())
             && !selectedElement.IsOnLocalFunctionWithUnsupportedAttributes()
             && !selectedElement.IsOnLambdaExpressionWithUnsupportedAttributes()
-            && !selectedElement.IsOnAnonymousMethodWithUnsupportedAttributes()
-            && (AllowsMultiple || !selectedElement.Attributes.Any(IsAttribute)))
+            && !selectedElement.IsOnAnonymousMethodWithUnsupportedAttributes())
         {
-            createAttributeFactory = CreateAttributeFactoryIfAvailable(selectedElement, out attributesToReplace);
-
-            if (createAttributeFactory is { })
+            IAttributesOwnerDeclaration? selectedElementToBeAnnotated;
+            switch (selectedElement)
             {
-                attributesOwnerDeclaration = selectedElement;
-                return true;
+                case IPrimaryConstructorDeclaration primaryConstructorDeclaration:
+                    selectedElementToBeAnnotated = primaryConstructorDeclaration.GetContainingTypeDeclaration();
+                    Debug.Assert(selectedElementToBeAnnotated is { });
+
+                    AttributeTarget = AttributeTarget.Method;
+                    break;
+
+                case IMethodDeclaration when AnnotateMethodReturnValue:
+                    selectedElementToBeAnnotated = selectedElement;
+                    AttributeTarget = AttributeTarget.Return;
+                    break;
+
+                default:
+                    selectedElementToBeAnnotated = selectedElement;
+                    AttributeTarget = AttributeTarget.None;
+                    break;
+            }
+
+            if (AllowsMultiple
+                || !selectedElementToBeAnnotated.Attributes.Any(attribute => attribute.Target == AttributeTarget && IsAttribute(attribute)))
+            {
+                createAttributeFactory = CreateAttributeFactoryIfAvailable(selectedElement, out attributesToReplace);
+
+                if (createAttributeFactory is { })
+                {
+                    attributesOwnerDeclaration = selectedElementToBeAnnotated;
+                    return true;
+                }
             }
         }
 
+        AttributeTarget = AttributeTarget.None;
         attributesToReplace = [];
         createAttributeFactory = null;
         attributesOwnerDeclaration = null;
@@ -110,30 +137,10 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
 
             using (WriteLockCookie.Create())
             {
-                AttributeTarget attributeTarget;
-
-                switch (attributesOwnerDeclaration)
-                {
-                    case IPrimaryConstructorDeclaration primaryConstructorDeclaration:
-                        attributesOwnerDeclaration = primaryConstructorDeclaration.GetContainingTypeDeclaration();
-                        Debug.Assert(attributesOwnerDeclaration is { });
-
-                        attributeTarget = AttributeTarget.Method;
-                        break;
-
-                    case IMethodDeclaration when AnnotateMethodReturnValue:
-                        attributeTarget = AttributeTarget.Return;
-                        break;
-
-                    default:
-                        attributeTarget = AttributeTarget.None;
-                        break;
-                }
-
                 var factory = CSharpElementFactory.GetInstance(attributesOwnerDeclaration);
 
                 attribute = createAttributeFactory(factory);
-                attribute.SetTarget(attributeTarget);
+                attribute.SetTarget(AttributeTarget);
 
                 if (attributesToReplace is [])
                 {

@@ -1,0 +1,37 @@
+﻿using System;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
+
+namespace Test
+{
+    public class FormatStrings
+    {
+        public void Formatters(int number, StringBuilder stringBuilder, TextWriter textWriter)
+        {
+            var result1 = string.Format("{0|:G|(0)}", number);
+            var result2 = FormattableStringFactory.Create("{0|:G|(1)}", number);
+
+            stringBuilder.AppendFormat("{0|:G|(2)}", number);
+            textWriter.Write("{0|:G|(3)}", number);
+            textWriter.WriteLine("{0|:G|(4)}", number);
+            Console.Write("{0|:G|(5)}", number);
+            Console.WriteLine("{0|:G|(6)}", number);
+        }
+
+        public static void Custom(string format, params object[] args) { }
+
+        public void NoDetection(int number)
+        {
+            Custom("{0:G0}", number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'G' is redundant.
+(1): ReSharper Dead Code: Specifying 'G' is redundant.
+(2): ReSharper Dead Code: Specifying 'G' is redundant.
+(3): ReSharper Dead Code: Specifying 'G' is redundant.
+(4): ReSharper Dead Code: Specifying 'G' is redundant.
+(5): ReSharper Dead Code: Specifying 'G' is redundant.
+(6): ReSharper Dead Code: Specifying 'G' is redundant.

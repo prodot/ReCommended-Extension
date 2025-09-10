@@ -15,6 +15,18 @@ namespace DisposableAnnotated
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    [MustDisposeResource]
+    internal struct Struct() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource]
+    internal record struct RecordStruct() : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
 }
 
 namespace DisposableAnnotatedAgain
@@ -32,6 +44,20 @@ namespace DisposableAnnotatedAgain
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    [MustDisposeResource]
+    [method: MustDisposeResource]
+    internal struct Struct() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource]
+    [method: MustDisposeResource]
+    internal record struct RecordStruct() : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
 }
 
 namespace DisposableAnnotatedWithFalse
@@ -44,6 +70,18 @@ namespace DisposableAnnotatedWithFalse
 
     [MustDisposeResource(false)]
     internal record Record() : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
+    [MustDisposeResource(false)]
+    internal struct Struct() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource(false)]
+    internal record struct RecordStruct() : IAsyncDisposable
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
@@ -64,50 +102,20 @@ namespace DisposableAnnotatedWithFalseAgain
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
-}
 
-namespace DisposableWithNoBaseTypeAnnotated
-{
-    internal class GrandParent : IDisposable
+    [MustDisposeResource(false)]
+    [method: MustDisposeResource(false)]
+    internal struct Struct() : IDisposable
     {
         public void Dispose() { }
     }
 
-    internal class Parent : GrandParent { }
-
-    internal class Child() : Parent { }
-
-    internal record GrandParentRecord : IDisposable
-    {
-        public void Dispose() { }
-    }
-
-    internal record ParentRecord : GrandParentRecord { }
-
-    internal record ChildRecord() : ParentRecord { }
-}
-
-namespace DisposableWithNearestBaseTypeAnnotatedWithFalse
-{
     [MustDisposeResource(false)]
-    internal class GrandParent : IAsyncDisposable
+    [method: MustDisposeResource(false)]
+    internal record struct RecordStruct() : IAsyncDisposable
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
-
-    internal class Parent : GrandParent { }
-
-    internal class Child() : Parent { }
-
-    internal record GrandParentRecord : IAsyncDisposable
-    {
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
-    }
-
-    [MustDisposeResource(false)]
-    internal record ParentRecord : GrandParentRecord { }
-
-    internal record ChildRecord() : ParentRecord { }
 }
 
 namespace DisposableWithNearestTypeAnnotated
@@ -165,19 +173,12 @@ namespace NonDisposable
 
     [method: MustDisposeResource(false)]
     internal record Record() { }
-}
 
-namespace DisposableStructs
-{
-    internal struct DisposableStruct() : IDisposable
-    {
-        public void Dispose() { }
-    }
+    [method: MustDisposeResource]
+    internal struct Struct() { }
 
-    internal record struct DisposableStructRecord() : IDisposable
-    {
-        public void Dispose() { }
-    }
+    [method: MustDisposeResource(false)]
+    internal record struct RecordStruct() { }
 }
 
 namespace NonDisposableStructs
@@ -193,20 +194,4 @@ namespace RefStructs
 {
     [method: MustDisposeResource]
     internal ref struct RefStruct() { }
-
-    internal ref struct RefStructWithDispose()
-    {
-        public void Dispose() { }
-    }
-
-    internal ref struct RefStructWithDisposeAsync()
-    {
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
-    }
-
-    internal ref struct RefStructWithClose()
-    {
-        [HandlesResourceDisposal]
-        public void Close() { }
-    }
 }

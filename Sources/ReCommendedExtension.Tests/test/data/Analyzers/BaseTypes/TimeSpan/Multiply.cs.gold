@@ -1,0 +1,19 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void Operator(TimeSpan timeSpan, double factor)
+        {
+            var result = |timeSpan.Multiply(factor)|(0);
+        }
+
+        public void NoDetection(TimeSpan timeSpan, double factor)
+        {
+            timeSpan.Multiply(factor);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '*' operator.

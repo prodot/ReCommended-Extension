@@ -34,11 +34,11 @@ public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvi
         => declaredElement switch
         {
             IMethod method => !method.ReturnType.IsVoid()
-                && !method.ReturnType.IsDisposable(context)
+                && !method.ReturnType.IsDisposable()
                 && !method.ReturnType.IsTasklikeOfDisposable(context)
                 && !IsAnyBaseMethodAnnotated(method),
 
-            ILocalFunction localFunction => !localFunction.ReturnType.IsVoid() && !localFunction.ReturnType.IsDisposable(context),
+            ILocalFunction localFunction => !localFunction.ReturnType.IsVoid() && !localFunction.ReturnType.IsDisposable(),
 
             _ => false,
         };
@@ -48,6 +48,7 @@ public sealed class AnnotateWithMustUseReturnValue(ICSharpContextActionDataProvi
         [
             ..
             from attribute in ownerDeclaration.Attributes
+            where attribute.Target == AttributeTarget
             let shortName = attribute.GetAttributeType().GetClrName().ShortName
             where shortName == PureAnnotationProvider.PureAttributeShortName
                 || shortName == MustDisposeResourceAnnotationProvider.MustDisposeResourceAttributeShortName

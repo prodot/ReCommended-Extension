@@ -1,0 +1,40 @@
+﻿using System;
+
+namespace Test
+{
+    public class FormatStrings
+    {
+        public void RedundantFormatSpecifier(TimeSpan value)
+        {
+            var result1 = string.Format("{0|:c|(0)}", value);
+            var result2 = string.Format("{0|:t|(1)}", value);
+            var result3 = string.Format("{0|:T|(2)}", value);
+        }
+
+        public void RedundantFormatSpecifier(TimeSpan? value)
+        {
+            var result1 = string.Format("{0|:c|(3)}", value);
+            var result2 = string.Format("{0|:t|(4)}", value);
+            var result3 = string.Format("{0|:T|(5)}", value);
+        }
+
+        public void NoDetection(TimeSpan value)
+        {
+            var result1 = string.Format("{0:g}", value);
+            var result2 = string.Format("{0:G}", value);
+        }
+
+        public void NoDetection(TimeSpan? value)
+        {
+            var result1 = string.Format("{0:g}", value);
+            var result2 = string.Format("{0:G}", value);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'c' is redundant.
+(1): ReSharper Dead Code: Specifying 't' is redundant.
+(2): ReSharper Dead Code: Specifying 'T' is redundant.
+(3): ReSharper Dead Code: Specifying 'c' is redundant.
+(4): ReSharper Dead Code: Specifying 't' is redundant.
+(5): ReSharper Dead Code: Specifying 'T' is redundant.

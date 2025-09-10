@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DateTimeOffsets
+    {
+        public void ParseExact(string input, IFormatProvider formatProvider, DateTimeStyles styles, out DateTimeOffset result)
+        {
+            var result_ = DateTimeOffset.TryParseExact(input, "o", null{caret}, styles, out result);
+        }
+    }
+}

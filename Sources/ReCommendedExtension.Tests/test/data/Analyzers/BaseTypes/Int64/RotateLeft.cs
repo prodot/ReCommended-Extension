@@ -1,0 +1,18 @@
+﻿namespace Test
+{
+    public class Int64s
+    {
+        public void ExpressionResult(long n)
+        {
+            var result = long.RotateLeft(n, 0);
+        }
+
+        public void NoDetection(long n, int rotateAmount)
+        {
+            var result1 = long.RotateLeft(n, 1);
+            var result2 = long.RotateLeft(n, rotateAmount);
+
+            long.RotateLeft(n, 0);
+        }
+    }
+}

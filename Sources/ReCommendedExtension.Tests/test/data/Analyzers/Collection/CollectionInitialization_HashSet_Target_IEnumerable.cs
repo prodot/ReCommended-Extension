@@ -100,9 +100,7 @@ namespace TargetEnumerable
         void Consumer(IEnumerable<T> items) { }
 
         IEnumerable<T> Property01 { get; } = new HashSet<T>();
-        IEnumerable<T> Property02 { get; } = new HashSet<T> { 1, 2, 3 };
         IEnumerable<T> Property03 { get; set; } = new HashSet<T>(8);
-        IEnumerable<T> Property04 { get; set; } = new HashSet<T>(8) { 1, 2, 3 };
     }
 
     internal class A { }

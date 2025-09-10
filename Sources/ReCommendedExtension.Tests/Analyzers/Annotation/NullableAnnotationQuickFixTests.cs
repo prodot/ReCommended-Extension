@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 [TestNetCore30]
 public sealed class NullableAnnotationQuickFixTests : QuickFixTestBase<RemoveNullableAnnotationFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     [Test]
     public void TestRedundantNullableAnnotation() => DoNamedTest2();

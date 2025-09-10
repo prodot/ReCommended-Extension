@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Linq;
+using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.Linq;
 
@@ -20,12 +21,12 @@ public sealed class LinqAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseIndexerSuggestion
-            or UseLinqListPatternSuggestion
-            or UseSwitchExpressionSuggestion
-            or UseCollectionPropertySuggestion
-            or SuspiciousElementAccessWarning
-            or UseCollectionCountPropertyWarning // to figure out which cases are supported by R#
-            or NotResolvedError;
+                or UseLinqListPatternSuggestion
+                or UseSwitchExpressionSuggestion
+                or UseCollectionPropertySuggestion
+                or SuspiciousElementAccessWarning
+                or UseCollectionCountPropertyWarning // to figure out which cases are supported by R#
+            || highlighting.IsError();
 
     [SuppressMessage("ReSharper", "UseTargetTypedCollectionExpression")]
     [SuppressMessage("ReSharper", "UseCollectionExpression")]

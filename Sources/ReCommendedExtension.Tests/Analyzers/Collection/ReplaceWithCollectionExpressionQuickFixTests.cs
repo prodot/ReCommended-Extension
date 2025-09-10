@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 [TestNet80]
 public sealed class ReplaceWithCollectionExpressionQuickFixTests : QuickFixTestBase<ReplaceWithCollectionExpressionFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     [Test]
     public void TestCollectionInitialization_Array_Target_Array_Field() => DoNamedTest2();

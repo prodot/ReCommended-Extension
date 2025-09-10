@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -13,10 +12,10 @@ namespace ReCommendedExtension.Tests.Analyzers.NotifyPropertyChangedInvocatorFro
 [TestPackagesWithAnnotations]
 public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructor\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning or NotResolvedError;
+        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning || highlighting.IsError();
 
     [Test]
     public void TestNotifyPropertyChangedInvocatorFromConstructorAvailability() => DoNamedTest2();

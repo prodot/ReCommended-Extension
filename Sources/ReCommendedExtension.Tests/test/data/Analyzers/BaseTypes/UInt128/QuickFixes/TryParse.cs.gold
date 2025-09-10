@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt128s
+    {
+        public void TryParse(string s)
+        {
+            var result = UInt128.TryParse(s{caret}, out _);
+        }
+    }
+}

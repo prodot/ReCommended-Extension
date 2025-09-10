@@ -130,14 +130,6 @@ namespace Test
         public static bool operator >=(ClassRecordWithOperators? left, ClassRecordWithOperators? right) => throw new NotImplementedException();
     }
 
-    internal record ||ClassRecordWithSomeOperators|(10)|(11) : IComparable<ClassRecordWithSomeOperators> // declare IComparisonOperators<ClassRecordWithSomeOperators, ClassRecordWithSomeOperators, bool> interface (operators partially available)
-    {
-        public int CompareTo(ClassRecordWithSomeOperators? other) => throw new NotImplementedException();
-
-        public static bool operator <(ClassRecordWithSomeOperators? left, ClassRecordWithSomeOperators? right) => throw new NotImplementedException();
-        public static bool operator <=(ClassRecordWithSomeOperators? left, ClassRecordWithSomeOperators? right) => throw new NotImplementedException();
-    }
-
     internal record ClassRecordWithOperatorsAndInterface :
         IEqualityOperators<ClassRecordWithOperatorsAndInterface, ClassRecordWithOperatorsAndInterface, bool>,
         IComparable<ClassRecordWithOperatorsAndInterface>, 
@@ -151,12 +143,12 @@ namespace Test
         public static bool operator >=(ClassRecordWithOperatorsAndInterface? left, ClassRecordWithOperatorsAndInterface? right) => throw new NotImplementedException();
     }
 
-    internal record struct ||StructRecord|(12)|(13) : IComparable<StructRecord> // implement IComparisonOperators<StructRecord, StructRecord, bool> interface
+    internal record struct ||StructRecord|(10)|(11) : IComparable<StructRecord> // implement IComparisonOperators<StructRecord, StructRecord, bool> interface
     {
         public int CompareTo(StructRecord other) => throw new NotImplementedException();
     }
 
-    internal record ||StructRecordWithOperators|(14)|(15) : IComparable<StructRecordWithOperators> // declare IComparisonOperators<StructRecordWithOperators, StructRecordWithOperators, bool> interface (operators available)
+    internal record ||StructRecordWithOperators|(12)|(13) : IComparable<StructRecordWithOperators> // declare IComparisonOperators<StructRecordWithOperators, StructRecordWithOperators, bool> interface (operators available)
     {
         public int CompareTo(StructRecordWithOperators other) => throw new NotImplementedException();
 
@@ -190,9 +182,7 @@ namespace Test
 (7): ReSharper Suggestion: Implement IComparisonOperators<ClassRecord, ClassRecord, bool> interface.
 (8): ReSharper Suggestion: Declare IComparisonOperators<ClassRecordWithOperators, ClassRecordWithOperators, bool> interface (operators available).
 (9): ReSharper Suggestion: Declare IEqualityOperators<ClassRecordWithOperators, ClassRecordWithOperators, bool> interface (operators available).
-(10): ReSharper Suggestion: Declare IComparisonOperators<ClassRecordWithSomeOperators, ClassRecordWithSomeOperators, bool> interface (operators partially available).
-(11): ReSharper Suggestion: Declare IEqualityOperators<ClassRecordWithSomeOperators, ClassRecordWithSomeOperators, bool> interface (operators available).
-(12): ReSharper Suggestion: Declare IEqualityOperators<StructRecord, StructRecord, bool> interface (operators available).
-(13): ReSharper Suggestion: Implement IComparisonOperators<StructRecord, StructRecord, bool> interface.
-(14): ReSharper Suggestion: Declare IComparisonOperators<StructRecordWithOperators, StructRecordWithOperators, bool> interface (operators available).
-(15): ReSharper Suggestion: Declare IEqualityOperators<StructRecordWithOperators, StructRecordWithOperators, bool> interface (operators available).
+(10): ReSharper Suggestion: Declare IEqualityOperators<StructRecord, StructRecord, bool> interface (operators available).
+(11): ReSharper Suggestion: Implement IComparisonOperators<StructRecord, StructRecord, bool> interface.
+(12): ReSharper Suggestion: Declare IComparisonOperators<StructRecordWithOperators, StructRecordWithOperators, bool> interface (operators available).
+(13): ReSharper Suggestion: Declare IEqualityOperators<StructRecordWithOperators, StructRecordWithOperators, bool> interface (operators available).

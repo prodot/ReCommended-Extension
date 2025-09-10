@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Test
 {
-    class CustomCollection<T> : ICollection<T>
+    public class CustomCollection<T> : ICollection<T>
     {
         public void Add(T item) => throw new NotImplementedException();
 

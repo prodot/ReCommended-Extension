@@ -1,0 +1,70 @@
+﻿using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Test
+{
+    internal class Types
+    {
+        void FromLessThanMinValue_To(
+            [ValueRange(|-2_147_483_648L - 1|(0), 1)] int a, 
+            [ValueRange(|-1|(1), 1)] uint b, 
+            [ValueRange(|-1|(2), 1)] ulong d, 
+            [ValueRange(|-100_000|(3), 1)] short e, 
+            [ValueRange(|-1|(4), 1)] ushort f, 
+            [ValueRange(|-1|(5), 1)] byte g,
+            [ValueRange(|-150|(6), 1)] sbyte h) { }
+
+        void From_ToGreaterThanMaxValue(
+            [ValueRange(1, |2_147_483_647L + 10|(7))] int a, 
+            [ValueRange(1, |uint.MaxValue + 10L|(8))] uint b, 
+            [ValueRange(1, |long.MaxValue + 10ul|(9))] long c,
+            [ValueRange(1, |1_000_000|(10))] short e, 
+            [ValueRange(1, |1_000_000|(11))] ushort f, 
+            [ValueRange(1, |300|(12))] byte g,
+            [ValueRange(1, |200|(13))] sbyte h) { }
+    }
+}
+------------------------------------------------
+0: The 'from' value is less than the 'int.MinValue'.
+QUICKFIXES:
+Set the 'from' value to the 'int.MinValue'
+1: The 'from' value is negative.
+QUICKFIXES:
+Set the 'from' value to the '0'
+2: The 'from' value is negative.
+QUICKFIXES:
+Set the 'from' value to the '0'
+3: The 'from' value is less than the 'short.MinValue'.
+QUICKFIXES:
+Set the 'from' value to the 'short.MinValue'
+4: The 'from' value is negative.
+QUICKFIXES:
+Set the 'from' value to the '0'
+5: The 'from' value is negative.
+QUICKFIXES:
+Set the 'from' value to the '0'
+6: The 'from' value is less than the 'sbyte.MinValue'.
+QUICKFIXES:
+Set the 'from' value to the 'sbyte.MinValue'
+7: The 'to' value is greater than the 'int.MaxValue'.
+QUICKFIXES:
+Set the 'to' value to the 'int.MaxValue'
+8: The 'to' value is greater than the 'uint.MaxValue'.
+QUICKFIXES:
+Set the 'to' value to the 'uint.MaxValue'
+9: The 'to' value is greater than the 'long.MaxValue'.
+QUICKFIXES:
+Set the 'to' value to the 'long.MaxValue'
+10: The 'to' value is greater than the 'short.MaxValue'.
+QUICKFIXES:
+Set the 'to' value to the 'short.MaxValue'
+11: The 'to' value is greater than the 'ushort.MaxValue'.
+QUICKFIXES:
+Set the 'to' value to the 'ushort.MaxValue'
+12: The 'to' value is greater than the 'byte.MaxValue'.
+QUICKFIXES:
+Set the 'to' value to the 'byte.MaxValue'
+13: The 'to' value is greater than the 'sbyte.MaxValue'.
+QUICKFIXES:
+Set the 'to' value to the 'sbyte.MaxValue'

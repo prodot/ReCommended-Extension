@@ -1,0 +1,135 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void ParseExact(string input, string format, IFormatProvider formatProvider, TimeSpanStyles styles)
+        {
+            var result11 = TimeSpan.ParseExact(input, "c", |formatProvider|(0));
+            var result12 = TimeSpan.ParseExact(input, "t", |formatProvider|(1));
+            var result13 = TimeSpan.ParseExact(input, "T", |formatProvider|(2));
+
+            var result21 = TimeSpan.ParseExact(input, "c", |formatProvider|(3), styles);
+            var result22 = TimeSpan.ParseExact(input, "t", |formatProvider|(4), styles);
+            var result23 = TimeSpan.ParseExact(input, "T", |formatProvider|(5), styles);
+
+            var result31 = TimeSpan.ParseExact(input, |[format]|(6), formatProvider);
+            var result32 = TimeSpan.ParseExact(input, |(string[])[format]|(7), formatProvider);
+            var result33 = TimeSpan.ParseExact(input, |new[] { format }|(8), formatProvider);
+            var result34 = TimeSpan.ParseExact(input, |new string[] { format }|(9), formatProvider);
+
+            var result41 = TimeSpan.ParseExact(input, |[format]|(10), formatProvider, styles);
+            var result42 = TimeSpan.ParseExact(input, |(string[])[format]|(11), formatProvider, styles);
+            var result43 = TimeSpan.ParseExact(input, |new[] { format }|(12), formatProvider, styles);
+            var result44 = TimeSpan.ParseExact(input, |new string[] { format }|(13), formatProvider, styles);
+        }
+
+        public void TryParseExact(string input, string format, IFormatProvider formatProvider, TimeSpanStyles styles, out TimeSpan result)
+        {
+            var result11 = TimeSpan.TryParseExact(input, "c", |formatProvider|(14), out result);
+            var result12 = TimeSpan.TryParseExact(input, "t", |formatProvider|(15), out result);
+            var result13 = TimeSpan.TryParseExact(input, "T", |formatProvider|(16), out result);
+
+            var result21 = TimeSpan.TryParseExact(input, "c", |formatProvider|(17), styles, out result);
+            var result22 = TimeSpan.TryParseExact(input, "t", |formatProvider|(18), styles, out result);
+            var result23 = TimeSpan.TryParseExact(input, "T", |formatProvider|(19), styles, out result);
+
+            var result31 = TimeSpan.TryParseExact(input, |[format]|(20), formatProvider, out result);
+            var result32 = TimeSpan.TryParseExact(input, |(string[])[format]|(21), formatProvider, out result);
+            var result33 = TimeSpan.TryParseExact(input, |new[] { format }|(22), formatProvider, out result);
+            var result34 = TimeSpan.TryParseExact(input, |new string[] { format }|(23), formatProvider, out result);
+
+            var result41 = TimeSpan.TryParseExact(input, |[format]|(24), formatProvider, styles, out result);
+            var result42 = TimeSpan.TryParseExact(input, |(string[])[format]|(25), formatProvider, styles, out result);
+            var result43 = TimeSpan.TryParseExact(input, |new[] { format }|(26), formatProvider, styles, out result);
+            var result44 = TimeSpan.TryParseExact(input, |new string[] { format }|(27), formatProvider, styles, out result);
+        }
+    }
+}
+------------------------------------------------
+0: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+1: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+2: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+3: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+4: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+5: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+6: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+7: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+8: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+9: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+10: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+11: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+12: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+13: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+14: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+15: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+16: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+17: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+18: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+19: The format provider is ignored (pass null instead).
+QUICKFIXES:
+Replace with 'null'
+20: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+21: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+22: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+23: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+24: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+25: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+26: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+27: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'

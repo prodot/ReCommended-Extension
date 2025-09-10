@@ -15,6 +15,18 @@ namespace DisposableAnnotated
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
+
+    [MustDisposeResource]
+    internal struct Struct({on}) : IDisposable
+    {
+        public void Dispose() { }    
+    }
+
+    [MustDisposeResource]
+    internal record struct RecordStruct({on}) : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
 }
 
 namespace DisposableAnnotatedWithFalse
@@ -27,6 +39,18 @@ namespace DisposableAnnotatedWithFalse
 
     [MustDisposeResource(false)]
     internal record Record({on}) : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
+    [MustDisposeResource(false)]
+    internal struct Struct({on}) : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource(false)]
+    internal record struct RecordStruct({on}) : IAsyncDisposable
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
@@ -104,26 +128,10 @@ namespace NonDisposable
     internal class Class({off}) { }
 
     internal record Record({off}) { }
-}
 
-namespace DisposableStructs
-{
-    internal struct DisposableStruct({on}) : IDisposable
-    {
-        public void Dispose() { }
-    }
+    internal struct Struct({off}) { }
 
-    internal record struct DisposableStructRecord({on}) : IDisposable
-    {
-        public void Dispose() { }
-    }
-}
-
-namespace NonDisposableStructs
-{
-    internal struct NonDisposableStruct({off}) { }
-
-    internal record struct NonDisposableStructRecord({off}) { }
+    internal record struct RecordStruct({off}) { }
 }
 
 namespace RefStructs
@@ -144,5 +152,20 @@ namespace RefStructs
     {
         [HandlesResourceDisposal]
         public void Close() { }
+    }
+}
+
+namespace AnnotatedPrimaryConstructor
+{
+    [method: MustDisposeResource]
+    internal struct Struct({on}) : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [method: MustDisposeResource(false)]
+    internal record struct recordStruct({off}) : IDisposable
+    {
+        public void Dispose() { }
     }
 }

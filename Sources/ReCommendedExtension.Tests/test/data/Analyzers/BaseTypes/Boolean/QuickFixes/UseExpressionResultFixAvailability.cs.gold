@@ -1,0 +1,31 @@
+﻿namespace Test
+{
+    public class Booleans
+    {
+        public void Equals(bool flag, bool obj)
+        {
+            var result11 = |flag.Equals(false)|(0);
+            var result12 = |false.Equals(obj)|(1);
+
+            var result21 = |flag.Equals(null)|(2);
+        }
+
+        public void GetTypeCode(bool flag)
+        {
+            var result = |flag.GetTypeCode()|(3);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always the same as the inverted qualifier.
+QUICKFIXES:
+Replace with '!flag'
+1: The expression is always the same as the inverted argument.
+QUICKFIXES:
+Replace with '!(obj)'
+2: The expression is always false.
+QUICKFIXES:
+Replace with 'false'
+3: The expression is always TypeCode.Boolean.
+QUICKFIXES:
+Replace with 'TypeCode.Boolean'

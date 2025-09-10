@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Halves
+    {
+        public void ToString(Half number)
+        {
+            var result = number.ToString("E{caret}6");
+        }
+    }
+}

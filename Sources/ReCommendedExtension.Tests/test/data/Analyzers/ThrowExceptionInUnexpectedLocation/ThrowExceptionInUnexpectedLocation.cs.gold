@@ -26,7 +26,7 @@ namespace Test
                 throw new NotSupportedException();
 
                 void LocalFunction() => throw new AnyException(); // allowed
-                Action action => () => throw new AnyException(); // allowed
+                Action action = () => throw new AnyException(); // allowed
             }
         }
 

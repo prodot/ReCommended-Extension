@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -16,7 +15,7 @@ public sealed class AnnotationAnalyzerTestsForNUnitTestProjects : CSharpHighligh
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is MissingSuppressionJustificationWarning or NotResolvedError;
+        => highlighting is MissingSuppressionJustificationWarning || highlighting.IsError();
 
     [Test]
     [TestPackages("nunit/3.13.3")]

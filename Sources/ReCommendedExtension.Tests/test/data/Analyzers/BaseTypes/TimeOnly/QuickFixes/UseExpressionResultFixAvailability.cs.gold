@@ -1,0 +1,61 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimesOnly
+    {
+        public void _Constructors()
+        {
+            var result11 = |new TimeOnly(0)|(0);
+            var result12 = |new TimeOnly(0, 0)|(1);
+            var result13 = |new TimeOnly(0, 0, 0)|(2);
+            var result14 = |new TimeOnly(0, 0, 0, 0)|(3);
+            var result15 = |new TimeOnly(0, 0, 0, 0, 0)|(4);
+
+            TimeOnly result21 = |new(0)|(5);
+            TimeOnly result22 = |new(0, 0)|(6);
+            TimeOnly result23 = |new(0, 0, 0)|(7);
+            TimeOnly result24 = |new(0, 0, 0, 0)|(8);
+            TimeOnly result25 = |new(0, 0, 0, 0, 0)|(9);
+        }
+
+        public void Equals(TimeOnly timeOnly)
+        {
+            var result = |timeOnly.Equals(null)|(10);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+1: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+2: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+3: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+4: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+5: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+6: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+7: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+8: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+9: The expression is always TimeOnly.MinValue.
+QUICKFIXES:
+Replace with 'TimeOnly.MinValue'
+10: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

@@ -1,0 +1,20 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Class
+    {
+        public void RedundantLinqQuery(IEnumerable<int> items)
+        {
+            var result = |from item in|(0) items |select item|(1);
+        }
+    }
+}
+------------------------------------------------
+0: No-op LINQ query is redundant.
+QUICKFIXES:
+Remove LINQ query
+1: No-op LINQ query is redundant.
+QUICKFIXES:
+Remove LINQ query

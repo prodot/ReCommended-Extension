@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Decimals
+    {
+        public void GetTypeCode(decimal number)
+        {
+            var result = {caret}TypeCode.Decimal;
+        }
+    }
+}

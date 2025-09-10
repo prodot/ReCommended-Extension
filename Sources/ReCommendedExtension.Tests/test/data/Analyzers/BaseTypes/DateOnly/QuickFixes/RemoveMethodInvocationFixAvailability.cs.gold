@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Test
+{
+    public class DatesOnly
+    {
+        public void AddDays(DateOnly dateOnly)
+        {
+            var result = dateOnly.|AddDays(0)|(0);
+        }
+    }
+}
+------------------------------------------------
+0: Calling 'AddDays' with 0 is redundant.
+QUICKFIXES:
+Remove method invocation

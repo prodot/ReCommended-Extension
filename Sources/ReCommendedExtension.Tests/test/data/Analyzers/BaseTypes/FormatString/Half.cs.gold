@@ -1,0 +1,74 @@
+﻿using System;
+
+namespace Test
+{
+    public class FormatStrings
+    {
+        public void RedundantFormatSpecifier(Half number)
+        {
+            var result1 = string.Format("{0|:G|(0)}", number);
+            var result2 = string.Format("{0|:G0|(1)}", number);
+        }
+
+        public void RedundantFormatSpecifier(Half? number)
+        {
+            var result1 = string.Format("{0|:G|(2)}", number);
+            var result2 = string.Format("{0|:G0|(3)}", number);
+        }
+
+        public void RedundantFormatPrecisionSpecifier(Half number)
+        {
+            var result11 = string.Format("{0:E|6|(4)}", number);
+            var result12 = string.Format("{0:e|6|(5)}", number);
+
+            var result21 = string.Format("{0:R|3|(6)}", number);
+            var result22 = string.Format("{0:r|3|(7)}", number);
+        }
+
+        public void RedundantFormatPrecisionSpecifier(Half? number)
+        {
+            var result11 = string.Format("{0:E|6|(8)}", number);
+            var result12 = string.Format("{0:e|6|(9)}", number);
+
+            var result21 = string.Format("{0:R|3|(10)}", number);
+            var result22 = string.Format("{0:r|3|(11)}", number);
+        }
+
+        public void NoDetection(Half number)
+        {
+            var result1 = string.Format("{0:G1}", number);
+            var result2 = string.Format("{0:g}", number);
+            var result3 = string.Format("{0:g0}", number);
+            var result4 = string.Format("{0:g1}", number);
+            var result5 = string.Format("{0:E}", number);
+            var result6 = string.Format("{0:E5}", number);
+            var result7 = string.Format("{0:R}", number);
+            var result8 = string.Format("{0:r}", number);
+        }
+
+        public void NoDetection(Half? number)
+        {
+            var result1 = string.Format("{0:G1}", number);
+            var result2 = string.Format("{0:g}", number);
+            var result3 = string.Format("{0:g0}", number);
+            var result4 = string.Format("{0:g1}", number);
+            var result5 = string.Format("{0:E}", number);
+            var result6 = string.Format("{0:E5}", number);
+            var result7 = string.Format("{0:R}", number);
+            var result8 = string.Format("{0:r}", number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'G' is redundant.
+(1): ReSharper Dead Code: Specifying 'G0' is redundant.
+(2): ReSharper Dead Code: Specifying 'G' is redundant.
+(3): ReSharper Dead Code: Specifying 'G0' is redundant.
+(4): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(5): ReSharper Dead Code: The format precision specifier is redundant, 'e' has the same effect.
+(6): ReSharper Dead Code: The format precision specifier is redundant, 'R' has the same effect.
+(7): ReSharper Dead Code: The format precision specifier is redundant, 'r' has the same effect.
+(8): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(9): ReSharper Dead Code: The format precision specifier is redundant, 'e' has the same effect.
+(10): ReSharper Dead Code: The format precision specifier is redundant, 'R' has the same effect.
+(11): ReSharper Dead Code: The format precision specifier is redundant, 'r' has the same effect.

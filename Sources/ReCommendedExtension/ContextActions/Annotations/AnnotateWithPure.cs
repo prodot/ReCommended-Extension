@@ -67,12 +67,12 @@ public sealed class AnnotateWithPure(ICSharpContextActionDataProvider provider) 
         => declaredElement switch
         {
             IMethod method => ReturnsAnyValueWithoutRefParameters(method)
-                && !method.ReturnType.IsDisposable(context)
+                && !method.ReturnType.IsDisposable()
                 && !method.ReturnType.IsTasklikeOfDisposable(context)
                 && !IsAnyBaseMethodAnnotated(method),
 
             ILocalFunction localFunction => ReturnsAnyValueWithoutRefParameters(localFunction)
-                && !localFunction.ReturnType.IsDisposable(context)
+                && !localFunction.ReturnType.IsDisposable()
                 && !localFunction.ReturnType.IsTasklikeOfDisposable(context),
 
             _ => false,
@@ -83,6 +83,7 @@ public sealed class AnnotateWithPure(ICSharpContextActionDataProvider provider) 
         [
             ..
             from attribute in ownerDeclaration.Attributes
+            where attribute.Target == AttributeTarget
             let shortName = attribute.GetAttributeType().GetClrName().ShortName
             where shortName == MustUseReturnValueAnnotationProvider.MustUseReturnValueAttributeShortName
                 || shortName == MustDisposeResourceAnnotationProvider.MustDisposeResourceAttributeShortName

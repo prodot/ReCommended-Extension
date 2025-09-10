@@ -1,0 +1,159 @@
+﻿using System;
+using System.Threading;
+
+namespace Test
+{
+    public class Nullables
+    {
+        public enum ZeroBasedenum { Zero, One, Two, Three }
+        public enum NonZeroBasedenum { One = 1, Two = 2, Three = 3 }
+
+        public struct CustomStruct;
+
+        public void GetValueOrDefault<T>(
+            byte? _byte,
+            sbyte? _sbyte,
+            short? _short,
+            ushort? _ushort,
+            int? _int,
+            uint? _uint,
+            long? _long,
+            ulong? _ulong,
+            Int128? _int128,
+            UInt128? _uint128,
+            nint? _nint,
+            nuint? _nuint,
+            double? _double,
+            float? _float,
+            Half? _half,
+            decimal? _decimal,
+            bool? _bool,
+            char? _char,
+            ZeroBasedenum? _zeroBasedenum,
+            NonZeroBasedenum? _nonZeroBasedenum,
+            (int, bool, string)? _tuple,
+            (Int128, Half, (bool?, int?))? _tupleNested,
+            CustomStruct? _struct,
+            CancellationToken? _cancellationToken,
+            T? _generic) where T : struct
+        {
+            var result1 = _byte.|GetValueOrDefault()|(0);
+            var result2 = _sbyte.|GetValueOrDefault()|(1);
+            var result3 = _short.|GetValueOrDefault()|(2);
+            var result4 = _ushort.|GetValueOrDefault()|(3);
+            var result5 = _int.|GetValueOrDefault()|(4);
+            var result6 = _uint.|GetValueOrDefault()|(5);
+            var result7 = _long.|GetValueOrDefault()|(6);
+            var result8 = _ulong.|GetValueOrDefault()|(7);
+            var result9 = _int128.|GetValueOrDefault()|(8);
+            var resultA = _uint128.|GetValueOrDefault()|(9);
+            var resultB = _nint.|GetValueOrDefault()|(10);
+            var resultC = _nuint.|GetValueOrDefault()|(11);
+            var resultD = _double.|GetValueOrDefault()|(12);
+            var resultE = _float.|GetValueOrDefault()|(13);
+            var resultF = _half.|GetValueOrDefault()|(14);
+            var resultG = _decimal.|GetValueOrDefault()|(15);
+            var resultH = _bool.|GetValueOrDefault()|(16);
+            var resultI = _char.|GetValueOrDefault()|(17);
+            var resultJ = _zeroBasedenum.|GetValueOrDefault()|(18);
+            var resultK = _nonZeroBasedenum.|GetValueOrDefault()|(19);
+            var resultL = _tuple.|GetValueOrDefault()|(20);
+            var resultM = _tupleNested.|GetValueOrDefault()|(21);
+            var resultN = _struct.|GetValueOrDefault()|(22);
+            var resultO = _cancellationToken.|GetValueOrDefault()|(23);
+            var resultP = _generic.|GetValueOrDefault()|(24);
+        }
+
+        public void GetValueOrDefault(int? nullable, int defaultValue)
+        {
+            var result = nullable.|GetValueOrDefault(defaultValue)|(25);
+        }
+
+        public void GetValueOrDefault<T>(T? nullable, T defaultValue) where T : struct
+        {
+            var result = nullable.|GetValueOrDefault(defaultValue)|(26);
+        }
+    }
+}
+------------------------------------------------
+0: Use the '??' operator.
+QUICKFIXES:
+Replace with '_byte ?? 0'
+1: Use the '??' operator.
+QUICKFIXES:
+Replace with '_sbyte ?? 0'
+2: Use the '??' operator.
+QUICKFIXES:
+Replace with '_short ?? 0'
+3: Use the '??' operator.
+QUICKFIXES:
+Replace with '_ushort ?? 0'
+4: Use the '??' operator.
+QUICKFIXES:
+Replace with '_int ?? 0'
+5: Use the '??' operator.
+QUICKFIXES:
+Replace with '_uint ?? 0'
+6: Use the '??' operator.
+QUICKFIXES:
+Replace with '_long ?? 0'
+7: Use the '??' operator.
+QUICKFIXES:
+Replace with '_ulong ?? 0'
+8: Use the '??' operator.
+QUICKFIXES:
+Replace with '_int128 ?? 0'
+9: Use the '??' operator.
+QUICKFIXES:
+Replace with '_uint128 ?? 0'
+10: Use the '??' operator.
+QUICKFIXES:
+Replace with '_nint ?? 0'
+11: Use the '??' operator.
+QUICKFIXES:
+Replace with '_nuint ?? 0'
+12: Use the '??' operator.
+QUICKFIXES:
+Replace with '_double ?? 0'
+13: Use the '??' operator.
+QUICKFIXES:
+Replace with '_float ?? 0'
+14: Use the '??' operator.
+QUICKFIXES:
+Replace with '_half ?? (Half)0'
+15: Use the '??' operator.
+QUICKFIXES:
+Replace with '_decimal ?? 0'
+16: Use the '??' operator.
+QUICKFIXES:
+Replace with '_bool ?? false'
+17: Use the '??' operator.
+QUICKFIXES:
+Replace with '_char ?? '\0''
+18: Use the '??' operator.
+QUICKFIXES:
+Replace with '_zeroBasedenum ?? ZeroBasedenum.Zero'
+19: Use the '??' operator.
+QUICKFIXES:
+Replace with '_nonZeroBasedenum ?? (NonZeroBasedenum)0'
+20: Use the '??' operator.
+QUICKFIXES:
+Replace with '_tuple ?? (0, false, null)'
+21: Use the '??' operator.
+QUICKFIXES:
+Replace with '_tupleNested ?? (0, (Half)0, (null, null))'
+22: Use the '??' operator.
+QUICKFIXES:
+Replace with '_struct ?? new CustomStruct()'
+23: Use the '??' operator.
+QUICKFIXES:
+Replace with '_cancellationToken ?? CancellationToken.None'
+24: Use the '??' operator.
+QUICKFIXES:
+Replace with '_generic ?? default(T)'
+25: Use the '??' operator.
+QUICKFIXES:
+Replace with 'nullable ?? defaultValue'
+26: Use the '??' operator.
+QUICKFIXES:
+Replace with 'nullable ?? defaultValue'

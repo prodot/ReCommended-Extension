@@ -113,6 +113,24 @@ namespace DisposableAnnotated
     {
         public void Dispose() { }
     }
+
+    [MustDisposeResource]
+    internal struct SWithout{off}Parameters : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource(false)]
+    internal struct SWith{on}False : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [MustDisposeResource(true)]
+    internal struct SWith{off}True : IDisposable
+    {
+        public void Dispose() { }
+    }
 }
 
 namespace NonDisposable
@@ -120,38 +138,42 @@ namespace NonDisposable
     internal class Cl{off}ass { }
 
     internal record Re{off}cord { }
+
+    internal struct Str{off}uct { }
+
+    internal record struct Re{off}cordStruct { }
 }
 
 namespace Structs
 {
-    internal struct Disposable{off}Struct : IDisposable
+    internal struct Disposable{on}Struct : IDisposable
     {
         public void Dispose() { }
     }
 
-    internal record struct DisposableStruct{off}Record : IDisposable
+    internal record struct DisposableStruct{on}Record : IDisposable
     {
         public void Dispose() { }
     }
 
-    internal struct DisposableStruct{off}WithCtor : IDisposable
+    internal struct DisposableStruct{on}WithCtor : IDisposable
     {
         public DisposableStructWithCtor() { }
         public void Dispose() { }
     }
 
-    internal record struct DisposableStruct{off}RecordWithCtor : IDisposable
+    internal record struct DisposableStruct{on}RecordWithCtor : IDisposable
     {
         public DisposableStructRecordWithCtor() { }
         public void Dispose() { }
     }
 
-    internal struct DisposableStructWith{off}PrimaryCtor() : IDisposable
+    internal struct DisposableStructWith{on}PrimaryCtor() : IDisposable
     {
         public void Dispose() { }
     }
 
-    internal record struct DisposableStructRecord{off}WithPrimaryCtor() : IDisposable
+    internal record struct DisposableStructRecord{on}WithPrimaryCtor() : IDisposable
     {
         public void Dispose() { }
     }
@@ -162,34 +184,34 @@ namespace Structs
 
     internal ref struct Ref{off}Struct { }
 
-    internal ref struct RefStruct{off}WithDispose
+    internal ref struct RefStruct{on}WithDispose
     {
         public void Dispose() { }
     }
 
-    internal ref struct RefStructWith{off}DisposeAsync
+    internal ref struct RefStructWith{on}DisposeAsync
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
-    internal ref struct RefStructWith{off}DisposeAndCtor
+    internal ref struct RefStructWith{on}DisposeAndCtor
     {
         public RefStructWithDisposeAndCtor() { }
         public void Dispose() { }
     }
 
-    internal ref struct RefStructWithDispose{off}AsyncAndCtor
+    internal ref struct RefStructWithDispose{on}AsyncAndCtor
     {
         public RefStructWithDisposeAsyncAndCtor() { }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
-    internal ref struct RefStructWithDisposeAnd{off}PrimaryCtor()
+    internal ref struct RefStructWithDisposeAnd{on}PrimaryCtor()
     {
         public void Dispose() { }
     }
 
-    internal ref struct RefStructWithDisposeAsync{off}AndAndPrimaryCtor()
+    internal ref struct RefStructWithDisposeAsync{on}AndAndPrimaryCtor()
     {
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
@@ -202,4 +224,19 @@ namespace Other
     internal enum En{off}um { }
 
     internal delegate void Dele{off}gate();
+}
+
+namespace AnnotatedPrimaryConstructor
+{
+    [method: MustDisposeResource]
+    internal struct Str{on}uct() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    [method: MustDisposeResource(false)]
+    internal record struct RecordStr{on}uct() : IDisposable
+    {
+        public void Dispose() { }
+    }
 }

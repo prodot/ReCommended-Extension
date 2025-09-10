@@ -1,0 +1,1023 @@
+﻿using System;
+
+namespace Test
+{
+    public class FormatStrings
+    {
+        public void Byte(byte number)
+        {
+            var result1 = string.Format("{0|:G|(0)}", number);
+            var result2 = string.Format("{0|:G0|(1)}", number);
+            var result3 = string.Format("{0|:G3|(2)}", number);
+            var result4 = string.Format("{0|:G4|(3)}", number);
+            var result5 = string.Format("{0|:g|(4)}", number);
+            var result6 = string.Format("{0|:g0|(5)}", number);
+            var result7 = string.Format("{0|:g3|(6)}", number);
+            var result8 = string.Format("{0|:g4|(7)}", number);
+        }
+
+        public void Byte(byte? number)
+        {
+            var result1 = string.Format("{0|:G|(8)}", number);
+            var result2 = string.Format("{0|:G0|(9)}", number);
+            var result3 = string.Format("{0|:G3|(10)}", number);
+            var result4 = string.Format("{0|:G4|(11)}", number);
+            var result5 = string.Format("{0|:g|(12)}", number);
+            var result6 = string.Format("{0|:g0|(13)}", number);
+            var result7 = string.Format("{0|:g3|(14)}", number);
+            var result8 = string.Format("{0|:g4|(15)}", number);
+        }
+
+        public void SByte(sbyte number)
+        {
+            var result1 = string.Format("{0|:G|(16)}", number);
+            var result2 = string.Format("{0|:G0|(17)}", number);
+            var result3 = string.Format("{0|:G3|(18)}", number);
+            var result4 = string.Format("{0|:G4|(19)}", number);
+            var result5 = string.Format("{0|:g|(20)}", number);
+            var result6 = string.Format("{0|:g0|(21)}", number);
+            var result7 = string.Format("{0|:g3|(22)}", number);
+            var result8 = string.Format("{0|:g4|(23)}", number);
+        }
+
+        public void SByte(sbyte? number)
+        {
+            var result1 = string.Format("{0|:G|(24)}", number);
+            var result2 = string.Format("{0|:G0|(25)}", number);
+            var result3 = string.Format("{0|:G3|(26)}", number);
+            var result4 = string.Format("{0|:G4|(27)}", number);
+            var result5 = string.Format("{0|:g|(28)}", number);
+            var result6 = string.Format("{0|:g0|(29)}", number);
+            var result7 = string.Format("{0|:g3|(30)}", number);
+            var result8 = string.Format("{0|:g4|(31)}", number);
+        }
+
+        public void Int16(short number)
+        {
+            var result1 = string.Format("{0|:G|(32)}", number);
+            var result2 = string.Format("{0|:G0|(33)}", number);
+            var result3 = string.Format("{0|:G5|(34)}", number);
+            var result4 = string.Format("{0|:G6|(35)}", number);
+            var result5 = string.Format("{0|:g|(36)}", number);
+            var result6 = string.Format("{0|:g0|(37)}", number);
+            var result7 = string.Format("{0|:g5|(38)}", number);
+            var result8 = string.Format("{0|:g6|(39)}", number);
+        }
+
+        public void Int16(short? number)
+        {
+            var result1 = string.Format("{0|:G|(40)}", number);
+            var result2 = string.Format("{0|:G0|(41)}", number);
+            var result3 = string.Format("{0|:G5|(42)}", number);
+            var result4 = string.Format("{0|:G6|(43)}", number);
+            var result5 = string.Format("{0|:g|(44)}", number);
+            var result6 = string.Format("{0|:g0|(45)}", number);
+            var result7 = string.Format("{0|:g5|(46)}", number);
+            var result8 = string.Format("{0|:g6|(47)}", number);
+        }
+
+        public void UInt16(ushort number)
+        {
+            var result1 = string.Format("{0|:G|(48)}", number);
+            var result2 = string.Format("{0|:G0|(49)}", number);
+            var result3 = string.Format("{0|:G5|(50)}", number);
+            var result4 = string.Format("{0|:G6|(51)}", number);
+            var result5 = string.Format("{0|:g|(52)}", number);
+            var result6 = string.Format("{0|:g0|(53)}", number);
+            var result7 = string.Format("{0|:g5|(54)}", number);
+            var result8 = string.Format("{0|:g6|(55)}", number);
+        }
+
+        public void UInt16(ushort? number)
+        {
+            var result1 = string.Format("{0|:G|(56)}", number);
+            var result2 = string.Format("{0|:G0|(57)}", number);
+            var result3 = string.Format("{0|:G5|(58)}", number);
+            var result4 = string.Format("{0|:G6|(59)}", number);
+            var result5 = string.Format("{0|:g|(60)}", number);
+            var result6 = string.Format("{0|:g0|(61)}", number);
+            var result7 = string.Format("{0|:g5|(62)}", number);
+            var result8 = string.Format("{0|:g6|(63)}", number);
+        }
+
+        public void Int32(int number)
+        {
+            var result1 = string.Format("{0|:G|(64)}", number);
+            var result2 = string.Format("{0|:G0|(65)}", number);
+            var result3 = string.Format("{0|:G10|(66)}", number);
+            var result4 = string.Format("{0|:G11|(67)}", number);
+            var result5 = string.Format("{0|:g|(68)}", number);
+            var result6 = string.Format("{0|:g0|(69)}", number);
+            var result7 = string.Format("{0|:g10|(70)}", number);
+            var result8 = string.Format("{0|:g11|(71)}", number);
+        }
+
+        public void Int32(int? number)
+        {
+            var result1 = string.Format("{0|:G|(72)}", number);
+            var result2 = string.Format("{0|:G0|(73)}", number);
+            var result3 = string.Format("{0|:G10|(74)}", number);
+            var result4 = string.Format("{0|:G11|(75)}", number);
+            var result5 = string.Format("{0|:g|(76)}", number);
+            var result6 = string.Format("{0|:g0|(77)}", number);
+            var result7 = string.Format("{0|:g10|(78)}", number);
+            var result8 = string.Format("{0|:g11|(79)}", number);
+        }
+
+        public void UInt32(uint number)
+        {
+            var result1 = string.Format("{0|:G|(80)}", number);
+            var result2 = string.Format("{0|:G0|(81)}", number);
+            var result3 = string.Format("{0|:G10|(82)}", number);
+            var result4 = string.Format("{0|:G11|(83)}", number);
+            var result5 = string.Format("{0|:g|(84)}", number);
+            var result6 = string.Format("{0|:g0|(85)}", number);
+            var result7 = string.Format("{0|:g10|(86)}", number);
+            var result8 = string.Format("{0|:g11|(87)}", number);
+        }
+
+        public void UInt32(uint? number)
+        {
+            var result1 = string.Format("{0|:G|(88)}", number);
+            var result2 = string.Format("{0|:G0|(89)}", number);
+            var result3 = string.Format("{0|:G10|(90)}", number);
+            var result4 = string.Format("{0|:G11|(91)}", number);
+            var result5 = string.Format("{0|:g|(92)}", number);
+            var result6 = string.Format("{0|:g0|(93)}", number);
+            var result7 = string.Format("{0|:g10|(94)}", number);
+            var result8 = string.Format("{0|:g11|(95)}", number);
+        }
+
+        public void Int64(long number)
+        {
+            var result1 = string.Format("{0|:G|(96)}", number);
+            var result2 = string.Format("{0|:G0|(97)}", number);
+            var result3 = string.Format("{0|:G19|(98)}", number);
+            var result4 = string.Format("{0|:G20|(99)}", number);
+            var result5 = string.Format("{0|:g|(100)}", number);
+            var result6 = string.Format("{0|:g0|(101)}", number);
+            var result7 = string.Format("{0|:g19|(102)}", number);
+            var result8 = string.Format("{0|:g20|(103)}", number);
+        }
+
+        public void Int64(long? number)
+        {
+            var result1 = string.Format("{0|:G|(104)}", number);
+            var result2 = string.Format("{0|:G0|(105)}", number);
+            var result3 = string.Format("{0|:G19|(106)}", number);
+            var result4 = string.Format("{0|:G20|(107)}", number);
+            var result5 = string.Format("{0|:g|(108)}", number);
+            var result6 = string.Format("{0|:g0|(109)}", number);
+            var result7 = string.Format("{0|:g19|(110)}", number);
+            var result8 = string.Format("{0|:g20|(111)}", number);
+        }
+
+        public void UInt64(ulong number)
+        {
+            var result1 = string.Format("{0|:G|(112)}", number);
+            var result2 = string.Format("{0|:G0|(113)}", number);
+            var result3 = string.Format("{0|:G20|(114)}", number);
+            var result4 = string.Format("{0|:G21|(115)}", number);
+            var result5 = string.Format("{0|:g|(116)}", number);
+            var result6 = string.Format("{0|:g0|(117)}", number);
+            var result7 = string.Format("{0|:g20|(118)}", number);
+            var result8 = string.Format("{0|:g21|(119)}", number);
+        }
+
+        public void UInt64(ulong? number)
+        {
+            var result1 = string.Format("{0|:G|(120)}", number);
+            var result2 = string.Format("{0|:G0|(121)}", number);
+            var result3 = string.Format("{0|:G20|(122)}", number);
+            var result4 = string.Format("{0|:G21|(123)}", number);
+            var result5 = string.Format("{0|:g|(124)}", number);
+            var result6 = string.Format("{0|:g0|(125)}", number);
+            var result7 = string.Format("{0|:g20|(126)}", number);
+            var result8 = string.Format("{0|:g21|(127)}", number);
+        }
+
+        public void Int128_(Int128 number)
+        {
+            var result1 = string.Format("{0|:G|(128)}", number);
+            var result2 = string.Format("{0|:G0|(129)}", number);
+            var result3 = string.Format("{0|:G39|(130)}", number);
+            var result4 = string.Format("{0|:G40|(131)}", number);
+            var result5 = string.Format("{0|:g|(132)}", number);
+            var result6 = string.Format("{0|:g0|(133)}", number);
+            var result7 = string.Format("{0|:g39|(134)}", number);
+            var result8 = string.Format("{0|:g40|(135)}", number);
+        }
+
+        public void Int128_(Int128? number)
+        {
+            var result1 = string.Format("{0|:G|(136)}", number);
+            var result2 = string.Format("{0|:G0|(137)}", number);
+            var result3 = string.Format("{0|:G39|(138)}", number);
+            var result4 = string.Format("{0|:G40|(139)}", number);
+            var result5 = string.Format("{0|:g|(140)}", number);
+            var result6 = string.Format("{0|:g0|(141)}", number);
+            var result7 = string.Format("{0|:g39|(142)}", number);
+            var result8 = string.Format("{0|:g40|(143)}", number);
+        }
+
+        public void UInt128_(UInt128 number)
+        {
+            var result1 = string.Format("{0|:G|(144)}", number);
+            var result2 = string.Format("{0|:G0|(145)}", number);
+            var result3 = string.Format("{0|:G39|(146)}", number);
+            var result4 = string.Format("{0|:G40|(147)}", number);
+            var result5 = string.Format("{0|:g|(148)}", number);
+            var result6 = string.Format("{0|:g0|(149)}", number);
+            var result7 = string.Format("{0|:g39|(150)}", number);
+            var result8 = string.Format("{0|:g40|(151)}", number);
+        }
+
+        public void UInt128_(UInt128? number)
+        {
+            var result1 = string.Format("{0|:G|(152)}", number);
+            var result2 = string.Format("{0|:G0|(153)}", number);
+            var result3 = string.Format("{0|:G39|(154)}", number);
+            var result4 = string.Format("{0|:G40|(155)}", number);
+            var result5 = string.Format("{0|:g|(156)}", number);
+            var result6 = string.Format("{0|:g0|(157)}", number);
+            var result7 = string.Format("{0|:g39|(158)}", number);
+            var result8 = string.Format("{0|:g40|(159)}", number);
+        }
+
+        public void IntPtr(nint number)
+        {
+            var result1 = string.Format("{0|:G|(160)}", number);
+            var result2 = string.Format("{0|:G0|(161)}", number);
+            var result3 = string.Format("{0|:g|(162)}", number);
+            var result4 = string.Format("{0|:g0|(163)}", number);
+        }
+
+        public void IntPtr(nint? number)
+        {
+            var result1 = string.Format("{0|:G|(164)}", number);
+            var result2 = string.Format("{0|:G0|(165)}", number);
+            var result3 = string.Format("{0|:g|(166)}", number);
+            var result4 = string.Format("{0|:g0|(167)}", number);
+        }
+
+        public void UIntPtr(nuint number)
+        {
+            var result1 = string.Format("{0|:G|(168)}", number);
+            var result2 = string.Format("{0|:G0|(169)}", number);
+            var result3 = string.Format("{0|:g|(170)}", number);
+            var result4 = string.Format("{0|:g0|(171)}", number);
+        }
+
+        public void UIntPtr(nuint? number)
+        {
+            var result1 = string.Format("{0|:G|(172)}", number);
+            var result2 = string.Format("{0|:G0|(173)}", number);
+            var result3 = string.Format("{0|:g|(174)}", number);
+            var result4 = string.Format("{0|:g0|(175)}", number);
+        }
+
+        public void Decimal(decimal number)
+        {
+            var result1 = string.Format("{0|:G|(176)}", number);
+            var result2 = string.Format("{0|:g|(177)}", number);
+        }
+
+        public void Decimal(decimal? number)
+        {
+            var result1 = string.Format("{0|:G|(178)}", number);
+            var result2 = string.Format("{0|:g|(179)}", number);
+        }
+
+        public void Double(double number)
+        {
+            var result1 = string.Format("{0|:G|(180)}", number);
+            var result2 = string.Format("{0|:G0|(181)}", number);
+        }
+
+        public void Double(double? number)
+        {
+            var result1 = string.Format("{0|:G|(182)}", number);
+            var result2 = string.Format("{0|:G0|(183)}", number);
+        }
+
+        public void Single(float number)
+        {
+            var result1 = string.Format("{0|:G|(184)}", number);
+            var result2 = string.Format("{0|:G0|(185)}", number);
+        }
+
+        public void Single(float? number)
+        {
+            var result1 = string.Format("{0|:G|(186)}", number);
+            var result2 = string.Format("{0|:G0|(187)}", number);
+        }
+
+        public void Half_(Half number)
+        {
+            var result1 = string.Format("{0|:G|(188)}", number);
+            var result2 = string.Format("{0|:G0|(189)}", number);
+        }
+
+        public void Half_(Half? number)
+        {
+            var result1 = string.Format("{0|:G|(190)}", number);
+            var result2 = string.Format("{0|:G0|(191)}", number);
+        }
+
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void Enum_(SampleEnum value)
+        {
+            var result1 = string.Format("{0|:G|(192)}", value);
+            var result2 = string.Format("{0|:g|(193)}", value);
+        }
+
+        public void Enum_(SampleEnum? value)
+        {
+            var result1 = string.Format("{0|:G|(194)}", value);
+            var result2 = string.Format("{0|:g|(195)}", value);
+        }
+
+        public void Guid_(Guid value)
+        {
+            var result1 = string.Format("{0|:D|(196)}", value);
+            var result2 = string.Format("{0|:d|(197)}", value);
+        }
+
+        public void Guid_(Guid? value)
+        {
+            var result1 = string.Format("{0|:D|(198)}", value);
+            var result2 = string.Format("{0|:d|(199)}", value);
+        }
+
+        public void TimeSpan_(TimeSpan value)
+        {
+            var result1 = string.Format("{0|:c|(200)}", value);
+            var result2 = string.Format("{0|:t|(201)}", value);
+            var result3 = string.Format("{0|:T|(202)}", value);
+        }
+
+        public void TimeSpan_(TimeSpan? value)
+        {
+            var result1 = string.Format("{0|:c|(203)}", value);
+            var result2 = string.Format("{0|:t|(204)}", value);
+            var result3 = string.Format("{0|:T|(205)}", value);
+        }
+
+        public void DateOnly_(DateOnly value)
+        {
+            var result = string.Format("{0|:d|(206)}", value);
+        }
+
+        public void DateOnly_(DateOnly? value)
+        {
+            var result = string.Format("{0|:d|(207)}", value);
+        }
+
+        public void TimeOnly_(TimeOnly value)
+        {
+            var result = string.Format("{0|:t|(208)}", value);
+        }
+
+        public void TimeOnly_(TimeOnly? value)
+        {
+            var result = string.Format("{0|:t|(209)}", value);
+        }
+    }
+}
+------------------------------------------------
+0: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+1: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+2: Specifying 'G3' is redundant.
+QUICKFIXES:
+Remove format specifier
+3: Specifying 'G4' is redundant.
+QUICKFIXES:
+Remove format specifier
+4: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+5: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+6: Specifying 'g3' is redundant.
+QUICKFIXES:
+Remove format specifier
+7: Specifying 'g4' is redundant.
+QUICKFIXES:
+Remove format specifier
+8: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+9: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+10: Specifying 'G3' is redundant.
+QUICKFIXES:
+Remove format specifier
+11: Specifying 'G4' is redundant.
+QUICKFIXES:
+Remove format specifier
+12: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+13: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+14: Specifying 'g3' is redundant.
+QUICKFIXES:
+Remove format specifier
+15: Specifying 'g4' is redundant.
+QUICKFIXES:
+Remove format specifier
+16: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+17: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+18: Specifying 'G3' is redundant.
+QUICKFIXES:
+Remove format specifier
+19: Specifying 'G4' is redundant.
+QUICKFIXES:
+Remove format specifier
+20: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+21: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+22: Specifying 'g3' is redundant.
+QUICKFIXES:
+Remove format specifier
+23: Specifying 'g4' is redundant.
+QUICKFIXES:
+Remove format specifier
+24: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+25: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+26: Specifying 'G3' is redundant.
+QUICKFIXES:
+Remove format specifier
+27: Specifying 'G4' is redundant.
+QUICKFIXES:
+Remove format specifier
+28: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+29: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+30: Specifying 'g3' is redundant.
+QUICKFIXES:
+Remove format specifier
+31: Specifying 'g4' is redundant.
+QUICKFIXES:
+Remove format specifier
+32: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+33: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+34: Specifying 'G5' is redundant.
+QUICKFIXES:
+Remove format specifier
+35: Specifying 'G6' is redundant.
+QUICKFIXES:
+Remove format specifier
+36: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+37: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+38: Specifying 'g5' is redundant.
+QUICKFIXES:
+Remove format specifier
+39: Specifying 'g6' is redundant.
+QUICKFIXES:
+Remove format specifier
+40: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+41: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+42: Specifying 'G5' is redundant.
+QUICKFIXES:
+Remove format specifier
+43: Specifying 'G6' is redundant.
+QUICKFIXES:
+Remove format specifier
+44: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+45: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+46: Specifying 'g5' is redundant.
+QUICKFIXES:
+Remove format specifier
+47: Specifying 'g6' is redundant.
+QUICKFIXES:
+Remove format specifier
+48: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+49: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+50: Specifying 'G5' is redundant.
+QUICKFIXES:
+Remove format specifier
+51: Specifying 'G6' is redundant.
+QUICKFIXES:
+Remove format specifier
+52: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+53: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+54: Specifying 'g5' is redundant.
+QUICKFIXES:
+Remove format specifier
+55: Specifying 'g6' is redundant.
+QUICKFIXES:
+Remove format specifier
+56: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+57: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+58: Specifying 'G5' is redundant.
+QUICKFIXES:
+Remove format specifier
+59: Specifying 'G6' is redundant.
+QUICKFIXES:
+Remove format specifier
+60: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+61: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+62: Specifying 'g5' is redundant.
+QUICKFIXES:
+Remove format specifier
+63: Specifying 'g6' is redundant.
+QUICKFIXES:
+Remove format specifier
+64: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+65: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+66: Specifying 'G10' is redundant.
+QUICKFIXES:
+Remove format specifier
+67: Specifying 'G11' is redundant.
+QUICKFIXES:
+Remove format specifier
+68: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+69: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+70: Specifying 'g10' is redundant.
+QUICKFIXES:
+Remove format specifier
+71: Specifying 'g11' is redundant.
+QUICKFIXES:
+Remove format specifier
+72: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+73: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+74: Specifying 'G10' is redundant.
+QUICKFIXES:
+Remove format specifier
+75: Specifying 'G11' is redundant.
+QUICKFIXES:
+Remove format specifier
+76: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+77: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+78: Specifying 'g10' is redundant.
+QUICKFIXES:
+Remove format specifier
+79: Specifying 'g11' is redundant.
+QUICKFIXES:
+Remove format specifier
+80: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+81: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+82: Specifying 'G10' is redundant.
+QUICKFIXES:
+Remove format specifier
+83: Specifying 'G11' is redundant.
+QUICKFIXES:
+Remove format specifier
+84: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+85: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+86: Specifying 'g10' is redundant.
+QUICKFIXES:
+Remove format specifier
+87: Specifying 'g11' is redundant.
+QUICKFIXES:
+Remove format specifier
+88: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+89: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+90: Specifying 'G10' is redundant.
+QUICKFIXES:
+Remove format specifier
+91: Specifying 'G11' is redundant.
+QUICKFIXES:
+Remove format specifier
+92: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+93: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+94: Specifying 'g10' is redundant.
+QUICKFIXES:
+Remove format specifier
+95: Specifying 'g11' is redundant.
+QUICKFIXES:
+Remove format specifier
+96: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+97: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+98: Specifying 'G19' is redundant.
+QUICKFIXES:
+Remove format specifier
+99: Specifying 'G20' is redundant.
+QUICKFIXES:
+Remove format specifier
+100: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+101: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+102: Specifying 'g19' is redundant.
+QUICKFIXES:
+Remove format specifier
+103: Specifying 'g20' is redundant.
+QUICKFIXES:
+Remove format specifier
+104: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+105: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+106: Specifying 'G19' is redundant.
+QUICKFIXES:
+Remove format specifier
+107: Specifying 'G20' is redundant.
+QUICKFIXES:
+Remove format specifier
+108: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+109: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+110: Specifying 'g19' is redundant.
+QUICKFIXES:
+Remove format specifier
+111: Specifying 'g20' is redundant.
+QUICKFIXES:
+Remove format specifier
+112: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+113: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+114: Specifying 'G20' is redundant.
+QUICKFIXES:
+Remove format specifier
+115: Specifying 'G21' is redundant.
+QUICKFIXES:
+Remove format specifier
+116: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+117: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+118: Specifying 'g20' is redundant.
+QUICKFIXES:
+Remove format specifier
+119: Specifying 'g21' is redundant.
+QUICKFIXES:
+Remove format specifier
+120: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+121: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+122: Specifying 'G20' is redundant.
+QUICKFIXES:
+Remove format specifier
+123: Specifying 'G21' is redundant.
+QUICKFIXES:
+Remove format specifier
+124: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+125: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+126: Specifying 'g20' is redundant.
+QUICKFIXES:
+Remove format specifier
+127: Specifying 'g21' is redundant.
+QUICKFIXES:
+Remove format specifier
+128: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+129: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+130: Specifying 'G39' is redundant.
+QUICKFIXES:
+Remove format specifier
+131: Specifying 'G40' is redundant.
+QUICKFIXES:
+Remove format specifier
+132: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+133: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+134: Specifying 'g39' is redundant.
+QUICKFIXES:
+Remove format specifier
+135: Specifying 'g40' is redundant.
+QUICKFIXES:
+Remove format specifier
+136: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+137: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+138: Specifying 'G39' is redundant.
+QUICKFIXES:
+Remove format specifier
+139: Specifying 'G40' is redundant.
+QUICKFIXES:
+Remove format specifier
+140: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+141: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+142: Specifying 'g39' is redundant.
+QUICKFIXES:
+Remove format specifier
+143: Specifying 'g40' is redundant.
+QUICKFIXES:
+Remove format specifier
+144: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+145: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+146: Specifying 'G39' is redundant.
+QUICKFIXES:
+Remove format specifier
+147: Specifying 'G40' is redundant.
+QUICKFIXES:
+Remove format specifier
+148: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+149: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+150: Specifying 'g39' is redundant.
+QUICKFIXES:
+Remove format specifier
+151: Specifying 'g40' is redundant.
+QUICKFIXES:
+Remove format specifier
+152: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+153: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+154: Specifying 'G39' is redundant.
+QUICKFIXES:
+Remove format specifier
+155: Specifying 'G40' is redundant.
+QUICKFIXES:
+Remove format specifier
+156: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+157: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+158: Specifying 'g39' is redundant.
+QUICKFIXES:
+Remove format specifier
+159: Specifying 'g40' is redundant.
+QUICKFIXES:
+Remove format specifier
+160: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+161: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+162: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+163: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+164: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+165: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+166: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+167: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+168: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+169: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+170: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+171: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+172: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+173: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+174: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+175: Specifying 'g0' is redundant.
+QUICKFIXES:
+Remove format specifier
+176: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+177: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+178: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+179: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+180: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+181: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+182: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+183: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+184: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+185: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+186: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+187: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+188: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+189: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+190: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+191: Specifying 'G0' is redundant.
+QUICKFIXES:
+Remove format specifier
+192: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+193: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+194: Specifying 'G' is redundant.
+QUICKFIXES:
+Remove format specifier
+195: Specifying 'g' is redundant.
+QUICKFIXES:
+Remove format specifier
+196: Specifying 'D' is redundant.
+QUICKFIXES:
+Remove format specifier
+197: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+198: Specifying 'D' is redundant.
+QUICKFIXES:
+Remove format specifier
+199: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+200: Specifying 'c' is redundant.
+QUICKFIXES:
+Remove format specifier
+201: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier
+202: Specifying 'T' is redundant.
+QUICKFIXES:
+Remove format specifier
+203: Specifying 'c' is redundant.
+QUICKFIXES:
+Remove format specifier
+204: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier
+205: Specifying 'T' is redundant.
+QUICKFIXES:
+Remove format specifier
+206: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+207: Specifying 'd' is redundant.
+QUICKFIXES:
+Remove format specifier
+208: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier
+209: Specifying 't' is redundant.
+QUICKFIXES:
+Remove format specifier

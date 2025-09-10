@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 [TestNetCore30(ANNOTATIONS_PACKAGE)]
 public sealed class CoerceValueRangeBoundaryQuickFixTests : QuickFixTestBase<CoerceValueRangeBoundary>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     [Test]
     public void TestCoerceLowerBoundaryForSignedType() => DoNamedTest2();

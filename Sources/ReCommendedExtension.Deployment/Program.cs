@@ -131,7 +131,7 @@ internal static class Program
 
         var executionDirectory = Path.GetFileName(Path.GetDirectoryName(executionDirectoryPath));
 
-        isReleaseBuild = string.Equals(executionDirectory, $"Release{targetPlatform:G}", StringComparison.OrdinalIgnoreCase);
+        isReleaseBuild = string.Equals(executionDirectory, $"Release{targetPlatform}", StringComparison.OrdinalIgnoreCase);
 
         var extensionProjectDirectory = Path.Combine(solutionDirectoryPath, "ReCommendedExtension");
 

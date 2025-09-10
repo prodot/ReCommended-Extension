@@ -1,0 +1,32 @@
+﻿using System;
+
+namespace Test
+{
+    public class DateTimes
+    {
+        public void ExpressionResult(DateTime dateTime)
+        {
+            var result = |dateTime.Equals(null)|(0);
+        }
+
+        public void Operator(DateTime dateTime, DateTime value)
+        {
+            var result1 = |dateTime.Equals(value)|(1);
+            var result2 = |DateTime.Equals(dateTime, value)|(2);
+        }
+
+        public void NoDetection(DateTime dateTime, DateTime value, DateTime? otherValue)
+        {
+            var result = dateTime.Equals(otherValue);
+
+            dateTime.Equals(null);
+
+            dateTime.Equals(value);
+            DateTime.Equals(dateTime, value);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always false.
+(1): ReSharper Suggestion: Use the '==' operator.
+(2): ReSharper Suggestion: Use the '==' operator.

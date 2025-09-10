@@ -46,12 +46,12 @@ namespace Test
     }
 
     [method: MustDisposeResource]
-    internal ref struct DisposableRefStruct()
+    internal ref struct |DisposableRefStruct|(6)()
     {
-        [|HandlesResourceDisposal|(6)]
+        [|HandlesResourceDisposal|(7)]
         public void Dispose() { }
 
-        [|HandlesResourceDisposal|(7)]
+        [|HandlesResourceDisposal|(8)]
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
         [HandlesResourceDisposal]
@@ -65,5 +65,6 @@ namespace Test
 (3): ReSharper Warning: Annotation is not valid for private methods.
 (4): ReSharper Warning: Annotation is redundant because a base method is already annotated with [HandlesResourceDisposal].
 (5): ReSharper Warning: Annotation is redundant for 'DisposeAsync' methods.
-(6): ReSharper Warning: Annotation is redundant for 'Dispose' methods.
-(7): ReSharper Warning: Annotation is redundant for 'DisposeAsync' methods.
+(6): ReSharper Warning: Struct is disposable, but not annotated with [MustDisposeResource] or [MustDisposeResource(false)].
+(7): ReSharper Warning: Annotation is redundant for 'Dispose' methods.
+(8): ReSharper Warning: Annotation is redundant for 'DisposeAsync' methods.

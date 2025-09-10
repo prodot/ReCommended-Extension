@@ -1,0 +1,164 @@
+﻿using System;
+
+namespace Test
+{
+    public class FormatStrings
+    {
+        public void RedundantFormatSpecifier(UInt128 number)
+        {
+            var result1 = string.Format("{0|:G|(0)}", number);
+            var result2 = string.Format("{0|:G0|(1)}", number);
+            var result3 = string.Format("{0|:G39|(2)}", number);
+            var result4 = string.Format("{0|:G40|(3)}", number);
+            var result5 = string.Format("{0|:g|(4)}", number);
+            var result6 = string.Format("{0|:g0|(5)}", number);
+            var result7 = string.Format("{0|:g39|(6)}", number);
+            var result8 = string.Format("{0|:g40|(7)}", number);
+        }
+
+        public void RedundantFormatSpecifier(UInt128? number)
+        {
+            var result1 = string.Format("{0|:G|(8)}", number);
+            var result2 = string.Format("{0|:G0|(9)}", number);
+            var result3 = string.Format("{0|:G39|(10)}", number);
+            var result4 = string.Format("{0|:G40|(11)}", number);
+            var result5 = string.Format("{0|:g|(12)}", number);
+            var result6 = string.Format("{0|:g0|(13)}", number);
+            var result7 = string.Format("{0|:g39|(14)}", number);
+            var result8 = string.Format("{0|:g40|(15)}", number);
+        }
+
+        public void RedundantFormatPrecisionSpecifier(UInt128 number)
+        {
+            var result11 = string.Format("{0:E|6|(16)}", number);
+            var result12 = string.Format("{0:e|6|(17)}", number);
+
+            var result21 = string.Format("{0:D|0|(18)}", number);
+            var result22 = string.Format("{0:D|1|(19)}", number);
+            var result23 = string.Format("{0:d|0|(20)}", number);
+            var result24 = string.Format("{0:d|1|(21)}", number);
+
+            var result31 = string.Format("{0:B|0|(22)}", number);
+            var result32 = string.Format("{0:B|1|(23)}", number);
+            var result33 = string.Format("{0:b|0|(24)}", number);
+            var result34 = string.Format("{0:b|1|(25)}", number);
+
+            var result41 = string.Format("{0:X|0|(26)}", number);
+            var result42 = string.Format("{0:X|1|(27)}", number);
+            var result43 = string.Format("{0:x|0|(28)}", number);
+            var result44 = string.Format("{0:x|1|(29)}", number);
+        }
+
+        public void RedundantFormatPrecisionSpecifier(UInt128? number)
+        {
+            var result11 = string.Format("{0:E|6|(30)}", number);
+            var result12 = string.Format("{0:e|6|(31)}", number);
+
+            var result21 = string.Format("{0:D|0|(32)}", number);
+            var result22 = string.Format("{0:D|1|(33)}", number);
+            var result23 = string.Format("{0:d|0|(34)}", number);
+            var result24 = string.Format("{0:d|1|(35)}", number);
+
+            var result31 = string.Format("{0:B|0|(36)}", number);
+            var result32 = string.Format("{0:B|1|(37)}", number);
+            var result33 = string.Format("{0:b|0|(38)}", number);
+            var result34 = string.Format("{0:b|1|(39)}", number);
+
+            var result41 = string.Format("{0:X|0|(40)}", number);
+            var result42 = string.Format("{0:X|1|(41)}", number);
+            var result43 = string.Format("{0:x|0|(42)}", number);
+            var result44 = string.Format("{0:x|1|(43)}", number);
+        }
+
+        public void SuspiciousFormatSpecifier(UInt128 number)
+        {
+            var result1 = string.Format("{0:|R|(44)}", number);
+            var result2 = string.Format("{0:|R3|(45)}", number);
+            var result3 = string.Format("{0:|r|(46)}", number);
+            var result4 = string.Format("{0:|r3|(47)}", number);
+        }
+
+        public void SuspiciousFormatSpecifier(UInt128? number)
+        {
+            var result1 = string.Format("{0:|R|(48)}", number);
+            var result2 = string.Format("{0:|R3|(49)}", number);
+            var result3 = string.Format("{0:|r|(50)}", number);
+            var result4 = string.Format("{0:|r3|(51)}", number);
+        }
+
+        public void NoDetection(UInt128 number)
+        {
+            var result1 = string.Format("{0:G38}", number);
+            var result2 = string.Format("{0:E}", number);
+            var result3 = string.Format("{0:E5}", number);
+            var result4 = string.Format("{0:D}", number);
+            var result5 = string.Format("{0:D2}", number);
+            var result6 = string.Format("{0:b8}", number);
+            var result7 = string.Format("{0:x8}", number);
+        }
+
+        public void NoDetection(UInt128? number)
+        {
+            var result1 = string.Format("{0:G38}", number);
+            var result2 = string.Format("{0:E}", number);
+            var result3 = string.Format("{0:E5}", number);
+            var result4 = string.Format("{0:D}", number);
+            var result5 = string.Format("{0:D2}", number);
+            var result6 = string.Format("{0:b8}", number);
+            var result7 = string.Format("{0:x8}", number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'G' is redundant.
+(1): ReSharper Dead Code: Specifying 'G0' is redundant.
+(2): ReSharper Dead Code: Specifying 'G39' is redundant.
+(3): ReSharper Dead Code: Specifying 'G40' is redundant.
+(4): ReSharper Dead Code: Specifying 'g' is redundant.
+(5): ReSharper Dead Code: Specifying 'g0' is redundant.
+(6): ReSharper Dead Code: Specifying 'g39' is redundant.
+(7): ReSharper Dead Code: Specifying 'g40' is redundant.
+(8): ReSharper Dead Code: Specifying 'G' is redundant.
+(9): ReSharper Dead Code: Specifying 'G0' is redundant.
+(10): ReSharper Dead Code: Specifying 'G39' is redundant.
+(11): ReSharper Dead Code: Specifying 'G40' is redundant.
+(12): ReSharper Dead Code: Specifying 'g' is redundant.
+(13): ReSharper Dead Code: Specifying 'g0' is redundant.
+(14): ReSharper Dead Code: Specifying 'g39' is redundant.
+(15): ReSharper Dead Code: Specifying 'g40' is redundant.
+(16): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(17): ReSharper Dead Code: The format precision specifier is redundant, 'e' has the same effect.
+(18): ReSharper Dead Code: The format precision specifier is redundant, 'D' has the same effect.
+(19): ReSharper Dead Code: The format precision specifier is redundant, 'D' has the same effect.
+(20): ReSharper Dead Code: The format precision specifier is redundant, 'd' has the same effect.
+(21): ReSharper Dead Code: The format precision specifier is redundant, 'd' has the same effect.
+(22): ReSharper Dead Code: The format precision specifier is redundant, 'B' has the same effect.
+(23): ReSharper Dead Code: The format precision specifier is redundant, 'B' has the same effect.
+(24): ReSharper Dead Code: The format precision specifier is redundant, 'b' has the same effect.
+(25): ReSharper Dead Code: The format precision specifier is redundant, 'b' has the same effect.
+(26): ReSharper Dead Code: The format precision specifier is redundant, 'X' has the same effect.
+(27): ReSharper Dead Code: The format precision specifier is redundant, 'X' has the same effect.
+(28): ReSharper Dead Code: The format precision specifier is redundant, 'x' has the same effect.
+(29): ReSharper Dead Code: The format precision specifier is redundant, 'x' has the same effect.
+(30): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(31): ReSharper Dead Code: The format precision specifier is redundant, 'e' has the same effect.
+(32): ReSharper Dead Code: The format precision specifier is redundant, 'D' has the same effect.
+(33): ReSharper Dead Code: The format precision specifier is redundant, 'D' has the same effect.
+(34): ReSharper Dead Code: The format precision specifier is redundant, 'd' has the same effect.
+(35): ReSharper Dead Code: The format precision specifier is redundant, 'd' has the same effect.
+(36): ReSharper Dead Code: The format precision specifier is redundant, 'B' has the same effect.
+(37): ReSharper Dead Code: The format precision specifier is redundant, 'B' has the same effect.
+(38): ReSharper Dead Code: The format precision specifier is redundant, 'b' has the same effect.
+(39): ReSharper Dead Code: The format precision specifier is redundant, 'b' has the same effect.
+(40): ReSharper Dead Code: The format precision specifier is redundant, 'X' has the same effect.
+(41): ReSharper Dead Code: The format precision specifier is redundant, 'X' has the same effect.
+(42): ReSharper Dead Code: The format precision specifier is redundant, 'x' has the same effect.
+(43): ReSharper Dead Code: The format precision specifier is redundant, 'x' has the same effect.
+(44): ReSharper Warning: The format specifier might be unsupported.
+(45): ReSharper Warning: The format specifier might be unsupported.
+(46): ReSharper Warning: The format specifier might be unsupported.
+(47): ReSharper Warning: The format specifier might be unsupported.
+(48): ReSharper Warning: The format specifier might be unsupported.
+(49): ReSharper Warning: The format specifier might be unsupported.
+(50): ReSharper Warning: The format specifier might be unsupported.
+(51): ReSharper Warning: The format specifier might be unsupported.

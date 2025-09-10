@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -15,10 +14,10 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseType;
 [TestNet80]
 public sealed class BaseTypeQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypeQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseType\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RemoveRedundantBaseTypeDeclarationHint or NotResolvedError;
+        => highlighting is RemoveRedundantBaseTypeDeclarationHint || highlighting.IsError();
 
     [Test]
     public void TestAvailability() => DoNamedTest2();

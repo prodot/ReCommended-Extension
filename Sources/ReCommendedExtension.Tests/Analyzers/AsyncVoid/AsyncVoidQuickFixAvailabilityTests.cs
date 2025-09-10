@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -13,10 +12,10 @@ namespace ReCommendedExtension.Tests.Analyzers.AsyncVoid;
 [TestNetFramework45]
 public sealed class AsyncVoidQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AsyncVoidQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning or NotResolvedError;
+        => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning || highlighting.IsError();
 
     [Test]
     public void TestAnonymousMethodAvailability() => DoNamedTest2();

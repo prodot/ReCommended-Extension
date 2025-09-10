@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.NotifyPropertyChangedInvocatorFro
 [TestFixture]
 public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixTests : QuickFixTestBase<RemoveNotifyPropertyChangedInvocatorFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructorQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructor\QuickFixes";
 
     [Test]
     public void TestNotifyPropertyChangedInvocatorFromConstructor() => DoNamedTest2();

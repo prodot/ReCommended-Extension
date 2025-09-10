@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 [TestPackages(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotationQuickFixTests : QuickFixTestBase<RemoveAttributeFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     [Test]
     public void TestNotAllowed() => DoNamedTest2();

@@ -1,0 +1,12 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace Types
+{
+    [method: MustDisposeResource]
+    [MustDisposeResource]
+    class Disposable{caret}Class() : IDisposable
+    {
+        public void Dispose() { }
+    }
+}

@@ -1,0 +1,32 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void ExpressionResult(TimeSpan timeSpan)
+        {
+            var result = |timeSpan.Equals(null)|(0);
+        }
+
+        public void Operator(TimeSpan timeSpan, TimeSpan obj)
+        {
+            var result1 = |timeSpan.Equals(obj)|(1);
+            var result2 = |TimeSpan.Equals(timeSpan, obj)|(2);
+        }
+
+        public void NoDetection(TimeSpan timeSpan, TimeSpan obj, TimeSpan? otherObj)
+        {
+            var result = timeSpan.Equals(otherObj);
+
+            timeSpan.Equals(null);
+
+            timeSpan.Equals(obj);
+            TimeSpan.Equals(timeSpan, obj);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always false.
+(1): ReSharper Suggestion: Use the '==' operator.
+(2): ReSharper Suggestion: Use the '==' operator.

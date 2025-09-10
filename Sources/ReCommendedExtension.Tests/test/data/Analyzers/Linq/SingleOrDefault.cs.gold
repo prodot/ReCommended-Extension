@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Test
 {
-    class CustomList<T> : IList<T>
+    public class CustomList<T> : IList<T>
     {
         public int IndexOf(T item) => throw new NotImplementedException();
     

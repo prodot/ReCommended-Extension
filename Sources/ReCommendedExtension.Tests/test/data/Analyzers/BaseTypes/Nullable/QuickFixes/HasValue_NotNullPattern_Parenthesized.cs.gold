@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Nullables
+    {
+        public void HasValue(int? nullable)
+        {
+            var result = (nullable is not n{caret}ull).ToString();
+        }
+    }
+}

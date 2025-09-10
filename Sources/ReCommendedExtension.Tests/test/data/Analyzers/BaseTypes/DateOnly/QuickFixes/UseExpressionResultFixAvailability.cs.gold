@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Test
+{
+    public class DatesOnly
+    {
+        public void Equals(DateOnly dateOnly)
+        {
+            var result = |dateOnly.Equals(null)|(0);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always false.
+QUICKFIXES:
+Replace with 'false'

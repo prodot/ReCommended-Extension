@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Decimals
+    {
+        public void Round(decimal d, MidpointRounding mode)
+        {
+            var result = decimal.Round(d, 0{caret}, mode);
+        }
+    }
+}

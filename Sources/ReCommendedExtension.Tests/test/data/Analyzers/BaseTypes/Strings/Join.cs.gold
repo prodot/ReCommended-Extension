@@ -1,0 +1,305 @@
+﻿using System;
+using System.Text;
+
+namespace Test
+{
+    public class StringBuilders
+    {
+        public void ExpressionResult_Empty(string s, char c, string?[] stringItems, string stringItem)
+        {
+            var result11 = |string.Join(s, (object?[])[])|(0);
+            var result12 = |string.Join(s, new object?[0])|(1);
+            var result13 = |string.Join(s, new object?[] { })|(2);
+            var result14 = |string.Join(s, Array.Empty<object?>())|(3);
+
+            var result21 = |string.Join(s, (int[])[])|(4);
+            var result22 = |string.Join(s, new int[0])|(5);
+            var result23 = |string.Join(s, new int[] { })|(6);
+            var result24 = |string.Join(s, Array.Empty<int>())|(7);
+
+            var result31 = |string.Join(s, (string?[])[])|(8);
+            var result32 = |string.Join(s, new string?[0])|(9);
+            var result33 = |string.Join(s, new string?[] { })|(10);
+            var result34 = |string.Join(s, Array.Empty<string?>())|(11);
+
+            var result41 = |string.Join(c, (object?[])[])|(12);
+            var result42 = |string.Join(c, new object?[0])|(13);
+            var result43 = |string.Join(c, new object?[] { })|(14);
+            var result44 = |string.Join(c, Array.Empty<object?>())|(15);
+
+            var result51 = |string.Join(c, (int[])[])|(16);
+            var result52 = |string.Join(c, new int[0])|(17);
+            var result53 = |string.Join(c, new int[] { })|(18);
+            var result54 = |string.Join(c, Array.Empty<int>())|(19);
+
+            var result61 = |string.Join(c, (string?[])[])|(20);
+            var result62 = |string.Join(c, new string?[0])|(21);
+            var result63 = |string.Join(c, new string?[] { })|(22);
+            var result64 = |string.Join(c, Array.Empty<string?>())|(23);
+
+            var result71 = |string.Join(s, default(ReadOnlySpan<object?>))|(24);
+            var result72 = |string.Join(s, new ReadOnlySpan<object?>())|(25);
+            var result73 = |string.Join(s, (ReadOnlySpan<object?>)[])|(26);
+
+            var result81 = |string.Join(s, default(ReadOnlySpan<string?>))|(27);
+            var result82 = |string.Join(s, new ReadOnlySpan<string?>())|(28);
+            var result83 = |string.Join(s, (ReadOnlySpan<string?>)[])|(29);
+
+            var result91 = |string.Join(c, default(ReadOnlySpan<object?>))|(30);
+            var result92 = |string.Join(c, new ReadOnlySpan<object?>())|(31);
+            var result93 = |string.Join(c, (ReadOnlySpan<object?>)[])|(32);
+
+            var resultA1 = |string.Join(c, default(ReadOnlySpan<string?>))|(33);
+            var resultA2 = |string.Join(c, new ReadOnlySpan<string?>())|(34);
+            var resultA3 = |string.Join(c, (ReadOnlySpan<string?>)[])|(35);
+
+            var resultB1 = |string.Join(s, stringItems, 0, 0)|(36);
+            var resultB2 = |string.Join(s, [stringItem], 1, 0)|(37);
+
+            var resultC1 = |string.Join(c, stringItems, 0, 0)|(38);
+            var resultC2 = |string.Join(c, [stringItem], 1, 0)|(39);
+        }
+
+        public void ExpressionResult_Item(string s, char c, object objectItem, int intItem, string stringItem, string?[] stringItems)
+        {
+            var result11 = |string.Join(s, (object?[])[objectItem])|(40);
+            var result12 = |string.Join(s, new[] { objectItem })|(41);
+
+            var result21 = |string.Join(s, (int[])[intItem])|(42);
+            var result22 = |string.Join(s, new[] { intItem })|(43);
+
+            var result31 = |string.Join(s, (string?[])[stringItem])|(44);
+            var result32 = |string.Join(s, new[] { stringItem })|(45);
+
+            var result41 = |string.Join(c, (object?[])[objectItem])|(46);
+            var result43 = |string.Join(c, new[] { objectItem })|(47);
+
+            var result51 = |string.Join(c, (int[])[intItem])|(48);
+            var result52 = |string.Join(c, new[] { intItem })|(49);
+
+            var result61 = |string.Join(c, (string?[])[stringItem])|(50);
+            var result62 = |string.Join(c, new[] { stringItem })|(51);
+
+            var result71 = |string.Join(s, [objectItem])|(52);
+            var result72 = |string.Join(s, objectItem)|(53);
+
+            var result81 = |string.Join(s, (ReadOnlySpan<string?>)[stringItem])|(54);
+            var result82 = |string.Join(s, stringItem)|(55);
+
+            var result91 = |string.Join(c, [objectItem])|(56);
+            var result92 = |string.Join(c, objectItem)|(57);
+
+            var resultA1 = |string.Join(c, (ReadOnlySpan<string?>)[stringItem])|(58);
+            var resultA2 = |string.Join(c, stringItem)|(59);
+
+            var resultB1 = |string.Join(s, [stringItem], 0, 1)|(60);
+
+            var resultC1 = |string.Join(c, [stringItem], 0, 1)|(61);
+        }
+
+        public void SingleCharacter(object?[] objectItems, int[] intItems, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings, int startIndex, int count)
+        {
+            var result1 = string.Join(|","|(62), objectItems);
+            var result2 = string.Join(|","|(63), intItems);
+            var result3 = string.Join(|","|(64), stringItems);
+            var result4 = string.Join(|","|(65), spanOfObjects);
+            var result5 = string.Join(|","|(66), spanOfStrings);
+            var result6 = string.Join(|","|(67), stringItems, startIndex, count);
+        }
+
+        public void NoDetection(string s, char c, object objectItem, object?[] objectItems, int intItem, int[] intItems, string stringItem, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings)
+        {
+            var result11 = string.Join(s, (object?[])[objectItem, objectItem]);
+            var result12 = string.Join(s, new[] { objectItem, objectItem });
+            var result13 = string.Join(s, objectItems);
+
+            var result21 = string.Join(s, (int[])[intItem, intItem]);
+            var result22 = string.Join(s, new[] { intItem, intItem });
+            var result23 = string.Join(s, intItems);
+
+            var result31 = string.Join(s, (string?[])[stringItem, stringItem]);
+            var result32 = string.Join(s, new[] { stringItem, stringItem });
+            var result33 = string.Join(s, stringItems);
+            var result34 = string.Join(separator: s, stringItem, stringItem);
+
+            var result41 = string.Join(c, (object?[])[objectItem, objectItem]);
+            var result42 = string.Join(c, new[] { objectItem, objectItem });
+            var result43 = string.Join(c, objectItems);
+
+            var result51 = string.Join(c, (int[])[intItem, intItem]);
+            var result52 = string.Join(c, new[] { intItem, intItem });
+            var result53 = string.Join(c, intItems);
+
+            var result61 = string.Join(c, (string?[])[stringItem, stringItem]);
+            var result62 = string.Join(c, new[] { stringItem, stringItem });
+            var result63 = string.Join(c, stringItems);
+
+            var result71 = string.Join(s, objectItem, objectItem);
+            var result72 = string.Join(s, [objectItem, objectItem]);
+            var result73 = string.Join(s, spanOfObjects);
+
+            var result81 = string.Join(s, stringItem, stringItem);
+            var result82 = string.Join(s, (ReadOnlySpan<string?>)[stringItem, stringItem]);
+            var result83 = string.Join(s, spanOfStrings);
+
+            var result91 = string.Join(c, objectItem, objectItem);
+            var result92 = string.Join(c, [objectItem, objectItem]);
+            var result93 = string.Join(c, spanOfObjects);
+
+            var resultA1 = string.Join(c, stringItem, stringItem);
+            var resultA2 = string.Join(c, (ReadOnlySpan<string?>)[stringItem, stringItem]);
+            var resultA3 = string.Join(c, spanOfStrings);
+
+            string.Join(s, (object?[])[]);
+            string.Join(s, new object?[0]);
+            string.Join(s, new object?[] { });
+            string.Join(s, Array.Empty<object?>());
+            string.Join(s, (object?[])[objectItem]);
+            string.Join(s, new[] { objectItem });
+
+            string.Join(s, default(ReadOnlySpan<object?>));
+            string.Join(s, new ReadOnlySpan<object?>());
+            string.Join(s, (ReadOnlySpan<object?>)[]);
+            string.Join(s, [objectItem]);
+            string.Join(s, objectItem);
+
+            string.Join(s, (int[])[]);
+            string.Join(s, new int[0]);
+            string.Join(s, new int[] { });
+            string.Join(s, Array.Empty<int>());
+            string.Join(s, (int[])[intItem]);
+            string.Join(s, new[] { intItem });
+
+            string.|Join|(68)(s, (string?[])[]);
+            string.|Join|(69)(s, new string?[0]);
+            string.|Join|(70)(s, new string?[] { });
+            string.|Join|(71)(s, Array.Empty<string?>());
+            string.|Join|(72)(s, (string?[])[stringItem]);
+            string.|Join|(73)(s, new[] { stringItem });
+
+            string.|Join|(74)(s, stringItems, 0, 0);
+            string.|Join|(75)(s, [stringItem], 1, 0);
+            string.|Join|(76)(s, [stringItem], 0, 1);
+
+            string.Join(s, default(ReadOnlySpan<string?>));
+            string.Join(s, new ReadOnlySpan<string?>());
+            string.Join(s, (ReadOnlySpan<string?>)[]);
+            string.Join(s, (ReadOnlySpan<string?>)[stringItem]);
+
+            string.Join(c, (object?[])[]);
+            string.Join(c, new object?[0]);
+            string.Join(c, new object?[] { });
+            string.Join(c, Array.Empty<object?>());
+            string.Join(c, (object?[])[objectItem]);
+            string.Join(c, new[] { objectItem });
+
+            string.Join(c, default(ReadOnlySpan<object?>));
+            string.Join(c, new ReadOnlySpan<object?>());
+            string.Join(c, (ReadOnlySpan<object?>)[]);
+            string.Join(c, [objectItem]);
+            string.Join(c, objectItem);
+
+            string.Join(c, (int[])[]);
+            string.Join(c, new int[0]);
+            string.Join(c, new int[] { });
+            string.Join(c, Array.Empty<int>());
+            string.Join(c, (int[])[intItem]);
+            string.Join(c, new[] { intItem });
+
+            string.Join(c, (string?[])[]);
+            string.Join(c, new string?[0]);
+            string.Join(c, new string?[] { });
+            string.Join(c, Array.Empty<string?>());
+            string.Join(c, (string?[])[stringItem]);
+            string.Join(c, new[] { stringItem });
+
+            string.Join(c, stringItems, 0, 0);
+            string.Join(c, [stringItem], 1, 0);
+            string.Join(c, [stringItem], 0, 1);
+
+            string.Join(c, default(ReadOnlySpan<string?>));
+            string.Join(c, new ReadOnlySpan<string?>());
+            string.Join(c, (ReadOnlySpan<string?>)[]);
+            string.Join(c, (ReadOnlySpan<string?>)[stringItem]);
+            string.Join(c, stringItem);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always an empty string.
+(1): ReSharper Suggestion: The expression is always an empty string.
+(2): ReSharper Suggestion: The expression is always an empty string.
+(3): ReSharper Suggestion: The expression is always an empty string.
+(4): ReSharper Suggestion: The expression is always an empty string.
+(5): ReSharper Suggestion: The expression is always an empty string.
+(6): ReSharper Suggestion: The expression is always an empty string.
+(7): ReSharper Suggestion: The expression is always an empty string.
+(8): ReSharper Suggestion: The expression is always an empty string.
+(9): ReSharper Suggestion: The expression is always an empty string.
+(10): ReSharper Suggestion: The expression is always an empty string.
+(11): ReSharper Suggestion: The expression is always an empty string.
+(12): ReSharper Suggestion: The expression is always an empty string.
+(13): ReSharper Suggestion: The expression is always an empty string.
+(14): ReSharper Suggestion: The expression is always an empty string.
+(15): ReSharper Suggestion: The expression is always an empty string.
+(16): ReSharper Suggestion: The expression is always an empty string.
+(17): ReSharper Suggestion: The expression is always an empty string.
+(18): ReSharper Suggestion: The expression is always an empty string.
+(19): ReSharper Suggestion: The expression is always an empty string.
+(20): ReSharper Suggestion: The expression is always an empty string.
+(21): ReSharper Suggestion: The expression is always an empty string.
+(22): ReSharper Suggestion: The expression is always an empty string.
+(23): ReSharper Suggestion: The expression is always an empty string.
+(24): ReSharper Suggestion: The expression is always an empty string.
+(25): ReSharper Suggestion: The expression is always an empty string.
+(26): ReSharper Suggestion: The expression is always an empty string.
+(27): ReSharper Suggestion: The expression is always an empty string.
+(28): ReSharper Suggestion: The expression is always an empty string.
+(29): ReSharper Suggestion: The expression is always an empty string.
+(30): ReSharper Suggestion: The expression is always an empty string.
+(31): ReSharper Suggestion: The expression is always an empty string.
+(32): ReSharper Suggestion: The expression is always an empty string.
+(33): ReSharper Suggestion: The expression is always an empty string.
+(34): ReSharper Suggestion: The expression is always an empty string.
+(35): ReSharper Suggestion: The expression is always an empty string.
+(36): ReSharper Suggestion: The expression is always an empty string.
+(37): ReSharper Suggestion: The expression is always an empty string.
+(38): ReSharper Suggestion: The expression is always an empty string.
+(39): ReSharper Suggestion: The expression is always an empty string.
+(40): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(41): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(42): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(43): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(44): ReSharper Suggestion: The expression is always the same as the passed element.
+(45): ReSharper Suggestion: The expression is always the same as the passed element.
+(46): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(47): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(48): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(49): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(50): ReSharper Suggestion: The expression is always the same as the passed element.
+(51): ReSharper Suggestion: The expression is always the same as the passed element.
+(52): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(53): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(54): ReSharper Suggestion: The expression is always the same as the passed element.
+(55): ReSharper Suggestion: The expression is always the same as the passed element.
+(56): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(57): ReSharper Suggestion: The expression is always the same as the passed element converted to string.
+(58): ReSharper Suggestion: The expression is always the same as the passed element.
+(59): ReSharper Suggestion: The expression is always the same as the passed element.
+(60): ReSharper Suggestion: The expression is always the same as the passed element.
+(61): ReSharper Suggestion: The expression is always the same as the passed element.
+(62): ReSharper Suggestion: Pass the single character.
+(63): ReSharper Suggestion: Pass the single character.
+(64): ReSharper Suggestion: Pass the single character.
+(65): ReSharper Suggestion: Pass the single character.
+(66): ReSharper Suggestion: Pass the single character.
+(67): ReSharper Suggestion: Pass the single character.
+(68): ReSharper Warning: Return value of pure method is not used
+(69): ReSharper Warning: Return value of pure method is not used
+(70): ReSharper Warning: Return value of pure method is not used
+(71): ReSharper Warning: Return value of pure method is not used
+(72): ReSharper Warning: Return value of pure method is not used
+(73): ReSharper Warning: Return value of pure method is not used
+(74): ReSharper Warning: Return value of pure method is not used
+(75): ReSharper Warning: Return value of pure method is not used
+(76): ReSharper Warning: Return value of pure method is not used

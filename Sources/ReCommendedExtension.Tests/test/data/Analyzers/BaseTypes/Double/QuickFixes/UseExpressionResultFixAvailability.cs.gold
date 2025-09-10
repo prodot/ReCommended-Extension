@@ -1,0 +1,24 @@
+﻿using System;
+
+namespace Test
+{
+    public class Doubles
+    {
+        public void Equals(double number)
+        {
+            var result = |number.Equals(null)|(0);
+        }
+
+        public void GetTypeCode(double number)
+        {
+            var result = |number.GetTypeCode()|(1);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always false.
+QUICKFIXES:
+Replace with 'false'
+1: The expression is always TypeCode.Double.
+QUICKFIXES:
+Replace with 'TypeCode.Double'

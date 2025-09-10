@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Int32s
+    {
+        public void RotateLeft()
+        {
+            var result = {caret}1;
+        }
+    }
+}

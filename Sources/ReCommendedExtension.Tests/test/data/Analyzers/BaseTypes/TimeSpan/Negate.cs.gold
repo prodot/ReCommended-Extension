@@ -1,0 +1,19 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void Operator(TimeSpan timeSpan)
+        {
+            var result = |timeSpan.Negate()|(0);
+        }
+
+        public void NoDetection(TimeSpan timeSpan)
+        {
+            timeSpan.Negate();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '-' operator.

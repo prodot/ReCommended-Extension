@@ -1,0 +1,1634 @@
+﻿using System;
+
+namespace Test
+{
+    public class InterpolatedStringItems
+    {
+        public void Byte(byte number)
+        {
+            var result11 = $"{number:E|6|(0)}";
+            var result12 = $"{number:e|6|(1)}";
+
+            var result21 = $"{number:D|0|(2)}";
+            var result22 = $"{number:D|1|(3)}";
+            var result23 = $"{number:d|0|(4)}";
+            var result24 = $"{number:d|1|(5)}";
+
+            var result31 = $"{number:B|0|(6)}";
+            var result32 = $"{number:B|1|(7)}";
+            var result33 = $"{number:b|0|(8)}";
+            var result34 = $"{number:b|1|(9)}";
+
+            var result41 = $"{number:X|0|(10)}";
+            var result42 = $"{number:X|1|(11)}";
+            var result43 = $"{number:x|0|(12)}";
+            var result44 = $"{number:x|1|(13)}";
+        }
+
+        public void Byte(byte? number)
+        {
+            var result11 = $"{number:E|6|(14)}";
+            var result12 = $"{number:e|6|(15)}";
+
+            var result21 = $"{number:D|0|(16)}";
+            var result22 = $"{number:D|1|(17)}";
+            var result23 = $"{number:d|0|(18)}";
+            var result24 = $"{number:d|1|(19)}";
+
+            var result31 = $"{number:B|0|(20)}";
+            var result32 = $"{number:B|1|(21)}";
+            var result33 = $"{number:b|0|(22)}";
+            var result34 = $"{number:b|1|(23)}";
+
+            var result41 = $"{number:X|0|(24)}";
+            var result42 = $"{number:X|1|(25)}";
+            var result43 = $"{number:x|0|(26)}";
+            var result44 = $"{number:x|1|(27)}";
+        }
+
+        public void SByte(sbyte number)
+        {
+            var result11 = $"{number:E|6|(28)}";
+            var result12 = $"{number:e|6|(29)}";
+
+            var result21 = $"{number:D|0|(30)}";
+            var result22 = $"{number:D|1|(31)}";
+            var result23 = $"{number:d|0|(32)}";
+            var result24 = $"{number:d|1|(33)}";
+
+            var result31 = $"{number:B|0|(34)}";
+            var result32 = $"{number:B|1|(35)}";
+            var result33 = $"{number:b|0|(36)}";
+            var result34 = $"{number:b|1|(37)}";
+
+            var result41 = $"{number:X|0|(38)}";
+            var result42 = $"{number:X|1|(39)}";
+            var result43 = $"{number:x|0|(40)}";
+            var result44 = $"{number:x|1|(41)}";
+        }
+
+        public void SByte(sbyte? number)
+        {
+            var result11 = $"{number:E|6|(42)}";
+            var result12 = $"{number:e|6|(43)}";
+
+            var result21 = $"{number:D|0|(44)}";
+            var result22 = $"{number:D|1|(45)}";
+            var result23 = $"{number:d|0|(46)}";
+            var result24 = $"{number:d|1|(47)}";
+
+            var result31 = $"{number:B|0|(48)}";
+            var result32 = $"{number:B|1|(49)}";
+            var result33 = $"{number:b|0|(50)}";
+            var result34 = $"{number:b|1|(51)}";
+
+            var result41 = $"{number:X|0|(52)}";
+            var result42 = $"{number:X|1|(53)}";
+            var result43 = $"{number:x|0|(54)}";
+            var result44 = $"{number:x|1|(55)}";
+        }
+
+        public void Int16(short number)
+        {
+            var result11 = $"{number:E|6|(56)}";
+            var result12 = $"{number:e|6|(57)}";
+
+            var result21 = $"{number:D|0|(58)}";
+            var result22 = $"{number:D|1|(59)}";
+            var result23 = $"{number:d|0|(60)}";
+            var result24 = $"{number:d|1|(61)}";
+
+            var result31 = $"{number:B|0|(62)}";
+            var result32 = $"{number:B|1|(63)}";
+            var result33 = $"{number:b|0|(64)}";
+            var result34 = $"{number:b|1|(65)}";
+
+            var result41 = $"{number:X|0|(66)}";
+            var result42 = $"{number:X|1|(67)}";
+            var result43 = $"{number:x|0|(68)}";
+            var result44 = $"{number:x|1|(69)}";
+        }
+
+        public void Int16(short? number)
+        {
+            var result11 = $"{number:E|6|(70)}";
+            var result12 = $"{number:e|6|(71)}";
+
+            var result21 = $"{number:D|0|(72)}";
+            var result22 = $"{number:D|1|(73)}";
+            var result23 = $"{number:d|0|(74)}";
+            var result24 = $"{number:d|1|(75)}";
+
+            var result31 = $"{number:B|0|(76)}";
+            var result32 = $"{number:B|1|(77)}";
+            var result33 = $"{number:b|0|(78)}";
+            var result34 = $"{number:b|1|(79)}";
+
+            var result41 = $"{number:X|0|(80)}";
+            var result42 = $"{number:X|1|(81)}";
+            var result43 = $"{number:x|0|(82)}";
+            var result44 = $"{number:x|1|(83)}";
+        }
+
+        public void UInt16(ushort number)
+        {
+            var result11 = $"{number:E|6|(84)}";
+            var result12 = $"{number:e|6|(85)}";
+
+            var result21 = $"{number:D|0|(86)}";
+            var result22 = $"{number:D|1|(87)}";
+            var result23 = $"{number:d|0|(88)}";
+            var result24 = $"{number:d|1|(89)}";
+
+            var result31 = $"{number:B|0|(90)}";
+            var result32 = $"{number:B|1|(91)}";
+            var result33 = $"{number:b|0|(92)}";
+            var result34 = $"{number:b|1|(93)}";
+
+            var result41 = $"{number:X|0|(94)}";
+            var result42 = $"{number:X|1|(95)}";
+            var result43 = $"{number:x|0|(96)}";
+            var result44 = $"{number:x|1|(97)}";
+        }
+
+        public void UInt16(ushort? number)
+        {
+            var result11 = $"{number:E|6|(98)}";
+            var result12 = $"{number:e|6|(99)}";
+
+            var result21 = $"{number:D|0|(100)}";
+            var result22 = $"{number:D|1|(101)}";
+            var result23 = $"{number:d|0|(102)}";
+            var result24 = $"{number:d|1|(103)}";
+
+            var result31 = $"{number:B|0|(104)}";
+            var result32 = $"{number:B|1|(105)}";
+            var result33 = $"{number:b|0|(106)}";
+            var result34 = $"{number:b|1|(107)}";
+
+            var result41 = $"{number:X|0|(108)}";
+            var result42 = $"{number:X|1|(109)}";
+            var result43 = $"{number:x|0|(110)}";
+            var result44 = $"{number:x|1|(111)}";
+        }
+
+        public void Int32(int number)
+        {
+            var result11 = $"{number:E|6|(112)}";
+            var result12 = $"{number:e|6|(113)}";
+
+            var result21 = $"{number:D|0|(114)}";
+            var result22 = $"{number:D|1|(115)}";
+            var result23 = $"{number:d|0|(116)}";
+            var result24 = $"{number:d|1|(117)}";
+
+            var result31 = $"{number:B|0|(118)}";
+            var result32 = $"{number:B|1|(119)}";
+            var result33 = $"{number:b|0|(120)}";
+            var result34 = $"{number:b|1|(121)}";
+
+            var result41 = $"{number:X|0|(122)}";
+            var result42 = $"{number:X|1|(123)}";
+            var result43 = $"{number:x|0|(124)}";
+            var result44 = $"{number:x|1|(125)}";
+        }
+
+        public void Int32(int? number)
+        {
+            var result11 = $"{number:E|6|(126)}";
+            var result12 = $"{number:e|6|(127)}";
+
+            var result21 = $"{number:D|0|(128)}";
+            var result22 = $"{number:D|1|(129)}";
+            var result23 = $"{number:d|0|(130)}";
+            var result24 = $"{number:d|1|(131)}";
+
+            var result31 = $"{number:B|0|(132)}";
+            var result32 = $"{number:B|1|(133)}";
+            var result33 = $"{number:b|0|(134)}";
+            var result34 = $"{number:b|1|(135)}";
+
+            var result41 = $"{number:X|0|(136)}";
+            var result42 = $"{number:X|1|(137)}";
+            var result43 = $"{number:x|0|(138)}";
+            var result44 = $"{number:x|1|(139)}";
+        }
+
+        public void UInt32(uint number)
+        {
+            var result11 = $"{number:E|6|(140)}";
+            var result12 = $"{number:e|6|(141)}";
+
+            var result21 = $"{number:D|0|(142)}";
+            var result22 = $"{number:D|1|(143)}";
+            var result23 = $"{number:d|0|(144)}";
+            var result24 = $"{number:d|1|(145)}";
+
+            var result31 = $"{number:B|0|(146)}";
+            var result32 = $"{number:B|1|(147)}";
+            var result33 = $"{number:b|0|(148)}";
+            var result34 = $"{number:b|1|(149)}";
+
+            var result41 = $"{number:X|0|(150)}";
+            var result42 = $"{number:X|1|(151)}";
+            var result43 = $"{number:x|0|(152)}";
+            var result44 = $"{number:x|1|(153)}";
+        }
+
+        public void UInt32(uint? number)
+        {
+            var result11 = $"{number:E|6|(154)}";
+            var result12 = $"{number:e|6|(155)}";
+
+            var result21 = $"{number:D|0|(156)}";
+            var result22 = $"{number:D|1|(157)}";
+            var result23 = $"{number:d|0|(158)}";
+            var result24 = $"{number:d|1|(159)}";
+
+            var result31 = $"{number:B|0|(160)}";
+            var result32 = $"{number:B|1|(161)}";
+            var result33 = $"{number:b|0|(162)}";
+            var result34 = $"{number:b|1|(163)}";
+
+            var result41 = $"{number:X|0|(164)}";
+            var result42 = $"{number:X|1|(165)}";
+            var result43 = $"{number:x|0|(166)}";
+            var result44 = $"{number:x|1|(167)}";
+        }
+
+        public void Int64(long number)
+        {
+            var result11 = $"{number:E|6|(168)}";
+            var result12 = $"{number:e|6|(169)}";
+
+            var result21 = $"{number:D|0|(170)}";
+            var result22 = $"{number:D|1|(171)}";
+            var result23 = $"{number:d|0|(172)}";
+            var result24 = $"{number:d|1|(173)}";
+
+            var result31 = $"{number:B|0|(174)}";
+            var result32 = $"{number:B|1|(175)}";
+            var result33 = $"{number:b|0|(176)}";
+            var result34 = $"{number:b|1|(177)}";
+
+            var result41 = $"{number:X|0|(178)}";
+            var result42 = $"{number:X|1|(179)}";
+            var result43 = $"{number:x|0|(180)}";
+            var result44 = $"{number:x|1|(181)}";
+        }
+
+        public void Int64(long? number)
+        {
+            var result11 = $"{number:E|6|(182)}";
+            var result12 = $"{number:e|6|(183)}";
+
+            var result21 = $"{number:D|0|(184)}";
+            var result22 = $"{number:D|1|(185)}";
+            var result23 = $"{number:d|0|(186)}";
+            var result24 = $"{number:d|1|(187)}";
+
+            var result31 = $"{number:B|0|(188)}";
+            var result32 = $"{number:B|1|(189)}";
+            var result33 = $"{number:b|0|(190)}";
+            var result34 = $"{number:b|1|(191)}";
+
+            var result41 = $"{number:X|0|(192)}";
+            var result42 = $"{number:X|1|(193)}";
+            var result43 = $"{number:x|0|(194)}";
+            var result44 = $"{number:x|1|(195)}";
+        }
+
+        public void UInt64(ulong number)
+        {
+            var result11 = $"{number:E|6|(196)}";
+            var result12 = $"{number:e|6|(197)}";
+
+            var result21 = $"{number:D|0|(198)}";
+            var result22 = $"{number:D|1|(199)}";
+            var result23 = $"{number:d|0|(200)}";
+            var result24 = $"{number:d|1|(201)}";
+
+            var result31 = $"{number:B|0|(202)}";
+            var result32 = $"{number:B|1|(203)}";
+            var result33 = $"{number:b|0|(204)}";
+            var result34 = $"{number:b|1|(205)}";
+
+            var result41 = $"{number:X|0|(206)}";
+            var result42 = $"{number:X|1|(207)}";
+            var result43 = $"{number:x|0|(208)}";
+            var result44 = $"{number:x|1|(209)}";
+        }
+
+        public void UInt64(ulong? number)
+        {
+            var result11 = $"{number:E|6|(210)}";
+            var result12 = $"{number:e|6|(211)}";
+
+            var result21 = $"{number:D|0|(212)}";
+            var result22 = $"{number:D|1|(213)}";
+            var result23 = $"{number:d|0|(214)}";
+            var result24 = $"{number:d|1|(215)}";
+
+            var result31 = $"{number:B|0|(216)}";
+            var result32 = $"{number:B|1|(217)}";
+            var result33 = $"{number:b|0|(218)}";
+            var result34 = $"{number:b|1|(219)}";
+
+            var result41 = $"{number:X|0|(220)}";
+            var result42 = $"{number:X|1|(221)}";
+            var result43 = $"{number:x|0|(222)}";
+            var result44 = $"{number:x|1|(223)}";
+        }
+
+        public void Int128_(Int128 number)
+        {
+            var result11 = $"{number:E|6|(224)}";
+            var result12 = $"{number:e|6|(225)}";
+
+            var result21 = $"{number:D|0|(226)}";
+            var result22 = $"{number:D|1|(227)}";
+            var result23 = $"{number:d|0|(228)}";
+            var result24 = $"{number:d|1|(229)}";
+
+            var result31 = $"{number:B|0|(230)}";
+            var result32 = $"{number:B|1|(231)}";
+            var result33 = $"{number:b|0|(232)}";
+            var result34 = $"{number:b|1|(233)}";
+
+            var result41 = $"{number:X|0|(234)}";
+            var result42 = $"{number:X|1|(235)}";
+            var result43 = $"{number:x|0|(236)}";
+            var result44 = $"{number:x|1|(237)}";
+        }
+
+        public void Int128_(Int128? number)
+        {
+            var result11 = $"{number:E|6|(238)}";
+            var result12 = $"{number:e|6|(239)}";
+
+            var result21 = $"{number:D|0|(240)}";
+            var result22 = $"{number:D|1|(241)}";
+            var result23 = $"{number:d|0|(242)}";
+            var result24 = $"{number:d|1|(243)}";
+
+            var result31 = $"{number:B|0|(244)}";
+            var result32 = $"{number:B|1|(245)}";
+            var result33 = $"{number:b|0|(246)}";
+            var result34 = $"{number:b|1|(247)}";
+
+            var result41 = $"{number:X|0|(248)}";
+            var result42 = $"{number:X|1|(249)}";
+            var result43 = $"{number:x|0|(250)}";
+            var result44 = $"{number:x|1|(251)}";
+        }
+
+        public void UInt128_(UInt128 number)
+        {
+            var result11 = $"{number:E|6|(252)}";
+            var result12 = $"{number:e|6|(253)}";
+
+            var result21 = $"{number:D|0|(254)}";
+            var result22 = $"{number:D|1|(255)}";
+            var result23 = $"{number:d|0|(256)}";
+            var result24 = $"{number:d|1|(257)}";
+
+            var result31 = $"{number:B|0|(258)}";
+            var result32 = $"{number:B|1|(259)}";
+            var result33 = $"{number:b|0|(260)}";
+            var result34 = $"{number:b|1|(261)}";
+
+            var result41 = $"{number:X|0|(262)}";
+            var result42 = $"{number:X|1|(263)}";
+            var result43 = $"{number:x|0|(264)}";
+            var result44 = $"{number:x|1|(265)}";
+        }
+
+        public void UInt128_(UInt128? number)
+        {
+            var result11 = $"{number:E|6|(266)}";
+            var result12 = $"{number:e|6|(267)}";
+
+            var result21 = $"{number:D|0|(268)}";
+            var result22 = $"{number:D|1|(269)}";
+            var result23 = $"{number:d|0|(270)}";
+            var result24 = $"{number:d|1|(271)}";
+
+            var result31 = $"{number:B|0|(272)}";
+            var result32 = $"{number:B|1|(273)}";
+            var result33 = $"{number:b|0|(274)}";
+            var result34 = $"{number:b|1|(275)}";
+
+            var result41 = $"{number:X|0|(276)}";
+            var result42 = $"{number:X|1|(277)}";
+            var result43 = $"{number:x|0|(278)}";
+            var result44 = $"{number:x|1|(279)}";
+        }
+
+        public void IntPtr(nint number)
+        {
+            var result11 = $"{number:E|6|(280)}";
+            var result12 = $"{number:e|6|(281)}";
+
+            var result21 = $"{number:D|0|(282)}";
+            var result22 = $"{number:D|1|(283)}";
+            var result23 = $"{number:d|0|(284)}";
+            var result24 = $"{number:d|1|(285)}";
+
+            var result31 = $"{number:B|0|(286)}";
+            var result32 = $"{number:B|1|(287)}";
+            var result33 = $"{number:b|0|(288)}";
+            var result34 = $"{number:b|1|(289)}";
+
+            var result41 = $"{number:X|0|(290)}";
+            var result42 = $"{number:X|1|(291)}";
+            var result43 = $"{number:x|0|(292)}";
+            var result44 = $"{number:x|1|(293)}";
+        }
+
+        public void IntPtr(nint? number)
+        {
+            var result11 = $"{number:E|6|(294)}";
+            var result12 = $"{number:e|6|(295)}";
+
+            var result21 = $"{number:D|0|(296)}";
+            var result22 = $"{number:D|1|(297)}";
+            var result23 = $"{number:d|0|(298)}";
+            var result24 = $"{number:d|1|(299)}";
+
+            var result31 = $"{number:B|0|(300)}";
+            var result32 = $"{number:B|1|(301)}";
+            var result33 = $"{number:b|0|(302)}";
+            var result34 = $"{number:b|1|(303)}";
+
+            var result41 = $"{number:X|0|(304)}";
+            var result42 = $"{number:X|1|(305)}";
+            var result43 = $"{number:x|0|(306)}";
+            var result44 = $"{number:x|1|(307)}";
+        }
+
+        public void UIntPtr(nuint number)
+        {
+            var result11 = $"{number:E|6|(308)}";
+            var result12 = $"{number:e|6|(309)}";
+
+            var result21 = $"{number:D|0|(310)}";
+            var result22 = $"{number:D|1|(311)}";
+            var result23 = $"{number:d|0|(312)}";
+            var result24 = $"{number:d|1|(313)}";
+
+            var result31 = $"{number:B|0|(314)}";
+            var result32 = $"{number:B|1|(315)}";
+            var result33 = $"{number:b|0|(316)}";
+            var result34 = $"{number:b|1|(317)}";
+
+            var result41 = $"{number:X|0|(318)}";
+            var result42 = $"{number:X|1|(319)}";
+            var result43 = $"{number:x|0|(320)}";
+            var result44 = $"{number:x|1|(321)}";
+        }
+
+        public void UIntPtr(nuint? number)
+        {
+            var result11 = $"{number:E|6|(322)}";
+            var result12 = $"{number:e|6|(323)}";
+
+            var result21 = $"{number:D|0|(324)}";
+            var result22 = $"{number:D|1|(325)}";
+            var result23 = $"{number:d|0|(326)}";
+            var result24 = $"{number:d|1|(327)}";
+
+            var result31 = $"{number:B|0|(328)}";
+            var result32 = $"{number:B|1|(329)}";
+            var result33 = $"{number:b|0|(330)}";
+            var result34 = $"{number:b|1|(331)}";
+
+            var result41 = $"{number:X|0|(332)}";
+            var result42 = $"{number:X|1|(333)}";
+            var result43 = $"{number:x|0|(334)}";
+            var result44 = $"{number:x|1|(335)}";
+        }
+
+        public void Decimal(decimal number)
+        {
+            var result11 = $"{number:E|6|(336)}";
+            var result12 = $"{number:e|6|(337)}";
+        }
+
+        public void Decimal(decimal? number)
+        {
+            var result11 = $"{number:E|6|(338)}";
+            var result12 = $"{number:e|6|(339)}";
+        }
+
+        public void Double(double number)
+        {
+            var result11 = $"{number:E|6|(340)}";
+            var result12 = $"{number:e|6|(341)}";
+        }
+
+        public void Double(double? number)
+        {
+            var result11 = $"{number:E|6|(342)}";
+            var result12 = $"{number:e|6|(343)}";
+        }
+
+        public void Single(float number)
+        {
+            var result11 = $"{number:E|6|(344)}";
+            var result12 = $"{number:e|6|(345)}";
+        }
+
+        public void Single(float? number)
+        {
+            var result11 = $"{number:E|6|(346)}";
+            var result12 = $"{number:e|6|(347)}";
+        }
+
+        public void Half_(Half number)
+        {
+            var result11 = $"{number:E|6|(348)}";
+            var result12 = $"{number:e|6|(349)}";
+
+            var result21 = $"{number:R|3|(350)}";
+            var result22 = $"{number:r|3|(351)}";
+        }
+
+        public void Half_(Half? number)
+        {
+            var result11 = $"{number:E|6|(352)}";
+            var result12 = $"{number:e|6|(353)}";
+
+            var result21 = $"{number:R|3|(354)}";
+            var result22 = $"{number:r|3|(355)}";
+        }
+    }
+}
+------------------------------------------------
+0: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+1: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+2: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+3: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+4: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+5: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+6: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+7: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+8: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+9: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+10: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+11: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+12: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+13: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+14: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+15: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+16: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+17: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+18: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+19: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+20: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+21: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+22: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+23: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+24: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+25: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+26: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+27: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+28: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+29: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+30: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+31: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+32: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+33: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+34: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+35: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+36: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+37: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+38: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+39: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+40: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+41: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+42: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+43: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+44: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+45: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+46: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+47: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+48: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+49: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+50: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+51: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+52: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+53: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+54: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+55: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+56: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+57: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+58: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+59: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+60: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+61: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+62: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+63: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+64: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+65: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+66: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+67: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+68: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+69: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+70: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+71: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+72: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+73: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+74: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+75: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+76: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+77: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+78: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+79: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+80: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+81: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+82: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+83: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+84: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+85: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+86: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+87: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+88: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+89: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+90: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+91: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+92: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+93: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+94: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+95: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+96: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+97: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+98: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+99: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+100: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+101: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+102: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+103: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+104: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+105: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+106: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+107: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+108: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+109: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+110: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+111: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+112: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+113: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+114: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+115: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+116: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+117: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+118: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+119: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+120: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+121: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+122: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+123: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+124: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+125: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+126: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+127: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+128: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+129: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+130: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+131: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+132: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+133: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+134: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+135: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+136: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+137: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+138: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+139: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+140: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+141: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+142: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+143: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+144: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+145: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+146: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+147: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+148: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+149: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+150: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+151: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+152: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+153: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+154: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+155: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+156: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+157: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+158: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+159: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+160: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+161: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+162: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+163: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+164: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+165: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+166: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+167: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+168: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+169: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+170: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+171: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+172: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+173: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+174: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+175: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+176: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+177: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+178: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+179: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+180: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+181: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+182: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+183: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+184: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+185: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+186: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+187: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+188: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+189: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+190: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+191: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+192: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+193: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+194: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+195: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+196: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+197: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+198: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+199: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+200: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+201: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+202: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+203: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+204: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+205: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+206: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+207: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+208: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+209: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+210: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+211: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+212: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+213: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+214: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+215: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+216: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+217: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+218: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+219: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+220: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+221: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+222: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+223: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+224: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+225: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+226: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+227: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+228: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+229: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+230: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+231: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+232: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+233: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+234: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+235: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+236: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+237: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+238: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+239: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+240: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+241: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+242: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+243: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+244: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+245: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+246: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+247: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+248: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+249: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+250: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+251: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+252: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+253: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+254: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+255: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+256: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+257: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+258: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+259: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+260: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+261: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+262: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+263: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+264: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+265: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+266: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+267: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+268: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+269: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+270: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+271: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+272: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+273: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+274: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+275: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+276: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+277: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+278: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+279: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+280: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+281: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+282: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+283: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+284: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+285: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+286: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+287: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+288: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+289: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+290: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+291: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+292: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+293: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+294: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+295: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+296: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+297: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+298: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+299: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+300: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+301: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+302: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+303: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+304: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+305: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+306: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+307: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+308: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+309: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+310: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+311: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+312: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+313: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+314: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+315: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+316: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+317: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+318: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+319: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+320: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+321: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+322: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+323: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+324: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+325: The format precision specifier is redundant, 'D' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+326: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+327: The format precision specifier is redundant, 'd' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+328: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+329: The format precision specifier is redundant, 'B' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+330: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+331: The format precision specifier is redundant, 'b' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+332: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+333: The format precision specifier is redundant, 'X' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+334: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+335: The format precision specifier is redundant, 'x' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+336: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+337: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+338: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+339: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+340: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+341: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+342: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+343: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+344: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+345: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+346: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+347: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+348: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+349: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+350: The format precision specifier is redundant, 'R' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+351: The format precision specifier is redundant, 'r' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+352: The format precision specifier is redundant, 'E' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+353: The format precision specifier is redundant, 'e' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+354: The format precision specifier is redundant, 'R' has the same effect.
+QUICKFIXES:
+Remove format precision specifier
+355: The format precision specifier is redundant, 'r' has the same effect.
+QUICKFIXES:
+Remove format precision specifier

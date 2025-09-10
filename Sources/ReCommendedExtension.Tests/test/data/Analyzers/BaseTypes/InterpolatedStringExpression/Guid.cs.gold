@@ -1,0 +1,34 @@
+﻿using System;
+
+namespace Test
+{
+    public class InterpolatedStringItems
+    {
+        public void RedundantFormatSpecifier(Guid value)
+        {
+            var result1 = $"{value|:D|(0)}";
+            var result2 = $"{value|:d|(1)}";
+        }
+
+        public void RedundantFormatSpecifier(Guid? value)
+        {
+            var result1 = $"{value|:D|(2)}";
+            var result2 = $"{value|:d|(3)}";
+        }
+
+        public void NoDetection(Guid value)
+        {
+            var result = $"{value:N}";
+        }
+
+        public void NoDetection(Guid? value)
+        {
+            var result = $"{value:N}";
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'D' is redundant.
+(1): ReSharper Dead Code: Specifying 'd' is redundant.
+(2): ReSharper Dead Code: Specifying 'D' is redundant.
+(3): ReSharper Dead Code: Specifying 'd' is redundant.

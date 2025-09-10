@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 [TestNet80(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotationArgumentQuickFixTests : QuickFixTestBase<RemoveAttributeArgumentFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     [Test]
     public void TestRedundantAnnotationArgument() => DoNamedTest2();

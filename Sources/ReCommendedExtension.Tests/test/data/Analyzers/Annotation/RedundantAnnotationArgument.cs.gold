@@ -23,18 +23,38 @@ namespace Test
         public void Dispose() { }
     }
 
+    [MustDisposeResource(|true|(3))]
+    internal struct Struct : IDisposable
+    {
+        public void Dispose() { }
+    }
+
+    internal struct StructWithConstructor : IDisposable
+    {
+        [MustDisposeResource(|true|(4))]
+        public StructWithConstructor() { }
+
+        public void Dispose() { }
+    }
+
+    [method: MustDisposeResource(|true|(5))]
+    internal struct StructWithPrimaryConstructor() : IDisposable
+    {
+        public void Dispose() { }
+    }
+
     internal class Methods
     {
-        [MustDisposeResource(|true|(3))]
+        [MustDisposeResource(|true|(6))]
         public IDisposable Method() => throw new NotImplementedException();
 
         public void LocalFunctions()
         {
-            [MustDisposeResource(|true|(4))]
+            [MustDisposeResource(|true|(7))]
             IDisposable LocalFunction() => throw new NotImplementedException();
         }
 
-        public void Parameters([MustDisposeResource(|true|(5))] out IDisposable parameter) => throw new NotImplementedException();
+        public void Parameters([MustDisposeResource(|true|(8))] out IDisposable parameter) => throw new NotImplementedException();
     }
 
     [MustDisposeResource(false)]
@@ -50,3 +70,6 @@ namespace Test
 (3): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
 (4): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
 (5): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
+(6): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
+(7): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.
+(8): ReSharper Suggestion: Passing 'true' to the [MustDisposeResource] annotation is redundant.

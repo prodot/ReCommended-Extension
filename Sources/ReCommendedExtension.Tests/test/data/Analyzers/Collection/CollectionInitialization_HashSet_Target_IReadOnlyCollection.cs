@@ -100,9 +100,7 @@ namespace TargetReadOnlyCollection
         void Consumer(IReadOnlyCollection<T> items) { }
 
         IReadOnlyCollection<T> Property01 { get; } = new HashSet<T>();
-        IReadOnlyCollection<T> Property02 { get; } = new HashSet<T> { 1, 2, 3 };
         IReadOnlyCollection<T> Property03 { get; set; } = new HashSet<T>(8);
-        IReadOnlyCollection<T> Property04 { get; set; } = new HashSet<T>(8) { 1, 2, 3 };
     }
 
     internal class A { }

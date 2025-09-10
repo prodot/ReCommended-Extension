@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Characters
+    {
+        public void GetTypeCode(char character)
+        {
+            var result = {caret}TypeCode.Char;
+        }
+    }
+}

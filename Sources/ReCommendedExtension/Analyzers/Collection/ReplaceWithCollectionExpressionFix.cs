@@ -57,9 +57,8 @@ public sealed class ReplaceWithCollectionExpressionFix(UseTargetTypedCollectionE
 
                 if (declaredElement is ITypeParametersOwner typeParametersOwner)
                 {
-                    var typeArguments = (from typeParameter in typeParametersOwner.TypeParameters select substitution[typeParameter]).ToList();
-
-                    highlighting.MethodReferenceToSetInferredTypeArguments.SetTypeArguments(typeArguments);
+                    highlighting.MethodReferenceToSetInferredTypeArguments.SetTypeArguments(
+                        [..from typeParameter in typeParametersOwner.TypeParameters select substitution[typeParameter]]);
                 }
             }
 

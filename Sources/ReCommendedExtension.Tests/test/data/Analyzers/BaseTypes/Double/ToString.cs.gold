@@ -1,0 +1,118 @@
+﻿using System;
+
+namespace Test
+{
+    public class Doubles
+    {
+        public void RedundantArgument(double number, string format, IFormatProvider provider)
+        {
+            var result11 = number.ToString(|null as string|(0));
+            var result12 = number.ToString(|""|(1));
+
+            var result21 = number.ToString(|"G"|(2));
+            var result22 = number.ToString(|"G0"|(3));
+
+            var result31 = number.ToString(|null as IFormatProvider|(4));
+            var result32 = number.ToString(|null|(5), provider);
+            var result33 = number.ToString(|""|(6), provider);
+            var result34 = number.ToString(format, |null|(7));
+            var result35 = number.ToString(|""|(8), |null|(9));
+
+            var result41 = number.ToString(|"G"|(10), provider);
+            var result42 = number.ToString(|"G0"|(11), provider);
+        }
+
+        public void RedundantFormatPrecisionSpecifier(double number, IFormatProvider provider)
+        {
+            var result11 = number.ToString("E|6|(12)");
+            var result12 = number.ToString("e|6|(13)");
+
+            var result21 = number.ToString("E|6|(14)", provider);
+            var result22 = number.ToString("e|6|(15)", provider);
+
+            const string formatSpecifier = "E6";
+
+            var result31 = number.ToString(|formatSpecifier|(16));
+            var result32 = number.ToString(|formatSpecifier|(17), provider);
+
+            var result41 = number.ToString(@"E|6|(18)");
+            var result42 = number.ToString($@"E|6|(19)");
+            var result43 = number.ToString(@$"E|6|(20)");
+            var result44 = number.ToString("""E|06|(21)""");
+            var result45 = number.ToString($"""E|06|(22)""");
+            var result46 = number.ToString($$"""E|06|(23)""");
+            var result47 = number.ToString("""
+                                           E|006|(24)
+                                           """);
+        }
+
+        public void PassOtherFormatSpecifier(double number, IFormatProvider provider)
+        {
+            var result11 = number.ToString(|"R"|(25));
+            var result12 = number.ToString(|"R3"|(26));
+            var result13 = number.ToString(|"r"|(27));
+            var result14 = number.ToString(|"r3"|(28));
+
+            var result21 = number.ToString(|"R"|(29), provider);
+            var result22 = number.ToString(|"R3"|(30), provider);
+            var result23 = number.ToString(|"r"|(31), provider);
+            var result24 = number.ToString(|"r3"|(32), provider);
+        }
+
+        public void NoDetection(double number, string format, IFormatProvider provider)
+        {
+            var result11 = number.ToString(format);
+            var result12 = number.ToString("G2");
+            var result13 = number.ToString("g");
+            var result14 = number.ToString("g0");
+            var result15 = number.ToString("E");
+            var result16 = number.ToString("E5");
+            var result17 = number.ToString("F");
+            var result18 = number.ToString("F2");
+
+            var result21 = number.ToString(provider);
+            var result22 = number.ToString(format, provider);
+            var result23 = number.ToString("G2", provider);
+            var result24 = number.ToString("g", provider);
+            var result25 = number.ToString("g0", provider);
+            var result26 = number.ToString("E", provider);
+            var result27 = number.ToString("E5", provider);
+            var result28 = number.ToString("F", provider);
+            var result29 = number.ToString("F2", provider);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing null or an empty string is redundant.
+(1): ReSharper Dead Code: Passing null or an empty string is redundant.
+(2): ReSharper Dead Code: Passing "G" is redundant.
+(3): ReSharper Dead Code: Passing "G0" is redundant.
+(4): ReSharper Dead Code: Passing null is redundant.
+(5): ReSharper Dead Code: Passing null or an empty string is redundant.
+(6): ReSharper Dead Code: Passing null or an empty string is redundant.
+(7): ReSharper Dead Code: Passing null is redundant.
+(8): ReSharper Dead Code: Passing null or an empty string is redundant.
+(9): ReSharper Dead Code: Passing null is redundant.
+(10): ReSharper Dead Code: Passing "G" is redundant.
+(11): ReSharper Dead Code: Passing "G0" is redundant.
+(12): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(13): ReSharper Dead Code: The format precision specifier is redundant, 'e' has the same effect.
+(14): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(15): ReSharper Dead Code: The format precision specifier is redundant, 'e' has the same effect.
+(16): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(17): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(18): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(19): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(20): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(21): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(22): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(23): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(24): ReSharper Dead Code: The format precision specifier is redundant, 'E' has the same effect.
+(25): ReSharper Suggestion: Pass the 'G17' format specifier (string length may vary).
+(26): ReSharper Suggestion: Pass the 'G17' format specifier (string length may vary).
+(27): ReSharper Suggestion: Pass the 'G17' format specifier (string length may vary).
+(28): ReSharper Suggestion: Pass the 'G17' format specifier (string length may vary).
+(29): ReSharper Suggestion: Pass the 'G17' format specifier (string length may vary).
+(30): ReSharper Suggestion: Pass the 'G17' format specifier (string length may vary).
+(31): ReSharper Suggestion: Pass the 'G17' format specifier (string length may vary).
+(32): ReSharper Suggestion: Pass the 'G17' format specifier (string length may vary).

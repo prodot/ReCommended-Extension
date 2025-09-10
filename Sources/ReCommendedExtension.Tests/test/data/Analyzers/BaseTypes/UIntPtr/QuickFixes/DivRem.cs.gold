@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class UIntPtrs
+    {
+        public void DivRem()
+        {
+            var result = (Quotient: (nuint)0, {caret}Remainder: (nuint)0);
+        }
+    }
+}

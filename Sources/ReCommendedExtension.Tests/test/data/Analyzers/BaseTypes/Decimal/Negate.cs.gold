@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Decimals
+    {
+        public void Operator(decimal d)
+        {
+            var result = |decimal.Negate(d)|(0);
+        }
+
+        public void NoDetection(decimal d)
+        {
+            decimal.Negate(d);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '-' operator.

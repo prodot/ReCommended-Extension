@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DateTimes
+    {
+        public void _Constructors(int year, int month, int day, Calendar calendar)
+        {
+            var result = new DateTime(year, month, day, 0, {caret}0, 0, calendar);
+        }
+    }
+}

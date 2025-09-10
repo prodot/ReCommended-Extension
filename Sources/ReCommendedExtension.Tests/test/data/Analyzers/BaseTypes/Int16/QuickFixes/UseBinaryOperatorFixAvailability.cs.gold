@@ -1,0 +1,30 @@
+﻿namespace Test
+{
+    public class Int16s
+    {
+        public void Equals(short number, short obj)
+        {
+            var result = |number.Equals(obj)|(0);
+        }
+
+        public void IsNegative(short number)
+        {
+            var result = |short.IsNegative(number)|(1);
+        }
+
+        public void IsPositive(short number)
+        {
+            var result = |short.IsPositive(number)|(2);
+        }
+    }
+}
+------------------------------------------------
+0: Use the '==' operator.
+QUICKFIXES:
+Replace with 'number == obj'
+1: Use the '<' operator to compare to 0.
+QUICKFIXES:
+Replace with 'number < 0'
+2: Use the '>=' operator to compare to 0.
+QUICKFIXES:
+Replace with 'number >= 0'

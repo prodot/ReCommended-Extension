@@ -1,0 +1,237 @@
+﻿using System;
+
+namespace Test
+{
+    public class Int16s
+    {
+        public void Clamp(short number)
+        {
+            var result11 = |short.Clamp(number, 1, 0x01)|(0);
+
+            short result21 = |short.Clamp(number, 1, 0x01)|(1);
+
+            var result31 = |short.Clamp(number, short.MinValue, short.MaxValue)|(2);
+            var result32 = |short.Clamp(1, short.MinValue, short.MaxValue)|(3);
+
+            short result41 = |short.Clamp(number, short.MinValue, short.MaxValue)|(4);
+            short result42 = |short.Clamp(1, short.MinValue, short.MaxValue)|(5);
+
+            var result51 = |Math.Clamp(number, (short)1, (short)1)|(6);
+            var result52 = |Math.Clamp(number, short.MinValue, short.MaxValue)|(7);
+        }
+
+        public void DivRem(short left)
+        {
+            var result11 = |short.DivRem(0, 10)|(8);
+
+            (short, short) result21 = |short.DivRem(0, 10)|(9);
+
+            (short quotient, short remainder) result32 = |short.DivRem(0, 10)|(10);
+
+            var result71 = |Math.DivRem((short)0, (short)10)|(11);
+        }
+
+        public void Equals(short number)
+        {
+            var result = |number.Equals(null)|(12);
+        }
+
+        public void GetTypeCode(short number)
+        {
+            var result = |number.GetTypeCode()|(13);
+        }
+
+        public void Max()
+        {
+            var result1 = |short.Max(10, 0x0A)|(14);
+
+            short result2 = |short.Max(10, 0x0A)|(15);
+
+            var result3 = |Math.Max((short)10, (short)10)|(16);
+        }
+
+        public void MaxMagnitude()
+        {
+            var result1 = |short.MaxMagnitude(10, 0x0A)|(17);
+
+            short result2 = |short.MaxMagnitude(10, 0x0A)|(18);
+        }
+
+        public void Min()
+        {
+            var result1 = |short.Min(10, 0x0A)|(19);
+
+            short result2 = |short.Min(10, 0x0A)|(20);
+
+            var result3 = |Math.Min((short)10, (short)10)|(21);
+        }
+
+        public void MinMagnitude()
+        {
+            var result1 = |short.MinMagnitude(10, 0x0A)|(22);
+
+            short result2 = |short.MinMagnitude(10, 0x0A)|(23);
+        }
+
+        public void RotateLeft(short n)
+        {
+            const int c = 1;
+
+            var result11 = |short.RotateLeft(n, 0)|(24);
+            var result12 = |short.RotateLeft(0x01, 0)|(25);
+            var result13 = |short.RotateLeft(1 + 1, 0)|(26);
+            var result14 = |short.RotateLeft(c, 0)|(27);
+
+            short result21 = |short.RotateLeft(n, 0)|(28);
+            short result22 = |short.RotateLeft(1, 0)|(29);
+            short result23 = |short.RotateLeft(1 + 1, 0)|(30);
+            short result24 = |short.RotateLeft(c, 0)|(31);
+        }
+
+        public void RotateRight(short n)
+        {
+            const int c = 1;
+
+            var result11 = |short.RotateRight(n, 0)|(32);
+            var result12 = |short.RotateRight(0x01, 0)|(33);
+            var result13 = |short.RotateRight(1 + 1, 0)|(34);
+            var result14 = |short.RotateRight(c, 0)|(35);
+
+            short result21 = |short.RotateRight(n, 0)|(36);
+            short result22 = |short.RotateRight(1, 0)|(37);
+            short result23 = |short.RotateRight(1 + 1, 0)|(38);
+            short result24 = |short.RotateRight(c, 0)|(39);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '(short)0x01'
+Replace with '(short)1'
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '0x01'
+Replace with '1'
+2: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+3: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(short)1'
+4: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+5: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with '(short)1'
+7: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+8: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (short)0, Remainder: (short)0)'
+9: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+10: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+11: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (short)0, Remainder: (short)0)'
+12: The expression is always false.
+QUICKFIXES:
+Replace with 'false'
+13: The expression is always TypeCode.Int16.
+QUICKFIXES:
+Replace with 'TypeCode.Int16'
+14: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)0x0A'
+Replace with '(short)10'
+15: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+16: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)10'
+17: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)0x0A'
+Replace with '(short)10'
+18: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+19: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)0x0A'
+Replace with '(short)10'
+20: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+21: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)10'
+22: The expression is always 10.
+QUICKFIXES:
+Replace with '(short)0x0A'
+Replace with '(short)10'
+23: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+24: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+25: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(short)0x01'
+26: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(short)(1 + 1)'
+27: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(short)c'
+28: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+29: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+30: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+31: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+32: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+33: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(short)0x01'
+34: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(short)(1 + 1)'
+35: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(short)c'
+36: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+37: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+38: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+39: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'

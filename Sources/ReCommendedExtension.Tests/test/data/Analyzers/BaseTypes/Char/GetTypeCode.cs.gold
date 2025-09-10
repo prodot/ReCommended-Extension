@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Characters
+    {
+        public void ExpressionResult(char character)
+        {
+            var result = |character.GetTypeCode()|(0);
+        }
+
+        public void NoDetection(char character)
+        {
+            character.GetTypeCode();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always TypeCode.Char.

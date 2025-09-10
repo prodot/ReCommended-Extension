@@ -1,0 +1,30 @@
+﻿namespace Test
+{
+    public class SBytes
+    {
+        public void Equals(sbyte number, sbyte obj)
+        {
+            var result = |number.Equals(obj)|(0);
+        }
+
+        public void IsNegative(sbyte number)
+        {
+            var result = |sbyte.IsNegative(number)|(1);
+        }
+
+        public void IsPositive(sbyte number)
+        {
+            var result = |sbyte.IsPositive(number)|(2);
+        }
+    }
+}
+------------------------------------------------
+0: Use the '==' operator.
+QUICKFIXES:
+Replace with 'number == obj'
+1: Use the '<' operator to compare to 0.
+QUICKFIXES:
+Replace with 'number < 0'
+2: Use the '>=' operator to compare to 0.
+QUICKFIXES:
+Replace with 'number >= 0'

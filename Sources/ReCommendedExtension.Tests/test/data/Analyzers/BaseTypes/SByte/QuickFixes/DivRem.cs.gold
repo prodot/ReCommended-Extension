@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class SBytes
+    {
+        public void DivRem()
+        {
+            var result = (Quotient: (sbyte)0, {caret}Remainder: (sbyte)0);
+        }
+    }
+}

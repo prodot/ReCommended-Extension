@@ -121,7 +121,10 @@ namespace Test
     public class Elements
     {
         [ValueRange(-1, 3)]
-        uint Method() { }
+        uint Method()
+        {
+            return 0;
+        }
 
         [ValueRange(-1, 3)] uint Property => 3;
         [ValueRange(-1, 3)] uint Property2 { get; set; }

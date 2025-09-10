@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class UIntPtrs
+    {
+        public void ToString(nuint number)
+        {
+            var result = number.ToString("E{caret}6");
+        }
+    }
+}

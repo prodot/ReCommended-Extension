@@ -1,0 +1,373 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt32s
+    {
+        public void Clamp(uint number)
+        {
+            const int c = 1;
+
+            var result11 = |uint.Clamp(number, 1, 0x0001)|(0);
+            var result12 = |uint.Clamp(number, 1, 0x0001u)|(1);
+            var result13 = |uint.Clamp(number, 1, c)|(2);
+            var result14 = |uint.Clamp(number, 97, 'a')|(3);
+
+            uint result21 = |uint.Clamp(number, 1, 0x0001)|(4);
+            uint result22 = |uint.Clamp(number, 1, 0x0001u)|(5);
+            uint result23 = |uint.Clamp(number, 1, c)|(6);
+            uint result24 = |uint.Clamp(number, 97, 'a')|(7);
+
+            var result31 = |uint.Clamp(number, uint.MinValue, uint.MaxValue)|(8);
+            var result32 = |uint.Clamp(1, uint.MinValue, uint.MaxValue)|(9);
+            var result33 = |uint.Clamp(1u, uint.MinValue, uint.MaxValue)|(10);
+            var result34 = |uint.Clamp(c, uint.MinValue, uint.MaxValue)|(11);
+            var result35 = |uint.Clamp('a', uint.MinValue, uint.MaxValue)|(12);
+
+            uint result41 = |uint.Clamp(number, uint.MinValue, uint.MaxValue)|(13);
+            uint result42 = |uint.Clamp(1, uint.MinValue, uint.MaxValue)|(14);
+            uint result43 = |uint.Clamp(1u, uint.MinValue, uint.MaxValue)|(15);
+            uint result44 = |uint.Clamp(c, uint.MinValue, uint.MaxValue)|(16);
+            uint result45 = |uint.Clamp('a', uint.MinValue, uint.MaxValue)|(17);
+
+            var result51 = |Math.Clamp(number, 1u, 1u)|(18);
+            var result52 = |Math.Clamp(number, uint.MinValue, uint.MaxValue)|(19);
+        }
+
+        public void DivRem(uint left)
+        {
+            var result11 = |uint.DivRem(0, 10)|(20);
+
+            (uint, uint) result21 = |uint.DivRem(0, 10)|(21);
+
+            (uint quotient, uint remainder) result32 = |uint.DivRem(0, 10)|(22);
+
+            var result71 = |Math.DivRem(0u, 10u)|(23);
+        }
+
+        public void Equals(uint number)
+        {
+            var result = |number.Equals(null)|(24);
+        }
+
+        public void GetTypeCode(uint number)
+        {
+            var result = |number.GetTypeCode()|(25);
+        }
+
+        public void Max()
+        {
+            const int c = 10;
+
+            var result11 = |uint.Max(10, 0x0A)|(26);
+            var result12 = |uint.Max(10, 10u)|(27);
+            var result13 = |uint.Max(10, c)|(28);
+            var result14 = |uint.Max(97, 'a')|(29);
+
+            uint result21 = |uint.Max(10, 0x0A)|(30);
+            uint result22 = |uint.Max(10, 10u)|(31);
+            uint result23 = |uint.Max(10, c)|(32);
+            uint result24 = |uint.Max(97, 'a')|(33);
+
+            var result31 = |Math.Max(10u, 10u)|(34);
+        }
+
+        public void Min()
+        {
+            const int c = 10;
+
+            var result11 = |uint.Min(10, 0x0A)|(35);
+            var result12 = |uint.Min(10, 10u)|(36);
+            var result13 = |uint.Min(10, c)|(37);
+            var result14 = |uint.Min(97, 'a')|(38);
+
+            uint result21 = |uint.Min(10, 0x0A)|(39);
+            uint result22 = |uint.Min(10, 10u)|(40);
+            uint result23 = |uint.Min(10, c)|(41);
+            uint result24 = |uint.Min(97, 'a')|(42);
+
+            var result31 = |Math.Min(10u, 10u)|(43);
+        }
+
+        public void RotateLeft(uint n)
+        {
+            const int c = 1;
+
+            var result11 = |uint.RotateLeft(n, 0)|(44);
+            var result12 = |uint.RotateLeft(0x01, 0)|(45);
+            var result13 = |uint.RotateLeft(0x01u, 0)|(46);
+            var result14 = |uint.RotateLeft(1 + 1, 0)|(47);
+            var result15 = |uint.RotateLeft(1u + 1u, 0)|(48);
+            var result16 = |uint.RotateLeft(c, 0)|(49);
+            var result17 = |uint.RotateLeft('a', 0)|(50);
+
+            uint result21 = |uint.RotateLeft(n, 0)|(51);
+            uint result22 = |uint.RotateLeft(1, 0)|(52);
+            uint result23 = |uint.RotateLeft(1u, 0)|(53);
+            uint result24 = |uint.RotateLeft(1 + 1, 0)|(54);
+            uint result25 = |uint.RotateLeft(1u + 1u, 0)|(55);
+            uint result26 = |uint.RotateLeft(c, 0)|(56);
+            uint result27 = |uint.RotateLeft('a', 0)|(57);
+        }
+
+        public void RotateRight(uint n)
+        {
+            const int c = 1;
+
+            var result11 = |uint.RotateRight(n, 0)|(58);
+            var result12 = |uint.RotateRight(0x01, 0)|(59);
+            var result13 = |uint.RotateRight(0x01u, 0)|(60);
+            var result14 = |uint.RotateRight(1 + 1, 0)|(61);
+            var result15 = |uint.RotateRight(1u + 1u, 0)|(62);
+            var result16 = |uint.RotateRight(c, 0)|(63);
+            var result17 = |uint.RotateRight('a', 0)|(64);
+
+            uint result21 = |uint.RotateRight(n, 0)|(65);
+            uint result22 = |uint.RotateRight(1, 0)|(66);
+            uint result23 = |uint.RotateRight(1u, 0)|(67);
+            uint result24 = |uint.RotateRight(1 + 1, 0)|(68);
+            uint result25 = |uint.RotateRight(1u + 1u, 0)|(69);
+            uint result26 = |uint.RotateRight(c, 0)|(70);
+            uint result27 = |uint.RotateRight('a', 0)|(71);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001u'
+Replace with '1u'
+1: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001u'
+Replace with '1u'
+2: The expression is always 1.
+QUICKFIXES:
+Replace with '(uint)c'
+Replace with '1u'
+3: The expression is always 97.
+QUICKFIXES:
+Replace with '(uint)'a''
+Replace with '97u'
+4: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001'
+Replace with '1'
+5: The expression is always 1.
+QUICKFIXES:
+Replace with '0x0001u'
+Replace with '1'
+6: The expression is always 1.
+QUICKFIXES:
+Replace with 'c'
+Replace with '1'
+7: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+8: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+9: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+10: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+11: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)c'
+12: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)'a''
+13: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+14: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+15: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+16: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+17: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with ''a''
+18: The expression is always 1.
+QUICKFIXES:
+Replace with '1u'
+19: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'number'
+20: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0u, Remainder: 0u)'
+21: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+22: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+23: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0u, Remainder: 0u)'
+24: The expression is always false.
+QUICKFIXES:
+Replace with 'false'
+25: The expression is always TypeCode.UInt32.
+QUICKFIXES:
+Replace with 'TypeCode.UInt32'
+26: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0Au'
+Replace with '10u'
+27: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+28: The expression is always 10.
+QUICKFIXES:
+Replace with '(uint)c'
+Replace with '10u'
+29: The expression is always 97.
+QUICKFIXES:
+Replace with '(uint)'a''
+Replace with '97u'
+30: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+31: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+32: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+33: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+34: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+35: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0Au'
+Replace with '10u'
+36: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+37: The expression is always 10.
+QUICKFIXES:
+Replace with '(uint)c'
+Replace with '10u'
+38: The expression is always 97.
+QUICKFIXES:
+Replace with '(uint)'a''
+Replace with '97u'
+39: The expression is always 10.
+QUICKFIXES:
+Replace with '0x0A'
+Replace with '10'
+40: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+Replace with '10'
+41: The expression is always 10.
+QUICKFIXES:
+Replace with 'c'
+Replace with '10'
+42: The expression is always 97.
+QUICKFIXES:
+Replace with ''a''
+Replace with '97'
+43: The expression is always 10.
+QUICKFIXES:
+Replace with '10u'
+44: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+45: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01u'
+46: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01u'
+47: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)(1 + 1)'
+48: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u + 1u'
+49: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)c'
+50: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)'a''
+51: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+52: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+53: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+54: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+55: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u + 1u'
+56: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+57: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with ''a''
+58: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+59: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01u'
+60: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '0x01u'
+61: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)(1 + 1)'
+62: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u + 1u'
+63: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)c'
+64: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)'a''
+65: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'n'
+66: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+67: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u'
+68: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1 + 1'
+69: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1u + 1u'
+70: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'c'
+71: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with ''a''

@@ -1,0 +1,28 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class DateTimeOffsets
+    {
+        public void RedundantArgument(string input, ReadOnlySpan<char> s, IFormatProvider provider)
+        {
+            var result11 = DateTimeOffset.Parse(input, |null|(0));
+            var result12 = DateTimeOffset.Parse(input, provider, |DateTimeStyles.None|(1));
+
+            var result21 = DateTimeOffset.Parse(s, |null|(2));
+        }
+
+        public void NoDetection(string input, ReadOnlySpan<char> s, IFormatProvider provider, DateTimeStyles styles)
+        {
+            var result11 = DateTimeOffset.Parse(input, provider);
+            var result12 = DateTimeOffset.Parse(input, provider, styles);
+
+            var result21 = DateTimeOffset.Parse(s, provider);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing null is redundant.
+(1): ReSharper Dead Code: Passing DateTimeStyles.None is redundant.
+(2): ReSharper Dead Code: Passing null is redundant.

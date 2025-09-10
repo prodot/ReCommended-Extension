@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt128s
+    {
+        public void ExpressionResult(UInt128 left)
+        {
+            var result1 = |UInt128.DivRem(0, 10)|(0);
+        }
+
+        public void NoDetection(UInt128 left, UInt128 right)
+        {
+            var result1 = UInt128.DivRem(0, right);
+
+            UInt128.DivRem(0, 10);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always (0, 0).

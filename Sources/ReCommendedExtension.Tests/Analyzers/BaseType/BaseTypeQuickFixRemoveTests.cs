@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseType;
 [TestNet80]
 public sealed class BaseTypeQuickFixRemoveTests : QuickFixTestBase<RemoveBaseTypeDeclarationFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypeQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\BaseType\QuickFixes";
 
     [Test]
     public void TestClass() => DoNamedTest2();

@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Randoms
+    {
+        public void GetItems<T>(Random random, T[] array)
+        {
+            var result = Array.E{caret}mpty<T>();
+        }
+    }
+}

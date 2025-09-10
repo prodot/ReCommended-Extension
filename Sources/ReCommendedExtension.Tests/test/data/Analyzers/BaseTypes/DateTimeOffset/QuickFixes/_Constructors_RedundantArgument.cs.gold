@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class DateTimeOffsets
+    {
+        public void _Constructors(int year, int month, int day, int hour, int minute, int second, TimeSpan offset)
+        {
+            var result = new DateTimeOffset(year, month, day, hour, minute, second{caret}, offset);
+        }
+    }
+}

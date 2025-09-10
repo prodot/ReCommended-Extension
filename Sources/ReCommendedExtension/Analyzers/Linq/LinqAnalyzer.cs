@@ -1,5 +1,4 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
@@ -51,7 +50,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     [Pure]
     static bool IsIndexableCollectionOrString(IType type, ITreeNode context)
     {
-        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray(context) || type.IsString())
+        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray() || type.IsString())
         {
             return true;
         }
@@ -70,7 +69,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     [Pure]
     static bool IsIndexableCollectionOrString(IType type, ICSharpExpression expression, out bool hasAccessibleIndexer)
     {
-        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray(expression) || type.IsString())
+        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray() || type.IsString())
         {
             hasAccessibleIndexer = true;
             return true;
@@ -92,8 +91,10 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                 if (typeElement is ITypeParameter typeParameter)
                 {
                     var hasAccessibleIndexerIfIndexableCollection = false;
-                    if (typeParameter.TypeConstraints.Any(
-                        t => IsIndexableCollectionOrString(t, expression, out hasAccessibleIndexerIfIndexableCollection)))
+                    if (typeParameter.TypeConstraints.Any(t => IsIndexableCollectionOrString(
+                        t,
+                        expression,
+                        out hasAccessibleIndexerIfIndexableCollection)))
                     {
                         hasAccessibleIndexer = hasAccessibleIndexerIfIndexableCollection;
                         return true;
@@ -106,10 +107,10 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     : null;
 
                 hasAccessibleIndexer = GetIndexers(GetAllProperties(typeElement))
-                    .Any(
-                        indexer => (listIndexer is { } && indexer.OverridesOrImplements(listIndexer)
-                                || readOnlyListIndexer is { } && indexer.OverridesOrImplements(readOnlyListIndexer))
-                            && AccessUtil.IsSymbolAccessible(indexer, new ElementAccessContext(expression)));
+                    .Any(indexer
+                        => (listIndexer is { } && indexer.OverridesOrImplements(listIndexer)
+                            || readOnlyListIndexer is { } && indexer.OverridesOrImplements(readOnlyListIndexer))
+                        && AccessUtil.IsSymbolAccessible(indexer, new ElementAccessContext(expression)));
                 return true;
             }
         }
@@ -144,16 +145,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
     {
         if (collectionType is IDeclaredType declaredType && declaredType.TryGetGenericParameterTypes() is [{ } itemType])
         {
-            Debug.Assert(CSharpLanguage.Instance is { });
-
-            var defaultValue = DefaultValueUtil.GetClrDefaultValue(itemType, CSharpLanguage.Instance, context);
-
-            if (itemType.IsEnumType() && defaultValue is { } and not ICastExpression)
-            {
-                return $"{itemType.GetPresentableName(CSharpLanguage.Instance)}.{defaultValue.GetText()}";
-            }
-
-            return defaultValue?.GetText();
+            return itemType.TryGetDefaultValue(context);
         }
 
         return null;
@@ -185,7 +177,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                         invocationExpression,
                         invokedExpression,
                         indexArgument.Value.GetText(),
-                        type.IsGenericArray(invocationExpression) || type.IsString()));
+                        type.IsGenericArray() || type.IsString()));
             }
 
             return;
@@ -392,7 +384,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
 
         var type = invokedExpression.QualifierExpression.Type();
 
-        if (type.IsString() || type.IsGenericArray(invokedExpression))
+        if (type.IsString() || type.IsGenericArray())
         {
             consumer.AddHighlighting(
                 new UseCollectionPropertySuggestion(
@@ -483,7 +475,7 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
             switch (method.ShortName)
             {
                 case nameof(Enumerable.ElementAt):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_, { Type: IDeclaredType indexType }], [{ Value: { } } indexArgument])
                             when indexType.IsInt() || indexType.IsSystemIndex():
@@ -493,23 +485,23 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     break;
 
                 case nameof(Enumerable.ElementAtOrDefault):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([_, { Type: IDeclaredType indexType }], _) when indexType.IsInt() || indexType.IsSystemIndex():
+                        case ([_, { Type: IDeclaredType indexType }], [_]) when indexType.IsInt() || indexType.IsSystemIndex():
                             AnalyzeElementAtOrDefault(consumer, element, invokedExpression);
                             break;
                     }
                     break;
 
                 case nameof(Enumerable.First):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeFirst(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.FirstOrDefault):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeFirstOrDefault(consumer, element, invokedExpression); break;
 
@@ -521,14 +513,14 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     break;
 
                 case nameof(Enumerable.Last):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeLast(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.LastOrDefault):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeLastOrDefault(consumer, element, invokedExpression); break;
 
@@ -541,21 +533,21 @@ public sealed class LinqAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchr
                     break;
 
                 case nameof(Enumerable.LongCount):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeLongCount(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.Single):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeSingle(consumer, element, invokedExpression); break;
                     }
                     break;
 
                 case nameof(Enumerable.SingleOrDefault):
-                    switch (method.Parameters, element.Arguments)
+                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
                         case ([_], []): AnalyzeSingleOrDefault(consumer, element, invokedExpression); break;
 

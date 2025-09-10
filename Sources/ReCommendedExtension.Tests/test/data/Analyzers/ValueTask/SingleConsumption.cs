@@ -67,7 +67,7 @@ namespace Tests
             }
         }
 
-        async ValueTask ConditionalExpression(int x, ValueTask<int> vt)
+        async ValueTask<int> ConditionalExpression(int x, ValueTask<int> vt)
         {
             return x > 3 ? await vt : await vt.ConfigureAwait(false);
         }

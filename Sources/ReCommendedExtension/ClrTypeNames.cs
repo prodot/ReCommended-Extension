@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
@@ -27,6 +29,8 @@ internal static class ClrTypeNames
     static IClrTypeName GetClrTypeName<T>() => GetClrTypeName(typeof(T));
 
     public static readonly IClrTypeName Math = GetClrTypeName(typeof(Math));
+
+    public static readonly IClrTypeName MathF = new ClrTypeName("System.MathF");
 
     public static readonly IClrTypeName ContractClassForAttribute = GetClrTypeName<ContractClassForAttribute>();
 
@@ -82,7 +86,48 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName StringSplitOptions = GetClrTypeName<StringSplitOptions>();
 
+    public static readonly IClrTypeName NumberStyles = GetClrTypeName<NumberStyles>();
+
+    public static readonly IClrTypeName MidpointRounding = GetClrTypeName<MidpointRounding>();
+
+    public static readonly IClrTypeName TimeSpanStyles = GetClrTypeName<TimeSpanStyles>();
+
+    public static readonly IClrTypeName DateTimeKind = GetClrTypeName<DateTimeKind>();
+
+    public static readonly IClrTypeName DateTimeStyles = GetClrTypeName<DateTimeStyles>();
+
+    public static readonly IClrTypeName Calendar = GetClrTypeName<Calendar>();
+
+    public static readonly IClrTypeName Random = GetClrTypeName<Random>();
+
+    public static readonly IClrTypeName EditorBrowsableState = GetClrTypeName<EditorBrowsableState>();
+
     public static readonly IClrTypeName Lock = new ClrTypeName("System.Threading.Lock");
+
+    public static readonly IClrTypeName Int128 = new ClrTypeName("System.Int128");
+
+    public static readonly IClrTypeName UInt128 = new ClrTypeName("System.UInt128");
+
+    public static readonly IClrTypeName Half = new ClrTypeName("System.Half");
+
+    public static readonly IClrTypeName AppendInterpolatedStringHandler =
+        new ClrTypeName("System.Text.StringBuilder.AppendInterpolatedStringHandler");
+
+    public static readonly IClrTypeName MemoryExtensions_TryWriteInterpolatedStringHandler =
+        new ClrTypeName("System.MemoryExtensions.TryWriteInterpolatedStringHandler");
+
+    public static readonly IClrTypeName Utf8_TryWriteInterpolatedStringHandler =
+        new ClrTypeName("System.Text.Unicode.Utf8.TryWriteInterpolatedStringHandler");
+
+    public static readonly IClrTypeName AssertInterpolatedStringHandler = new ClrTypeName("System.Diagnostics.Debug.AssertInterpolatedStringHandler");
+
+    public static readonly IClrTypeName WriteIfInterpolatedStringHandler =
+        new ClrTypeName("System.Diagnostics.Debug.WriteIfInterpolatedStringHandler");
+
+    public static readonly IClrTypeName TraceVerboseInterpolatedStringHandler =
+        new ClrTypeName("System.Diagnostics.TraceSwitchExtensions.TraceVerboseInterpolatedStringHandler");
+
+    public static readonly IClrTypeName TextWriter = GetClrTypeName<TextWriter>();
 
     [JetBrains.Annotations.Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

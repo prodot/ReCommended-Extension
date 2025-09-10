@@ -54,7 +54,7 @@ namespace TargetCollection
         ICollection<string?> Property5 => new string?[0];
         ICollection<string?> Property6 => new string?[3];
         ICollection<string?> Property7 => new[] { "one", "two", "three", null };
-        ICollection<string?> Property8 => Array.Empty<int>();
+        ICollection<string?> Property8 => Array.Empty<string>();
     }
 
     public class GenericClass<T> where T : new()

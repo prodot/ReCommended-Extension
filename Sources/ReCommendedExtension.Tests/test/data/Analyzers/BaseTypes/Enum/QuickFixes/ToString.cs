@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Enums
+    {
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void ToString(SampleEnum e)
+        {
+            var result = e.ToString("{caret}");
+        }
+    }
+}

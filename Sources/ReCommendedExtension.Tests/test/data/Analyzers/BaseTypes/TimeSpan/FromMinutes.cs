@@ -1,0 +1,24 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void ExpressionResult()
+        {
+            var result1 = TimeSpan.FromMinutes(0);
+            var result2 = TimeSpan.FromMinutes(0, 0);
+            var result3 = TimeSpan.FromMinutes(seconds: 0, minutes: 0);
+        }
+
+        public void NoDetection(int minutes, int seconds)
+        {
+            var result1 = TimeSpan.FromMinutes(minutes);
+            var result2 = TimeSpan.FromMinutes(0, seconds);
+
+            TimeSpan.FromMinutes(0);
+            TimeSpan.FromMinutes(0, 0);
+            TimeSpan.FromMinutes(seconds: 0, minutes: 0);
+        }
+    }
+}

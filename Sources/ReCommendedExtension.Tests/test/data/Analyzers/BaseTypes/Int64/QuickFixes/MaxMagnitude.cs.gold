@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Int64s
+    {
+        public void MaxMagnitude()
+        {
+            var result = {caret}10L;
+        }
+    }
+}

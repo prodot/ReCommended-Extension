@@ -9,7 +9,7 @@ public sealed class CatchClauseWithoutVariableAnalyzer : ElementProblemAnalyzer<
 {
     protected override void Run(ISpecificCatchClause element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (element.ExceptionType.IsClrType(PredefinedType.EXCEPTION_FQN) && element.ExceptionDeclaration == null)
+        if (element.ExceptionType.IsSystemException() && element.ExceptionDeclaration == null)
         {
             consumer.AddHighlighting(new CatchClauseWithoutVariableHint("Redundant declaration without an exception variable.", element));
         }

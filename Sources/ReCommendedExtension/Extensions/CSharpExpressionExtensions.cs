@@ -1,4 +1,5 @@
-﻿using JetBrains.Metadata.Reader.API;
+﻿using System.Globalization;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -7,15 +8,17 @@ using JetBrains.ReSharper.Psi.CSharp.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Util.Literals;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
 namespace ReCommendedExtension.Extensions;
 
 internal static class CSharpExpressionExtensions
 {
     [Pure]
-    public static IType? TryGetTargetType(this ICSharpExpression expression)
+    public static IType? TryGetTargetType(this ICSharpExpression expression, bool forCollectionExpressions)
     {
         var targetType = expression.GetImplicitlyConvertedTo();
 
@@ -24,11 +27,14 @@ internal static class CSharpExpressionExtensions
             return null;
         }
 
-        switch (expression.Parent)
+        if (forCollectionExpressions)
         {
-            case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
-            case IQueryFirstFrom or IQueryParameterPlatform:
-                return null;
+            switch (expression.Parent)
+            {
+                case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
+                case IQueryFirstFrom or IQueryParameterPlatform:
+                    return null;
+            }
         }
 
         return targetType;
@@ -42,7 +48,8 @@ internal static class CSharpExpressionExtensions
     public static string? TryGetStringConstant(this ICSharpExpression? expression)
         => expression switch
         {
-            IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } => value,
+            IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } when
+                expression is not ICSharpLiteralExpression literalExpression || !literalExpression.IsUtf8StringLiteral() => value,
 
             IReferenceExpression { Reference: var reference } when reference.Resolve().DeclaredElement is IField
                 {
@@ -61,42 +68,101 @@ internal static class CSharpExpressionExtensions
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Char, CharValue: var value } } ? value : null;
 
     [Pure]
-    public static int? TryGetInt32Constant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Int, IntValue: var value } } ? value : null;
+    public static int? TryGetInt32Constant(this ICSharpExpression? expression) => NumberInfo.Int32.TryGetConstant(expression, out _);
+
+    [Pure]
+    public static long? TryGetInt64Constant(this ICSharpExpression? expression) => NumberInfo.Int64.TryGetConstant(expression, out _);
+
+    [Pure]
+    public static bool? TryGetBooleanConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: var value } } ? value : null;
 
     [Pure]
     public static StringComparison? TryGetStringComparisonConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(PredefinedType.STRING_COMPARISON_CLASS)
+            && enumType.IsStringComparison()
                 ? (StringComparison)constantValue.IntValue
                 : null;
 
     [Pure]
     public static StringSplitOptions? TryGetStringSplitOptionsConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsClrType(ClrTypeNames.StringSplitOptions)
+            && enumType.IsStringSplitOptions()
                 ? (StringSplitOptions)constantValue.IntValue
                 : null;
 
-    public static void TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
-    {
-        if (expression is IParenthesizedExpression parenthesizedExpression
-            && CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(expression, LanguageManager.Instance, null) is
-            {
-                NeedsToRemove: true,
-            })
+    [Pure]
+    public static NumberStyles? TryGetNumberStylesConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsNumberStyles()
+                ? (NumberStyles)constantValue.IntValue
+                : null;
+
+    [Pure]
+    public static MidpointRounding? TryGetMidpointRoundingConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsMidpointRounding()
+                ? (MidpointRounding)constantValue.IntValue
+                : null;
+
+    [Pure]
+    public static TimeSpanStyles? TryGetTimeSpanStylesConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsTimeSpanStyles()
+                ? (TimeSpanStyles)constantValue.IntValue
+                : null;
+
+    [Pure]
+    public static DateTimeKind? TryGetDateTimeKindConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsDateTimeKind()
+                ? (DateTimeKind)constantValue.IntValue
+                : null;
+
+    [Pure]
+    public static DateTimeStyles? TryGetDateTimeStylesConstant(this ICSharpExpression? expression)
+        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+            && enumType.IsDateTimeStyles()
+                ? (DateTimeStyles)constantValue.IntValue
+                : null;
+
+    [Pure]
+    public static bool AreParenthesesRedundant(this IParenthesizedExpression parenthesizedExpression)
+        => CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(parenthesizedExpression, LanguageManager.Instance, null) is
         {
-            ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+            NeedsToRemove: true,
+        };
+
+    /// <returns>The inner expression (regardless if parentheses have been removed).</returns>
+    public static ICSharpExpression TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
+    {
+        if (expression is IParenthesizedExpression parenthesizedExpression)
+        {
+            if (parenthesizedExpression.AreParenthesesRedundant())
+            {
+                return ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+            }
+
+            return parenthesizedExpression.Expression;
         }
+
+        return expression;
     }
 
-    public static void TryRemoveRangeIndexParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
+    [Pure]
+    public static ICSharpExpression Cast(this ICSharpExpression expression, string typeName)
     {
-        if (expression is IElementAccessExpression { Arguments: [{ Value: IRangeExpression rangeExpression }] })
+        var factory = CSharpElementFactory.GetInstance(expression);
+
+        var newExpression = factory.CreateExpression($"({typeName})($0)", expression);
+
+        if (newExpression is ICastExpression { Op: IParenthesizedExpression parenthesizedExpression } castExpression
+            && parenthesizedExpression.AreParenthesesRedundant())
         {
-            rangeExpression.LeftOperand?.TryRemoveParentheses(factory);
-            rangeExpression.RightOperand?.TryRemoveParentheses(factory);
+            castExpression.SetOp(factory.CreateExpression("$0", expression));
         }
+
+        return newExpression;
     }
 
     [Pure]
@@ -133,12 +199,9 @@ internal static class CSharpExpressionExtensions
             {
                 NullableAnnotation.NotAnnotated or NullableAnnotation.NotNullable => CSharpControlFlowNullReferenceState.NOT_NULL,
 
-                NullableAnnotation.RuntimeNotNullable when expression is IObjectCreationExpression
-                    || expression.Parent is not IReferenceExpression
-                    {
-                        Reference: var reference,
-                    } // the nullability detection doesn't work well for extension method invocations
-                    || reference.Resolve().DeclaredElement is not IMethod { IsExtensionMethod: true } => CSharpControlFlowNullReferenceState.NOT_NULL,
+                // the nullability detection doesn't work well for extension method invocations
+                NullableAnnotation.RuntimeNotNullable when expression.Parent is not IReferenceExpression referenceExpression
+                    || referenceExpression.ConditionalAccessSign == null => CSharpControlFlowNullReferenceState.NOT_NULL,
 
                 NullableAnnotation.Annotated or NullableAnnotation.Nullable =>
                     CSharpControlFlowNullReferenceState.MAY_BE_NULL, // todo: distinguish if the expression is "null" or just "may be null" here

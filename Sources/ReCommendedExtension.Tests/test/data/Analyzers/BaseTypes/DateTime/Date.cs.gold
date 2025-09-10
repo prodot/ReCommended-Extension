@@ -1,0 +1,28 @@
+﻿using System;
+using static System.DateTime;
+
+namespace Test
+{
+    public class DateTimes
+    {
+        public void DateTimeProperty()
+        {
+            var result1 = DateTime.|Now.Date|(0);
+            var result2 = |Now.Date|(1);
+        }
+
+        public void NoDetection(DateTime dateTime)
+        {
+            var result11 = dateTime.Date;
+
+            var result21 = nameof(DateTime.Now.Date);
+            var result22 = nameof(Now.Date);
+
+            dateTime.|Date|(2) = dateTime;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the 'Today' property.
+(1): ReSharper Suggestion: Use the 'Today' property.
+(2): ReSharper Underlined Error Highlighting: The property 'System.DateTime.Date' has no setter

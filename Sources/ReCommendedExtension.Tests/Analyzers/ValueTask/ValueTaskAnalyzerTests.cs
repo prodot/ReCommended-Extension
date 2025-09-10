@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -16,7 +15,7 @@ public sealed class ValueTaskAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\ValueTask";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is PossibleMultipleConsumptionWarning or IntentionalBlockingAttemptWarning or NotResolvedError;
+        => highlighting is PossibleMultipleConsumptionWarning or IntentionalBlockingAttemptWarning || highlighting.IsError();
 
     [Test]
     public void TestCodePaths() => DoNamedTest2();

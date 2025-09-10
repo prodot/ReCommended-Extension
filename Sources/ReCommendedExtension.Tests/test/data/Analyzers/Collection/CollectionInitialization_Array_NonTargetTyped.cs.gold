@@ -40,7 +40,6 @@ namespace NonTargetTyped
             IEnumerable<T> var9 = Array.Empty<T>().AsEnumerable();
 
             IEnumerable<T> var10 = from i in new[] { a, b, c } select i;
-            IEnumerable<T> var11 = from i in new[] { 1, 2, 3 } from j in new[] { 4, 5, 6 } select i + j;
         }
     }
 }

@@ -1,0 +1,68 @@
+﻿using System;
+
+namespace Test
+{
+    public class Randoms
+    {
+        public void RedundantArgument(Random random, int maxValue)
+        {
+            var result11 = random.Next(|int.MaxValue|(0));
+            var result12 = random.Next(|2_147_483_647|(1));
+            var result13 = random.Next(|0x7fff_ffff|(2));
+
+            var result21 = random.Next(|0|(3), maxValue);
+        }
+
+        public void RedundantArgument_Nullable(Random? random, int maxValue)
+        {
+            var result11 = random?.Next(|int.MaxValue|(4));
+            var result12 = random?.Next(|2_147_483_647|(5));
+            var result13 = random?.Next(|0x7fff_ffff|(6));
+
+            var result21 = random?.Next(|0|(7), maxValue);
+        }
+
+        public void ExpressionResult(Random random)
+        {
+            var result11 = |random.Next(0)|(8);
+            var result12 = |random.Next(1)|(9);
+
+            var result21 = |random.Next(10, 10)|(10);
+            var result22 = |random.Next(10, 11)|(11);
+        }
+
+        public void NoDetection(Random random, int minValue, int maxValue)
+        {
+            var result1 = random.Next(minValue, int.MaxValue);
+            var result2 = random.Next(minValue, maxValue);
+
+            random.Next(0);
+            random.Next(1);
+
+            random.Next(10, 10);
+            random.Next(10, 11);
+        }
+
+        public void NoDetection_Nullable(Random? random)
+        {
+            var result11 = random?.Next(0);
+            var result12 = random?.Next(1);
+
+            var result21 = random?.Next(10, 10);
+            var result22 = random?.Next(10, 11);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing the int.MaxValue is redundant.
+(1): ReSharper Dead Code: Passing the int.MaxValue is redundant.
+(2): ReSharper Dead Code: Passing the int.MaxValue is redundant.
+(3): ReSharper Dead Code: Passing 0 is redundant.
+(4): ReSharper Dead Code: Passing the int.MaxValue is redundant.
+(5): ReSharper Dead Code: Passing the int.MaxValue is redundant.
+(6): ReSharper Dead Code: Passing the int.MaxValue is redundant.
+(7): ReSharper Dead Code: Passing 0 is redundant.
+(8): ReSharper Suggestion: The expression is always 0.
+(9): ReSharper Suggestion: The expression is always 0.
+(10): ReSharper Suggestion: The expression is the same as the first argument.
+(11): ReSharper Suggestion: The expression is the same as the first argument.

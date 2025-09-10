@@ -1,0 +1,42 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void RedundantArgument(TimeSpan timeSpan, string format, IFormatProvider formatProvider)
+        {
+            var result11 = timeSpan.ToString(|null|(0));
+            var result12 = timeSpan.ToString(|""|(1));
+            var result13 = timeSpan.ToString(|"c"|(2));
+            var result14 = timeSpan.ToString(|"t"|(3));
+            var result15 = timeSpan.ToString(|"T"|(4));
+
+            var result21 = timeSpan.ToString(format, |null|(5));
+
+            var result31 = timeSpan.ToString(null, |formatProvider|(6));
+            var result32 = timeSpan.ToString("", |formatProvider|(7));
+            var result33 = timeSpan.ToString("c", |formatProvider|(8));
+            var result34 = timeSpan.ToString("t", |formatProvider|(9));
+            var result35 = timeSpan.ToString("T", |formatProvider|(10));
+        }
+
+        public void NoDetection(TimeSpan timeSpan, string format, IFormatProvider formatProvider)
+        {
+            var result11 = timeSpan.ToString(format);
+            var result12 = timeSpan.ToString(format, formatProvider);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing null or an empty string is redundant.
+(1): ReSharper Dead Code: Passing null or an empty string is redundant.
+(2): ReSharper Dead Code: Passing "c" is redundant.
+(3): ReSharper Dead Code: Passing "t" is redundant.
+(4): ReSharper Dead Code: Passing "T" is redundant.
+(5): ReSharper Dead Code: Passing null is redundant.
+(6): ReSharper Dead Code: Passing a format provider is redundant.
+(7): ReSharper Dead Code: Passing a format provider is redundant.
+(8): ReSharper Dead Code: Passing a format provider is redundant.
+(9): ReSharper Dead Code: Passing a format provider is redundant.
+(10): ReSharper Dead Code: Passing a format provider is redundant.

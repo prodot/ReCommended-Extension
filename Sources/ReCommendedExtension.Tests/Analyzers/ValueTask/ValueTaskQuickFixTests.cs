@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.ValueTask;
 [TestNetCore30]
 public sealed class ValueTaskQuickFixTests : QuickFixTestBase<InsertAsTaskFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\ValueTaskQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\ValueTask\QuickFixes";
 
     [Test]
     public void TestInsertAsTask() => DoNamedTest2();

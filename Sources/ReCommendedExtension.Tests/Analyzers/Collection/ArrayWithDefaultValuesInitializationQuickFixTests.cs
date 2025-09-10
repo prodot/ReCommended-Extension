@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 [TestFixture]
 public sealed class ArrayWithDefaultValuesInitializationQuickFixTests : QuickFixTestBase<ReplaceWithNewArrayWithLengthFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\CollectionQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     [Test]
     public void TestArrayWithDefaultValuesInitialization() => DoNamedTest2();

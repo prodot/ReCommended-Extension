@@ -1,6 +1,5 @@
 ﻿using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
@@ -15,15 +14,15 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 [TestNetCore30(ANNOTATIONS_PACKAGE)]
 public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\AnnotationQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantNullableAnnotationHint
-            or NotAllowedAnnotationWarning
-            or ConflictingAnnotationWarning
-            or RedundantAnnotationSuggestion
-            or InvalidValueRangeBoundaryWarning
-            or NotResolvedError;
+                or NotAllowedAnnotationWarning
+                or ConflictingAnnotationWarning
+                or RedundantAnnotationSuggestion
+                or InvalidValueRangeBoundaryWarning
+            || highlighting.IsError();
 
     [Test]
     public void TestAnnotationAvailability() => DoNamedTest2();

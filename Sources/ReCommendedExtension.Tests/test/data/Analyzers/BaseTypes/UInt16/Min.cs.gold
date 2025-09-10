@@ -1,0 +1,28 @@
+﻿using System;
+
+namespace Test
+{
+    public class UInt16s
+    {
+        public void ExpressionResult(ushort number)
+        {
+            var result1 = |ushort.Min(10, 10)|(0);
+
+            var result2 = |Math.Min((ushort)10, (ushort)10)|(1);
+        }
+
+        public void NoDetection(ushort x, ushort y)
+        {
+            var result11 = ushort.Min(1, 2);
+            var result12 = ushort.Min(x, 2);
+            var result13 = ushort.Min(1, y);
+
+            ushort.Min(10, 10);
+
+            Math.Min((ushort)10, (ushort)10);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always 10.
+(1): ReSharper Suggestion: The expression is always 10.

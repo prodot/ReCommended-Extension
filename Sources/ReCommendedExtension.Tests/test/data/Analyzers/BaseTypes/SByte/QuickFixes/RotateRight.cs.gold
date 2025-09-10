@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class SBytes
+    {
+        public void RotateRight()
+        {
+            var result = (sbyte{caret})1;
+        }
+    }
+}

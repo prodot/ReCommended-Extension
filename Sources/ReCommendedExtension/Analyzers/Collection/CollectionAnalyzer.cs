@@ -4,10 +4,12 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using JetBrains.Util;
 using ReCommendedExtension.Extensions;
 using ReCommendedExtension.Extensions.MethodFinding;
 using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSignature;
@@ -122,7 +124,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 _ when parameterType.IsInt() => 0,
                 _ when parameterType.IsGenericIEnumerable() => 1,
-                _ when parameterType.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN) => 2,
+                _ when parameterType.IsGenericEqualityComparer() => 2,
 
                 _ => -1,
             };
@@ -148,10 +150,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             && intParameter2.IsInt()
             && enumerableParameter1.IsGenericIEnumerable()
             && enumerableParameter2.IsGenericIEnumerable()
-            && comparerParameter1.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter3.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN));
+            && comparerParameter1.IsGenericEqualityComparer()
+            && comparerParameter2.IsGenericEqualityComparer()
+            && comparerParameter2.IsGenericEqualityComparer()
+            && comparerParameter3.IsGenericEqualityComparer());
     }
 
     [Conditional("DEBUG")]
@@ -167,7 +169,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 _ when parameterType.IsInt() => 0,
                 _ when parameterType.IsIDictionary() => 1,
                 _ when parameterType.IsGenericIEnumerable() => 2,
-                _ when parameterType.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN) => 3,
+                _ when parameterType.IsGenericEqualityComparer() => 3,
 
                 _ => -1,
             };
@@ -197,11 +199,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             && dictionaryParameter2.IsIDictionary()
             && enumerableParameter1.IsGenericIEnumerable()
             && enumerableParameter2.IsGenericIEnumerable()
-            && comparerParameter.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter2.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter3.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-            && comparerParameter4.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN));
+            && comparerParameter.IsGenericEqualityComparer()
+            && comparerParameter2.IsGenericEqualityComparer()
+            && comparerParameter2.IsGenericEqualityComparer()
+            && comparerParameter3.IsGenericEqualityComparer()
+            && comparerParameter4.IsGenericEqualityComparer());
     }
 
     [Pure]
@@ -271,7 +273,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     [Pure]
     static (IType? arrayItemType, bool isCovariant)? TryGetIfTargetTypedToGenericArray(ICSharpExpression expression, IType itemType, IType targetType)
     {
-        if (targetType.IsGenericArray(expression) && TypesUtil.GetEnumerableOrArrayElementType(targetType) is { } targetItemType)
+        if (targetType.IsGenericArray() && TypesUtil.GetEnumerableOrArrayElementType(targetType) is { } targetItemType)
         {
             if (itemType.Classify == TypeClassification.REFERENCE_TYPE
                 && targetItemType.Classify == TypeClassification.REFERENCE_TYPE
@@ -379,6 +381,73 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         return builder.ToString();
     }
 
+    [Pure]
+    static bool CanBeReplacedWithCollectionExpression(ICSharpExpression expression, IReferenceExpression? methodReferenceToSetInferredTypeArguments)
+    {
+        [Pure]
+        static ICSharpTreeNode? TryGetGoverningContext(ICSharpExpression expression)
+        {
+            for (var p = expression.Parent as ICSharpTreeNode; p is { }; p = p.Parent as ICSharpTreeNode)
+            {
+                if (p is ICSharpStatement or ICSharpTypeMemberDeclaration)
+                {
+                    return p;
+                }
+            }
+
+            return null;
+        }
+
+        [Pure]
+        static ICSharpTreeNode? TryFindChild(ICSharpTreeNode clone, ICSharpTreeNode originalNode, ICSharpTreeNode originalExpression)
+        {
+            foreach (var (clonedChild, originalChild) in clone.Children<ICSharpTreeNode>().Zip(originalNode.Children<ICSharpTreeNode>()))
+            {
+                Debug.Assert(clonedChild.GetText() == originalChild.GetText());
+
+                if (originalChild == originalExpression)
+                {
+                    return clonedChild;
+                }
+
+                if (TryFindChild(clonedChild, originalChild, originalExpression) is { } c)
+                {
+                    return c;
+                }
+            }
+
+            return null;
+        }
+
+        if (TryGetGoverningContext(expression) is { } governingContext)
+        {
+            Debug.Assert(governingContext != expression);
+
+            var clone = governingContext.Copy(governingContext);
+
+            if (TryFindChild(clone, governingContext, expression) is { } clonedExpression)
+            {
+                if (methodReferenceToSetInferredTypeArguments is { }
+                    && TryFindChild(clone, governingContext, methodReferenceToSetInferredTypeArguments) is IReferenceExpression clonedMethodReference)
+                {
+                    var (declaredElement, substitution) = methodReferenceToSetInferredTypeArguments.Reference.Resolve().Result;
+
+                    if (declaredElement is ITypeParametersOwner typeParametersOwner)
+                    {
+                        clonedMethodReference.SetTypeArguments(
+                            [..from typeParameter in typeParametersOwner.TypeParameters select substitution[typeParameter]]);
+                    }
+                }
+
+                return ModificationUtil
+                    .ReplaceChild(clonedExpression, CSharpElementFactory.GetInstance(expression).CreateExpression("[]"))
+                    .TryGetTargetType(true) is { };
+            }
+        }
+
+        return false;
+    }
+
     static void AnalyzeArrayInitializer(IHighlightingConsumer consumer, IArrayInitializer arrayInitializer)
     {
         switch (arrayInitializer)
@@ -437,7 +506,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 var itemType = arrayCreationExpression.GetElementType();
 
-                if (arrayCreationExpression.TryGetTargetType() is { } targetType)
+                if (arrayCreationExpression.TryGetTargetType(true) is { } targetType)
                 {
                     // new T[] { }      ->  []
                     // new T[] { ... }  ->  [...]
@@ -474,7 +543,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                                 || isEmptyArray
                                 && (arrayCreationExpression.ArrayInitializer == null
                                     || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { }
-                                    || isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is null)))
+                                    || isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is null))
+                            && CanBeReplacedWithCollectionExpression(arrayCreationExpression, methodReferenceToSetInferredTypeArguments))
                         {
                             string? covariantTypeName;
                             if (isCollectionItemTypeCovariant)
@@ -516,7 +586,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                             && (isCollectionItemTypeCovariant && arrayCreationExpression.TypeName is { }
                                 || isEmptyArray
                                 && (arrayCreationExpression.ArrayInitializer == null
-                                    || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { })))
+                                    || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { }))
+                            && CanBeReplacedWithCollectionExpression(arrayCreationExpression, methodReferenceToSetInferredTypeArguments))
                         {
                             Debug.Assert(CSharpLanguage.Instance is { });
 
@@ -544,7 +615,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         && (isArrayItemTypeCovariant && arrayCreationExpression.TypeName is { }
                             || isEmptyArray
                             && (arrayCreationExpression.ArrayInitializer == null && isArrayItemTypeCovariant
-                                || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { })))
+                                || arrayCreationExpression.Parent is ICSharpArgument && methodReferenceToSetInferredTypeArguments is { }))
+                        && CanBeReplacedWithCollectionExpression(arrayCreationExpression, methodReferenceToSetInferredTypeArguments))
                     {
                         string? covariantTypeName;
                         if (isArrayItemTypeCovariant)
@@ -614,7 +686,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     static void AnalyzeObjectCreationExpression(IHighlightingConsumer consumer, IObjectCreationExpression objectCreationExpression)
     {
         if (objectCreationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120
-            && objectCreationExpression.TryGetTargetType() is { } targetType)
+            && objectCreationExpression.TryGetTargetType(true) is { } targetType)
         {
             switch (objectCreationExpression.Type())
             {
@@ -622,11 +694,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     AnalyzeListCreationExpression(consumer, objectCreationExpression, type, targetType);
                     break;
 
-                case var type when type.IsClrType(PredefinedType.HASHSET_FQN):
+                case var type when type.IsGenericHashSet():
                     AnalyzeHashSetCreationExpression(consumer, objectCreationExpression, type, targetType);
                     break;
 
-                case var type when type.IsClrType(PredefinedType.GENERIC_DICTIONARY_FQN):
+                case var type when type.IsGenericDictionary():
                     AnalyzeDictionaryCreationExpression(consumer, objectCreationExpression, type, targetType);
                     break;
 
@@ -652,12 +724,13 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         AssertListConstructors(listCreationExpression.GetPsiModule());
 
-        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } itemType)
+        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } itemType
+            && listCreationExpression.TryGetArgumentsInDeclarationOrder() is { } constructorArguments)
         {
-            var parameterType = listCreationExpression.Arguments is [{ MatchingParameter.Type: var t }] ? t : null;
+            var parameterType = constructorArguments is [{ MatchingParameter.Type: var t }] ? t : null;
             var arguments =
                 (parameterType.IsInt()
-                    && listCreationExpression.Arguments[0].Expression is { } arg
+                    && constructorArguments[0] is { Expression: { } arg }
                     && arg.IsConstantValue()
                     && arg.ConstantValue.IntValue > (listCreationExpression.Initializer?.InitializerElements.Count ?? 0)
                         ? ListArguments.Capacity
@@ -677,7 +750,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             // target-typed to IEnumerable<T> or IReadOnlyCollection<T> or IReadOnlyList<T>
             if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
                     ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)
-                    ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN)) is var (collectionItemType, _))
+                    ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN)) is var (collectionItemType, _)
+                && CanBeReplacedWithCollectionExpression(listCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 Debug.Assert(collectionItemType is { });
                 Debug.Assert(CSharpLanguage.Instance is { });
@@ -691,7 +765,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                             : "Use collection expression (a compiler-synthesized read-only collection will be used).",
                         isEmptyList ? $"'{typeName}' will be used" : "a compiler-synthesized read-only collection will be used",
                         listCreationExpression,
-                        parameterType.IsGenericIEnumerable() ? listCreationExpression.Arguments[0].Value : null,
+                        parameterType.IsGenericIEnumerable() ? constructorArguments[0]?.Value : null,
                         listCreationExpression.Initializer?.InitializerElements,
                         methodReferenceToSetInferredTypeArguments));
             }
@@ -699,14 +773,15 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             // target-typed to ICollection<T> or IList<T>
             if ((arguments & ListArguments.Capacity) == 0
                 && (TryGetIfTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN)
-                    ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN)) is var (_, _))
+                    ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN)) is var (_, _)
+                && CanBeReplacedWithCollectionExpression(listCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
                         "Use collection expression.",
                         null,
                         listCreationExpression,
-                        parameterType.IsGenericIEnumerable() ? listCreationExpression.Arguments[0].Value : null,
+                        parameterType.IsGenericIEnumerable() ? constructorArguments[0]?.Value : null,
                         listCreationExpression.Initializer?.InitializerElements,
                         methodReferenceToSetInferredTypeArguments));
             }
@@ -716,7 +791,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             if (isEmptyList
                 && (arguments & ListArguments.Capacity) == 0
                 && methodReferenceToSetInferredTypeArguments is { }
-                && TryGetIfTargetTypedTo(PredefinedType.GENERIC_LIST_FQN) is var (_, _))
+                && TryGetIfTargetTypedTo(PredefinedType.GENERIC_LIST_FQN) is var (_, _)
+                && CanBeReplacedWithCollectionExpression(listCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
@@ -738,9 +814,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     {
         AssertHashSetConstructors(hashSetCreationExpression.GetPsiModule());
 
-        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } itemType)
+        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } itemType
+            && hashSetCreationExpression.TryGetArgumentsInDeclarationOrder() is { } constructorArguments)
         {
-            var parameterTypes = hashSetCreationExpression.Arguments switch
+            var parameterTypes = constructorArguments switch
             {
                 [{ MatchingParameter.Type: var t }] => [t, null],
                 [{ MatchingParameter.Type: var t0 }, { MatchingParameter.Type: var t1 }] => [t0, t1],
@@ -748,17 +825,17 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             };
             var arguments =
                 (parameterTypes[0].IsInt()
-                    && hashSetCreationExpression.Arguments[0].Expression is { } arg
+                    && constructorArguments[0] is { Expression: { } arg }
                     && arg.IsConstantValue()
                     && arg.ConstantValue.IntValue > (hashSetCreationExpression.Initializer?.InitializerElements.Count ?? 0)
                         ? HashSetArguments.Capacity
                         : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? HashSetArguments.Collection : 0)
-                | (parameterTypes[0].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-                    && hashSetCreationExpression.Arguments[0].Expression is { } a0
+                | (parameterTypes[0].IsGenericEqualityComparer()
+                    && constructorArguments[0] is { Expression: { } a0 }
                     && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
-                    || parameterTypes[1].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-                    && hashSetCreationExpression.Arguments[1].Expression is { } a1
+                    || parameterTypes[1].IsGenericEqualityComparer()
+                    && constructorArguments[1] is { Expression: { } a1 }
                     && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
                         ? HashSetArguments.Comparer
                         : 0);
@@ -776,7 +853,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             // target-typed to IEnumerable<T> or IReadOnlyCollection<T>
             if (isEmptyHashSet
                 && (TryGetIfTargetTypedTo(PredefinedType.GENERIC_IENUMERABLE_FQN)
-                    ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)) is var (collectionItemType, _))
+                    ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN)) is var (collectionItemType, _)
+                && CanBeReplacedWithCollectionExpression(hashSetCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 Debug.Assert(collectionItemType is { });
                 Debug.Assert(CSharpLanguage.Instance is { });
@@ -798,7 +876,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             if (isEmptyHashSet
                 && (arguments & (HashSetArguments.Capacity | HashSetArguments.Comparer)) == 0
                 && methodReferenceToSetInferredTypeArguments is { }
-                && TryGetIfTargetTypedTo(PredefinedType.HASHSET_FQN) is var (_, _))
+                && TryGetIfTargetTypedTo(PredefinedType.HASHSET_FQN) is var (_, _)
+                && CanBeReplacedWithCollectionExpression(hashSetCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
@@ -822,9 +901,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         AssertDictionaryConstructors(psiModule);
 
-        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } keyType && TypesUtil.GetTypeArgumentValue(type, 1) is { } valueType)
+        if (TypesUtil.GetTypeArgumentValue(type, 0) is { } keyType
+            && TypesUtil.GetTypeArgumentValue(type, 1) is { } valueType
+            && dictionaryCreationExpression.TryGetArgumentsInDeclarationOrder() is { } constructorArguments)
         {
-            var parameterTypes = dictionaryCreationExpression.Arguments switch
+            var parameterTypes = constructorArguments switch
             {
                 [{ MatchingParameter.Type: var t }] => [t, null],
                 [{ MatchingParameter.Type: var t0 }, { MatchingParameter.Type: var t1 }] => [t0, t1],
@@ -832,18 +913,18 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             };
             var arguments =
                 (parameterTypes[0].IsInt()
-                    && dictionaryCreationExpression.Arguments[0].Expression is { } arg
+                    && constructorArguments[0] is { Expression: { } arg }
                     && arg.IsConstantValue()
                     && arg.ConstantValue.IntValue > (dictionaryCreationExpression.Initializer?.InitializerElements.Count ?? 0)
                         ? DictionaryArguments.Capacity
                         : 0)
                 | (parameterTypes[0].IsIDictionary() ? DictionaryArguments.Dictionary : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? DictionaryArguments.Pairs : 0)
-                | (parameterTypes[0].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-                    && dictionaryCreationExpression.Arguments[0].Expression is { } a0
+                | (parameterTypes[0].IsGenericEqualityComparer()
+                    && constructorArguments[0] is { Expression: { } a0 }
                     && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
-                    || parameterTypes[1].IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN)
-                    && dictionaryCreationExpression.Arguments[1].Expression is { } a1
+                    || parameterTypes[1].IsGenericEqualityComparer()
+                    && constructorArguments[1] is { Expression: { } a1 }
                     && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
                         ? DictionaryArguments.Comparer
                         : 0);
@@ -864,7 +945,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             // - empty dictionary without a specified capacity or comparer
             if (isEmptyDictionary
                 && (arguments & (DictionaryArguments.Capacity | DictionaryArguments.Comparer)) == 0
-                && IsTargetTypedTo(PredefinedType.GENERIC_DICTIONARY_FQN))
+                && IsTargetTypedTo(PredefinedType.GENERIC_DICTIONARY_FQN)
+                && CanBeReplacedWithCollectionExpression(dictionaryCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
@@ -895,7 +977,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
         // target-typed to its own type: cases not covered by R#
         // - public default constructor used or passed to a method, which requires setting inferred type arguments
-        if (isPublicDefaultCtorUsed && IsTargetTypedToItsOwnType() && (!hasAccessibleAddMethod || methodReferenceToSetInferredTypeArguments is { }))
+        if (isPublicDefaultCtorUsed
+            && IsTargetTypedToItsOwnType()
+            && (!hasAccessibleAddMethod || methodReferenceToSetInferredTypeArguments is { })
+            && CanBeReplacedWithCollectionExpression(collectionCreationExpression, methodReferenceToSetInferredTypeArguments))
         {
             consumer.AddHighlighting(
                 new UseTargetTypedCollectionExpressionSuggestion(
@@ -955,7 +1040,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         Debug.Assert(arrayEmptyInvocationExpression.TypeArguments is [_]);
 
         if (arrayEmptyInvocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120
-            && arrayEmptyInvocationExpression.TryGetTargetType() is { } targetType)
+            && arrayEmptyInvocationExpression.TryGetTargetType(true) is { } targetType)
         {
             var psiModule = arrayEmptyInvocationExpression.GetPsiModule();
 
@@ -977,7 +1062,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_IREADONLYLIST_FQN)) is var (covariantCollectionItemType,
                 isCollectionItemTypeCovariant)
                 && arrayEmptyInvocationExpression.Parent is ICSharpArgument
-                && methodReferenceToSetInferredTypeArguments is { })
+                && methodReferenceToSetInferredTypeArguments is { }
+                && CanBeReplacedWithCollectionExpression(arrayEmptyInvocationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 string? covariantTypeName;
                 if (isCollectionItemTypeCovariant)
@@ -1005,7 +1091,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
             // target-typed to ICollection<T> or IList<T>
             if ((TryGetIfTargetTypedTo(PredefinedType.GENERIC_ICOLLECTION_FQN) ?? TryGetIfTargetTypedTo(PredefinedType.GENERIC_ILIST_FQN)) is var (
-                collectionItemType, _))
+                collectionItemType, _)
+                && CanBeReplacedWithCollectionExpression(arrayEmptyInvocationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 Debug.Assert(CSharpLanguage.Instance is { });
 
@@ -1027,7 +1114,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             // target-typed to T[] - inferred, but not covariant
             if (TryGetIfTargetTypedToArray() is (_, false)
                 && arrayEmptyInvocationExpression.Parent is ICSharpArgument
-                && methodReferenceToSetInferredTypeArguments is { })
+                && methodReferenceToSetInferredTypeArguments is { }
+                && CanBeReplacedWithCollectionExpression(arrayEmptyInvocationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(

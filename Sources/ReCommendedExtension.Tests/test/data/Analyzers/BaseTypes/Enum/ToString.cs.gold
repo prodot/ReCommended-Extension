@@ -1,0 +1,30 @@
+﻿namespace Test
+{
+    public class Enums
+    {
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void RedundantArgument(SampleEnum e)
+        {
+            var result1 = e.ToString(|null as string|(0));
+            var result2 = e.ToString(|""|(1));
+            var result3 = e.ToString(|"G"|(2));
+            var result4 = e.ToString(|"g"|(3));
+        }
+
+        public void NoDetection(SampleEnum e)
+        {
+            var result = e.ToString("F");
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing null or an empty string is redundant.
+(1): ReSharper Dead Code: Passing null or an empty string is redundant.
+(2): ReSharper Dead Code: Passing "G" is redundant.
+(3): ReSharper Dead Code: Passing "g" is redundant.

@@ -1,0 +1,55 @@
+﻿using System;
+
+namespace Test
+{
+    public class Randoms
+    {
+        public void RedundantArgument(Random random, int maxValue)
+        {
+            var result11 = random.Next(int.MaxValue);
+            var result12 = random.Next(2_147_483_647);
+            var result13 = random.Next(0x7fff_ffff);
+
+            var result21 = random.Next(0, maxValue);
+        }
+
+        public void RedundantArgument_Nullable(Random? random, int maxValue)
+        {
+            var result11 = random?.Next(int.MaxValue);
+            var result12 = random?.Next(2_147_483_647);
+            var result13 = random?.Next(0x7fff_ffff);
+
+            var result21 = random?.Next(0, maxValue);
+        }
+
+        public void ExpressionResult(Random random)
+        {
+            var result11 = random.Next(0);
+            var result12 = random.Next(1);
+
+            var result21 = random.Next(10, 10);
+            var result22 = random.Next(10, 11);
+        }
+
+        public void NoDetection(Random random, int minValue, int maxValue)
+        {
+            var result1 = random.Next(minValue, int.MaxValue);
+            var result2 = random.Next(minValue, maxValue);
+
+            random.Next(0);
+            random.Next(1);
+
+            random.Next(10, 10);
+            random.Next(10, 11);
+        }
+
+        public void NoDetection_Nullable(Random? random)
+        {
+            var result11 = random?.Next(0);
+            var result12 = random?.Next(1);
+
+            var result21 = random?.Next(10, 10);
+            var result22 = random?.Next(10, 11);
+        }
+    }
+}

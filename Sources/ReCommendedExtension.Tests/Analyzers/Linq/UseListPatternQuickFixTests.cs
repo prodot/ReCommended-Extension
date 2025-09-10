@@ -13,7 +13,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Linq;
 [TestNet70]
 public sealed class UseListPatternQuickFixTests : QuickFixTestBase<UseLinqListPatternFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\LinqQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Linq\QuickFixes";
 
     [Test]
     public void TestUseListPattern_FirstOrDefault() => DoNamedTest2();

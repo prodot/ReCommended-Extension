@@ -1,0 +1,13 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void TryParseExact(string input, IFormatProvider formatProvider, TimeSpanStyles styles, out TimeSpan result)
+        {
+            var result_ = TimeSpan.TryParseExact(input, "c", formatProvider: null{caret}, styles, out result);
+        }
+    }
+}

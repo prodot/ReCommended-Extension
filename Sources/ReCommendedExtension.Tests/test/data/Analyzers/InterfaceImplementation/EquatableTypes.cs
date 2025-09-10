@@ -26,16 +26,6 @@ namespace Test
         public static bool operator !=(Class2WithOperators? left, Class2WithOperators? right) => throw new NotImplementedException();
     }
 
-    internal class Class2WithSomeOperators : IEquatable<Class2WithSomeOperators> // declare IEqualityOperators<Class2WithSomeOperators, Class2WithSomeOperators, bool> interface (operators partially available)
-    {
-        public override bool Equals(object? obj) => throw new NotImplementedException();
-        public override int GetHashCode() => throw new NotImplementedException();
-
-        public bool Equals(Class2WithSomeOperators? other) => throw new NotImplementedException();
-
-        public static bool operator ==(Class2WithSomeOperators? left, Class2WithSomeOperators? right) => throw new NotImplementedException();
-    }
-
     internal class Class2WithOperatorsAndInterface : IEquatable<Class2WithOperatorsAndInterface>, IEqualityOperators<Class2WithOperatorsAndInterface, Class2WithOperatorsAndInterface, bool>
     {
         public override bool Equals(object? obj) => throw new NotImplementedException();
@@ -86,16 +76,6 @@ namespace Test
 
         public static bool operator ==(Struct2WithOperators left, Struct2WithOperators right) => throw new NotImplementedException();
         public static bool operator !=(Struct2WithOperators left, Struct2WithOperators right) => throw new NotImplementedException();
-    }
-
-    internal struct Struct2WithSomeOperators : IEquatable<Struct2WithSomeOperators> // declare IEqualityOperators<Struct2WithSomeOperators, Struct2WithSomeOperators, bool> (operators partially available)
-    {
-        public override bool Equals(object? obj) => throw new NotImplementedException();
-        public override int GetHashCode() => throw new NotImplementedException();
-
-        public bool Equals(Struct2WithOperators other) => throw new NotImplementedException();
-
-        public static bool operator ==(Struct2WithSomeOperators left, Struct2WithSomeOperators right) => throw new NotImplementedException();
     }
 
     internal struct Struct2WithOperatorsAndInterface : IEquatable<Struct2WithOperatorsAndInterface>, IEqualityOperators<Struct2WithOperatorsAndInterface, Struct2WithOperatorsAndInterface, bool>

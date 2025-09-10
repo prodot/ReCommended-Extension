@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.CatchClauseWithoutVariable;
 [TestFixture]
 public sealed class CatchClauseWithoutVariableQuickFixTests : QuickFixTestBase<RemoveExceptionTypeDeclarationFromCatchClauseFix>
 {
-    protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariableQuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariable\QuickFixes";
 
     [Test]
     public void TestCatchClauseWithoutVariable() => DoNamedTest2();

@@ -1,0 +1,56 @@
+﻿using System;
+
+namespace Test
+{
+    public class TimeSpans
+    {
+        public void Add(TimeSpan timeSpan, TimeSpan ts)
+        {
+            var result = |timeSpan.Add(ts)|(0);
+        }
+
+        public void Divide(TimeSpan timeSpan, double divisor, TimeSpan ts)
+        {
+            var result1 = |timeSpan.Divide(divisor)|(1);
+            var result2 = |timeSpan.Divide(ts)|(2);
+        }
+
+        public void Equals(TimeSpan timeSpan, TimeSpan obj)
+        {
+            var result1 = |timeSpan.Equals(obj)|(3);
+            var result2 = |TimeSpan.Equals(timeSpan, obj)|(4);
+        }
+
+        public void Multiply(TimeSpan timeSpan, double factor)
+        {
+            var result = |timeSpan.Multiply(factor)|(5);
+        }
+
+        public void Subtract(TimeSpan timeSpan, TimeSpan ts)
+        {
+            var result = |timeSpan.Subtract(ts)|(6);
+        }
+    }
+}
+------------------------------------------------
+0: Use the '+' operator.
+QUICKFIXES:
+Replace with 'timeSpan + ts'
+1: Use the '/' operator.
+QUICKFIXES:
+Replace with 'timeSpan / divisor'
+2: Use the '/' operator.
+QUICKFIXES:
+Replace with 'timeSpan / ts'
+3: Use the '==' operator.
+QUICKFIXES:
+Replace with 'timeSpan == obj'
+4: Use the '==' operator.
+QUICKFIXES:
+Replace with 'timeSpan == obj'
+5: Use the '*' operator.
+QUICKFIXES:
+Replace with 'timeSpan * factor'
+6: Use the '-' operator.
+QUICKFIXES:
+Replace with 'timeSpan - ts'

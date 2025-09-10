@@ -1,0 +1,184 @@
+﻿using System;
+using System.ComponentModel;
+
+namespace Test
+{
+    public class SomeClass
+    {
+        public void Deconstruct(out int x)
+        {
+            x = 1;
+        }
+
+        public void |Deconstruct|(0)(out int x, out bool y)
+        {
+            x = 1;
+            y = true;
+        }
+
+        public void |Deconstruct|(1)<T>(out int x, out bool y, out T z)
+        {
+            x = 1;
+            y = true;
+            z = default;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public void Deconstruct<T, U>(out int x, out bool y, out T z, out U z2)
+        {
+            x = 1;
+            y = true;
+            z = default;
+            z2 = default;
+        }
+    }
+
+    public abstract class BaseClass
+    {
+        public abstract void Deconstruct(out int x);
+
+        public abstract void |Deconstruct|(2)(out int x, out bool y);
+
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public abstract void Deconstruct<T>(out int x, out bool y, out T z);
+
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public abstract void Deconstruct<T, U>(out int x, out bool y, out T z, out U z2);
+
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public abstract void Deconstruct<T, U>(out int x, out bool y, out T z, out U z2, out string z3);
+    }
+
+    public class DerivedClass : BaseClass
+    {
+        public override void Deconstruct(out int x)
+        {
+            x = 1;
+        }
+
+        public override void |Deconstruct|(3)(out int x, out bool y)
+        {
+            x = 1;
+            y = true;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public override void Deconstruct<T>(out int x, out bool y, out T z)
+        {
+            x = 1;
+            y = true;
+            z = default;
+        }
+
+        public override void Deconstruct<T, U>(out int x, out bool y, out T z, out U z2)
+        {
+            x = 1;
+            y = true;
+            z = default;
+            z2 = default;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override void Deconstruct<T, U>(out int x, out bool y, out T z, out U z2, out string z3)
+        {
+            x = 1;
+            y = true;
+            z = default;
+            z2 = default;
+            z3 = "";
+        }
+    }
+
+    public class DerivedDerivedClass : DerivedClass
+    {
+        public new void |Deconstruct|(4)(out int x, out bool y)
+        {
+            x = 1;
+            y = true;
+        }
+    }
+
+    public interface IInterface
+    {
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        void Deconstruct(out int x, out bool y);
+    }
+
+    public class ImplementingClass : IInterface
+    {
+        public void Deconstruct(out int x, out bool y)
+        {
+            x = 1;
+            y = true;
+        }
+    }
+
+    public class C { }
+
+    public static class Extensions
+    {
+        public static void Deconstruct(this C c, out int x)
+        {
+            x = 1;
+        }
+
+        public static void |Deconstruct|(5)(this C c, out int x, out bool y)
+        {
+            x = 1;
+            y = true;
+        }
+
+        public static void |Deconstruct|(6)<T>(this C c, out int x, out bool y, out T z)
+        {
+            x = 1;
+            y = true;
+            z = default;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public static void Deconstruct<T, U>(this C c, out int x, out bool y, out T z, out U z2)
+        {
+            x = 1;
+            y = true;
+            z = default;
+            z2 = default;
+        }
+    }
+}
+
+namespace PartialClasses
+{
+    public partial class PartialClass
+    {
+        public partial void |Deconstruct|(7)(out int x, out bool y);
+
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public partial void Deconstruct<T>(out int x, out bool y, out T z);
+    }
+
+    public partial class PartialClass
+    {
+        public partial void |Deconstruct|(8)(out int x, out bool y)
+        {
+            x = 1;
+            y = true;
+        }
+
+        public partial void Deconstruct<T>(out int x, out bool y, out T z)
+        {
+            x = 1;
+            y = true;
+            z = default;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].
+(1): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].
+(2): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].
+(3): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].
+(4): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].
+(5): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].
+(6): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].
+(7): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].
+(8): ReSharper Warning: Annotate the deconstruction method with [EditorBrowsable(EditorBrowsableState.Never)].

@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Int16s
+    {
+        public void GetTypeCode(short number)
+        {
+            var result = number.Get{caret}TypeCode();
+        }
+    }
+}

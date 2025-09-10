@@ -1,0 +1,27 @@
+﻿using System;
+
+namespace Test
+{
+    public class UIntPtrs
+    {
+        public void ExpressionResult(nuint number)
+        {
+            var result1 = nuint.Clamp(number, 1, 1);
+
+            var result2 = Math.Clamp(number, (nuint)1, (nuint)1);
+        }
+
+        public void NoDetection(nuint number, nuint min, nuint max)
+        {
+            var result11 = nuint.Clamp(number, 1, max);
+            var result12 = nuint.Clamp(number, min, 10);
+
+            var result21 = Math.Clamp(number, (nuint)1, max);
+            var result22 = Math.Clamp(number, min, 10);
+
+            nuint.Clamp(number, 1, 1);
+
+            Math.Clamp(number, (nuint)1, (nuint)1);
+        }
+    }
+}

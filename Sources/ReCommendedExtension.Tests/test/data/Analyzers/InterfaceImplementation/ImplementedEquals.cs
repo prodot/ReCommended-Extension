@@ -55,6 +55,6 @@ namespace Test
 
         public override int GetHashCode() => _value.GetHashCode();
 
-        public override bool Equals(object other) => other is Class2 otherS && Equals(otherS)
+        public override bool Equals(object other) => other is Class2 otherS && Equals(otherS);
     }
 }

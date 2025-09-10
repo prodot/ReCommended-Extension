@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Characters
+    {
+        public void CharRangePattern(char c)
+        {
+            var result = |char.IsAsciiHexDigit(c)|(0);
+        }
+
+        public void NoDetection(char c)
+        {
+            char.IsAsciiHexDigit(c);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use pattern.

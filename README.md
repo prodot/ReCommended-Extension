@@ -5,18 +5,19 @@ The ReCommended Extension for ReSharper and Rider augments the sophisticated cod
 
 - advanced disposable object analysis built around the `[MustDisposeResource]` and `[HandlesResourceDisposal]` annotations,
 - detection of more cases where collection expressions can be used,
-- detection of redundant assertions,
+- LINQ and base type analyzers (encourage the use of modern language features, detect unused arguments),
+- format specifier analyzers (detect redundant specifiers, redundant precision specifiers),
 - inappropriate use of `async void`,
 - exception analyzer (exceptions that should never be thrown or caught, exceptions thrown in unexpected locations),
+- detection of redundant assertions,
 - array initializers (empty arrays or arrays initialized with default values),
 - `await` expression analyzer (add `.ConfigureAwait(false)` for last expressions),
 - `ValueTask`/`ValueTask<T>` analyzer (possible multiple consumption),
-- LINQ and `string` method analyzers (to encourage use of modern language features),
 - incorrect use of `ArgumentException` constructor parameters,
 - locking on weak identity objects,
 - use of `yield return` inside the `lock` blocks,
-- incorrect use of ReSharper annotations,
-- and lots more.
+- annotations analyzers (missing annotations, incorrectly used ReSharper annotations),
+- and much more.
 
 Most of the highlightings also have quick fixes for obvious solutions.
 
