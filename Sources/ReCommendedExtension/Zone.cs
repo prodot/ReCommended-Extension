@@ -1,11 +1,14 @@
 ﻿using JetBrains.Application.BuildScript.Application.Zones;
 using JetBrains.Application.Environment;
-using JetBrains.Platform.VisualStudio.Protocol.BuildScript;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Xaml;
+using ReCommendedExtension;
+
+#if RESHARPER
+using JetBrains.Platform.VisualStudio.Protocol.BuildScript;
 using JetBrains.VsIntegration.Env;
 using JetBrains.VsIntegration.Zones;
-using ReCommendedExtension;
+#endif
 
 namespace ReCommendedExtension
 {
@@ -40,17 +43,18 @@ namespace ReCommendedExtension
 namespace ExtensionActivator
 {
 #if RIDER
-  [ZoneActivator]
-  [ZoneMarker]
-  public sealed class ReCommendedExtensionActivator : IActivate<IReCommendedExtensionZone>
-  {
-    public bool ActivatorEnabled() => true;
-  }
+    [ZoneActivator]
+    [ZoneMarker]
+    public sealed class ReCommendedExtensionActivator : IActivate<IReCommendedExtensionZone>
+    {
+        public bool ActivatorEnabled() => true;
+    }
 #endif
 
-
 #if RESHARPER
-    /// Activator for InProcess mode
+    /// <summary>
+    /// Activator for the In-Process mode
+    /// </summary>
     [ZoneActivator]
     [ZoneMarker(typeof(IVisualStudioFrontendEnvZone))]
     public sealed class ReCommendedExtensionActivator(VisualStudioProtocolConnector protocolConnector) : IActivateDynamic<IReCommendedExtensionZone>
@@ -58,9 +62,11 @@ namespace ExtensionActivator
         public bool ActivatorEnabled() => !protocolConnector.IsOutOfProcess;
     }
 
-    /// Activator for Out of Process mode
+    /// <summary>
+    /// Activator for the Out-of-Process mode
+    /// </summary>
     [ZoneActivator]
     [ZoneMarker(typeof(IVisualStudioBackendOutOfProcessEnvZone))]
-    public sealed class ReCommendedExtensionActivatorOOP : IActivate<IReCommendedExtensionZone>;
+    public sealed class ReCommendedExtensionActivatorOop : IActivate<IReCommendedExtensionZone>;
 #endif
 }
