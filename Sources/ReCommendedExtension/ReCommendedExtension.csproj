@@ -10,7 +10,7 @@
         <Company>prodot GmbH</Company>
         <Copyright>© 2012-2025 $(Company)</Copyright>
 
-        <FileVersion>8.0.0</FileVersion>
+        <FileVersion>8.1.0</FileVersion>
         <Version>$(FileVersion).0</Version>
 
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
