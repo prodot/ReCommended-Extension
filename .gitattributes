@@ -1,0 +1,5 @@
+﻿*.properties=ISO-8859-1
+*.toml=ISO-8859-1
+*.svg=ISO-8859-1
+*.kts=ISO-8859-1
+*.bat=ISO-8859-1
