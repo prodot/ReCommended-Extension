@@ -8,12 +8,5 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes =
-    [
-        typeof(UseExpressionResultSuggestion),
-        typeof(UseBinaryOperatorSuggestion),
-        typeof(RedundantArgumentHint),
-        typeof(SuspiciousFormatSpecifierWarning),
-        typeof(RedundantFormatPrecisionSpecifierHint),
-    ])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class Int64Analyzer() : SignedIntegerAnalyzer<long>(NumberInfos.NumberInfo.Int64);

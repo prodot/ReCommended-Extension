@@ -321,35 +321,6 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestToString()
-    {
-        Test((dateTimeOffset, format) => dateTimeOffset.ToString(format), (dateTimeOffset, _) => dateTimeOffset.ToString(), TestValues, [null, ""]);
-
-        Test(dateTimeOffset => dateTimeOffset.ToString(null as IFormatProvider), dateTimeOffset => dateTimeOffset.ToString());
-
-        Test(
-            (dateTimeOffset, format, formatProvider) => dateTimeOffset.ToString(format, formatProvider),
-            (dateTimeOffset, _, formatProvider) => dateTimeOffset.ToString(formatProvider),
-            TestValues,
-            [null, ""],
-            FormatProviders);
-        Test(
-            (dateTimeOffset, format) => dateTimeOffset.ToString(format, null),
-            (dateTimeOffset, format) => dateTimeOffset.ToString(format),
-            TestValues,
-            ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"]);
-        Test(
-            (dateTimeOffset, format, formatProvider) => dateTimeOffset.ToString(format, formatProvider),
-            (dateTimeOffset, format, _) => dateTimeOffset.ToString(format),
-            TestValues,
-            ["o", "O", "r", "R", "s", "u"],
-            FormatProviders);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestTryParse()
     {

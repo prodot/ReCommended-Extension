@@ -2,7 +2,6 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
@@ -15,11 +14,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion
-                or UseBinaryOperatorSuggestion
-                or RedundantArgumentHint
-                or UseUnaryOperatorSuggestion
-                or RedundantFormatPrecisionSpecifierHint
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint or UseUnaryOperatorSuggestion
             || highlighting.IsError();
 
     [Test]
@@ -36,8 +31,4 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     [Test]
     public void TestUseUnaryOperatorFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    public void TestRemoveFormatPrecisionSpecifierAvailability() => DoNamedTest2();
 }

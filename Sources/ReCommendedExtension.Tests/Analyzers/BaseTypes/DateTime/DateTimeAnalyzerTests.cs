@@ -476,36 +476,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestToString()
-    {
-        Test((dateTime, format) => dateTime.ToString(format), (dateTime, _) => dateTime.ToString(), TestValues, [null, ""]);
-
-        Test(dateTime => dateTime.ToString(null as IFormatProvider), dateTime => dateTime.ToString());
-
-        Test(
-            (dateTime, format, provider) => dateTime.ToString(format, provider),
-            (dateTime, _, provider) => dateTime.ToString(provider),
-            TestValues,
-            [null, ""],
-            FormatProviders);
-        Test(
-            (dateTime, format) => dateTime.ToString(format, null),
-            (dateTime, format) => dateTime.ToString(format),
-            TestValues,
-            ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"]);
-        Test(
-            (dateTime, format, provider) => dateTime.ToString(format, provider),
-            (dateTime, format, _) => dateTime.ToString(format),
-            TestValues,
-            ["o", "O", "r", "R", "s", "u"],
-            FormatProviders);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestTryParse()
     {

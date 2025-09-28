@@ -956,65 +956,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>timeSpan.ToString(null)</c> → <c>timeSpan.ToString()</c><para/>
-    /// <c>timeSpan.ToString("")</c> → <c>timeSpan.ToString()</c><para/>
-    /// <c>timeSpan.ToString("c")</c> → <c>timeSpan.ToString()</c><para/>
-    /// <c>timeSpan.ToString("t")</c> → <c>timeSpan.ToString()</c><para/>
-    /// <c>timeSpan.ToString("T")</c> → <c>timeSpan.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
-    {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.TIMESPAN_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule);
-
-        var format = formatArgument.Value.TryGetStringConstant();
-
-        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-
-        if (format is "c" or "t" or "T" && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>timeSpan.ToString(format, null)</c> → <c>timeSpan.ToString(format)</c><para/>
-    /// <c>timeSpan.ToString(null, formatProvider)</c> → <c>timeSpan.ToString(null)</c><para/>
-    /// <c>timeSpan.ToString("", formatProvider)</c> → <c>timeSpan.ToString("")</c><para/>
-    /// <c>timeSpan.ToString("c", formatProvider)</c> → <c>timeSpan.ToString("c")</c><para/>
-    /// <c>timeSpan.ToString("t", formatProvider)</c> → <c>timeSpan.ToString("t")</c><para/>
-    /// <c>timeSpan.ToString("T", formatProvider)</c> → <c>timeSpan.ToString("T")</c>
-    /// </remarks>
-    static void AnalyzeToString_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument formatArgument,
-        ICSharpArgument formatProviderArgument)
-    {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.TIMESPAN_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
-                invocationExpression.PsiModule);
-
-        if (formatProviderArgument.Value.IsDefaultValue() && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
-        }
-
-        if ((formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() is "" or "c" or "t" or "T") && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", formatProviderArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>TimeSpan.TryParse(input, null, out result)</c> → <c>TimeSpan.TryParse(input, out result)</c>
     /// </remarks>
     static void AnalyzeTryParse_String_IFormatProvider_TimeSpan(
@@ -1480,25 +1421,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                 {
                                     case ([{ Type: var tsType }], [{ } tsArgument]) when tsType.IsTimeSpan():
                                         AnalyzeSubtract_TimeSpan(consumer, invocationExpression, invokedExpression, tsArgument);
-                                        break;
-                                }
-                                break;
-
-                            case nameof(TimeSpan.ToString):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
-                                        AnalyzeToString_String(consumer, invocationExpression, formatArgument);
-                                        break;
-
-                                    case ([{ Type: var formatType }, { Type: var formatProviderType }], [
-                                        { } formatArgument, { } formatProviderArgument,
-                                    ]) when formatType.IsString() && formatProviderType.IsIFormatProvider():
-                                        AnalyzeToString_String_IFormatProvider(
-                                            consumer,
-                                            invocationExpression,
-                                            formatArgument,
-                                            formatProviderArgument);
                                         break;
                                 }
                                 break;

@@ -33,34 +33,16 @@ namespace Test
             var result25 = Math.Round(d, |0|(18), |MidpointRounding.ToEven|(19));
         }
 
-        public void ToString(decimal number, string format, IFormatProvider provider)
-        {
-            var result11 = number.ToString(|null as string|(20));
-            var result12 = number.ToString(|""|(21));
-
-            var result21 = number.ToString(|"G"|(22));
-            var result22 = number.ToString(|"g"|(23));
-
-            var result31 = number.ToString(|null as IFormatProvider|(24));
-            var result32 = number.ToString(|null|(25), provider);
-            var result33 = number.ToString(|""|(26), provider);
-            var result34 = number.ToString(format, |null|(27));
-            var result35 = number.ToString(|""|(28), |null|(29));
-
-            var result41 = number.ToString(|"G"|(30), provider);
-            var result42 = number.ToString(|"g"|(31), provider);
-        }
-
         public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
         {
-            var result11 = decimal.TryParse(s, |NumberStyles.Number|(32), provider, out _);
-            var result12 = decimal.TryParse(s, |null|(33), out _);
+            var result11 = decimal.TryParse(s, |NumberStyles.Number|(20), provider, out _);
+            var result12 = decimal.TryParse(s, |null|(21), out _);
 
-            var result21 = decimal.TryParse(s1, |NumberStyles.Number|(34), provider, out _);
-            var result22 = decimal.TryParse(s1, |null|(35), out _);
+            var result21 = decimal.TryParse(s1, |NumberStyles.Number|(22), provider, out _);
+            var result22 = decimal.TryParse(s1, |null|(23), out _);
 
-            var result31 = decimal.TryParse(utf8Text, |NumberStyles.Number|(36), provider, out _);
-            var result32 = decimal.TryParse(utf8Text, |null|(37), out _);
+            var result31 = decimal.TryParse(utf8Text, |NumberStyles.Number|(24), provider, out _);
+            var result32 = decimal.TryParse(utf8Text, |null|(25), out _);
         }
     }
 }
@@ -125,57 +107,21 @@ Remove argument
 19: Passing MidpointRounding.ToEven is redundant.
 QUICKFIXES:
 Remove argument
-20: Passing null or an empty string is redundant.
+20: Passing NumberStyles.Number is redundant.
 QUICKFIXES:
 Remove argument
-21: Passing null or an empty string is redundant.
+21: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-22: Passing "G" is redundant.
+22: Passing NumberStyles.Number is redundant.
 QUICKFIXES:
 Remove argument
-23: Passing "g" is redundant.
+23: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-24: Passing null is redundant.
+24: Passing NumberStyles.Number is redundant.
 QUICKFIXES:
 Remove argument
-25: Passing null or an empty string is redundant.
-QUICKFIXES:
-Remove argument
-26: Passing null or an empty string is redundant.
-QUICKFIXES:
-Remove argument
-27: Passing null is redundant.
-QUICKFIXES:
-Remove argument
-28: Passing null or an empty string is redundant.
-QUICKFIXES:
-Remove argument
-29: Passing null is redundant.
-QUICKFIXES:
-Remove argument
-30: Passing "G" is redundant.
-QUICKFIXES:
-Remove argument
-31: Passing "g" is redundant.
-QUICKFIXES:
-Remove argument
-32: Passing NumberStyles.Number is redundant.
-QUICKFIXES:
-Remove argument
-33: Passing null is redundant.
-QUICKFIXES:
-Remove argument
-34: Passing NumberStyles.Number is redundant.
-QUICKFIXES:
-Remove argument
-35: Passing null is redundant.
-QUICKFIXES:
-Remove argument
-36: Passing NumberStyles.Number is redundant.
-QUICKFIXES:
-Remove argument
-37: Passing null is redundant.
+25: Passing null is redundant.
 QUICKFIXES:
 Remove argument

@@ -30,8 +30,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     {
         public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
 
-        public static IReadOnlyList<ParameterType> IFormatProvider { get; } = [new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN }];
-
         public static IReadOnlyList<ParameterType> String_IFormatProvider { get; } =
         [
             new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
@@ -569,83 +567,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     }
 
     /// <remarks>
-    /// <c>dateTimeOffset.ToString(null)</c> → <c>dateTimeOffset.ToString()</c><para/>
-    /// <c>dateTimeOffset.ToString("")</c> → <c>dateTimeOffset.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
-    {
-        if ((formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() == "")
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTimeOffset.ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateTimeOffset.ToString(null)</c> → <c>dateTimeOffset.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument formatProviderArgument)
-    {
-        if (formatProviderArgument.Value.IsDefaultValue()
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTimeOffset.ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateTimeOffset.ToString(null, provider)</c> → <c>dateTimeOffset.ToString(provider)</c><para/>
-    /// <c>dateTimeOffset.ToString("", provider)</c> → <c>dateTimeOffset.ToString(provider)</c><para/>
-    /// <c>dateTimeOffset.ToString(format, null)</c> → <c>dateTimeOffset.ToString(format)</c><para/>
-    /// <c>dateTimeOffset.ToString("O", provider)</c> → <c>dateTimeOffset.ToString("O")</c><para/>
-    /// <c>dateTimeOffset.ToString("o", provider)</c> → <c>dateTimeOffset.ToString("o")</c><para/>
-    /// <c>dateTimeOffset.ToString("R", provider)</c> → <c>dateTimeOffset.ToString("R")</c><para/>
-    /// <c>dateTimeOffset.ToString("r", provider)</c> → <c>dateTimeOffset.ToString("r")</c><para/>
-    /// <c>dateTimeOffset.ToString("s", provider)</c> → <c>dateTimeOffset.ToString("s")</c><para/>
-    /// <c>dateTimeOffset.ToString("u", provider)</c> → <c>dateTimeOffset.ToString("u")</c>
-    /// </remarks>
-    static void AnalyzeToString_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument formatArgument,
-        ICSharpArgument formatProviderArgument)
-    {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTimeOffset.ToString), ParameterTypes = ParameterTypes.String },
-                invocationExpression.PsiModule);
-
-        if (formatProviderArgument.Value.IsDefaultValue() && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
-            return;
-        }
-
-        var format = formatArgument.Value.TryGetStringConstant();
-
-        if ((formatArgument.Value.IsDefaultValue() || format == "")
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTimeOffset.ToString), ParameterTypes = ParameterTypes.IFormatProvider },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-
-        if (format is "o" or "O" or "r" or "R" or "s" or "u" && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", formatProviderArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>DateTimeOffset.TryParse(s, null, out result)</c> → <c>DateTimeOffset.TryParse(s, out result)</c>
     /// </remarks>
     static void AnalyzeTryParse_String_IFormatProvider_DateTimeOffset(
@@ -1028,31 +949,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
 
                                     case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsTimeSpan():
                                         AnalyzeSubtract_TimeSpan(consumer, invocationExpression, invokedExpression, valueArgument);
-                                        break;
-                                }
-                                break;
-
-                            case nameof(DateTimeOffset.ToString):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
-                                        AnalyzeToString_String(consumer, invocationExpression, formatArgument);
-                                        break;
-
-                                    case ([{ Type: var formatProviderType }], [{ } formatProviderArgument])
-                                        when formatProviderType.IsIFormatProvider():
-
-                                        AnalyzeToString_IFormatProvider(consumer, invocationExpression, formatProviderArgument);
-                                        break;
-
-                                    case ([{ Type: var formatType }, { Type: var formatProviderType }], [
-                                        { } formatArgument, { } formatProviderArgument,
-                                    ]) when formatType.IsString() && formatProviderType.IsIFormatProvider():
-                                        AnalyzeToString_String_IFormatProvider(
-                                            consumer,
-                                            invocationExpression,
-                                            formatArgument,
-                                            formatProviderArgument);
                                         break;
                                 }
                                 break;

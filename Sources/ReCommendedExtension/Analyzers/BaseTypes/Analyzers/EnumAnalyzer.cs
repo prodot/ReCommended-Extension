@@ -133,32 +133,6 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     }
 
     /// <remarks>
-    /// <c>enum.ToString(null)</c> → <c>enum.ToString()</c><para/>
-    /// <c>enum.ToString("")</c> → <c>enum.ToString()</c><para/>
-    /// <c>enum.ToString("G")</c> → <c>enum.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
-    {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.ENUM_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule);
-
-        var format = formatArgument.Value.TryGetStringConstant();
-
-        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-
-        if (format is "G" or "g" && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>Enum.TryParse&lt;E>(value, false, out result)</c> → <c>Enum.TryParse&lt;E>(value, out result)</c>
     /// </remarks>
     static void AnalyzeTryParse_String_Boolean_E(
@@ -234,102 +208,75 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (element is { InvokedExpression: IReferenceExpression { Reference: var reference } invokedExpression }
+        if (element is { InvokedExpression: IReferenceExpression { Reference: var reference } }
             && reference.Resolve().DeclaredElement is IMethod
             {
-                AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC, IsStatic: true,
             } method
             && method.ContainingType.IsSystemEnumClass())
         {
-            switch (invokedExpression, method)
+            switch (method.ShortName)
             {
-                case ({ QualifierExpression: { } }, { IsStatic: false, TypeParameters: [] }):
-                    switch (method.ShortName)
+                case nameof(Enum.Parse):
+                    switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case nameof(Enum.ToString):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
-                                    AnalyzeToString_String(consumer, element, formatArgument);
-                                    break;
-                            }
+                        case ([_], [{ Type: var valueType }, { Type: var ignoreCaseType }], [_, { } ignoreCaseArgument])
+                            when valueType.IsString() && ignoreCaseType.IsBool():
+
+                            AnalyzeParse_String_Boolean(consumer, element, ignoreCaseArgument);
+                            break;
+
+                        case ([_], [{ Type: var valueType }, { Type: var ignoreCaseType }], [_, { } ignoreCaseArgument])
+                            when valueType.IsReadOnlySpanOfChar() && ignoreCaseType.IsBool():
+
+                            AnalyzeParse_ReadOnlySpanOfChar_Boolean(consumer, element, ignoreCaseArgument);
+                            break;
+
+                        case ([], [{ Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }], [_, _, { } ignoreCaseArgument])
+                            when enumTypeType.IsSystemType() && valueType.IsString() && ignoreCaseType.IsBool():
+
+                            AnalyzeParse_Type_String_Boolean(consumer, element, ignoreCaseArgument);
+                            break;
+
+                        case ([], [{ Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }], [_, _, { } ignoreCaseArgument])
+                            when enumTypeType.IsSystemType() && valueType.IsReadOnlySpanOfChar() && ignoreCaseType.IsBool():
+
+                            AnalyzeParse_Type_ReadOnlySpanOfChar_Boolean(consumer, element, ignoreCaseArgument);
                             break;
                     }
                     break;
 
-                case (_, { IsStatic: true }):
-                    switch (method.ShortName)
+                case nameof(Enum.TryParse):
+                    switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case nameof(Enum.Parse):
-                            switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([_], [{ Type: var valueType }, { Type: var ignoreCaseType }], [_, { } ignoreCaseArgument])
-                                    when valueType.IsString() && ignoreCaseType.IsBool():
+                        case ([var typeParameter], [{ Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType }], [
+                                _, { } ignoreCaseArgument, _,
+                            ]) when valueType.IsString()
+                            && ignoreCaseType.IsBool()
+                            && TypeEqualityComparer.Default.Equals(TypeFactory.CreateType(typeParameter), resultType):
 
-                                    AnalyzeParse_String_Boolean(consumer, element, ignoreCaseArgument);
-                                    break;
-
-                                case ([_], [{ Type: var valueType }, { Type: var ignoreCaseType }], [_, { } ignoreCaseArgument])
-                                    when valueType.IsReadOnlySpanOfChar() && ignoreCaseType.IsBool():
-
-                                    AnalyzeParse_ReadOnlySpanOfChar_Boolean(consumer, element, ignoreCaseArgument);
-                                    break;
-
-                                case ([], [{ Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }], [
-                                    _, _, { } ignoreCaseArgument,
-                                ]) when enumTypeType.IsSystemType() && valueType.IsString() && ignoreCaseType.IsBool():
-                                    AnalyzeParse_Type_String_Boolean(consumer, element, ignoreCaseArgument);
-                                    break;
-
-                                case ([], [{ Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }], [
-                                    _, _, { } ignoreCaseArgument,
-                                ]) when enumTypeType.IsSystemType() && valueType.IsReadOnlySpanOfChar() && ignoreCaseType.IsBool():
-                                    AnalyzeParse_Type_ReadOnlySpanOfChar_Boolean(consumer, element, ignoreCaseArgument);
-                                    break;
-                            }
+                            AnalyzeTryParse_String_Boolean_E(consumer, element, ignoreCaseArgument);
                             break;
 
-                        case nameof(Enum.TryParse):
-                            switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([var typeParameter], [{ Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType }], [
-                                        _, { } ignoreCaseArgument, _,
-                                    ]) when valueType.IsString()
-                                    && ignoreCaseType.IsBool()
-                                    && TypeEqualityComparer.Default.Equals(TypeFactory.CreateType(typeParameter), resultType):
+                        case ([var typeParameter], [{ Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType }], [
+                                _, { } ignoreCaseArgument, _,
+                            ]) when valueType.IsReadOnlySpanOfChar()
+                            && ignoreCaseType.IsBool()
+                            && TypeEqualityComparer.Default.Equals(TypeFactory.CreateType(typeParameter), resultType):
 
-                                    AnalyzeTryParse_String_Boolean_E(consumer, element, ignoreCaseArgument);
-                                    break;
+                            AnalyzeTryParse_ReadOnlySpanOfChar_Boolean_E(consumer, element, ignoreCaseArgument);
+                            break;
 
-                                case ([var typeParameter], [{ Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType }], [
-                                        _, { } ignoreCaseArgument, _,
-                                    ]) when valueType.IsReadOnlySpanOfChar()
-                                    && ignoreCaseType.IsBool()
-                                    && TypeEqualityComparer.Default.Equals(TypeFactory.CreateType(typeParameter), resultType):
+                        case ([], [{ Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType }], [
+                            _, _, { } ignoreCaseArgument, _,
+                        ]) when enumTypeType.IsSystemType() && valueType.IsString() && ignoreCaseType.IsBool() && resultType.IsObject():
+                            AnalyzeTryParse_Type_String_Boolean_Object(consumer, element, ignoreCaseArgument);
+                            break;
 
-                                    AnalyzeTryParse_ReadOnlySpanOfChar_Boolean_E(consumer, element, ignoreCaseArgument);
-                                    break;
-
-                                case ([], [
-                                        { Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType },
-                                    ], [_, _, { } ignoreCaseArgument, _]) when enumTypeType.IsSystemType()
-                                    && valueType.IsString()
-                                    && ignoreCaseType.IsBool()
-                                    && resultType.IsObject():
-
-                                    AnalyzeTryParse_Type_String_Boolean_Object(consumer, element, ignoreCaseArgument);
-                                    break;
-
-                                case ([], [
-                                        { Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType },
-                                    ], [_, _, { } ignoreCaseArgument, _]) when enumTypeType.IsSystemType()
-                                    && valueType.IsReadOnlySpanOfChar()
-                                    && ignoreCaseType.IsBool()
-                                    && resultType.IsObject():
-
-                                    AnalyzeTryParse_Type_ReadOnlySpanOfChar_Boolean_Object(consumer, element, ignoreCaseArgument);
-                                    break;
-                            }
+                        case ([], [{ Type: var enumTypeType }, { Type: var valueType }, { Type: var ignoreCaseType }, { Type: var resultType }], [
+                            _, _, { } ignoreCaseArgument, _,
+                        ]) when enumTypeType.IsSystemType() && valueType.IsReadOnlySpanOfChar() && ignoreCaseType.IsBool() && resultType.IsObject():
+                            AnalyzeTryParse_Type_ReadOnlySpanOfChar_Boolean_Object(consumer, element, ignoreCaseArgument);
                             break;
                     }
                     break;

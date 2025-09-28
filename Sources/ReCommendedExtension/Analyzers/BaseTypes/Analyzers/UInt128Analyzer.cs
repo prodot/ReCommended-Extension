@@ -9,12 +9,5 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes =
-    [
-        typeof(UseExpressionResultSuggestion),
-        typeof(UseBinaryOperatorSuggestion),
-        typeof(RedundantArgumentHint),
-        typeof(SuspiciousFormatSpecifierWarning),
-        typeof(RedundantFormatPrecisionSpecifierHint),
-    ])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(RedundantArgumentHint)])]
 public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128>(BaseTypes.NumberInfos.NumberInfo.UInt128);

@@ -23,13 +23,5 @@ public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 
     [Test]
     [TestNetCore21]
-    public void TestToString() => DoNamedTest2();
-
-    [Test]
-    [TestNetCore21]
-    public void TestToString_FormatProvider() => DoNamedTest2();
-
-    [Test]
-    [TestNetCore21]
     public void TestTryParse() => DoNamedTest2();
 }

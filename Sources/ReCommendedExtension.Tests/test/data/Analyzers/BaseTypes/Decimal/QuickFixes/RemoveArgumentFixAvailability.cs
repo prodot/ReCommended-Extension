@@ -33,24 +33,6 @@ namespace Test
             var result25 = Math.Round(d, 0, MidpointRounding.ToEven);
         }
 
-        public void ToString(decimal number, string format, IFormatProvider provider)
-        {
-            var result11 = number.ToString(null as string);
-            var result12 = number.ToString("");
-
-            var result21 = number.ToString("G");
-            var result22 = number.ToString("g");
-
-            var result31 = number.ToString(null as IFormatProvider);
-            var result32 = number.ToString(null, provider);
-            var result33 = number.ToString("", provider);
-            var result34 = number.ToString(format, null);
-            var result35 = number.ToString("", null);
-
-            var result41 = number.ToString("G", provider);
-            var result42 = number.ToString("g", provider);
-        }
-
         public void TryParse(string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
         {
             var result11 = decimal.TryParse(s, NumberStyles.Number, provider, out _);

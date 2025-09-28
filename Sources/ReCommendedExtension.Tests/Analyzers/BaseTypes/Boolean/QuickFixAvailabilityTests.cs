@@ -13,8 +13,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Boolean\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantMethodInvocationHint or RedundantArgumentHint
-            || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantMethodInvocationHint || highlighting.IsError();
 
     [Test]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
@@ -24,7 +23,4 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     [Test]
     public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
-
-    [Test]
-    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 }

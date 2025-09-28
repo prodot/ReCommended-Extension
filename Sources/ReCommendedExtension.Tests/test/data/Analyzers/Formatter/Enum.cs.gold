@@ -1,0 +1,64 @@
+﻿namespace Test
+{
+    public class Formatters
+    {
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void RedundantFormatSpecifier(SampleEnum value)
+        {
+            var result11 = $"{value|:G|(0)}";
+            var result12 = $"{value|:g|(1)}";
+
+            var result21 = string.Format("{0|:G|(2)}", value);
+            var result22 = string.Format("{0|:g|(3)}", value);
+
+            var result31 = value.ToString(|null as string|(4));
+            var result32 = value.ToString(|""|(5));
+            var result33 = value.ToString(|"G"|(6));
+            var result34 = value.ToString(|"g"|(7));
+        }
+
+        public void RedundantFormatSpecifier(SampleEnum? value)
+        {
+            var result11 = $"{value|:G|(8)}";
+            var result12 = $"{value|:g|(9)}";
+
+            var result21 = string.Format("{0|:G|(10)}", value);
+            var result22 = string.Format("{0|:g|(11)}", value);
+        }
+
+        public void NoDetection(SampleEnum value)
+        {
+            var result1 = $"{value:F}";
+
+            var result2 = string.Format("{0:F}", value);
+
+            var result3 = value.ToString("F");
+        }
+
+        public void NoDetection(SampleEnum? value)
+        {
+            var result1 = $"{value:F}";
+
+            var result2 = string.Format("{0:F}", value);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'G' is redundant.
+(1): ReSharper Dead Code: Specifying 'g' is redundant.
+(2): ReSharper Dead Code: Specifying 'G' is redundant.
+(3): ReSharper Dead Code: Specifying 'g' is redundant.
+(4): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(5): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(6): ReSharper Dead Code: Specifying 'G' is redundant.
+(7): ReSharper Dead Code: Specifying 'g' is redundant.
+(8): ReSharper Dead Code: Specifying 'G' is redundant.
+(9): ReSharper Dead Code: Specifying 'g' is redundant.
+(10): ReSharper Dead Code: Specifying 'G' is redundant.
+(11): ReSharper Dead Code: Specifying 'g' is redundant.

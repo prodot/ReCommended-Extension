@@ -6,18 +6,14 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Enum;
 
 [TestFixture]
+[TestNetCore20]
 public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Enum\QuickFixes";
 
     [Test]
-    [TestNetCore20]
     public void TestParse() => DoNamedTest2();
 
     [Test]
-    public void TestToString() => DoNamedTest2();
-
-    [Test]
-    [TestNetCore20]
     public void TestTryParse() => DoNamedTest2();
 }

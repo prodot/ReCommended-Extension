@@ -3,7 +3,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.MethodFinding;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -12,13 +11,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes =
-    [
-        typeof(UseBinaryOperatorSuggestion),
-        typeof(UseExpressionResultSuggestion),
-        typeof(UseCharRangePatternSuggestion),
-        typeof(RedundantArgumentHint),
-    ])]
+    HighlightingTypes = [typeof(UseBinaryOperatorSuggestion), typeof(UseExpressionResultSuggestion), typeof(UseCharRangePatternSuggestion)])]
 public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
     /// <remarks>
@@ -229,22 +222,6 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         }
     }
 
-    /// <remarks>
-    /// <c>character.ToString(provider)</c> → <c>character.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (PredefinedType.CHAR_FQN.HasMethod(
-            new MethodSignature { Name = nameof(bool.ToString), ParameterTypes = [] },
-            invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
-        }
-    }
-
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { Reference: var reference } invokedExpression }
@@ -276,15 +253,6 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([], []): AnalyzeGetTypeCode(consumer, element); break;
-                            }
-                            break;
-
-                        case nameof(char.ToString):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var providerType }], [{ } providerArgument]) when providerType.IsIFormatProvider():
-                                    AnalyzeToString_IFormatProvider(consumer, element, providerArgument);
-                                    break;
                             }
                             break;
                     }

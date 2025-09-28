@@ -299,29 +299,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestToString()
-    {
-        var formatsRedundant = new[] { null, "", "c", "t", "T" };
-
-        Test((timeSpan, format) => timeSpan.ToString(format), (timeSpan, _) => timeSpan.ToString(), TestValues, formatsRedundant);
-
-        Test(
-            (timeSpan, format) => timeSpan.ToString(format, null),
-            (timeSpan, format) => timeSpan.ToString(format),
-            TestValues,
-            ["c", "t", "T", "g", "G"]);
-        Test(
-            (timeSpan, format, formatProvider) => timeSpan.ToString(format, formatProvider),
-            (timeSpan, _, _) => timeSpan.ToString(),
-            TestValues,
-            formatsRedundant,
-            FormatProviders);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNetCore21]
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestTryParse()

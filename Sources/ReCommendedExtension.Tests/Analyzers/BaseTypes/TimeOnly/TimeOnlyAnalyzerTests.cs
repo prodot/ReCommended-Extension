@@ -226,39 +226,6 @@ public sealed class TimeOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.TimeOn
     }
 
     [Test]
-    public void TestToString()
-    {
-        Test((timeOnly, format) => timeOnly.ToString(format), (timeOnly, _) => timeOnly.ToString(), TestValues, [null, "", "t"]);
-
-        Test(timeOnly => timeOnly.ToString(null as IFormatProvider), timeOnly => timeOnly.ToString(), TestValues);
-
-        Test(
-            (timeOnly, format) => timeOnly.ToString(format, null),
-            (timeOnly, format) => timeOnly.ToString(format),
-            TestValues,
-            [null, "", "t", "T", "o", "O", "r", "R"]);
-        Test(
-            (timeOnly, provider) => timeOnly.ToString(null, provider),
-            (timeOnly, provider) => timeOnly.ToString(provider),
-            TestValues,
-            FormatProviders);
-        Test(
-            (timeOnly, format, provider) => timeOnly.ToString(format, provider),
-            (timeOnly, _, provider) => timeOnly.ToString(provider),
-            TestValues,
-            [null, "", "t"],
-            FormatProviders);
-        Test(
-            (timeOnly, format, provider) => timeOnly.ToString(format, provider),
-            (timeOnly, format, _) => timeOnly.ToString(format),
-            TestValues,
-            ["o", "O", "r", "R"],
-            FormatProviders);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestTryParse()
     {

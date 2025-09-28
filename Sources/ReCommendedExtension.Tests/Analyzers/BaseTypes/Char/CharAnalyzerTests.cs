@@ -15,8 +15,7 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Char";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion or UseCharRangePatternSuggestion or RedundantArgumentHint
-            || highlighting.IsError();
+        => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion or UseCharRangePatternSuggestion || highlighting.IsError();
 
     protected override char[] TestValues { get; } = ['a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue];
 
@@ -135,16 +134,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     public void TestIsBetween()
     {
         Test(c => MissingCharMethods.IsBetween(c, 'a', 'c'), c => c is >= 'a' and <= 'c');
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestToString()
-    {
-        Test(character => character.ToString(null), character => character.ToString());
-        Test((character, provider) => character.ToString(provider), (character, _) => character.ToString(), TestValues, FormatProviders);
 
         DoNamedTest2();
     }

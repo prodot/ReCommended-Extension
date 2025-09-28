@@ -102,48 +102,6 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     }
 
     /// <remarks>
-    /// <c>guid.ToString(null)</c> → <c>guid.ToString()</c><para/>
-    /// <c>guid.ToString("")</c> → <c>guid.ToString()</c><para/>
-    /// <c>guid.ToString("D")</c> → <c>guid.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
-    {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.GUID_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule);
-
-        var format = formatArgument.Value.TryGetStringConstant();
-
-        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-
-        if (format is "D" or "d" && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>guid.ToString(format, provider)</c> → <c>guid.ToString(format)</c>
-    /// </remarks>
-    static void AnalyzeToString_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (PredefinedType.GUID_FQN.HasMethod(
-            new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
-            invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>Guid.TryParse(s, provider, out result)</c> → <c>Guid.TryParse(s, out result)</c>
     /// </remarks>
     static void AnalyzeTryParse_String_IFormatProvider_Guid(
@@ -198,21 +156,6 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
                                 case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, objArgument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(Guid.ToString):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
-                                    AnalyzeToString_String(consumer, element, formatArgument);
-                                    break;
-
-                                case ([{ Type: var formatType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when formatType.IsString() && providerType.IsIFormatProvider():
-
-                                    AnalyzeToString_String_IFormatProvider(consumer, element, providerArgument);
                                     break;
                             }
                             break;

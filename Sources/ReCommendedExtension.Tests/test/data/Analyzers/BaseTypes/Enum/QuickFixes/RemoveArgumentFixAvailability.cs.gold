@@ -20,21 +20,13 @@ namespace Test
             var result22 = Enum.Parse(typeof(SampleEnum), value1, |false|(3));
         }
 
-        public void ToString(SampleEnum e)
-        {
-            var result1 = e.ToString(|null as string|(4));
-            var result2 = e.ToString(|""|(5));
-            var result3 = e.ToString(|"G"|(6));
-            var result4 = e.ToString(|"g"|(7));
-        }
-
         public void TryParse(string value, ReadOnlySpan<char> value1, out SampleEnum result, out object resultObject)
         {
-            var result11 = Enum.TryParse<SampleEnum>(value, |false|(8), out result);
-            var result12 = Enum.TryParse<SampleEnum>(value1, |false|(9), out result);
+            var result11 = Enum.TryParse<SampleEnum>(value, |false|(4), out result);
+            var result12 = Enum.TryParse<SampleEnum>(value1, |false|(5), out result);
 
-            var result21 = Enum.TryParse(typeof(SampleEnum), value, |false|(10), out resultObject);
-            var result22 = Enum.TryParse(typeof(SampleEnum), value1, |false|(11), out resultObject);
+            var result21 = Enum.TryParse(typeof(SampleEnum), value, |false|(6), out resultObject);
+            var result22 = Enum.TryParse(typeof(SampleEnum), value1, |false|(7), out resultObject);
         }
     }
 }
@@ -51,27 +43,15 @@ Remove argument
 3: Passing false is redundant.
 QUICKFIXES:
 Remove argument
-4: Passing null or an empty string is redundant.
+4: Passing false is redundant.
 QUICKFIXES:
 Remove argument
-5: Passing null or an empty string is redundant.
+5: Passing false is redundant.
 QUICKFIXES:
 Remove argument
-6: Passing "G" is redundant.
+6: Passing false is redundant.
 QUICKFIXES:
 Remove argument
-7: Passing "g" is redundant.
-QUICKFIXES:
-Remove argument
-8: Passing false is redundant.
-QUICKFIXES:
-Remove argument
-9: Passing false is redundant.
-QUICKFIXES:
-Remove argument
-10: Passing false is redundant.
-QUICKFIXES:
-Remove argument
-11: Passing false is redundant.
+7: Passing false is redundant.
 QUICKFIXES:
 Remove argument

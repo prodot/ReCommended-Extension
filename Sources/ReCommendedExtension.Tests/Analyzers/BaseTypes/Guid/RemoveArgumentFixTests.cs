@@ -6,18 +6,14 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Guid;
 
 [TestFixture]
+[TestNet70]
 public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Guid\QuickFixes";
 
     [Test]
-    [TestNet70]
     public void TestParse() => DoNamedTest2();
 
     [Test]
-    public void TestToString() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
     public void TestTryParse() => DoNamedTest2();
 }

@@ -1,0 +1,109 @@
+﻿using System;
+
+namespace Test
+{
+    public class Formatters
+    {
+        public void RedundantFormatSpecifier(DateOnly value)
+        {
+            var result1 = $"{value|:d|(0)}";
+
+            var result2 = string.Format("{0|:d|(1)}", value);
+        }
+
+        public void RedundantFormatSpecifier(DateOnly? value)
+        {
+            var result1 = $"{value|:d|(2)}";
+
+            var result2 = string.Format("{0|:d|(3)}", value);
+        }
+
+        public void RedundantFormatSpecifierProvider(DateOnly dateOnly, string format, IFormatProvider provider)
+        {
+            var result11 = dateOnly.ToString(|null as string|(4));
+            var result12 = dateOnly.ToString(|""|(5));
+            var result13 = dateOnly.ToString(|"d"|(6));
+
+            var result21 = dateOnly.ToString(|null as IFormatProvider|(7));
+
+            var result31 = dateOnly.ToString(format, |null|(8));
+            var result32 = dateOnly.ToString(|null|(9), provider);
+            var result33 = dateOnly.ToString(|""|(10), provider);
+            var result34 = dateOnly.ToString(|"d"|(11), provider);
+            var result35 = dateOnly.ToString("o", |provider|(12));
+            var result36 = dateOnly.ToString("O", |provider|(13));
+            var result37 = dateOnly.ToString("r", |provider|(14));
+            var result38 = dateOnly.ToString("R", |provider|(15));
+        }
+
+        public void NoDetection(DateOnly value)
+        {
+            var result11 = $"{value:D}";
+            var result12 = $"{value:o}";
+            var result13 = $"{value:O}";
+            var result14 = $"{value:r}";
+            var result15 = $"{value:R}";
+            var result16 = $"{value:m}";
+            var result17 = $"{value:M}";
+            var result18 = $"{value:y}";
+            var result19 = $"{value:Y}";
+
+            var result21 = string.Format("{0:D}", value);
+            var result22 = string.Format("{0:o}", value);
+            var result23 = string.Format("{0:O}", value);
+            var result24 = string.Format("{0:r}", value);
+            var result25 = string.Format("{0:R}", value);
+            var result26 = string.Format("{0:m}", value);
+            var result27 = string.Format("{0:M}", value);
+            var result28 = string.Format("{0:y}", value);
+            var result29 = string.Format("{0:Y}", value);
+        }
+
+        public void NoDetection(DateOnly? value)
+        {
+            var result11 = $"{value:D}";
+            var result12 = $"{value:o}";
+            var result13 = $"{value:O}";
+            var result14 = $"{value:r}";
+            var result15 = $"{value:R}";
+            var result16 = $"{value:m}";
+            var result17 = $"{value:M}";
+            var result18 = $"{value:y}";
+            var result19 = $"{value:Y}";
+
+            var result21 = string.Format("{0:D}", value);
+            var result22 = string.Format("{0:o}", value);
+            var result23 = string.Format("{0:O}", value);
+            var result24 = string.Format("{0:r}", value);
+            var result25 = string.Format("{0:R}", value);
+            var result26 = string.Format("{0:m}", value);
+            var result27 = string.Format("{0:M}", value);
+            var result28 = string.Format("{0:y}", value);
+            var result29 = string.Format("{0:Y}", value);
+        }
+
+        public void NoDetection(DateOnly dateOnly, string format, IFormatProvider provider)
+        {
+            var result1 = dateOnly.ToString(format);
+            var result2 = dateOnly.ToString(provider);
+            var result3 = dateOnly.ToString(format, provider);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'd' is redundant.
+(1): ReSharper Dead Code: Specifying 'd' is redundant.
+(2): ReSharper Dead Code: Specifying 'd' is redundant.
+(3): ReSharper Dead Code: Specifying 'd' is redundant.
+(4): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(5): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(6): ReSharper Dead Code: Specifying 'd' is redundant.
+(7): ReSharper Dead Code: Passing null is redundant.
+(8): ReSharper Dead Code: Passing null is redundant.
+(9): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(10): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(11): ReSharper Dead Code: Specifying 'd' is redundant.
+(12): ReSharper Dead Code: Passing a format provider is redundant.
+(13): ReSharper Dead Code: Passing a format provider is redundant.
+(14): ReSharper Dead Code: Passing a format provider is redundant.
+(15): ReSharper Dead Code: Passing a format provider is redundant.

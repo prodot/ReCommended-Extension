@@ -16,8 +16,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(UseBinaryOperatorSuggestion),
         typeof(RedundantArgumentHint),
         typeof(UseUnaryOperatorSuggestion),
-        typeof(SuspiciousFormatSpecifierWarning),
-        typeof(RedundantFormatPrecisionSpecifierHint),
     ])]
 public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(NumberInfos.NumberInfo.Decimal)
 {

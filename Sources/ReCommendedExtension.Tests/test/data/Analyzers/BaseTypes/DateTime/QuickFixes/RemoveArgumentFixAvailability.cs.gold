@@ -57,31 +57,13 @@ namespace Test
             var result = DateTime.ParseExact(s, format, provider, |DateTimeStyles.None|(33));
         }
 
-        public void ToString(DateTime dateTime, string format, IFormatProvider provider)
-        {
-            var result11 = dateTime.ToString(|null as string|(34));
-            var result12 = dateTime.ToString(|""|(35));
-
-            var result21 = dateTime.ToString(|null as IFormatProvider|(36));
-
-            var result31 = dateTime.ToString(|null|(37), provider);
-            var result32 = dateTime.ToString(|""|(38), provider);
-            var result33 = dateTime.ToString(format, |null|(39));
-            var result34 = dateTime.ToString("O", |provider|(40));
-            var result35 = dateTime.ToString("o", |provider|(41));
-            var result36 = dateTime.ToString("R", |provider|(42));
-            var result37 = dateTime.ToString("r", |provider|(43));
-            var result38 = dateTime.ToString("s", |provider|(44));
-            var result39 = dateTime.ToString("u", |provider|(45));
-        }
-
         public void RedundantATryParsergument(string s, ReadOnlySpan<char> s1, IFormatProvider provider, out DateTime result)
         {
-            var result11 = DateTime.TryParse(s, |null|(46), out result);
-            var result12 = DateTime.TryParse(s1, |null|(47), out result);
+            var result11 = DateTime.TryParse(s, |null|(34), out result);
+            var result12 = DateTime.TryParse(s1, |null|(35), out result);
 
-            var result21 = DateTime.TryParse(s, provider, |DateTimeStyles.None|(48), out result);
-            var result22 = DateTime.TryParse(s1, provider, |DateTimeStyles.None|(49), out result);
+            var result21 = DateTime.TryParse(s, provider, |DateTimeStyles.None|(36), out result);
+            var result22 = DateTime.TryParse(s1, provider, |DateTimeStyles.None|(37), out result);
         }
     }
 }
@@ -188,51 +170,15 @@ Remove argument
 33: Passing DateTimeStyles.None is redundant.
 QUICKFIXES:
 Remove argument
-34: Passing null or an empty string is redundant.
+34: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-35: Passing null or an empty string is redundant.
+35: Passing null is redundant.
 QUICKFIXES:
 Remove argument
-36: Passing null is redundant.
+36: Passing DateTimeStyles.None is redundant.
 QUICKFIXES:
 Remove argument
-37: Passing null or an empty string is redundant.
-QUICKFIXES:
-Remove argument
-38: Passing null or an empty string is redundant.
-QUICKFIXES:
-Remove argument
-39: Passing null is redundant.
-QUICKFIXES:
-Remove argument
-40: Passing a format provider is redundant.
-QUICKFIXES:
-Remove argument
-41: Passing a format provider is redundant.
-QUICKFIXES:
-Remove argument
-42: Passing a format provider is redundant.
-QUICKFIXES:
-Remove argument
-43: Passing a format provider is redundant.
-QUICKFIXES:
-Remove argument
-44: Passing a format provider is redundant.
-QUICKFIXES:
-Remove argument
-45: Passing a format provider is redundant.
-QUICKFIXES:
-Remove argument
-46: Passing null is redundant.
-QUICKFIXES:
-Remove argument
-47: Passing null is redundant.
-QUICKFIXES:
-Remove argument
-48: Passing DateTimeStyles.None is redundant.
-QUICKFIXES:
-Remove argument
-49: Passing DateTimeStyles.None is redundant.
+37: Passing DateTimeStyles.None is redundant.
 QUICKFIXES:
 Remove argument

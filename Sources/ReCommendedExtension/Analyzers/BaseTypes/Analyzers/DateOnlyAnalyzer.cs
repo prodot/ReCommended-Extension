@@ -30,8 +30,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
 
-        public static IReadOnlyList<ParameterType> IFormatProvider { get; } = [new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN }];
-
         public static IReadOnlyList<ParameterType> String_String { get; } =
         [
             new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.STRING_FQN },
@@ -514,101 +512,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     }
 
     /// <remarks>
-    /// <c>dateOnly.ToString(null)</c> → <c>dateOnly.ToString()</c><para/>
-    /// <c>dateOnly.ToString("")</c> → <c>dateOnly.ToString()</c><para/>
-    /// <c>dateOnly.ToString("d")</c> → <c>dateOnly.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
-    {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule);
-
-        var format = formatArgument.Value.TryGetStringConstant();
-
-        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-
-        if (format == "d" && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateOnly.ToString(null)</c> → <c>dateOnly.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateOnly.ToString(format, null)</c> → <c>dateOnly.ToString(format)</c><para/>
-    /// <c>dateOnly.ToString(null, provider)</c> → <c>dateOnly.ToString(provider)</c><para/>
-    /// <c>dateOnly.ToString("", provider)</c> → <c>dateOnly.ToString(provider)</c><para/>
-    /// <c>dateOnly.ToString("d", provider)</c> → <c>dateOnly.ToString(provider)</c><para/>
-    /// <c>dateOnly.ToString("o", provider)</c> → <c>dateOnly.ToString("o")</c><para/>
-    /// <c>dateOnly.ToString("O", provider)</c> → <c>dateOnly.ToString("O")</c><para/>
-    /// <c>dateOnly.ToString("r", provider)</c> → <c>dateOnly.ToString("r")</c><para/>
-    /// <c>dateOnly.ToString("R", provider)</c> → <c>dateOnly.ToString("R")</c>
-    /// </remarks>
-    static void AnalyzeToString_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument formatArgument,
-        ICSharpArgument providerArgument)
-    {
-        [Pure]
-        bool MethodWithFormatExists()
-            => PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String },
-                invocationExpression.PsiModule);
-
-        [Pure]
-        bool MethodWithProviderExists()
-            => PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider },
-                invocationExpression.PsiModule);
-
-        if (providerArgument.Value.IsDefaultValue() && MethodWithFormatExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-
-        var format = formatArgument.Value.TryGetStringConstant();
-
-        if ((formatArgument.Value.IsDefaultValue() || format == "") && MethodWithProviderExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-
-        switch (format)
-        {
-            case "d" when MethodWithProviderExists():
-                consumer.AddHighlighting(new RedundantArgumentHint($"Passing \"{format}\" is redundant.", formatArgument));
-                break;
-
-            case "o" or "O" or "r" or "R" when MethodWithFormatExists():
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
-                break;
-        }
-    }
-
-    /// <remarks>
     /// <c>DateOnly.TryParse(s, provider, DateTimeStyles.None, out result)</c> → <c>DateOnly.TryParse(s, provider, out result)</c> (.NET 7)
     /// </remarks>
     static void AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_DateOnly(
@@ -1007,25 +910,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
 
                                 case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, valueArgument);
-                                    break;
-                            }
-                            break;
-
-                        case "ToString": // todo: nameof(DateOnly.ToString) when available
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
-                                    AnalyzeToString_String(consumer, element, formatArgument);
-                                    break;
-
-                                case ([{ Type: var providerType }], [{ } providerArgument]) when providerType.IsIFormatProvider():
-                                    AnalyzeToString_IFormatProvider(consumer, element, providerArgument);
-                                    break;
-
-                                case ([{ Type: var formatType }, { Type: var providerType }], [{ } formatArgument, { } providerArgument])
-                                    when formatType.IsString() && providerType.IsIFormatProvider():
-
-                                    AnalyzeToString_String_IFormatProvider(consumer, element, formatArgument, providerArgument);
                                     break;
                             }
                             break;

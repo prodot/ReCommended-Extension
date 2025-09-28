@@ -3,7 +3,6 @@ using System.Text;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
@@ -17,12 +16,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion
-                or UseBinaryOperatorSuggestion
-                or RedundantArgumentHint
-                or UseUnaryOperatorSuggestion
-                or SuspiciousFormatSpecifierWarning
-                or RedundantFormatPrecisionSpecifierHint
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint or UseUnaryOperatorSuggestion
             || highlighting.IsError();
 
     protected override decimal[] TestValues { get; } = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MinValue, decimal.MaxValue];
@@ -204,41 +198,6 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
             (d1, d2) => d1 - d2,
             [..TestValues.Except([decimal.MinValue, decimal.MaxValue])],
             [..TestValues.Except([decimal.MinValue, decimal.MaxValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestToString()
-    {
-        var formatsRedundant = new[] { null, "", "G", "g" };
-        var formatsRedundantSpecifier = new[] { "E6", "e6" };
-
-        Test((n, format) => n.ToString(format), (n, _) => n.ToString(), TestValues, formatsRedundant);
-        Test((n, format) => n.ToString(format), (n, format) => n.ToString($"{format[0]}"), TestValues, formatsRedundantSpecifier);
-
-        Test(n => n.ToString(null as IFormatProvider), n => n.ToString());
-
-        Test(
-            (n, format) => n.ToString(format, null),
-            (n, format) => n.ToString(format),
-            TestValues,
-            [..formatsRedundant, ..formatsRedundantSpecifier]);
-        Test(
-            (n, format, provider) => n.ToString(format, provider),
-            (n, _, provider) => n.ToString(provider),
-            TestValues,
-            formatsRedundant,
-            FormatProviders);
-        Test(
-            (n, format, provider) => n.ToString(format, provider),
-            (n, format, provider) => n.ToString($"{format[0]}", provider),
-            TestValues,
-            formatsRedundantSpecifier,
-            FormatProviders);
 
         DoNamedTest2();
     }

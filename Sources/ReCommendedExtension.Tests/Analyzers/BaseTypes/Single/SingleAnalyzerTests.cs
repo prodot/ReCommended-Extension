@@ -17,12 +17,7 @@ public sealed class SingleAnalyzerTests : BaseTypeAnalyzerTests<float>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Single";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion
-                or RedundantArgumentHint
-                or UseFloatingPointPatternSuggestion
-                or PassOtherFormatSpecifierSuggestion
-                or RedundantFormatPrecisionSpecifierHint
-            || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint or UseFloatingPointPatternSuggestion || highlighting.IsError();
 
     protected override float[] TestValues { get; } =
     [
@@ -125,39 +120,6 @@ public sealed class SingleAnalyzerTests : BaseTypeAnalyzerTests<float>
             (n, digits) => MissingMathFMethods.Round(n, digits),
             TestValues,
             digitsValues);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestToString()
-    {
-        var formatsRedundant = new[] { null, "", "G", "G0" };
-        var formatsRedundantSpecifier = new[] { "E6", "e6" };
-
-        Test((n, format) => n.ToString(format), (n, _) => n.ToString(), TestValues, formatsRedundant);
-        Test((n, format) => n.ToString(format), (n, format) => n.ToString($"{format[0]}"), TestValues, formatsRedundantSpecifier);
-
-        Test(
-            (n, format) => n.ToString(format, null),
-            (n, format) => n.ToString(format),
-            TestValues,
-            [..formatsRedundant, ..formatsRedundantSpecifier]);
-        Test(
-            (n, format, provider) => n.ToString(format, provider),
-            (n, _, provider) => n.ToString(provider),
-            TestValues,
-            formatsRedundant,
-            FormatProviders);
-        Test(
-            (n, format, provider) => n.ToString(format, provider),
-            (n, format, provider) => n.ToString($"{format[0]}", provider),
-            TestValues,
-            formatsRedundantSpecifier,
-            FormatProviders);
 
         DoNamedTest2();
     }

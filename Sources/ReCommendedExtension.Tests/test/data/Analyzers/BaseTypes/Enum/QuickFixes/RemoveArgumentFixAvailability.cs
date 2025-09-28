@@ -20,14 +20,6 @@ namespace Test
             var result22 = Enum.Parse(typeof(SampleEnum), value1, false);
         }
 
-        public void ToString(SampleEnum e)
-        {
-            var result1 = e.ToString(null as string);
-            var result2 = e.ToString("");
-            var result3 = e.ToString("G");
-            var result4 = e.ToString("g");
-        }
-
         public void TryParse(string value, ReadOnlySpan<char> value1, out SampleEnum result, out object resultObject)
         {
             var result11 = Enum.TryParse<SampleEnum>(value, false, out result);

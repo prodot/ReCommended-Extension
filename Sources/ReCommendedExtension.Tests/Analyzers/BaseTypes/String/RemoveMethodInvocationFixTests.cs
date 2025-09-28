@@ -36,7 +36,4 @@ public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMeth
 
     [Test]
     public void TestSubstring_0() => DoNamedTest2();
-
-    [Test]
-    public void TestToString_IFormatProvider() => DoNamedTest2();
 }

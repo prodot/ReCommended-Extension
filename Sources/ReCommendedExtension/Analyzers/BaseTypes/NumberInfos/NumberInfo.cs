@@ -3,7 +3,6 @@ using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
@@ -1188,22 +1187,22 @@ public abstract record NumberInfo
     internal static NumberInfo? TryGet(IType type)
         => type switch
         {
-            var t when t.IsByte() || t.IsNullable() && t.Unlift().IsByte() => Byte,
-            var t when t.IsSbyte() || t.IsNullable() && t.Unlift().IsSbyte() => SByte,
-            var t when t.IsShort() || t.IsNullable() && t.Unlift().IsShort() => Int16,
-            var t when t.IsUshort() || t.IsNullable() && t.Unlift().IsUshort() => UInt16,
-            var t when t.IsInt() || t.IsNullable() && t.Unlift().IsInt() => Int32,
-            var t when t.IsUint() || t.IsNullable() && t.Unlift().IsUint() => UInt32,
-            var t when t.IsLong() || t.IsNullable() && t.Unlift().IsLong() => Int64,
-            var t when t.IsUlong() || t.IsNullable() && t.Unlift().IsUlong() => UInt64,
-            var t when t.IsInt128() || t.IsNullable() && t.Unlift().IsInt128() => Int128,
-            var t when t.IsUInt128() || t.IsNullable() && t.Unlift().IsUInt128() => UInt128,
-            var t when t.IsIntPtr() || t.IsNullable() && t.Unlift().IsIntPtr() => IntPtr,
-            var t when t.IsUIntPtr() || t.IsNullable() && t.Unlift().IsUIntPtr() => UIntPtr,
-            var t when t.IsDecimal() || t.IsNullable() && t.Unlift().IsDecimal() => Decimal,
-            var t when t.IsDouble() || t.IsNullable() && t.Unlift().IsDouble() => Double,
-            var t when t.IsFloat() || t.IsNullable() && t.Unlift().IsFloat() => Single,
-            var t when t.IsHalf() || t.IsNullable() && t.Unlift().IsHalf() => Half,
+            var t when t.IsByte() => Byte,
+            var t when t.IsSbyte() => SByte,
+            var t when t.IsShort() => Int16,
+            var t when t.IsUshort() => UInt16,
+            var t when t.IsInt() => Int32,
+            var t when t.IsUint() => UInt32,
+            var t when t.IsLong() => Int64,
+            var t when t.IsUlong() => UInt64,
+            var t when t.IsInt128() => Int128,
+            var t when t.IsUInt128() => UInt128,
+            var t when t.IsIntPtr() => IntPtr,
+            var t when t.IsUIntPtr() => UIntPtr,
+            var t when t.IsDecimal() => Decimal,
+            var t when t.IsDouble() => Double,
+            var t when t.IsFloat() => Single,
+            var t when t.IsHalf() => Half,
             _ => null,
         };
 

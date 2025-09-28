@@ -1,0 +1,45 @@
+﻿namespace Test
+{
+    public class Formatters
+    {
+        public enum SampleEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
+
+        public void CastEnums(SampleEnum value)
+        {
+            var result1 = $"{|(int)value|(0)}";
+            var result2 = $"{|(int?)value|(1)}";
+            var result3 = $"{|(long)value|(2)}";
+            var result4 = $"{|(long?)value|(3)}";
+        }
+
+        public void CastEnums(SampleEnum? value)
+        {
+            var result1 = $"{|(int?)value|(4)}";
+            var result2 = $"{|(long?)value|(5)}";
+        }
+    }
+}
+------------------------------------------------
+0: Use the 'D' format specifier instead of the type cast.
+QUICKFIXES:
+Replace with 'value:D'
+1: Use the 'D' format specifier instead of the type cast.
+QUICKFIXES:
+Replace with 'value:D'
+2: Use the 'D' format specifier instead of the type cast.
+QUICKFIXES:
+Replace with 'value:D'
+3: Use the 'D' format specifier instead of the type cast.
+QUICKFIXES:
+Replace with 'value:D'
+4: Use the 'D' format specifier instead of the type cast.
+QUICKFIXES:
+Replace with 'value:D'
+5: Use the 'D' format specifier instead of the type cast.
+QUICKFIXES:
+Replace with 'value:D'

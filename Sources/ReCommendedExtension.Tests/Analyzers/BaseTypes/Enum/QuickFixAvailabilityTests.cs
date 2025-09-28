@@ -9,6 +9,7 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Enum;
 
 [TestFixture]
+[TestNet60]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Enum\QuickFixes";
@@ -17,6 +18,5 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
         => highlighting is RedundantArgumentHint || highlighting.IsError();
 
     [Test]
-    [TestNet60]
     public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 }

@@ -3028,24 +3028,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.ToString(provider)</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzeToString_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression)
-    {
-        if (!invocationExpression.IsUsedAsStatement())
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.ToString)}' with a format provider is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
     /// <c>text.Trim(null)</c> → <c>text.Trim()</c><para/>
     /// <c>text.Trim([])</c> → <c>text.Trim()</c><para/>
     /// <c>text.Trim('a', 'a', 'b')</c> → <c>text.Trim('a', 'b')</c>
@@ -3610,15 +3592,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             {
                                 case ([{ Type: var startIndexType }], [{ } startIndexArgument]) when startIndexType.IsInt():
                                     AnalyzeSubstring_Int32(consumer, element, invokedExpression, startIndexArgument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(string.ToString):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var formatProviderType }], [_]) when formatProviderType.IsIFormatProvider():
-                                    AnalyzeToString_IFormatProvider(consumer, element, invokedExpression);
                                     break;
                             }
                             break;

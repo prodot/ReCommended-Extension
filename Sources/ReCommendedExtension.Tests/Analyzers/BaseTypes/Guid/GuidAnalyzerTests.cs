@@ -49,24 +49,6 @@ public sealed class GuidAnalyzerTests : BaseTypeAnalyzerTests<System.Guid>
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestToString()
-    {
-        var formatsRedundant = new[] { null, "", "D", "d" };
-
-        Test((guid, format) => guid.ToString(format), (n, _) => n.ToString(), TestValues, formatsRedundant);
-
-        Test(
-            (guid, format, provider) => guid.ToString(format, provider),
-            (guid, format, _) => guid.ToString(format),
-            TestValues,
-            [..formatsRedundant, "N"],
-            FormatProviders);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestTryParse()
     {

@@ -10,6 +10,7 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Enum;
 
 [TestFixture]
+[TestNet60]
 public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Enum";
@@ -74,7 +75,6 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [TestNet60]
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestParse()
     {
@@ -100,24 +100,6 @@ public sealed class EnumAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestToString()
-    {
-        TestEnum(e => e.ToString(null as string), e => e.ToString());
-        TestEnum(e => e.ToString(""), e => e.ToString());
-        TestEnum(e => e.ToString("G"), e => e.ToString());
-        TestEnum(e => e.ToString("g"), e => e.ToString());
-
-        TestFlags(e => e.ToString(null as string), e => e.ToString());
-        TestFlags(e => e.ToString(""), e => e.ToString());
-        TestFlags(e => e.ToString("G"), e => e.ToString());
-        TestFlags(e => e.ToString("g"), e => e.ToString());
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet60]
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestTryParse()
     {

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Reflection;
+﻿using System.Reflection;
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
@@ -686,18 +685,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     {
         Test("abcde", text => text.Substring(0), text => text);
         TestNullable("abcde", text => text?.Substring(0), text => text);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    public void TestToString()
-    {
-        Test("abcde", text => text.ToString(null), text => text);
-        Test("abcde", text => text.ToString(CultureInfo.CurrentCulture), text => text);
-        TestNullable("abcde", text => text?.ToString(null), text => text);
-        TestNullable("abcde", text => text?.ToString(CultureInfo.CurrentCulture), text => text);
 
         DoNamedTest2();
     }

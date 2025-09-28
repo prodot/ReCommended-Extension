@@ -189,39 +189,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
     }
 
     [Test]
-    public void TestToString()
-    {
-        Test((dateOnly, format) => dateOnly.ToString(format), (dateOnly, _) => dateOnly.ToString(), TestValues, [null, "", "d"]);
-
-        Test(dateOnly => dateOnly.ToString(null as IFormatProvider), dateOnly => dateOnly.ToString(), TestValues);
-
-        Test(
-            (dateOnly, format) => dateOnly.ToString(format, null),
-            (dateOnly, format) => dateOnly.ToString(format),
-            TestValues,
-            [null, "", "d", "D", "o", "O", "r", "R", "m", "M", "y", "Y"]);
-        Test(
-            (dateOnly, provider) => dateOnly.ToString(null, provider),
-            (dateOnly, provider) => dateOnly.ToString(provider),
-            TestValues,
-            FormatProviders);
-        Test(
-            (dateOnly, format, provider) => dateOnly.ToString(format, provider),
-            (dateOnly, _, provider) => dateOnly.ToString(provider),
-            TestValues,
-            [null, "", "d"],
-            FormatProviders);
-        Test(
-            (dateOnly, format, provider) => dateOnly.ToString(format, provider),
-            (dateOnly, format, _) => dateOnly.ToString(format),
-            TestValues,
-            ["o", "O", "r", "R"],
-            FormatProviders);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestTryParse()
     {

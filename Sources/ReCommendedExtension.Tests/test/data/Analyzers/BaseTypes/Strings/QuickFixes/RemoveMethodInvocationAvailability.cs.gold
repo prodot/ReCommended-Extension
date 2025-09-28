@@ -31,12 +31,6 @@ namespace Test
         {
             var result = text.|Substring(0)|(9);
         }
-
-        public void ToString(string text, IFormatProvider provider)
-        {
-            var result1 = text.|ToString(provider)|(10);
-            var result2 = text.|ToString(null)|(11);
-        }
     }
 }
 ------------------------------------------------
@@ -68,11 +62,5 @@ Remove method invocation
 QUICKFIXES:
 Remove method invocation
 9: Calling 'Substring' with 0 is redundant.
-QUICKFIXES:
-Remove method invocation
-10: Calling 'ToString' with a format provider is redundant.
-QUICKFIXES:
-Remove method invocation
-11: Calling 'ToString' with a format provider is redundant.
 QUICKFIXES:
 Remove method invocation

@@ -36,24 +36,6 @@ namespace Test
             var result3 = TimeOnly.ParseExact(s1, formats, null);
         }
 
-        public void ToString(TimeOnly timeOnly, string format, IFormatProvider provider)
-        {
-            var result11 = timeOnly.ToString(null as string);
-            var result12 = timeOnly.ToString("");
-            var result13 = timeOnly.ToString("t");
-
-            var result21 = timeOnly.ToString(null as IFormatProvider);
-
-            var result31 = timeOnly.ToString(format, null);
-            var result32 = timeOnly.ToString(null, provider);
-            var result33 = timeOnly.ToString("", provider);
-            var result34 = timeOnly.ToString("t", provider);
-            var result35 = timeOnly.ToString("o", provider);
-            var result36 = timeOnly.ToString("O", provider);
-            var result37 = timeOnly.ToString("r", provider);
-            var result38 = timeOnly.ToString("R", provider);
-        }
-
         public void TryParse(string s, ReadOnlySpan<char> s1, IFormatProvider? provider, out TimeOnly result)
         {
             var result11 = TimeOnly.TryParse(s, provider, DateTimeStyles.None, out result);

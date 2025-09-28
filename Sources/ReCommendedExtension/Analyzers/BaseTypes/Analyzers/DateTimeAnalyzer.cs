@@ -35,8 +35,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
         public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
 
-        public static IReadOnlyList<ParameterType> IFormatProvider { get; } = [new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN }];
-
         public static IReadOnlyList<ParameterType> String_IFormatProvider { get; } =
         [
             new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
@@ -968,83 +966,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     }
 
     /// <remarks>
-    /// <c>dateTime.ToString(null)</c> → <c>dateTime.ToString()</c><para/>
-    /// <c>dateTime.ToString("")</c> → <c>dateTime.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument formatArgument)
-    {
-        if ((formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() == "")
-            && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateTime.ToString(null)</c> → <c>dateTime.ToString()</c>
-    /// </remarks>
-    static void AnalyzeToString_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.ToString), ParameterTypes = [] },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateTime.ToString(null, provider)</c> → <c>dateTime.ToString(provider)</c><para/>
-    /// <c>dateTime.ToString("", provider)</c> → <c>dateTime.ToString(provider)</c><para/>
-    /// <c>dateTime.ToString(format, null)</c> → <c>dateTime.ToString(format)</c><para/>
-    /// <c>dateTime.ToString("O", provider)</c> → <c>dateTime.ToString("O")</c><para/>
-    /// <c>dateTime.ToString("o", provider)</c> → <c>dateTime.ToString("o")</c><para/>
-    /// <c>dateTime.ToString("R", provider)</c> → <c>dateTime.ToString("R")</c><para/>
-    /// <c>dateTime.ToString("r", provider)</c> → <c>dateTime.ToString("r")</c><para/>
-    /// <c>dateTime.ToString("s", provider)</c> → <c>dateTime.ToString("s")</c><para/>
-    /// <c>dateTime.ToString("u", provider)</c> → <c>dateTime.ToString("u")</c>
-    /// </remarks>
-    static void AnalyzeToString_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument formatArgument,
-        ICSharpArgument providerArgument)
-    {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.ToString), ParameterTypes = ParameterTypes.String },
-                invocationExpression.PsiModule);
-
-        if (providerArgument.Value.IsDefaultValue() && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-            return;
-        }
-
-        var format = formatArgument.Value.TryGetStringConstant();
-
-        if ((formatArgument.Value.IsDefaultValue() || format == "")
-            && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.ToString), ParameterTypes = ParameterTypes.IFormatProvider },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null or an empty string is redundant.", formatArgument));
-        }
-
-        if (format is "o" or "O" or "r" or "R" or "s" or "u" && MethodExists())
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>DateTime.TryParse(s, null, out result)</c> → <c>DateTime.TryParse(s, out result)</c>
     /// </remarks>
     static void AnalyzeTryParse_String_IFormatProvider_DateTime(
@@ -1644,25 +1565,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
                                     case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsTimeSpan():
                                         AnalyzeSubtract_TimeSpan(consumer, invocationExpression, invokedExpression, valueArgument);
-                                        break;
-                                }
-                                break;
-
-                            case nameof(DateTime.ToString):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var formatType }], [{ } formatArgument]) when formatType.IsString():
-                                        AnalyzeToString_String(consumer, invocationExpression, formatArgument);
-                                        break;
-
-                                    case ([{ Type: var providerType }], [{ } providerArgument]) when providerType.IsIFormatProvider():
-                                        AnalyzeToString_IFormatProvider(consumer, invocationExpression, providerArgument);
-                                        break;
-
-                                    case ([{ Type: var formatType }, { Type: var providerType }], [{ } formatArgument, { } providerArgument])
-                                        when formatType.IsString() && providerType.IsIFormatProvider():
-
-                                        AnalyzeToString_String_IFormatProvider(consumer, invocationExpression, formatArgument, providerArgument);
                                         break;
                                 }
                                 break;
