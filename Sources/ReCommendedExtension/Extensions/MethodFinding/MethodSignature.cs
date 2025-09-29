@@ -1,6 +1,6 @@
 ﻿using JetBrains.ReSharper.Psi;
 
-﻿namespace ReCommendedExtension.Extensions.MethodFinding;
+namespace ReCommendedExtension.Extensions.MethodFinding;
 
 internal record struct MethodSignature
 {
