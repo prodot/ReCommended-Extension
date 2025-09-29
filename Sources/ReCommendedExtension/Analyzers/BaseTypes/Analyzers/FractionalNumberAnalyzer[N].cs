@@ -24,7 +24,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
             && containingType.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(Math.Round), ParameterTypes = [new ParameterType { ClrTypeName = NumberInfo.ClrTypeName }], IsStatic = true,
+                    Name = nameof(Math.Round), ParameterTypes = [t => t.IsClrType(NumberInfo.ClrTypeName)], IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -45,7 +45,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
             && containingType.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(Math.Round), ParameterTypes = [new ParameterType { ClrTypeName = NumberInfo.ClrTypeName }], IsStatic = true,
+                    Name = nameof(Math.Round), ParameterTypes = [t => t.IsClrType(NumberInfo.ClrTypeName)], IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -70,7 +70,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                 new MethodSignature
                 {
                     Name = nameof(Math.Round),
-                    ParameterTypes = [new ParameterType { ClrTypeName = NumberInfo.ClrTypeName }, ..ParameterTypes.MidpointRounding],
+                    ParameterTypes = [t => t.IsClrType(NumberInfo.ClrTypeName), ..ParameterTypes.MidpointRounding],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -83,7 +83,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                 new MethodSignature
                 {
                     Name = nameof(Math.Round),
-                    ParameterTypes = [new ParameterType { ClrTypeName = NumberInfo.ClrTypeName }, ..ParameterTypes.Int32],
+                    ParameterTypes = [t => t.IsClrType(NumberInfo.ClrTypeName), ..ParameterTypes.Int32],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))

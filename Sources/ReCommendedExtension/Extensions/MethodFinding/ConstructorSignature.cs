@@ -1,6 +1,8 @@
-﻿namespace ReCommendedExtension.Extensions.MethodFinding;
+﻿using JetBrains.ReSharper.Psi;
+
+namespace ReCommendedExtension.Extensions.MethodFinding;
 
 internal record struct ConstructorSignature
 {
-    public required IReadOnlyList<ParameterType> ParameterTypes { get; init; }
+    public required IReadOnlyList<Func<IType, bool>> ParameterTypes { get; init; }
 }

@@ -28,99 +28,61 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
 
-        public static IReadOnlyList<ParameterType> String_String { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String { get; } = [t => t.IsString(), t => t.IsString()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_DateOnly { get; } = [t => t.IsString(), t => t.IsDateOnly()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_StringArray { get; } = [t => t.IsString(), t => t.IsGenericArrayOfString()];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_DateOnly { get; } = [t => t.IsReadOnlySpanOfChar(), t => t.IsDateOnly()];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_StringArray { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.STRING_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsGenericArrayOfString(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_DateOnly { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_DateOnly { get; } = [t => t.IsString(), t => t.IsString(), t => t.IsDateOnly()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_StringArray_DateOnly { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+            t => t.IsString(), t => t.IsGenericArrayOfString(), t => t.IsDateOnly(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_StringArray { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_ReadOnlySpanOfChar_DateOnly { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsReadOnlySpanOfChar(), t => t.IsDateOnly(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_DateOnly { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_StringArray_DateOnly { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsGenericArrayOfString(), t => t.IsDateOnly(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_StringArray { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_DateOnly { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider_DateOnly { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+            t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateOnly(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_StringArray_DateOnly { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateOnly { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateOnly(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_ReadOnlySpanOfT_DateOnly { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_StringArray_DateOnly { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles_DateOnly { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider_DateTimeStyles { get; } =
-        [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
-        ];
-
-        public static IReadOnlyList<ParameterType> String_IFormatProvider_DateOnly { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider_DateOnly { get; } =
-        [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
-        ];
-
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles_DateOnly { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(), t => t.IsDateOnly(),
         ];
     }
 
@@ -228,7 +190,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = "Parse", ParameterTypes = ParameterTypes.ReadOnlySpanOfT_IFormatProvider_DateTimeStyles, IsStatic = true, // todo: nameof(DateOnly.Parse) when available
+                    Name = "Parse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true, // todo: nameof(DateOnly.Parse) when available
                 },
                 invocationExpression.PsiModule))
         {
@@ -458,7 +420,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         if (providerArgument.Value.IsDefaultValue()
             && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfT_StringArray, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
+                new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_StringArray, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -556,7 +518,10 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.ReadOnlySpanOfT_IFormatProvider_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
+                new MethodSignature
+                {
+                    Name = "TryParse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParse) when available
+                },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -574,7 +539,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.ReadOnlySpanOfT_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
+                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -634,7 +599,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfT_ReadOnlySpanOfT_DateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParseExact) when available
+                    Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_ReadOnlySpanOfChar_DateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParseExact) when available
                 },
                 invocationExpression.PsiModule))
         {
@@ -827,7 +792,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         if (providerArgument.Value.IsDefaultValue()
             && styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfT_StringArray_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_StringArray_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(

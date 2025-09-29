@@ -1,7 +1,7 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Extensions.MethodFinding;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -10,38 +10,38 @@ public abstract class NumberAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     private protected static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar { get; } = [t => t.IsReadOnlySpanOfChar()];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfByte { get; } = [t => t.IsReadOnlySpanOfByte()];
+
+        public static IReadOnlyList<Func<IType, bool>> Int32 { get; } = [t => t.IsInt()];
+
+        public static IReadOnlyList<Func<IType, bool>> MidpointRounding { get; } = [t => t.IsMidpointRounding()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider { get; } = [t => t.IsString(), t => t.IsIFormatProvider()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_NumberStyles { get; } = [t => t.IsString(), t => t.IsNumberStyles()];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32 { get; } = [new() { ClrTypeName = PredefinedType.INT_FQN }];
-
-        public static IReadOnlyList<ParameterType> MidpointRounding { get; } = [new() { ClrTypeName = ClrTypeNames.MidpointRounding }];
-
-        public static IReadOnlyList<ParameterType> String_IFormatProvider { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfByte_IFormatProvider { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            t => t.IsReadOnlySpanOfByte(), t => t.IsIFormatProvider(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_NumberStyles { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_NumberStyles_IFormatProvider { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = ClrTypeNames.NumberStyles },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsNumberStyles(), t => t.IsIFormatProvider(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfByte_NumberStyles_IFormatProvider { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_NumberStyles_IFormatProvider { get; } =
-        [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = ClrTypeNames.NumberStyles },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            t => t.IsReadOnlySpanOfByte(), t => t.IsNumberStyles(), t => t.IsIFormatProvider(),
         ];
     }
 }

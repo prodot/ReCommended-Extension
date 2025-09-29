@@ -9,10 +9,9 @@ internal static class MemberFinder
     [Pure]
     static bool HasMember(
         [InstantHandle] this IEnumerable<IParametersOwner> members,
-        IReadOnlyList<ParameterType> parameterTypes,
+        IReadOnlyList<Func<IType, bool>> parameterTypes,
         bool returnParameterNames,
-        out string[] parameterNames,
-        IPsiModule psiModule)
+        out string[] parameterNames)
     {
         parameterNames = [];
 
@@ -32,7 +31,7 @@ internal static class MemberFinder
 
             for (var i = 0; i < parameterTypes.Count; i++)
             {
-                if (parameterTypes[i].IsSameAs(member.Parameters[i].Type, psiModule))
+                if (parameterTypes[i](member.Parameters[i].Type))
                 {
                     if (returnParameterNames)
                     {
@@ -62,13 +61,12 @@ internal static class MemberFinder
         this ITypeElement typeElement,
         ConstructorSignature signature,
         bool returnParameterNames,
-        out string[] parameterNames,
-        IPsiModule psiModule)
+        out string[] parameterNames)
         => (
             from constructor in typeElement.Constructors
             where constructor is { AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC }
                 && constructor.Parameters.Count == signature.ParameterTypes.Count
-            select constructor).HasMember(signature.ParameterTypes, returnParameterNames, out parameterNames, psiModule);
+            select constructor).HasMember(signature.ParameterTypes, returnParameterNames, out parameterNames);
 
     [Pure]
     public static bool HasConstructor(
@@ -80,7 +78,7 @@ internal static class MemberFinder
     {
         if (clrTypeName.TryGetTypeElement(psiModule) is { } typeElement)
         {
-            return typeElement.HasConstructor(signature, returnParameterNames, out parameterNames, psiModule);
+            return typeElement.HasConstructor(signature, returnParameterNames, out parameterNames);
         }
 
         parameterNames = [];
@@ -88,33 +86,28 @@ internal static class MemberFinder
     }
 
     [Pure]
-    public static bool HasConstructor(this ITypeElement typeElement, ConstructorSignature signature, IPsiModule psiModule)
-        => typeElement.HasConstructor(signature, false, out _, psiModule);
+    public static bool HasConstructor(this ITypeElement typeElement, ConstructorSignature signature)
+        => typeElement.HasConstructor(signature, false, out _);
 
     [Pure]
     public static bool HasConstructor(this IClrTypeName clrTypeName, ConstructorSignature signature, IPsiModule psiModule)
-        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasConstructor(signature, psiModule);
+        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasConstructor(signature);
 
     [Pure]
-    public static bool HasProperty(this ITypeElement typeElement, PropertySignature signature, IPsiModule psiModule)
+    public static bool HasProperty(this ITypeElement typeElement, PropertySignature signature)
         => (
             from property in typeElement.Properties
             where property is { AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC }
                 && property.IsStatic == signature.IsStatic
                 && property.ShortName == signature.Name
-            select property).HasMember([], false, out _, psiModule);
+            select property).HasMember([], false, out _);
 
     [Pure]
     public static bool HasProperty(this IClrTypeName clrTypeName, PropertySignature signature, IPsiModule psiModule)
-        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasProperty(signature, psiModule);
+        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasProperty(signature);
 
     [Pure]
-    public static bool HasMethod(
-        this ITypeElement typeElement,
-        MethodSignature signature,
-        bool returnParameterNames,
-        out string[] parameterNames,
-        IPsiModule psiModule)
+    public static bool HasMethod(this ITypeElement typeElement, MethodSignature signature, bool returnParameterNames, out string[] parameterNames)
         => (
             from method in typeElement.Methods
             where method is { AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC }
@@ -122,7 +115,7 @@ internal static class MemberFinder
                 && method.ShortName == signature.Name
                 && method.TypeParametersCount == signature.GenericParametersCount
                 && method.Parameters.Count == signature.ParameterTypes.Count
-            select method).HasMember(signature.ParameterTypes, returnParameterNames, out parameterNames, psiModule);
+            select method).HasMember(signature.ParameterTypes, returnParameterNames, out parameterNames);
 
     [Pure]
     public static bool HasMethod(
@@ -134,7 +127,7 @@ internal static class MemberFinder
     {
         if (clrTypeName.TryGetTypeElement(psiModule) is { } typeElement)
         {
-            return typeElement.HasMethod(signature, returnParameterNames, out parameterNames, psiModule);
+            return typeElement.HasMethod(signature, returnParameterNames, out parameterNames);
         }
 
         parameterNames = [];
@@ -142,10 +135,9 @@ internal static class MemberFinder
     }
 
     [Pure]
-    public static bool HasMethod(this ITypeElement typeElement, MethodSignature signature, IPsiModule psiModule)
-        => typeElement.HasMethod(signature, false, out _, psiModule);
+    public static bool HasMethod(this ITypeElement typeElement, MethodSignature signature) => typeElement.HasMethod(signature, false, out _);
 
     [Pure]
     public static bool HasMethod(this IClrTypeName clrTypeName, MethodSignature signature, IPsiModule psiModule)
-        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasMethod(signature, psiModule);
+        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasMethod(signature);
 }

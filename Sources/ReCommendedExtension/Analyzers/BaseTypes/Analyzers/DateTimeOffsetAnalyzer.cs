@@ -28,103 +28,68 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
 
-        public static IReadOnlyList<ParameterType> String_IFormatProvider { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider { get; } = [t => t.IsString(), t => t.IsIFormatProvider()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_DateTimeOffset { get; } = [t => t.IsString(), t => t.IsDateTimeOffset()];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_DateTimeOffset { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsDateTimeOffset(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_DateTimeOffset { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider_DateTimeOffset { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.DATETIMEOFFSET_FQN },
+            t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeOffset(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_DateTimeOffset { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTimeOffset { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.DATETIMEOFFSET_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTimeOffset(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_IFormatProvider_DateTimeOffset { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.DATETIMEOFFSET_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider_DateTimeOffset { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.DATETIMEOFFSET_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles_DateTimeOffset { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(), t => t.IsDateTimeOffset(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsTimeSpan(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles_DateTimeOffset { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
-            new() { ClrTypeName = PredefinedType.DATETIMEOFFSET_FQN },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsTimeSpan(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_TimeSpan { get; } =
         [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_TimeSpan { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.Calendar },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsCalendar(),
+            t => t.IsTimeSpan(),
         ];
     }
 
@@ -324,7 +289,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                 new MethodSignature
                 {
                     Name = nameof(DateTimeOffset.Parse),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT_IFormatProvider_DateTimeStyles,
+                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles,
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -598,7 +563,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
             && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(DateTimeOffset.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT_DateTimeOffset, IsStatic = true,
+                    Name = nameof(DateTimeOffset.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_DateTimeOffset, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -642,7 +607,7 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                 new MethodSignature
                 {
                     Name = nameof(DateTimeOffset.TryParse),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT_IFormatProvider_DateTimeOffset,
+                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTimeOffset,
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))

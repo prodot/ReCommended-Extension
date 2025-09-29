@@ -29,196 +29,123 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> Int64 { get; } = [new() { ClrTypeName = PredefinedType.LONG_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> Int64 { get; } = [t => t.IsLong()];
 
-        public static IReadOnlyList<ParameterType> Char { get; } = [new() { ClrTypeName = PredefinedType.CHAR_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> Char { get; } = [t => t.IsChar()];
 
-        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
 
-        public static IReadOnlyList<ParameterType> String_IFormatProvider { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider { get; } = [t => t.IsString(), t => t.IsIFormatProvider()];
+
+        public static IReadOnlyList<Func<IType, bool>> DateOnly_TimeOnly { get; } = [t => t.IsDateOnly(), t => t.IsTimeOnly()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_DateTime { get; } = [t => t.IsString(), t => t.IsDateTime()];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_DateTime { get; } = [t => t.IsReadOnlySpanOfChar(), t => t.IsDateTime()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider_DateTime { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTime(),
         ];
 
-        public static IReadOnlyList<ParameterType> DateOnly_TimeOnly { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTime { get; } =
         [
-            new() { ClrTypeName = PredefinedType.DATE_ONLY_FQN }, new() { ClrTypeName = PredefinedType.TIME_ONLY_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTime(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_DateTime { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.DATETIME_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_DateTime { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32 { get; } = [t => t.IsInt(), t => t.IsInt(), t => t.IsInt()];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.DATETIME_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_IFormatProvider_DateTime { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.DATETIME_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider_DateTime { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Calendar { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.DATETIME_FQN },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsCalendar(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles_DateTime { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(), t => t.IsDateTime(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsDateTimeKind(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsCalendar(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Calendar { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.Calendar },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_DateTimeStyles_DateTime { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeStyles },
-            new() { ClrTypeName = PredefinedType.DATETIME_FQN },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsCalendar(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
         [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeKind },
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsDateTimeKind(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind { get; } =
         [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.Calendar },
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsCalendar(),
+            t => t.IsDateTimeKind(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
         [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.Calendar },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.DateTimeKind },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.Calendar },
-            new() { ClrTypeName = ClrTypeNames.DateTimeKind },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.Calendar },
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsInt(),
+            t => t.IsCalendar(),
         ];
     }
 
@@ -726,7 +653,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
             && PredefinedType.DATETIME_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(DateTime.Parse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT_IFormatProvider_DateTimeStyles, IsStatic = true,
+                    Name = nameof(DateTime.Parse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -992,7 +919,10 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT_DateTime, IsStatic = true },
+                new MethodSignature
+                {
+                    Name = nameof(DateTime.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_DateTime, IsStatic = true,
+                },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -1033,7 +963,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                 new MethodSignature
                 {
                     Name = nameof(DateTime.TryParse),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT_IFormatProvider_DateTime,
+                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTime,
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))

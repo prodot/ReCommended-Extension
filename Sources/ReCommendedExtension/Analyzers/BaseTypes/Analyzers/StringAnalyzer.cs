@@ -36,92 +36,55 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> Char { get; } = [new() { ClrTypeName = PredefinedType.CHAR_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> Char { get; } = [t => t.IsChar()];
 
-        public static IReadOnlyList<ParameterType> CharArray { get; } = [new ArrayParameterType { ClrTypeName = PredefinedType.CHAR_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> CharArray { get; } = [t => t.IsGenericArrayOfChar()];
 
-        public static IReadOnlyList<ParameterType> Char_Char { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Char_Char { get; } = [t => t.IsChar(), t => t.IsChar()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_Int32 { get; } = [t => t.IsChar(), t => t.IsInt()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_StringComparison { get; } = [t => t.IsChar(), t => t.IsStringComparison()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_StringSplitOptions { get; } = [t => t.IsChar(), t => t.IsStringSplitOptions()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_ObjectArray { get; } = [t => t.IsChar(), t => t.IsGenericArrayOfObject()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_StringArray { get; } = [t => t.IsChar(), t => t.IsGenericArrayOfString()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_StringArray_Int32_Int32 { get; } =
         [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = PredefinedType.CHAR_FQN },
+            t => t.IsChar(), t => t.IsGenericArrayOfString(), t => t.IsInt(), t => t.IsInt(),
         ];
 
-        public static IReadOnlyList<ParameterType> Char_Int32 { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Char_ReadOnlySpanOfString { get; } = [t => t.IsChar(), t => t.IsReadOnlySpanOfString()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_ReadOnlySpanOfObject { get; } = [t => t.IsChar(), t => t.IsReadOnlySpanOfObject()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_IEnumerableOfT { get; } = [t => t.IsChar(), t => t.IsGenericIEnumerable()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_Int32_Int32 { get; } = [t => t.IsChar(), t => t.IsInt(), t => t.IsInt()];
+
+        public static IReadOnlyList<Func<IType, bool>> Char_Int32_StringSplitOptions { get; } =
         [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = PredefinedType.INT_FQN },
+            t => t.IsChar(), t => t.IsInt(), t => t.IsStringSplitOptions(),
         ];
 
-        public static IReadOnlyList<ParameterType> Char_StringComparison { get; } =
+        public static IReadOnlyList<Func<IType, bool>> CharArray_StringSplitOptions { get; } =
         [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = PredefinedType.STRING_COMPARISON_CLASS },
+            t => t.IsGenericArrayOfChar(), t => t.IsStringSplitOptions(),
         ];
 
-        public static IReadOnlyList<ParameterType> Char_StringSplitOptions { get; } =
+        public static IReadOnlyList<Func<IType, bool>> CharArray_Int32_StringSplitOptions { get; } =
         [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
+            t => t.IsGenericArrayOfChar(), t => t.IsInt(), t => t.IsStringSplitOptions(),
         ];
 
-        public static IReadOnlyList<ParameterType> Char_ObjectArray { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new ArrayParameterType { ClrTypeName = PredefinedType.OBJECT_FQN },
-        ];
+        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
 
-        public static IReadOnlyList<ParameterType> Char_StringArray { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
-        ];
+        public static IReadOnlyList<Func<IType, bool>> String_StringComparison { get; } = [t => t.IsString(), t => t.IsStringComparison()];
 
-        public static IReadOnlyList<ParameterType> Char_StringArray_Int32_Int32 { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN },
-            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Char_ReadOnlySpanOfT { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Char_IEnumerableOfT { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN }, new GenericParameterType { ClrTypeName = PredefinedType.GENERIC_IENUMERABLE_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Char_Int32_Int32 { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Char_Int32_StringSplitOptions { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.CHAR_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
-        ];
-
-        public static IReadOnlyList<ParameterType> CharArray_StringSplitOptions { get; } =
-        [
-            new ArrayParameterType { ClrTypeName = PredefinedType.CHAR_FQN }, new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
-        ];
-
-        public static IReadOnlyList<ParameterType> CharArray_Int32_StringSplitOptions { get; } =
-        [
-            new ArrayParameterType { ClrTypeName = PredefinedType.CHAR_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = ClrTypeNames.StringSplitOptions },
-        ];
-
-        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
-
-        public static IReadOnlyList<ParameterType> String_StringComparison { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.STRING_COMPARISON_CLASS },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32 { get; } = [new() { ClrTypeName = PredefinedType.INT_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> Int32 { get; } = [t => t.IsInt()];
     }
 
     [Pure]
@@ -1220,7 +1183,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     new MethodSignature
                     {
                         Name = nameof(string.Join),
-                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfT,
+                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfObject,
                         IsStatic = true,
                     },
                     separatorArgument.NameIdentifier is { },
@@ -1485,7 +1448,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     new MethodSignature
                     {
                         Name = nameof(string.Join),
-                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfT,
+                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfString,
                         IsStatic = true,
                     },
                     separatorArgument.NameIdentifier is { },

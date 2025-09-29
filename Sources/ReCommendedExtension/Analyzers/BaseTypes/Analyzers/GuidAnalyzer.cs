@@ -17,22 +17,13 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT { get; } =
-        [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-        ];
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar { get; } = [t => t.IsReadOnlySpanOfChar()];
 
-        public static IReadOnlyList<ParameterType> String_Guid { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.GUID_FQN },
-        ];
+        public static IReadOnlyList<Func<IType, bool>> String_Guid { get; } = [t => t.IsString(), t => t.IsGuid()];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_Guid { get; } =
-        [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN }, new() { ClrTypeName = PredefinedType.GUID_FQN },
-        ];
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_Guid { get; } = [t => t.IsReadOnlySpanOfChar(), t => t.IsGuid()];
     }
 
     /// <remarks>
@@ -94,7 +85,7 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         ICSharpArgument providerArgument)
     {
         if (PredefinedType.GUID_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Guid.Parse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT, IsStatic = true },
+            new MethodSignature { Name = nameof(Guid.Parse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar, IsStatic = true },
             invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
@@ -126,7 +117,7 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         ICSharpArgument providerArgument)
     {
         if (PredefinedType.GUID_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Guid.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT_Guid, IsStatic = true },
+            new MethodSignature { Name = nameof(Guid.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_Guid, IsStatic = true },
             invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));

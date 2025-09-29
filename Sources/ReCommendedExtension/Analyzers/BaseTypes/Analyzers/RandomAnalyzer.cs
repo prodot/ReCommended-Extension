@@ -19,9 +19,9 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 {
     static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> Int32 { get; } = [new() { ClrTypeName = PredefinedType.INT_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> Int32 { get; } = [t => t.IsInt()];
 
-        public static IReadOnlyList<ParameterType> Int64 { get; } = [new() { ClrTypeName = PredefinedType.LONG_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> Int64 { get; } = [t => t.IsLong()];
     }
 
     [Pure]

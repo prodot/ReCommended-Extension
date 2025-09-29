@@ -28,104 +28,62 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
 
-        public static IReadOnlyList<ParameterType> String_TimeSpan { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_TimeSpan { get; } = [t => t.IsString(), t => t.IsTimeSpan()];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_TimeSpan { get; } = [t => t.IsReadOnlySpanOfChar(), t => t.IsTimeSpan()];
+
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32 { get; } = [t => t.IsInt(), t => t.IsInt(), t => t.IsInt()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN }, new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_TimeSpan { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_TimeSpan { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsTimeSpan(),
         ];
 
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_TimeSpan { get; } =
         [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsTimeSpan(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_StringArray_IFormatProvider { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            t => t.IsString(), t => t.IsGenericArrayOfString(), t => t.IsIFormatProvider(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_TimeSpan { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_StringArray_IFormatProvider_TimeSpan { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+            t => t.IsString(), t => t.IsGenericArrayOfString(), t => t.IsIFormatProvider(), t => t.IsTimeSpan(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_ReadOnlySpanOfT_IFormatProvider_TimeSpan { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpan { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+            t => t.IsReadOnlySpanOfChar(), t => t.IsGenericArrayOfString(), t => t.IsIFormatProvider(), t => t.IsTimeSpan(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_StringArray_IFormatProvider { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_TimeSpanStyles { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsTimeSpanStyles(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_StringArray_IFormatProvider_TimeSpan { get; } =
+        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_TimeSpanStyles_TimeSpan { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsTimeSpanStyles(), t => t.IsTimeSpan(),
         ];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_StringArray_IFormatProvider_TimeSpan { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32 { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new ArrayParameterType { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
         ];
 
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_TimeSpanStyles { get; } =
+        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.TimeSpanStyles },
-        ];
-
-        public static IReadOnlyList<ParameterType> String_String_IFormatProvider_TimeSpanStyles_TimeSpan { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.IFORMATPROVIDER_FQN },
-            new() { ClrTypeName = ClrTypeNames.TimeSpanStyles },
-            new() { ClrTypeName = PredefinedType.TIMESPAN_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32 { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Int32_Int32_Int32_Int32_Int32 { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
-            new() { ClrTypeName = PredefinedType.INT_FQN },
+            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
         ];
     }
 
@@ -982,7 +940,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (formatProviderArgument.Value.IsDefaultValue()
             && PredefinedType.TIMESPAN_FQN.HasMethod(
-                new MethodSignature { Name = nameof(TimeSpan.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT_TimeSpan, IsStatic = true },
+                new MethodSignature { Name = nameof(TimeSpan.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_TimeSpan, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
@@ -1065,7 +1023,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 new MethodSignature
                 {
                     Name = nameof(TimeSpan.TryParseExact),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT_ReadOnlySpanOfT_IFormatProvider_TimeSpan,
+                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_TimeSpan,
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -1254,7 +1212,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 new MethodSignature
                 {
                     Name = nameof(TimeSpan.TryParseExact),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT_StringArray_IFormatProvider_TimeSpan,
+                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpan,
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))

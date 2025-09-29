@@ -16,42 +16,23 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class ParameterTypes
     {
-        public static IReadOnlyList<ParameterType> String { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }];
+        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
 
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT { get; } =
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar { get; } = [t => t.IsReadOnlySpanOfChar()];
+
+        public static IReadOnlyList<Func<IType, bool>> Type_String { get; } = [t => t.IsSystemType(), t => t.IsString()];
+
+        public static IReadOnlyList<Func<IType, bool>> Type_ReadOnlySpanOfChar { get; } = [t => t.IsSystemType(), t => t.IsReadOnlySpanOfChar()];
+
+        public static IReadOnlyList<Func<IType, bool>> String_E { get; } = [t => t.IsString(), _ => true];
+
+        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_E { get; } = [t => t.IsReadOnlySpanOfChar(), _ => true];
+
+        public static IReadOnlyList<Func<IType, bool>> Type_String_Object { get; } = [t => t.IsSystemType(), t => t.IsString(), t => t.IsObject()];
+
+        public static IReadOnlyList<Func<IType, bool>> Type_ReadOnlySpanOfChar_Object { get; } =
         [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Type_String { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.TYPE_FQN }, new() { ClrTypeName = PredefinedType.STRING_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Type_ReadOnlySpanOfT { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.TYPE_FQN }, new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> String_E { get; } = [new() { ClrTypeName = PredefinedType.STRING_FQN }, new()];
-
-        public static IReadOnlyList<ParameterType> ReadOnlySpanOfT_E { get; } =
-        [
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN }, new(),
-        ];
-
-        public static IReadOnlyList<ParameterType> Type_String_Object { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.TYPE_FQN },
-            new() { ClrTypeName = PredefinedType.STRING_FQN },
-            new() { ClrTypeName = PredefinedType.OBJECT_FQN },
-        ];
-
-        public static IReadOnlyList<ParameterType> Type_ReadOnlySpanOfT_Object { get; } =
-        [
-            new() { ClrTypeName = PredefinedType.TYPE_FQN },
-            new GenericParameterType { ClrTypeName = PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN },
-            new() { ClrTypeName = PredefinedType.OBJECT_FQN },
+            t => t.IsSystemType(), t => t.IsReadOnlySpanOfChar(), t => t.IsObject(),
         ];
     }
 
@@ -88,7 +69,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                 new MethodSignature
                 {
                     Name = nameof(Enum.Parse),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfT,
+                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar,
                     GenericParametersCount = 1,
                     IsStatic = true,
                 },
@@ -125,7 +106,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     {
         if (ignoreCaseArgument.Value.TryGetBooleanConstant() is false
             && PredefinedType.ENUM_FQN.HasMethod(
-                new MethodSignature { Name = nameof(Enum.Parse), ParameterTypes = ParameterTypes.Type_ReadOnlySpanOfT, IsStatic = true },
+                new MethodSignature { Name = nameof(Enum.Parse), ParameterTypes = ParameterTypes.Type_ReadOnlySpanOfChar, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing false is redundant.", ignoreCaseArgument));
@@ -164,7 +145,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
             && PredefinedType.ENUM_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(Enum.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfT_E, GenericParametersCount = 1, IsStatic = true,
+                    Name = nameof(Enum.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_E, GenericParametersCount = 1, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -199,7 +180,7 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     {
         if (ignoreCaseArgument.Value.TryGetBooleanConstant() is false
             && PredefinedType.ENUM_FQN.HasMethod(
-                new MethodSignature { Name = nameof(Enum.TryParse), ParameterTypes = ParameterTypes.Type_ReadOnlySpanOfT_Object, IsStatic = true },
+                new MethodSignature { Name = nameof(Enum.TryParse), ParameterTypes = ParameterTypes.Type_ReadOnlySpanOfChar_Object, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing false is redundant.", ignoreCaseArgument));
