@@ -53,7 +53,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
         => PredefinedType.ARRAY_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Array.Empty), ParameterTypes = [], GenericParametersCount = 1, IsStatic = true },
+            new MethodSignature { Name = nameof(Array.Empty), Parameters = [], GenericParametersCount = 1, IsStatic = true },
             psiModule);
 
     [Pure]

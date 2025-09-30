@@ -158,7 +158,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
     {
         if (styleArgument.Value.TryGetNumberStylesConstant() == numberInfo.DefaultNumberStyles
             && numberInfo.ClrTypeName.HasMethod(
-                new MethodSignature { Name = nameof(int.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
+                new MethodSignature { Name = nameof(int.Parse), Parameters = Parameters.String, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
@@ -177,7 +177,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
     {
         if (providerArgument.Value.IsDefaultValue()
             && numberInfo.ClrTypeName.HasMethod(
-                new MethodSignature { Name = nameof(int.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
+                new MethodSignature { Name = nameof(int.Parse), Parameters = Parameters.String, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -196,7 +196,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
     {
         if (styleArgument.Value.TryGetNumberStylesConstant() == numberInfo.DefaultNumberStyles
             && numberInfo.ClrTypeName.HasMethod(
-                new MethodSignature { Name = "Parse", ParameterTypes = ParameterTypes.String_IFormatProvider, IsStatic = true }, // todo: nameof(IParsable<T>.Parse) when available
+                new MethodSignature { Name = "Parse", Parameters = Parameters.String_IFormatProvider, IsStatic = true }, // todo: nameof(IParsable<T>.Parse) when available
                 invocationExpression.PsiModule))
         {
             var styles = string.Join(" | ", from t in $"{numberInfo.DefaultNumberStyles}".Split(',') select $"{nameof(NumberStyles)}.{t.Trim()}");
@@ -206,7 +206,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
 
         if (providerArgument.Value.IsDefaultValue()
             && numberInfo.ClrTypeName.HasMethod(
-                new MethodSignature { Name = nameof(int.Parse), ParameterTypes = ParameterTypes.String_NumberStyles, IsStatic = true },
+                new MethodSignature { Name = nameof(int.Parse), Parameters = Parameters.String_NumberStyles, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -223,12 +223,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
     {
         if (providerArgument.Value.IsDefaultValue()
             && numberInfo.ClrTypeName.HasMethod(
-                new MethodSignature
-                {
-                    Name = "Parse", // todo: nameof(INumberBase<T>.Parse) when available
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_NumberStyles_IFormatProvider,
-                    IsStatic = true,
-                },
+                new MethodSignature { Name = "Parse", Parameters = Parameters.ReadOnlySpanOfChar_NumberStyles_IFormatProvider, IsStatic = true }, // todo: nameof(INumberBase<T>.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -245,12 +240,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
     {
         if (providerArgument.Value.IsDefaultValue()
             && numberInfo.ClrTypeName.HasMethod(
-                new MethodSignature
-                {
-                    Name = "Parse", // todo: nameof(INumberBase<T>.Parse) when available
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfByte_NumberStyles_IFormatProvider,
-                    IsStatic = true,
-                },
+                new MethodSignature { Name = "Parse", Parameters = Parameters.ReadOnlySpanOfByte_NumberStyles_IFormatProvider, IsStatic = true }, // todo: nameof(INumberBase<T>.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -270,7 +260,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(IParsable<T>.TryParse) when available
-                    ParameterTypes = [..ParameterTypes.String_IFormatProvider, t => t.IsClrType(numberInfo.ClrTypeName)],
+                    Parameters = [..Parameters.String_IFormatProvider, new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT)],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -294,7 +284,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = nameof(int.TryParse),
-                    ParameterTypes = [..ParameterTypes.String, t => t.IsClrType(numberInfo.ClrTypeName)],
+                    Parameters = [..Parameters.String, new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT)],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -316,7 +306,11 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(IParsable<T>.TryParse) when available
-                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfChar_IFormatProvider, t => t.IsClrType(numberInfo.ClrTypeName)],
+                    Parameters =
+                    [
+                        ..Parameters.ReadOnlySpanOfChar_IFormatProvider,
+                        new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT),
+                    ],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -340,7 +334,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(ISpanParsable<T>.TryParse) when available
-                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfChar, t => t.IsClrType(numberInfo.ClrTypeName)],
+                    Parameters = [..Parameters.ReadOnlySpanOfChar, new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT)],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -362,7 +356,11 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(IUtf8SpanParsable<T>.TryParse) when available
-                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfByte_IFormatProvider, t => t.IsClrType(numberInfo.ClrTypeName)],
+                    Parameters =
+                    [
+                        ..Parameters.ReadOnlySpanOfByte_IFormatProvider,
+                        new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT),
+                    ],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -386,7 +384,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = nameof(int.TryParse),
-                    ParameterTypes = [..ParameterTypes.ReadOnlySpanOfByte, t => t.IsClrType(numberInfo.ClrTypeName)],
+                    Parameters = [..Parameters.ReadOnlySpanOfByte, new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT)],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))

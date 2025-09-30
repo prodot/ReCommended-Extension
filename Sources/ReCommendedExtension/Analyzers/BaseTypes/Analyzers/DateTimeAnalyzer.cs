@@ -27,125 +27,164 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class ParameterTypes
+    static class Parameters
     {
-        public static IReadOnlyList<Func<IType, bool>> Int64 { get; } = [t => t.IsLong()];
+        public static IReadOnlyList<Parameter> Int64 { get; } = [new(t => t.IsLong())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char { get; } = [t => t.IsChar()];
+        public static IReadOnlyList<Parameter> Char { get; } = [new(t => t.IsChar())];
 
-        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
+        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider { get; } = [t => t.IsString(), t => t.IsIFormatProvider()];
+        public static IReadOnlyList<Parameter> String_IFormatProvider { get; } = [new(t => t.IsString()), new(t => t.IsIFormatProvider())];
 
-        public static IReadOnlyList<Func<IType, bool>> DateOnly_TimeOnly { get; } = [t => t.IsDateOnly(), t => t.IsTimeOnly()];
+        public static IReadOnlyList<Parameter> DateOnly_TimeOnly { get; } = [new(t => t.IsDateOnly()), new(t => t.IsTimeOnly())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_DateTime { get; } = [t => t.IsString(), t => t.IsDateTime()];
+        public static IReadOnlyList<Parameter> String_outDateTime { get; } = [new(t => t.IsString()), new(t => t.IsDateTime(), ParameterKind.OUTPUT)];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_DateTime { get; } = [t => t.IsReadOnlySpanOfChar(), t => t.IsDateTime()];
-
-        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider_DateTime { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outDateTime { get; } =
         [
-            t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTime(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsDateTime(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTime { get; } =
+        public static IReadOnlyList<Parameter> String_IFormatProvider_outDateTime { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTime(),
+            new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTime(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outDateTime { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTime(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32 { get; } = [t => t.IsInt(), t => t.IsInt(), t => t.IsInt()];
-
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32 { get; } = [new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt())];
+
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Calendar { get; } =
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsCalendar(),
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles_DateTime { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Calendar { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(), t => t.IsDateTime(),
+            new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsCalendar()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles_outDateTime { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
+            new(t => t.IsString()),
+            new(t => t.IsString()),
+            new(t => t.IsIFormatProvider()),
+            new(t => t.IsDateTimeStyles()),
+            new(t => t.IsDateTime(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsDateTimeKind(),
+            new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsCalendar(),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsDateTimeKind()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsCalendar()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsCalendar(),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsCalendar()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsDateTimeKind(),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
         [
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsCalendar(),
-            t => t.IsDateTimeKind(),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsDateTimeKind()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind { get; } =
         [
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsInt(),
-            t => t.IsCalendar(),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsCalendar()),
+            new(t => t.IsDateTimeKind()),
+        ];
+
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
+        [
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsInt()),
+            new(t => t.IsCalendar()),
         ];
     }
 
@@ -174,7 +213,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (kindArgument.Value.TryGetDateTimeKindConstant() == DateTimeKind.Unspecified
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int64 },
+                new ConstructorSignature { Parameters = Parameters.Int64 },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -192,7 +231,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (kindArgument.Value.TryGetDateTimeKindConstant() == DateTimeKind.Unspecified
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.DateOnly_TimeOnly },
+                new ConstructorSignature { Parameters = Parameters.DateOnly_TimeOnly },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -213,7 +252,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         if ((hourArgument.Value.TryGetInt32Constant(), minuteArgument.Value.TryGetInt32Constant(), secondArgument.Value.TryGetInt32Constant())
             == (0, 0, 0)
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentRangeHint("Passing '0, 0, 0' is redundant.", hourArgument, secondArgument));
@@ -230,7 +269,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (kindArgument.Value.TryGetDateTimeKindConstant() == DateTimeKind.Unspecified
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -251,7 +290,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         if ((hourArgument.Value.TryGetInt32Constant(), minuteArgument.Value.TryGetInt32Constant(), secondArgument.Value.TryGetInt32Constant())
             == (0, 0, 0)
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Calendar },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Calendar },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentRangeHint("Passing '0, 0, 0' is redundant.", hourArgument, secondArgument));
@@ -268,7 +307,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (millisecondArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", millisecondArgument));
@@ -287,7 +326,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (kindArgument.Value.TryGetDateTimeKindConstant() == DateTimeKind.Unspecified
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -296,7 +335,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
         if (millisecondArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", millisecondArgument));
@@ -313,7 +352,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (millisecondArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Calendar },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Calendar },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", millisecondArgument));
@@ -330,7 +369,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (kindArgument.Value.TryGetDateTimeKindConstant() == DateTimeKind.Unspecified
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -348,7 +387,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (microsecondArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", microsecondArgument));
@@ -367,7 +406,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (kindArgument.Value.TryGetDateTimeKindConstant() == DateTimeKind.Unspecified
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -376,7 +415,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
         if (microsecondArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", microsecondArgument));
@@ -393,7 +432,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (microsecondArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", microsecondArgument));
@@ -412,7 +451,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (kindArgument.Value.TryGetDateTimeKindConstant() == DateTimeKind.Unspecified
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -421,7 +460,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
         if (microsecondArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind },
                 objectCreationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", microsecondArgument));
@@ -567,7 +606,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.GetDateTimeFormats), ParameterTypes = [] },
+                new MethodSignature { Name = nameof(DateTime.GetDateTimeFormats), Parameters = [] },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -584,7 +623,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.GetDateTimeFormats), ParameterTypes = ParameterTypes.Char },
+                new MethodSignature { Name = nameof(DateTime.GetDateTimeFormats), Parameters = Parameters.Char },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -616,7 +655,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
+                new MethodSignature { Name = nameof(DateTime.Parse), Parameters = Parameters.String, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -633,7 +672,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (stylesArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.Parse), ParameterTypes = ParameterTypes.String_IFormatProvider, IsStatic = true },
+                new MethodSignature { Name = nameof(DateTime.Parse), Parameters = Parameters.String_IFormatProvider, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -653,7 +692,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
             && PredefinedType.DATETIME_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(DateTime.Parse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true,
+                    Name = nameof(DateTime.Parse), Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -709,7 +748,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
             && PredefinedType.DATETIME_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(DateTime.ParseExact), ParameterTypes = ParameterTypes.String_String_IFormatProvider, IsStatic = true,
+                    Name = nameof(DateTime.ParseExact), Parameters = Parameters.String_String_IFormatProvider, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -735,7 +774,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                 new MethodSignature
                 {
                     Name = nameof(DateTime.ParseExact),
-                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles,
+                    Parameters = Parameters.String_String_IFormatProvider_DateTimeStyles,
                     IsStatic = true,
                 },
                 formatsArgument.NameIdentifier is { },
@@ -902,7 +941,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATETIME_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTime.TryParse), ParameterTypes = ParameterTypes.String_DateTime, IsStatic = true },
+                new MethodSignature { Name = nameof(DateTime.TryParse), Parameters = Parameters.String_outDateTime, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -921,7 +960,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
             && PredefinedType.DATETIME_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(DateTime.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_DateTime, IsStatic = true,
+                    Name = nameof(DateTime.TryParse), Parameters = Parameters.ReadOnlySpanOfChar_outDateTime, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -941,7 +980,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
             && PredefinedType.DATETIME_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(DateTime.TryParse), ParameterTypes = ParameterTypes.String_IFormatProvider_DateTime, IsStatic = true,
+                    Name = nameof(DateTime.TryParse), Parameters = Parameters.String_IFormatProvider_outDateTime, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -962,9 +1001,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
             && PredefinedType.DATETIME_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(DateTime.TryParse),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTime,
-                    IsStatic = true,
+                    Name = nameof(DateTime.TryParse), Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_outDateTime, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -1011,7 +1048,7 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                 new MethodSignature
                 {
                     Name = nameof(DateTime.TryParseExact),
-                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles_DateTime,
+                    Parameters = Parameters.String_String_IFormatProvider_DateTimeStyles_outDateTime,
                     IsStatic = true,
                 },
                 formatsArgument.NameIdentifier is { },

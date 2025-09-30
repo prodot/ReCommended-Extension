@@ -26,64 +26,80 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class ParameterTypes
+    static class Parameters
     {
-        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
+        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_TimeSpan { get; } = [t => t.IsString(), t => t.IsTimeSpan()];
+        public static IReadOnlyList<Parameter> String_outTimeSpan { get; } = [new(t => t.IsString()), new(t => t.IsTimeSpan(), ParameterKind.OUTPUT)];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_TimeSpan { get; } = [t => t.IsReadOnlySpanOfChar(), t => t.IsTimeSpan()];
-
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32 { get; } = [t => t.IsInt(), t => t.IsInt(), t => t.IsInt()];
-
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outTimeSpan { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsTimeSpan(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_TimeSpan { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32 { get; } = [new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt())];
+
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsTimeSpan(),
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_TimeSpan { get; } =
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_outTimeSpan { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsTimeSpan(),
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsTimeSpan(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_StringArray_IFormatProvider { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_outTimeSpan { get; } =
         [
-            t => t.IsString(), t => t.IsGenericArrayOfString(), t => t.IsIFormatProvider(),
+            new(t => t.IsReadOnlySpanOfChar()),
+            new(t => t.IsReadOnlySpanOfChar()),
+            new(t => t.IsIFormatProvider()),
+            new(t => t.IsTimeSpan(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_StringArray_IFormatProvider_TimeSpan { get; } =
+        public static IReadOnlyList<Parameter> String_StringArray_IFormatProvider { get; } =
         [
-            t => t.IsString(), t => t.IsGenericArrayOfString(), t => t.IsIFormatProvider(), t => t.IsTimeSpan(),
+            new(t => t.IsString()), new(t => t.IsGenericArrayOfString()), new(t => t.IsIFormatProvider()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpan { get; } =
+        public static IReadOnlyList<Parameter> String_StringArray_IFormatProvider_outTimeSpan { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsGenericArrayOfString(), t => t.IsIFormatProvider(), t => t.IsTimeSpan(),
+            new(t => t.IsString()),
+            new(t => t.IsGenericArrayOfString()),
+            new(t => t.IsIFormatProvider()),
+            new(t => t.IsTimeSpan(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_TimeSpanStyles { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray_IFormatProvider_outTimeSpan { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsTimeSpanStyles(),
+            new(t => t.IsReadOnlySpanOfChar()),
+            new(t => t.IsGenericArrayOfString()),
+            new(t => t.IsIFormatProvider()),
+            new(t => t.IsTimeSpan(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_TimeSpanStyles_TimeSpan { get; } =
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_TimeSpanStyles { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsTimeSpanStyles(), t => t.IsTimeSpan(),
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsTimeSpanStyles()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_TimeSpanStyles_outTimeSpan { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
+            new(t => t.IsString()),
+            new(t => t.IsString()),
+            new(t => t.IsIFormatProvider()),
+            new(t => t.IsTimeSpanStyles()),
+            new(t => t.IsTimeSpan(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Int32_Int32_Int32_Int32 { get; } =
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32 { get; } =
         [
-            t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(), t => t.IsInt(),
+            new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()),
+        ];
+
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32 { get; } =
+        [
+            new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()),
         ];
     }
 
@@ -178,7 +194,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             }
 
             if (PredefinedType.TIMESPAN_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
             {
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", daysArgument));
@@ -218,7 +234,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             }
 
             if (PredefinedType.TIMESPAN_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
             {
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", millisecondsArgument));
@@ -259,7 +275,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             }
 
             if (PredefinedType.TIMESPAN_FQN.HasConstructor(
-                new ConstructorSignature { ParameterTypes = ParameterTypes.Int32_Int32_Int32_Int32_Int32 },
+                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32 },
                 objectCreationExpression.PsiModule))
             {
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", microsecondsArgument));
@@ -679,7 +695,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (formatProviderArgument.Value.IsDefaultValue()
             && PredefinedType.TIMESPAN_FQN.HasMethod(
-                new MethodSignature { Name = nameof(TimeSpan.Parse), ParameterTypes = ParameterTypes.String, IsStatic = true },
+                new MethodSignature { Name = nameof(TimeSpan.Parse), Parameters = Parameters.String, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
@@ -736,10 +752,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
         if (stylesArgument.Value.TryGetTimeSpanStylesConstant() == TimeSpanStyles.None
             && PredefinedType.TIMESPAN_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(TimeSpan.ParseExact), ParameterTypes = ParameterTypes.String_String_IFormatProvider, IsStatic = true,
-                },
+                new MethodSignature { Name = nameof(TimeSpan.ParseExact), Parameters = Parameters.String_String_IFormatProvider, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -759,10 +772,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
         {
             case { Count: 1 } collectionCreation when PredefinedType.TIMESPAN_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(TimeSpan.ParseExact), ParameterTypes = ParameterTypes.String_String_IFormatProvider, IsStatic = true,
-                },
+                new MethodSignature { Name = nameof(TimeSpan.ParseExact), Parameters = Parameters.String_String_IFormatProvider, IsStatic = true },
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -812,9 +822,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             case { Count: 1 } collectionCreation when PredefinedType.TIMESPAN_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(TimeSpan.ParseExact),
-                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_TimeSpanStyles,
-                    IsStatic = true,
+                    Name = nameof(TimeSpan.ParseExact), Parameters = Parameters.String_String_IFormatProvider_TimeSpanStyles, IsStatic = true,
                 },
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
@@ -852,9 +860,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             && PredefinedType.TIMESPAN_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(TimeSpan.ParseExact),
-                    ParameterTypes = ParameterTypes.String_StringArray_IFormatProvider,
-                    IsStatic = true,
+                    Name = nameof(TimeSpan.ParseExact), Parameters = Parameters.String_StringArray_IFormatProvider, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -923,7 +929,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (formatProviderArgument.Value.IsDefaultValue()
             && PredefinedType.TIMESPAN_FQN.HasMethod(
-                new MethodSignature { Name = nameof(TimeSpan.TryParse), ParameterTypes = ParameterTypes.String_TimeSpan, IsStatic = true },
+                new MethodSignature { Name = nameof(TimeSpan.TryParse), Parameters = Parameters.String_outTimeSpan, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
@@ -940,7 +946,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (formatProviderArgument.Value.IsDefaultValue()
             && PredefinedType.TIMESPAN_FQN.HasMethod(
-                new MethodSignature { Name = nameof(TimeSpan.TryParse), ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_TimeSpan, IsStatic = true },
+                new MethodSignature { Name = nameof(TimeSpan.TryParse), Parameters = Parameters.ReadOnlySpanOfChar_outTimeSpan, IsStatic = true },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
@@ -999,9 +1005,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             && PredefinedType.TIMESPAN_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(TimeSpan.TryParseExact),
-                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_TimeSpan,
-                    IsStatic = true,
+                    Name = nameof(TimeSpan.TryParseExact), Parameters = Parameters.String_String_IFormatProvider_outTimeSpan, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -1023,7 +1027,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 new MethodSignature
                 {
                     Name = nameof(TimeSpan.TryParseExact),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_TimeSpan,
+                    Parameters = Parameters.ReadOnlySpanOfChar_ReadOnlySpanOfChar_IFormatProvider_outTimeSpan,
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -1047,9 +1051,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             case { Count: 1 } collectionCreation when PredefinedType.TIMESPAN_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(TimeSpan.TryParseExact),
-                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_TimeSpan,
-                    IsStatic = true,
+                    Name = nameof(TimeSpan.TryParseExact), Parameters = Parameters.String_String_IFormatProvider_outTimeSpan, IsStatic = true,
                 },
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
@@ -1101,7 +1103,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 new MethodSignature
                 {
                     Name = nameof(TimeSpan.TryParseExact),
-                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_TimeSpanStyles_TimeSpan,
+                    Parameters = Parameters.String_String_IFormatProvider_TimeSpanStyles_outTimeSpan,
                     IsStatic = true,
                 },
                 formatsArgument.NameIdentifier is { },
@@ -1140,9 +1142,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             && PredefinedType.TIMESPAN_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(TimeSpan.TryParseExact),
-                    ParameterTypes = ParameterTypes.String_StringArray_IFormatProvider_TimeSpan,
-                    IsStatic = true,
+                    Name = nameof(TimeSpan.TryParseExact), Parameters = Parameters.String_StringArray_IFormatProvider_outTimeSpan, IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -1212,7 +1212,7 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 new MethodSignature
                 {
                     Name = nameof(TimeSpan.TryParseExact),
-                    ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_StringArray_IFormatProvider_TimeSpan,
+                    Parameters = Parameters.ReadOnlySpanOfChar_StringArray_IFormatProvider_outTimeSpan,
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))

@@ -26,63 +26,73 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class ParameterTypes
+    static class Parameters
     {
-        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
+        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String { get; } = [t => t.IsString(), t => t.IsString()];
+        public static IReadOnlyList<Parameter> String_String { get; } = [new(t => t.IsString()), new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_DateOnly { get; } = [t => t.IsString(), t => t.IsDateOnly()];
+        public static IReadOnlyList<Parameter> String_outDateOnly { get; } = [new(t => t.IsString()), new(t => t.IsDateOnly(), ParameterKind.OUTPUT)];
 
-        public static IReadOnlyList<Func<IType, bool>> String_StringArray { get; } = [t => t.IsString(), t => t.IsGenericArrayOfString()];
+        public static IReadOnlyList<Parameter> String_StringArray { get; } = [new(t => t.IsString()), new(t => t.IsGenericArrayOfString())];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_DateOnly { get; } = [t => t.IsReadOnlySpanOfChar(), t => t.IsDateOnly()];
-
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_StringArray { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outDateOnly { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsGenericArrayOfString(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsDateOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_DateOnly { get; } = [t => t.IsString(), t => t.IsString(), t => t.IsDateOnly()];
-
-        public static IReadOnlyList<Func<IType, bool>> String_StringArray_DateOnly { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray { get; } =
         [
-            t => t.IsString(), t => t.IsGenericArrayOfString(), t => t.IsDateOnly(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsGenericArrayOfString()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_ReadOnlySpanOfChar_DateOnly { get; } =
+        public static IReadOnlyList<Parameter> String_String_outDateOnly { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsReadOnlySpanOfChar(), t => t.IsDateOnly(),
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsDateOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_StringArray_DateOnly { get; } =
+        public static IReadOnlyList<Parameter> String_StringArray_outDateOnly { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsGenericArrayOfString(), t => t.IsDateOnly(),
+            new(t => t.IsString()), new(t => t.IsGenericArrayOfString()), new(t => t.IsDateOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_ReadOnlySpanOfChar_outDateOnly { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsDateOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider_DateOnly { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray_outDateOnly { get; } =
         [
-            t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateOnly(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsGenericArrayOfString()), new(t => t.IsDateOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateOnly { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateOnly(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Parameter> String_IFormatProvider_outDateOnly { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
+            new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles_DateOnly { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outDateOnly { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(), t => t.IsDateOnly(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateOnly(), ParameterKind.OUTPUT),
+        ];
+
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
+        [
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
+        ];
+
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles_outDateOnly { get; } =
+        [
+            new(t => t.IsString()),
+            new(t => t.IsString()),
+            new(t => t.IsIFormatProvider()),
+            new(t => t.IsDateTimeStyles()),
+            new(t => t.IsDateOnly(), ParameterKind.OUTPUT),
         ];
     }
 
@@ -148,7 +158,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         if (providerArgument.Value.IsDefaultValue()
             && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Parse", ParameterTypes = ParameterTypes.String, IsStatic = true }, // todo: nameof(DateOnly.Parse) when available
+                new MethodSignature { Name = "Parse", Parameters = Parameters.String, IsStatic = true }, // todo: nameof(DateOnly.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -171,7 +181,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Parse", ParameterTypes = ParameterTypes.String, IsStatic = true }, // todo: nameof(DateOnly.Parse) when available
+                new MethodSignature { Name = "Parse", Parameters = Parameters.String, IsStatic = true }, // todo: nameof(DateOnly.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -188,10 +198,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = "Parse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true, // todo: nameof(DateOnly.Parse) when available
-                },
+                new MethodSignature { Name = "Parse", Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true }, // todo: nameof(DateOnly.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -213,7 +220,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         {
             if ((styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
                 && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                    new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.String_String, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
+                    new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                     invocationExpression.PsiModule))
             {
                 consumer.AddHighlighting(
@@ -251,7 +258,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
         {
             case { Count: 1 } collectionCreation when PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.String_String, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
+                new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -304,7 +311,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         if (providerArgument.Value.IsDefaultValue()
             && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.String_StringArray, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
+                new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_StringArray, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -319,10 +326,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
         {
             case { Count: 1 } collectionCreation when PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = "ParseExact", ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles, IsStatic = true, // todo: nameof(DateOnly.ParseExact) when available
-                },
+                new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String_IFormatProvider_DateTimeStyles, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -420,7 +424,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         if (providerArgument.Value.IsDefaultValue()
             && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_StringArray, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
+                new MethodSignature { Name = "ParseExact", Parameters = Parameters.ReadOnlySpanOfChar_StringArray, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -483,7 +487,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.String_IFormatProvider_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
+                new MethodSignature { Name = "TryParse", Parameters = Parameters.String_IFormatProvider_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -501,7 +505,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.String_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
+                new MethodSignature { Name = "TryParse", Parameters = Parameters.String_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -520,7 +524,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = "TryParse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParse) when available
+                    Name = "TryParse", Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_outDateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParse) when available
                 },
                 invocationExpression.PsiModule))
         {
@@ -539,7 +543,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
+                new MethodSignature { Name = "TryParse", Parameters = Parameters.ReadOnlySpanOfChar_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -561,7 +565,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         {
             if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
                 && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                    new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_String_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                    new MethodSignature { Name = "TryParseExact", Parameters = Parameters.String_String_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
                     invocationExpression.PsiModule))
             {
                 consumer.AddHighlighting(
@@ -599,7 +603,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_ReadOnlySpanOfChar_DateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParseExact) when available
+                    Name = "TryParseExact", Parameters = Parameters.ReadOnlySpanOfChar_ReadOnlySpanOfChar_outDateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParseExact) when available
                 },
                 invocationExpression.PsiModule))
         {
@@ -623,7 +627,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
         {
             case { Count: 1 } collectionCreation when PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_String_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                new MethodSignature { Name = "TryParseExact", Parameters = Parameters.String_String_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -704,7 +708,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         if (providerArgument.Value.IsDefaultValue()
             && styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_StringArray_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                new MethodSignature { Name = "TryParseExact", Parameters = Parameters.String_StringArray_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -719,9 +723,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             case { Count: 1 } collectionCreation when PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = "TryParseExact",
-                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles_DateOnly, // todo: nameof(DateOnly.TryParseExact) when available
-                    IsStatic = true,
+                    Name = "TryParseExact", Parameters = Parameters.String_String_IFormatProvider_DateTimeStyles_outDateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParseExact) when available
                 },
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
@@ -792,7 +794,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         if (providerArgument.Value.IsDefaultValue()
             && styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_StringArray_DateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
+                new MethodSignature { Name = "TryParseExact", Parameters = Parameters.ReadOnlySpanOfChar_StringArray_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(

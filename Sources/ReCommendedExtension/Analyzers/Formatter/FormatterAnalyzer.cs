@@ -28,11 +28,11 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
     : ElementProblemAnalyzer<ICSharpTreeNode>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class ParameterTypes
+    static class Parameters
     {
-        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
+        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> IFormatProvider { get; } = [t => t.IsIFormatProvider()];
+        public static IReadOnlyList<Parameter> IFormatProvider { get; } = [new(t => t.IsIFormatProvider())];
     }
 
     record struct ToStringInvocation
@@ -122,7 +122,7 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                             FormatArgument = new ToStringInvocationArgument
                             {
                                 Argument = formatArgument,
-                                CanBeRemoved = containingType.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }),
+                                CanBeRemoved = containingType.HasMethod(new MethodSignature { Name = nameof(ToString), Parameters = [] }),
                             },
                         };
 
@@ -133,7 +133,7 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                             ProviderArgument = new ToStringInvocationArgument
                             {
                                 Argument = providerArgument,
-                                CanBeRemoved = containingType.HasMethod(new MethodSignature { Name = nameof(ToString), ParameterTypes = [] }),
+                                CanBeRemoved = containingType.HasMethod(new MethodSignature { Name = nameof(ToString), Parameters = [] }),
                             },
                         };
                     }
@@ -147,13 +147,13 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                             {
                                 Argument = formatArgument,
                                 CanBeRemoved = containingType.HasMethod(
-                                    new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.IFormatProvider }),
+                                    new MethodSignature { Name = nameof(ToString), Parameters = Parameters.IFormatProvider }),
                             },
                             ProviderArgument = new ToStringInvocationArgument
                             {
                                 Argument = providerArgument,
                                 CanBeRemoved = containingType.HasMethod(
-                                    new MethodSignature { Name = nameof(ToString), ParameterTypes = ParameterTypes.String }),
+                                    new MethodSignature { Name = nameof(ToString), Parameters = Parameters.String }),
                             },
                         };
                     }

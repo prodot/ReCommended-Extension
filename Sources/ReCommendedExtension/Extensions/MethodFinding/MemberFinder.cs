@@ -9,7 +9,7 @@ internal static class MemberFinder
     [Pure]
     static bool HasMember(
         [InstantHandle] this IEnumerable<IParametersOwner> members,
-        IReadOnlyList<Func<IType, bool>> parameterTypes,
+        IReadOnlyList<Parameter> parameters,
         bool returnParameterNames,
         out string[] parameterNames)
     {
@@ -17,7 +17,7 @@ internal static class MemberFinder
 
         foreach (var member in members)
         {
-            if (parameterTypes is [])
+            if (parameters is [])
             {
                 return true;
             }
@@ -26,16 +26,19 @@ internal static class MemberFinder
 
             if (returnParameterNames)
             {
-                parameterNames = new string[parameterTypes.Count];
+                parameterNames = new string[parameters.Count];
             }
 
-            for (var i = 0; i < parameterTypes.Count; i++)
+            for (var i = 0; i < parameters.Count; i++)
             {
-                if (parameterTypes[i](member.Parameters[i].Type))
+                var parameter = parameters[i];
+                var memberParameter = member.Parameters[i];
+
+                if (parameter.Kind == memberParameter.Kind && parameter.IsType(memberParameter.Type))
                 {
                     if (returnParameterNames)
                     {
-                        parameterNames[i] = member.Parameters[i].ShortName;
+                        parameterNames[i] = memberParameter.ShortName;
                     }
                     continue;
                 }
@@ -65,8 +68,8 @@ internal static class MemberFinder
         => (
             from constructor in typeElement.Constructors
             where constructor is { AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC }
-                && constructor.Parameters.Count == signature.ParameterTypes.Count
-            select constructor).HasMember(signature.ParameterTypes, returnParameterNames, out parameterNames);
+                && constructor.Parameters.Count == signature.Parameters.Count
+            select constructor).HasMember(signature.Parameters, returnParameterNames, out parameterNames);
 
     [Pure]
     public static bool HasConstructor(
@@ -114,8 +117,8 @@ internal static class MemberFinder
                 && method.IsStatic == signature.IsStatic
                 && method.ShortName == signature.Name
                 && method.TypeParametersCount == signature.GenericParametersCount
-                && method.Parameters.Count == signature.ParameterTypes.Count
-            select method).HasMember(signature.ParameterTypes, returnParameterNames, out parameterNames);
+                && method.Parameters.Count == signature.Parameters.Count
+            select method).HasMember(signature.Parameters, returnParameterNames, out parameterNames);
 
     [Pure]
     public static bool HasMethod(

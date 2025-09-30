@@ -26,73 +26,77 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class ParameterTypes
+    static class Parameters
     {
-        public static IReadOnlyList<Func<IType, bool>> TimeSpan { get; } = [t => t.IsTimeSpan()];
+        public static IReadOnlyList<Parameter> TimeSpan { get; } = [new(t => t.IsTimeSpan())];
 
-        public static IReadOnlyList<Func<IType, bool>> Double { get; } = [t => t.IsDouble()];
+        public static IReadOnlyList<Parameter> Double { get; } = [new(t => t.IsDouble())];
 
-        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
+        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String { get; } = [t => t.IsString(), t => t.IsString()];
+        public static IReadOnlyList<Parameter> String_String { get; } = [new(t => t.IsString()), new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_StringArray { get; } = [t => t.IsString(), t => t.IsGenericArrayOfString()];
+        public static IReadOnlyList<Parameter> String_StringArray { get; } = [new(t => t.IsString()), new(t => t.IsGenericArrayOfString())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_TimeOnly { get; } = [t => t.IsString(), t => t.IsTimeOnly()];
+        public static IReadOnlyList<Parameter> String_outTimeOnly { get; } = [new(t => t.IsString()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT)];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_TimeOnly { get; } = [t => t.IsReadOnlySpanOfChar(), t => t.IsTimeOnly()];
-
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_StringArray { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outTimeOnly { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsGenericArrayOfString(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_TimeOnly { get; } = [t => t.IsString(), t => t.IsString(), t => t.IsTimeOnly()];
-
-        public static IReadOnlyList<Func<IType, bool>> String_IFormatProvider_TimeOnly { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray { get; } =
         [
-            t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsTimeOnly(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsGenericArrayOfString()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_StringArray_TimeOnly { get; } =
+        public static IReadOnlyList<Parameter> String_String_outTimeOnly { get; } =
         [
-            t => t.IsString(),
-            t => t.IsGenericArrayOfString(),
-            t => t.IsTimeOnly(),
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Parameter> String_IFormatProvider_outTimeOnly { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
+            new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_IFormatProvider_TimeOnly { get; } =
+        public static IReadOnlyList<Parameter> String_StringArray_outTimeOnly { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(),
-            t => t.IsIFormatProvider(),
-            t => t.IsTimeOnly(),
+            new(t => t.IsString()), new(t => t.IsGenericArrayOfString()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_ReadOnlySpanOfChar_TimeOnly { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(), t => t.IsReadOnlySpanOfChar(), t => t.IsTimeOnly(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> ReadOnlySpanOfChar_StringArray_TimeOnly { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outTimeOnly { get; } =
         [
-            t => t.IsReadOnlySpanOfChar(),
-            t => t.IsGenericArrayOfString(),
-            t => t.IsTimeOnly(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_ReadOnlySpanOfChar_outTimeOnly { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String_String_IFormatProvider_DateTimeStyles_TimeOnly { get; } =
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray_outTimeOnly { get; } =
         [
-            t => t.IsString(), t => t.IsString(), t => t.IsIFormatProvider(), t => t.IsDateTimeStyles(), t => t.IsTimeOnly(),
+            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsGenericArrayOfString()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+        ];
+
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
+        [
+            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
+        ];
+
+        public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles_outTimeOnly { get; } =
+        [
+            new(t => t.IsString()),
+            new(t => t.IsString()),
+            new(t => t.IsIFormatProvider()),
+            new(t => t.IsDateTimeStyles()),
+            new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
         ];
     }
 
@@ -202,7 +206,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (wrappedDaysArgument.IsDiscard()
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Add", ParameterTypes = ParameterTypes.TimeSpan }, // todo: nameof(TimeOnly.Add) when available
+                new MethodSignature { Name = "Add", Parameters = Parameters.TimeSpan }, // todo: nameof(TimeOnly.Add) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Discarding is redundant.", wrappedDaysArgument));
@@ -219,7 +223,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (wrappedDaysArgument.IsDiscard()
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "AddHours", ParameterTypes = ParameterTypes.Double }, // todo: nameof(TimeOnly.AddHours) when available
+                new MethodSignature { Name = "AddHours", Parameters = Parameters.Double }, // todo: nameof(TimeOnly.AddHours) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Discarding is redundant.", wrappedDaysArgument));
@@ -236,7 +240,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (wrappedDaysArgument.IsDiscard()
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "AddMinutes", ParameterTypes = ParameterTypes.Double }, // todo: nameof(TimeOnly.AddMinutes) when available
+                new MethodSignature { Name = "AddMinutes", Parameters = Parameters.Double }, // todo: nameof(TimeOnly.AddMinutes) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Discarding is redundant.", wrappedDaysArgument));
@@ -289,7 +293,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         if (providerArgument.Value.IsDefaultValue()
             && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Parse", ParameterTypes = ParameterTypes.String, IsStatic = true }, // todo: nameof(TimeOnly.Parse) when available
+                new MethodSignature { Name = "Parse", Parameters = Parameters.String, IsStatic = true }, // todo: nameof(TimeOnly.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -312,7 +316,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Parse", ParameterTypes = ParameterTypes.String, IsStatic = true }, // todo: nameof(TimeOnly.Parse) when available
+                new MethodSignature { Name = "Parse", Parameters = Parameters.String, IsStatic = true }, // todo: nameof(TimeOnly.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -329,10 +333,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = "Parse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true, // todo: nameof(TimeOnly.Parse) when available
-                },
+                new MethodSignature { Name = "Parse", Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true }, // todo: nameof(TimeOnly.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -354,7 +355,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         {
             if ((styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
                 && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                    new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.String_String, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
+                    new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                     invocationExpression.PsiModule))
             {
                 consumer.AddHighlighting(
@@ -392,7 +393,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
         {
             case { Count: 1 } collectionCreation when PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.String_String, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
+                new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -442,7 +443,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         if (providerArgument.Value.IsDefaultValue()
             && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.String_StringArray, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
+                new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_StringArray, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -457,10 +458,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
         {
             case { Count: 1 } collectionCreation when PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = "ParseExact", ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles, IsStatic = true, // todo: nameof(TimeOnly.ParseExact) when available
-                },
+                new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String_IFormatProvider_DateTimeStyles, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -552,7 +550,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         if (providerArgument.Value.IsDefaultValue()
             && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "ParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_StringArray, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
+                new MethodSignature { Name = "ParseExact", Parameters = Parameters.ReadOnlySpanOfChar_StringArray, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -612,7 +610,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.String_IFormatProvider_TimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
+                new MethodSignature { Name = "TryParse", Parameters = Parameters.String_IFormatProvider_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -630,7 +628,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.String_TimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
+                new MethodSignature { Name = "TryParse", Parameters = Parameters.String_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -647,7 +645,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_IFormatProvider_TimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
+                new MethodSignature { Name = "TryParse", Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -665,7 +663,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (providerArgument.Value.IsDefaultValue()
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_TimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
+                new MethodSignature { Name = "TryParse", Parameters = Parameters.ReadOnlySpanOfChar_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
@@ -687,7 +685,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         {
             if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
                 && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                    new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_String_TimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
+                    new MethodSignature { Name = "TryParseExact", Parameters = Parameters.String_String_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
                     invocationExpression.PsiModule))
             {
                 consumer.AddHighlighting(
@@ -725,7 +723,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_ReadOnlySpanOfChar_TimeOnly, IsStatic = true, // todo: nameof(TimeOnly.TryParseExact) when available
+                    Name = "TryParseExact", Parameters = Parameters.ReadOnlySpanOfChar_ReadOnlySpanOfChar_outTimeOnly, IsStatic = true, // todo: nameof(TimeOnly.TryParseExact) when available
                 },
                 invocationExpression.PsiModule))
         {
@@ -749,7 +747,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
         {
             case { Count: 1 } collectionCreation when PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_String_TimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
+                new MethodSignature { Name = "TryParseExact", Parameters = Parameters.String_String_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -824,7 +822,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         if (providerArgument.Value.IsDefaultValue()
             && styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.String_StringArray_TimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
+                new MethodSignature { Name = "TryParseExact", Parameters = Parameters.String_StringArray_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
@@ -839,9 +837,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             case { Count: 1 } collectionCreation when PredefinedType.TIME_ONLY_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = "TryParseExact",
-                    ParameterTypes = ParameterTypes.String_String_IFormatProvider_DateTimeStyles_TimeOnly, // todo: nameof(TimeOnly.TryParseExact) when available
-                    IsStatic = true,
+                    Name = "TryParseExact", Parameters = Parameters.String_String_IFormatProvider_DateTimeStyles_outTimeOnly, IsStatic = true, // todo: nameof(TimeOnly.TryParseExact) when available
                 },
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
@@ -909,7 +905,7 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         if (providerArgument.Value.IsDefaultValue()
             && styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParseExact", ParameterTypes = ParameterTypes.ReadOnlySpanOfChar_StringArray_TimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
+                new MethodSignature { Name = "TryParseExact", Parameters = Parameters.ReadOnlySpanOfChar_StringArray_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(

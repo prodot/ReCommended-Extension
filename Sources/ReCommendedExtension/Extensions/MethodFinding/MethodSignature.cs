@@ -1,12 +1,10 @@
-﻿using JetBrains.ReSharper.Psi;
-
-namespace ReCommendedExtension.Extensions.MethodFinding;
+﻿namespace ReCommendedExtension.Extensions.MethodFinding;
 
 internal record struct MethodSignature
 {
     public required string Name { get; init; }
 
-    public required IReadOnlyList<Func<IType, bool>> ParameterTypes { get; init; }
+    public required IReadOnlyList<Parameter> Parameters { get; init; }
 
     public bool IsStatic { get; init; }
 

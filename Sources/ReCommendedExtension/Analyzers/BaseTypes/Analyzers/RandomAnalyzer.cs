@@ -17,11 +17,11 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
     : ElementProblemAnalyzer<IInvocationExpression>
 {
-    static class ParameterTypes
+    static class Parameters
     {
-        public static IReadOnlyList<Func<IType, bool>> Int32 { get; } = [t => t.IsInt()];
+        public static IReadOnlyList<Parameter> Int32 { get; } = [new(t => t.IsInt())];
 
-        public static IReadOnlyList<Func<IType, bool>> Int64 { get; } = [t => t.IsLong()];
+        public static IReadOnlyList<Parameter> Int64 { get; } = [new(t => t.IsLong())];
     }
 
     [Pure]
@@ -37,7 +37,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         var type = itemType.GetPresentableName(CSharpLanguage.Instance);
 
         if (PredefinedType.ARRAY_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Array.Empty), ParameterTypes = [], GenericParametersCount = 1, IsStatic = true },
+            new MethodSignature { Name = nameof(Array.Empty), Parameters = [], GenericParametersCount = 1, IsStatic = true },
             context.GetPsiModule()))
         {
             return $"{nameof(Array)}.{nameof(Array.Empty)}<{type}>()";
@@ -124,10 +124,9 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
         switch (maxValueArgument.Value.TryGetInt32Constant())
         {
-            case int.MaxValue
-                when ClrTypeNames.Random.HasMethod(
-                    new MethodSignature { Name = nameof(Random.Next), ParameterTypes = [] },
-                    invocationExpression.PsiModule):
+            case int.MaxValue when ClrTypeNames.Random.HasMethod(
+                new MethodSignature { Name = nameof(Random.Next), Parameters = [] },
+                invocationExpression.PsiModule):
                 consumer.AddHighlighting(new RedundantArgumentHint($"Passing the int.{nameof(int.MaxValue)} is redundant.", maxValueArgument));
                 break;
 
@@ -156,7 +155,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         switch (minValueArgument.Value.TryGetInt32Constant())
         {
             case 0 when ClrTypeNames.Random.HasMethod(
-                new MethodSignature { Name = nameof(Random.Next), ParameterTypes = ParameterTypes.Int32 },
+                new MethodSignature { Name = nameof(Random.Next), Parameters = Parameters.Int32 },
                 invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", minValueArgument));
@@ -194,7 +193,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         switch (maxValueArgument.Value.TryGetInt64Constant())
         {
             case long.MaxValue when ClrTypeNames.Random.HasMethod(
-                new MethodSignature { Name = "NextInt64", ParameterTypes = [] }, // todo: nameof(Random.NextInt64) when available
+                new MethodSignature { Name = "NextInt64", Parameters = [] }, // todo: nameof(Random.NextInt64) when available
                 invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(new RedundantArgumentHint($"Passing the long.{nameof(long.MaxValue)} is redundant.", maxValueArgument));
@@ -225,7 +224,7 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         switch (minValueArgument.Value.TryGetInt64Constant())
         {
             case 0 when ClrTypeNames.Random.HasMethod(
-                new MethodSignature { Name = "NextInt64", ParameterTypes = ParameterTypes.Int64 }, // todo: nameof(Random.NextInt64) when available
+                new MethodSignature { Name = "NextInt64", Parameters = Parameters.Int64 }, // todo: nameof(Random.NextInt64) when available
                 invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", minValueArgument));

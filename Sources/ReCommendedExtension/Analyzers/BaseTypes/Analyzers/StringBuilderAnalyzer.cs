@@ -27,34 +27,34 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     : ElementProblemAnalyzer<IInvocationExpression>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class ParameterTypes
+    static class Parameters
     {
-        public static IReadOnlyList<Func<IType, bool>> Char { get; } = [t => t.IsChar()];
+        public static IReadOnlyList<Parameter> Char { get; } = [new(t => t.IsChar())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_Char { get; } = [t => t.IsChar(), t => t.IsChar()];
+        public static IReadOnlyList<Parameter> Char_Char { get; } = [new(t => t.IsChar()), new(t => t.IsChar())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_Char_Int32_Int32 { get; } =
+        public static IReadOnlyList<Parameter> Char_Char_Int32_Int32 { get; } =
         [
-            t => t.IsChar(), t => t.IsChar(), t => t.IsInt(), t => t.IsInt(),
+            new(t => t.IsChar()), new(t => t.IsChar()), new(t => t.IsInt()), new(t => t.IsInt()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_ObjectArray { get; } = [t => t.IsChar(), t => t.IsGenericArrayOfObject()];
+        public static IReadOnlyList<Parameter> Char_ObjectArray { get; } = [new(t => t.IsChar()), new(t => t.IsGenericArrayOfObject())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_StringArray { get; } = [t => t.IsChar(), t => t.IsGenericArrayOfString()];
+        public static IReadOnlyList<Parameter> Char_StringArray { get; } = [new(t => t.IsChar()), new(t => t.IsGenericArrayOfString())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_IEnumerableOfT { get; } = [t => t.IsChar(), t => t.IsGenericIEnumerable()];
+        public static IReadOnlyList<Parameter> Char_IEnumerableOfT { get; } = [new(t => t.IsChar()), new(t => t.IsGenericIEnumerable())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_ReadOnlySpanOfString { get; } = [t => t.IsChar(), t => t.IsReadOnlySpanOfString()];
+        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfString { get; } = [new(t => t.IsChar()), new(t => t.IsReadOnlySpanOfString())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_ReadOnlySpanOfObject { get; } = [t => t.IsChar(), t => t.IsReadOnlySpanOfObject()];
+        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfObject { get; } = [new(t => t.IsChar()), new(t => t.IsReadOnlySpanOfObject())];
 
-        public static IReadOnlyList<Func<IType, bool>> Object { get; } = [t => t.IsObject()];
+        public static IReadOnlyList<Parameter> Object { get; } = [new(t => t.IsObject())];
 
-        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
+        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_String { get; } = [t => t.IsInt(), t => t.IsString()];
+        public static IReadOnlyList<Parameter> Int32_String { get; } = [new(t => t.IsInt()), new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32_Char { get; } = [t => t.IsInt(), t => t.IsChar()];
+        public static IReadOnlyList<Parameter> Int32_Char { get; } = [new(t => t.IsInt()), new(t => t.IsChar())];
     }
 
     /// <remarks>
@@ -78,7 +78,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 break;
 
             case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Char },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Char },
                 invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", repeatCountArgument));
@@ -183,7 +183,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 break;
 
             case [var character] when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Char },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Char },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -224,7 +224,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             case (var value, >= 0 and var startIndex, 1) when value.TryGetStringConstant() is { } s
                 && startIndex < s.Length
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Char },
+                    new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Char },
                     valueArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule):
@@ -332,7 +332,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
@@ -394,11 +394,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature
-                    {
-                        Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                        ParameterTypes = ParameterTypes.Char_ObjectArray,
-                    },
+                    new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_ObjectArray }, // todo: use 'nameof(StringBuilder.AppendJoin)'
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -429,7 +425,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
@@ -491,11 +487,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature
-                    {
-                        Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfObject,
-                    },
+                    new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_ReadOnlySpanOfObject }, // todo: use 'nameof(StringBuilder.AppendJoin)'
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -535,7 +527,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     return;
 
                 case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                    new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                     invocationExpression.PsiModule):
 
                     consumer.AddHighlighting(
@@ -552,12 +544,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
         if (separatorArgument.Value.TryGetStringConstant() is [var character]
             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    ParameterTypes = ParameterTypes.Char_IEnumerableOfT,
-                    GenericParametersCount = 1,
-                },
+                new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_IEnumerableOfT, GenericParametersCount = 1 }, // todo: use 'nameof(StringBuilder.AppendJoin)'
                 separatorArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule))
@@ -585,7 +572,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
@@ -647,11 +634,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature
-                    {
-                        Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                        ParameterTypes = ParameterTypes.Char_StringArray,
-                    },
+                    new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_StringArray }, // todo: use 'nameof(StringBuilder.AppendJoin)'
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -682,7 +665,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
         if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
@@ -744,11 +727,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature
-                    {
-                        Name = "AppendJoin", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfString,
-                    },
+                    new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_ReadOnlySpanOfString }, // todo: use 'nameof(StringBuilder.AppendJoin)'
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -776,7 +755,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
         if (arguments.TrySplit(out _, out var valuesArguments))
@@ -852,7 +831,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
         if (arguments.TrySplit(out _, out var valuesArguments))
@@ -936,7 +915,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     return;
 
                 case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.Object },
+                    new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                     invocationExpression.PsiModule):
 
                     consumer.AddHighlighting(
@@ -965,7 +944,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
         if (arguments.TrySplit(out _, out var valuesArguments))
@@ -1041,7 +1020,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), ParameterTypes = ParameterTypes.String },
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
         if (arguments.TrySplit(out _, out var valuesArguments))
@@ -1115,14 +1094,14 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         switch (valueArgument.Value.TryGetStringConstant(), countArgument.Value.TryGetInt32Constant())
         {
             case (null, 1) when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Insert), ParameterTypes = ParameterTypes.Int32_String },
+                new MethodSignature { Name = nameof(StringBuilder.Insert), Parameters = Parameters.Int32_String },
                 invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", countArgument));
                 break;
 
             case ([var character], 1) when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Insert), ParameterTypes = ParameterTypes.Int32_Char },
+                new MethodSignature { Name = nameof(StringBuilder.Insert), Parameters = Parameters.Int32_Char },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -1145,7 +1124,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     {
         if (valueArgument.Value.TryGetStringConstant() is [var character]
             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Insert), ParameterTypes = ParameterTypes.Int32_Char },
+                new MethodSignature { Name = nameof(StringBuilder.Insert), Parameters = Parameters.Int32_Char },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule))
@@ -1204,7 +1183,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             if (oldValue is [var oldCharacter]
                 && newValue is [var newCharacter]
                 && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(StringBuilder.Replace), ParameterTypes = ParameterTypes.Char_Char },
+                    new MethodSignature { Name = nameof(StringBuilder.Replace), Parameters = Parameters.Char_Char },
                     oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -1261,7 +1240,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         if (oldValueArgument.Value.TryGetStringConstant() is [var oldCharacter]
             && newValueArgument.Value.TryGetStringConstant() is [var newCharacter]
             && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Replace), ParameterTypes = ParameterTypes.Char_Char_Int32_Int32 },
+                new MethodSignature { Name = nameof(StringBuilder.Replace), Parameters = Parameters.Char_Char_Int32_Int32 },
                 oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule))

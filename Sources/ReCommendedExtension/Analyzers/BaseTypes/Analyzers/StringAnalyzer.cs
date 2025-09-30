@@ -34,57 +34,57 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     : ElementProblemAnalyzer<IInvocationExpression>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class ParameterTypes
+    static class Parameters
     {
-        public static IReadOnlyList<Func<IType, bool>> Char { get; } = [t => t.IsChar()];
+        public static IReadOnlyList<Parameter> Char { get; } = [new(t => t.IsChar())];
 
-        public static IReadOnlyList<Func<IType, bool>> CharArray { get; } = [t => t.IsGenericArrayOfChar()];
+        public static IReadOnlyList<Parameter> CharArray { get; } = [new(t => t.IsGenericArrayOfChar())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_Char { get; } = [t => t.IsChar(), t => t.IsChar()];
+        public static IReadOnlyList<Parameter> Char_Char { get; } = [new(t => t.IsChar()), new(t => t.IsChar())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_Int32 { get; } = [t => t.IsChar(), t => t.IsInt()];
+        public static IReadOnlyList<Parameter> Char_Int32 { get; } = [new(t => t.IsChar()), new(t => t.IsInt())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_StringComparison { get; } = [t => t.IsChar(), t => t.IsStringComparison()];
+        public static IReadOnlyList<Parameter> Char_StringComparison { get; } = [new(t => t.IsChar()), new(t => t.IsStringComparison())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_StringSplitOptions { get; } = [t => t.IsChar(), t => t.IsStringSplitOptions()];
+        public static IReadOnlyList<Parameter> Char_StringSplitOptions { get; } = [new(t => t.IsChar()), new(t => t.IsStringSplitOptions())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_ObjectArray { get; } = [t => t.IsChar(), t => t.IsGenericArrayOfObject()];
+        public static IReadOnlyList<Parameter> Char_ObjectArray { get; } = [new(t => t.IsChar()), new(t => t.IsGenericArrayOfObject())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_StringArray { get; } = [t => t.IsChar(), t => t.IsGenericArrayOfString()];
+        public static IReadOnlyList<Parameter> Char_StringArray { get; } = [new(t => t.IsChar()), new(t => t.IsGenericArrayOfString())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_StringArray_Int32_Int32 { get; } =
+        public static IReadOnlyList<Parameter> Char_StringArray_Int32_Int32 { get; } =
         [
-            t => t.IsChar(), t => t.IsGenericArrayOfString(), t => t.IsInt(), t => t.IsInt(),
+            new(t => t.IsChar()), new(t => t.IsGenericArrayOfString()), new(t => t.IsInt()), new(t => t.IsInt()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_ReadOnlySpanOfString { get; } = [t => t.IsChar(), t => t.IsReadOnlySpanOfString()];
+        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfString { get; } = [new(t => t.IsChar()), new(t => t.IsReadOnlySpanOfString())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_ReadOnlySpanOfObject { get; } = [t => t.IsChar(), t => t.IsReadOnlySpanOfObject()];
+        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfObject { get; } = [new(t => t.IsChar()), new(t => t.IsReadOnlySpanOfObject())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_IEnumerableOfT { get; } = [t => t.IsChar(), t => t.IsGenericIEnumerable()];
+        public static IReadOnlyList<Parameter> Char_IEnumerableOfT { get; } = [new(t => t.IsChar()), new(t => t.IsGenericIEnumerable())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_Int32_Int32 { get; } = [t => t.IsChar(), t => t.IsInt(), t => t.IsInt()];
+        public static IReadOnlyList<Parameter> Char_Int32_Int32 { get; } = [new(t => t.IsChar()), new(t => t.IsInt()), new(t => t.IsInt())];
 
-        public static IReadOnlyList<Func<IType, bool>> Char_Int32_StringSplitOptions { get; } =
+        public static IReadOnlyList<Parameter> Char_Int32_StringSplitOptions { get; } =
         [
-            t => t.IsChar(), t => t.IsInt(), t => t.IsStringSplitOptions(),
+            new(t => t.IsChar()), new(t => t.IsInt()), new(t => t.IsStringSplitOptions()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> CharArray_StringSplitOptions { get; } =
+        public static IReadOnlyList<Parameter> CharArray_StringSplitOptions { get; } =
         [
-            t => t.IsGenericArrayOfChar(), t => t.IsStringSplitOptions(),
+            new(t => t.IsGenericArrayOfChar()), new(t => t.IsStringSplitOptions()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> CharArray_Int32_StringSplitOptions { get; } =
+        public static IReadOnlyList<Parameter> CharArray_Int32_StringSplitOptions { get; } =
         [
-            t => t.IsGenericArrayOfChar(), t => t.IsInt(), t => t.IsStringSplitOptions(),
+            new(t => t.IsGenericArrayOfChar()), new(t => t.IsInt()), new(t => t.IsStringSplitOptions()),
         ];
 
-        public static IReadOnlyList<Func<IType, bool>> String { get; } = [t => t.IsString()];
+        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
 
-        public static IReadOnlyList<Func<IType, bool>> String_StringComparison { get; } = [t => t.IsString(), t => t.IsStringComparison()];
+        public static IReadOnlyList<Parameter> String_StringComparison { get; } = [new(t => t.IsString()), new(t => t.IsStringComparison())];
 
-        public static IReadOnlyList<Func<IType, bool>> Int32 { get; } = [t => t.IsInt()];
+        public static IReadOnlyList<Parameter> Int32 { get; } = [new(t => t.IsInt())];
     }
 
     [Pure]
@@ -98,7 +98,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         if (items is [])
         {
             if (PredefinedType.ARRAY_FQN.HasMethod(
-                new MethodSignature { Name = nameof(Array.Empty), ParameterTypes = [], GenericParametersCount = 1, IsStatic = true },
+                new MethodSignature { Name = nameof(Array.Empty), Parameters = [], GenericParametersCount = 1, IsStatic = true },
                 context.GetPsiModule()))
             {
                 return $"{nameof(Array)}.{nameof(Array.Empty)}<string>()";
@@ -142,7 +142,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case [var character] when PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char },
+                new MethodSignature { Name = nameof(string.Contains), Parameters = Parameters.Char },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -178,7 +178,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case [var character] when PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char_StringComparison },
+                new MethodSignature { Name = nameof(string.Contains), Parameters = Parameters.Char_StringComparison },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -344,7 +344,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char },
+                new MethodSignature { Name = nameof(string.Contains), Parameters = Parameters.Char },
                 invocationExpression.PsiModule);
 
         Debug.Assert(invokedExpression.QualifierExpression is { });
@@ -451,7 +451,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), ParameterTypes = ParameterTypes.Char },
+                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
@@ -475,7 +475,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.Char_StringComparison },
+                new MethodSignature { Name = nameof(string.Contains), Parameters = Parameters.Char_StringComparison },
                 invocationExpression.PsiModule);
 
         Debug.Assert(invokedExpression.QualifierExpression is { });
@@ -578,13 +578,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         [Pure]
         bool MethodStartsWithExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.StartsWith), ParameterTypes = ParameterTypes.String },
+                new MethodSignature { Name = nameof(string.StartsWith), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
         [Pure]
         bool MethodContainsExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
+                new MethodSignature { Name = nameof(string.Contains), Parameters = Parameters.String_StringComparison },
                 invocationExpression.PsiModule);
 
         Debug.Assert(invokedExpression.QualifierExpression is { });
@@ -598,7 +598,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case [var character] when PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), ParameterTypes = ParameterTypes.Char_StringComparison },
+                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char_StringComparison },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -722,7 +722,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), ParameterTypes = ParameterTypes.String },
+                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.String },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
@@ -750,13 +750,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         [Pure]
         bool MethodStartsWithExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.StartsWith), ParameterTypes = ParameterTypes.String_StringComparison },
+                new MethodSignature { Name = nameof(string.StartsWith), Parameters = Parameters.String_StringComparison },
                 invocationExpression.PsiModule);
 
         [Pure]
         bool MethodContainsExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Contains), ParameterTypes = ParameterTypes.String_StringComparison },
+                new MethodSignature { Name = nameof(string.Contains), Parameters = Parameters.String_StringComparison },
                 invocationExpression.PsiModule);
 
         Debug.Assert(invokedExpression.QualifierExpression is { });
@@ -770,7 +770,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case [var character] when PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), ParameterTypes = ParameterTypes.Char_StringComparison },
+                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char_StringComparison },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -895,7 +895,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), ParameterTypes = ParameterTypes.String_StringComparison },
+                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.String_StringComparison },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
@@ -924,7 +924,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case { Count: 1 } collectionCreation when PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), ParameterTypes = ParameterTypes.Char },
+                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char },
                 invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
@@ -965,7 +965,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         if (startIndexArgument.Value.TryGetInt32Constant() == 0
             && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOfAny), ParameterTypes = ParameterTypes.CharArray },
+                new MethodSignature { Name = nameof(string.IndexOfAny), Parameters = Parameters.CharArray },
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
@@ -976,7 +976,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.IndexOf), ParameterTypes = ParameterTypes.Char_Int32 },
+                    new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char_Int32 },
                     invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
@@ -1020,7 +1020,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
                 && countArgument.Value is { }
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.IndexOf), ParameterTypes = ParameterTypes.Char_Int32_Int32 },
+                    new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char_Int32_Int32 },
                     invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
@@ -1105,7 +1105,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.Join), ParameterTypes = ParameterTypes.Char_ObjectArray, IsStatic = true },
+                    new MethodSignature { Name = nameof(string.Join), Parameters = Parameters.Char_ObjectArray, IsStatic = true },
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -1180,12 +1180,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature
-                    {
-                        Name = nameof(string.Join),
-                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfObject,
-                        IsStatic = true,
-                    },
+                    new MethodSignature { Name = nameof(string.Join), Parameters = Parameters.Char_ReadOnlySpanOfObject, IsStatic = true },
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -1234,10 +1229,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             && PredefinedType.STRING_FQN.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(string.Join),
-                    ParameterTypes = ParameterTypes.Char_IEnumerableOfT,
-                    GenericParametersCount = 1,
-                    IsStatic = true,
+                    Name = nameof(string.Join), Parameters = Parameters.Char_IEnumerableOfT, GenericParametersCount = 1, IsStatic = true,
                 },
                 separatorArgument.NameIdentifier is { },
                 out var parameterNames,
@@ -1310,12 +1302,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature
-                    {
-                        Name = nameof(string.Join),
-                        ParameterTypes = ParameterTypes.Char_StringArray,
-                        IsStatic = true,
-                    },
+                    new MethodSignature { Name = nameof(string.Join), Parameters = Parameters.Char_StringArray, IsStatic = true },
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -1366,12 +1353,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
         if (separatorArgument.Value.TryGetStringConstant() is [var character]
             && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(string.Join),
-                    ParameterTypes = ParameterTypes.Char_StringArray_Int32_Int32,
-                    IsStatic = true,
-                },
+                new MethodSignature { Name = nameof(string.Join), Parameters = Parameters.Char_StringArray_Int32_Int32, IsStatic = true },
                 separatorArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule))
@@ -1445,12 +1427,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             if (separatorArgument.Value.TryGetStringConstant() is [var character]
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature
-                    {
-                        Name = nameof(string.Join),
-                        ParameterTypes = ParameterTypes.Char_ReadOnlySpanOfString,
-                        IsStatic = true,
-                    },
+                    new MethodSignature { Name = nameof(string.Join), Parameters = Parameters.Char_ReadOnlySpanOfString, IsStatic = true },
                     separatorArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -1808,7 +1785,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             case [var character] when comparisonTypeArgument.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.LastIndexOf), ParameterTypes = ParameterTypes.Char },
+                    new MethodSignature { Name = nameof(string.LastIndexOf), Parameters = Parameters.Char },
                     valueArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule):
@@ -1846,7 +1823,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case { Count: 1 } collectionCreation when PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.LastIndexOf), ParameterTypes = ParameterTypes.Char },
+                new MethodSignature { Name = nameof(string.LastIndexOf), Parameters = Parameters.Char },
                 invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
@@ -1899,7 +1876,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         {
             case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.LastIndexOf), ParameterTypes = ParameterTypes.Char_Int32 },
+                    new MethodSignature { Name = nameof(string.LastIndexOf), Parameters = Parameters.Char_Int32 },
                     invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
@@ -1956,7 +1933,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
                 && countArgument.Value is { }
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.LastIndexOf), ParameterTypes = ParameterTypes.Char_Int32_Int32 },
+                    new MethodSignature { Name = nameof(string.LastIndexOf), Parameters = Parameters.Char_Int32_Int32 },
                     invocationExpression.PsiModule):
 
                 consumer.AddHighlighting(
@@ -2027,7 +2004,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             if (paddingCharArgument.Value.TryGetCharConstant() == ' '
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.PadLeft), ParameterTypes = ParameterTypes.Int32 },
+                    new MethodSignature { Name = nameof(string.PadLeft), Parameters = Parameters.Int32 },
                     invokedExpression.GetPsiModule()))
             {
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing ' ' is redundant.", paddingCharArgument));
@@ -2079,7 +2056,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
             if (paddingCharArgument.Value.TryGetCharConstant() == ' '
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.PadRight), ParameterTypes = ParameterTypes.Int32 },
+                    new MethodSignature { Name = nameof(string.PadRight), Parameters = Parameters.Int32 },
                     invokedExpression.GetPsiModule()))
             {
                 consumer.AddHighlighting(new RedundantArgumentHint("Passing ' ' is redundant.", paddingCharArgument));
@@ -2180,7 +2157,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             if (oldValue is [var oldCharacter]
                 && newValue is [var newCharacter]
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.Replace), ParameterTypes = ParameterTypes.Char_Char },
+                    new MethodSignature { Name = nameof(string.Replace), Parameters = Parameters.Char_Char },
                     oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -2253,7 +2230,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             if (oldValue is [var oldCharacter]
                 && newValue is [var newCharacter]
                 && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.Replace), ParameterTypes = ParameterTypes.Char_Char },
+                    new MethodSignature { Name = nameof(string.Replace), Parameters = Parameters.Char_Char },
                     oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
                     out var parameterNames,
                     invocationExpression.PsiModule))
@@ -2317,7 +2294,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             break;
 
                         case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
+                            new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
                             invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
 
                             consumer.AddHighlighting(
@@ -2489,7 +2466,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
 
                     case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
+                        new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
                         invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
 
                         consumer.AddHighlighting(
@@ -2554,7 +2531,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
 
                     case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
+                        new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
                         invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
 
                         consumer.AddHighlighting(
@@ -2567,7 +2544,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case [var character] when PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Split), ParameterTypes = ParameterTypes.Char_StringSplitOptions },
+                new MethodSignature { Name = nameof(string.Split), Parameters = Parameters.Char_StringSplitOptions },
                 separatorArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -2632,7 +2609,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
 
                     case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
+                        new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
                         invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
 
                         consumer.AddHighlighting(
@@ -2645,7 +2622,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 break;
 
             case ([var character], _) when PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Split), ParameterTypes = ParameterTypes.Char_Int32_StringSplitOptions },
+                new MethodSignature { Name = nameof(string.Split), Parameters = Parameters.Char_Int32_StringSplitOptions },
                 separatorArgument.NameIdentifier is { },
                 out var parameterNames,
                 invocationExpression.PsiModule):
@@ -2695,7 +2672,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             break;
 
                         case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
+                            new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
                             invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
 
                             consumer.AddHighlighting(
@@ -2712,7 +2689,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 if (collectionCreation.StringConstants.All(s => s is [_]))
                 {
                     if (PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.Split), ParameterTypes = ParameterTypes.CharArray_StringSplitOptions },
+                        new MethodSignature { Name = nameof(string.Split), Parameters = Parameters.CharArray_StringSplitOptions },
                         invocationExpression.PsiModule))
                     {
                         var highlighting = collectionCreation.Expression switch
@@ -2815,7 +2792,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                 if (collectionCreation.StringConstants.All(s => s is [_]))
                 {
                     if (PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.Split), ParameterTypes = ParameterTypes.CharArray_Int32_StringSplitOptions },
+                        new MethodSignature { Name = nameof(string.Split), Parameters = Parameters.CharArray_Int32_StringSplitOptions },
                         invocationExpression.PsiModule))
                     {
                         var highlighting = collectionCreation.Expression switch
@@ -3003,7 +2980,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Trim), ParameterTypes = [] },
+                new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
                 invocationExpression.PsiModule);
 
         switch (arguments)
@@ -3070,7 +3047,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.TrimEnd), ParameterTypes = [] },
+                new MethodSignature { Name = nameof(string.TrimEnd), Parameters = [] },
                 invocationExpression.PsiModule);
 
         switch (arguments)
@@ -3137,7 +3114,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         [Pure]
         bool MethodExists()
             => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.TrimStart), ParameterTypes = [] },
+                new MethodSignature { Name = nameof(string.TrimStart), Parameters = [] },
                 invocationExpression.PsiModule);
 
         switch (arguments)
