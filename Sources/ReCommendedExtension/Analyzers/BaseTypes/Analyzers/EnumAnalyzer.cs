@@ -16,29 +16,29 @@ public sealed class EnumAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar { get; } = [new(t => t.IsReadOnlySpanOfChar())];
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar { get; } = [Parameter.ReadOnlySpanOfChar];
 
-        public static IReadOnlyList<Parameter> Type_String { get; } = [new(t => t.IsSystemType()), new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> Type_String { get; } = [Parameter.Type, Parameter.String];
 
-        public static IReadOnlyList<Parameter> Type_ReadOnlySpanOfChar { get; } = [new(t => t.IsSystemType()), new(t => t.IsReadOnlySpanOfChar())];
+        public static IReadOnlyList<Parameter> Type_ReadOnlySpanOfChar { get; } = [Parameter.Type, Parameter.ReadOnlySpanOfChar];
 
-        public static IReadOnlyList<Parameter> String_outE { get; } = [new(t => t.IsString()), new(_ => true, ParameterKind.OUTPUT)];
+        public static IReadOnlyList<Parameter> String_outE { get; } = [Parameter.String, Parameter.T with { Kind = ParameterKind.OUTPUT }];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outE { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(_ => true, ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.T with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> Type_String_outObject { get; } =
         [
-            new(t => t.IsSystemType()), new(t => t.IsString()), new(t => t.IsObject(), ParameterKind.OUTPUT),
+            Parameter.Type, Parameter.String, Parameter.Object with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> Type_ReadOnlySpanOfChar_outObject { get; } =
         [
-            new(t => t.IsSystemType()), new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsObject(), ParameterKind.OUTPUT),
+            Parameter.Type, Parameter.ReadOnlySpanOfChar, Parameter.Object with { Kind = ParameterKind.OUTPUT },
         ];
     }
 

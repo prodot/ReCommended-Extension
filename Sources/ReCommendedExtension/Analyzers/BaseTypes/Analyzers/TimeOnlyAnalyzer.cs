@@ -28,75 +28,75 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> TimeSpan { get; } = [new(t => t.IsTimeSpan())];
+        public static IReadOnlyList<Parameter> TimeSpan { get; } = [Parameter.TimeSpan];
 
-        public static IReadOnlyList<Parameter> Double { get; } = [new(t => t.IsDouble())];
+        public static IReadOnlyList<Parameter> Double { get; } = [Parameter.Double];
 
-        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> String_String { get; } = [new(t => t.IsString()), new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String_String { get; } = [Parameter.String, Parameter.String];
 
-        public static IReadOnlyList<Parameter> String_StringArray { get; } = [new(t => t.IsString()), new(t => t.IsGenericArrayOfString())];
+        public static IReadOnlyList<Parameter> String_StringArray { get; } = [Parameter.String, Parameter.StringArray];
 
-        public static IReadOnlyList<Parameter> String_outTimeOnly { get; } = [new(t => t.IsString()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT)];
+        public static IReadOnlyList<Parameter> String_outTimeOnly { get; } =
+        [
+            Parameter.String, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+        ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outTimeOnly { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray { get; } =
-        [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsGenericArrayOfString()),
-        ];
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray { get; } = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray];
 
         public static IReadOnlyList<Parameter> String_String_outTimeOnly { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+            Parameter.String, Parameter.String, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> String_IFormatProvider_outTimeOnly { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+            Parameter.String, Parameter.IFormatProvider, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> String_StringArray_outTimeOnly { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsGenericArrayOfString()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+            Parameter.String, Parameter.StringArray, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
+            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTimeStyles,
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outTimeOnly { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_ReadOnlySpanOfChar_outTimeOnly { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.ReadOnlySpanOfChar, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray_outTimeOnly { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsGenericArrayOfString()), new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.StringArray, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
+            Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles_outTimeOnly { get; } =
         [
-            new(t => t.IsString()),
-            new(t => t.IsString()),
-            new(t => t.IsIFormatProvider()),
-            new(t => t.IsDateTimeStyles()),
-            new(t => t.IsTimeOnly(), ParameterKind.OUTPUT),
+            Parameter.String,
+            Parameter.String,
+            Parameter.IFormatProvider,
+            Parameter.DateTimeStyles,
+            Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
     }
 

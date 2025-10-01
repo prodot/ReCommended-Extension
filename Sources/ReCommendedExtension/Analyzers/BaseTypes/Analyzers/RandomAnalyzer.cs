@@ -19,9 +19,9 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 {
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> Int32 { get; } = [new(t => t.IsInt())];
+        public static IReadOnlyList<Parameter> Int32 { get; } = [Parameter.Int32];
 
-        public static IReadOnlyList<Parameter> Int64 { get; } = [new(t => t.IsLong())];
+        public static IReadOnlyList<Parameter> Int64 { get; } = [Parameter.Int64];
     }
 
     [Pure]

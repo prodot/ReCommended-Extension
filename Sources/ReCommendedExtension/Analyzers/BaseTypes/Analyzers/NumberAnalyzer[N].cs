@@ -260,7 +260,11 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(IParsable<T>.TryParse) when available
-                    Parameters = [..Parameters.String_IFormatProvider, new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT)],
+                    Parameters =
+                    [
+                        ..Parameters.String_IFormatProvider,
+                        new Parameter { IsType = t => t.IsClrType(numberInfo.ClrTypeName), Kind = ParameterKind.OUTPUT },
+                    ],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -284,7 +288,10 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = nameof(int.TryParse),
-                    Parameters = [..Parameters.String, new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT)],
+                    Parameters =
+                    [
+                        ..Parameters.String, new Parameter { IsType = t => t.IsClrType(numberInfo.ClrTypeName), Kind = ParameterKind.OUTPUT },
+                    ],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -309,7 +316,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     Parameters =
                     [
                         ..Parameters.ReadOnlySpanOfChar_IFormatProvider,
-                        new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT),
+                        new Parameter { IsType = t => t.IsClrType(numberInfo.ClrTypeName), Kind = ParameterKind.OUTPUT },
                     ],
                     IsStatic = true,
                 },
@@ -334,7 +341,11 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = "TryParse", // todo: nameof(ISpanParsable<T>.TryParse) when available
-                    Parameters = [..Parameters.ReadOnlySpanOfChar, new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT)],
+                    Parameters =
+                    [
+                        ..Parameters.ReadOnlySpanOfChar,
+                        new Parameter { IsType = t => t.IsClrType(numberInfo.ClrTypeName), Kind = ParameterKind.OUTPUT },
+                    ],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -359,7 +370,7 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                     Parameters =
                     [
                         ..Parameters.ReadOnlySpanOfByte_IFormatProvider,
-                        new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT),
+                        new Parameter { IsType = t => t.IsClrType(numberInfo.ClrTypeName), Kind = ParameterKind.OUTPUT },
                     ],
                     IsStatic = true,
                 },
@@ -384,7 +395,11 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : NumberAnalyz
                 new MethodSignature
                 {
                     Name = nameof(int.TryParse),
-                    Parameters = [..Parameters.ReadOnlySpanOfByte, new Parameter(t => t.IsClrType(numberInfo.ClrTypeName), ParameterKind.OUTPUT)],
+                    Parameters =
+                    [
+                        ..Parameters.ReadOnlySpanOfByte,
+                        new Parameter { IsType = t => t.IsClrType(numberInfo.ClrTypeName), Kind = ParameterKind.OUTPUT },
+                    ],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))

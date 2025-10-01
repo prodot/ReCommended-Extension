@@ -29,32 +29,29 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> Char { get; } = [new(t => t.IsChar())];
+        public static IReadOnlyList<Parameter> Char { get; } = [Parameter.Char];
 
-        public static IReadOnlyList<Parameter> Char_Char { get; } = [new(t => t.IsChar()), new(t => t.IsChar())];
+        public static IReadOnlyList<Parameter> Char_Char { get; } = [Parameter.Char, Parameter.Char];
 
-        public static IReadOnlyList<Parameter> Char_Char_Int32_Int32 { get; } =
-        [
-            new(t => t.IsChar()), new(t => t.IsChar()), new(t => t.IsInt()), new(t => t.IsInt()),
-        ];
+        public static IReadOnlyList<Parameter> Char_Char_Int32_Int32 { get; } = [Parameter.Char, Parameter.Char, Parameter.Int32, Parameter.Int32];
 
-        public static IReadOnlyList<Parameter> Char_ObjectArray { get; } = [new(t => t.IsChar()), new(t => t.IsGenericArrayOfObject())];
+        public static IReadOnlyList<Parameter> Char_ObjectArray { get; } = [Parameter.Char, Parameter.ObjectArray];
 
-        public static IReadOnlyList<Parameter> Char_StringArray { get; } = [new(t => t.IsChar()), new(t => t.IsGenericArrayOfString())];
+        public static IReadOnlyList<Parameter> Char_StringArray { get; } = [Parameter.Char, Parameter.StringArray];
 
-        public static IReadOnlyList<Parameter> Char_IEnumerableOfT { get; } = [new(t => t.IsChar()), new(t => t.IsGenericIEnumerable())];
+        public static IReadOnlyList<Parameter> Char_IEnumerableOfT { get; } = [Parameter.Char, Parameter.IEnumerableOfT];
 
-        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfString { get; } = [new(t => t.IsChar()), new(t => t.IsReadOnlySpanOfString())];
+        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfString { get; } = [Parameter.Char, Parameter.ReadOnlySpanOfString];
 
-        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfObject { get; } = [new(t => t.IsChar()), new(t => t.IsReadOnlySpanOfObject())];
+        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfObject { get; } = [Parameter.Char, Parameter.ReadOnlySpanOfObject];
 
-        public static IReadOnlyList<Parameter> Object { get; } = [new(t => t.IsObject())];
+        public static IReadOnlyList<Parameter> Object { get; } = [Parameter.Object];
 
-        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> Int32_String { get; } = [new(t => t.IsInt()), new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> Int32_String { get; } = [Parameter.Int32, Parameter.String];
 
-        public static IReadOnlyList<Parameter> Int32_Char { get; } = [new(t => t.IsInt()), new(t => t.IsChar())];
+        public static IReadOnlyList<Parameter> Int32_Char { get; } = [Parameter.Int32, Parameter.Char];
     }
 
     /// <remarks>

@@ -28,88 +28,82 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> String_IFormatProvider { get; } = [new(t => t.IsString()), new(t => t.IsIFormatProvider())];
+        public static IReadOnlyList<Parameter> String_IFormatProvider { get; } = [Parameter.String, Parameter.IFormatProvider];
 
         public static IReadOnlyList<Parameter> String_outDateTimeOffset { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsDateTimeOffset(), ParameterKind.OUTPUT),
+            Parameter.String, Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outDateTimeOffset { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsDateTimeOffset(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> String_IFormatProvider_outDateTimeOffset { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeOffset(), ParameterKind.OUTPUT),
+            Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outDateTimeOffset { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeOffset(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()),
+            Parameter.String, Parameter.String, Parameter.IFormatProvider,
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
+            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTimeStyles,
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
+            Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles_outDateTimeOffset { get; } =
         [
-            new(t => t.IsString()),
-            new(t => t.IsString()),
-            new(t => t.IsIFormatProvider()),
-            new(t => t.IsDateTimeStyles()),
-            new(t => t.IsDateTimeOffset(), ParameterKind.OUTPUT),
+            Parameter.String,
+            Parameter.String,
+            Parameter.IFormatProvider,
+            Parameter.DateTimeStyles,
+            Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsTimeSpan()),
+            Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.TimeSpan,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsTimeSpan()),
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.TimeSpan,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_TimeSpan { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsCalendar()),
-            new(t => t.IsTimeSpan()),
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Calendar,
+            Parameter.TimeSpan,
         ];
     }
 

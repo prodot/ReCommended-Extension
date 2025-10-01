@@ -29,162 +29,147 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> Int64 { get; } = [new(t => t.IsLong())];
+        public static IReadOnlyList<Parameter> Int64 { get; } = [Parameter.Int64];
 
-        public static IReadOnlyList<Parameter> Char { get; } = [new(t => t.IsChar())];
+        public static IReadOnlyList<Parameter> Char { get; } = [Parameter.Char];
 
-        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> String_IFormatProvider { get; } = [new(t => t.IsString()), new(t => t.IsIFormatProvider())];
+        public static IReadOnlyList<Parameter> String_IFormatProvider { get; } = [Parameter.String, Parameter.IFormatProvider];
 
-        public static IReadOnlyList<Parameter> DateOnly_TimeOnly { get; } = [new(t => t.IsDateOnly()), new(t => t.IsTimeOnly())];
+        public static IReadOnlyList<Parameter> DateOnly_TimeOnly { get; } = [Parameter.DateOnly, Parameter.TimeOnly];
 
-        public static IReadOnlyList<Parameter> String_outDateTime { get; } = [new(t => t.IsString()), new(t => t.IsDateTime(), ParameterKind.OUTPUT)];
+        public static IReadOnlyList<Parameter> String_outDateTime { get; } =
+        [
+            Parameter.String, Parameter.DateTime with { Kind = ParameterKind.OUTPUT },
+        ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outDateTime { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsDateTime(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.DateTime with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> String_IFormatProvider_outDateTime { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTime(), ParameterKind.OUTPUT),
+            Parameter.String, Parameter.IFormatProvider, Parameter.DateTime with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outDateTime { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTime(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTime with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()),
+            Parameter.String, Parameter.String, Parameter.IFormatProvider,
         ];
 
-        public static IReadOnlyList<Parameter> Int32_Int32_Int32 { get; } = [new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt())];
+        public static IReadOnlyList<Parameter> Int32_Int32_Int32 { get; } = [Parameter.Int32, Parameter.Int32, Parameter.Int32];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
+            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTimeStyles,
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
-            new(t => t.IsString()), new(t => t.IsString()), new(t => t.IsIFormatProvider()), new(t => t.IsDateTimeStyles()),
+            Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Calendar { get; } =
         [
-            new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsCalendar()),
+            Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Calendar,
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles_outDateTime { get; } =
         [
-            new(t => t.IsString()),
-            new(t => t.IsString()),
-            new(t => t.IsIFormatProvider()),
-            new(t => t.IsDateTimeStyles()),
-            new(t => t.IsDateTime(), ParameterKind.OUTPUT),
+            Parameter.String,
+            Parameter.String,
+            Parameter.IFormatProvider,
+            Parameter.DateTimeStyles,
+            Parameter.DateTime with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()), new(t => t.IsInt()),
+            Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsDateTimeKind()),
+            Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.DateTimeKind,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsCalendar()),
+            Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Calendar,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
+            Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsCalendar()),
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Calendar,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32 { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_DateTimeKind { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsDateTimeKind()),
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.DateTimeKind,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_DateTimeKind { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsCalendar()),
-            new(t => t.IsDateTimeKind()),
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Calendar,
+            Parameter.DateTimeKind,
         ];
 
         public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar { get; } =
         [
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsInt()),
-            new(t => t.IsCalendar()),
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Int32,
+            Parameter.Calendar,
         ];
     }
 

@@ -17,15 +17,15 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar { get; } = [new(t => t.IsReadOnlySpanOfChar())];
+        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar { get; } = [Parameter.ReadOnlySpanOfChar];
 
-        public static IReadOnlyList<Parameter> String_outGuid { get; } = [new(t => t.IsString()), new(t => t.IsGuid(), ParameterKind.OUTPUT)];
+        public static IReadOnlyList<Parameter> String_outGuid { get; } = [Parameter.String, Parameter.Guid with { Kind = ParameterKind.OUTPUT }];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outGuid { get; } =
         [
-            new(t => t.IsReadOnlySpanOfChar()), new(t => t.IsGuid(), ParameterKind.OUTPUT),
+            Parameter.ReadOnlySpanOfChar, Parameter.Guid with { Kind = ParameterKind.OUTPUT },
         ];
     }
 

@@ -24,7 +24,9 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
             && containingType.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(Math.Round), Parameters = [new Parameter(t => t.IsClrType(NumberInfo.ClrTypeName))], IsStatic = true,
+                    Name = nameof(Math.Round),
+                    Parameters = [new Parameter { IsType = t => t.IsClrType(NumberInfo.ClrTypeName) }],
+                    IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -45,7 +47,9 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
             && containingType.HasMethod(
                 new MethodSignature
                 {
-                    Name = nameof(Math.Round), Parameters = [new Parameter(t => t.IsClrType(NumberInfo.ClrTypeName))], IsStatic = true,
+                    Name = nameof(Math.Round),
+                    Parameters = [new Parameter { IsType = t => t.IsClrType(NumberInfo.ClrTypeName) }],
+                    IsStatic = true,
                 },
                 invocationExpression.PsiModule))
         {
@@ -70,7 +74,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                 new MethodSignature
                 {
                     Name = nameof(Math.Round),
-                    Parameters = [new Parameter(t => t.IsClrType(NumberInfo.ClrTypeName)), ..Parameters.MidpointRounding],
+                    Parameters = [new Parameter { IsType = t => t.IsClrType(NumberInfo.ClrTypeName) }, ..Parameters.MidpointRounding],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))
@@ -83,7 +87,7 @@ public abstract class FractionalNumberAnalyzer<N>(NumberInfo<N> numberInfo) : Nu
                 new MethodSignature
                 {
                     Name = nameof(Math.Round),
-                    Parameters = [new Parameter(t => t.IsClrType(NumberInfo.ClrTypeName)), ..Parameters.Int32],
+                    Parameters = [new Parameter { IsType = t => t.IsClrType(NumberInfo.ClrTypeName) }, ..Parameters.Int32],
                     IsStatic = true,
                 },
                 invocationExpression.PsiModule))

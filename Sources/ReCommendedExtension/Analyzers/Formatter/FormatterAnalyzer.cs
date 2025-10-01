@@ -30,9 +30,9 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> IFormatProvider { get; } = [new(t => t.IsIFormatProvider())];
+        public static IReadOnlyList<Parameter> IFormatProvider { get; } = [Parameter.IFormatProvider];
     }
 
     record struct ToStringInvocation

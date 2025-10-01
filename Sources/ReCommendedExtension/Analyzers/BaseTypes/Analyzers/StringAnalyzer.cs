@@ -36,55 +36,52 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> Char { get; } = [new(t => t.IsChar())];
+        public static IReadOnlyList<Parameter> Char { get; } = [Parameter.Char];
 
-        public static IReadOnlyList<Parameter> CharArray { get; } = [new(t => t.IsGenericArrayOfChar())];
+        public static IReadOnlyList<Parameter> CharArray { get; } = [Parameter.CharArray];
 
-        public static IReadOnlyList<Parameter> Char_Char { get; } = [new(t => t.IsChar()), new(t => t.IsChar())];
+        public static IReadOnlyList<Parameter> Char_Char { get; } = [Parameter.Char, Parameter.Char];
 
-        public static IReadOnlyList<Parameter> Char_Int32 { get; } = [new(t => t.IsChar()), new(t => t.IsInt())];
+        public static IReadOnlyList<Parameter> Char_Int32 { get; } = [Parameter.Char, Parameter.Int32];
 
-        public static IReadOnlyList<Parameter> Char_StringComparison { get; } = [new(t => t.IsChar()), new(t => t.IsStringComparison())];
+        public static IReadOnlyList<Parameter> Char_StringComparison { get; } = [Parameter.Char, Parameter.StringComparison];
 
-        public static IReadOnlyList<Parameter> Char_StringSplitOptions { get; } = [new(t => t.IsChar()), new(t => t.IsStringSplitOptions())];
+        public static IReadOnlyList<Parameter> Char_StringSplitOptions { get; } = [Parameter.Char, Parameter.StringSplitOptions];
 
-        public static IReadOnlyList<Parameter> Char_ObjectArray { get; } = [new(t => t.IsChar()), new(t => t.IsGenericArrayOfObject())];
+        public static IReadOnlyList<Parameter> Char_ObjectArray { get; } = [Parameter.Char, Parameter.ObjectArray];
 
-        public static IReadOnlyList<Parameter> Char_StringArray { get; } = [new(t => t.IsChar()), new(t => t.IsGenericArrayOfString())];
+        public static IReadOnlyList<Parameter> Char_StringArray { get; } = [Parameter.Char, Parameter.StringArray];
 
         public static IReadOnlyList<Parameter> Char_StringArray_Int32_Int32 { get; } =
         [
-            new(t => t.IsChar()), new(t => t.IsGenericArrayOfString()), new(t => t.IsInt()), new(t => t.IsInt()),
+            Parameter.Char, Parameter.StringArray, Parameter.Int32, Parameter.Int32,
         ];
 
-        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfString { get; } = [new(t => t.IsChar()), new(t => t.IsReadOnlySpanOfString())];
+        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfString { get; } = [Parameter.Char, Parameter.ReadOnlySpanOfString];
 
-        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfObject { get; } = [new(t => t.IsChar()), new(t => t.IsReadOnlySpanOfObject())];
+        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfObject { get; } = [Parameter.Char, Parameter.ReadOnlySpanOfObject];
 
-        public static IReadOnlyList<Parameter> Char_IEnumerableOfT { get; } = [new(t => t.IsChar()), new(t => t.IsGenericIEnumerable())];
+        public static IReadOnlyList<Parameter> Char_IEnumerableOfT { get; } = [Parameter.Char, Parameter.IEnumerableOfT];
 
-        public static IReadOnlyList<Parameter> Char_Int32_Int32 { get; } = [new(t => t.IsChar()), new(t => t.IsInt()), new(t => t.IsInt())];
+        public static IReadOnlyList<Parameter> Char_Int32_Int32 { get; } = [Parameter.Char, Parameter.Int32, Parameter.Int32];
 
         public static IReadOnlyList<Parameter> Char_Int32_StringSplitOptions { get; } =
         [
-            new(t => t.IsChar()), new(t => t.IsInt()), new(t => t.IsStringSplitOptions()),
+            Parameter.Char, Parameter.Int32, Parameter.StringSplitOptions,
         ];
 
-        public static IReadOnlyList<Parameter> CharArray_StringSplitOptions { get; } =
-        [
-            new(t => t.IsGenericArrayOfChar()), new(t => t.IsStringSplitOptions()),
-        ];
+        public static IReadOnlyList<Parameter> CharArray_StringSplitOptions { get; } = [Parameter.CharArray, Parameter.StringSplitOptions];
 
         public static IReadOnlyList<Parameter> CharArray_Int32_StringSplitOptions { get; } =
         [
-            new(t => t.IsGenericArrayOfChar()), new(t => t.IsInt()), new(t => t.IsStringSplitOptions()),
+            Parameter.CharArray, Parameter.Int32, Parameter.StringSplitOptions,
         ];
 
-        public static IReadOnlyList<Parameter> String { get; } = [new(t => t.IsString())];
+        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> String_StringComparison { get; } = [new(t => t.IsString()), new(t => t.IsStringComparison())];
+        public static IReadOnlyList<Parameter> String_StringComparison { get; } = [Parameter.String, Parameter.StringComparison];
 
-        public static IReadOnlyList<Parameter> Int32 { get; } = [new(t => t.IsInt())];
+        public static IReadOnlyList<Parameter> Int32 { get; } = [Parameter.Int32];
     }
 
     [Pure]
