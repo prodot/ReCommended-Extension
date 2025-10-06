@@ -14,16 +14,16 @@
     <ItemGroup>
         <PackageReference Include="JetBrains.Lifetimes" Version="2024.3.3" />
         <PackageReference Condition="'$(Configuration)'=='DebugReSharper' OR '$(Configuration)'=='ReleaseReSharper'"
-                          Include="JetBrains.ReSharper.SDK.Tests" Version="2025.2.2.1">
+                          Include="JetBrains.ReSharper.SDK.Tests" Version="2025.2.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Condition="'$(Configuration)'=='DebugRider' OR '$(Configuration)'=='ReleaseRider'"
-                          Include="JetBrains.Rider.SDK.Tests" Version="2025.2.2.1">
+                          Include="JetBrains.Rider.SDK.Tests" Version="2025.2.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
         <PackageReference Include="NUnit" Version="3.13.2" />
         <PackageReference Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
