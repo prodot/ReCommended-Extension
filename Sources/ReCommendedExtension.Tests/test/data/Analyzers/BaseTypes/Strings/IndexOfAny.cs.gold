@@ -6,47 +6,47 @@ namespace Test
     {
         public void RedundantArguments(string text, char[] c, string s)
         {
-            var result1 = text.IndexOfAny(c, |0|(0));
-            var result2 = text.IndexOfAny(c, |startIndex: 0|(1));
+            var result1 = text.IndexOfAny(c, 0);
+            var result2 = text.IndexOfAny(c, startIndex: 0);
         }
 
         public void RedundantArguments_Nullable(string? text, char[] c, string s)
         {
-            var result1 = text?.IndexOfAny(c, |0|(2));
-            var result2 = text?.IndexOfAny(c, |startIndex: 0|(3));
+            var result1 = text?.IndexOfAny(c, 0);
+            var result2 = text?.IndexOfAny(c, startIndex: 0);
         }
 
         public void ExpressionResult(string text)
         {
-            var result = |text.IndexOfAny([])|(4);
+            var result = |text.IndexOfAny([])|(0);
         }
 
         public void DuplicateItems(string text, int startIndex, int count)
         {
-            var result1 = text.IndexOfAny(['a', |'a'|(5)]);
-            var result2 = text.IndexOfAny(['a', |'a'|(6)], startIndex);
-            var result3 = text.IndexOfAny(['a', |'a'|(7)], startIndex, count);
+            var result1 = text.IndexOfAny(['a', |'a'|(1)]);
+            var result2 = text.IndexOfAny(['a', |'a'|(2)], startIndex);
+            var result3 = text.IndexOfAny(['a', |'a'|(3)], startIndex, count);
         }
 
         public void DuplicateItems_Nullable(string? text, int startIndex, int count)
         {
-            var result1 = text?.IndexOfAny(['a', |'a'|(8)]);
-            var result2 = text?.IndexOfAny(['a', |'a'|(9)], startIndex);
-            var result3 = text?.IndexOfAny(['a', |'a'|(10)], startIndex, count);
+            var result1 = text?.IndexOfAny(['a', |'a'|(4)]);
+            var result2 = text?.IndexOfAny(['a', |'a'|(5)], startIndex);
+            var result3 = text?.IndexOfAny(['a', |'a'|(6)], startIndex, count);
         }
 
         public void OtherMethod(string text, char c, int startIndex, int count)
         {
-            var result1 = text.|IndexOfAny([c])|(11);
-            var result2 = text.|IndexOfAny([c], startIndex)|(12);
-            var result3 = text.|IndexOfAny([c], startIndex, count)|(13);
+            var result1 = text.|IndexOfAny([c])|(7);
+            var result2 = text.|IndexOfAny([c], startIndex)|(8);
+            var result3 = text.|IndexOfAny([c], startIndex, count)|(9);
         }
 
         public void OtherMethod_Nullable(string? text, char c, int startIndex, int count)
         {
-            var result1 = text?.|IndexOfAny([c])|(14);
-            var result2 = text?.|IndexOfAny([c], startIndex)|(15);
-            var result3 = text?.|IndexOfAny([c], startIndex, count)|(16);
+            var result1 = text?.|IndexOfAny([c])|(10);
+            var result2 = text?.|IndexOfAny([c], startIndex)|(11);
+            var result3 = text?.|IndexOfAny([c], startIndex, count)|(12);
         }
 
         public void NoDetection(string text, char c, char[] ca, int startIndex)
@@ -56,7 +56,7 @@ namespace Test
             var result21 = text.IndexOfAny(ca, 1);
             var result22 = text.IndexOfAny(ca, startIndex);
 
-            text.|IndexOfAny|(17)([]);
+            text.|IndexOfAny|(13)([]);
         }
 
         public void NoDetection_Nullable(string? text, char[] c, int startIndex)
@@ -66,21 +66,17 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Passing 0 is redundant.
-(1): ReSharper Dead Code: Passing 0 is redundant.
-(2): ReSharper Dead Code: Passing 0 is redundant.
-(3): ReSharper Dead Code: Passing 0 is redundant.
-(4): ReSharper Suggestion: The expression is always -1.
+(0): ReSharper Suggestion: The expression is always -1.
+(1): ReSharper Dead Code: The character is already passed.
+(2): ReSharper Dead Code: The character is already passed.
+(3): ReSharper Dead Code: The character is already passed.
+(4): ReSharper Dead Code: The character is already passed.
 (5): ReSharper Dead Code: The character is already passed.
 (6): ReSharper Dead Code: The character is already passed.
-(7): ReSharper Dead Code: The character is already passed.
-(8): ReSharper Dead Code: The character is already passed.
-(9): ReSharper Dead Code: The character is already passed.
-(10): ReSharper Dead Code: The character is already passed.
+(7): ReSharper Suggestion: Use the 'IndexOf' method.
+(8): ReSharper Suggestion: Use the 'IndexOf' method.
+(9): ReSharper Suggestion: Use the 'IndexOf' method.
+(10): ReSharper Suggestion: Use the 'IndexOf' method.
 (11): ReSharper Suggestion: Use the 'IndexOf' method.
 (12): ReSharper Suggestion: Use the 'IndexOf' method.
-(13): ReSharper Suggestion: Use the 'IndexOf' method.
-(14): ReSharper Suggestion: Use the 'IndexOf' method.
-(15): ReSharper Suggestion: Use the 'IndexOf' method.
-(16): ReSharper Suggestion: Use the 'IndexOf' method.
-(17): ReSharper Warning: Return value of pure method is not used
+(13): ReSharper Warning: Return value of pure method is not used

@@ -7,52 +7,52 @@ namespace Test
     {
         public void RedundantArgument(string s, string format, IFormatProvider provider)
         {
-            var result = DateTime.ParseExact(s, format, provider, |DateTimeStyles.None|(0));
+            var result = DateTime.ParseExact(s, format, provider, DateTimeStyles.None);
         }
 
         public void OtherArgument(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style)
         {
-            var result11 = DateTime.ParseExact(s, "o", |provider|(1));
-            var result12 = DateTime.ParseExact(s, "O", |provider|(2));
-            var result13 = DateTime.ParseExact(s, "r", |provider|(3));
-            var result14 = DateTime.ParseExact(s, "R", |provider|(4));
-            var result15 = DateTime.ParseExact(s, "s", |provider|(5));
-            var result16 = DateTime.ParseExact(s, "u", |provider|(6));
+            var result11 = DateTime.ParseExact(s, "o", |provider|(0));
+            var result12 = DateTime.ParseExact(s, "O", |provider|(1));
+            var result13 = DateTime.ParseExact(s, "r", |provider|(2));
+            var result14 = DateTime.ParseExact(s, "R", |provider|(3));
+            var result15 = DateTime.ParseExact(s, "s", |provider|(4));
+            var result16 = DateTime.ParseExact(s, "u", |provider|(5));
 
-            var result21 = DateTime.ParseExact(s, "o", |provider|(7), style);
-            var result22 = DateTime.ParseExact(s, "O", |provider|(8), style);
-            var result23 = DateTime.ParseExact(s, "r", |provider|(9), style);
-            var result24 = DateTime.ParseExact(s, "R", |provider|(10), style);
-            var result25 = DateTime.ParseExact(s, "s", |provider|(11), style);
-            var result26 = DateTime.ParseExact(s, "u", |provider|(12), style);
+            var result21 = DateTime.ParseExact(s, "o", |provider|(6), style);
+            var result22 = DateTime.ParseExact(s, "O", |provider|(7), style);
+            var result23 = DateTime.ParseExact(s, "r", |provider|(8), style);
+            var result24 = DateTime.ParseExact(s, "R", |provider|(9), style);
+            var result25 = DateTime.ParseExact(s, "s", |provider|(10), style);
+            var result26 = DateTime.ParseExact(s, "u", |provider|(11), style);
 
-            var result31 = DateTime.ParseExact(s, |[format]|(13), provider, style);
-            var result32 = DateTime.ParseExact(s, |(string[])[format]|(14), provider, style);
-            var result33 = DateTime.ParseExact(s, |new[] { format }|(15), provider, style);
-            var result34 = DateTime.ParseExact(s, |new string[] { format }|(16), provider, style);
+            var result31 = DateTime.ParseExact(s, |[format]|(12), provider, style);
+            var result32 = DateTime.ParseExact(s, |(string[])[format]|(13), provider, style);
+            var result33 = DateTime.ParseExact(s, |new[] { format }|(14), provider, style);
+            var result34 = DateTime.ParseExact(s, |new string[] { format }|(15), provider, style);
 
-            var result41 = DateTime.ParseExact(s, ["o", "r", "s", "u"], |provider|(17), style);
-            var result42 = DateTime.ParseExact(s, (string[])["o", "r", "s", "u"], |provider|(18), style);
-            var result43 = DateTime.ParseExact(s, new[] { "o", "r", "s", "u" }, |provider|(19), style);
-            var result44 = DateTime.ParseExact(s, new string[] { "o", "r", "s", "u" }, |provider|(20), style);
+            var result41 = DateTime.ParseExact(s, ["o", "r", "s", "u"], |provider|(16), style);
+            var result42 = DateTime.ParseExact(s, (string[])["o", "r", "s", "u"], |provider|(17), style);
+            var result43 = DateTime.ParseExact(s, new[] { "o", "r", "s", "u" }, |provider|(18), style);
+            var result44 = DateTime.ParseExact(s, new string[] { "o", "r", "s", "u" }, |provider|(19), style);
 
-            var result51 = DateTime.ParseExact(s1, ["o", "r", "s", "u"], |provider|(21), style);
-            var result52 = DateTime.ParseExact(s1, (string[])["o", "r", "s", "u"], |provider|(22), style);
-            var result53 = DateTime.ParseExact(s1, new[] { "o", "r", "s", "u" }, |provider|(23), style);
-            var result54 = DateTime.ParseExact(s1, new string[] { "o", "r", "s", "u" }, |provider|(24), style);
+            var result51 = DateTime.ParseExact(s1, ["o", "r", "s", "u"], |provider|(20), style);
+            var result52 = DateTime.ParseExact(s1, (string[])["o", "r", "s", "u"], |provider|(21), style);
+            var result53 = DateTime.ParseExact(s1, new[] { "o", "r", "s", "u" }, |provider|(22), style);
+            var result54 = DateTime.ParseExact(s1, new string[] { "o", "r", "s", "u" }, |provider|(23), style);
         }
 
         public void RedundantElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style)
         {
-            var result11 = DateTime.ParseExact(s, ["d", "D", "f", "F", "g", |"g"|(25), "G", "m", |"M"|(26), "o", |"O"|(27), "r", |"R"|(28), "s", "t", "T", "u", "U", "y", |"Y"|(29)], provider, style);
-            var result12 = DateTime.ParseExact(s, (string[])["d", "D", "f", "F", "g", |"g"|(30), "G", "m", |"M"|(31), "o", |"O"|(32), "r", |"R"|(33), "s", "t", "T", "u", "U", "y", |"Y"|(34)], provider, style);
-            var result13 = DateTime.ParseExact(s, new[] { "d", "D", "f", "F", "g", |"g"|(35), "G", "m", |"M"|(36), "o", |"O"|(37), "r", |"R"|(38), "s", "t", "T", "u", "U", "y", |"Y"|(39) }, provider, style);
-            var result14 = DateTime.ParseExact(s, new string[] { "d", "D", "f", "F", "g", |"g"|(40), "G", "m", |"M"|(41), "o", |"O"|(42), "r", |"R"|(43), "s", "t", "T", "u", "U", "y", |"Y"|(44) }, provider, style);
+            var result11 = DateTime.ParseExact(s, ["d", "D", "f", "F", "g", |"g"|(24), "G", "m", |"M"|(25), "o", |"O"|(26), "r", |"R"|(27), "s", "t", "T", "u", "U", "y", |"Y"|(28)], provider, style);
+            var result12 = DateTime.ParseExact(s, (string[])["d", "D", "f", "F", "g", |"g"|(29), "G", "m", |"M"|(30), "o", |"O"|(31), "r", |"R"|(32), "s", "t", "T", "u", "U", "y", |"Y"|(33)], provider, style);
+            var result13 = DateTime.ParseExact(s, new[] { "d", "D", "f", "F", "g", |"g"|(34), "G", "m", |"M"|(35), "o", |"O"|(36), "r", |"R"|(37), "s", "t", "T", "u", "U", "y", |"Y"|(38) }, provider, style);
+            var result14 = DateTime.ParseExact(s, new string[] { "d", "D", "f", "F", "g", |"g"|(39), "G", "m", |"M"|(40), "o", |"O"|(41), "r", |"R"|(42), "s", "t", "T", "u", "U", "y", |"Y"|(43) }, provider, style);
 
-            var result21 = DateTime.ParseExact(s1, ["d", "D", "f", "F", "g", |"g"|(45), "G", "m", |"M"|(46), "o", |"O"|(47), "r", |"R"|(48), "s", "t", "T", "u", "U", "y", |"Y"|(49)], provider, style);
-            var result22 = DateTime.ParseExact(s1, (string[])["d", "D", "f", "F", "g", |"g"|(50), "G", "m", |"M"|(51), "o", |"O"|(52), "r", |"R"|(53), "s", "t", "T", "u", "U", "y", |"Y"|(54)], provider, style);
-            var result23 = DateTime.ParseExact(s1, new[] { "d", "D", "f", "F", "g", |"g"|(55), "G", "m", |"M"|(56), "o", |"O"|(57), "r", |"R"|(58), "s", "t", "T", "u", "U", "y", |"Y"|(59) }, provider, style);
-            var result24 = DateTime.ParseExact(s1, new string[] { "d", "D", "f", "F", "g", |"g"|(60), "G", "m", |"M"|(61), "o", |"O"|(62), "r", |"R"|(63), "s", "t", "T", "u", "U", "y", |"Y"|(64) }, provider, style);
+            var result21 = DateTime.ParseExact(s1, ["d", "D", "f", "F", "g", |"g"|(44), "G", "m", |"M"|(45), "o", |"O"|(46), "r", |"R"|(47), "s", "t", "T", "u", "U", "y", |"Y"|(48)], provider, style);
+            var result22 = DateTime.ParseExact(s1, (string[])["d", "D", "f", "F", "g", |"g"|(49), "G", "m", |"M"|(50), "o", |"O"|(51), "r", |"R"|(52), "s", "t", "T", "u", "U", "y", |"Y"|(53)], provider, style);
+            var result23 = DateTime.ParseExact(s1, new[] { "d", "D", "f", "F", "g", |"g"|(54), "G", "m", |"M"|(55), "o", |"O"|(56), "r", |"R"|(57), "s", "t", "T", "u", "U", "y", |"Y"|(58) }, provider, style);
+            var result24 = DateTime.ParseExact(s1, new string[] { "d", "D", "f", "F", "g", |"g"|(59), "G", "m", |"M"|(60), "o", |"O"|(61), "r", |"R"|(62), "s", "t", "T", "u", "U", "y", |"Y"|(63) }, provider, style);
         }
 
         public void NoDetection(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style)
@@ -101,7 +101,7 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Passing DateTimeStyles.None is redundant.
+(0): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (1): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (2): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (3): ReSharper Suggestion: The format provider is ignored (pass null instead).
@@ -113,11 +113,11 @@ namespace Test
 (9): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (10): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (11): ReSharper Suggestion: The format provider is ignored (pass null instead).
-(12): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(12): ReSharper Suggestion: The only collection element should be passed directly.
 (13): ReSharper Suggestion: The only collection element should be passed directly.
 (14): ReSharper Suggestion: The only collection element should be passed directly.
 (15): ReSharper Suggestion: The only collection element should be passed directly.
-(16): ReSharper Suggestion: The only collection element should be passed directly.
+(16): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (17): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (18): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (19): ReSharper Suggestion: The format provider is ignored (pass null instead).
@@ -125,44 +125,43 @@ namespace Test
 (21): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (22): ReSharper Suggestion: The format provider is ignored (pass null instead).
 (23): ReSharper Suggestion: The format provider is ignored (pass null instead).
-(24): ReSharper Suggestion: The format provider is ignored (pass null instead).
-(25): ReSharper Dead Code: The string is already passed.
+(24): ReSharper Dead Code: The string is already passed.
+(25): ReSharper Dead Code: The equivalent string is already passed.
 (26): ReSharper Dead Code: The equivalent string is already passed.
 (27): ReSharper Dead Code: The equivalent string is already passed.
 (28): ReSharper Dead Code: The equivalent string is already passed.
-(29): ReSharper Dead Code: The equivalent string is already passed.
-(30): ReSharper Dead Code: The string is already passed.
+(29): ReSharper Dead Code: The string is already passed.
+(30): ReSharper Dead Code: The equivalent string is already passed.
 (31): ReSharper Dead Code: The equivalent string is already passed.
 (32): ReSharper Dead Code: The equivalent string is already passed.
 (33): ReSharper Dead Code: The equivalent string is already passed.
-(34): ReSharper Dead Code: The equivalent string is already passed.
-(35): ReSharper Dead Code: The string is already passed.
+(34): ReSharper Dead Code: The string is already passed.
+(35): ReSharper Dead Code: The equivalent string is already passed.
 (36): ReSharper Dead Code: The equivalent string is already passed.
 (37): ReSharper Dead Code: The equivalent string is already passed.
 (38): ReSharper Dead Code: The equivalent string is already passed.
-(39): ReSharper Dead Code: The equivalent string is already passed.
-(40): ReSharper Dead Code: The string is already passed.
+(39): ReSharper Dead Code: The string is already passed.
+(40): ReSharper Dead Code: The equivalent string is already passed.
 (41): ReSharper Dead Code: The equivalent string is already passed.
 (42): ReSharper Dead Code: The equivalent string is already passed.
 (43): ReSharper Dead Code: The equivalent string is already passed.
-(44): ReSharper Dead Code: The equivalent string is already passed.
-(45): ReSharper Dead Code: The string is already passed.
+(44): ReSharper Dead Code: The string is already passed.
+(45): ReSharper Dead Code: The equivalent string is already passed.
 (46): ReSharper Dead Code: The equivalent string is already passed.
 (47): ReSharper Dead Code: The equivalent string is already passed.
 (48): ReSharper Dead Code: The equivalent string is already passed.
-(49): ReSharper Dead Code: The equivalent string is already passed.
-(50): ReSharper Dead Code: The string is already passed.
+(49): ReSharper Dead Code: The string is already passed.
+(50): ReSharper Dead Code: The equivalent string is already passed.
 (51): ReSharper Dead Code: The equivalent string is already passed.
 (52): ReSharper Dead Code: The equivalent string is already passed.
 (53): ReSharper Dead Code: The equivalent string is already passed.
-(54): ReSharper Dead Code: The equivalent string is already passed.
-(55): ReSharper Dead Code: The string is already passed.
+(54): ReSharper Dead Code: The string is already passed.
+(55): ReSharper Dead Code: The equivalent string is already passed.
 (56): ReSharper Dead Code: The equivalent string is already passed.
 (57): ReSharper Dead Code: The equivalent string is already passed.
 (58): ReSharper Dead Code: The equivalent string is already passed.
-(59): ReSharper Dead Code: The equivalent string is already passed.
-(60): ReSharper Dead Code: The string is already passed.
+(59): ReSharper Dead Code: The string is already passed.
+(60): ReSharper Dead Code: The equivalent string is already passed.
 (61): ReSharper Dead Code: The equivalent string is already passed.
 (62): ReSharper Dead Code: The equivalent string is already passed.
 (63): ReSharper Dead Code: The equivalent string is already passed.
-(64): ReSharper Dead Code: The equivalent string is already passed.

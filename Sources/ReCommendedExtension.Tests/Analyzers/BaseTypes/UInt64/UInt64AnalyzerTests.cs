@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
@@ -16,7 +14,7 @@ public sealed class UInt64AnalyzerTests : BaseTypeAnalyzerTests<ulong>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt64";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
 
     protected override ulong[] TestValues { get; } = [0, 1, 2, ulong.MaxValue];
 
@@ -86,27 +84,6 @@ public sealed class UInt64AnalyzerTests : BaseTypeAnalyzerTests<ulong>
     }
 
     [Test]
-    [TestNet80]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParse()
-    {
-        Test(n => ulong.Parse($"{n}", NumberStyles.Integer), n => ulong.Parse($"{n}"));
-        Test(n => ulong.Parse($"{n}", null), n => ulong.Parse($"{n}"));
-        Test(
-            (n, provider) => ulong.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => ulong.Parse($"{n}", provider),
-            TestValues,
-            FormatProviders);
-        Test(n => ulong.Parse($"{n}", NumberStyles.None, null), n => ulong.Parse($"{n}", NumberStyles.None));
-
-        Test(n => MissingUInt64Methods.Parse($"{n}".AsSpan(), null), n => MissingUInt64Methods.Parse($"{n}".AsSpan()));
-
-        Test(n => MissingUInt64Methods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingUInt64Methods.Parse(Encoding.UTF8.GetBytes($"{n}")));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestRotateLeft()
     {
@@ -120,49 +97,6 @@ public sealed class UInt64AnalyzerTests : BaseTypeAnalyzerTests<ulong>
     public void TestRotateRight()
     {
         Test(n => MissingUInt64Methods.RotateRight(n, 0), n => n);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse()
-    {
-        Test(
-            (ulong n, IFormatProvider? provider, out ulong result) => ulong.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (ulong n, IFormatProvider? provider, out ulong result) => MissingUInt64Methods.TryParse($"{n}", provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (ulong n, out ulong result) => MissingUInt64Methods.TryParse($"{n}", null, out result),
-            (ulong n, out ulong result) => ulong.TryParse($"{n}", out result));
-
-        Test(
-            (ulong n, IFormatProvider? provider, out ulong result) => MissingUInt64Methods.TryParse(
-                $"{n}".AsSpan(),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (ulong n, IFormatProvider? provider, out ulong result) => MissingUInt64Methods.TryParse($"{n}".AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (ulong n, out ulong result) => MissingUInt64Methods.TryParse($"{n}".AsSpan(), null, out result),
-            (ulong n, out ulong result) => MissingUInt64Methods.TryParse($"{n}".AsSpan(), out result));
-
-        Test(
-            (ulong n, IFormatProvider? provider, out ulong result) => MissingUInt64Methods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (ulong n, IFormatProvider? provider, out ulong result)
-                => MissingUInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (ulong n, out ulong result) => MissingUInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
-            (ulong n, out ulong result) => MissingUInt64Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }

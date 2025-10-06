@@ -21,7 +21,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
                 or PassSingleCharactersSuggestion
                 or UseStringListPatternSuggestion
                 or UseOtherMethodSuggestion
-                or RedundantArgumentHint
                 or RedundantElementHint
                 or UseStringPropertySuggestion
                 or RedundantMethodInvocationHint
@@ -55,9 +54,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
     public void TestUseOtherMethodFixAvailability() => DoNamedTest2();
-
-    [Test]
-    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]

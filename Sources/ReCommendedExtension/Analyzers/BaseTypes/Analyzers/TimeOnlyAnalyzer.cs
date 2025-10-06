@@ -17,7 +17,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes =
     [
         typeof(UseExpressionResultSuggestion),
-        typeof(RedundantArgumentHint),
         typeof(UseBinaryOperatorSuggestion),
         typeof(RedundantArgumentRangeHint),
         typeof(UseOtherArgumentSuggestion),
@@ -28,25 +27,11 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> TimeSpan { get; } = [Parameter.TimeSpan];
-
-        public static IReadOnlyList<Parameter> Double { get; } = [Parameter.Double];
-
         public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
         public static IReadOnlyList<Parameter> String_String { get; } = [Parameter.String, Parameter.String];
 
         public static IReadOnlyList<Parameter> String_StringArray { get; } = [Parameter.String, Parameter.StringArray];
-
-        public static IReadOnlyList<Parameter> String_outTimeOnly { get; } =
-        [
-            Parameter.String, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
-        ];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outTimeOnly { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
-        ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray { get; } = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray];
 
@@ -55,24 +40,9 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             Parameter.String, Parameter.String, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
-        public static IReadOnlyList<Parameter> String_IFormatProvider_outTimeOnly { get; } =
-        [
-            Parameter.String, Parameter.IFormatProvider, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
-        ];
-
         public static IReadOnlyList<Parameter> String_StringArray_outTimeOnly { get; } =
         [
             Parameter.String, Parameter.StringArray, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
-        ];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTimeStyles,
-        ];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outTimeOnly { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_ReadOnlySpanOfChar_outTimeOnly { get; } =
@@ -197,57 +167,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>timeOnly.Add(value, out _)</c> → <c>timeOnly.Add(value)</c>
-    /// </remarks>
-    static void AnalyzeAdd_TimeSpan_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument wrappedDaysArgument)
-    {
-        if (wrappedDaysArgument.IsDiscard()
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Add", Parameters = Parameters.TimeSpan }, // todo: nameof(TimeOnly.Add) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Discarding is redundant.", wrappedDaysArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>timeOnly.AddHours(value, out _)</c> → <c>timeOnly.AddHours(value)</c>
-    /// </remarks>
-    static void AnalyzeAddHours_Double_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument wrappedDaysArgument)
-    {
-        if (wrappedDaysArgument.IsDiscard()
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "AddHours", Parameters = Parameters.Double }, // todo: nameof(TimeOnly.AddHours) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Discarding is redundant.", wrappedDaysArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>timeOnly.AddMinutes(value, out _)</c> → <c>timeOnly.AddMinutes(value)</c>
-    /// </remarks>
-    static void AnalyzeAddMinutes_Double_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument wrappedDaysArgument)
-    {
-        if (wrappedDaysArgument.IsDiscard()
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "AddMinutes", Parameters = Parameters.Double }, // todo: nameof(TimeOnly.AddMinutes) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Discarding is redundant.", wrappedDaysArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>timeOnly.Equals(value)</c> → <c>timeOnly == value</c>
     /// </remarks>
     static void AnalyzeEquals_TimeOnly(
@@ -291,57 +210,21 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         ICSharpArgument? styleArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
+            && styleArgument?.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "Parse", Parameters = Parameters.String, IsStatic = true }, // todo: nameof(TimeOnly.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
-                styleArgument is { }
-                    ? new RedundantArgumentRangeHint(
-                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
-                        providerArgument,
-                        styleArgument)
-                    : new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
         }
     }
 
     /// <remarks>
-    /// <c>TimeOnly.Parse(s, null)</c> → <c>TimeOnly.Parse(s)</c>
-    /// </remarks>
-    static void AnalyzeParse_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Parse", Parameters = Parameters.String, IsStatic = true }, // todo: nameof(TimeOnly.Parse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeOnly.Parse(s, null)</c> → <c>TimeOnly.Parse(s)</c>
-    /// </remarks>
-    static void AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Parse", Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true }, // todo: nameof(TimeOnly.Parse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeOnly.ParseExact(s, format, null, DateTimeStyles.None)</c> → <c>TimeOnly.ParseExact(s, format)</c>
+    /// <c>TimeOnly.ParseExact(s, format, null, DateTimeStyles.None)</c> → <c>TimeOnly.ParseExact(s, format)</c><para/>
     /// <c>TimeOnly.ParseExact(s, "R", provider, style)</c> → <c>TimeOnly.ParseExact(s, "R", null, style)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_String_IFormatProvider_DateTimeStyles(
@@ -353,18 +236,16 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     {
         if (providerArgument.Value.IsDefaultValue())
         {
-            if ((styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
+            if (styleArgument?.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
                 && PredefinedType.TIME_ONLY_FQN.HasMethod(
                     new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                     invocationExpression.PsiModule))
             {
                 consumer.AddHighlighting(
-                    styleArgument is { }
-                        ? new RedundantArgumentRangeHint(
-                            $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
-                            providerArgument,
-                            styleArgument)
-                        : new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+                    new RedundantArgumentRangeHint(
+                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                        providerArgument,
+                        styleArgument));
             }
         }
         else
@@ -441,18 +322,16 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         ICSharpArgument? styleArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
+            && styleArgument?.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_StringArray, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
-                styleArgument is { }
-                    ? new RedundantArgumentRangeHint(
-                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
-                        providerArgument,
-                        styleArgument)
-                    : new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
         }
 
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
@@ -548,18 +427,16 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         ICSharpArgument? styleArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
+            && styleArgument?.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.TIME_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "ParseExact", Parameters = Parameters.ReadOnlySpanOfChar_StringArray, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
-                styleArgument is { }
-                    ? new RedundantArgumentRangeHint(
-                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
-                        providerArgument,
-                        styleArgument)
-                    : new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
         }
 
         if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
@@ -597,76 +474,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                             "null"));
                 }
             }
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeOnly.TryParse(s, provider, DateTimeStyles.None, out result)</c> → <c>TimeOnly.TryParse(s, provider, out result)</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_TimeOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument styleArgument)
-    {
-        if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", Parameters = Parameters.String_IFormatProvider_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", styleArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeOnly.TryParse(s, null, out result)</c> → <c>TimeOnly.TryParse(s, out result)</c>
-    /// </remarks>
-    static void AnalyzeTryParse_String_IFormatProvider_TimeOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", Parameters = Parameters.String_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeOnly.TryParse(s, provider, DateTimeStyles.None, out result)</c> → <c>TimeOnly.TryParse(s, provider, out result)</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_TimeOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument styleArgument)
-    {
-        if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", styleArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeOnly.TryParse(s, null, out result)</c> → <c>TimeOnly.TryParse(s, out result)</c>
-    /// </remarks>
-    static void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_TimeOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.TIME_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", Parameters = Parameters.ReadOnlySpanOfChar_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
         }
     }
 
@@ -1030,39 +837,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     case ({ QualifierExpression: { } }, { IsStatic: false }):
                         switch (method.ShortName)
                         {
-                            case "Add": // todo: nameof(TimeOnly.Add) when available
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var valueType}, { Type: var wrappedDaysType}], [_, { } wrappedDaysArgument])
-                                        when valueType.IsTimeSpan() && wrappedDaysType.IsInt():
-
-                                        AnalyzeAdd_TimeSpan_Int32(consumer, invocationExpression, wrappedDaysArgument);
-                                        break;
-                                }
-                                break;
-
-                            case "AddHours": // todo: nameof(TimeOnly.AddHours) when available
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var valueType }, { Type: var wrappedDaysType }], [_, { } wrappedDaysArgument])
-                                        when valueType.IsDouble() && wrappedDaysType.IsInt():
-
-                                        AnalyzeAddHours_Double_Int32(consumer, invocationExpression,wrappedDaysArgument);
-                                        break;
-                                }
-                                break;
-
-                            case "AddMinutes": // todo: nameof(TimeOnly.AddMinutes) when available
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var valueType }, { Type: var wrappedDaysType }], [_, { } wrappedDaysArgument])
-                                        when valueType.IsDouble() && wrappedDaysType.IsInt():
-
-                                        AnalyzeAddMinutes_Double_Int32(consumer, invocationExpression, wrappedDaysArgument);
-                                        break;
-                                }
-                                break;
-
                             case "Equals": // todo: nameof(TimeOnly.Equals) when available
                                 switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
                                 {
@@ -1092,18 +866,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             invocationExpression,
                                             providerArgument,
                                             styleArgument);
-                                        break;
-
-                                    case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                        when sType.IsString() && providerType.IsIFormatProvider():
-
-                                        AnalyzeParse_String_IFormatProvider(consumer, invocationExpression, providerArgument);
-                                        break;
-
-                                    case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                        when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
-
-                                        AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, invocationExpression, providerArgument);
                                         break;
                                 }
                                 break;
@@ -1166,46 +928,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             formatsArgument,
                                             providerArgument,
                                             styleArgument);
-                                        break;
-                                }
-                                break;
-
-                            case "TryParse": // todo: nameof(TimeOnly.TryParse) when available
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var sType }, { Type: var providerType }, { Type: var styleType }, { Type: var resultType }], [
-                                            _, _, { } styleArgument, _,
-                                        ]) when sType.IsString()
-                                        && providerType.IsIFormatProvider()
-                                        && styleType.IsDateTimeStyles()
-                                        && resultType.IsTimeOnly():
-
-                                        AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_TimeOnly(consumer, invocationExpression, styleArgument);
-                                        break;
-
-                                    case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                        when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsTimeOnly():
-
-                                        AnalyzeTryParse_String_IFormatProvider_TimeOnly(consumer, invocationExpression, providerArgument);
-                                        break;
-
-                                    case ([{ Type: var sType }, { Type: var providerType }, { Type: var styleType }, { Type: var resultType }], [
-                                            _, _, { } styleArgument, _,
-                                        ]) when sType.IsReadOnlySpanOfChar()
-                                        && providerType.IsIFormatProvider()
-                                        && styleType.IsDateTimeStyles()
-                                        && resultType.IsTimeOnly():
-
-                                        AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_TimeOnly(
-                                            consumer,
-                                            invocationExpression,
-                                            styleArgument);
-                                        break;
-
-                                    case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                        when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider() && resultType.IsTimeOnly():
-
-                                        AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_TimeOnly(consumer, invocationExpression, providerArgument);
                                         break;
                                 }
                                 break;

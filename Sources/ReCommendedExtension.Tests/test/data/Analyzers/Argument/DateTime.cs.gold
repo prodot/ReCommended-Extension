@@ -1,0 +1,117 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void RedundantArgument(DateTime dateTime, long ticks, DateOnly date, TimeOnly time, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, Calendar calendar, DateTimeKind kind, char f, string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, out DateTime result)
+        {
+            var result11 = new DateTime(ticks, |DateTimeKind.Unspecified|(0));
+            var result12 = new DateTime(date, time, |DateTimeKind.Unspecified|(1));
+            var result13 = new DateTime(year, month, day, hour, minute, second, |DateTimeKind.Unspecified|(2));
+            var result14 = new DateTime(year, month, day, hour, minute, second, |0|(3));
+            var result15 = new DateTime(year, month, day, hour, minute, second, |0|(4), |DateTimeKind.Unspecified|(5));
+            var result16 = new DateTime(year, month, day, hour, minute, second, |0|(6), calendar);
+            var result17 = new DateTime(year, month, day, hour, minute, second, millisecond, calendar, |DateTimeKind.Unspecified|(7));
+            var result18 = new DateTime(year, month, day, hour, minute, second, millisecond, |0|(8));
+            var result19 = new DateTime(year, month, day, hour, minute, second, millisecond, |0|(9), calendar);
+            var result1A = new DateTime(year, month, day, hour, minute, second, millisecond, |0|(10), |DateTimeKind.Unspecified|(11));
+            var result1B = new DateTime(year, month, day, hour, minute, second, millisecond, |0|(12), calendar, |DateTimeKind.Unspecified|(13));
+            
+            DateTime result21 = new(ticks, |DateTimeKind.Unspecified|(14));
+            DateTime result22 = new(date, time, |DateTimeKind.Unspecified|(15));
+            DateTime result23 = new(year, month, day, hour, minute, second, |DateTimeKind.Unspecified|(16));
+            DateTime result24 = new(year, month, day, hour, minute, second, |0|(17));
+            DateTime result25 = new(year, month, day, hour, minute, second, |0|(18), |DateTimeKind.Unspecified|(19));
+            DateTime result26 = new(year, month, day, hour, minute, second, |0|(20), calendar);
+            DateTime result27 = new(year, month, day, hour, minute, second, millisecond, calendar, |DateTimeKind.Unspecified|(21));
+            DateTime result28 = new(year, month, day, hour, minute, second, millisecond, |0|(22));
+            DateTime result29 = new(year, month, day, hour, minute, second, millisecond, |0|(23), calendar);
+            DateTime result2A = new(year, month, day, hour, minute, second, millisecond, |0|(24), |DateTimeKind.Unspecified|(25));
+            DateTime result2B = new(year, month, day, hour, minute, second, millisecond, |0|(26), calendar, |DateTimeKind.Unspecified|(27));
+
+            var result31 = dateTime.GetDateTimeFormats(|null|(28));
+            var result32 = dateTime.GetDateTimeFormats(f, |null|(29));
+
+            var result41 = DateTime.Parse(s, |null|(30));
+            var result42 = DateTime.Parse(s1, |null|(31));
+            var result43 = DateTime.Parse(s, provider, |DateTimeStyles.None|(32));
+
+            var result51 = DateTime.ParseExact(s, format, provider, |DateTimeStyles.None|(33));
+
+            var result61 = DateTime.TryParse(s, |null|(34), out result);
+            var result62 = DateTime.TryParse(s1, |null|(35), out result);
+            var result63 = DateTime.TryParse(s, provider, |DateTimeStyles.None|(36), out result);
+            var result64 = DateTime.TryParse(s1, provider, |DateTimeStyles.None|(37), out result);
+        }
+
+        public void NoDetection(DateTime dateTime, long ticks, DateOnly date, TimeOnly time, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, Calendar calendar, DateTimeKind kind, char f, string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out DateTime result)
+        {
+            var result11 = new DateTime(ticks, kind);
+            var result12 = new DateTime(date, time, kind);
+            var result13 = new DateTime(year, month, day, hour, minute, second, kind);
+            var result14 = new DateTime(year, month, day, hour, minute, second, millisecond);
+            var result15 = new DateTime(year, month, day, hour, minute, second, millisecond, kind);
+            var result16 = new DateTime(year, month, day, hour, minute, second, millisecond, calendar);
+            var result17 = new DateTime(year, month, day, hour, minute, second, millisecond, calendar, kind);
+            var result18 = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond);
+            var result19 = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, calendar);
+            var result1A = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, kind);
+            var result1B = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, calendar, kind);
+
+            var result21 = dateTime.GetDateTimeFormats(provider);
+            var result22 = dateTime.GetDateTimeFormats(f, provider);
+
+            var result31 = DateTime.Parse(s, provider);
+            var result32 = DateTime.Parse(s1, provider);
+            var result33 = DateTime.Parse(s, provider, style);
+
+            var result41 = DateTime.ParseExact(s, format, provider, style);
+
+            var result51 = DateTime.TryParse(s, provider, out result);
+            var result52 = DateTime.TryParse(s1, provider, out result);
+            var result53 = DateTime.TryParse(s, provider, style, out result);
+            var result54 = DateTime.TryParse(s1, provider, style, out result);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(1): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(2): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(3): ReSharper Dead Code: Passing 0 is redundant.
+(4): ReSharper Dead Code: Passing 0 is redundant.
+(5): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(6): ReSharper Dead Code: Passing 0 is redundant.
+(7): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(8): ReSharper Dead Code: Passing 0 is redundant.
+(9): ReSharper Dead Code: Passing 0 is redundant.
+(10): ReSharper Dead Code: Passing 0 is redundant.
+(11): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(12): ReSharper Dead Code: Passing 0 is redundant.
+(13): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(14): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(15): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(16): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(17): ReSharper Dead Code: Passing 0 is redundant.
+(18): ReSharper Dead Code: Passing 0 is redundant.
+(19): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(20): ReSharper Dead Code: Passing 0 is redundant.
+(21): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(22): ReSharper Dead Code: Passing 0 is redundant.
+(23): ReSharper Dead Code: Passing 0 is redundant.
+(24): ReSharper Dead Code: Passing 0 is redundant.
+(25): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(26): ReSharper Dead Code: Passing 0 is redundant.
+(27): ReSharper Dead Code: Passing DateTimeKind.Unspecified is redundant.
+(28): ReSharper Dead Code: Passing null is redundant.
+(29): ReSharper Dead Code: Passing null is redundant.
+(30): ReSharper Dead Code: Passing null is redundant.
+(31): ReSharper Dead Code: Passing null is redundant.
+(32): ReSharper Dead Code: Passing DateTimeStyles.None is redundant.
+(33): ReSharper Dead Code: Passing DateTimeStyles.None is redundant.
+(34): ReSharper Dead Code: Passing null is redundant.
+(35): ReSharper Dead Code: Passing null is redundant.
+(36): ReSharper Dead Code: Passing DateTimeStyles.None is redundant.
+(37): ReSharper Dead Code: Passing DateTimeStyles.None is redundant.

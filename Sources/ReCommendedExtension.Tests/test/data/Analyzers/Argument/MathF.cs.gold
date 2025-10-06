@@ -1,0 +1,26 @@
+﻿using System;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void RedundantArgument(float n)
+        {
+            var result11 = MathF.Round(n, |0|(0));
+            var result12 = MathF.Round(n, |MidpointRounding.ToEven|(1));
+            var result13 = MathF.Round(n, |0|(2), |MidpointRounding.ToEven|(3));
+        }
+
+        public void NoDetection(float n, int digits, MidpointRounding rounding)
+        {
+            var result11 = MathF.Round(n, digits);
+            var result12 = MathF.Round(n, rounding);
+            var result13 = MathF.Round(n, digits, rounding);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing 0 is redundant.
+(1): ReSharper Dead Code: Passing MidpointRounding.ToEven is redundant.
+(2): ReSharper Dead Code: Passing 0 is redundant.
+(3): ReSharper Dead Code: Passing MidpointRounding.ToEven is redundant.

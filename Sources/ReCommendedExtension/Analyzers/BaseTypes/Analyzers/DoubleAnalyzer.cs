@@ -8,5 +8,5 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint), typeof(UseFloatingPointPatternSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseFloatingPointPatternSuggestion)])]
 public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(NumberInfos.NumberInfo.Double);

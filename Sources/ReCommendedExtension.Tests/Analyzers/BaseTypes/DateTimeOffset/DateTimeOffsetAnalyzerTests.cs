@@ -16,8 +16,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTimeOffset";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantArgumentHint
-                or RedundantMethodInvocationHint
+        => highlighting is RedundantMethodInvocationHint
                 or UseBinaryOperatorSuggestion
                 or UseExpressionResultSuggestion
                 or UseOtherArgumentSuggestion
@@ -32,78 +31,6 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
         new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(2)),
         new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(-6)),
     ];
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void Test_Constructors()
-    {
-        Test(
-            dateTimeOffset => new System.DateTimeOffset(
-                dateTimeOffset.Year,
-                dateTimeOffset.Month,
-                dateTimeOffset.Day,
-                dateTimeOffset.Hour,
-                dateTimeOffset.Minute,
-                dateTimeOffset.Second,
-                0,
-                dateTimeOffset.Offset),
-            dateTimeOffset => new System.DateTimeOffset(
-                dateTimeOffset.Year,
-                dateTimeOffset.Month,
-                dateTimeOffset.Day,
-                dateTimeOffset.Hour,
-                dateTimeOffset.Minute,
-                dateTimeOffset.Second,
-                dateTimeOffset.Offset));
-        Test(
-            dateTimeOffset => MissingDateTimeOffsetMembers._Ctor(
-                dateTimeOffset.Year,
-                dateTimeOffset.Month,
-                dateTimeOffset.Day,
-                dateTimeOffset.Hour,
-                dateTimeOffset.Minute,
-                dateTimeOffset.Second,
-                dateTimeOffset.Millisecond,
-                0,
-                dateTimeOffset.Offset),
-            dateTimeOffset => new System.DateTimeOffset(
-                dateTimeOffset.Year,
-                dateTimeOffset.Month,
-                dateTimeOffset.Day,
-                dateTimeOffset.Hour,
-                dateTimeOffset.Minute,
-                dateTimeOffset.Second,
-                dateTimeOffset.Millisecond,
-                dateTimeOffset.Offset));
-        Test<Calendar, System.DateTimeOffset>(
-            (dateTimeOffset, calendar) => MissingDateTimeOffsetMembers._Ctor(
-                dateTimeOffset.Year,
-                dateTimeOffset.Month,
-                dateTimeOffset.Day,
-                dateTimeOffset.Hour,
-                dateTimeOffset.Minute,
-                dateTimeOffset.Second,
-                dateTimeOffset.Millisecond,
-                0,
-                calendar,
-                dateTimeOffset.Offset),
-            (dateTimeOffset, calendar) => new System.DateTimeOffset(
-                dateTimeOffset.Year,
-                dateTimeOffset.Month,
-                dateTimeOffset.Day,
-                dateTimeOffset.Hour,
-                dateTimeOffset.Minute,
-                dateTimeOffset.Second,
-                dateTimeOffset.Millisecond,
-                calendar,
-                dateTimeOffset.Offset),
-            [..TestValues.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
-            [new GregorianCalendar(), new JulianCalendar(), new JapaneseCalendar()]);
-
-        DoNamedTest2();
-    }
 
     [Test]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
@@ -134,29 +61,6 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
         Test((dateTimeOffset, other) => dateTimeOffset.Equals(other), (dateTimeOffset, other) => dateTimeOffset == other, TestValues, TestValues);
         Test(dateTimeOffset => dateTimeOffset.Equals(null), _ => false);
         Test((first, second) => System.DateTimeOffset.Equals(first, second), (first, second) => first == second, TestValues, TestValues);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParse()
-    {
-        Test(
-            dateTimeOffset => System.DateTimeOffset.Parse($"{dateTimeOffset}", null),
-            dateTimeOffset => System.DateTimeOffset.Parse($"{dateTimeOffset}"));
-        Test(
-            (dateTimeOffset, formatProvider) => System.DateTimeOffset.Parse(
-                dateTimeOffset.ToString(formatProvider),
-                formatProvider,
-                DateTimeStyles.None),
-            (dateTimeOffset, formatProvider) => System.DateTimeOffset.Parse(dateTimeOffset.ToString(formatProvider), formatProvider),
-            TestValues,
-            FormatProviders);
-        Test(
-            dateTimeOffset => MissingDateTimeOffsetMembers.Parse($"{dateTimeOffset}".AsSpan(), null),
-            dateTimeOffset => MissingDateTimeOffsetMembers.Parse($"{dateTimeOffset}".AsSpan()));
 
         DoNamedTest2();
     }
@@ -209,19 +113,6 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
             invariantFormats,
             FormatProviders,
             dateTimeStyles);
-        Test(
-            (dateTimeOffset, format, formatProvider) => System.DateTimeOffset.ParseExact(
-                dateTimeOffset.ToString(format, formatProvider),
-                format,
-                formatProvider,
-                DateTimeStyles.None),
-            (dateTimeOffset, format, formatProvider) => System.DateTimeOffset.ParseExact(
-                dateTimeOffset.ToString(format, formatProvider),
-                format,
-                formatProvider),
-            testValues,
-            formats,
-            FormatProviders);
         Test(
             (dateTimeOffset, format, formatProvider, styles) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, formatProvider),
@@ -316,39 +207,6 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
             dateTimeOffset => dateTimeOffset.Subtract(timeSpanValue),
             dateTimeOffset => dateTimeOffset - timeSpanValue,
             [..TestValues.Except([System.DateTimeOffset.MinValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    public void TestTryParse()
-    {
-        Test(
-            (System.DateTimeOffset dateTimeOffset, out System.DateTimeOffset result)
-                => MissingDateTimeOffsetMembers.TryParse($"{dateTimeOffset}", null, out result),
-            (System.DateTimeOffset dateTimeOffset, out System.DateTimeOffset result)
-                => System.DateTimeOffset.TryParse($"{dateTimeOffset}", out result));
-        Test(
-            (System.DateTimeOffset dateTimeOffset, out System.DateTimeOffset result)
-                => MissingDateTimeOffsetMembers.TryParse($"{dateTimeOffset}".AsSpan(), null, out result),
-            (System.DateTimeOffset dateTimeOffset, out System.DateTimeOffset result)
-                => MissingDateTimeOffsetMembers.TryParse($"{dateTimeOffset}".AsSpan(), out result));
-
-        Test(
-            (System.DateTimeOffset dateTimeOffset, IFormatProvider? formatProvider, out System.DateTimeOffset result)
-                => System.DateTimeOffset.TryParse($"{dateTimeOffset}", formatProvider, DateTimeStyles.None, out result),
-            (System.DateTimeOffset dateTimeOffset, IFormatProvider? formatProvider, out System.DateTimeOffset result)
-                => MissingDateTimeOffsetMembers.TryParse($"{dateTimeOffset}", formatProvider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (System.DateTimeOffset dateTimeOffset, IFormatProvider? formatProvider, out System.DateTimeOffset result)
-                => MissingDateTimeOffsetMembers.TryParse($"{dateTimeOffset}".AsSpan(), formatProvider, DateTimeStyles.None, out result),
-            (System.DateTimeOffset dateTimeOffset, IFormatProvider? formatProvider, out System.DateTimeOffset result)
-                => MissingDateTimeOffsetMembers.TryParse($"{dateTimeOffset}".AsSpan(), formatProvider, out result),
-            TestValues,
-            FormatProviders);
 
         DoNamedTest2();
     }

@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
@@ -16,7 +14,7 @@ public sealed class Int32AnalyzerTests : BaseTypeAnalyzerTests<int>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int32";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
 
     protected override int[] TestValues { get; } = [0, 1, 2, -1, -2, int.MinValue, int.MaxValue];
 
@@ -124,27 +122,6 @@ public sealed class Int32AnalyzerTests : BaseTypeAnalyzerTests<int>
     }
 
     [Test]
-    [TestNet80]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParse()
-    {
-        Test(n => int.Parse($"{n}", NumberStyles.Integer), n => int.Parse($"{n}"));
-        Test(n => int.Parse($"{n}", null), n => int.Parse($"{n}"));
-        Test(
-            (n, provider) => int.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => int.Parse($"{n}", provider),
-            TestValues,
-            FormatProviders);
-        Test(n => int.Parse($"{n}", NumberStyles.AllowLeadingSign, null), n => int.Parse($"{n}", NumberStyles.AllowLeadingSign));
-
-        Test(n => MissingInt32Methods.Parse($"{n}".AsSpan(), null), n => MissingInt32Methods.Parse($"{n}".AsSpan()));
-
-        Test(n => MissingInt32Methods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingInt32Methods.Parse(Encoding.UTF8.GetBytes($"{n}")));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestRotateLeft()
     {
@@ -158,48 +135,6 @@ public sealed class Int32AnalyzerTests : BaseTypeAnalyzerTests<int>
     public void TestRotateRight()
     {
         Test(n => MissingInt32Methods.RotateRight(n, 0), n => n);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse()
-    {
-        Test(
-            (int n, IFormatProvider? provider, out int result) => int.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (int n, IFormatProvider? provider, out int result) => MissingInt32Methods.TryParse($"{n}", provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (int n, out int result) => MissingInt32Methods.TryParse($"{n}", null, out result),
-            (int n, out int result) => int.TryParse($"{n}", out result));
-
-        Test(
-            (int n, IFormatProvider? provider, out int result) => MissingInt32Methods.TryParse(
-                $"{n}".AsSpan(),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (int n, IFormatProvider? provider, out int result) => MissingInt32Methods.TryParse($"{n}".AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (int n, out int result) => MissingInt32Methods.TryParse($"{n}".AsSpan(), null, out result),
-            (int n, out int result) => MissingInt32Methods.TryParse($"{n}".AsSpan(), out result));
-
-        Test(
-            (int n, IFormatProvider? provider, out int result) => MissingInt32Methods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (int n, IFormatProvider? provider, out int result) => MissingInt32Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (int n, out int result) => MissingInt32Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
-            (int n, out int result) => MissingInt32Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }

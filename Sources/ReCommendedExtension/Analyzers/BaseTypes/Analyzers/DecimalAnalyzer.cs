@@ -10,13 +10,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes =
-    [
-        typeof(UseExpressionResultSuggestion),
-        typeof(UseBinaryOperatorSuggestion),
-        typeof(RedundantArgumentHint),
-        typeof(UseUnaryOperatorSuggestion),
-    ])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(UseUnaryOperatorSuggestion)])]
 public sealed class DecimalAnalyzer() : FractionalNumberAnalyzer<decimal>(NumberInfos.NumberInfo.Decimal)
 {
     [Pure]

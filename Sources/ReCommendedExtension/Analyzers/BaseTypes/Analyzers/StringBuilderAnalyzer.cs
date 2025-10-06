@@ -20,7 +20,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(PassSingleCharacterSuggestion),
         typeof(PassSingleCharactersSuggestion),
         typeof(UseOtherMethodSuggestion),
-        typeof(RedundantArgumentHint),
         typeof(RedundantMethodInvocationHint),
     ])]
 public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
@@ -49,14 +48,11 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
         public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
-        public static IReadOnlyList<Parameter> Int32_String { get; } = [Parameter.Int32, Parameter.String];
-
         public static IReadOnlyList<Parameter> Int32_Char { get; } = [Parameter.Int32, Parameter.Char];
     }
 
     /// <remarks>
-    /// <c>builder.Append(value, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append(value, 1)</c> → <c>builder.Append(value)</c>
+    /// <c>builder.Append(value, 0)</c> → <c>builder</c>
     /// </remarks>
     static void AnalyzeAppend_Char_Int32(
         IHighlightingConsumer consumer,
@@ -64,22 +60,13 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         IReferenceExpression invokedExpression,
         ICSharpArgument repeatCountArgument)
     {
-        switch (repeatCountArgument.Value.TryGetInt32Constant())
+        if (repeatCountArgument.Value.TryGetInt32Constant() == 0)
         {
-            case 0:
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Append)}' with the repeat count 0 is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                break;
-
-            case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Char },
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", repeatCountArgument));
-                break;
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Calling '{nameof(StringBuilder.Append)}' with the repeat count 0 is redundant.",
+                    invocationExpression,
+                    invokedExpression));
         }
     }
 
@@ -1079,7 +1066,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Insert(index, value, 1)</c> → <c>builder.Insert(index, value)</c><para/>
     /// <c>builder.Insert(index, "a", 1)</c> → <c>builder.Insert(index, 'a')</c>
     /// </remarks>
     static void AnalyzeInsert_Int32_String_Int32(
@@ -1088,29 +1074,21 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         ICSharpArgument valueArgument,
         ICSharpArgument countArgument)
     {
-        switch (valueArgument.Value.TryGetStringConstant(), countArgument.Value.TryGetInt32Constant())
-        {
-            case (null, 1) when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Insert), Parameters = Parameters.Int32_String },
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing 1 is redundant.", countArgument));
-                break;
-
-            case ([var character], 1) when PredefinedType.STRING_BUILDER_FQN.HasMethod(
+        if (valueArgument.Value.TryGetStringConstant() is [var character]
+            && countArgument.Value.TryGetInt32Constant() == 1
+            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
                 new MethodSignature { Name = nameof(StringBuilder.Insert), Parameters = Parameters.Int32_Char },
                 valueArgument.NameIdentifier is { },
                 out var parameterNames,
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new PassSingleCharacterSuggestion(
-                        "Pass the single character.",
-                        valueArgument,
-                        parameterNames is [_, var valueParameterName] ? valueParameterName : null,
-                        character,
-                        redundantArguments: [countArgument]));
-                break;
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new PassSingleCharacterSuggestion(
+                    "Pass the single character.",
+                    valueArgument,
+                    parameterNames is [_, var valueParameterName] ? valueParameterName : null,
+                    character,
+                    redundantArguments: [countArgument]));
         }
     }
 

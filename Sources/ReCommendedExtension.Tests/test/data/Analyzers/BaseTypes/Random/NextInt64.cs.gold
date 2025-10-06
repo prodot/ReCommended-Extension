@@ -6,29 +6,29 @@ namespace Test
     {
         public void RedundantArgument(Random random, long maxValue)
         {
-            var result11 = random.NextInt64(|long.MaxValue|(0));
-            var result12 = random.NextInt64(|9_223_372_036_854_775_807|(1));
-            var result13 = random.NextInt64(|0x7fff_ffff_ffff_ffff|(2));
+            var result11 = random.NextInt64(long.MaxValue);
+            var result12 = random.NextInt64(9_223_372_036_854_775_807);
+            var result13 = random.NextInt64(0x7fff_ffff_ffff_ffff);
 
-            var result21 = random.NextInt64(|0|(3), maxValue);
+            var result21 = random.NextInt64(0, maxValue);
         }
 
         public void RedundantArgument_Nullable(Random? random, int maxValue)
         {
-            var result11 = random?.NextInt64(|long.MaxValue|(4));
-            var result12 = random?.NextInt64(|9_223_372_036_854_775_807|(5));
-            var result13 = random?.NextInt64(|0x7fff_ffff_ffff_ffff|(6));
+            var result11 = random?.NextInt64(long.MaxValue);
+            var result12 = random?.NextInt64(9_223_372_036_854_775_807);
+            var result13 = random?.NextInt64(0x7fff_ffff_ffff_ffff);
 
-            var result21 = random?.NextInt64(|0|(7), maxValue);
+            var result21 = random?.NextInt64(0, maxValue);
         }
 
         public void ExpressionResult(Random random)
         {
-            var result11 = |random.NextInt64(0)|(8);
-            var result12 = |random.NextInt64(1)|(9);
+            var result11 = |random.NextInt64(0)|(0);
+            var result12 = |random.NextInt64(1)|(1);
 
-            var result21 = |random.NextInt64(10, 10)|(10);
-            var result22 = |random.NextInt64(10, 11)|(11);
+            var result21 = |random.NextInt64(10, 10)|(2);
+            var result22 = |random.NextInt64(10, 11)|(3);
         }
 
         public void NoDetection(Random random, long minValue, long maxValue)
@@ -54,15 +54,7 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Passing the long.MaxValue is redundant.
-(1): ReSharper Dead Code: Passing the long.MaxValue is redundant.
-(2): ReSharper Dead Code: Passing the long.MaxValue is redundant.
-(3): ReSharper Dead Code: Passing 0 is redundant.
-(4): ReSharper Dead Code: Passing the long.MaxValue is redundant.
-(5): ReSharper Dead Code: Passing the long.MaxValue is redundant.
-(6): ReSharper Dead Code: Passing the long.MaxValue is redundant.
-(7): ReSharper Dead Code: Passing 0 is redundant.
-(8): ReSharper Suggestion: The expression is always 0.
-(9): ReSharper Suggestion: The expression is always 0.
-(10): ReSharper Suggestion: The expression is the same as the first argument.
-(11): ReSharper Suggestion: The expression is the same as the first argument.
+(0): ReSharper Suggestion: The expression is always 0.
+(1): ReSharper Suggestion: The expression is always 0.
+(2): ReSharper Suggestion: The expression is the same as the first argument.
+(3): ReSharper Suggestion: The expression is the same as the first argument.

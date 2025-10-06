@@ -1,12 +1,9 @@
-﻿using System.Globalization;
-using System.Text;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
-using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Int128;
 
@@ -19,7 +16,7 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
 
     protected override int128[] TestValues { get; } = [0, 1, 2, -1, -2, int128.MinValue, int128.MaxValue];
 
@@ -101,26 +98,6 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
     }
 
     [Test]
-    [TestNet80]
-    public void TestParse()
-    {
-        Test(n => int128.Parse($"{n}", NumberStyles.Integer), n => int128.Parse($"{n}"));
-        Test(n => int128.Parse($"{n}", null), n => int128.Parse($"{n}"));
-        Test(
-            (n, provider) => int128.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => int128.Parse($"{n}", provider),
-            TestValues,
-            FormatProviders);
-        Test(n => int128.Parse($"{n}", NumberStyles.AllowLeadingSign, null), n => int128.Parse($"{n}", NumberStyles.AllowLeadingSign));
-
-        Test(n => MissingInt128Methods.Parse($"{n}".AsSpan(), null), n => MissingInt128Methods.Parse($"{n}".AsSpan()));
-
-        Test(n => MissingInt128Methods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingInt128Methods.Parse(Encoding.UTF8.GetBytes($"{n}")));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     public void TestRotateLeft()
     {
         Test(n => int128.RotateLeft(n, 0), n => n);
@@ -132,51 +109,6 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
     public void TestRotateRight()
     {
         Test(n => int128.RotateRight(n, 0), n => n);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse()
-    {
-        Test(
-            (int128 n, IFormatProvider? provider, out int128 result) => int128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (int128 n, IFormatProvider? provider, out int128 result) => int128.TryParse($"{n}", provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (int128 n, out int128 result) => int128.TryParse($"{n}", null, out result),
-            (int128 n, out int128 result) => int128.TryParse($"{n}", out result));
-
-        Test(
-            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse(
-                $"{n}".AsSpan(),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), out result));
-
-        Test(
-            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                provider,
-                out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }

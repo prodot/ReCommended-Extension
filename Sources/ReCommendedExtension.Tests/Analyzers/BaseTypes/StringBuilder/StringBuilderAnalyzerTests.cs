@@ -23,7 +23,6 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
         => highlighting is PassSingleCharacterSuggestion
                 or PassSingleCharactersSuggestion
                 or UseOtherMethodSuggestion
-                or RedundantArgumentHint
                 or RedundantMethodInvocationHint
             || highlighting.IsError();
 
@@ -88,8 +87,6 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
     {
         Test("abcde", builder => builder.Append('x', 0), builder => builder);
         TestNullable("abcde", builder => builder?.Append('x', 0), builder => builder);
-        Test("abcde", builder => builder.Append('x', 1), builder => builder.Append('x'));
-        TestNullable("abcde", builder => builder?.Append('x', 1), builder => builder?.Append('x'));
 
         Test("abcde", builder => builder.Append(null as char[]), builder => builder);
         TestNullable("abcde", builder => builder?.Append(null as char[]), builder => builder);
@@ -245,8 +242,6 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
     public void TestInsert()
     {
-        Test("abcde", builder => builder.Insert(1, "xyz", 1), builder => builder.Insert(1, "xyz"), true);
-        TestNullable("abcde", builder => builder?.Insert(1, "xyz", 1), builder => builder?.Insert(1, "xyz"), true);
         Test("abcde", builder => builder.Insert(1, "x", 1), builder => builder.Insert(1, 'x'), true);
         TestNullable("abcde", builder => builder?.Insert(1, "x", 1), builder => builder?.Insert(1, 'x'), true);
 

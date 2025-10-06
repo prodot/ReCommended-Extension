@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
@@ -16,8 +14,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint or UseUnaryOperatorSuggestion
-            || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or UseUnaryOperatorSuggestion || highlighting.IsError();
 
     protected override decimal[] TestValues { get; } = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MinValue, decimal.MaxValue];
 
@@ -124,31 +121,6 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     }
 
     [Test]
-    [TestNet80]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParse()
-    {
-        Test(n => decimal.Parse($"{n}", NumberStyles.Number), n => decimal.Parse($"{n}"));
-        Test(n => decimal.Parse($"{n}", null), n => decimal.Parse($"{n}"));
-        Test(
-            (n, provider) => decimal.Parse($"{n}", NumberStyles.Number, provider),
-            (n, provider) => decimal.Parse($"{n}", provider),
-            TestValues,
-            FormatProviders);
-        Test(
-            n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, null),
-            n => decimal.Parse($"{n}", NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint));
-
-        Test(n => MissingDecimalMethods.Parse($"{n}".AsSpan(), null), n => MissingDecimalMethods.Parse($"{n}".AsSpan()));
-
-        Test(
-            n => MissingDecimalMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null),
-            n => MissingDecimalMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestRemainder()
@@ -163,32 +135,6 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     }
 
     [Test]
-    [TestNetCore20]
-    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestRound()
-    {
-        var roundings = new[] { MidpointRounding.ToEven, MidpointRounding.AwayFromZero };
-        var digitsValues = new[] { 0, 1, 2 };
-
-        Test(n => decimal.Round(n, 0), n => decimal.Round(n));
-        Test(n => decimal.Round(n, MidpointRounding.ToEven), n => decimal.Round(n));
-        Test((n, mode) => decimal.Round(n, 0, mode), (n, mode) => decimal.Round(n, mode), TestValues, roundings);
-        Test(
-            (n, decimals) => decimal.Round(n, decimals, MidpointRounding.ToEven),
-            (n, decimals) => decimal.Round(n, decimals),
-            TestValues,
-            digitsValues);
-
-        Test(n => Math.Round(n, 0), n => Math.Round(n));
-        Test(n => Math.Round(n, MidpointRounding.ToEven), n => Math.Round(n));
-        Test((n, mode) => Math.Round(n, 0, mode), (n, mode) => Math.Round(n, mode), TestValues, roundings);
-        Test((n, decimals) => Math.Round(n, decimals, MidpointRounding.ToEven), (n, decimals) => Math.Round(n, decimals), TestValues, digitsValues);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestSubtract()
@@ -198,51 +144,6 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
             (d1, d2) => d1 - d2,
             [..TestValues.Except([decimal.MinValue, decimal.MaxValue])],
             [..TestValues.Except([decimal.MinValue, decimal.MaxValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse()
-    {
-        Test(
-            (decimal n, IFormatProvider? provider, out decimal result) => decimal.TryParse($"{n}", NumberStyles.Number, provider, out result),
-            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse($"{n}", provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}", null, out result),
-            (decimal n, out decimal result) => decimal.TryParse($"{n}", out result));
-
-        Test(
-            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse(
-                $"{n}".AsSpan(),
-                NumberStyles.Number,
-                provider,
-                out result),
-            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), null, out result),
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse($"{n}".AsSpan(), out result));
-
-        Test(
-            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                NumberStyles.Number,
-                provider,
-                out result),
-            (decimal n, IFormatProvider? provider, out decimal result) => MissingDecimalMethods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                provider,
-                out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
-            (decimal n, out decimal result) => MissingDecimalMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }

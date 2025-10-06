@@ -2,7 +2,6 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.MethodFinding;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 
@@ -11,24 +10,9 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseBinaryOperatorSuggestion), typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
+    HighlightingTypes = [typeof(UseBinaryOperatorSuggestion), typeof(UseExpressionResultSuggestion)])]
 public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
-    static class Parameters
-    {
-        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar { get; } = [Parameter.ReadOnlySpanOfChar];
-
-        public static IReadOnlyList<Parameter> String_outGuid { get; } = [Parameter.String, Parameter.Guid with { Kind = ParameterKind.OUTPUT }];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outGuid { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.Guid with { Kind = ParameterKind.OUTPUT },
-        ];
-    }
-
     /// <remarks>
     /// <c>guid.Equals(g)</c> → <c>guid == g</c>
     /// </remarks>
@@ -63,70 +47,6 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         }
     }
 
-    /// <remarks>
-    /// <c>Guid.Parse(s, provider)</c> → <c>Guid.Parse(s)</c>
-    /// </remarks>
-    static void AnalyzeParse_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (PredefinedType.GUID_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Guid.Parse), Parameters = Parameters.String, IsStatic = true },
-            invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>Guid.Parse(s, provider)</c> → <c>Guid.Parse(s)</c> (.NET Core 2.1)
-    /// </remarks>
-    static void AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (PredefinedType.GUID_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Guid.Parse), Parameters = Parameters.ReadOnlySpanOfChar, IsStatic = true },
-            invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>Guid.TryParse(s, provider, out result)</c> → <c>Guid.TryParse(s, out result)</c>
-    /// </remarks>
-    static void AnalyzeTryParse_String_IFormatProvider_Guid(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (PredefinedType.GUID_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Guid.TryParse), Parameters = Parameters.String_outGuid, IsStatic = true },
-            invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>Guid.TryParse(s, provider, out result)</c> → <c>Guid.TryParse(s, out result)</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_Guid(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (PredefinedType.GUID_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Guid.TryParse), Parameters = Parameters.ReadOnlySpanOfChar_outGuid, IsStatic = true },
-            invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing a format provider is redundant.", providerArgument));
-        }
-    }
-
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { Reference: var reference } invokedExpression }
@@ -150,45 +70,6 @@ public sealed class GuidAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 
                                 case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, objArgument);
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-
-                case (_, { IsStatic: true }):
-                    switch (method.ShortName)
-                    {
-                        case nameof(Guid.Parse):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when sType.IsString() && providerType.IsIFormatProvider():
-
-                                    AnalyzeParse_String_IFormatProvider(consumer, element, providerArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
-
-                                    AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, element, providerArgument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(Guid.TryParse):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                    when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsGuid():
-
-                                    AnalyzeTryParse_String_IFormatProvider_Guid(consumer, element, providerArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                    when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider() && resultType.IsGuid():
-
-                                    AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_Guid(consumer, element, providerArgument);
                                     break;
                             }
                             break;

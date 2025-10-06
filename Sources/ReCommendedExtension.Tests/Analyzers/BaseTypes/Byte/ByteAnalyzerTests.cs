@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
@@ -16,7 +14,7 @@ public sealed class ByteAnalyzerTests : BaseTypeAnalyzerTests<byte>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Byte";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
 
     protected override byte[] TestValues { get; } = [0, 1, 2, byte.MaxValue];
 
@@ -86,27 +84,6 @@ public sealed class ByteAnalyzerTests : BaseTypeAnalyzerTests<byte>
     }
 
     [Test]
-    [TestNet80]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParse()
-    {
-        Test(n => byte.Parse($"{n}", NumberStyles.Integer), n => byte.Parse($"{n}"));
-        Test(n => byte.Parse($"{n}", null), n => byte.Parse($"{n}"));
-        Test(
-            (n, provider) => byte.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => byte.Parse($"{n}", provider),
-            TestValues,
-            FormatProviders);
-        Test(n => byte.Parse($"{n}", NumberStyles.None, null), n => byte.Parse($"{n}", NumberStyles.None));
-
-        Test(n => MissingByteMethods.Parse($"{n}".AsSpan(), null), n => MissingByteMethods.Parse($"{n}".AsSpan()));
-
-        Test(n => MissingByteMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingByteMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestRotateLeft()
     {
@@ -120,45 +97,6 @@ public sealed class ByteAnalyzerTests : BaseTypeAnalyzerTests<byte>
     public void TestRotateRight()
     {
         Test(n => MissingByteMethods.RotateRight(n, 0), n => n);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse()
-    {
-        Test(
-            (byte n, IFormatProvider? provider, out byte result) => byte.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (byte n, IFormatProvider? provider, out byte result) => MissingByteMethods.TryParse($"{n}", provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (byte n, out byte result) => MissingByteMethods.TryParse($"{n}", null, out result),
-            (byte n, out byte result) => byte.TryParse($"{n}", out result));
-
-        Test(
-            (byte n, IFormatProvider? provider, out byte result)
-                => MissingByteMethods.TryParse($"{n}".AsSpan(), NumberStyles.Integer, provider, out result),
-            (byte n, IFormatProvider? provider, out byte result) => MissingByteMethods.TryParse($"{n}".AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (byte n, out byte result) => MissingByteMethods.TryParse($"{n}".AsSpan(), null, out result),
-            (byte n, out byte result) => MissingByteMethods.TryParse($"{n}".AsSpan(), out result));
-
-        Test(
-            (byte n, IFormatProvider? provider, out byte result) => MissingByteMethods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (byte n, IFormatProvider? provider, out byte result) => MissingByteMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (byte n, out byte result) => MissingByteMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
-            (byte n, out byte result) => MissingByteMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }

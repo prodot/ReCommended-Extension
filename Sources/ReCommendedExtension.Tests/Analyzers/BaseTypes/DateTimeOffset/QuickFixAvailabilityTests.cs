@@ -15,18 +15,12 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTimeOffset\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantArgumentHint
-                or RedundantMethodInvocationHint
+        => highlighting is RedundantMethodInvocationHint
                 or UseBinaryOperatorSuggestion
                 or UseExpressionResultSuggestion
                 or UseOtherArgumentSuggestion
                 or RedundantElementHint
             || highlighting.IsError();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
-    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 
     [Test]
     public void TestRemoveMethodInvocationFixAvailability() => DoNamedTest2();

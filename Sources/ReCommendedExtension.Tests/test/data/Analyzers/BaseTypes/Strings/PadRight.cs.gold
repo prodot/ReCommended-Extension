@@ -8,9 +8,9 @@ namespace Test
         {
             var result1 = text.|PadRight(0)|(0);
             var result2 = text.|PadRight(0, c)|(1);
-            var result3 = text.PadRight(totalWidth, |' '|(2));
+            var result3 = text.PadRight(totalWidth, ' ');
 
-            var result4 = text.|PadRight(0, ' ')|(3);
+            var result4 = text.|PadRight(0, ' ')|(2);
         }
 
         public void NoDetection(string text, char c, int totalWidth)
@@ -19,17 +19,16 @@ namespace Test
             var result2 = text.PadRight(1, c);
             var result3 = text.PadRight(totalWidth, 'a');
 
-            text.|PadRight|(4)(0);
-            text.|PadRight|(5)(0, c);
-            text.|PadRight|(6)(totalWidth, ' ');
+            text.|PadRight|(3)(0);
+            text.|PadRight|(4)(0, c);
+            text.|PadRight|(5)(totalWidth, ' ');
         }
     }
 }
 ---------------------------------------------------------
 (0): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
 (1): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
-(2): ReSharper Dead Code: Passing ' ' is redundant.
-(3): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
+(2): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
+(3): ReSharper Warning: Return value of pure method is not used
 (4): ReSharper Warning: Return value of pure method is not used
 (5): ReSharper Warning: Return value of pure method is not used
-(6): ReSharper Warning: Return value of pure method is not used

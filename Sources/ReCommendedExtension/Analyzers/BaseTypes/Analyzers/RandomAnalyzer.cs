@@ -13,17 +13,10 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(RedundantArgumentHint)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
 public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
     : ElementProblemAnalyzer<IInvocationExpression>
 {
-    static class Parameters
-    {
-        public static IReadOnlyList<Parameter> Int32 { get; } = [Parameter.Int32];
-
-        public static IReadOnlyList<Parameter> Int64 { get; } = [Parameter.Int64];
-    }
-
     [Pure]
     static string CreateEmptyArray(IType itemType, IInvocationExpression context)
     {
@@ -110,7 +103,6 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>random.Next(int.MaxValue)</c> → <c>random.Next()</c><para/>
     /// <c>random.Next(0)</c> → <c>0</c><para/>
     /// <c>random.Next(1)</c> → <c>0</c>
     /// </remarks>
@@ -122,24 +114,15 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        switch (maxValueArgument.Value.TryGetInt32Constant())
+        if (maxValueArgument.Value.TryGetInt32Constant() is 0 or 1
+            && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
-            case int.MaxValue when ClrTypeNames.Random.HasMethod(
-                new MethodSignature { Name = nameof(Random.Next), Parameters = [] },
-                invocationExpression.PsiModule):
-                consumer.AddHighlighting(new RedundantArgumentHint($"Passing the int.{nameof(int.MaxValue)} is redundant.", maxValueArgument));
-                break;
-
-            case 0 or 1 when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
-
-                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
-                break;
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0"));
         }
     }
 
     /// <remarks>
-    /// <c>random.Next(0, maxValue)</c> → <c>random.Next(maxValue)</c><para/>
     /// <c>random.Next(n, n)</c> → <c>n</c><para/>
     /// <c>random.Next(n, n + 1)</c> → <c>n</c>
     /// </remarks>
@@ -152,33 +135,23 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        switch (minValueArgument.Value.TryGetInt32Constant())
+        if (minValueArgument.Value.TryGetInt32Constant() is { } minValue
+            && maxValueArgument.Value.TryGetInt32Constant() is { } maxValue
+            && (minValue == maxValue || minValue == unchecked(maxValue - 1))
+            && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
-            case 0 when ClrTypeNames.Random.HasMethod(
-                new MethodSignature { Name = nameof(Random.Next), Parameters = Parameters.Int32 },
-                invocationExpression.PsiModule):
+            Debug.Assert(minValueArgument.Value is { });
 
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", minValueArgument));
-                break;
-
-            case var minValue when maxValueArgument.Value.TryGetInt32Constant() is { } maxValue
-                && (minValue == maxValue || minValue == unchecked(maxValue - 1))
-                && !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
-
-                Debug.Assert(minValueArgument.Value is { });
-
-                consumer.AddHighlighting(
-                    new UseExpressionResultSuggestion(
-                        "The expression is the same as the first argument.",
-                        invocationExpression,
-                        NumberInfo.Int32.GetReplacementFromArgument(invocationExpression, minValueArgument.Value)));
-                break;
+            consumer.AddHighlighting(
+                new UseExpressionResultSuggestion(
+                    "The expression is the same as the first argument.",
+                    invocationExpression,
+                    NumberInfo.Int32.GetReplacementFromArgument(invocationExpression, minValueArgument.Value)));
         }
     }
 
     /// <remarks>
-    /// <c>random.NextInt64(long.MaxValue)</c> → <c>random.NextInt64()</c> (.NET 6)<para/>
     /// <c>random.NextInt64(0)</c> → <c>0</c><para/>
     /// <c>random.NextInt64(1)</c> → <c>0</c>
     /// </remarks>
@@ -190,25 +163,15 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        switch (maxValueArgument.Value.TryGetInt64Constant())
+        if (maxValueArgument.Value.TryGetInt64Constant() is 0 or 1
+            && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
-            case long.MaxValue when ClrTypeNames.Random.HasMethod(
-                new MethodSignature { Name = "NextInt64", Parameters = [] }, // todo: nameof(Random.NextInt64) when available
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(new RedundantArgumentHint($"Passing the long.{nameof(long.MaxValue)} is redundant.", maxValueArgument));
-                break;
-
-            case 0 or 1 when !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
-
-                consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0L"));
-                break;
+            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always 0.", invocationExpression, "0L"));
         }
     }
 
     /// <remarks>
-    /// <c>random.NextInt64(0, maxValue)</c> → <c>random.NextInt64(maxValue)</c> (.NET 6)<para/>
     /// <c>random.Next(n, n)</c> → <c>n</c><para/>
     /// <c>random.Next(n, n + 1)</c> → <c>n</c>
     /// </remarks>
@@ -221,28 +184,19 @@ public sealed class RandomAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        switch (minValueArgument.Value.TryGetInt64Constant())
+        if (minValueArgument.Value.TryGetInt64Constant() is { } minValue
+            && maxValueArgument.Value.TryGetInt32Constant() is { } maxValue
+            && (minValue == maxValue || minValue == unchecked(maxValue - 1))
+            && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
-            case 0 when ClrTypeNames.Random.HasMethod(
-                new MethodSignature { Name = "NextInt64", Parameters = Parameters.Int64 }, // todo: nameof(Random.NextInt64) when available
-                invocationExpression.PsiModule):
+            Debug.Assert(minValueArgument.Value is { });
 
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", minValueArgument));
-                break;
-
-            case var minValue when maxValueArgument.Value.TryGetInt32Constant() is { } maxValue
-                && (minValue == maxValue || minValue == unchecked(maxValue - 1))
-                && !invocationExpression.IsUsedAsStatement()
-                && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
-
-                Debug.Assert(minValueArgument.Value is { });
-
-                consumer.AddHighlighting(
-                    new UseExpressionResultSuggestion(
-                        "The expression is the same as the first argument.",
-                        invocationExpression,
-                        NumberInfo.Int64.GetReplacementFromArgument(invocationExpression, minValueArgument.Value)));
-                break;
+            consumer.AddHighlighting(
+                new UseExpressionResultSuggestion(
+                    "The expression is the same as the first argument.",
+                    invocationExpression,
+                    NumberInfo.Int64.GetReplacementFromArgument(invocationExpression, minValueArgument.Value)));
         }
     }
 

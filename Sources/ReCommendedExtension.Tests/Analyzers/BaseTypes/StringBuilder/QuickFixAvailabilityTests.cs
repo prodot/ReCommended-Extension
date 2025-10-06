@@ -19,7 +19,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
         => highlighting is PassSingleCharacterSuggestion
                 or PassSingleCharactersSuggestion
                 or UseOtherMethodSuggestion
-                or RedundantArgumentHint
                 or RedundantMethodInvocationHint
             || highlighting.IsError();
 
@@ -34,9 +33,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [NullableContext(NullableContextKind.Enable)]
     [TestNet90]
     public void TestUseOtherMethodFixAvailability() => DoNamedTest2();
-
-    [Test]
-    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]

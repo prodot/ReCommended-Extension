@@ -1,9 +1,14 @@
-﻿using JetBrains.ReSharper.Psi;
+﻿using System.Runtime.CompilerServices;
+using JetBrains.ReSharper.Psi;
 
 namespace ReCommendedExtension.Extensions.MethodFinding;
 
 [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using original type names.")]
+[SuppressMessage("ReSharper", "NotAccessedPositionalProperty.Global", Justification = "Used for debugging only.")]
 internal sealed record Parameter
+#if DEBUG
+    ([CallerMemberName] string Name = "")
+#endif
 {
     public static Parameter T { get; } = new() { IsType = _ => true };
 
@@ -21,11 +26,39 @@ internal sealed record Parameter
 
     public static Parameter CharArray { get; } = new() { IsType = t => t.IsGenericArrayOfChar() };
 
+    public static Parameter Boolean { get; } = new() { IsType = t => t.IsBool() };
+
+    public static Parameter Byte { get; } = new() { IsType = t => t.IsByte() };
+
+    public static Parameter SByte { get; } = new() { IsType = t => t.IsSbyte() };
+
+    public static Parameter Int16 { get; } = new() { IsType = t => t.IsShort() };
+
+    public static Parameter UInt16 { get; } = new() { IsType = t => t.IsUshort() };
+
     public static Parameter Int32 { get; } = new() { IsType = t => t.IsInt() };
+
+    public static Parameter UInt32 { get; } = new() { IsType = t => t.IsUint() };
 
     public static Parameter Int64 { get; } = new() { IsType = t => t.IsLong() };
 
+    public static Parameter UInt64 { get; } = new() { IsType = t => t.IsUlong() };
+
+    public static Parameter Int128 { get; } = new() { IsType = t => t.IsInt128() };
+
+    public static Parameter UInt128 { get; } = new() { IsType = t => t.IsUInt128() };
+
+    public static Parameter IntPtr { get; } = new() { IsType = t => t.IsIntPtr() };
+
+    public static Parameter UIntPtr { get; } = new() { IsType = t => t.IsUIntPtr() };
+
+    public static Parameter Decimal { get; } = new() { IsType = t => t.IsDecimal() };
+
     public static Parameter Double { get; } = new() { IsType = t => t.IsDouble() };
+
+    public static Parameter Single { get; } = new() { IsType = t => t.IsFloat() };
+
+    public static Parameter Half { get; } = new() { IsType = t => t.IsHalf() };
 
     public static Parameter Guid { get; } = new() { IsType = t => t.IsGuid() };
 

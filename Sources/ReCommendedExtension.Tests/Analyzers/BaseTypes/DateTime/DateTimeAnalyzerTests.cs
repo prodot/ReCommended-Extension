@@ -17,7 +17,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-                or RedundantArgumentHint
                 or RedundantArgumentRangeHint
                 or UseDateTimePropertySuggestion
                 or UseBinaryOperatorSuggestion
@@ -47,233 +46,13 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
         Test(() => new System.DateTime(0), () => System.DateTime.MinValue);
 
-        Test(() => new System.DateTime(0, DateTimeKind.Unspecified), () => new System.DateTime(0));
-        Test(() => new System.DateTime(1, DateTimeKind.Unspecified), () => new System.DateTime(1));
-        Test(() => new System.DateTime(638_882_119_800_000_000, DateTimeKind.Unspecified), () => new System.DateTime(638_882_119_800_000_000));
-
-        Test(
-            dateTime => MissingDateTimeMembers._Ctor(
-                Missing.DateOnly.FromDateTime(dateTime),
-                Missing.TimeOnly.FromDateTime(dateTime),
-                DateTimeKind.Unspecified),
-            dateTime => MissingDateTimeMembers._Ctor(Missing.DateOnly.FromDateTime(dateTime), Missing.TimeOnly.FromDateTime(dateTime)));
-
         Test(
             dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0),
             dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day));
 
         Test(
-            dateTime => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                DateTimeKind.Unspecified),
-            dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second));
-
-        Test(
             (dateTime, calendar) => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, calendar),
             (dateTime, calendar) => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, calendar),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            calendars);
-
-        Test(
-            dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, 0),
-            dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second));
-
-        Test(
-            dateTime => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                DateTimeKind.Unspecified),
-            dateTime => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond));
-        Test(
-            dateTime => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                0,
-                dateTime.Kind),
-            dateTime => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Kind));
-
-        Test(
-            (dateTime, calendar) => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                0,
-                calendar),
-            (dateTime, calendar) => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                calendar),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            calendars);
-
-        Test(
-            (dateTime, calendar) => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                calendar,
-                DateTimeKind.Unspecified),
-            (dateTime, calendar) => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                calendar),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            calendars);
-
-        Test(
-            dateTime => MissingDateTimeMembers._Ctor(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                dateTime.GetMicrosecond(),
-                DateTimeKind.Unspecified),
-            dateTime => MissingDateTimeMembers._Ctor(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                dateTime.GetMicrosecond()));
-        Test(
-            dateTime => MissingDateTimeMembers._Ctor(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                0,
-                dateTime.Kind),
-            dateTime => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                dateTime.Kind));
-
-        Test(
-            (dateTime, calendar) => MissingDateTimeMembers._Ctor(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                0,
-                calendar),
-            (dateTime, calendar) => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                calendar),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            calendars);
-
-        Test(
-            (dateTime, calendar) => MissingDateTimeMembers._Ctor(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                dateTime.GetMicrosecond(),
-                calendar,
-                DateTimeKind.Unspecified),
-            (dateTime, calendar) => MissingDateTimeMembers._Ctor(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                dateTime.GetMicrosecond(),
-                calendar),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            calendars);
-        Test(
-            (dateTime, calendar) => MissingDateTimeMembers._Ctor(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                0,
-                calendar,
-                dateTime.Kind),
-            (dateTime, calendar) => new System.DateTime(
-                dateTime.Year,
-                dateTime.Month,
-                dateTime.Day,
-                dateTime.Hour,
-                dateTime.Minute,
-                dateTime.Second,
-                dateTime.Millisecond,
-                calendar,
-                dateTime.Kind),
             [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             calendars);
 
@@ -318,42 +97,10 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestGetDateTimeFormats()
-    {
-        Test(dateTime => dateTime.GetDateTimeFormats(null), dateTime => dateTime.GetDateTimeFormats());
-        Test(
-            (dateTime, format) => dateTime.GetDateTimeFormats(format, null),
-            (dateTime, format) => dateTime.GetDateTimeFormats(format),
-            TestValues,
-            ['d', 'D', 'f', 'F', 'g', 'G', 'm', 'M', 'o', 'O', 'r', 'R', 's', 't', 'T', 'u', 'U', 'y', 'Y']);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestGetTypeCode()
     {
         Test(dateTime => dateTime.GetTypeCode(), _ => TypeCode.DateTime);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParse()
-    {
-        Test(dateTime => System.DateTime.Parse($"{dateTime}", null), dateTime => System.DateTime.Parse($"{dateTime}"));
-        Test(
-            (dateTime, provider) => System.DateTime.Parse(dateTime.ToString(provider), provider, DateTimeStyles.None),
-            (dateTime, provider) => System.DateTime.Parse(dateTime.ToString(provider), provider),
-            TestValues,
-            FormatProviders);
-        Test(
-            dateTime => MissingDateTimeMembers.Parse($"{dateTime}".AsSpan(), null),
-            dateTime => MissingDateTimeMembers.Parse($"{dateTime}".AsSpan()));
 
         DoNamedTest2();
     }
@@ -393,12 +140,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
             invariantFormats,
             FormatProviders,
             styles);
-        Test(
-            (dateTime, format, provider) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, DateTimeStyles.None),
-            (dateTime, format, provider) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider),
-            TestValues,
-            formats,
-            FormatProviders);
         Test(
             (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), [format], provider, style),
             (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, style),
@@ -471,35 +212,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
         Test(dateTime => dateTime.Subtract(dateTimeValue), dateTime => dateTime - dateTimeValue, [..TestValues.Except([System.DateTime.MinValue])]);
         Test(dateTime => dateTime.Subtract(timeSpanValue), dateTime => dateTime - timeSpanValue, [..TestValues.Except([System.DateTime.MinValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    public void TestTryParse()
-    {
-        Test(
-            (System.DateTime dateTime, out System.DateTime result) => MissingDateTimeMembers.TryParse($"{dateTime}", null, out result),
-            (System.DateTime dateTime, out System.DateTime result) => System.DateTime.TryParse($"{dateTime}", out result));
-        Test(
-            (System.DateTime dateTime, out System.DateTime result) => MissingDateTimeMembers.TryParse($"{dateTime}".AsSpan(), null, out result),
-            (System.DateTime dateTime, out System.DateTime result) => MissingDateTimeMembers.TryParse($"{dateTime}".AsSpan(), out result));
-
-        Test(
-            (System.DateTime dateTime, IFormatProvider? provider, out System.DateTime result)
-                => System.DateTime.TryParse($"{dateTime}", provider, DateTimeStyles.None, out result),
-            (System.DateTime dateTime, IFormatProvider? provider, out System.DateTime result)
-                => MissingDateTimeMembers.TryParse($"{dateTime}", provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (System.DateTime dateTime, IFormatProvider? provider, out System.DateTime result)
-                => MissingDateTimeMembers.TryParse($"{dateTime}".AsSpan(), provider, DateTimeStyles.None, out result),
-            (System.DateTime dateTime, IFormatProvider? provider, out System.DateTime result)
-                => MissingDateTimeMembers.TryParse($"{dateTime}".AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
 
         DoNamedTest2();
     }

@@ -1,0 +1,81 @@
+﻿using System;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void RedundantArgument(string text, char c, char[] charArray, string s, StringComparison comparison, int totalWidth)
+        {
+            var result11 = text.IndexOf(c, |0|(0));
+            var result12 = text.IndexOf(s, |0|(1));
+            var result13 = text.IndexOf(s, |0|(2), comparison);
+
+            var result21 = text.IndexOfAny(charArray, |0|(3));
+
+            var result31 = text.PadLeft(totalWidth, |' '|(4));
+
+            var result41 = text.PadRight(totalWidth, |' '|(5));
+
+            var result51 = text.Split(';', |';'|(6), |';'|(7));
+
+            var result61 = text.Trim(|null|(8));
+            var result62 = text.Trim(|[]|(9));
+            var result63 = text.Trim('.', |'.'|(10), |'.'|(11));
+
+            var result71 = text.TrimEnd(|null|(12));
+            var result72 = text.TrimEnd(|[]|(13));
+            var result73 = text.TrimEnd('.', |'.'|(14), |'.'|(15));
+
+            var result81 = text.TrimStart(|null|(16));
+            var |result82|(17) = text.TrimStart(|[]|(18));
+            var |result82|(19) = text.TrimStart('.', |'.'|(20), |'.'|(21));
+        }
+
+        public void NoDetection(string text, char c, char[] charArray, string s, int startIndex, StringComparison comparison, int totalWidth)
+        {
+            var result11 = text.IndexOf(c, startIndex);
+            var result12 = text.IndexOf(s, startIndex);
+            var result13 = text.IndexOf(s, startIndex, comparison);
+
+            var result21 = text.IndexOfAny(charArray, startIndex);
+
+            var result31 = text.PadLeft(totalWidth, c);
+
+            var result41 = text.PadRight(totalWidth, c);
+
+            var result51 = text.Split(';', '.');
+
+            var result61 = text.Trim(charArray);
+            var result62 = text.Trim(';', '.');
+
+            var result71 = text.TrimEnd(charArray);
+            var result72 = text.TrimEnd(';', '.');
+
+            var result81 = text.TrimStart(charArray);
+            var result82 = text.TrimStart(';', '.');
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing 0 is redundant.
+(1): ReSharper Dead Code: Passing 0 is redundant.
+(2): ReSharper Dead Code: Passing 0 is redundant.
+(3): ReSharper Dead Code: Passing 0 is redundant.
+(4): ReSharper Dead Code: Passing ' ' is redundant.
+(5): ReSharper Dead Code: Passing ' ' is redundant.
+(6): ReSharper Dead Code: The character is already passed.
+(7): ReSharper Dead Code: The character is already passed.
+(8): ReSharper Dead Code: Passing null is redundant.
+(9): ReSharper Dead Code: Passing an empty array is redundant.
+(10): ReSharper Dead Code: The character is already passed.
+(11): ReSharper Dead Code: The character is already passed.
+(12): ReSharper Dead Code: Passing null is redundant.
+(13): ReSharper Dead Code: Passing an empty array is redundant.
+(14): ReSharper Dead Code: The character is already passed.
+(15): ReSharper Dead Code: The character is already passed.
+(16): ReSharper Dead Code: Passing null is redundant.
+(17): ReSharper Warning: Conflicting variable 'result82' is defined below
+(18): ReSharper Dead Code: Passing an empty array is redundant.
+(19): ReSharper Underlined Error Highlighting: A local variable named 'result82' cannot be declared in this scope because it would give a different meaning to 'result82', which is already used in a parent or current scope to denote something else
+(20): ReSharper Dead Code: The character is already passed.
+(21): ReSharper Dead Code: The character is already passed.

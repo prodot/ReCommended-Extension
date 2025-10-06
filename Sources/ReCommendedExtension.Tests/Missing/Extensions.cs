@@ -1,4 +1,5 @@
-﻿using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+﻿using System.Text;
+using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
 namespace ReCommendedExtension.Tests.Missing;
 
@@ -43,4 +44,7 @@ internal static class Extensions
 
             _ => throw new NotSupportedException(),
         };
+
+    [Pure]
+    public static byte[] AsUtf8Bytes(this string value) => Encoding.UTF8.GetBytes(value);
 }

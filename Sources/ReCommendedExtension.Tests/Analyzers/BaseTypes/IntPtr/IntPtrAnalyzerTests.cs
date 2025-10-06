@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -19,7 +17,7 @@ public sealed class IntPtrAnalyzerTests : BaseTypeAnalyzerTests<nint>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\IntPtr";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
 
     protected override nint[] TestValues { get; } = [0, 1, 2, -1, -2];
 
@@ -115,28 +113,6 @@ public sealed class IntPtrAnalyzerTests : BaseTypeAnalyzerTests<nint>
     }
 
     [Test]
-    [TestNet80]
-    public void TestParse()
-    {
-        Test(n => MissingIntPtrMethods.Parse($"{n}", NumberStyles.Integer), n => MissingIntPtrMethods.Parse($"{n}"));
-        Test(n => MissingIntPtrMethods.Parse($"{n}", null), n => MissingIntPtrMethods.Parse($"{n}"));
-        Test(
-            (n, provider) => MissingIntPtrMethods.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => MissingIntPtrMethods.Parse($"{n}", provider),
-            TestValues,
-            FormatProviders);
-        Test(
-            n => MissingIntPtrMethods.Parse($"{n}", NumberStyles.AllowLeadingSign, null),
-            n => MissingIntPtrMethods.Parse($"{n}", NumberStyles.AllowLeadingSign));
-
-        Test(n => MissingIntPtrMethods.Parse($"{n}".AsSpan(), null), n => MissingIntPtrMethods.Parse($"{n}".AsSpan()));
-
-        Test(n => MissingIntPtrMethods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingIntPtrMethods.Parse(Encoding.UTF8.GetBytes($"{n}")));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestRotateLeft()
     {
@@ -150,49 +126,6 @@ public sealed class IntPtrAnalyzerTests : BaseTypeAnalyzerTests<nint>
     public void TestRotateRight()
     {
         Test(n => MissingIntPtrMethods.RotateRight(n, 0), n => n);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse()
-    {
-        Test(
-            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse($"{n}", provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}", null, out result),
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}", out result));
-
-        Test(
-            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse(
-                $"{n}".AsSpan(),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse($"{n}".AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}".AsSpan(), null, out result),
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse($"{n}".AsSpan(), out result));
-
-        Test(
-            (nint n, IFormatProvider? provider, out nint result) => MissingIntPtrMethods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (nint n, IFormatProvider? provider, out nint result)
-                => MissingIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
-            (nint n, out nint result) => MissingIntPtrMethods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }

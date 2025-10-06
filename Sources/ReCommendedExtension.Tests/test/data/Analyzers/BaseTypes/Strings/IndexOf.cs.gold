@@ -45,26 +45,26 @@ namespace Test
 
         public void RedundantArguments(string text, char c, string s)
         {
-            var result1 = text.IndexOf(c, |0|(28));
-            var result2 = text.IndexOf(c, |startIndex: 0|(29));
+            var result1 = text.IndexOf(c, 0);
+            var result2 = text.IndexOf(c, startIndex: 0);
 
-            var result3 = text.IndexOf(s, |0|(30));
-            var result4 = text.IndexOf(s, |startIndex: 0|(31));
+            var result3 = text.IndexOf(s, 0);
+            var result4 = text.IndexOf(s, startIndex: 0);
 
-            var result5 = text.IndexOf(s, |0|(32), StringComparison.CurrentCulture);
-            var result6 = text.IndexOf(s, |startIndex: 0|(33), StringComparison.CurrentCulture);
+            var result5 = text.IndexOf(s, 0, StringComparison.CurrentCulture);
+            var result6 = text.IndexOf(s, startIndex: 0, StringComparison.CurrentCulture);
         }
 
         public void ExpressionResult(string text)
         {
-            var result1 = |text.IndexOf("")|(34);
-            var result2 = |text.IndexOf("", StringComparison.CurrentCulture)|(35);
+            var result1 = |text.IndexOf("")|(28);
+            var result2 = |text.IndexOf("", StringComparison.CurrentCulture)|(29);
         }
 
         public void AsCharacter(string text)
         {
-            var result1 = text.IndexOf(|"a"|(36));
-            var result2 = text.IndexOf(|"a"|(37), StringComparison.OrdinalIgnoreCase);
+            var result1 = text.IndexOf(|"a"|(30));
+            var result2 = text.IndexOf(|"a"|(31), StringComparison.OrdinalIgnoreCase);
         }
 
         public void NoDetection(string text, char c, int startIndex)
@@ -72,8 +72,8 @@ namespace Test
             var result1 = text.IndexOf(c, 1);
             var result2 = text.IndexOf(c, startIndex);
 
-            text.|IndexOf|(38)("");
-            text.|IndexOf|(39)("", StringComparison.CurrentCulture);
+            text.|IndexOf|(32)("");
+            text.|IndexOf|(33)("", StringComparison.CurrentCulture);
         }
 
         public void NoDetection(string? text, StringComparison comparisonType, char c, string s)
@@ -142,15 +142,9 @@ namespace Test
 (25): ReSharper Suggestion: Use the 'Contains' method.
 (26): ReSharper Suggestion: Use the 'Contains' method.
 (27): ReSharper Suggestion: Use the 'Contains' method.
-(28): ReSharper Dead Code: Passing 0 is redundant.
-(29): ReSharper Dead Code: Passing 0 is redundant.
-(30): ReSharper Dead Code: Passing 0 is redundant.
-(31): ReSharper Dead Code: Passing 0 is redundant.
-(32): ReSharper Dead Code: Passing 0 is redundant.
-(33): ReSharper Dead Code: Passing 0 is redundant.
-(34): ReSharper Suggestion: The expression is always 0.
-(35): ReSharper Suggestion: The expression is always 0.
-(36): ReSharper Suggestion: Pass the single character.
-(37): ReSharper Suggestion: Pass the single character.
-(38): ReSharper Warning: Return value of pure method is not used
-(39): ReSharper Warning: Return value of pure method is not used
+(28): ReSharper Suggestion: The expression is always 0.
+(29): ReSharper Suggestion: The expression is always 0.
+(30): ReSharper Suggestion: Pass the single character.
+(31): ReSharper Suggestion: Pass the single character.
+(32): ReSharper Warning: Return value of pure method is not used
+(33): ReSharper Warning: Return value of pure method is not used

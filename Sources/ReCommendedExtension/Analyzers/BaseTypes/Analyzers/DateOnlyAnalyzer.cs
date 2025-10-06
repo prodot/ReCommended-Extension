@@ -19,7 +19,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(UseBinaryOperatorSuggestion),
         typeof(UseExpressionResultSuggestion),
         typeof(RedundantArgumentRangeHint),
-        typeof(RedundantArgumentHint),
         typeof(UseOtherArgumentSuggestion),
         typeof(RedundantElementHint),
     ])]
@@ -32,17 +31,7 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
 
         public static IReadOnlyList<Parameter> String_String { get; } = [Parameter.String, Parameter.String];
 
-        public static IReadOnlyList<Parameter> String_outDateOnly { get; } =
-        [
-            Parameter.String, Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-        ];
-
         public static IReadOnlyList<Parameter> String_StringArray { get; } = [Parameter.String, Parameter.StringArray];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outDateOnly { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-        ];
 
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray { get; } = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray];
 
@@ -64,21 +53,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_StringArray_outDateOnly { get; } =
         [
             Parameter.ReadOnlySpanOfChar, Parameter.StringArray, Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-        ];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTimeStyles,
-        ];
-
-        public static IReadOnlyList<Parameter> String_IFormatProvider_outDateOnly { get; } =
-        [
-            Parameter.String, Parameter.IFormatProvider, Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-        ];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outDateOnly { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
@@ -156,57 +130,21 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         ICSharpArgument? styleArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
+            && styleArgument?.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "Parse", Parameters = Parameters.String, IsStatic = true }, // todo: nameof(DateOnly.Parse) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
-                styleArgument is { }
-                    ? new RedundantArgumentRangeHint(
-                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
-                        providerArgument,
-                        styleArgument)
-                    : new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
         }
     }
 
     /// <remarks>
-    /// <c>DateOnly.Parse(s, null)</c> → <c>DateOnly.Parse(s)</c>
-    /// </remarks>
-    static void AnalyzeParse_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Parse", Parameters = Parameters.String, IsStatic = true }, // todo: nameof(DateOnly.Parse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateOnly.Parse(s, null)</c> → <c>DateOnly.Parse(s)</c>
-    /// </remarks>
-    static void AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "Parse", Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles, IsStatic = true }, // todo: nameof(DateOnly.Parse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateOnly.ParseExact(s, format, null, DateTimeStyles.None)</c> → <c>DateOnly.ParseExact(s, format)</c>
+    /// <c>DateOnly.ParseExact(s, format, null, DateTimeStyles.None)</c> → <c>DateOnly.ParseExact(s, format)</c><para/>
     /// <c>DateOnly.ParseExact(s, "R", provider, style)</c> → <c>DateOnly.ParseExact(s, "R", null, style)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_String_IFormatProvider_DateTimeStyles(
@@ -218,18 +156,16 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     {
         if (providerArgument.Value.IsDefaultValue())
         {
-            if ((styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
+            if (styleArgument?.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
                 && PredefinedType.DATE_ONLY_FQN.HasMethod(
                     new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                     invocationExpression.PsiModule))
             {
                 consumer.AddHighlighting(
-                    styleArgument is { }
-                        ? new RedundantArgumentRangeHint(
-                            $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
-                            providerArgument,
-                            styleArgument)
-                        : new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+                    new RedundantArgumentRangeHint(
+                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                        providerArgument,
+                        styleArgument));
             }
         }
         else
@@ -309,18 +245,16 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         ICSharpArgument? styleArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
+            && styleArgument?.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_StringArray, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
-                styleArgument is { }
-                    ? new RedundantArgumentRangeHint(
-                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
-                        providerArgument,
-                        styleArgument)
-                    : new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
         }
 
         switch (CollectionCreation.TryFrom(formatsArgument.Value))
@@ -422,18 +356,16 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         ICSharpArgument? styleArgument)
     {
         if (providerArgument.Value.IsDefaultValue()
-            && (styleArgument == null || styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None)
+            && styleArgument?.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
             && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "ParseExact", Parameters = Parameters.ReadOnlySpanOfChar_StringArray, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                 invocationExpression.PsiModule))
         {
             consumer.AddHighlighting(
-                styleArgument is { }
-                    ? new RedundantArgumentRangeHint(
-                        $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
-                        providerArgument,
-                        styleArgument)
-                    : new RedundantArgumentHint("Passing null is redundant.", providerArgument));
+                new RedundantArgumentRangeHint(
+                    $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+                    providerArgument,
+                    styleArgument));
         }
 
         if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
@@ -474,79 +406,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                             "null"));
                 }
             }
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateOnly.TryParse(s, provider, DateTimeStyles.None, out result)</c> → <c>DateOnly.TryParse(s, provider, out result)</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_DateOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument styleArgument)
-    {
-        if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
-            && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", Parameters = Parameters.String_IFormatProvider_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", styleArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateOnly.TryParse(s, null, out result)</c> → <c>DateOnly.TryParse(s, out result)</c>
-    /// </remarks>
-    static void AnalyzeTryParse_String_IFormatProvider_DateOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", Parameters = Parameters.String_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateOnly.TryParse(s, provider, DateTimeStyles.None, out result)</c> → <c>DateOnly.TryParse(s, provider, out result)</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_DateOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument styleArgument)
-    {
-        if (styleArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
-            && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = "TryParse", Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_outDateOnly, IsStatic = true, // todo: nameof(DateOnly.TryParse) when available
-                },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", styleArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateOnly.TryParse(s, null, out result)</c> → <c>DateOnly.TryParse(s, out result)</c>
-    /// </remarks>
-    static void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATE_ONLY_FQN.HasMethod(
-                new MethodSignature { Name = "TryParse", Parameters = Parameters.ReadOnlySpanOfChar_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParse) when available
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
         }
     }
 
@@ -894,18 +753,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                 ]) when sType.IsString() && providerType.IsIFormatProvider() && styleType.IsDateTimeStyles():
                                     AnalyzeParse_String_IFormatProvider_DateTimeStyles(consumer, element, providerArgument, styleArgument);
                                     break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when sType.IsString() && providerType.IsIFormatProvider():
-
-                                    AnalyzeParse_String_IFormatProvider(consumer, element, providerArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                    when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
-
-                                    AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, element, providerArgument);
-                                    break;
                             }
                             break;
 
@@ -963,43 +810,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                         formatsArgument,
                                         providerArgument,
                                         styleArgument);
-                                    break;
-                            }
-                            break;
-
-                        case "TryParse": // todo: nameof(DateOnly.TryParse) when available
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var styleType }, { Type: var resultType }], [
-                                        _, _, { } styleArgument, _,
-                                    ]) when sType.IsString()
-                                    && providerType.IsIFormatProvider()
-                                    && styleType.IsDateTimeStyles()
-                                    && resultType.IsDateOnly():
-
-                                    AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_DateOnly(consumer, element, styleArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                    when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsDateOnly():
-
-                                    AnalyzeTryParse_String_IFormatProvider_DateOnly(consumer, element, providerArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var styleType }, { Type: var resultType }], [
-                                        _, _, { } styleArgument, _,
-                                    ]) when sType.IsReadOnlySpanOfChar()
-                                    && providerType.IsIFormatProvider()
-                                    && styleType.IsDateTimeStyles()
-                                    && resultType.IsDateOnly():
-
-                                    AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_DateOnly(consumer, element, styleArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                    when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider() && resultType.IsDateOnly():
-
-                                    AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateOnly(consumer, element, providerArgument);
                                     break;
                             }
                             break;

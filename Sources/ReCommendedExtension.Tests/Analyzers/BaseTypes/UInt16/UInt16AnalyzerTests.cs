@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
@@ -16,7 +14,7 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt16";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
 
     protected override ushort[] TestValues { get; } = [0, 1, 2, ushort.MaxValue];
 
@@ -86,27 +84,6 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
     }
 
     [Test]
-    [TestNet80]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParse()
-    {
-        Test(n => ushort.Parse($"{n}", NumberStyles.Integer), n => ushort.Parse($"{n}"));
-        Test(n => ushort.Parse($"{n}", null), n => ushort.Parse($"{n}"));
-        Test(
-            (n, provider) => ushort.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => ushort.Parse($"{n}", provider),
-            TestValues,
-            FormatProviders);
-        Test(n => ushort.Parse($"{n}", NumberStyles.None, null), n => ushort.Parse($"{n}", NumberStyles.None));
-
-        Test(n => MissingUInt16Methods.Parse($"{n}".AsSpan(), null), n => MissingUInt16Methods.Parse($"{n}".AsSpan()));
-
-        Test(n => MissingUInt16Methods.Parse(Encoding.UTF8.GetBytes($"{n}"), null), n => MissingUInt16Methods.Parse(Encoding.UTF8.GetBytes($"{n}")));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [TestNet70]
     public void TestRotateLeft()
     {
@@ -120,49 +97,6 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
     public void TestRotateRight()
     {
         Test(n => MissingUInt16Methods.RotateRight(n, 0), n => n);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet80]
-    public void TestTryParse()
-    {
-        Test(
-            (ushort n, IFormatProvider? provider, out ushort result) => ushort.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (ushort n, IFormatProvider? provider, out ushort result) => MissingUInt16Methods.TryParse($"{n}", provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (ushort n, out ushort result) => MissingUInt16Methods.TryParse($"{n}", null, out result),
-            (ushort n, out ushort result) => ushort.TryParse($"{n}", out result));
-
-        Test(
-            (ushort n, IFormatProvider? provider, out ushort result) => MissingUInt16Methods.TryParse(
-                $"{n}".AsSpan(),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (ushort n, IFormatProvider? provider, out ushort result) => MissingUInt16Methods.TryParse($"{n}".AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (ushort n, out ushort result) => MissingUInt16Methods.TryParse($"{n}".AsSpan(), null, out result),
-            (ushort n, out ushort result) => MissingUInt16Methods.TryParse($"{n}".AsSpan(), out result));
-
-        Test(
-            (ushort n, IFormatProvider? provider, out ushort result) => MissingUInt16Methods.TryParse(
-                Encoding.UTF8.GetBytes($"{n}"),
-                NumberStyles.Integer,
-                provider,
-                out result),
-            (ushort n, IFormatProvider? provider, out ushort result)
-                => MissingUInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), provider, out result),
-            TestValues,
-            FormatProviders);
-        Test(
-            (ushort n, out ushort result) => MissingUInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), null, out result),
-            (ushort n, out ushort result) => MissingUInt16Methods.TryParse(Encoding.UTF8.GetBytes($"{n}"), out result));
 
         DoNamedTest2();
     }

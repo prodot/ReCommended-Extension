@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using JetBrains.ReSharper.Feature.Services.Daemon;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -16,7 +15,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     typeof(ICSharpInvocationInfo),
     HighlightingTypes =
     [
-        typeof(RedundantArgumentHint),
         typeof(RedundantMethodInvocationHint),
         typeof(UseBinaryOperatorSuggestion),
         typeof(UseExpressionResultSuggestion),
@@ -28,40 +26,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
-
-        public static IReadOnlyList<Parameter> String_IFormatProvider { get; } = [Parameter.String, Parameter.IFormatProvider];
-
-        public static IReadOnlyList<Parameter> String_outDateTimeOffset { get; } =
-        [
-            Parameter.String, Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
-        ];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_outDateTimeOffset { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
-        ];
-
-        public static IReadOnlyList<Parameter> String_IFormatProvider_outDateTimeOffset { get; } =
-        [
-            Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
-        ];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_outDateTimeOffset { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
-        ];
-
-        public static IReadOnlyList<Parameter> String_String_IFormatProvider { get; } =
-        [
-            Parameter.String, Parameter.String, Parameter.IFormatProvider,
-        ];
-
-        public static IReadOnlyList<Parameter> ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles { get; } =
-        [
-            Parameter.ReadOnlySpanOfChar, Parameter.IFormatProvider, Parameter.DateTimeStyles,
-        ];
-
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
             Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
@@ -75,87 +39,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
             Parameter.DateTimeStyles,
             Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
         ];
-
-        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
-        [
-            Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.TimeSpan,
-        ];
-
-        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan { get; } =
-        [
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.TimeSpan,
-        ];
-
-        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_TimeSpan { get; } =
-        [
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Int32,
-            Parameter.Calendar,
-            Parameter.TimeSpan,
-        ];
-    }
-
-    /// <remarks>
-    /// <c>new DateTimeOffset(year, month, day, hour, minute, second, 0, offset)</c> → <c>new DateTimeOffset(year, month, day, hour, minute, second, offset)</c>
-    /// </remarks>
-    static void Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan(
-        IHighlightingConsumer consumer,
-        IObjectCreationExpression objectCreationExpression,
-        ICSharpArgument millisecondArgument)
-    {
-        if (millisecondArgument.Value.TryGetInt32Constant() == 0
-            && PredefinedType.DATETIMEOFFSET_FQN.HasConstructor(
-                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan },
-                objectCreationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", millisecondArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>new DateTimeOffset(year, month, day, hour, minute, second, millisecond, 0, offset)</c> → <c>new DateTimeOffset(year, month, day, hour, minute, second, millisecond, offset)</c>
-    /// </remarks>
-    static void Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan(
-        IHighlightingConsumer consumer,
-        IObjectCreationExpression objectCreationExpression,
-        ICSharpArgument microsecondArgument)
-    {
-        if (microsecondArgument.Value.TryGetInt32Constant() == 0
-            && PredefinedType.DATETIMEOFFSET_FQN.HasConstructor(
-                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan },
-                objectCreationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", microsecondArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>new DateTimeOffset(year, month, day, hour, minute, second, millisecond, 0, calendar, offset)</c> → <c>new DateTimeOffset(year, month, day, hour, minute, second, millisecond, calendar, offset)</c>
-    /// </remarks>
-    static void Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_TimeSpan(
-        IHighlightingConsumer consumer,
-        IObjectCreationExpression objectCreationExpression,
-        ICSharpArgument microsecondArgument)
-    {
-        if (microsecondArgument.Value.TryGetInt32Constant() == 0
-            && PredefinedType.DATETIMEOFFSET_FQN.HasConstructor(
-                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_TimeSpan },
-                objectCreationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", microsecondArgument));
-        }
     }
 
     /// <remarks>
@@ -256,63 +139,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     }
 
     /// <remarks>
-    /// <c>DateTimeOffset.Parse(input, null)</c> → <c>DateTimeOffset.Parse(input)</c>
-    /// </remarks>
-    static void AnalyzeParse_String_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument formatProviderArgument)
-    {
-        if (formatProviderArgument.Value.IsDefaultValue()
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTimeOffset.Parse), Parameters = Parameters.String, IsStatic = true },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", formatProviderArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateTimeOffset.Parse(input, provider, DateTimeStyles.None)</c> → <c>DateTimeOffset.Parse(input, provider)</c>
-    /// </remarks>
-    static void AnalyzeParse_String_IFormatProvider_DateTimeStyles(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument stylesArgument)
-    {
-        if (stylesArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTimeOffset.Parse), Parameters = Parameters.String_IFormatProvider, IsStatic = true },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", stylesArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateTimeOffset.Parse(s, null)</c> → <c>DateTimeOffset.Parse(s)</c> (.NET Core 2.1)
-    /// </remarks>
-    static void AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(DateTimeOffset.Parse),
-                    Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles,
-                    IsStatic = true,
-                },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>DateTimeOffset.ParseExact(input, "R", provider)</c> → <c>DateTimeOffset.ParseExact(input, "R", null)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_String_IFormatProvider(
@@ -334,15 +160,12 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     }
 
     /// <remarks>
-    /// <c>DateTimeOffset.ParseExact(input, "R", formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, "R", null, styles)</c><para/>
-    /// <c>DateTimeOffset.ParseExact(input, format, formatProvider, DateTimeStyles.None)</c> → <c>DateTimeOffset.ParseExact(input, format, formatProvider)</c>
+    /// <c>DateTimeOffset.ParseExact(input, "R", formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, "R", null, styles)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_String_IFormatProvider_DateTimeStyles(
         IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
         ICSharpArgument formatArgument,
-        ICSharpArgument formatProviderArgument,
-        ICSharpArgument stylesArgument)
+        ICSharpArgument formatProviderArgument)
     {
         if (formatArgument.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" or "s" or "u"
             && !formatProviderArgument.Value.IsDefaultValue()
@@ -354,18 +177,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                     formatProviderArgument,
                     formatProviderArgument.NameIdentifier?.Name,
                     "null"));
-        }
-
-        if (stylesArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(DateTimeOffset.ParseExact), Parameters = Parameters.String_String_IFormatProvider, IsStatic = true,
-                },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", stylesArgument));
         }
     }
 
@@ -544,87 +355,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     }
 
     /// <remarks>
-    /// <c>DateTimeOffset.TryParse(s, null, out result)</c> → <c>DateTimeOffset.TryParse(s, out result)</c>
-    /// </remarks>
-    static void AnalyzeTryParse_String_IFormatProvider_DateTimeOffset(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature { Name = nameof(DateTimeOffset.TryParse), Parameters = Parameters.String_outDateTimeOffset, IsStatic = true },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateTimeOffset.TryParse(s, null, out result)</c> → <c>DateTimeOffset.TryParse(s, out result)</c> (.NET Core 2.1)
-    /// </remarks>
-    static void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeOffset(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument providerArgument)
-    {
-        if (providerArgument.Value.IsDefaultValue()
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(DateTimeOffset.TryParse), Parameters = Parameters.ReadOnlySpanOfChar_outDateTimeOffset, IsStatic = true,
-                },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", providerArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateTimeOffset.TryParse(input, formatProvider, DateTimeStyles.None, out result)</c> → <c>DateTimeOffset.TryParse(input, formatProvider, out result)</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_DateTimeOffset(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument stylesArgument)
-    {
-        if (stylesArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(DateTimeOffset.TryParse), Parameters = Parameters.String_IFormatProvider_outDateTimeOffset, IsStatic = true,
-                },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", stylesArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateTimeOffset.TryParse(input, formatProvider, DateTimeStyles.None, out result)</c> → <c>DateTimeOffset.TryParse(input, formatProvider, out result)</c> (.NET 7)
-    /// </remarks>
-    static void AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_DateTimeOffset(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument stylesArgument)
-    {
-        if (stylesArgument.Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None
-            && PredefinedType.DATETIMEOFFSET_FQN.HasMethod(
-                new MethodSignature
-                {
-                    Name = nameof(DateTimeOffset.TryParse),
-                    Parameters = Parameters.ReadOnlySpanOfChar_IFormatProvider_outDateTimeOffset,
-                    IsStatic = true,
-                },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new RedundantArgumentHint($"Passing {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)} is redundant.", stylesArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>DateTimeOffset.TryParseExact(input, "R", formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, "R", null, styles, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_String_String_IFormatProvider_DateTimeStyles_DateTimeOffset(
@@ -777,95 +507,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     {
         switch (element)
         {
-            case IObjectCreationExpression { ConstructorReference: var reference } objectCreationExpression
-                when reference.Resolve().DeclaredElement is IConstructor
-                {
-                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC, IsStatic: false,
-                } constructor
-                && constructor.ContainingType.IsClrType(PredefinedType.DATETIMEOFFSET_FQN):
-
-                switch (constructor.Parameters, objectCreationExpression.TryGetArgumentsInDeclarationOrder())
-                {
-                    case ([
-                            { Type: var yearType },
-                            { Type: var monthType },
-                            { Type: var dayType },
-                            { Type: var hourType },
-                            { Type: var minuteType },
-                            { Type: var secondType },
-                            { Type: var millisecondType },
-                            { Type: var offsetType },
-                        ], [_, _, _, _, _, _, { } millisecondArgument, _])
-                        when yearType.IsInt()
-                        && monthType.IsInt()
-                        && dayType.IsInt()
-                        && hourType.IsInt()
-                        && minuteType.IsInt()
-                        && secondType.IsInt()
-                        && millisecondType.IsInt()
-                        && offsetType.IsTimeSpan():
-
-                        Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan(consumer, objectCreationExpression, millisecondArgument);
-                        break;
-
-                    case ([
-                            { Type: var yearType },
-                            { Type: var monthType },
-                            { Type: var dayType },
-                            { Type: var hourType },
-                            { Type: var minuteType },
-                            { Type: var secondType },
-                            { Type: var millisecondType },
-                            { Type: var microsecondType },
-                            { Type: var offsetType },
-                        ], [_, _, _, _, _, _, _, { } microsecondArgument, _])
-                        when yearType.IsInt()
-                        && monthType.IsInt()
-                        && dayType.IsInt()
-                        && hourType.IsInt()
-                        && minuteType.IsInt()
-                        && secondType.IsInt()
-                        && millisecondType.IsInt()
-                        && microsecondType.IsInt()
-                        && offsetType.IsTimeSpan():
-
-                        Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_TimeSpan(
-                            consumer,
-                            objectCreationExpression,
-                            microsecondArgument);
-                        break;
-
-                    case ([
-                            { Type: var yearType },
-                            { Type: var monthType },
-                            { Type: var dayType },
-                            { Type: var hourType },
-                            { Type: var minuteType },
-                            { Type: var secondType },
-                            { Type: var millisecondType },
-                            { Type: var microsecondType },
-                            { Type: var calendarType },
-                            { Type: var offsetType },
-                        ], [_, _, _, _, _, _, _, { } microsecondArgument, _, _])
-                        when yearType.IsInt()
-                        && monthType.IsInt()
-                        && dayType.IsInt()
-                        && hourType.IsInt()
-                        && minuteType.IsInt()
-                        && secondType.IsInt()
-                        && millisecondType.IsInt()
-                        && microsecondType.IsInt()
-                        && calendarType.IsCalendar()
-                        && offsetType.IsTimeSpan():
-
-                        Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Int32_Calendar_TimeSpan(
-                            consumer,
-                            objectCreationExpression,
-                            microsecondArgument);
-                        break;
-                }
-                break;
-
             case IInvocationExpression
                 {
                     InvokedExpression: IReferenceExpression { Reference: var reference } invokedExpression,
@@ -941,29 +582,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                 }
                                 break;
 
-                            case nameof(DateTimeOffset.Parse):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var inputType }, { Type: var formatProviderType }], [_, { } formatProviderArgument])
-                                        when inputType.IsString() && formatProviderType.IsIFormatProvider():
-
-                                        AnalyzeParse_String_IFormatProvider(consumer, invocationExpression, formatProviderArgument);
-                                        break;
-
-                                    case ([{ Type: var inputType }, { Type: var formatProviderType }, { Type: var stylesType }], [
-                                        _, _, { } stylesArgument,
-                                    ]) when inputType.IsString() && formatProviderType.IsIFormatProvider() && stylesType.IsDateTimeStyles():
-                                        AnalyzeParse_String_IFormatProvider_DateTimeStyles(consumer, invocationExpression, stylesArgument);
-                                        break;
-
-                                    case ([{ Type: var sType }, { Type: var providerType }], [_, { } providerArgument])
-                                        when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider():
-
-                                        AnalyzeParse_ReadOnlySpanOfChar_IFormatProvider(consumer, invocationExpression, providerArgument);
-                                        break;
-                                }
-                                break;
-
                             case nameof(DateTimeOffset.ParseExact):
                                 switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
                                 {
@@ -978,18 +596,15 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                             { Type: var formatType },
                                             { Type: var formatProviderType },
                                             { Type: var stylesType },
-                                        ], [_, { } formatArgument, { } formatProviderArgument, { } stylesArgument])
-                                        when inputType.IsString()
+                                        ], [_, { } formatArgument, { } formatProviderArgument, _]) when inputType.IsString()
                                         && formatType.IsString()
                                         && formatProviderType.IsIFormatProvider()
                                         && stylesType.IsDateTimeStyles():
 
                                         AnalyzeParseExact_String_String_IFormatProvider_DateTimeStyles(
                                             consumer,
-                                            invocationExpression,
                                             formatArgument,
-                                            formatProviderArgument,
-                                            stylesArgument);
+                                            formatProviderArgument);
                                         break;
 
                                     case ([
@@ -1023,59 +638,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                             consumer,
                                             formatsArgument,
                                             formatProviderArgument);
-                                        break;
-                                }
-                                break;
-
-                            case nameof(DateTimeOffset.TryParse):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                        when sType.IsString() && providerType.IsIFormatProvider() && resultType.IsDateTimeOffset():
-
-                                        AnalyzeTryParse_String_IFormatProvider_DateTimeOffset(consumer, invocationExpression, providerArgument);
-                                        break;
-
-                                    case ([{ Type: var sType }, { Type: var providerType }, { Type: var resultType }], [_, { } providerArgument, _])
-                                        when sType.IsReadOnlySpanOfChar() && providerType.IsIFormatProvider() && resultType.IsDateTimeOffset():
-
-                                        AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeOffset(
-                                            consumer,
-                                            invocationExpression,
-                                            providerArgument);
-                                        break;
-
-                                    case ([
-                                            { Type: var inputType },
-                                            { Type: var formatProviderType },
-                                            { Type: var stylesType },
-                                            { Type: var resultType },
-                                        ], [_, _, { } stylesArgument, _])
-                                        when inputType.IsString()
-                                        && formatProviderType.IsIFormatProvider()
-                                        && stylesType.IsDateTimeStyles()
-                                        && resultType.IsDateTimeOffset():
-
-                                        AnalyzeTryParse_String_IFormatProvider_DateTimeStyles_DateTimeOffset(
-                                            consumer,
-                                            invocationExpression,
-                                            stylesArgument);
-                                        break;
-
-                                    case ([
-                                            { Type: var inputType },
-                                            { Type: var formatProviderType },
-                                            { Type: var stylesType },
-                                            { Type: var resultType },
-                                        ], [_, _, { } stylesArgument, _]) when inputType.IsReadOnlySpanOfChar()
-                                        && formatProviderType.IsIFormatProvider()
-                                        && stylesType.IsDateTimeStyles()
-                                        && resultType.IsDateTimeOffset():
-
-                                        AnalyzeTryParse_ReadOnlySpanOfChar_IFormatProvider_DateTimeStyles_DateTimeOffset(
-                                            consumer,
-                                            invocationExpression,
-                                            stylesArgument);
                                         break;
                                 }
                                 break;

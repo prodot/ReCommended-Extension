@@ -1,0 +1,65 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void RedundantArgument(double n, string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider, out double result)
+        {
+            var result11 = double.Parse(s, |NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent | NumberStyles.AllowThousands|(0));
+            var result12 = double.Parse(s, |null|(1));
+            var result13 = double.Parse(s, |NumberStyles.Float | NumberStyles.AllowThousands|(2), |null|(3));
+            var result14 = double.Parse(s1, |null|(4));
+            var result15 = double.Parse(utf8Text, |null|(5));
+
+            var result21 = double.TryParse(s, |null|(6), out result);
+            var result22 = double.TryParse(s1, |null|(7), out result);
+            var result23 = double.TryParse(utf8Text, |null|(8), out result);
+            var result24 = double.TryParse(s, |NumberStyles.Float | NumberStyles.AllowThousands|(9), provider, out result);
+            var result25 = double.TryParse(s1, |NumberStyles.Float | NumberStyles.AllowThousands|(10), provider, out result);
+            var result26 = double.TryParse(utf8Text, |NumberStyles.Float | NumberStyles.AllowThousands|(11), provider, out result);
+
+            var result31 = double.Round(n, |0|(12));
+            var result32 = double.Round(n, |MidpointRounding.ToEven|(13));
+            var result33 = double.Round(n, |0|(14), |MidpointRounding.ToEven|(15));
+        }
+
+        public void NoDetection(double n, string s, ReadOnlySpan<char> s1, ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider, int digits, MidpointRounding rounding, out double result)
+        {
+            var result11 = double.Parse(s, style);
+            var result12 = double.Parse(s, provider);
+            var result13 = double.Parse(s, style, provider);
+            var result14 = double.Parse(s1, provider);
+            var result15 = double.Parse(utf8Text, provider);
+
+            var result21 = double.TryParse(s, provider, out result);
+            var result22 = double.TryParse(s1, provider, out result);
+            var result23 = double.TryParse(utf8Text, provider, out result);
+            var result24 = double.TryParse(s, style, provider, out result);
+            var result25 = double.TryParse(s1, style, provider, out result);
+            var result26 = double.TryParse(utf8Text, style, provider, out result);
+
+            var result31 = double.Round(n, digits);
+            var result32 = double.Round(n, rounding);
+            var result33 = double.Round(n, digits, rounding);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing NumberStyles.Float | NumberStyles.AllowThousands is redundant.
+(1): ReSharper Dead Code: Passing null is redundant.
+(2): ReSharper Dead Code: Passing NumberStyles.Float | NumberStyles.AllowThousands is redundant.
+(3): ReSharper Dead Code: Passing null is redundant.
+(4): ReSharper Dead Code: Passing null is redundant.
+(5): ReSharper Dead Code: Passing null is redundant.
+(6): ReSharper Dead Code: Passing null is redundant.
+(7): ReSharper Dead Code: Passing null is redundant.
+(8): ReSharper Dead Code: Passing null is redundant.
+(9): ReSharper Dead Code: Passing NumberStyles.Float | NumberStyles.AllowThousands is redundant.
+(10): ReSharper Dead Code: Passing NumberStyles.Float | NumberStyles.AllowThousands is redundant.
+(11): ReSharper Dead Code: Passing NumberStyles.Float | NumberStyles.AllowThousands is redundant.
+(12): ReSharper Dead Code: Passing 0 is redundant.
+(13): ReSharper Dead Code: Passing MidpointRounding.ToEven is redundant.
+(14): ReSharper Dead Code: Passing 0 is redundant.
+(15): ReSharper Dead Code: Passing MidpointRounding.ToEven is redundant.

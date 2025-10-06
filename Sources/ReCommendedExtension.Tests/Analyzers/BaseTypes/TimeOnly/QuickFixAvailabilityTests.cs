@@ -17,7 +17,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-                or RedundantArgumentHint
                 or UseBinaryOperatorSuggestion
                 or RedundantArgumentRangeHint
                 or UseOtherArgumentSuggestion
@@ -28,10 +27,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet70]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 
     [Test]
     public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();

@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void RedundantArgument()
+        {
+            var result = new TimeSpan({caret}1, 2, 3);
+        }
+    }
+}

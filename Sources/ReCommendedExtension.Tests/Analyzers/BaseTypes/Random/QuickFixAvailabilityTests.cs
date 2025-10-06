@@ -11,20 +11,16 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Random;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 [NullableContext(NullableContextKind.Enable)]
-[TestNet60]
+[TestNet80]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Random\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or RedundantArgumentHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
-
-    [Test]
-    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 }

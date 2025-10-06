@@ -17,7 +17,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-                or RedundantArgumentHint
                 or UseBinaryOperatorSuggestion
                 or UseUnaryOperatorSuggestion
                 or UseOtherArgumentSuggestion
@@ -50,9 +49,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
         Test(() => new System.TimeSpan(0, 0, 0, 0), () => System.TimeSpan.Zero);
         Test(() => new System.TimeSpan(0, 0, 0, 0, 0), () => System.TimeSpan.Zero);
         Test(() => MissingTimeSpanMembers._Ctor(0, 0, 0, 0, 0, 0), () => System.TimeSpan.Zero);
-        Test(() => new System.TimeSpan(0, 1, 2, 3), () => new System.TimeSpan(1, 2, 3));
-        Test(() => new System.TimeSpan(1, 2, 3, 4, 0), () => new System.TimeSpan(1, 2, 3, 4));
-        Test(() => MissingTimeSpanMembers._Ctor(1, 2, 3, 4, 5, 0), () => new System.TimeSpan(1, 2, 3, 4, 5));
         Test(() => new System.TimeSpan(long.MinValue), () => System.TimeSpan.MinValue);
         Test(() => new System.TimeSpan(long.MaxValue), () => System.TimeSpan.MaxValue);
 
@@ -189,15 +185,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParse()
-    {
-        Test(timeSpan => System.TimeSpan.Parse($"{timeSpan}", null), timeSpan => System.TimeSpan.Parse($"{timeSpan}"));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
@@ -216,16 +203,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
             constantFormatSpecifiers,
             FormatProviders);
 
-        Test(
-            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(
-                timeSpan.ToString(format, formatProvider),
-                format,
-                formatProvider,
-                TimeSpanStyles.None),
-            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, formatProvider), format, formatProvider),
-            TestValues,
-            formatSpecifiers,
-            FormatProviders);
         Test(
             (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider, styles),
             (timeSpan, format, _, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null, styles),
@@ -246,11 +223,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
             TestValues,
             FormatProviders);
 
-        Test(
-            (timeSpan, formatProvider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, TimeSpanStyles.None),
-            (timeSpan, formatProvider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider),
-            TestValues,
-            FormatProviders);
         Test(
             (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(
                 timeSpan.ToString(format, formatProvider),
@@ -299,21 +271,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
-    [TestNetCore21]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestTryParse()
-    {
-        Test(
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => System.TimeSpan.TryParse($"{timeSpan}", null, out result),
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => System.TimeSpan.TryParse($"{timeSpan}", out result));
-        Test(
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => MissingTimeSpanMembers.TryParse($"{timeSpan}".AsSpan(), null, out result),
-            (System.TimeSpan timeSpan, out System.TimeSpan result) => MissingTimeSpanMembers.TryParse($"{timeSpan}".AsSpan(), out result));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
@@ -335,21 +292,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
             FormatProviders);
 
         Test(
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                timeSpan.ToString(format, formatProvider),
-                format,
-                formatProvider,
-                TimeSpanStyles.None,
-                out result),
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                timeSpan.ToString(format, formatProvider),
-                format,
-                formatProvider,
-                out result),
-            TestValues,
-            formatSpecifiers,
-            FormatProviders);
-        Test(
             (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
                 => System.TimeSpan.TryParseExact($"{timeSpan}", format, formatProvider, styles, out result),
             (System.TimeSpan timeSpan, string format, IFormatProvider? _, TimeSpanStyles styles, out System.TimeSpan result)
@@ -358,24 +300,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
             constantFormatSpecifiers,
             FormatProviders,
             timeSpanStyles);
-
-        Test(
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
-                => MissingTimeSpanMembers.TryParseExact(
-                    timeSpan.ToString(format, formatProvider).AsSpan(),
-                    format.AsSpan(),
-                    formatProvider,
-                    TimeSpanStyles.None,
-                    out result),
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
-                => MissingTimeSpanMembers.TryParseExact(
-                    timeSpan.ToString(format, formatProvider).AsSpan(),
-                    format.AsSpan(),
-                    formatProvider,
-                    out result),
-            TestValues,
-            formatSpecifiers,
-            FormatProviders);
 
         Test(
             (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
@@ -399,17 +323,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
             TestValues,
             FormatProviders);
 
-        Test(
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                $"{timeSpan}",
-                ["c", "g", "G"],
-                formatProvider,
-                TimeSpanStyles.None,
-                out result),
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, out result),
-            TestValues,
-            FormatProviders);
         Test(
             (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
                 => System.TimeSpan.TryParseExact(timeSpan.ToString(format, formatProvider), [format], formatProvider, styles, out result),
@@ -447,20 +360,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
             TestValues,
             FormatProviders);
 
-        Test(
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                timeSpan.ToString("c", formatProvider).AsSpan(),
-                ["c", "t", "T", "g", "G"],
-                formatProvider,
-                TimeSpanStyles.None,
-                out result),
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                timeSpan.ToString("c", formatProvider).AsSpan(),
-                ["c", "t", "T", "g", "G"],
-                formatProvider,
-                out result),
-            TestValues,
-            FormatProviders);
         Test(
             (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
                 => MissingTimeSpanMembers.TryParseExact(

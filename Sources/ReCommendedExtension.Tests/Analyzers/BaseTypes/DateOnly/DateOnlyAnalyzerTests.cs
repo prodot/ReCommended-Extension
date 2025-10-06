@@ -20,7 +20,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
                 or UseBinaryOperatorSuggestion
                 or UseExpressionResultSuggestion
                 or RedundantArgumentRangeHint
-                or RedundantArgumentHint
                 or UseOtherArgumentSuggestion
                 or RedundantElementHint
             || highlighting.IsError();
@@ -46,21 +45,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
     }
 
     [Test]
-    [TestNet70]
-    public void TestParse()
-    {
-        Test(
-            dateOnly => Missing.DateOnly.Parse(dateOnly.ToString(), null, DateTimeStyles.None),
-            dateOnly => Missing.DateOnly.Parse(dateOnly.ToString()));
-        Test(dateOnly => Missing.DateOnly.Parse(dateOnly.ToString(), null), dateOnly => Missing.DateOnly.Parse(dateOnly.ToString()));
-        Test(
-            dateOnly => Missing.DateOnly.Parse(dateOnly.ToString().AsSpan(), null),
-            dateOnly => Missing.DateOnly.Parse(dateOnly.ToString().AsSpan()));
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     public void TestParseExact()
     {
@@ -78,11 +62,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
             DateTimeStyles.AdjustToUniversal,
         };
 
-        Test(
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format), format, null, DateTimeStyles.None),
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format), format),
-            TestValues,
-            formats);
         Test(
             (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(dateOnly.ToString(format, provider), format, provider, style),
             (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(dateOnly.ToString(format, provider), format, null, style),
@@ -102,11 +81,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
             TestValues,
             formats);
 
-        Test(
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format), formats, null),
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format), formats),
-            TestValues,
-            formats);
         Test(
             (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(dateOnly.ToString(format, provider), [format], provider, style),
             (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(dateOnly.ToString(format, provider), format, provider, style),
@@ -150,11 +124,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
             formats);
 
         Test(
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), formats, null),
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), formats),
-            TestValues,
-            formats);
-        Test(
             (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
                 ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
@@ -184,43 +153,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
             invariantFormats,
             FormatProviders,
             styles);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    public void TestTryParse()
-    {
-        Test(
-            (Missing.DateOnly dateOnly, IFormatProvider? provider, out Missing.DateOnly result) => Missing.DateOnly.TryParse(
-                dateOnly.ToString(),
-                provider,
-                DateTimeStyles.None,
-                out result),
-            (Missing.DateOnly dateOnly, IFormatProvider? provider, out Missing.DateOnly result)
-                => Missing.DateOnly.TryParse(dateOnly.ToString(), provider, out result),
-            TestValues,
-            FormatProviders);
-
-        Test(
-            (Missing.DateOnly dateOnly, IFormatProvider? provider, out Missing.DateOnly result) => Missing.DateOnly.TryParse(
-                dateOnly.ToString().AsSpan(),
-                provider,
-                DateTimeStyles.None,
-                out result),
-            (Missing.DateOnly dateOnly, IFormatProvider? provider, out Missing.DateOnly result)
-                => Missing.DateOnly.TryParse(dateOnly.ToString().AsSpan(), provider, out result),
-            TestValues,
-            FormatProviders);
-
-        Test(
-            (Missing.DateOnly dateOnly, out Missing.DateOnly result) => Missing.DateOnly.TryParse(dateOnly.ToString(), null, out result),
-            (Missing.DateOnly dateOnly, out Missing.DateOnly result) => Missing.DateOnly.TryParse(dateOnly.ToString(), out result));
-
-        Test(
-            (Missing.DateOnly dateOnly, out Missing.DateOnly result) => Missing.DateOnly.TryParse(dateOnly.ToString().AsSpan(), null, out result),
-            (Missing.DateOnly dateOnly, out Missing.DateOnly result) => Missing.DateOnly.TryParse(dateOnly.ToString().AsSpan(), out result));
 
         DoNamedTest2();
     }

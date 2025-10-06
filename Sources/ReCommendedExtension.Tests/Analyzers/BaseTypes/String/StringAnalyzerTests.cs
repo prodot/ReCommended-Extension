@@ -24,7 +24,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
                 or PassSingleCharactersSuggestion
                 or UseStringListPatternSuggestion
                 or UseOtherMethodSuggestion
-                or RedundantArgumentHint
                 or RedundantElementHint
                 or UseStringPropertySuggestion
                 or RedundantMethodInvocationHint
@@ -74,7 +73,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Pure]
-    static IEnumerable<E> GetEnumValues<E>() where E : struct, System.Enum
+    static IEnumerable<E> GetEnumValues<E>() where E : struct, Enum
     {
         [Pure]
         static IEnumerable<MissingStringSplitOptions> GetMissingStringSplitOptions()
@@ -95,11 +94,10 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             throw new NotSupportedException();
         }
 
-        return System.Enum.GetValues(typeof(E)).Cast<E>();
+        return Enum.GetValues(typeof(E)).Cast<E>();
     }
 
-    static void Test<E, R>(string text, Func<string, E, R> expected, Func<string, E, R> actual, bool emptyThrows = false)
-        where E : struct, System.Enum
+    static void Test<E, R>(string text, Func<string, E, R> expected, Func<string, E, R> actual, bool emptyThrows = false) where E : struct, Enum
     {
         foreach (var value in GetEnumValues<E>())
         {
@@ -120,7 +118,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     static void TestNullable<E, R>(string text, Func<string?, E, R> expected, Func<string?, E, R> actual, bool emptyThrows = false)
-        where E : struct, System.Enum
+        where E : struct, Enum
     {
         foreach (var value in GetEnumValues<E>())
         {
@@ -227,8 +225,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.IndexOf('x') == -1, text => !text.Contains('x'));
         Test("abcde", text => text.IndexOf('x') < 0, text => !text.Contains('x'));
 
-        Test("abcde", text => text.IndexOf('c', 0), text => text.IndexOf('c'));
-
         Test<StringComparison, bool>(
             "abcde",
             (text, comparisonType) => text.IndexOf('c', comparisonType) > -1,
@@ -263,8 +259,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.IndexOf("bcd") >= 0, text => text.Contains("bcd"));
         Test("abcde", text => text.IndexOf("xyz") == -1, text => !text.Contains("xyz"));
         Test("abcde", text => text.IndexOf("xyz") < 0, text => !text.Contains("xyz"));
-
-        Test("abcde", text => text.IndexOf("bcd", 0), text => text.IndexOf("bcd"));
 
         Test<StringComparison, int>("abcde", (text, comparisonType) => text.IndexOf("", comparisonType), (_, _) => 0);
         Test<StringComparison, int>(
@@ -306,11 +300,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             (text, comparisonType) => text.IndexOf("xyz", comparisonType) < 0,
             (text, comparisonType) => !text.Contains("xyz", comparisonType));
 
-        Test<StringComparison, int>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("bcd", 0, comparisonType),
-            (text, comparisonType) => text.IndexOf("bcd", comparisonType));
-
         DoNamedTest2();
     }
 
@@ -329,8 +318,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.IndexOfAny(['b', 'c', 'c']), text => text.IndexOfAny(['b', 'c']));
         TestNullable("abcde", text => text?.IndexOfAny(['b', 'c', 'c']), text => text?.IndexOfAny(['b', 'c']));
 
-        Test("abcde", text => text.IndexOfAny(['b', 'c'], 0), text => text.IndexOfAny(['b', 'c']));
-        TestNullable("abcde", text => text?.IndexOfAny(['b', 'c'], 0), text => text?.IndexOfAny(['b', 'c']));
         Test("abcde", text => text.IndexOfAny(['c'], 1), text => text.IndexOf('c', 1), true);
         TestNullable("abcde", text => text?.IndexOfAny(['c'], 1), text => text?.IndexOf('c', 1), true);
         Test("abcde", text => text.IndexOfAny(['b', 'c', 'c'], 1), text => text.IndexOfAny(['b', 'c'], 1), true);
@@ -476,9 +463,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.PadLeft(0, 'x'), text => text);
         TestNullable("abcde", text => text?.PadLeft(0, 'x'), text => text);
 
-        Test("abcde", text => text.PadLeft(3, ' '), text => text.PadLeft(3));
-        TestNullable("abcde", text => text?.PadLeft(3, ' '), text => text?.PadLeft(3));
-
         DoNamedTest2();
     }
 
@@ -492,9 +476,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
         Test("abcde", text => text.PadRight(0, 'x'), text => text);
         TestNullable("abcde", text => text?.PadRight(0, 'x'), text => text);
-
-        Test("abcde", text => text.PadRight(3, ' '), text => text.PadRight(3));
-        TestNullable("abcde", text => text?.PadRight(3, ' '), text => text?.PadRight(3));
 
         DoNamedTest2();
     }
@@ -554,9 +535,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test<MissingStringSplitOptions, string[]>("abcde", (text, options) => text.Split(',', 0, options), (_, _) => []);
         Test("  abcde  ", text => text.Split(',', 1), text => [text]);
         Test("  abcde  ", text => text.Split(',', 1, MissingStringSplitOptions.TrimEntries), text => [text.Trim()]);
-
-        Test("ab,cd,e", text => text.Split(',', ','), text => text.Split(','));
-        TestNullable("ab,cd,e", text => text?.Split(',', ','), text => text?.Split(','));
 
         Test("abcde", text => text.Split([','], 0), _ => []);
         Test("ab,cd,e", text => text.Split([','], 1), text => [text]);
@@ -685,59 +663,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     {
         Test("abcde", text => text.Substring(0), text => text);
         TestNullable("abcde", text => text?.Substring(0), text => text);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestTrim()
-    {
-        Test("  abcde  ", text => text.Trim(null), text => text.Trim());
-        TestNullable("  abcde  ", text => text?.Trim(null), text => text?.Trim());
-
-        Test("  abcde  ", text => text.Trim([]), text => text.Trim());
-        TestNullable("  abcde  ", text => text?.Trim([]), text => text?.Trim());
-
-        Test("..abcde..", text => text.Trim('.', '.'), text => text.Trim('.'));
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    [SuppressMessage("ReSharper", "RedundantExplicitParamsArrayCreation")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestTrimEnd()
-    {
-        Test("  abcde  ", text => text.TrimEnd(null), text => text.TrimEnd());
-        TestNullable("  abcde  ", text => text?.TrimEnd(null), text => text?.TrimEnd());
-
-        Test("  abcde  ", text => text.TrimEnd([]), text => text.TrimEnd());
-        TestNullable("  abcde  ", text => text?.TrimEnd([]), text => text?.TrimEnd());
-
-        Test("..abcde..", text => text.TrimEnd('.', '.'), text => text.TrimEnd('.'));
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    [SuppressMessage("ReSharper", "RedundantExplicitParamsArrayCreation")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestTrimStart()
-    {
-        Test("  abcde  ", text => text.TrimStart(null), text => text.TrimStart());
-        TestNullable("  abcde  ", text => text?.TrimStart(null), text => text?.TrimStart());
-
-        Test("  abcde  ", text => text.TrimStart([]), text => text.TrimStart());
-        TestNullable("  abcde  ", text => text?.TrimStart([]), text => text?.TrimStart());
-
-        Test("..abcde..", text => text.TrimStart('.', '.'), text => text.TrimStart('.'));
 
         DoNamedTest2();
     }

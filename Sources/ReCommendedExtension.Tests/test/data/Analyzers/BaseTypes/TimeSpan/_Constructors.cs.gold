@@ -27,13 +27,13 @@ namespace Test
 
         public void RedundantArgument(int days, int hours, int minutes, int seconds, int milliseconds)
         {
-            var result11 = new TimeSpan(|0|(14), hours, minutes, seconds);
-            var result12 = new TimeSpan(days, hours, minutes, seconds, |0|(15));
-            var result13 = new TimeSpan(days, hours, minutes, seconds, milliseconds, |0|(16));
+            var result11 = new TimeSpan(0, hours, minutes, seconds);
+            var result12 = new TimeSpan(days, hours, minutes, seconds, 0);
+            var result13 = new TimeSpan(days, hours, minutes, seconds, milliseconds, 0);
 
-            TimeSpan result21 = new(|0|(17), hours, minutes, seconds);
-            TimeSpan result22 = new(days, hours, minutes, seconds, |0|(18));
-            TimeSpan result23 = new(days, hours, minutes, seconds, milliseconds, |0|(19));
+            TimeSpan result21 = new(0, hours, minutes, seconds);
+            TimeSpan result22 = new(days, hours, minutes, seconds, 0);
+            TimeSpan result23 = new(days, hours, minutes, seconds, milliseconds, 0);
         }
 
         public void NoDetection()
@@ -63,9 +63,3 @@ namespace Test
 (11): ReSharper Suggestion: The expression is always TimeSpan.Zero.
 (12): ReSharper Suggestion: The expression is always TimeSpan.MinValue.
 (13): ReSharper Suggestion: The expression is always TimeSpan.MaxValue.
-(14): ReSharper Dead Code: Passing 0 is redundant.
-(15): ReSharper Dead Code: Passing 0 is redundant.
-(16): ReSharper Dead Code: Passing 0 is redundant.
-(17): ReSharper Dead Code: Passing 0 is redundant.
-(18): ReSharper Dead Code: Passing 0 is redundant.
-(19): ReSharper Dead Code: Passing 0 is redundant.

@@ -24,7 +24,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(PassSingleCharactersSuggestion),
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
-        typeof(RedundantArgumentHint),
         typeof(RedundantElementHint),
         typeof(UseStringPropertySuggestion),
         typeof(RedundantMethodInvocationHint),
@@ -37,8 +36,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     static class Parameters
     {
         public static IReadOnlyList<Parameter> Char { get; } = [Parameter.Char];
-
-        public static IReadOnlyList<Parameter> CharArray { get; } = [Parameter.CharArray];
 
         public static IReadOnlyList<Parameter> Char_Char { get; } = [Parameter.Char, Parameter.Char];
 
@@ -80,8 +77,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
         public static IReadOnlyList<Parameter> String_StringComparison { get; } = [Parameter.String, Parameter.StringComparison];
-
-        public static IReadOnlyList<Parameter> Int32 { get; } = [Parameter.Int32];
     }
 
     [Pure]
@@ -442,20 +437,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf(c, 0)</c> → <c>text.IndexOf(c)</c>
-    /// </remarks>
-    static void AnalyzeIndexOf_Char_Int32(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument startIndexArgument)
-    {
-        if (startIndexArgument.Value.TryGetInt32Constant() == 0
-            && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>text.IndexOf(c, comparisonType) > -1</c> → <c>text.Contains(c, comparisonType)</c> (.NET Core 2.1)<para/>
     /// <c>text.IndexOf(c, comparisonType) != -1</c> → <c>text.Contains(c, comparisonType)</c> (.NET Core 2.1)<para/>
     /// <c>text.IndexOf(c, comparisonType) >= 0</c> → <c>text.Contains(c, comparisonType)</c> (.NET Core 2.1)<para/>
@@ -710,23 +691,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf(s, 0)</c> → <c>text.IndexOf(s)</c>
-    /// </remarks>
-    static void AnalyzeIndexOf_String_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument startIndexArgument)
-    {
-        if (startIndexArgument.Value.TryGetInt32Constant() == 0
-            && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.String },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>text.IndexOf("", StringComparison)</c> → <c>0</c><para/>
     /// <c>text.IndexOf("a", comparisonType)</c> → <c>text.IndexOf('a', comparisonType)</c> (.NET Core 2.1)<para/>
     /// <c>text.IndexOf(s, comparisonType) == 0</c> → <c>text.StartsWith(s, comparisonType)</c><para/>
@@ -883,23 +847,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOf(s, 0, comparisonType)</c> → <c>text.IndexOf(s, comparisonType)</c>
-    /// </remarks>
-    static void AnalyzeIndexOf_String_Int32_StringComparison(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument startIndexArgument)
-    {
-        if (startIndexArgument.Value.TryGetInt32Constant() == 0
-            && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.String_StringComparison },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
-        }
-    }
-
-    /// <remarks>
     /// <c>text.IndexOfAny([])</c> → <c>-1</c><para/>
     /// <c>text.IndexOfAny([c])</c> → <c>text.IndexOf(c)</c><para/>
     /// <c>text.IndexOfAny(['a', 'a', 'b'])</c> → <c>text.IndexOfAny(['a', 'b'])</c>
@@ -949,7 +896,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.IndexOfAny(chars, 0)</c> → <c>text.IndexOfAny(chars)</c><para/>
     /// <c>text.IndexOfAny([c], startIndex)</c> → <c>text.IndexOf(c, startIndex)</c><para/>
     /// <c>text.IndexOfAny(['a', 'a', 'b'], startIndex)</c> → <c>text.IndexOfAny(['a', 'b'], startIndex)</c>
     /// </remarks>
@@ -960,15 +906,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument anyOfArgument,
         ICSharpArgument startIndexArgument)
     {
-        if (startIndexArgument.Value.TryGetInt32Constant() == 0
-            && PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.IndexOfAny), Parameters = Parameters.CharArray },
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentHint("Passing 0 is redundant.", startIndexArgument));
-            return;
-        }
-
         switch (CollectionCreation.TryFrom(anyOfArgument.Value))
         {
             case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
@@ -1977,35 +1914,21 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.PadLeft(0, c)</c> → <c>text</c><para/>
-    /// <c>text.PadLeft(totalWidth, ' ')</c> → <c>text.PadLeft(totalWidth)</c>
+    /// <c>text.PadLeft(0, c)</c> → <c>text</c>
     /// </remarks>
     static void AnalyzePadLeft_Int32_Char(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        ICSharpArgument totalWidthArgument,
-        ICSharpArgument paddingCharArgument)
+        ICSharpArgument totalWidthArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement())
+        if (!invocationExpression.IsUsedAsStatement() && totalWidthArgument.Value.TryGetInt32Constant() == 0)
         {
-            if (totalWidthArgument.Value.TryGetInt32Constant() == 0)
-            {
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(string.PadLeft)}' with 0 is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                return;
-            }
-
-            if (paddingCharArgument.Value.TryGetCharConstant() == ' '
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.PadLeft), Parameters = Parameters.Int32 },
-                    invokedExpression.GetPsiModule()))
-            {
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing ' ' is redundant.", paddingCharArgument));
-            }
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Calling '{nameof(string.PadLeft)}' with 0 is redundant.",
+                    invocationExpression,
+                    invokedExpression));
         }
     }
 
@@ -2029,35 +1952,21 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.PadRight(0, c)</c> → <c>text</c><para/>
-    /// <c>text.PadRight(totalWidth, ' ')</c> → <c>text.PadRight(totalWidth)</c>
+    /// <c>text.PadRight(0, c)</c> → <c>text</c>
     /// </remarks>
     static void AnalyzePadRight_Int32_Char(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        ICSharpArgument totalWidthArgument,
-        ICSharpArgument paddingCharArgument)
+        ICSharpArgument totalWidthArgument)
     {
-        if (!invocationExpression.IsUsedAsStatement())
+        if (!invocationExpression.IsUsedAsStatement() && totalWidthArgument.Value.TryGetInt32Constant() == 0)
         {
-            if (totalWidthArgument.Value.TryGetInt32Constant() == 0)
-            {
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(string.PadRight)}' with 0 is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                return;
-            }
-
-            if (paddingCharArgument.Value.TryGetCharConstant() == ' '
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.PadRight), Parameters = Parameters.Int32 },
-                    invokedExpression.GetPsiModule()))
-            {
-                consumer.AddHighlighting(new RedundantArgumentHint("Passing ' ' is redundant.", paddingCharArgument));
-            }
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Calling '{nameof(string.PadRight)}' with 0 is redundant.",
+                    invocationExpression,
+                    invokedExpression));
         }
     }
 
@@ -2311,36 +2220,16 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// </remarks>
     static void AnalyzeSplit_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
     {
-        switch (arguments)
+        if (arguments is [{ Value: var argumentExpression }] && CollectionCreation.TryFrom(argumentExpression) is { Count: > 1 } collectionCreation)
         {
-            case [_, _, ..]:
+            var set = new HashSet<char>(collectionCreation.Count);
+
+            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
             {
-                var set = new HashSet<char>(arguments.Count);
-
-                foreach (var argument in arguments)
+                if (!set.Add(character))
                 {
-                    if (argument?.Value.TryGetCharConstant() is { } character && !set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
-                    }
+                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
                 }
-
-                break;
-            }
-
-            case [{ Value: var argumentExpression }] when CollectionCreation.TryFrom(argumentExpression) is { Count: > 1 } collectionCreation:
-            {
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-
-                break;
             }
         }
     }
@@ -2965,202 +2854,58 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Trim(null)</c> → <c>text.Trim()</c><para/>
-    /// <c>text.Trim([])</c> → <c>text.Trim()</c><para/>
     /// <c>text.Trim('a', 'a', 'b')</c> → <c>text.Trim('a', 'b')</c>
     /// </remarks>
-    static void AnalyzeTrim_CharArray(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument?> arguments)
+    static void AnalyzeTrim_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
     {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
-                invocationExpression.PsiModule);
-
-        switch (arguments)
+        if (arguments is [{ } argument] && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
         {
-            case [_, _, ..]:
+            var set = new HashSet<char>(collectionCreation.Count);
+
+            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
             {
-                var set = new HashSet<char>(arguments.Count);
-
-                foreach (var argument in arguments)
+                if (!set.Add(character))
                 {
-                    if (argument?.Value.TryGetCharConstant() is { } character && !set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
-                    }
+                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
                 }
-
-                break;
-            }
-
-            case [{ } argument]:
-            {
-                switch (CollectionCreation.TryFrom(argument.Value))
-                {
-                    case { Count: 0 }:
-                        if (MethodExists())
-                        {
-                            consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
-                        }
-                        break;
-
-                    case { Count: > 1 } collectionCreation:
-                        var set = new HashSet<char>(collectionCreation.Count);
-
-                        foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                        {
-                            if (!set.Add(character))
-                            {
-                                consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                            }
-                        }
-                        break;
-                }
-
-                if (argument.Value.IsDefaultValue() && MethodExists())
-                {
-                    consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
-                }
-
-                break;
             }
         }
     }
 
     /// <remarks>
-    /// <c>text.TrimEnd(null)</c> → <c>text.TrimEnd()</c><para/>
-    /// <c>text.TrimEnd([])</c> → <c>text.TrimEnd()</c><para/>
     /// <c>text.TrimEnd('a', 'a', 'b')</c> → <c>text.TrimEnd('a', 'b')</c>
     /// </remarks>
-    static void AnalyzeTrimEnd_CharArray(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument?> arguments)
+    static void AnalyzeTrimEnd_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
     {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.TrimEnd), Parameters = [] },
-                invocationExpression.PsiModule);
-
-        switch (arguments)
+        if (arguments is [{ } argument] && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
         {
-            case [_, _, ..]:
+            var set = new HashSet<char>(collectionCreation.Count);
+
+            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
             {
-                var set = new HashSet<char>(arguments.Count);
-
-                foreach (var argument in arguments)
+                if (!set.Add(character))
                 {
-                    if (argument?.Value.TryGetCharConstant() is { } character && !set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
-                    }
+                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
                 }
-
-                break;
-            }
-
-            case [{ } argument]:
-            {
-                switch (CollectionCreation.TryFrom(argument.Value))
-                {
-                    case { Count: 0 }:
-                        if (MethodExists())
-                        {
-                            consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
-                        }
-                        break;
-
-                    case { Count: > 1 } collectionCreation:
-                        var set = new HashSet<char>(collectionCreation.Count);
-
-                        foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                        {
-                            if (!set.Add(character))
-                            {
-                                consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                            }
-                        }
-                        break;
-                }
-
-                if (argument.Value.IsDefaultValue() && MethodExists())
-                {
-                    consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
-                }
-
-                break;
             }
         }
     }
 
     /// <remarks>
-    /// <c>text.TrimStart(null)</c> → <c>text.TrimStart()</c><para/>
-    /// <c>text.TrimStart([])</c> → <c>text.TrimStart()</c><para/>
     /// <c>text.TrimStart('a', 'a', 'b')</c> → <c>text.TrimStart('a', 'b')</c>
     /// </remarks>
-    static void AnalyzeTrimStart_CharArray(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        TreeNodeCollection<ICSharpArgument?> arguments)
+    static void AnalyzeTrimStart_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
     {
-        [Pure]
-        bool MethodExists()
-            => PredefinedType.STRING_FQN.HasMethod(
-                new MethodSignature { Name = nameof(string.TrimStart), Parameters = [] },
-                invocationExpression.PsiModule);
-
-        switch (arguments)
+        if (arguments is [{ } argument] && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
         {
-            case [_, _, ..]:
+            var set = new HashSet<char>(collectionCreation.Count);
+
+            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
             {
-                var set = new HashSet<char>(arguments.Count);
-
-                foreach (var argument in arguments)
+                if (!set.Add(character))
                 {
-                    if (argument?.Value.TryGetCharConstant() is { } character && !set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantArgumentHint("The character is already passed.", argument));
-                    }
+                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
                 }
-
-                break;
-            }
-
-            case [{ } argument]:
-            {
-                switch (CollectionCreation.TryFrom(argument.Value))
-                {
-                    case { Count: 0 }:
-                        if (MethodExists())
-                        {
-                            consumer.AddHighlighting(new RedundantArgumentHint("Passing an empty array is redundant.", argument));
-                        }
-                        break;
-
-                    case { Count: > 1 } collectionCreation:
-                        var set = new HashSet<char>(collectionCreation.Count);
-
-                        foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                        {
-                            if (!set.Add(character))
-                            {
-                                consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                            }
-                        }
-                        break;
-                }
-
-                if (argument.Value.IsDefaultValue() && MethodExists())
-                {
-                    consumer.AddHighlighting(new RedundantArgumentHint("Passing null is redundant.", argument));
-                }
-
-                break;
             }
         }
     }
@@ -3232,12 +2977,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     AnalyzeIndexOf_Char(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var startIndexType }], [_, { } startIndexArgument])
-                                    when valueType.IsChar() && startIndexType.IsInt():
-
-                                    AnalyzeIndexOf_Char_Int32(consumer, element, startIndexArgument);
-                                    break;
-
                                 case ([{ Type: var valueType }, { Type: var stringComparisonType }], [{ } valueArgument, { } comparisonTypeArgument])
                                     when valueType.IsChar() && stringComparisonType.IsStringComparison():
 
@@ -3248,22 +2987,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     AnalyzeIndexOf_String(consumer, element, invokedExpression, valueArgument);
                                     break;
 
-                                case ([{ Type: var valueType }, { Type: var startIndexType }], [_, { } startIndexArgument])
-                                    when valueType.IsString() && startIndexType.IsInt():
-
-                                    AnalyzeIndexOf_String_Int32(consumer, element, startIndexArgument);
-                                    break;
-
                                 case ([{ Type: var valueType }, { Type: var stringComparisonType }], [{ } valueArgument, { } comparisonTypeArgument])
                                     when valueType.IsString() && stringComparisonType.IsStringComparison():
 
                                     AnalyzeIndexOf_String_StringComparison(consumer, element, invokedExpression, valueArgument, comparisonTypeArgument);
-                                    break;
-
-                                case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var stringComparisonType }], [
-                                    _, { } startIndexArgument, _,
-                                ]) when valueType.IsString() && startIndexType.IsInt() && stringComparisonType.IsStringComparison():
-                                    AnalyzeIndexOf_String_Int32_StringComparison(consumer, element, startIndexArgument);
                                     break;
                             }
                             break;
@@ -3356,10 +3083,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     AnalyzePadLeft_Int32(consumer, element, invokedExpression, totalWidthArgument);
                                     break;
 
-                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [{ } totalWidthArgument, { } paddingCharArgument])
+                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [{ } totalWidthArgument, _])
                                     when totalWidthType.IsInt() && paddingCharType.IsChar():
 
-                                    AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
+                                    AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument);
                                     break;
                             }
                             break;
@@ -3371,10 +3098,10 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
                                     break;
 
-                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [{ } totalWidthArgument, { } paddingCharArgument])
+                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [{ } totalWidthArgument, _])
                                     when totalWidthType.IsInt() && paddingCharType.IsChar():
 
-                                    AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument, paddingCharArgument);
+                                    AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument);
                                     break;
                             }
                             break;
@@ -3537,7 +3264,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var trimCharsType }], { } arguments) when trimCharsType.IsGenericArrayOfChar():
-                                    AnalyzeTrim_CharArray(consumer, element, arguments);
+                                    AnalyzeTrim_CharArray(consumer, arguments);
                                     break;
                             }
                             break;
@@ -3546,7 +3273,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var trimCharsType }], { } arguments) when trimCharsType.IsGenericArrayOfChar():
-                                    AnalyzeTrimEnd_CharArray(consumer, element, arguments);
+                                    AnalyzeTrimEnd_CharArray(consumer, arguments);
                                     break;
                             }
                             break;
@@ -3555,7 +3282,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
                                 case ([{ Type: var trimCharsType }], { } arguments) when trimCharsType.IsGenericArrayOfChar():
-                                    AnalyzeTrimStart_CharArray(consumer, element, arguments);
+                                    AnalyzeTrimStart_CharArray(consumer, arguments);
                                     break;
                             }
                             break;

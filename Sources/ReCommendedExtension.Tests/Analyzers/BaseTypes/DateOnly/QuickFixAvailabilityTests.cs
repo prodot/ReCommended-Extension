@@ -20,7 +20,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
                 or UseBinaryOperatorSuggestion
                 or UseExpressionResultSuggestion
                 or RedundantArgumentRangeHint
-                or RedundantArgumentHint
                 or UseOtherArgumentSuggestion
                 or RedundantElementHint
             || highlighting.IsError();
@@ -36,10 +35,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     [Test]
     public void TestRemoveArgumentRangeFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [TestNet70]
-    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]

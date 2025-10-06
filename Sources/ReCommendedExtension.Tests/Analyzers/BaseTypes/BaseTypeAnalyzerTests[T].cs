@@ -62,17 +62,6 @@ public abstract class BaseTypeAnalyzerTests<T> : CSharpHighlightingTestBase
         }
     }
 
-    protected delegate R FuncWithOut<O, out R>(T arg1, out O arg2);
-
-    protected void Test(FuncWithOut<T, bool> expected, FuncWithOut<T, bool> actual, T[]? values = null)
-    {
-        foreach (var value in values ?? TestValues)
-        {
-            Assert.AreEqual(expected(value, out var expectedResult), actual(value, out var actualResult), $"with values: {value}");
-            Assert.AreEqual(expectedResult, actualResult, $"with values: {value}");
-        }
-    }
-
     protected delegate R FuncWithOut<in U, O, out R>(T arg1, U arg2, out O arg3);
 
     protected void Test<U>(FuncWithOut<U, T, bool> expected, FuncWithOut<U, T, bool> actual, T[] xValues, U[] yValues)
