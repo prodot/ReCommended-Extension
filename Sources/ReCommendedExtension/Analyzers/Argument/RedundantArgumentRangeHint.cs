@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes;
+namespace ReCommendedExtension.Analyzers.Argument;
 
 [RegisterConfigurableSeverity(
     SeverityId,
@@ -18,13 +18,11 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantArgumentRangeHint(string message, ICSharpArgument firstArgument, ICSharpArgument lastArgument) : Highlighting(message)
+public sealed class RedundantArgumentRangeHint(string message, IReadOnlyList<ICSharpArgument> arguments) : Highlighting(message)
 {
     const string SeverityId = "RedundantArgumentRange";
 
-    internal ICSharpArgument FirstArgument => firstArgument;
+    internal IReadOnlyList<ICSharpArgument> Arguments => arguments;
 
-    internal ICSharpArgument LastArgument => lastArgument;
-
-    public override DocumentRange CalculateRange() => firstArgument.GetDocumentRange().Join(lastArgument.GetDocumentRange());
+    public override DocumentRange CalculateRange() => arguments[0].GetDocumentRange().Join(arguments[^1].GetDocumentRange());
 }

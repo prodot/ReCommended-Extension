@@ -2,9 +2,9 @@
 
 namespace Test
 {
-    public class DateTimes
+    public class Arguments
     {
-        public void _Constructors(int year, int month, int day)
+        public void RedundantArgumentRange(int year, int month, int day)
         {
             var result = new DateTime(year, month, day, 0, {caret}0, 0);
         }

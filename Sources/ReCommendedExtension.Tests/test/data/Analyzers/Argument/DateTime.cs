@@ -46,6 +46,15 @@ namespace Test
             var result64 = DateTime.TryParse(s1, provider, DateTimeStyles.None, out result);
         }
 
+        public void RedundantArgumentRange(int year, int month, int day, Calendar calendar)
+        {
+            var result11 = new DateTime(year, month, day, 0, 0, 0);
+            var result12 = new DateTime(year, month, day, 0, 0, 0, calendar);
+
+            DateTime result21 = new(year, month, day, 0, 0, 0);
+            DateTime result22 = new(year, month, day, 0, 0, 0, calendar);
+        }
+
         public void NoDetection(DateTime dateTime, long ticks, DateOnly date, TimeOnly time, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, Calendar calendar, DateTimeKind kind, char f, string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out DateTime result)
         {
             var result11 = new DateTime(ticks, kind);
@@ -73,6 +82,10 @@ namespace Test
             var result52 = DateTime.TryParse(s1, provider, out result);
             var result53 = DateTime.TryParse(s, provider, style, out result);
             var result54 = DateTime.TryParse(s1, provider, style, out result);
+
+            var result61 = new DateTime(year, month, day, hour, minute, second);
+            var result62 = new DateTime(year, month, day, hour, minute, second, calendar);
+            var result63 = new DateTime(year, month, day, 0, second: 0, minute: 0);
         }
     }
 }

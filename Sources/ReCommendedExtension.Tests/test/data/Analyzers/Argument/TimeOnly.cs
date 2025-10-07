@@ -16,13 +16,11 @@ namespace Test
             var result31 = timeOnly.AddMinutes(doubleValue, out _);
             var result32 = timeOnly.AddMinutes(doubleValue, out int _);
 
-            var result41 = TimeOnly.Parse(s, null, DateTimeStyles.None);
-            var result42 = TimeOnly.Parse(s, null);
-            var result43 = TimeOnly.Parse(s1, null);
+            var result41 = TimeOnly.Parse(s, null);
+            var result42 = TimeOnly.Parse(s1, null);
 
-            var result51 = TimeOnly.ParseExact(s, format, null, DateTimeStyles.None);
-            var result52 = TimeOnly.ParseExact(s, formats, null);
-            var result53 = TimeOnly.ParseExact(s1, formats, null);
+            var result51 = TimeOnly.ParseExact(s, formats, null);
+            var result52 = TimeOnly.ParseExact(s1, formats, null);
 
             var result61 = TimeOnly.TryParse(s, null, out result);
             var result62 = TimeOnly.TryParse(s1, null, out result);
@@ -30,7 +28,21 @@ namespace Test
             var result64 = TimeOnly.TryParse(s1, provider, DateTimeStyles.None, out result);
         }
 
-        public void NoDetection(TimeOnly timeOnly, TimeSpan timeSpanValue, double doubleValue, string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, string format, string[] formats, out int wrappedDays, out TimeOnly result)
+        public void RedundantArgumentRange(string s, ReadOnlySpan<char> s1, string format, ReadOnlySpan<char> format1, string[] formats, out TimeOnly result)
+        {
+            var result11 = TimeOnly.Parse(s, null, DateTimeStyles.None);
+
+            var result21 = TimeOnly.ParseExact(s, format, null, DateTimeStyles.None);
+            var result22 = TimeOnly.ParseExact(s, formats, null, DateTimeStyles.None);
+            var result23 = TimeOnly.ParseExact(s1, formats, null, DateTimeStyles.None);
+
+            var result31 = TimeOnly.TryParseExact(s, format, null, DateTimeStyles.None, out result);
+            var result32 = TimeOnly.TryParseExact(s1, format1, null, DateTimeStyles.None, out result);
+            var result33 = TimeOnly.TryParseExact(s, formats, null, DateTimeStyles.None, out result);
+            var result34 = TimeOnly.TryParseExact(s1, formats, null, DateTimeStyles.None, out result);
+        }
+
+        public void NoDetection(TimeOnly timeOnly, TimeSpan timeSpanValue, double doubleValue, string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, string format, ReadOnlySpan<char> format1, string[] formats, out int wrappedDays, out TimeOnly result)
         {
             var result11 = timeOnly.Add(timeSpanValue, out wrappedDays);
             var result12 = timeOnly.AddHours(doubleValue, out wrappedDays);
@@ -54,6 +66,16 @@ namespace Test
             var result52 = TimeOnly.TryParse(s1, provider, out result);
             var result53 = TimeOnly.TryParse(s, provider, style, out result);
             var result54 = TimeOnly.TryParse(s1, provider, style, out result);
+
+            var result61 = TimeOnly.Parse(s, style: DateTimeStyles.None, provider: null);
+
+            var result71 = TimeOnly.ParseExact(s, formats, provider, style);
+            var result72 = TimeOnly.ParseExact(s1, formats, provider, style);
+
+            var result81 = TimeOnly.TryParseExact(s, format, provider, style, out result);
+            var result82 = TimeOnly.TryParseExact(s1, format1, provider, style, out result);
+            var result83 = TimeOnly.TryParseExact(s, formats, provider, style, out result);
+            var result84 = TimeOnly.TryParseExact(s1, formats, provider, style, out result);
         }
 
         public void NoDetection(TimeOnly timeOnly, TimeSpan timeSpanValue, double doubleValue)

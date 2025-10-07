@@ -11,7 +11,7 @@ using ReCommendedExtension.Extensions.MethodFinding;
 
 namespace ReCommendedExtension.Analyzers.Argument;
 
-[ElementProblemAnalyzer(typeof(ICSharpExpression), HighlightingTypes = [typeof(RedundantArgumentHint)])]
+[ElementProblemAnalyzer(typeof(ICSharpExpression), HighlightingTypes = [typeof(RedundantArgumentHint), typeof(RedundantArgumentRangeHint)])]
 public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 {
     sealed class ClrTypeNameEqualityComparer : IEqualityComparer<IClrTypeName>
@@ -34,7 +34,12 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         public int GetHashCode(IClrTypeName obj) => obj.FullName.GetHashCode();
     }
 
-    abstract record RedundantArgument
+    abstract record Issue
+    {
+        public required string Message { get; init; }
+    }
+
+    abstract record RedundantArgument : Issue
     {
         public static RedundantArgumentByPosition FormatProvider { get; } =
             new() { Condition = _ => true, Message = "Passing a format provider is redundant." };
@@ -150,8 +155,6 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
             },
             Message = "The character is already passed.",
         };
-
-        public required string Message { get; init; }
     }
 
     sealed record RedundantArgumentByPosition : RedundantArgument
@@ -168,6 +171,26 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     sealed record DuplicateArgument : RedundantArgument
     {
         public required Func<TreeNodeCollection<ICSharpArgument?>, IEnumerable<ICSharpArgument>> Selector { get; init; }
+    }
+
+    sealed record RedundantArgumentRange : Issue
+    {
+        public static RedundantArgumentRange TripleZero { get; } = new()
+        {
+            Condition = args => (args[0].Value.TryGetInt32Constant(), args[1].Value.TryGetInt32Constant(), args[2].Value.TryGetInt32Constant())
+                == (0, 0, 0),
+            Message = "Passing '0, 0, 0' is redundant.",
+        };
+
+        public static RedundantArgumentRange NullDateTimeStylesNone { get; } = new()
+        {
+            Condition = args => args[0].Value.IsDefaultValue() && args[1].Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None,
+            Message = $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
+        };
+
+        public Range ParameterIndexRange { get; init; } = ..;
+
+        public required Func<IReadOnlyList<ICSharpArgument>, bool> Condition { get; init; }
     }
 
     abstract record MemberSignature;
@@ -192,6 +215,8 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         public required MemberSignature Signature { get; init; }
 
         public IReadOnlyCollection<RedundantArgument> RedundantArguments { get; init; } = [];
+
+        public IReadOnlyCollection<RedundantArgumentRange> RedundantArgumentRanges { get; init; } = [];
     }
 
     /// <remarks>
@@ -480,8 +505,18 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         },
                         new Member
                         {
+                            Signature = new ConstructorSignature { Parameters = [..Enumerable.Repeat(Parameter.Int32, 6)] },
+                            RedundantArgumentRanges = [RedundantArgumentRange.TripleZero with { ParameterIndexRange = 3..6 }],
+                        },
+                        new Member
+                        {
                             Signature = new ConstructorSignature { Parameters = [..Enumerable.Repeat(Parameter.Int32, 6), Parameter.DateTimeKind] },
                             RedundantArguments = [RedundantArgument.DateTimeKindUnspecified with { ParameterIndex = 6 }],
+                        },
+                        new Member
+                        {
+                            Signature = new ConstructorSignature { Parameters = [..Enumerable.Repeat(Parameter.Int32, 6), Parameter.Calendar] },
+                            RedundantArgumentRanges = [RedundantArgumentRange.TripleZero with { ParameterIndexRange = 3..6 }],
                         },
                         new Member
                         {
@@ -978,7 +1013,8 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
+                            Signature =
+                                new MethodSignature
                             {
                                 Parameters = [Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles], IsStatic = true,
                             },
@@ -991,6 +1027,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.String],
                                 },
                             ],
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 1..3 }],
                         },
                         new Member
                         {
@@ -1020,7 +1057,8 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
+                            Signature =
+                                new MethodSignature
                             {
                                 Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles],
                                 IsStatic = true,
@@ -1034,10 +1072,12 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.String, Parameter.String],
                                 },
                             ],
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
+                            Signature =
+                                new MethodSignature
                             {
                                 Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles],
                                 IsStatic = true,
@@ -1051,6 +1091,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.String, Parameter.StringArray],
                                 },
                             ],
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
                         },
                         new Member
                         {
@@ -1071,6 +1112,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray],
                                 },
                             ],
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
                         },
                     ]
                 },
@@ -1135,6 +1177,75 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         },
                     ]
                 },
+                {
+                    "TryParseExact", // todo: nameof(DateOnly.TryParseExact) when available
+                    [
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.String,
+                                    Parameter.String,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.String,
+                                    Parameter.StringArray,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.StringArray,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                    ]
+                },
             };
 
         [Pure]
@@ -1179,7 +1290,8 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
+                            Signature =
+                                new MethodSignature
                             {
                                 Parameters = [Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles], IsStatic = true,
                             },
@@ -1192,6 +1304,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.String],
                                 },
                             ],
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 1..3 }],
                         },
                         new Member
                         {
@@ -1221,7 +1334,8 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
+                            Signature =
+                                new MethodSignature
                             {
                                 Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles],
                                 IsStatic = true,
@@ -1235,10 +1349,12 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.String, Parameter.String],
                                 },
                             ],
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
+                            Signature =
+                                new MethodSignature
                             {
                                 Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles],
                                 IsStatic = true,
@@ -1252,6 +1368,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.String, Parameter.StringArray],
                                 },
                             ],
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
                         },
                         new Member
                         {
@@ -1272,6 +1389,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray],
                                 },
                             ],
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
                         },
                     ]
                 },
@@ -1333,6 +1451,75 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 IsStatic = true,
                             },
                             RedundantArguments = [RedundantArgument.DateTimeStylesNone with { ParameterIndex = 2 }],
+                        },
+                    ]
+                },
+                {
+                    "TryParseExact", // todo: nameof(TimeOnly.TryParseExact) when available
+                    [
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.String,
+                                    Parameter.String,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.String,
+                                    Parameter.StringArray,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.StringArray,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            RedundantArgumentRanges = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
                         },
                     ]
                 },
@@ -1729,8 +1916,9 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         {
             switch (member.Signature, resolvedMember)
             {
-                case (ConstructorSignature constructorSignature, IConstructor resolvedConstructor)
-                    when AreParametersMatching(constructorSignature.Parameters, resolvedConstructor.Parameters):
+                case (ConstructorSignature constructorSignature, IConstructor resolvedConstructor) when AreParametersMatching(
+                    constructorSignature.Parameters,
+                    resolvedConstructor.Parameters):
 
                 case (MethodSignature methodSignature, IMethod resolvedMethod) when methodSignature.IsStatic == resolvedMethod.IsStatic
                     && methodSignature.GenericParametersCount == resolvedMethod.TypeParametersCount
@@ -1759,9 +1947,9 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                 && overloads.TryGetValue("", out var members)
                 && TryFindMember(members, resolvedConstructor) is { Signature: ConstructorSignature signature } constructor:
             {
-                // redundant arguments
                 if (objectCreationExpression.TryGetArgumentsInDeclarationOrder() is [_, ..] arguments)
                 {
+                    // redundant argument
                     foreach (var redundantArgument in constructor.RedundantArguments)
                     {
                         switch (redundantArgument)
@@ -1796,6 +1984,25 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                             }
                         }
                     }
+
+                    // redundant argument range
+                    if (arguments.AsPositionalArguments() is [_, _, ..] positionalArguments)
+                    {
+                        foreach (var redundantArgumentRange in constructor.RedundantArgumentRanges)
+                        {
+                            var args = positionalArguments.GetSubrange(redundantArgumentRange.ParameterIndexRange);
+
+                            if (redundantArgumentRange.Condition(args)
+                                && containingType.HasConstructor(
+                                    new Extensions.MethodFinding.ConstructorSignature
+                                    {
+                                        Parameters = signature.Parameters.WithoutElementsAt(redundantArgumentRange.ParameterIndexRange),
+                                    }))
+                            {
+                                consumer.AddHighlighting(new RedundantArgumentRangeHint(redundantArgumentRange.Message, args));
+                }
+                        }
+                    }
                 }
                 break;
             }
@@ -1812,9 +2019,9 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                 && overloads.TryGetValue(resolvedMethod.ShortName, out var members)
                 && TryFindMember(members, resolvedMethod) is { Signature: MethodSignature signature } method:
             {
-                // redundant arguments
                 if (invocationExpression.TryGetArgumentsInDeclarationOrder() is [_, ..] arguments)
                 {
+                    // redundant argument
                     foreach (var redundantArgument in method.RedundantArguments)
                     {
                         switch (redundantArgument)
@@ -1850,6 +2057,28 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     consumer.AddHighlighting(new RedundantArgumentHint(redundantArgument.Message, argument));
                                 }
                                 break;
+                            }
+                        }
+                    }
+
+                    // redundant argument range
+                    if (arguments.AsPositionalArguments() is [_, _, ..] positionalArguments)
+                    {
+                        foreach (var redundantArgumentRange in method.RedundantArgumentRanges)
+                        {
+                            var args = positionalArguments.GetSubrange(redundantArgumentRange.ParameterIndexRange);
+
+                            if (redundantArgumentRange.Condition(args)
+                                && containingType.HasMethod(
+                                    new Extensions.MethodFinding.MethodSignature
+                                    {
+                                        Name = resolvedMethod.ShortName,
+                                        Parameters = signature.Parameters.WithoutElementsAt(redundantArgumentRange.ParameterIndexRange),
+                                        IsStatic = signature.IsStatic,
+                                        GenericParametersCount = signature.GenericParametersCount,
+                                    }))
+                            {
+                                consumer.AddHighlighting(new RedundantArgumentRangeHint(redundantArgumentRange.Message, args));
                             }
                         }
                     }

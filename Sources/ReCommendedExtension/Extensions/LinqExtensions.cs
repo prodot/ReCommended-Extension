@@ -4,18 +4,21 @@ namespace ReCommendedExtension.Extensions;
 
 internal static class LinqExtensions
 {
-    sealed class ReadOnlyListView<T>(IReadOnlyList<T> list, [NonNegativeValue] int ignoreIndex) : IReadOnlyList<T>
+    sealed class ReadOnlyListView<T>(
+        IReadOnlyList<T> list,
+        [NonNegativeValue] int ignoreIndexOffset,
+        [ValueRange(1, int.MaxValue)] int ignoreLength = 1) : IReadOnlyList<T>
     {
-        public T this[int index] => index < ignoreIndex ? list[index] : list[index + 1];
+        public T this[int index] => index < ignoreIndexOffset ? list[index] : list[index + ignoreLength];
 
-        public int Count => list.Count - 1;
+        public int Count => list.Count - ignoreLength;
 
         [MustDisposeResource]
         public IEnumerator<T> GetEnumerator()
         {
             for (var i = 0; i < list.Count; i++)
             {
-                if (i != ignoreIndex)
+                if (i < ignoreIndexOffset || i >= ignoreIndexOffset + ignoreLength)
                 {
                     yield return list[i];
                 }
@@ -36,5 +39,18 @@ internal static class LinqExtensions
         Debug.Assert(ignoreIndex < list.Count);
 
         return new ReadOnlyListView<T>(list, ignoreIndex);
+    }
+
+    [Pure]
+    public static IReadOnlyList<T> WithoutElementsAt<T>(this IReadOnlyList<T> list, Range ignoreRange)
+    {
+        var (ignoreIndexOffset, ignoreLength) = ignoreRange.GetOffsetAndLength(list.Count);
+
+        if (ignoreLength == list.Count)
+        {
+            return [];
+        }
+
+        return new ReadOnlyListView<T>(list, ignoreIndexOffset, ignoreLength);
     }
 }

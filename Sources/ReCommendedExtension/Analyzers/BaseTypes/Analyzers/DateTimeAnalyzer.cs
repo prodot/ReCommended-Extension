@@ -15,7 +15,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes =
     [
         typeof(UseExpressionResultSuggestion),
-        typeof(RedundantArgumentRangeHint),
         typeof(UseDateTimePropertySuggestion),
         typeof(UseBinaryOperatorSuggestion),
         typeof(UseOtherArgumentSuggestion),
@@ -27,16 +26,9 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> Int32_Int32_Int32 { get; } = [Parameter.Int32, Parameter.Int32, Parameter.Int32];
-
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles { get; } =
         [
             Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
-        ];
-
-        public static IReadOnlyList<Parameter> Int32_Int32_Int32_Calendar { get; } =
-        [
-            Parameter.Int32, Parameter.Int32, Parameter.Int32, Parameter.Calendar,
         ];
 
         public static IReadOnlyList<Parameter> String_String_IFormatProvider_DateTimeStyles_outDateTime { get; } =
@@ -61,46 +53,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     $"The expression is always {nameof(DateTime)}.{nameof(DateTime.MinValue)}.",
                     objectCreationExpression,
                     $"{nameof(DateTime)}.{nameof(DateTime.MinValue)}"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>new DateTime(year, month, day, 0, 0, 0)</c> → <c>new DateTime(year, month, day)</c>
-    /// </remarks>
-    static void Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32(
-        IHighlightingConsumer consumer,
-        IObjectCreationExpression objectCreationExpression,
-        ICSharpArgument hourArgument,
-        ICSharpArgument minuteArgument,
-        ICSharpArgument secondArgument)
-    {
-        if ((hourArgument.Value.TryGetInt32Constant(), minuteArgument.Value.TryGetInt32Constant(), secondArgument.Value.TryGetInt32Constant())
-            == (0, 0, 0)
-            && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32 },
-                objectCreationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentRangeHint("Passing '0, 0, 0' is redundant.", hourArgument, secondArgument));
-        }
-    }
-
-    /// <remarks>
-    /// <c>new DateTime(year, month, day, 0, 0, 0, calendar)</c> → <c>new DateTime(year, month, day, calendar)</c>
-    /// </remarks>
-    static void Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Calendar(
-        IHighlightingConsumer consumer,
-        IObjectCreationExpression objectCreationExpression,
-        ICSharpArgument hourArgument,
-        ICSharpArgument minuteArgument,
-        ICSharpArgument secondArgument)
-    {
-        if ((hourArgument.Value.TryGetInt32Constant(), minuteArgument.Value.TryGetInt32Constant(), secondArgument.Value.TryGetInt32Constant())
-            == (0, 0, 0)
-            && PredefinedType.DATETIME_FQN.HasConstructor(
-                new ConstructorSignature { Parameters = Parameters.Int32_Int32_Int32_Calendar },
-                objectCreationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(new RedundantArgumentRangeHint("Passing '0, 0, 0' is redundant.", hourArgument, secondArgument));
         }
     }
 
@@ -628,49 +580,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                 {
                     case ([{ Type: var ticksType }], [{ } ticksArgument]) when ticksType.IsLong():
                         Analyze_Ctor_Int64(consumer, objectCreationExpression, ticksArgument);
-                        break;
-
-                    case ([
-                            { Type: var yearType },
-                            { Type: var monthType },
-                            { Type: var dayType },
-                            { Type: var hourType },
-                            { Type: var minuteType },
-                            { Type: var secondType },
-                        ], [_, _, _, { } hourArgument, { } minuteArgument, { } secondArgument])
-                        when yearType.IsInt() && monthType.IsInt() && dayType.IsInt() && hourType.IsInt() && minuteType.IsInt() && secondType.IsInt():
-
-                        Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32(
-                            consumer,
-                            objectCreationExpression,
-                            hourArgument,
-                            minuteArgument,
-                            secondArgument);
-                        break;
-
-                    case ([
-                            { Type: var yearType },
-                            { Type: var monthType },
-                            { Type: var dayType },
-                            { Type: var hourType },
-                            { Type: var minuteType },
-                            { Type: var secondType },
-                            { Type: var calendarType },
-                        ], [_, _, _, { } hourArgument, { } minuteArgument, { } secondArgument, _])
-                        when yearType.IsInt()
-                        && monthType.IsInt()
-                        && dayType.IsInt()
-                        && hourType.IsInt()
-                        && minuteType.IsInt()
-                        && secondType.IsInt()
-                        && calendarType.IsCalendar():
-
-                        Analyze_Ctor_Int32_Int32_Int32_Int32_Int32_Int32_Calendar(
-                            consumer,
-                            objectCreationExpression,
-                            hourArgument,
-                            minuteArgument,
-                            secondArgument);
                         break;
                 }
                 break;

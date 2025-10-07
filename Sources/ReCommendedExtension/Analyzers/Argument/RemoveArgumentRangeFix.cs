@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes;
+namespace ReCommendedExtension.Analyzers.Argument;
 
 [QuickFix]
 public sealed class RemoveArgumentRangeFix(RedundantArgumentRangeHint highlighting) : QuickFixBase
@@ -21,31 +21,34 @@ public sealed class RemoveArgumentRangeFix(RedundantArgumentRangeHint highlighti
     {
         using (WriteLockCookie.Create())
         {
-            if (highlighting
-                    .FirstArgument.PrevTokens()
-                    .TakeWhile(t => t.Parent == highlighting.FirstArgument.Parent)
+            var firstArgument = highlighting.Arguments[0];
+            var lastArgument = highlighting.Arguments[^1];
+
+            if (firstArgument
+                    .PrevTokens()
+                    .TakeWhile(t => t.Parent == firstArgument.Parent)
                     .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } previousCommaToken)
             {
-                ModificationUtil.DeleteChildRange(previousCommaToken, highlighting.LastArgument);
+                ModificationUtil.DeleteChildRange(previousCommaToken, lastArgument);
             }
             else
             {
-                if (highlighting
-                        .LastArgument.NextTokens()
-                        .TakeWhile(t => t.Parent == highlighting.LastArgument.Parent)
+                if (lastArgument
+                        .NextTokens()
+                        .TakeWhile(t => t.Parent == lastArgument.Parent)
                         .FirstOrDefault(t => t.GetTokenType() == CSharpTokenType.COMMA) is { } nextCommaToken)
                 {
                     var lastToken = nextCommaToken
                         .NextTokens()
-                        .TakeWhile(t => t.Parent == highlighting.LastArgument.Parent)
+                        .TakeWhile(t => t.Parent == lastArgument.Parent)
                         .FirstOrDefault(t => !t.IsWhitespaceToken()) is { } nonWhitespaceToken
                         ? nonWhitespaceToken.PrevTokens().First()
                         : nextCommaToken;
-                    ModificationUtil.DeleteChildRange(highlighting.FirstArgument, lastToken);
+                    ModificationUtil.DeleteChildRange(firstArgument, lastToken);
                 }
                 else
                 {
-                    ModificationUtil.DeleteChildRange(highlighting.FirstArgument, highlighting.LastArgument);
+                    ModificationUtil.DeleteChildRange(firstArgument, lastArgument);
                 }
             }
         }

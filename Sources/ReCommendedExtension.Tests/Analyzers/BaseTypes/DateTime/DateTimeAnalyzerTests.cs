@@ -17,7 +17,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-                or RedundantArgumentRangeHint
                 or UseDateTimePropertySuggestion
                 or UseBinaryOperatorSuggestion
                 or UseOtherArgumentSuggestion
@@ -42,19 +41,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     [SuppressMessage("ReSharper", "RedundantArgumentRange")]
     public void Test_Constructors()
     {
-        var calendars = new Calendar[] { new GregorianCalendar(), new JulianCalendar(), new JapaneseCalendar() };
-
         Test(() => new System.DateTime(0), () => System.DateTime.MinValue);
-
-        Test(
-            dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0),
-            dateTime => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day));
-
-        Test(
-            (dateTime, calendar) => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, calendar),
-            (dateTime, calendar) => new System.DateTime(dateTime.Year, dateTime.Month, dateTime.Day, calendar),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            calendars);
 
         DoNamedTest2();
     }

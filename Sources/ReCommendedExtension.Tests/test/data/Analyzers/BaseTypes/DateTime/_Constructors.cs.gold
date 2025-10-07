@@ -47,11 +47,11 @@ namespace Test
 
         public void RedundantArgumentRange(int year, int month, int day, Calendar calendar)
         {
-            var result11 = new DateTime(year, month, day, |0, 0, 0|(2));
-            var result12 = new DateTime(year, month, day, |0, 0, 0|(3), calendar);
+            var result11 = new DateTime(year, month, day, 0, 0, 0);
+            var result12 = new DateTime(year, month, day, 0, 0, 0, calendar);
 
-            DateTime result21 = new(year, month, day, |0, 0, 0|(4));
-            DateTime result22 = new(year, month, day, |0, 0, 0|(5), calendar);
+            DateTime result21 = new(year, month, day, 0, 0, 0);
+            DateTime result22 = new(year, month, day, 0, 0, 0, calendar);
         }
 
         public void NoDetection(long ticks, DateOnly date, TimeOnly time, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, Calendar calendar, DateTimeKind kind)
@@ -80,7 +80,3 @@ namespace Test
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always DateTime.MinValue.
 (1): ReSharper Suggestion: The expression is always DateTime.MinValue.
-(2): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
-(3): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
-(4): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
-(5): ReSharper Dead Code: Passing '0, 0, 0' is redundant.

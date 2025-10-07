@@ -22,4 +22,7 @@ public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
 
     [Test]
     public void TestRemoveArgument_Single() => DoNamedTest2();
+
+    [Test]
+    public void TestRemoveArgument_OutOfOrder() => DoNamedTest2();
 }

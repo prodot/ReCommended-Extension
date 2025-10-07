@@ -13,8 +13,11 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Argument\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantArgumentHint || highlighting.IsError();
+        => highlighting is RedundantArgumentHint or RedundantArgumentRangeHint || highlighting.IsError();
 
     [Test]
     public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
+
+    [Test]
+    public void TestRemoveArgumentRangeFixAvailability() => DoNamedTest2();
 }

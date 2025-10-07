@@ -46,6 +46,15 @@ namespace Test
             var result64 = DateTime.TryParse(s1, provider, |DateTimeStyles.None|(37), out result);
         }
 
+        public void RedundantArgumentRange(int year, int month, int day, Calendar calendar)
+        {
+            var result11 = new DateTime(year, month, day, |0, 0, 0|(38));
+            var result12 = new DateTime(year, month, day, |0, 0, 0|(39), calendar);
+
+            DateTime result21 = new(year, month, day, |0, 0, 0|(40));
+            DateTime result22 = new(year, month, day, |0, 0, 0|(41), calendar);
+        }
+
         public void NoDetection(DateTime dateTime, long ticks, DateOnly date, TimeOnly time, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, Calendar calendar, DateTimeKind kind, char f, string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out DateTime result)
         {
             var result11 = new DateTime(ticks, kind);
@@ -73,6 +82,10 @@ namespace Test
             var result52 = DateTime.TryParse(s1, provider, out result);
             var result53 = DateTime.TryParse(s, provider, style, out result);
             var result54 = DateTime.TryParse(s1, provider, style, out result);
+
+            var result61 = new DateTime(year, month, day, hour, minute, second);
+            var result62 = new DateTime(year, month, day, hour, minute, second, calendar);
+            var result63 = new DateTime(year, month, day, 0, second: 0, minute: 0);
         }
     }
 }
@@ -115,3 +128,7 @@ namespace Test
 (35): ReSharper Dead Code: Passing null is redundant.
 (36): ReSharper Dead Code: Passing DateTimeStyles.None is redundant.
 (37): ReSharper Dead Code: Passing DateTimeStyles.None is redundant.
+(38): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
+(39): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
+(40): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
+(41): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
