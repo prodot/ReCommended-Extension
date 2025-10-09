@@ -34,20 +34,20 @@ namespace Test
 
         public void RedundantElement(string input, ReadOnlySpan<char> input2, IFormatProvider formatProvider, TimeSpanStyles styles)
         {
-            var result11 = TimeSpan.ParseExact(input, ["c", |"t"|(14), |"T"|(15), "g", |"g"|(16)], formatProvider);
-            var result12 = TimeSpan.ParseExact(input, (string[])["c", |"t"|(17), |"T"|(18), "g", |"g"|(19)], formatProvider);
-            var result13 = TimeSpan.ParseExact(input, new[] { "c", |"t"|(20), |"T"|(21), "g", |"g"|(22) }, formatProvider);
-            var result14 = TimeSpan.ParseExact(input, new string[] { "c", |"t"|(23), |"T"|(24), "g", |"g"|(25) }, formatProvider);
+            var result11 = TimeSpan.ParseExact(input, ["c", "t", "T", "g", "g"], formatProvider);
+            var result12 = TimeSpan.ParseExact(input, (string[])["c", "t", "T", "g", "g"], formatProvider);
+            var result13 = TimeSpan.ParseExact(input, new[] { "c", "t", "T", "g", "g" }, formatProvider);
+            var result14 = TimeSpan.ParseExact(input, new string[] { "c", "t", "T", "g", "g" }, formatProvider);
 
-            var result21 = TimeSpan.ParseExact(input, ["c", |"t"|(26), |"T"|(27), "g", |"g"|(28)], formatProvider, styles);
-            var result22 = TimeSpan.ParseExact(input, (string[])["c", |"t"|(29), |"T"|(30), "g", |"g"|(31)], formatProvider, styles);
-            var result23 = TimeSpan.ParseExact(input, new[] { "c", |"t"|(32), |"T"|(33), "g", |"g"|(34) }, formatProvider, styles);
-            var result24 = TimeSpan.ParseExact(input, new string[] { "c", |"t"|(35), |"T"|(36), "g", |"g"|(37) }, formatProvider, styles);
+            var result21 = TimeSpan.ParseExact(input, ["c", "t", "T", "g", "g"], formatProvider, styles);
+            var result22 = TimeSpan.ParseExact(input, (string[])["c", "t", "T", "g", "g"], formatProvider, styles);
+            var result23 = TimeSpan.ParseExact(input, new[] { "c", "t", "T", "g", "g" }, formatProvider, styles);
+            var result24 = TimeSpan.ParseExact(input, new string[] { "c", "t", "T", "g", "g" }, formatProvider, styles);
 
-            var result31 = TimeSpan.ParseExact(input2, ["c", |"t"|(38), |"T"|(39), "g", |"g"|(40)], formatProvider, styles);
-            var result32 = TimeSpan.ParseExact(input2, (string[])["c", |"t"|(41), |"T"|(42), "g", |"g"|(43)], formatProvider, styles);
-            var result33 = TimeSpan.ParseExact(input2, new[] { "c", |"t"|(44), |"T"|(45), "g", |"g"|(46) }, formatProvider, styles);
-            var result34 = TimeSpan.ParseExact(input2, new string[] { "c", |"t"|(47), |"T"|(48), "g", |"g"|(49) }, formatProvider, styles);
+            var result31 = TimeSpan.ParseExact(input2, ["c", "t", "T", "g", "g"], formatProvider, styles);
+            var result32 = TimeSpan.ParseExact(input2, (string[])["c", "t", "T", "g", "g"], formatProvider, styles);
+            var result33 = TimeSpan.ParseExact(input2, new[] { "c", "t", "T", "g", "g" }, formatProvider, styles);
+            var result34 = TimeSpan.ParseExact(input2, new string[] { "c", "t", "T", "g", "g" }, formatProvider, styles);
         }
 
         public void NoDetection(string input, ReadOnlySpan<char> input2, string format, string[] formats, IFormatProvider formatProvider, TimeSpanStyles styles)
@@ -112,39 +112,3 @@ namespace Test
 (11): ReSharper Suggestion: The only collection element should be passed directly.
 (12): ReSharper Suggestion: The only collection element should be passed directly.
 (13): ReSharper Suggestion: The only collection element should be passed directly.
-(14): ReSharper Dead Code: The equivalent string is already passed.
-(15): ReSharper Dead Code: The equivalent string is already passed.
-(16): ReSharper Dead Code: The string is already passed.
-(17): ReSharper Dead Code: The equivalent string is already passed.
-(18): ReSharper Dead Code: The equivalent string is already passed.
-(19): ReSharper Dead Code: The string is already passed.
-(20): ReSharper Dead Code: The equivalent string is already passed.
-(21): ReSharper Dead Code: The equivalent string is already passed.
-(22): ReSharper Dead Code: The string is already passed.
-(23): ReSharper Dead Code: The equivalent string is already passed.
-(24): ReSharper Dead Code: The equivalent string is already passed.
-(25): ReSharper Dead Code: The string is already passed.
-(26): ReSharper Dead Code: The equivalent string is already passed.
-(27): ReSharper Dead Code: The equivalent string is already passed.
-(28): ReSharper Dead Code: The string is already passed.
-(29): ReSharper Dead Code: The equivalent string is already passed.
-(30): ReSharper Dead Code: The equivalent string is already passed.
-(31): ReSharper Dead Code: The string is already passed.
-(32): ReSharper Dead Code: The equivalent string is already passed.
-(33): ReSharper Dead Code: The equivalent string is already passed.
-(34): ReSharper Dead Code: The string is already passed.
-(35): ReSharper Dead Code: The equivalent string is already passed.
-(36): ReSharper Dead Code: The equivalent string is already passed.
-(37): ReSharper Dead Code: The string is already passed.
-(38): ReSharper Dead Code: The equivalent string is already passed.
-(39): ReSharper Dead Code: The equivalent string is already passed.
-(40): ReSharper Dead Code: The string is already passed.
-(41): ReSharper Dead Code: The equivalent string is already passed.
-(42): ReSharper Dead Code: The equivalent string is already passed.
-(43): ReSharper Dead Code: The string is already passed.
-(44): ReSharper Dead Code: The equivalent string is already passed.
-(45): ReSharper Dead Code: The equivalent string is already passed.
-(46): ReSharper Dead Code: The string is already passed.
-(47): ReSharper Dead Code: The equivalent string is already passed.
-(48): ReSharper Dead Code: The equivalent string is already passed.
-(49): ReSharper Dead Code: The string is already passed.

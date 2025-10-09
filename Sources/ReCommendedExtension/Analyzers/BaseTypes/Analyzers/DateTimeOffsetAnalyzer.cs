@@ -19,7 +19,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(UseBinaryOperatorSuggestion),
         typeof(UseExpressionResultSuggestion),
         typeof(UseOtherArgumentSuggestion),
-        typeof(RedundantElementHint),
     ])]
 public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
@@ -182,7 +181,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
 
     /// <remarks>
     /// <c>DateTimeOffset.ParseExact(input, [format], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, format, formatProvider, styles)</c><para/>
-    /// <c>DateTimeOffset.ParseExact(input, ["R", "r"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R"], formatProvider, styles)</c><para/>
     /// <c>DateTimeOffset.ParseExact(input, ["R", "s"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R", "s"], null, styles)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray_IFormatProvider_DateTimeStyles(
@@ -215,21 +213,9 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
             case { Count: > 1 } collectionCreation:
                 var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
                 {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
+                    set.Add(s);
                 }
 
                 if (collectionCreation.AllElementsAreStringConstants)
@@ -257,7 +243,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     }
 
     /// <remarks>
-    /// <c>DateTimeOffset.ParseExact(input, ["R", "r"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R"], formatProvider, styles)</c> (.NET Core 2.1)<para/>
     /// <c>DateTimeOffset.ParseExact(input, ["R", "s"], formatProvider, styles)</c> → <c>DateTimeOffset.ParseExact(input, ["R", "s"], null, style)</c> (.NET Core 2.1)
     /// </remarks>
     static void AnalyzeParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles(
@@ -269,21 +254,9 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
         {
             var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
             {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
+                set.Add(s);
             }
 
             if (collectionCreation.AllElementsAreStringConstants)
@@ -377,7 +350,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
 
     /// <remarks>
     /// <c>DateTimeOffset.TryParseExact(input, [format], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, format, formatProvider, styles, out result)</c><para/>
-    /// <c>DateTimeOffset.TryParseExact(input, ["R", "r"], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, ["R"], formatProvider, styles, out result)</c><para/>
     /// <c>DateTimeOffset.TryParseExact(input, ["R", "s"], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, ["R", "s"], null, styles, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateTimeOffset(
@@ -410,21 +382,9 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
             case { Count: > 1 } collectionCreation:
                 var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
                 {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
+                    set.Add(s);
                 }
 
                 if (collectionCreation.AllElementsAreStringConstants)
@@ -452,7 +412,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
     }
 
     /// <remarks>
-    /// <c>DateTimeOffset.TryParseExact(input, ["R", "r"], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, ["R"], formatProvider, styles, out result)</c> (.NET Core 2.1)<para/>
     /// <c>DateTimeOffset.TryParseExact(input, ["R", "s"], formatProvider, styles, out result)</c> → <c>DateTimeOffset.TryParseExact(input, ["R", "s"], null, styles, out result)</c> (.NET Core 2.1)
     /// </remarks>
     static void AnalyzeTryParseExact_ReadOnlyCSpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateTimeOffset(
@@ -464,21 +423,9 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
         {
             var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
             {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
+                set.Add(s);
             }
 
             if (collectionCreation.AllElementsAreStringConstants)

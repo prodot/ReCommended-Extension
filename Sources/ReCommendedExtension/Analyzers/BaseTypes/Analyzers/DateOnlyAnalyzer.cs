@@ -18,7 +18,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(UseBinaryOperatorSuggestion),
         typeof(UseExpressionResultSuggestion),
         typeof(UseOtherArgumentSuggestion),
-        typeof(RedundantElementHint),
     ])]
 public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
@@ -119,57 +118,31 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     }
 
     /// <remarks>
-    /// <c>DateOnly.ParseExact(s, [format])</c> → <c>DateOnly.ParseExact(s, format)</c><para/>
-    /// <c>DateOnly.ParseExact(s, ["m", "M"])</c> → <c>DateOnly.ParseExact(s, ["m"])</c>
+    /// <c>DateOnly.ParseExact(s, [format])</c> → <c>DateOnly.ParseExact(s, format)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument formatsArgument)
     {
-        switch (CollectionCreation.TryFrom(formatsArgument.Value))
-        {
-            case { Count: 1 } collectionCreation when PredefinedType.DATE_ONLY_FQN.HasMethod(
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: 1 } collectionCreation
+            && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String, IsStatic = true }, // todo: nameof(DateOnly.ParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new UseOtherArgumentSuggestion(
-                        "The only collection element should be passed directly.",
-                        formatsArgument,
-                        parameterNames is [_, var formatParameterName] ? formatParameterName : null,
-                        collectionCreation.SingleElement.GetText()));
-                break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-                {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
-                }
-
-                break;
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The only collection element should be passed directly.",
+                    formatsArgument,
+                    parameterNames is [_, var formatParameterName] ? formatParameterName : null,
+                    collectionCreation.SingleElement.GetText()));
         }
     }
 
     /// <remarks>
     /// <c>DateOnly.ParseExact(s, [format], provider, styles)</c> → <c>DateOnly.ParseExact(s, format, provider, styles)</c><para/>
-    /// <c>DateOnly.ParseExact(s, ["m", "M"], provider, styles)</c> → <c>DateOnly.ParseExact(s, ["m"], provider, styles)</c><para/>
     /// <c>DateOnly.ParseExact(s, ["o", "R"], provider, styles)</c> → <c>DateOnly.ParseExact(s, ["o", "R"], null, styles)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray_IFormatProvider_DateTimeStyles(
@@ -197,21 +170,9 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             case { Count: > 1 } collectionCreation:
                 var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
                 {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
+                    set.Add(s);
                 }
 
                 if (collectionCreation.AllElementsAreStringConstants)
@@ -237,35 +198,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     }
 
     /// <remarks>
-    /// <c>DateOnly.ParseExact(s, ["m", "M"])</c> → <c>DateOnly.ParseExact(s, ["m"])</c>
-    /// </remarks>
-    static void AnalyzeParseExact_ReadOnlySpanOfChar_StringArray(IHighlightingConsumer consumer, ICSharpArgument formatsArgument)
-    {
-        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
-        {
-            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-            {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateOnly.ParseExact(s, ["m", "M"], provider, styles)</c> → <c>DateOnly.ParseExact(s, ["m"], provider, styles)</c><para/>
     /// <c>DateOnly.ParseExact(s, ["o", "R"], provider, styles)</c> → <c>DateOnly.ParseExact(s, ["o", "R"], null, styles)</c>
     /// </remarks>
     static void AnalyzeParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_DateTimeStyles(
@@ -277,21 +209,9 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         {
             var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
             {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
+                set.Add(s);
             }
 
             if (collectionCreation.AllElementsAreStringConstants)
@@ -336,85 +256,31 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     }
 
     /// <remarks>
-    /// <c>DateOnly.TryParseExact(s, [format], out result)</c> → <c>DateOnly.TryParseExact(s, format, out result)</c><para/>
-    /// <c>DateOnly.TryParseExact(s, ["m", "M"], out result)</c> → <c>DateOnly.TryParseExact(s, ["m"], out result)</c>
+    /// <c>DateOnly.TryParseExact(s, [format], out result)</c> → <c>DateOnly.TryParseExact(s, format, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_String_StringArray_DateOnly(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument formatsArgument)
     {
-        switch (CollectionCreation.TryFrom(formatsArgument.Value))
-        {
-            case { Count: 1 } collectionCreation when PredefinedType.DATE_ONLY_FQN.HasMethod(
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: 1 } collectionCreation
+            && PredefinedType.DATE_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "TryParseExact", Parameters = Parameters.String_String_outDateOnly, IsStatic = true }, // todo: nameof(DateOnly.TryParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new UseOtherArgumentSuggestion(
-                        "The only collection element should be passed directly.",
-                        formatsArgument,
-                        parameterNames is [_, var formatParameterName, _] ? formatParameterName : null,
-                        collectionCreation.SingleElement.GetText()));
-                break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-                {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
-                }
-
-                break;
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateOnly.TryParseExact(s, ["m", "M"], out result)</c> → <c>DateOnly.TryParseExact(s, ["m"], out result)</c>
-    /// </remarks>
-    static void AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_DateOnly(IHighlightingConsumer consumer, ICSharpArgument formatsArgument)
-    {
-        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+                invocationExpression.PsiModule))
         {
-            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-            {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
-            }
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The only collection element should be passed directly.",
+                    formatsArgument,
+                    parameterNames is [_, var formatParameterName, _] ? formatParameterName : null,
+                    collectionCreation.SingleElement.GetText()));
         }
     }
 
     /// <remarks>
     /// <c>DateOnly.TryParseExact(s, [format], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, format, provider, style, out result)</c><para/>
-    /// <c>DateOnly.TryParseExact(s, ["m", "M"], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, ["m"], provider, style, out result)</c><para/>
     /// <c>DateOnly.TryParseExact(s, ["o", "R"], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, ["o", "R"], null, style, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_DateOnly(
@@ -445,21 +311,9 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
             case { Count: > 1 } collectionCreation:
                 var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
                 {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                        || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                        || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                        || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
+                    set.Add(s);
                 }
 
                 if (collectionCreation.AllElementsAreStringConstants)
@@ -485,7 +339,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
     }
 
     /// <remarks>
-    /// <c>DateOnly.TryParseExact(s, ["m", "M"], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, ["m"], provider, style, out result)</c><para/>
     /// <c>DateOnly.TryParseExact(s, ["o", "R"], provider, style, out result)</c> → <c>DateOnly.TryParseExact(s, ["o", "R"], null, style, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_DateTimeStyles_DateOnly(
@@ -497,21 +350,9 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
         {
             var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
             {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O"))
-                    || s is "r" or "R" && (set.Contains("r") || set.Contains("R"))
-                    || s is "m" or "M" && (set.Contains("m") || set.Contains("M"))
-                    || s is "y" or "Y" && (set.Contains("y") || set.Contains("Y")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
+                set.Add(s);
             }
 
             if (collectionCreation.AllElementsAreStringConstants)
@@ -604,12 +445,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                         providerArgument);
                                     break;
 
-                                case ([{ Type: var sType }, { Type: var formatsType }], [_, { } formatsArgument]) when sType.IsReadOnlySpanOfChar()
-                                    && formatsType.IsGenericArrayOfString():
-
-                                    AnalyzeParseExact_ReadOnlySpanOfChar_StringArray(consumer, formatsArgument);
-                                    break;
-
                                 case ([{ Type: var sType }, { Type: var formatsType }, { Type: var providerType }, { Type: var styleType }], [
                                         _, { } formatsArgument, { } providerArgument, _,
                                     ]) when sType.IsReadOnlySpanOfChar()
@@ -650,12 +485,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                                     when sType.IsString() && formatsType.IsGenericArrayOfString() && resultType.IsDateOnly():
 
                                     AnalyzeTryParseExact_String_StringArray_DateOnly(consumer, element, formatsArgument);
-                                    break;
-
-                                case ([{ Type: var sType }, { Type: var formatsType }, { Type: var resultType }], [_, { } formatsArgument, _])
-                                    when sType.IsReadOnlySpanOfChar() && formatsType.IsGenericArrayOfString() && resultType.IsDateOnly():
-
-                                    AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_DateOnly(consumer, formatsArgument);
                                     break;
 
                                 case ([

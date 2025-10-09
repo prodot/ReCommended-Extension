@@ -19,7 +19,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
                 or UseDateTimePropertySuggestion
                 or UseBinaryOperatorSuggestion
                 or UseOtherArgumentSuggestion
-                or RedundantElementHint
                 or RedundantMethodInvocationHint
             || highlighting.IsError();
 
@@ -38,11 +37,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
     public void TestUseOtherArgumentFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNetCore21]
-    public void TestRemoveElementFixAvailability() => DoNamedTest2();
 
     [Test]
     public void TestRemoveMethodInvocationFixAvailability() => DoNamedTest2();

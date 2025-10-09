@@ -24,7 +24,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(PassSingleCharactersSuggestion),
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
-        typeof(RedundantElementHint),
         typeof(UseStringPropertySuggestion),
         typeof(RedundantMethodInvocationHint),
         typeof(UseRangeIndexerSuggestion),
@@ -848,8 +847,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
     /// <remarks>
     /// <c>text.IndexOfAny([])</c> → <c>-1</c><para/>
-    /// <c>text.IndexOfAny([c])</c> → <c>text.IndexOf(c)</c><para/>
-    /// <c>text.IndexOfAny(['a', 'a', 'b'])</c> → <c>text.IndexOfAny(['a', 'b'])</c>
+    /// <c>text.IndexOfAny([c])</c> → <c>text.IndexOf(c)</c>
     /// </remarks>
     void AnalyzeIndexOfAny_CharArray(
         IHighlightingConsumer consumer,
@@ -880,24 +878,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         false,
                         [collectionCreation.SingleElement.GetText()]));
                 break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-                break;
         }
     }
 
     /// <remarks>
-    /// <c>text.IndexOfAny([c], startIndex)</c> → <c>text.IndexOf(c, startIndex)</c><para/>
-    /// <c>text.IndexOfAny(['a', 'a', 'b'], startIndex)</c> → <c>text.IndexOfAny(['a', 'b'], startIndex)</c>
+    /// <c>text.IndexOfAny([c], startIndex)</c> → <c>text.IndexOf(c, startIndex)</c>
     /// </remarks>
     static void AnalyzeIndexOfAny_CharArray_Int32(
         IHighlightingConsumer consumer,
@@ -906,40 +891,25 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument anyOfArgument,
         ICSharpArgument startIndexArgument)
     {
-        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        if (CollectionCreation.TryFrom(anyOfArgument.Value) is { Count: 1 } collectionCreation
+            && startIndexArgument.Value is { }
+            && PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char_Int32 },
+                invocationExpression.PsiModule))
         {
-            case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char_Int32 },
-                    invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new UseOtherMethodSuggestion(
-                        $"Use the '{nameof(string.IndexOf)}' method.",
-                        invocationExpression,
-                        invokedExpression,
-                        nameof(string.IndexOf),
-                        false,
-                        [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText()]));
-                break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-                break;
+            consumer.AddHighlighting(
+                new UseOtherMethodSuggestion(
+                    $"Use the '{nameof(string.IndexOf)}' method.",
+                    invocationExpression,
+                    invokedExpression,
+                    nameof(string.IndexOf),
+                    false,
+                    [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText()]));
         }
     }
 
     /// <remarks>
-    /// <c>text.IndexOfAny([c], startIndex, count)</c> → <c>text.IndexOf(c, startIndex, count)</c><para/>
-    /// <c>text.IndexOfAny(['a', 'a', 'b'], startIndex, count)</c> → <c>text.IndexOfAny(['a', 'a'], startIndex, count)</c>
+    /// <c>text.IndexOfAny([c], startIndex, count)</c> → <c>text.IndexOf(c, startIndex, count)</c>
     /// </remarks>
     static void AnalyzeIndexOfAny_CharArray_Int32_Int32(
         IHighlightingConsumer consumer,
@@ -949,35 +919,21 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument startIndexArgument,
         ICSharpArgument countArgument)
     {
-        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        if (CollectionCreation.TryFrom(anyOfArgument.Value) is { Count: 1 } collectionCreation
+            && startIndexArgument.Value is { }
+            && countArgument.Value is { }
+            && PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char_Int32_Int32 },
+                invocationExpression.PsiModule))
         {
-            case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
-                && countArgument.Value is { }
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.IndexOf), Parameters = Parameters.Char_Int32_Int32 },
-                    invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new UseOtherMethodSuggestion(
-                        $"Use the '{nameof(string.IndexOf)}' method.",
-                        invocationExpression,
-                        invokedExpression,
-                        nameof(string.IndexOf),
-                        false,
-                        [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText(), countArgument.Value.GetText()]));
-                break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-                break;
+            consumer.AddHighlighting(
+                new UseOtherMethodSuggestion(
+                    $"Use the '{nameof(string.IndexOf)}' method.",
+                    invocationExpression,
+                    invokedExpression,
+                    nameof(string.IndexOf),
+                    false,
+                    [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText(), countArgument.Value.GetText()]));
         }
     }
 
@@ -1737,8 +1693,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
     /// <remarks>
     /// <c>text.LastIndexOfAny([])</c> → <c>-1</c><para/>
-    /// <c>text.LastIndexOfAny([c])</c> → <c>text.LastIndexOf(c)</c><para/>
-    /// <c>text.LastIndexOfAny(['a', 'a', 'b'])</c> → <c>text.LastIndexOfAny(['a', 'b'])</c>
+    /// <c>text.LastIndexOfAny([c])</c> → <c>text.LastIndexOf(c)</c>
     /// </remarks>
     void AnalyzeLastIndexOfAny_CharArray(
         IHighlightingConsumer consumer,
@@ -1769,25 +1724,12 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         false,
                         [collectionCreation.SingleElement.GetText()]));
                 break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-                break;
         }
     }
 
     /// <remarks>
     /// <c>text.LastIndexOfAny(chars, 0)</c> → <c>-1</c><para/>
-    /// <c>text.LastIndexOfAny([c], startIndex)</c> → <c>text.LastIndexOf(c, startIndex)</c><para/>
-    /// <c>text.LastIndexOfAny(['a', 'a', 'b'], startIndex)</c> → <c>text.LastIndexOfAny(['a', 'b'], startIndex)</c>
+    /// <c>text.LastIndexOfAny([c], startIndex)</c> → <c>text.LastIndexOf(c, startIndex)</c>
     /// </remarks>
     void AnalyzeLastIndexOfAny_CharArray_Int32(
         IHighlightingConsumer consumer,
@@ -1822,26 +1764,13 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         false,
                         [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText()]));
                 break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-                break;
         }
     }
 
     /// <remarks>
     /// <c>text.LastIndexOfAny([c], 0, 0)</c> → <c>-1</c><para/>
     /// <c>text.LastIndexOfAny([c], 0, 1)</c> → <c>-1</c><para/>
-    /// <c>text.LastIndexOfAny([c], startIndex, count)</c> → <c>text.LastIndexOf(c, startIndex, count)</c><para/>
-    /// <c>text.LastIndexOfAny(['a', 'a', 'b'], startIndex, count)</c> → <c>text.LastIndexOfAny(['a', 'a'], startIndex, count)</c>
+    /// <c>text.LastIndexOfAny([c], startIndex, count)</c> → <c>text.LastIndexOf(c, startIndex, count)</c>
     /// </remarks>
     void AnalyzeLastIndexOfAny_CharArray_Int32_Int32(
         IHighlightingConsumer consumer,
@@ -1862,35 +1791,21 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             return;
         }
 
-        switch (CollectionCreation.TryFrom(anyOfArgument.Value))
+        if (CollectionCreation.TryFrom(anyOfArgument.Value) is { Count: 1 } collectionCreation
+            && startIndexArgument.Value is { }
+            && countArgument.Value is { }
+            && PredefinedType.STRING_FQN.HasMethod(
+                new MethodSignature { Name = nameof(string.LastIndexOf), Parameters = Parameters.Char_Int32_Int32 },
+                invocationExpression.PsiModule))
         {
-            case { Count: 1 } collectionCreation when startIndexArgument.Value is { }
-                && countArgument.Value is { }
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.LastIndexOf), Parameters = Parameters.Char_Int32_Int32 },
-                    invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new UseOtherMethodSuggestion(
-                        $"Use the '{nameof(string.LastIndexOf)}' method.",
-                        invocationExpression,
-                        invokedExpression,
-                        nameof(string.LastIndexOf),
-                        false,
-                        [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText(), countArgument.Value.GetText()]));
-                break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-                break;
+            consumer.AddHighlighting(
+                new UseOtherMethodSuggestion(
+                    $"Use the '{nameof(string.LastIndexOf)}' method.",
+                    invocationExpression,
+                    invokedExpression,
+                    nameof(string.LastIndexOf),
+                    false,
+                    [collectionCreation.SingleElement.GetText(), startIndexArgument.Value.GetText(), countArgument.Value.GetText()]));
         }
     }
 
@@ -2216,41 +2131,20 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Split('a', 'a', 'b')</c> → <c>text.Split('a', 'b')</c>
-    /// </remarks>
-    static void AnalyzeSplit_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
-    {
-        if (arguments is [{ Value: var argumentExpression }] && CollectionCreation.TryFrom(argumentExpression) is { Count: > 1 } collectionCreation)
-        {
-            var set = new HashSet<char>(collectionCreation.Count);
-
-            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-            {
-                if (!set.Add(character))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                }
-            }
-        }
-    }
-
-    /// <remarks>
     /// <c>text.Split(separator, 0)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
-    /// <c>text.Split(separator, 1)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split(['a', 'a', 'b'], count)</c> → <c>text.Split(['a', 'b'], count)</c><para/>
+    /// <c>text.Split(separator, 1)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)
     /// </remarks>
     void AnalyzeSplit_CharArray_Int32(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        ICSharpArgument separatorArgument,
         ICSharpArgument countArgument)
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        switch (separatorArgument.Value, countArgument.Value.TryGetInt32Constant())
+        switch (countArgument.Value.TryGetInt32Constant())
         {
-            case (_, 0) when !invocationExpression.IsUsedAsStatement()
+            case 0 when !invocationExpression.IsUsedAsStatement()
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(
@@ -2260,7 +2154,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         CreateStringArray([], invocationExpression)));
                 break;
 
-            case (_, 1) when !invocationExpression.IsUsedAsStatement()
+            case 1 when !invocationExpression.IsUsedAsStatement()
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 Debug.Assert(invokedExpression.QualifierExpression is { });
@@ -2271,62 +2165,26 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         invocationExpression,
                         CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
                 break;
-
-            case (_, _) when CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 1 } collectionCreation:
-            {
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-
-                break;
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.Split(['a', 'a', 'b'], options)</c> → <c>text.Split(['a', 'b'], options)</c><para/>
-    /// </remarks>
-    static void AnalyzeSplit_CharArray_StringSplitOptions(IHighlightingConsumer consumer, ICSharpArgument separatorArgument)
-    {
-        if (CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 1 } collectionCreation)
-        {
-            var set = new HashSet<char>(collectionCreation.Count);
-
-            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-            {
-                if (!set.Add(character))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                }
-            }
         }
     }
 
     /// <remarks>
     /// <c>text.Split(separator, 0, options)</c> → <c>Array.Empty&lt;string&gt;()</c> or <c>[]</c> (C# 12)<para/>
     /// <c>text.Split(separator, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split(separator, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(['a', 'a', 'b'], int, options)</c> → <c>text.Split(['a', 'b'], int, options)</c><para/>
+    /// <c>text.Split(separator, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)
     /// </remarks>
     void AnalyzeSplit_CharArray_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        ICSharpArgument separatorArgument,
         ICSharpArgument countArgument,
         ICSharpArgument optionsArgument)
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        switch (separatorArgument.Value, countArgument.Value.TryGetInt32Constant())
+        switch (countArgument.Value.TryGetInt32Constant())
         {
-            case (_, 0) when !invocationExpression.IsUsedAsStatement()
+            case 0 when !invocationExpression.IsUsedAsStatement()
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 consumer.AddHighlighting(
@@ -2336,7 +2194,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         CreateStringArray([], invocationExpression)));
                 break;
 
-            case (_, 1) when !invocationExpression.IsUsedAsStatement()
+            case 1 when !invocationExpression.IsUsedAsStatement()
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
                 Debug.Assert(invokedExpression.QualifierExpression is { });
@@ -2363,21 +2221,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         break;
                 }
                 break;
-
-            case (_, _) when CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 1 } collectionCreation:
-            {
-                var set = new HashSet<char>(collectionCreation.Count);
-
-                foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-                {
-                    if (!set.Add(character))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                    }
-                }
-
-                break;
-            }
         }
     }
 
@@ -2526,8 +2369,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <remarks>
     /// <c>text.Split([""], None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
     /// <c>text.Split([""], TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(["a", "b"], options)</c> → <c>text.Split(['a', 'b'], options)</c><para/>
-    /// <c>text.Split(["abc", "abc", "xy"], options)</c> → <c>text.Split(["abc", "xy"], options)</c>
+    /// <c>text.Split(["a", "b"], options)</c> → <c>text.Split(['a', 'b'], options)</c>
     /// </remarks>
     void AnalyzeSplit_StringArray_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -2599,21 +2441,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         }
                     }
                 }
-                else
-                {
-                    if (collectionCreation.Count > 1)
-                    {
-                        var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-                        foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-                        {
-                            if (!set.Add(s))
-                            {
-                                consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                            }
-                        }
-                    }
-                }
             }
         }
     }
@@ -2624,8 +2451,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <c>text.Split(separator, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
     /// <c>text.Split([""], count, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
     /// <c>text.Split([""], count, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(["a", "b"], count, options)</c> → <c>text.Split(['a', 'b'], count, options)</c><para/>
-    /// <c>text.Split(["abc", "abc", "xy"], count, options)</c> → <c>text.Split(["abc", "xy"], count, options)</c>
+    /// <c>text.Split(["a", "b"], count, options)</c> → <c>text.Split(['a', 'b'], count, options)</c>
     /// </remarks>
     void AnalyzeSplit_StringArray_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -2699,21 +2525,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         foreach (var element in collectionCreation.Elements)
                         {
                             consumer.AddHighlighting(highlighting, element.GetDocumentRange());
-                        }
-                    }
-                }
-                else
-                {
-                    if (collectionCreation.Count > 1)
-                    {
-                        var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-                        foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-                        {
-                            if (!set.Add(s))
-                            {
-                                consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                            }
                         }
                     }
                 }
@@ -2850,63 +2661,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     $"Calling '{nameof(string.Substring)}' with 0 is redundant.",
                     invocationExpression,
                     invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.Trim('a', 'a', 'b')</c> → <c>text.Trim('a', 'b')</c>
-    /// </remarks>
-    static void AnalyzeTrim_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
-    {
-        if (arguments is [{ } argument] && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
-        {
-            var set = new HashSet<char>(collectionCreation.Count);
-
-            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-            {
-                if (!set.Add(character))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                }
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.TrimEnd('a', 'a', 'b')</c> → <c>text.TrimEnd('a', 'b')</c>
-    /// </remarks>
-    static void AnalyzeTrimEnd_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
-    {
-        if (arguments is [{ } argument] && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
-        {
-            var set = new HashSet<char>(collectionCreation.Count);
-
-            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-            {
-                if (!set.Add(character))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                }
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.TrimStart('a', 'a', 'b')</c> → <c>text.TrimStart('a', 'b')</c>
-    /// </remarks>
-    static void AnalyzeTrimStart_CharArray(IHighlightingConsumer consumer, TreeNodeCollection<ICSharpArgument?> arguments)
-    {
-        if (arguments is [{ } argument] && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
-        {
-            var set = new HashSet<char>(collectionCreation.Count);
-
-            foreach (var (element, character) in collectionCreation.ElementsWithCharConstants)
-            {
-                if (!set.Add(character))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The character is already passed.", element));
-                }
-            }
         }
     }
 
@@ -3160,30 +2914,19 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     AnalyzeSplit_Char_Int32_StringSplitOptions(consumer, element, invokedExpression, countArgument, optionsArgument);
                                     break;
 
-                                case ([{ Type: var separatorType }], { } arguments) when separatorType.IsGenericArrayOfChar():
-                                    AnalyzeSplit_CharArray(consumer, arguments);
-                                    break;
-
-                                case ([{ Type: var separatorType }, { Type: var countType }], [{ } separatorArgument, { } countArgument])
+                                case ([{ Type: var separatorType }, { Type: var countType }], [_, { } countArgument])
                                     when separatorType.IsGenericArrayOfChar() && countType.IsInt():
 
-                                    AnalyzeSplit_CharArray_Int32(consumer, element, invokedExpression, separatorArgument, countArgument);
-                                    break;
-
-                                case ([{ Type: var separatorType }, { Type: var optionsType }], [{ } separatorArgument, _])
-                                    when separatorType.IsGenericArrayOfChar() && optionsType.IsStringSplitOptions():
-
-                                    AnalyzeSplit_CharArray_StringSplitOptions(consumer, separatorArgument);
+                                    AnalyzeSplit_CharArray_Int32(consumer, element, invokedExpression, countArgument);
                                     break;
 
                                 case ([{ Type: var separatorType }, { Type: var countType }, { Type: var optionsType }], [
-                                    { } separatorArgument, { } countArgument, { } optionsArgument,
+                                    _, { } countArgument, { } optionsArgument,
                                 ]) when separatorType.IsGenericArrayOfChar() && countType.IsInt() && optionsType.IsStringSplitOptions():
                                     AnalyzeSplit_CharArray_Int32_StringSplitOptions(
                                         consumer,
                                         element,
                                         invokedExpression,
-                                        separatorArgument,
                                         countArgument,
                                         optionsArgument);
                                     break;
@@ -3256,33 +2999,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             {
                                 case ([{ Type: var startIndexType }], [{ } startIndexArgument]) when startIndexType.IsInt():
                                     AnalyzeSubstring_Int32(consumer, element, invokedExpression, startIndexArgument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(string.Trim):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var trimCharsType }], { } arguments) when trimCharsType.IsGenericArrayOfChar():
-                                    AnalyzeTrim_CharArray(consumer, arguments);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(string.TrimEnd):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var trimCharsType }], { } arguments) when trimCharsType.IsGenericArrayOfChar():
-                                    AnalyzeTrimEnd_CharArray(consumer, arguments);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(string.TrimStart):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var trimCharsType }], { } arguments) when trimCharsType.IsGenericArrayOfChar():
-                                    AnalyzeTrimStart_CharArray(consumer, arguments);
                                     break;
                             }
                             break;

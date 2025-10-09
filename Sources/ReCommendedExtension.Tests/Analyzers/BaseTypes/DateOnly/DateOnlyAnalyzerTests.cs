@@ -16,11 +16,7 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateOnly";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantMethodInvocationHint
-                or UseBinaryOperatorSuggestion
-                or UseExpressionResultSuggestion
-                or UseOtherArgumentSuggestion
-                or RedundantElementHint
+        => highlighting is RedundantMethodInvocationHint or UseBinaryOperatorSuggestion or UseExpressionResultSuggestion or UseOtherArgumentSuggestion
             || highlighting.IsError();
 
     protected override Missing.DateOnly[] TestValues { get; } = [Missing.DateOnly.MinValue, Missing.DateOnly.MaxValue, new(2025, 7, 15)];
@@ -74,30 +70,10 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
             (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format), format),
             TestValues,
             formats);
-        Test(
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format), ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"]),
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format), ["d", "D", "m", "o", "r", "y"]),
-            TestValues,
-            formats);
 
         Test(
             (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(dateOnly.ToString(format, provider), [format], provider, style),
             (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(dateOnly.ToString(format, provider), format, provider, style),
-            TestValues,
-            formats,
-            FormatProviders,
-            styles);
-        Test(
-            (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(
-                dateOnly.ToString(format, provider),
-                ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
-                provider,
-                style),
-            (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(
-                dateOnly.ToString(format, provider),
-                ["d", "D", "m", "o", "r", "y"],
-                provider,
-                style),
             TestValues,
             formats,
             FormatProviders,
@@ -114,29 +90,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
             FormatProviders,
             styles);
 
-        Test(
-            (dateOnly, format) => Missing.DateOnly.ParseExact(
-                dateOnly.ToString(format).AsSpan(),
-                ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"]),
-            (dateOnly, format) => Missing.DateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), ["d", "D", "m", "o", "r", "y"]),
-            TestValues,
-            formats);
-
-        Test(
-            (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(
-                dateOnly.ToString(format, provider).AsSpan(),
-                ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
-                provider,
-                style),
-            (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(
-                dateOnly.ToString(format, provider).AsSpan(),
-                ["d", "D", "m", "o", "r", "y"],
-                provider,
-                style),
-            TestValues,
-            formats,
-            FormatProviders,
-            styles);
         Test(
             (dateOnly, format, provider, style) => Missing.DateOnly.ParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
@@ -193,49 +146,12 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
                 => Missing.DateOnly.TryParseExact(dateOnly.ToString(format), format, out result),
             TestValues,
             formats);
-        Test(
-            (Missing.DateOnly dateOnly, string format, out Missing.DateOnly result) => Missing.DateOnly.TryParseExact(
-                dateOnly.ToString(format),
-                ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
-                out result),
-            (Missing.DateOnly dateOnly, string format, out Missing.DateOnly result) => Missing.DateOnly.TryParseExact(
-                dateOnly.ToString(format),
-                ["d", "D", "m", "o", "r", "y"],
-                out result),
-            TestValues,
-            formats);
-
-        Test(
-            (Missing.DateOnly dateOnly, string format, out Missing.DateOnly result) => Missing.DateOnly.TryParseExact(
-                dateOnly.ToString(format).AsSpan(),
-                ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
-                out result),
-            (Missing.DateOnly dateOnly, string format, out Missing.DateOnly result) => Missing.DateOnly.TryParseExact(
-                dateOnly.ToString(format).AsSpan(),
-                ["d", "D", "m", "o", "r", "y"],
-                out result),
-            TestValues,
-            formats);
 
         Test(
             (Missing.DateOnly dateOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.DateOnly result)
                 => Missing.DateOnly.TryParseExact(dateOnly.ToString(format, provider), [format], provider, style, out result),
             (Missing.DateOnly dateOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.DateOnly result)
                 => Missing.DateOnly.TryParseExact(dateOnly.ToString(format, provider), format, provider, style, out result),
-            TestValues,
-            formats,
-            FormatProviders,
-            styles);
-        Test(
-            (Missing.DateOnly dateOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.DateOnly result)
-                => Missing.DateOnly.TryParseExact(
-                    dateOnly.ToString(format, provider),
-                    ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
-                    provider,
-                    style,
-                    out result),
-            (Missing.DateOnly dateOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.DateOnly result)
-                => Missing.DateOnly.TryParseExact(dateOnly.ToString(format, provider), ["d", "D", "m", "o", "r", "y"], provider, style, out result),
             TestValues,
             formats,
             FormatProviders,
@@ -250,25 +166,6 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
             FormatProviders,
             styles);
 
-        Test(
-            (Missing.DateOnly dateOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.DateOnly result)
-                => Missing.DateOnly.TryParseExact(
-                    dateOnly.ToString(format, provider).AsSpan(),
-                    ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
-                    provider,
-                    style,
-                    out result),
-            (Missing.DateOnly dateOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.DateOnly result)
-                => Missing.DateOnly.TryParseExact(
-                    dateOnly.ToString(format, provider).AsSpan(),
-                    ["d", "D", "m", "o", "r", "y"],
-                    provider,
-                    style,
-                    out result),
-            TestValues,
-            formats,
-            FormatProviders,
-            styles);
         Test(
             (Missing.DateOnly dateOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.DateOnly result)
                 => Missing.DateOnly.TryParseExact(dateOnly.ToString(format, provider).AsSpan(), invariantFormats, provider, style, out result),

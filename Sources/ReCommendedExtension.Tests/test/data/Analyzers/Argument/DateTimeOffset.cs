@@ -27,6 +27,15 @@ namespace Test
             var result51 = DateTimeOffset.ParseExact(s, format, provider, DateTimeStyles.None);
         }
 
+        public void RedundantCollectionElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, out DateTimeOffset result)
+        {
+            var result11 = DateTimeOffset.ParseExact(s, ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"], provider, style);
+            var result12 = DateTimeOffset.ParseExact(s1, ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"], provider, style);
+
+            var result21 = DateTimeOffset.TryParseExact(s, ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"], provider, style, out result);
+            var result22 = DateTimeOffset.TryParseExact(s1, ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"], provider, style, out result);
+        }
+
         public void NoDetection(int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, TimeSpan offset, Calendar calendar, string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, string format, out DateTimeOffset result)
         {
             var result11 = new DateTimeOffset(year, month, day, hour, minute, second, millisecond, offset);
@@ -43,6 +52,12 @@ namespace Test
             var result34 = DateTimeOffset.TryParse(s1, provider, style, out result);
 
             var result41 = DateTimeOffset.ParseExact(s, format, provider, style);
+
+            var result51 = DateTimeOffset.ParseExact(s, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"], provider, style);
+            var result52 = DateTimeOffset.ParseExact(s1, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"], provider, style);
+
+            var result61 = DateTimeOffset.TryParseExact(s, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"], provider, style, out result);
+            var result62 = DateTimeOffset.TryParseExact(s1, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"], provider, style, out result);
         }
     }
 }

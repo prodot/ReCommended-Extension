@@ -31,7 +31,31 @@ namespace Test
             var |result82|(19) = text.TrimStart('.', |'.'|(20), |'.'|(21));
         }
 
-        public void NoDetection(string text, char c, char[] charArray, string s, int startIndex, StringComparison comparison, int totalWidth)
+        public void RedundantCollectionElement(string text, int startIndex, int count, StringSplitOptions options)
+        {
+            var result11 = text.IndexOfAny(['a', |'a'|(22)]);
+            var result12 = text.IndexOfAny(['a', |'a'|(23)], startIndex);
+            var result13 = text.IndexOfAny(['a', |'a'|(24)], startIndex, count);
+
+            var result21 = text.LastIndexOfAny(['a', |'a'|(25)]);
+            var result22 = text.LastIndexOfAny(['a', |'a'|(26)], startIndex);
+            var result23 = text.LastIndexOfAny(['a', |'a'|(27)], startIndex, count);
+
+            var result31 = text.Split([';', |';'|(28)]);
+            var result32 = text.Split([';', |';'|(29)], count);
+            var result33 = text.Split([';', |';'|(30)], options);
+            var result34 = text.Split([';', |';'|(31)], count, options);
+            var result35 = text.Split([";", |";"|(32)], options);
+            var result36 = text.Split([";", |";"|(33)], count, options);
+
+            var result41 = text.Trim(['.', |'.'|(34), |'.'|(35)]);
+
+            var result51 = text.TrimEnd(['.', |'.'|(36), |'.'|(37)]);
+
+            var result61 = text.TrimStart(['.', |'.'|(38), |'.'|(39)]);
+        }
+
+        public void NoDetection(string text, char c, char[] charArray, string s, int startIndex, int count, StringComparison comparison, int totalWidth, StringSplitOptions options)
         {
             var result11 = text.IndexOf(c, startIndex);
             var result12 = text.IndexOf(s, startIndex);
@@ -53,6 +77,27 @@ namespace Test
 
             var result81 = text.TrimStart(charArray);
             var result82 = text.TrimStart(';', '.');
+
+            var result91 = text.IndexOfAny([c, c]);
+            var result92 = text.IndexOfAny([c, c], startIndex);
+            var result93 = text.IndexOfAny([c, c], startIndex, count);
+
+            var resultA1 = text.LastIndexOfAny([c, c]);
+            var resultA2 = text.LastIndexOfAny([c, c], startIndex);
+            var resultA3 = text.LastIndexOfAny([c, c], startIndex, count);
+
+            var resultB1 = text.Split([c, c]);
+            var resultB2 = text.Split([c, c], count);
+            var resultB3 = text.Split([c, c], options);
+            var resultB4 = text.Split([c, c], count, options);
+            var resultB5 = text.Split([s, s], options);
+            var resultB6 = text.Split([s, s], count, options);
+
+            var resultC1 = text.Trim([';', '.']);
+
+            var resultD1 = text.TrimEnd([';', '.']);
+
+            var resultE1 = text.TrimStart([';', '.']);
         }
     }
 }
@@ -79,3 +124,21 @@ namespace Test
 (19): ReSharper Underlined Error Highlighting: A local variable named 'result82' cannot be declared in this scope because it would give a different meaning to 'result82', which is already used in a parent or current scope to denote something else
 (20): ReSharper Dead Code: The character is already passed.
 (21): ReSharper Dead Code: The character is already passed.
+(22): ReSharper Dead Code: The character is already passed.
+(23): ReSharper Dead Code: The character is already passed.
+(24): ReSharper Dead Code: The character is already passed.
+(25): ReSharper Dead Code: The character is already passed.
+(26): ReSharper Dead Code: The character is already passed.
+(27): ReSharper Dead Code: The character is already passed.
+(28): ReSharper Dead Code: The character is already passed.
+(29): ReSharper Dead Code: The character is already passed.
+(30): ReSharper Dead Code: The character is already passed.
+(31): ReSharper Dead Code: The character is already passed.
+(32): ReSharper Dead Code: The string is already passed.
+(33): ReSharper Dead Code: The string is already passed.
+(34): ReSharper Dead Code: The character is already passed.
+(35): ReSharper Dead Code: The character is already passed.
+(36): ReSharper Dead Code: The character is already passed.
+(37): ReSharper Dead Code: The character is already passed.
+(38): ReSharper Dead Code: The character is already passed.
+(39): ReSharper Dead Code: The character is already passed.

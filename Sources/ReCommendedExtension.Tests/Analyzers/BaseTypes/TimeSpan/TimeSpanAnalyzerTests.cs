@@ -16,11 +16,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\TimeSpan";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion
-                or UseBinaryOperatorSuggestion
-                or UseUnaryOperatorSuggestion
-                or UseOtherArgumentSuggestion
-                or RedundantElementHint
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or UseUnaryOperatorSuggestion or UseOtherArgumentSuggestion
             || highlighting.IsError();
 
     protected override System.TimeSpan[] TestValues { get; } =
@@ -217,11 +213,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
             TestValues,
             formatSpecifiers,
             FormatProviders);
-        Test(
-            (timeSpan, formatProvider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "G"], formatProvider),
-            (timeSpan, formatProvider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider),
-            TestValues,
-            FormatProviders);
 
         Test(
             (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(
@@ -236,23 +227,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
                 styles),
             TestValues,
             formatSpecifiers,
-            FormatProviders,
-            timeSpanStyles);
-        Test(
-            (timeSpan, formatProvider, styles) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "G"], formatProvider, styles),
-            (timeSpan, formatProvider, styles) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], formatProvider, styles),
-            TestValues,
-            FormatProviders,
-            timeSpanStyles);
-
-        Test(
-            (timeSpan, formatProvider, styles) => MissingTimeSpanMembers.ParseExact(
-                $"{timeSpan}".AsSpan(),
-                ["c", "t", "T", "g", "G"],
-                formatProvider,
-                styles),
-            (timeSpan, formatProvider, styles) => MissingTimeSpanMembers.ParseExact($"{timeSpan}".AsSpan(), ["c", "g", "G"], formatProvider, styles),
-            TestValues,
             FormatProviders,
             timeSpanStyles);
 
@@ -309,19 +283,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
             TestValues,
             constantFormatSpecifiers,
             FormatProviders);
-        Test(
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                timeSpan.ToString("c", formatProvider),
-                ["c", "t", "T", "g", "G"],
-                formatProvider,
-                out result),
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => System.TimeSpan.TryParseExact(
-                timeSpan.ToString("c", formatProvider),
-                ["c", "g", "G"],
-                formatProvider,
-                out result),
-            TestValues,
-            FormatProviders);
 
         Test(
             (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
@@ -330,52 +291,6 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
                 => System.TimeSpan.TryParseExact(timeSpan.ToString(format, formatProvider), format, formatProvider, styles, out result),
             TestValues,
             formatSpecifiers,
-            FormatProviders,
-            timeSpanStyles);
-        Test(
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact(
-                    timeSpan.ToString("c", formatProvider),
-                    ["c", "t", "T", "g", "G"],
-                    formatProvider,
-                    styles,
-                    out result),
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact(timeSpan.ToString("c", formatProvider), ["c", "g", "G"], formatProvider, styles, out result),
-            TestValues,
-            FormatProviders,
-            timeSpanStyles);
-
-        Test(
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                timeSpan.ToString("c", formatProvider).AsSpan(),
-                ["c", "t", "T", "g", "G"],
-                formatProvider,
-                out result),
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, out System.TimeSpan result) => MissingTimeSpanMembers.TryParseExact(
-                timeSpan.ToString("c", formatProvider).AsSpan(),
-                ["c", "g", "G"],
-                formatProvider,
-                out result),
-            TestValues,
-            FormatProviders);
-
-        Test(
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
-                => MissingTimeSpanMembers.TryParseExact(
-                    timeSpan.ToString("c", formatProvider).AsSpan(),
-                    ["c", "t", "T", "g", "G"],
-                    formatProvider,
-                    styles,
-                    out result),
-            (System.TimeSpan timeSpan, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
-                => MissingTimeSpanMembers.TryParseExact(
-                    timeSpan.ToString("c", formatProvider).AsSpan(),
-                    ["c", "g", "G"],
-                    formatProvider,
-                    styles,
-                    out result),
-            TestValues,
             FormatProviders,
             timeSpanStyles);
 

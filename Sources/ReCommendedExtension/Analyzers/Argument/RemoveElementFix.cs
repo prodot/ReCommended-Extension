@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes;
+namespace ReCommendedExtension.Analyzers.Argument;
 
 [QuickFix]
 public sealed class RemoveElementFix(RedundantElementHint highlighting) : QuickFixBase

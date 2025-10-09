@@ -42,6 +42,19 @@ namespace Test
             var result34 = TimeOnly.TryParseExact(s1, formats, null, DateTimeStyles.None, out result);
         }
 
+        public void RedundantCollectionElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, out TimeOnly result)
+        {
+            var result11 = TimeOnly.ParseExact(s, ["t", "t", "T", "o", "O", "r", "R"]);
+            var result12 = TimeOnly.ParseExact(s1, ["t", "t", "T", "o", "O", "r", "R"]);
+            var result13 = TimeOnly.ParseExact(s, ["t", "t", "T", "o", "O", "r", "R"], provider, style);
+            var result14 = TimeOnly.ParseExact(s1, ["t", "t", "T", "o", "O", "r", "R"], provider, style);
+
+            var result21 = TimeOnly.TryParseExact(s, ["t", "t", "T", "o", "O", "r", "R"], out result);
+            var result22 = TimeOnly.TryParseExact(s1, ["t", "t", "T", "o", "O", "r", "R"], out result);
+            var result23 = TimeOnly.TryParseExact(s, ["t", "t", "T", "o", "O", "r", "R"], provider, style, out result);
+            var result24 = TimeOnly.TryParseExact(s1, ["t", "t", "T", "o", "O", "r", "R"], provider, style, out result);
+        }
+
         public void NoDetection(TimeOnly timeOnly, TimeSpan timeSpanValue, double doubleValue, string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, string format, ReadOnlySpan<char> format1, string[] formats, out int wrappedDays, out TimeOnly result)
         {
             var result11 = timeOnly.Add(timeSpanValue, out wrappedDays);
@@ -76,6 +89,16 @@ namespace Test
             var result82 = TimeOnly.TryParseExact(s1, format1, provider, style, out result);
             var result83 = TimeOnly.TryParseExact(s, formats, provider, style, out result);
             var result84 = TimeOnly.TryParseExact(s1, formats, provider, style, out result);
+
+            var result91 = TimeOnly.ParseExact(s, ["t", "T", "o", "r"]);
+            var result92 = TimeOnly.ParseExact(s1, ["t", "T", "o", "r"]);
+            var result93 = TimeOnly.ParseExact(s, ["t", "T", "o", "r"], provider, style);
+            var result94 = TimeOnly.ParseExact(s1, ["t", "T", "o", "r"], provider, style);
+
+            var resultA1 = TimeOnly.TryParseExact(s, ["t", "T", "o", "r"], out result);
+            var resultA2 = TimeOnly.TryParseExact(s1, ["t", "T", "o", "r"], out result);
+            var resultA3 = TimeOnly.TryParseExact(s, ["t", "T", "o", "r"], provider, style, out result);
+            var resultA4 = TimeOnly.TryParseExact(s1, ["t", "T", "o", "r"], provider, style, out result);
         }
 
         public void NoDetection(TimeOnly timeOnly, TimeSpan timeSpanValue, double doubleValue)

@@ -16,8 +16,7 @@ public sealed class TimeOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.TimeOn
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\TimeOnly";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or UseOtherArgumentSuggestion or RedundantElementHint
-            || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or UseOtherArgumentSuggestion || highlighting.IsError();
 
     protected override Missing.TimeOnly[] TestValues { get; } =
     [
@@ -78,30 +77,10 @@ public sealed class TimeOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.TimeOn
             (timeOnly, format) => Missing.TimeOnly.ParseExact(timeOnly.ToString(format), format),
             TestValues,
             formats);
-        Test(
-            (timeOnly, format) => Missing.TimeOnly.ParseExact(timeOnly.ToString(format), ["t", "t", "T", "o", "O", "r", "R"]),
-            (timeOnly, format) => Missing.TimeOnly.ParseExact(timeOnly.ToString(format), ["t", "T", "o", "r"]),
-            TestValues,
-            formats);
 
         Test(
             (timeOnly, format, provider, style) => Missing.TimeOnly.ParseExact(timeOnly.ToString(format, provider), [format], provider, style),
             (timeOnly, format, provider, style) => Missing.TimeOnly.ParseExact(timeOnly.ToString(format, provider), format, provider, style),
-            TestValues,
-            formats,
-            FormatProviders,
-            styles);
-        Test(
-            (timeOnly, format, provider, style) => Missing.TimeOnly.ParseExact(
-                timeOnly.ToString(format, provider),
-                ["t", "t", "T", "o", "O", "r", "R"],
-                provider,
-                style),
-            (timeOnly, format, provider, style) => Missing.TimeOnly.ParseExact(
-                timeOnly.ToString(format, provider),
-                ["t", "T", "o", "r"],
-                provider,
-                style),
             TestValues,
             formats,
             FormatProviders,
@@ -118,27 +97,6 @@ public sealed class TimeOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.TimeOn
             FormatProviders,
             styles);
 
-        Test(
-            (timeOnly, format) => Missing.TimeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), ["t", "t", "T", "o", "O", "r", "R"]),
-            (timeOnly, format) => Missing.TimeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), ["t", "T", "o", "r"]),
-            TestValues,
-            formats);
-
-        Test(
-            (timeOnly, format, provider, style) => Missing.TimeOnly.ParseExact(
-                timeOnly.ToString(format, provider).AsSpan(),
-                ["t", "t", "T", "o", "O", "r", "R"],
-                provider,
-                style),
-            (timeOnly, format, provider, style) => Missing.TimeOnly.ParseExact(
-                timeOnly.ToString(format, provider).AsSpan(),
-                ["t", "T", "o", "r"],
-                provider,
-                style),
-            TestValues,
-            formats,
-            FormatProviders,
-            styles);
         Test(
             (timeOnly, format, provider, style) => Missing.TimeOnly.ParseExact(
                 timeOnly.ToString(format, provider).AsSpan(),
@@ -195,49 +153,12 @@ public sealed class TimeOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.TimeOn
                 => Missing.TimeOnly.TryParseExact(timeOnly.ToString(format), format, out result),
             TestValues,
             formats);
-        Test(
-            (Missing.TimeOnly timeOnly, string format, out Missing.TimeOnly result) => Missing.TimeOnly.TryParseExact(
-                timeOnly.ToString(format),
-                ["t", "t", "T", "o", "O", "r", "R"],
-                out result),
-            (Missing.TimeOnly timeOnly, string format, out Missing.TimeOnly result) => Missing.TimeOnly.TryParseExact(
-                timeOnly.ToString(format),
-                ["t", "T", "o", "r"],
-                out result),
-            TestValues,
-            formats);
-
-        Test(
-            (Missing.TimeOnly timeOnly, string format, out Missing.TimeOnly result) => Missing.TimeOnly.TryParseExact(
-                timeOnly.ToString(format).AsSpan(),
-                ["t", "t", "T", "o", "O", "r", "R"],
-                out result),
-            (Missing.TimeOnly timeOnly, string format, out Missing.TimeOnly result) => Missing.TimeOnly.TryParseExact(
-                timeOnly.ToString(format).AsSpan(),
-                ["t", "T", "o", "r"],
-                out result),
-            TestValues,
-            formats);
 
         Test(
             (Missing.TimeOnly timeOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.TimeOnly result)
                 => Missing.TimeOnly.TryParseExact(timeOnly.ToString(format, provider), [format], provider, style, out result),
             (Missing.TimeOnly timeOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.TimeOnly result)
                 => Missing.TimeOnly.TryParseExact(timeOnly.ToString(format, provider), format, provider, style, out result),
-            TestValues,
-            formats,
-            FormatProviders,
-            styles);
-        Test(
-            (Missing.TimeOnly timeOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.TimeOnly result)
-                => Missing.TimeOnly.TryParseExact(
-                    timeOnly.ToString(format, provider),
-                    ["t", "t", "T", "o", "O", "r", "R"],
-                    provider,
-                    style,
-                    out result),
-            (Missing.TimeOnly timeOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.TimeOnly result)
-                => Missing.TimeOnly.TryParseExact(timeOnly.ToString(format, provider), ["t", "T", "o", "r"], provider, style, out result),
             TestValues,
             formats,
             FormatProviders,
@@ -252,20 +173,6 @@ public sealed class TimeOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.TimeOn
             FormatProviders,
             styles);
 
-        Test(
-            (Missing.TimeOnly timeOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.TimeOnly result)
-                => Missing.TimeOnly.TryParseExact(
-                    timeOnly.ToString(format, provider).AsSpan(),
-                    ["t", "t", "T", "o", "O", "r", "R"],
-                    provider,
-                    style,
-                    out result),
-            (Missing.TimeOnly timeOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.TimeOnly result)
-                => Missing.TimeOnly.TryParseExact(timeOnly.ToString(format, provider).AsSpan(), ["t", "T", "o", "r"], provider, style, out result),
-            TestValues,
-            formats,
-            FormatProviders,
-            styles);
         Test(
             (Missing.TimeOnly timeOnly, string format, IFormatProvider? provider, DateTimeStyles style, out Missing.TimeOnly result)
                 => Missing.TimeOnly.TryParseExact(timeOnly.ToString(format, provider).AsSpan(), invariantFormats, provider, style, out result),

@@ -55,6 +55,15 @@ namespace Test
             DateTime result22 = new(year, month, day, |0, 0, 0|(41), calendar);
         }
 
+        public void RedundantCollectionElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, out DateTime result)
+        {
+            var result11 = DateTime.ParseExact(s, ["d", |"d"|(42), "D", "f", "F", "g", "G", "m", |"M"|(43), "o", |"O"|(44), "r", |"R"|(45), "s", "t", "T", "u", "U", "y", |"Y"|(46)], provider, style);
+            var result12 = DateTime.ParseExact(s1, ["d", |"d"|(47), "D", "f", "F", "g", "G", "m", |"M"|(48), "o", |"O"|(49), "r", |"R"|(50), "s", "t", "T", "u", "U", "y", |"Y"|(51)], provider, style);
+
+            var result21 = DateTime.TryParseExact(s, ["d", |"d"|(52), "D", "f", "F", "g", "G", "m", |"M"|(53), "o", |"O"|(54), "r", |"R"|(55), "s", "t", "T", "u", "U", "y", |"Y"|(56)], provider, style, out result);
+            var result22 = DateTime.TryParseExact(s1, ["d", |"d"|(57), "D", "f", "F", "g", "G", "m", |"M"|(58), "o", |"O"|(59), "r", |"R"|(60), "s", "t", "T", "u", "U", "y", |"Y"|(61)], provider, style, out result);
+        }
+
         public void NoDetection(DateTime dateTime, long ticks, DateOnly date, TimeOnly time, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, Calendar calendar, DateTimeKind kind, char f, string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out DateTime result)
         {
             var result11 = new DateTime(ticks, kind);
@@ -86,6 +95,12 @@ namespace Test
             var result61 = new DateTime(year, month, day, hour, minute, second);
             var result62 = new DateTime(year, month, day, hour, minute, second, calendar);
             var result63 = new DateTime(year, month, day, 0, second: 0, minute: 0);
+
+            var result71 = DateTime.ParseExact(s, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style);
+            var result72 = DateTime.ParseExact(s1, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style);
+
+            var result81 = DateTime.TryParseExact(s, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style, out result);
+            var result82 = DateTime.TryParseExact(s1, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style, out result);
         }
     }
 }
@@ -132,3 +147,23 @@ namespace Test
 (39): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
 (40): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
 (41): ReSharper Dead Code: Passing '0, 0, 0' is redundant.
+(42): ReSharper Dead Code: The string is already passed.
+(43): ReSharper Dead Code: The equivalent string is already passed.
+(44): ReSharper Dead Code: The equivalent string is already passed.
+(45): ReSharper Dead Code: The equivalent string is already passed.
+(46): ReSharper Dead Code: The equivalent string is already passed.
+(47): ReSharper Dead Code: The string is already passed.
+(48): ReSharper Dead Code: The equivalent string is already passed.
+(49): ReSharper Dead Code: The equivalent string is already passed.
+(50): ReSharper Dead Code: The equivalent string is already passed.
+(51): ReSharper Dead Code: The equivalent string is already passed.
+(52): ReSharper Dead Code: The string is already passed.
+(53): ReSharper Dead Code: The equivalent string is already passed.
+(54): ReSharper Dead Code: The equivalent string is already passed.
+(55): ReSharper Dead Code: The equivalent string is already passed.
+(56): ReSharper Dead Code: The equivalent string is already passed.
+(57): ReSharper Dead Code: The string is already passed.
+(58): ReSharper Dead Code: The equivalent string is already passed.
+(59): ReSharper Dead Code: The equivalent string is already passed.
+(60): ReSharper Dead Code: The equivalent string is already passed.
+(61): ReSharper Dead Code: The equivalent string is already passed.

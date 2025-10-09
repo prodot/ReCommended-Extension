@@ -16,11 +16,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTimeOffset";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantMethodInvocationHint
-                or UseBinaryOperatorSuggestion
-                or UseExpressionResultSuggestion
-                or UseOtherArgumentSuggestion
-                or RedundantElementHint
+        => highlighting is RedundantMethodInvocationHint or UseBinaryOperatorSuggestion or UseExpressionResultSuggestion or UseOtherArgumentSuggestion
             || highlighting.IsError();
 
     protected override System.DateTimeOffset[] TestValues { get; } =
@@ -131,21 +127,6 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
         Test(
             (dateTimeOffset, format, formatProvider, styles) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, formatProvider),
-                ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"],
-                formatProvider,
-                styles),
-            (dateTimeOffset, format, formatProvider, styles) => System.DateTimeOffset.ParseExact(
-                dateTimeOffset.ToString(format, formatProvider),
-                ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"],
-                formatProvider,
-                styles),
-            testValues,
-            formats,
-            FormatProviders,
-            dateTimeStyles);
-        Test(
-            (dateTimeOffset, format, formatProvider, styles) => System.DateTimeOffset.ParseExact(
-                dateTimeOffset.ToString(format, formatProvider),
                 invariantFormats,
                 formatProvider,
                 styles),
@@ -156,21 +137,6 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
                 styles),
             testValues,
             invariantFormats,
-            FormatProviders,
-            dateTimeStyles);
-        Test(
-            (dateTimeOffset, format, formatProvider, styles) => MissingDateTimeOffsetMembers.ParseExact(
-                dateTimeOffset.ToString(format, formatProvider).AsSpan(),
-                ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"],
-                formatProvider,
-                styles),
-            (dateTimeOffset, format, formatProvider, styles) => MissingDateTimeOffsetMembers.ParseExact(
-                dateTimeOffset.ToString(format, formatProvider).AsSpan(),
-                ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"],
-                formatProvider,
-                styles),
-            testValues,
-            formats,
             FormatProviders,
             dateTimeStyles);
         Test(
@@ -279,69 +245,12 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
                     out System.DateTimeOffset result)
                 => System.DateTimeOffset.TryParseExact(
                     dateTimeOffset.ToString(format, formatProvider),
-                    ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"],
-                    formatProvider,
-                    styles,
-                    out result),
-            (
-                    System.DateTimeOffset dateTimeOffset,
-                    string format,
-                    IFormatProvider? formatProvider,
-                    DateTimeStyles styles,
-                    out System.DateTimeOffset result)
-                => System.DateTimeOffset.TryParseExact(
-                    dateTimeOffset.ToString(format, formatProvider),
-                    ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"],
-                    formatProvider,
-                    styles,
-                    out result),
-            [..TestValues.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
-            formats,
-            FormatProviders,
-            dateTimeStyles);
-        Test(
-            (
-                    System.DateTimeOffset dateTimeOffset,
-                    string format,
-                    IFormatProvider? formatProvider,
-                    DateTimeStyles styles,
-                    out System.DateTimeOffset result)
-                => System.DateTimeOffset.TryParseExact(
-                    dateTimeOffset.ToString(format, formatProvider),
                     invariantFormats,
                     formatProvider,
                     styles,
                     out result),
             (System.DateTimeOffset dateTime, string format, IFormatProvider? formatProvider, DateTimeStyles styles, out System.DateTimeOffset result)
                 => System.DateTimeOffset.TryParseExact(dateTime.ToString(format, formatProvider), invariantFormats, null, styles, out result),
-            [..TestValues.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
-            formats,
-            FormatProviders,
-            dateTimeStyles);
-        Test(
-            (
-                    System.DateTimeOffset dateTimeOffset,
-                    string format,
-                    IFormatProvider? formatProvider,
-                    DateTimeStyles styles,
-                    out System.DateTimeOffset result)
-                => MissingDateTimeOffsetMembers.TryParseExact(
-                    dateTimeOffset.ToString(format, formatProvider).AsSpan(),
-                    ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"],
-                    formatProvider,
-                    styles,
-                    out result),
-            (
-                System.DateTimeOffset dateTimeOffset,
-                string format,
-                IFormatProvider? formatProvider,
-                DateTimeStyles styles,
-                out System.DateTimeOffset result) => MissingDateTimeOffsetMembers.TryParseExact(
-                dateTimeOffset.ToString(format, formatProvider).AsSpan(),
-                ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"],
-                formatProvider,
-                styles,
-                out result),
             [..TestValues.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formats,
             FormatProviders,

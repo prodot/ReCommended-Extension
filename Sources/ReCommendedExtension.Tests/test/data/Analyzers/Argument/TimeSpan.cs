@@ -29,6 +29,18 @@ namespace Test
             var result64 = TimeSpan.TryParseExact(s1, formats, provider, TimeSpanStyles.None, out result);
         }
 
+        public void RedundantCollectionElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, TimeSpanStyles style, out TimeSpan result)
+        {
+            var result11 = TimeSpan.ParseExact(s, ["c", "t", "T", "g", "g", "G"], provider);
+            var result12 = TimeSpan.ParseExact(s, ["c", "t", "T", "g", "g", "G"], provider, style);
+            var result13 = TimeSpan.ParseExact(s1, ["c", "t", "T", "g", "g", "G"], provider, style);
+
+            var result21 = TimeSpan.TryParseExact(s, ["c", "t", "T", "g", "g", "G"], provider, out result);
+            var result22 = TimeSpan.TryParseExact(s1, ["c", "t", "T", "g", "g", "G"], provider, out result);
+            var result23 = TimeSpan.TryParseExact(s, ["c", "t", "T", "g", "g", "G"], provider, style, out result);
+            var result24 = TimeSpan.TryParseExact(s1, ["c", "t", "T", "g", "g", "G"], provider, style, out result);
+        }
+
         public void NoDetection(int days, int hours, int minutes, int seconds, int milliseconds, int microseconds, string s, ReadOnlySpan<char> s1, IFormatProvider provider, string format, ReadOnlySpan<char> format1, string[] formats, TimeSpanStyles style, out TimeSpan result)
         {
             var result11 = new TimeSpan(days, hours, minutes, seconds);
@@ -47,6 +59,15 @@ namespace Test
             var result52 = TimeSpan.TryParseExact(s1, format1, provider, style, out result);
             var result53 = TimeSpan.TryParseExact(s, formats, provider, style, out result);
             var result54 = TimeSpan.TryParseExact(s1, formats, provider, style, out result);
+
+            var result61 = TimeSpan.ParseExact(s, ["c", "g"], provider);
+            var result62 = TimeSpan.ParseExact(s, ["c", "g"], provider, style);
+            var result63 = TimeSpan.ParseExact(s1, ["c", "g"], provider, style);
+
+            var result71 = TimeSpan.TryParseExact(s, ["c", "g"], provider, out result);
+            var result72 = TimeSpan.TryParseExact(s1, ["c", "g"], provider, out result);
+            var result73 = TimeSpan.TryParseExact(s, ["c", "g"], provider, style, out result);
+            var result74 = TimeSpan.TryParseExact(s1, ["c", "g"], provider, style, out result);
         }
     }
 }

@@ -13,13 +13,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(ICSharpInvocationInfo),
-    HighlightingTypes =
-    [
-        typeof(UseExpressionResultSuggestion),
-        typeof(UseBinaryOperatorSuggestion),
-        typeof(UseOtherArgumentSuggestion),
-        typeof(RedundantElementHint),
-    ])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(UseOtherArgumentSuggestion)])]
 public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
@@ -199,54 +193,31 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>TimeOnly.ParseExact(s, [format])</c> → <c>TimeOnly.ParseExact(s, format)</c><para/>
-    /// <c>TimeOnly.ParseExact(s, ["r", "R"])</c> → <c>TimeOnly.ParseExact(s, ["r"])</c>
+    /// <c>TimeOnly.ParseExact(s, [format])</c> → <c>TimeOnly.ParseExact(s, format)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument formatsArgument)
     {
-        switch (CollectionCreation.TryFrom(formatsArgument.Value))
-        {
-            case { Count: 1 } collectionCreation when PredefinedType.TIME_ONLY_FQN.HasMethod(
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: 1 } collectionCreation
+            && PredefinedType.TIME_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "ParseExact", Parameters = Parameters.String_String, IsStatic = true }, // todo: nameof(TimeOnly.ParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new UseOtherArgumentSuggestion(
-                        "The only collection element should be passed directly.",
-                        formatsArgument,
-                        parameterNames is [_, var formatParameterName] ? formatParameterName : null,
-                        collectionCreation.SingleElement.GetText()));
-                break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-                {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O")) || s is "r" or "R" && (set.Contains("r") || set.Contains("R")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
-                }
-
-                break;
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The only collection element should be passed directly.",
+                    formatsArgument,
+                    parameterNames is [_, var formatParameterName] ? formatParameterName : null,
+                    collectionCreation.SingleElement.GetText()));
         }
     }
 
     /// <remarks>
     /// <c>TimeOnly.ParseExact(s, [format], provider, styles)</c> → <c>TimeOnly.ParseExact(s, format, provider, styles)</c><para/>
-    /// <c>TimeOnly.ParseExact(s, ["r", "R"], provider, styles)</c> → <c>TimeOnly.ParseExact(s, ["r"], provider, styles)</c><para/>
     /// <c>TimeOnly.ParseExact(s, ["o", "R"], provider, styles)</c> → <c>TimeOnly.ParseExact(s, ["o", "R"], null, styles)</c>
     /// </remarks>
     static void AnalyzeParseExact_String_StringArray_IFormatProvider_DateTimeStyles(
@@ -274,18 +245,9 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             case { Count: > 1 } collectionCreation:
                 var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
                 {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O")) || s is "r" or "R" && (set.Contains("r") || set.Contains("R")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
+                    set.Add(s);
                 }
 
                 if (collectionCreation.AllElementsAreStringConstants)
@@ -311,32 +273,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>TimeOnly.ParseExact(s, ["r", "R"])</c> → <c>TimeOnly.ParseExact(s, ["r"])</c>
-    /// </remarks>
-    static void AnalyzeParseExact_ReadOnlySpanOfChar_StringArray(IHighlightingConsumer consumer, ICSharpArgument formatsArgument)
-    {
-        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
-        {
-            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-            {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O")) || s is "r" or "R" && (set.Contains("r") || set.Contains("R")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeOnly.ParseExact(s, ["r", "R"], provider, styles)</c> → <c>TimeOnly.ParseExact(s, ["r"], provider, styles)</c><para/>
     /// <c>TimeOnly.ParseExact(s, ["o", "R"], provider, styles)</c> → <c>TimeOnly.ParseExact(s, ["o", "R"], null, styles)</c>
     /// </remarks>
     static void AnalyzeParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_DateTimeStyles(
@@ -348,18 +284,9 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         {
             var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
             {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O")) || s is "r" or "R" && (set.Contains("r") || set.Contains("R")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
+                set.Add(s);
             }
 
             if (collectionCreation.AllElementsAreStringConstants)
@@ -404,79 +331,31 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>TimeOnly.TryParseExact(s, [format], out result)</c> → <c>TimeOnly.TryParseExact(s, format, out result)</c><para/>
-    /// <c>TimeOnly.TryParseExact(s, ["r", "R"], out result)</c> → <c>TimeOnly.TryParseExact(s, ["r"], out result)</c>
+    /// <c>TimeOnly.TryParseExact(s, [format], out result)</c> → <c>TimeOnly.TryParseExact(s, format, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_String_StringArray_TimeOnly(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         ICSharpArgument formatsArgument)
     {
-        switch (CollectionCreation.TryFrom(formatsArgument.Value))
-        {
-            case { Count: 1 } collectionCreation when PredefinedType.TIME_ONLY_FQN.HasMethod(
+        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: 1 } collectionCreation
+            && PredefinedType.TIME_ONLY_FQN.HasMethod(
                 new MethodSignature { Name = "TryParseExact", Parameters = Parameters.String_String_outTimeOnly, IsStatic = true }, // todo: nameof(TimeOnly.TryParseExact) when available
                 formatsArgument.NameIdentifier is { },
                 out var parameterNames,
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new UseOtherArgumentSuggestion(
-                        "The only collection element should be passed directly.",
-                        formatsArgument,
-                        parameterNames is [_, var formatParameterName, _] ? formatParameterName : null,
-                        collectionCreation.SingleElement.GetText()));
-                break;
-
-            case { Count: > 1 } collectionCreation:
-                var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-                {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O")) || s is "r" or "R" && (set.Contains("r") || set.Contains("R")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
-                }
-
-                break;
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeOnly.TryParseExact(s, ["r", "R"], out result)</c> → <c>TimeOnly.TryParseExact(s, ["r"], out result)</c>
-    /// </remarks>
-    static void AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_TimeOnly(IHighlightingConsumer consumer, ICSharpArgument formatsArgument)
-    {
-        if (CollectionCreation.TryFrom(formatsArgument.Value) is { Count: > 1 } collectionCreation)
+                invocationExpression.PsiModule))
         {
-            var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
-
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
-            {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O")) || s is "r" or "R" && (set.Contains("r") || set.Contains("R")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
-            }
+            consumer.AddHighlighting(
+                new UseOtherArgumentSuggestion(
+                    "The only collection element should be passed directly.",
+                    formatsArgument,
+                    parameterNames is [_, var formatParameterName, _] ? formatParameterName : null,
+                    collectionCreation.SingleElement.GetText()));
         }
     }
 
     /// <remarks>
     /// <c>TimeOnly.TryParseExact(s, [format], provider, style, out result)</c> → <c>TimeOnly.TryParseExact(s, format, provider, style, out result)</c><para/>
-    /// <c>TimeOnly.TryParseExact(s, ["r", "R"], provider, style, out result)</c> → <c>TimeOnly.TryParseExact(s, ["r"], provider, style, out result)</c><para/>
     /// <c>TimeOnly.TryParseExact(s, ["o", "R"], provider, style, out result)</c> → <c>TimeOnly.TryParseExact(s, ["o", "R"], null, style, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_String_StringArray_IFormatProvider_DateTimeStyles_TimeOnly(
@@ -507,18 +386,9 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
             case { Count: > 1 } collectionCreation:
                 var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-                foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+                foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
                 {
-                    if (s is "o" or "O" && (set.Contains("o") || set.Contains("O")) || s is "r" or "R" && (set.Contains("r") || set.Contains("R")))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                        continue;
-                    }
-
-                    if (s != "" && !set.Add(s))
-                    {
-                        consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                    }
+                    set.Add(s);
                 }
 
                 if (collectionCreation.AllElementsAreStringConstants)
@@ -544,7 +414,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>TimeOnly.TryParseExact(s, ["r", "R"], provider, style, out result)</c> → <c>TimeOnly.TryParseExact(s, ["r"], provider, style, out result)</c><para/>
     /// <c>TimeOnly.TryParseExact(s, ["o", "R"], provider, style, out result)</c> → <c>TimeOnly.TryParseExact(s, ["o", "R"], null, style, out result)</c>
     /// </remarks>
     static void AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_IFormatProvider_DateTimeStyles_TimeOnly(
@@ -556,18 +425,9 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         {
             var set = new HashSet<string>(collectionCreation.Count, StringComparer.Ordinal);
 
-            foreach (var (element, s) in collectionCreation.ElementsWithStringConstants)
+            foreach (var (_, s) in collectionCreation.ElementsWithStringConstants)
             {
-                if (s is "o" or "O" && (set.Contains("o") || set.Contains("O")) || s is "r" or "R" && (set.Contains("r") || set.Contains("R")))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The equivalent string is already passed.", element));
-                    continue;
-                }
-
-                if (s != "" && !set.Add(s))
-                {
-                    consumer.AddHighlighting(new RedundantElementHint("The string is already passed.", element));
-                }
+                set.Add(s);
             }
 
             if (collectionCreation.AllElementsAreStringConstants)
@@ -718,12 +578,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             providerArgument);
                                         break;
 
-                                    case ([{ Type: var sType }, { Type: var formatsType }], [_, { } formatsArgument])
-                                        when sType.IsReadOnlySpanOfChar() && formatsType.IsGenericArrayOfString():
-
-                                        AnalyzeParseExact_ReadOnlySpanOfChar_StringArray(consumer, formatsArgument);
-                                        break;
-
                                     case ([{ Type: var sType }, { Type: var formatsType }, { Type: var providerType }, { Type: var styleType }], [
                                             _, { } formatsArgument, { } providerArgument, _,
                                         ]) when sType.IsReadOnlySpanOfChar()
@@ -764,12 +618,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                         when sType.IsString() && formatsType.IsGenericArrayOfString() && resultType.IsTimeOnly():
 
                                         AnalyzeTryParseExact_String_StringArray_TimeOnly(consumer, invocationExpression, formatsArgument);
-                                        break;
-
-                                    case ([{ Type: var sType }, { Type: var formatsType }, { Type: var resultType }], [_, { } formatsArgument, _])
-                                        when sType.IsReadOnlySpanOfChar() && formatsType.IsGenericArrayOfString() && resultType.IsTimeOnly():
-
-                                        AnalyzeTryParseExact_ReadOnlySpanOfChar_StringArray_TimeOnly(consumer, formatsArgument);
                                         break;
 
                                     case ([

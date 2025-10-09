@@ -23,30 +23,30 @@ namespace Test
 
         public void DuplicateItems(string text, int startIndex, int count)
         {
-            var result1 = text.IndexOfAny(['a', |'a'|(1)]);
-            var result2 = text.IndexOfAny(['a', |'a'|(2)], startIndex);
-            var result3 = text.IndexOfAny(['a', |'a'|(3)], startIndex, count);
+            var result1 = text.IndexOfAny(['a', 'a']);
+            var result2 = text.IndexOfAny(['a', 'a'], startIndex);
+            var result3 = text.IndexOfAny(['a', 'a'], startIndex, count);
         }
 
         public void DuplicateItems_Nullable(string? text, int startIndex, int count)
         {
-            var result1 = text?.IndexOfAny(['a', |'a'|(4)]);
-            var result2 = text?.IndexOfAny(['a', |'a'|(5)], startIndex);
-            var result3 = text?.IndexOfAny(['a', |'a'|(6)], startIndex, count);
+            var result1 = text?.IndexOfAny(['a', 'a']);
+            var result2 = text?.IndexOfAny(['a', 'a'], startIndex);
+            var result3 = text?.IndexOfAny(['a', 'a'], startIndex, count);
         }
 
         public void OtherMethod(string text, char c, int startIndex, int count)
         {
-            var result1 = text.|IndexOfAny([c])|(7);
-            var result2 = text.|IndexOfAny([c], startIndex)|(8);
-            var result3 = text.|IndexOfAny([c], startIndex, count)|(9);
+            var result1 = text.|IndexOfAny([c])|(1);
+            var result2 = text.|IndexOfAny([c], startIndex)|(2);
+            var result3 = text.|IndexOfAny([c], startIndex, count)|(3);
         }
 
         public void OtherMethod_Nullable(string? text, char c, int startIndex, int count)
         {
-            var result1 = text?.|IndexOfAny([c])|(10);
-            var result2 = text?.|IndexOfAny([c], startIndex)|(11);
-            var result3 = text?.|IndexOfAny([c], startIndex, count)|(12);
+            var result1 = text?.|IndexOfAny([c])|(4);
+            var result2 = text?.|IndexOfAny([c], startIndex)|(5);
+            var result3 = text?.|IndexOfAny([c], startIndex, count)|(6);
         }
 
         public void NoDetection(string text, char c, char[] ca, int startIndex)
@@ -56,7 +56,7 @@ namespace Test
             var result21 = text.IndexOfAny(ca, 1);
             var result22 = text.IndexOfAny(ca, startIndex);
 
-            text.|IndexOfAny|(13)([]);
+            text.|IndexOfAny|(7)([]);
         }
 
         public void NoDetection_Nullable(string? text, char[] c, int startIndex)
@@ -67,16 +67,10 @@ namespace Test
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always -1.
-(1): ReSharper Dead Code: The character is already passed.
-(2): ReSharper Dead Code: The character is already passed.
-(3): ReSharper Dead Code: The character is already passed.
-(4): ReSharper Dead Code: The character is already passed.
-(5): ReSharper Dead Code: The character is already passed.
-(6): ReSharper Dead Code: The character is already passed.
-(7): ReSharper Suggestion: Use the 'IndexOf' method.
-(8): ReSharper Suggestion: Use the 'IndexOf' method.
-(9): ReSharper Suggestion: Use the 'IndexOf' method.
-(10): ReSharper Suggestion: Use the 'IndexOf' method.
-(11): ReSharper Suggestion: Use the 'IndexOf' method.
-(12): ReSharper Suggestion: Use the 'IndexOf' method.
-(13): ReSharper Warning: Return value of pure method is not used
+(1): ReSharper Suggestion: Use the 'IndexOf' method.
+(2): ReSharper Suggestion: Use the 'IndexOf' method.
+(3): ReSharper Suggestion: Use the 'IndexOf' method.
+(4): ReSharper Suggestion: Use the 'IndexOf' method.
+(5): ReSharper Suggestion: Use the 'IndexOf' method.
+(6): ReSharper Suggestion: Use the 'IndexOf' method.
+(7): ReSharper Warning: Return value of pure method is not used

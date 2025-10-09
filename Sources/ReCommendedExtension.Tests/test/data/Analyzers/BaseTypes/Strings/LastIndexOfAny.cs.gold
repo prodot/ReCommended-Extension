@@ -14,30 +14,30 @@ namespace Test
 
         public void DuplicateItems(string text, int startIndex, int count)
         {
-            var result1 = text.LastIndexOfAny(['a', |'a'|(4)]);
-            var result2 = text.LastIndexOfAny(['a', |'a'|(5)], startIndex);
-            var result3 = text.LastIndexOfAny(['a', |'a'|(6)], startIndex, count);
+            var result1 = text.LastIndexOfAny(['a', 'a']);
+            var result2 = text.LastIndexOfAny(['a', 'a'], startIndex);
+            var result3 = text.LastIndexOfAny(['a', 'a'], startIndex, count);
         }
 
         public void DuplicateItems_Nullable(string? text, int startIndex, int count)
         {
-            var result1 = text?.LastIndexOfAny(['a', |'a'|(7)]);
-            var result2 = text?.LastIndexOfAny(['a', |'a'|(8)], startIndex);
-            var result3 = text?.LastIndexOfAny(['a', |'a'|(9)], startIndex, count);
+            var result1 = text?.LastIndexOfAny(['a', 'a']);
+            var result2 = text?.LastIndexOfAny(['a', 'a'], startIndex);
+            var result3 = text?.LastIndexOfAny(['a', 'a'], startIndex, count);
         }
 
         public void OtherMethod(string text, char c, int startIndex, int count)
         {
-            var result1 = text.|LastIndexOfAny([c])|(10);
-            var result2 = text.|LastIndexOfAny([c], startIndex)|(11);
-            var result3 = text.|LastIndexOfAny([c], startIndex, count)|(12);
+            var result1 = text.|LastIndexOfAny([c])|(4);
+            var result2 = text.|LastIndexOfAny([c], startIndex)|(5);
+            var result3 = text.|LastIndexOfAny([c], startIndex, count)|(6);
         }
 
         public void OtherMethod_Nullable(string? text, char c, int startIndex, int count)
         {
-            var result1 = text?.|LastIndexOfAny([c])|(13);
-            var result2 = text?.|LastIndexOfAny([c], startIndex)|(14);
-            var result3 = text?.|LastIndexOfAny([c], startIndex, count)|(15);
+            var result1 = text?.|LastIndexOfAny([c])|(7);
+            var result2 = text?.|LastIndexOfAny([c], startIndex)|(8);
+            var result3 = text?.|LastIndexOfAny([c], startIndex, count)|(9);
         }
 
         public void NoDetection(string text, char c, char[] ca, int startIndex)
@@ -47,10 +47,10 @@ namespace Test
             var result21 = text.LastIndexOfAny(ca, 1);
             var result22 = text.LastIndexOfAny(ca, startIndex);
 
-            text.|LastIndexOfAny|(16)([]);
-            text.|LastIndexOfAny|(17)(ca, 0);
-            text.|LastIndexOfAny|(18)(ca, 0, 0);
-            text.|LastIndexOfAny|(19)(ca, 0, 1);
+            text.|LastIndexOfAny|(10)([]);
+            text.|LastIndexOfAny|(11)(ca, 0);
+            text.|LastIndexOfAny|(12)(ca, 0, 0);
+            text.|LastIndexOfAny|(13)(ca, 0, 1);
         }
 
         public void NoDetection_Nullable(string? text, char[] c)
@@ -67,19 +67,13 @@ namespace Test
 (1): ReSharper Suggestion: The expression is always -1.
 (2): ReSharper Suggestion: The expression is always -1.
 (3): ReSharper Suggestion: The expression is always -1.
-(4): ReSharper Dead Code: The character is already passed.
-(5): ReSharper Dead Code: The character is already passed.
-(6): ReSharper Dead Code: The character is already passed.
-(7): ReSharper Dead Code: The character is already passed.
-(8): ReSharper Dead Code: The character is already passed.
-(9): ReSharper Dead Code: The character is already passed.
-(10): ReSharper Suggestion: Use the 'LastIndexOf' method.
-(11): ReSharper Suggestion: Use the 'LastIndexOf' method.
-(12): ReSharper Suggestion: Use the 'LastIndexOf' method.
-(13): ReSharper Suggestion: Use the 'LastIndexOf' method.
-(14): ReSharper Suggestion: Use the 'LastIndexOf' method.
-(15): ReSharper Suggestion: Use the 'LastIndexOf' method.
-(16): ReSharper Warning: Return value of pure method is not used
-(17): ReSharper Warning: Return value of pure method is not used
-(18): ReSharper Warning: Return value of pure method is not used
-(19): ReSharper Warning: Return value of pure method is not used
+(4): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(5): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(6): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(7): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(8): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(9): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(10): ReSharper Warning: Return value of pure method is not used
+(11): ReSharper Warning: Return value of pure method is not used
+(12): ReSharper Warning: Return value of pure method is not used
+(13): ReSharper Warning: Return value of pure method is not used

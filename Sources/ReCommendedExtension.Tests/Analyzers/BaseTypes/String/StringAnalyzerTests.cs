@@ -24,7 +24,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
                 or PassSingleCharactersSuggestion
                 or UseStringListPatternSuggestion
                 or UseOtherMethodSuggestion
-                or RedundantElementHint
                 or UseStringPropertySuggestion
                 or RedundantMethodInvocationHint
                 or UseRangeIndexerSuggestion
@@ -315,18 +314,12 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.IndexOfAny([]), _ => -1);
         Test("abcde", text => text.IndexOfAny(['c']), text => text.IndexOf('c'));
         TestNullable("abcde", text => text?.IndexOfAny(['c']), text => text?.IndexOf('c'));
-        Test("abcde", text => text.IndexOfAny(['b', 'c', 'c']), text => text.IndexOfAny(['b', 'c']));
-        TestNullable("abcde", text => text?.IndexOfAny(['b', 'c', 'c']), text => text?.IndexOfAny(['b', 'c']));
 
         Test("abcde", text => text.IndexOfAny(['c'], 1), text => text.IndexOf('c', 1), true);
         TestNullable("abcde", text => text?.IndexOfAny(['c'], 1), text => text?.IndexOf('c', 1), true);
-        Test("abcde", text => text.IndexOfAny(['b', 'c', 'c'], 1), text => text.IndexOfAny(['b', 'c'], 1), true);
-        TestNullable("abcde", text => text?.IndexOfAny(['b', 'c', 'c'], 1), text => text?.IndexOfAny(['b', 'c'], 1), true);
 
         Test("abcde", text => text.IndexOfAny(['c'], 1, 3), text => text.IndexOf('c', 1, 3), true);
         TestNullable("abcde", text => text?.IndexOfAny(['c'], 1, 3), text => text?.IndexOf('c', 1, 3), true);
-        Test("abcde", text => text.IndexOfAny(['b', 'c', 'c'], 1, 3), text => text.IndexOfAny(['b', 'c'], 1, 3), true);
-        TestNullable("abcde", text => text?.IndexOfAny(['b', 'c', 'c'], 1, 3), text => text?.IndexOfAny(['b', 'c'], 1, 3), true);
 
         DoNamedTest2();
     }
@@ -433,21 +426,15 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.LastIndexOfAny([]), _ => -1);
         Test("abcde", text => text.LastIndexOfAny(['c']), text => text.LastIndexOf('c'));
         TestNullable("abcde", text => text?.LastIndexOfAny(['c']), text => text?.LastIndexOf('c'));
-        Test("abcde", text => text.LastIndexOfAny(['b', 'c', 'c']), text => text.LastIndexOfAny(['b', 'c']));
-        TestNullable("abcde", text => text?.LastIndexOfAny(['b', 'c', 'c']), text => text?.LastIndexOfAny(['b', 'c']));
 
         Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0), _ => -1);
         Test("abcde", text => text.LastIndexOfAny(['c'], 4), text => text.LastIndexOf('c', 4));
         TestNullable("abcde", text => text?.LastIndexOfAny(['c'], 4), text => text?.LastIndexOf('c', 4));
-        Test("abcde", text => text.LastIndexOfAny(['b', 'c', 'c'], 4), text => text.LastIndexOfAny(['b', 'c'], 4));
-        TestNullable("abcde", text => text?.LastIndexOfAny(['b', 'c', 'c'], 4), text => text?.LastIndexOfAny(['b', 'c'], 4));
 
         Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0, 0), _ => -1);
         Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0, 1), _ => -1);
         Test("abcde", text => text.LastIndexOfAny(['c'], 4, 3), text => text.LastIndexOf('c', 4, 3));
         TestNullable("abcde", text => text?.LastIndexOfAny(['c'], 4, 3), text => text?.LastIndexOf('c', 4, 3));
-        Test("abcde", text => text.LastIndexOfAny(['b', 'c', 'c'], 4, 3), text => text.LastIndexOfAny(['b', 'c'], 4, 3));
-        TestNullable("abcde", text => text?.LastIndexOfAny(['b', 'c', 'c'], 4, 3), text => text?.LastIndexOfAny(['b', 'c'], 4, 3));
 
         DoNamedTest2();
     }
@@ -538,29 +525,10 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
         Test("abcde", text => text.Split([','], 0), _ => []);
         Test("ab,cd,e", text => text.Split([','], 1), text => [text]);
-        Test("ab,cd,e", text => text.Split([',', ','], 2), text => text.Split([','], 2));
-        TestNullable("ab,cd,e", text => text?.Split([',', ','], 2), text => text?.Split([','], 2));
-
-        Test<MissingStringSplitOptions, string[]>(
-            "  ab,cd,e  ",
-            (text, options) => text.Split([',', ','], options),
-            (text, options) => text.Split([','], options));
-        TestNullable<MissingStringSplitOptions, string[]?>(
-            "  ab,cd,e  ",
-            (text, options) => text?.Split([',', ','], options),
-            (text, options) => text?.Split([','], options));
 
         Test<MissingStringSplitOptions, string[]>("abcde", (text, options) => text.Split([','], 0, options), (_, _) => []);
         Test("  abcde  ", text => text.Split([','], 1, MissingStringSplitOptions.None), text => [text]);
         Test("  abcde  ", text => text.Split([','], 1, MissingStringSplitOptions.TrimEntries), text => [text.Trim()]);
-        Test<MissingStringSplitOptions, string[]>(
-            "  ab,cd,e  ",
-            (text, options) => text.Split([',', ','], 2, options),
-            (text, options) => text.Split([','], 2, options));
-        TestNullable<MissingStringSplitOptions, string[]?>(
-            "  ab,cd,e  ",
-            (text, options) => text?.Split([',', ','], 2, options),
-            (text, options) => text?.Split([','], 2, options));
 
         Test("  abcde  ", text => text.Split(null as string), text => [text]);
         Test("  abcde  ", text => text.Split(""), text => [text]);
@@ -601,14 +569,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             "  ab,cd,e  ",
             (text, options) => text?.Split([","], options),
             (text, options) => text?.Split([','], options));
-        Test<MissingStringSplitOptions, string[]>(
-            "  ab,cd,e  ",
-            (text, options) => text.Split([",", ","], options),
-            (text, options) => text.Split([","], options));
-        TestNullable<MissingStringSplitOptions, string[]?>(
-            "  ab,cd,e  ",
-            (text, options) => text?.Split([",", ","], options),
-            (text, options) => text?.Split([","], options));
 
         Test<MissingStringSplitOptions, string[]>("abcde", (text, options) => text.Split(["ab", "d"], 0, options), (_, _) => []);
         Test("  abcde  ", text => text.Split(["bd"], 1), text => [text]);
@@ -623,14 +583,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
             "  ab,cd,e  ",
             (text, options) => text?.Split([","], 10, options),
             (text, options) => text?.Split([','], 10, options));
-        Test<MissingStringSplitOptions, string[]>(
-            "  ab,cd,e  ",
-            (text, options) => text.Split([",", ","], 10, options),
-            (text, options) => text.Split([","], 10, options));
-        TestNullable<MissingStringSplitOptions, string[]?>(
-            "  ab,cd,e  ",
-            (text, options) => text?.Split([",", ","], 10, options),
-            (text, options) => text?.Split([","], 10, options));
 
         DoNamedTest2();
     }

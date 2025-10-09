@@ -42,6 +42,19 @@ namespace Test
             var result34 = TimeOnly.TryParseExact(s1, formats, |null, DateTimeStyles.None|(21), out result);
         }
 
+        public void RedundantCollectionElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, out TimeOnly result)
+        {
+            var result11 = TimeOnly.ParseExact(s, ["t", |"t"|(22), "T", "o", |"O"|(23), "r", |"R"|(24)]);
+            var result12 = TimeOnly.ParseExact(s1, ["t", |"t"|(25), "T", "o", |"O"|(26), "r", |"R"|(27)]);
+            var result13 = TimeOnly.ParseExact(s, ["t", |"t"|(28), "T", "o", |"O"|(29), "r", |"R"|(30)], provider, style);
+            var result14 = TimeOnly.ParseExact(s1, ["t", |"t"|(31), "T", "o", |"O"|(32), "r", |"R"|(33)], provider, style);
+
+            var result21 = TimeOnly.TryParseExact(s, ["t", |"t"|(34), "T", "o", |"O"|(35), "r", |"R"|(36)], out result);
+            var result22 = TimeOnly.TryParseExact(s1, ["t", |"t"|(37), "T", "o", |"O"|(38), "r", |"R"|(39)], out result);
+            var result23 = TimeOnly.TryParseExact(s, ["t", |"t"|(40), "T", "o", |"O"|(41), "r", |"R"|(42)], provider, style, out result);
+            var result24 = TimeOnly.TryParseExact(s1, ["t", |"t"|(43), "T", "o", |"O"|(44), "r", |"R"|(45)], provider, style, out result);
+        }
+
         public void NoDetection(TimeOnly timeOnly, TimeSpan timeSpanValue, double doubleValue, string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, string format, ReadOnlySpan<char> format1, string[] formats, out int wrappedDays, out TimeOnly result)
         {
             var result11 = timeOnly.Add(timeSpanValue, out wrappedDays);
@@ -76,6 +89,16 @@ namespace Test
             var result82 = TimeOnly.TryParseExact(s1, format1, provider, style, out result);
             var result83 = TimeOnly.TryParseExact(s, formats, provider, style, out result);
             var result84 = TimeOnly.TryParseExact(s1, formats, provider, style, out result);
+
+            var result91 = TimeOnly.ParseExact(s, ["t", "T", "o", "r"]);
+            var result92 = TimeOnly.ParseExact(s1, ["t", "T", "o", "r"]);
+            var result93 = TimeOnly.ParseExact(s, ["t", "T", "o", "r"], provider, style);
+            var result94 = TimeOnly.ParseExact(s1, ["t", "T", "o", "r"], provider, style);
+
+            var resultA1 = TimeOnly.TryParseExact(s, ["t", "T", "o", "r"], out result);
+            var resultA2 = TimeOnly.TryParseExact(s1, ["t", "T", "o", "r"], out result);
+            var resultA3 = TimeOnly.TryParseExact(s, ["t", "T", "o", "r"], provider, style, out result);
+            var resultA4 = TimeOnly.TryParseExact(s1, ["t", "T", "o", "r"], provider, style, out result);
         }
 
         public void NoDetection(TimeOnly timeOnly, TimeSpan timeSpanValue, double doubleValue)
@@ -109,3 +132,27 @@ namespace Test
 (19): ReSharper Dead Code: Passing 'null, DateTimeStyles.None' is redundant.
 (20): ReSharper Dead Code: Passing 'null, DateTimeStyles.None' is redundant.
 (21): ReSharper Dead Code: Passing 'null, DateTimeStyles.None' is redundant.
+(22): ReSharper Dead Code: The string is already passed.
+(23): ReSharper Dead Code: The equivalent string is already passed.
+(24): ReSharper Dead Code: The equivalent string is already passed.
+(25): ReSharper Dead Code: The string is already passed.
+(26): ReSharper Dead Code: The equivalent string is already passed.
+(27): ReSharper Dead Code: The equivalent string is already passed.
+(28): ReSharper Dead Code: The string is already passed.
+(29): ReSharper Dead Code: The equivalent string is already passed.
+(30): ReSharper Dead Code: The equivalent string is already passed.
+(31): ReSharper Dead Code: The string is already passed.
+(32): ReSharper Dead Code: The equivalent string is already passed.
+(33): ReSharper Dead Code: The equivalent string is already passed.
+(34): ReSharper Dead Code: The string is already passed.
+(35): ReSharper Dead Code: The equivalent string is already passed.
+(36): ReSharper Dead Code: The equivalent string is already passed.
+(37): ReSharper Dead Code: The string is already passed.
+(38): ReSharper Dead Code: The equivalent string is already passed.
+(39): ReSharper Dead Code: The equivalent string is already passed.
+(40): ReSharper Dead Code: The string is already passed.
+(41): ReSharper Dead Code: The equivalent string is already passed.
+(42): ReSharper Dead Code: The equivalent string is already passed.
+(43): ReSharper Dead Code: The string is already passed.
+(44): ReSharper Dead Code: The equivalent string is already passed.
+(45): ReSharper Dead Code: The equivalent string is already passed.
