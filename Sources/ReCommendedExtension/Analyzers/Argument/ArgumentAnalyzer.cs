@@ -13,7 +13,10 @@ namespace ReCommendedExtension.Analyzers.Argument;
 
 [ElementProblemAnalyzer(
     typeof(ICSharpExpression),
-    HighlightingTypes = [typeof(RedundantArgumentHint), typeof(RedundantArgumentRangeHint), typeof(RedundantElementHint)])]
+    HighlightingTypes =
+    [
+        typeof(RedundantArgumentHint), typeof(RedundantArgumentRangeHint), typeof(RedundantElementHint), typeof(UseOtherArgumentSuggestion),
+    ])]
 public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 {
     sealed class ClrTypeNameEqualityComparer : IEqualityComparer<IClrTypeName>
@@ -195,6 +198,100 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         public required Func<IReadOnlyList<ICSharpArgument>, bool> Condition { get; init; }
     }
 
+    sealed record ArgumentCondition
+    {
+        public int ParameterIndex { get; init; } = -1;
+
+        public required Func<ICSharpArgument, bool> Condition { get; init; }
+    }
+
+    sealed record ReplacementSignature
+    {
+        public required IReadOnlyList<Parameter> Parameters { get; init; }
+
+        public int ParameterIndex { get; init; } = -1;
+    }
+
+    sealed record OtherArgument : Inspection
+    {
+        [Pure]
+        static bool IsCollectionCreationWithOnlyInvariantConstants(ICSharpArgument arg, Func<string, bool> isInvariantConstant)
+        {
+            if (CollectionCreation.TryFrom(arg.Value) is { Count: > 0 } collectionCreation)
+            {
+                foreach (var s in collectionCreation.AllElementsAsStringConstants)
+                {
+                    if (s == null || !isInvariantConstant(s))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static OtherArgument NullFormatProviderForInvariantDateTimeOnlyFormat { get; } = new()
+        {
+            TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
+            FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" },
+            Message = "The format provider is ignored (pass null instead).",
+        };
+
+        public static OtherArgument NullFormatProviderForInvariantDateTimeOnlyFormatCollection { get; } = new()
+        {
+            TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
+            FurtherArgumentCondition = new ArgumentCondition
+            {
+                Condition = arg => IsCollectionCreationWithOnlyInvariantConstants(arg, s => s is "o" or "O" or "r" or "R"),
+            },
+            Message = "The format provider is ignored (pass null instead).",
+        };
+
+        public static OtherArgument NullFormatProviderForInvariantDateTimeFormat { get; } = new()
+        {
+            TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
+            FurtherArgumentCondition =
+                new ArgumentCondition { Condition = arg => arg.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" or "s" or "u" },
+            Message = "The format provider is ignored (pass null instead).",
+        };
+
+        public static OtherArgument NullFormatProviderForInvariantDateTimeFormatCollection { get; } = new()
+        {
+            TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
+            FurtherArgumentCondition = new ArgumentCondition
+            {
+                Condition = arg => IsCollectionCreationWithOnlyInvariantConstants(arg, s => s is "o" or "O" or "r" or "R" or "s" or "u"),
+            },
+            Message = "The format provider is ignored (pass null instead).",
+        };
+
+        public static OtherArgument NullFormatProviderForInvariantTimeSpanFormat { get; } = new()
+        {
+            TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
+            FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.TryGetStringConstant() is "c" or "t" or "T" },
+            Message = "The format provider is ignored (pass null instead).",
+        };
+
+        public static OtherArgument SingleCollectionElement { get; } = new()
+        {
+            TryGetReplacement = arg => CollectionCreation.TryFrom(arg.Value) is { Count: 1 } collectionCreation
+                ? collectionCreation.SingleElement.GetText()
+                : null,
+            Message = "The only collection element should be passed directly.",
+        };
+
+        public int ParameterIndex { get; init; } = -1;
+
+        public required Func<ICSharpArgument, string?> TryGetReplacement { get; init; }
+
+        public ArgumentCondition? FurtherArgumentCondition { get; init; }
+
+        public ReplacementSignature? ReplacementSignature { get; init; }
+    }
+
     abstract record RedundantCollectionElement : Inspection
     {
         const byte nonEquivalenceGroupId = 0xFF;
@@ -218,7 +315,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
                 if (groupId != nonEquivalenceGroupId)
                 {
-                    Debug.Assert(groupId is >= 0 and <= 7);
+                    Debug.Assert(groupId <= 7);
 
                     var bit = unchecked((byte)(1 << groupId));
                     if ((groupsSeenMask & bit) != 0)
@@ -617,7 +714,11 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
         [Pure]
         static Dictionary<string, IReadOnlyCollection<Member>> CreateDateTimeMembers()
-            => new(StringComparer.Ordinal)
+        {
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantDateTimeFormat.FurtherArgumentCondition is { });
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition is { });
+
+            return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
             {
                 {
                     "", // constructors
@@ -762,33 +863,108 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgument.DateTimeStylesNone with { ParameterIndex = 3 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider], IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantArgument.DateTimeStylesNone with { ParameterIndex = 3 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.ReadOnlySpanOfChar, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles,
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.ReadOnlySpanOfChar,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                     ]
                 },
@@ -863,14 +1039,71 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 Parameters =
                                 [
                                     Parameter.String,
-                                    Parameter.StringArray,
+                                    Parameter.String,
                                     Parameter.IFormatProvider,
                                     Parameter.DateTimeStyles,
                                     Parameter.DateTime with { Kind = ParameterKind.OUTPUT },
                                 ],
                                 IsStatic = true,
                             },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Inspections =
+                            [
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.String,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                        Parameter.DateTime with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String,
+                                            Parameter.String,
+                                            Parameter.IFormatProvider,
+                                            Parameter.DateTimeStyles,
+                                            Parameter.DateTime with { Kind = ParameterKind.OUTPUT },
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
@@ -886,15 +1119,32 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 ],
                                 IsStatic = true,
                             },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                     ]
                 },
             };
+        }
 
         [Pure]
         static Dictionary<string, IReadOnlyCollection<Member>> CreateDateTimeOffsetMembers()
-            => new(StringComparer.Ordinal)
+        {
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantDateTimeFormat.FurtherArgumentCondition is { });
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition is { });
+
+            return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
             {
                 {
                     "", // constructors
@@ -958,33 +1208,108 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgument.DateTimeStylesNone with { ParameterIndex = 3 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider], IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantArgument.DateTimeStylesNone with { ParameterIndex = 3 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.ReadOnlySpanOfChar, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles,
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.ReadOnlySpanOfChar,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                     ]
                 },
@@ -1061,14 +1386,71 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 Parameters =
                                 [
                                     Parameter.String,
-                                    Parameter.StringArray,
+                                    Parameter.String,
                                     Parameter.IFormatProvider,
                                     Parameter.DateTimeStyles,
                                     Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
                                 ],
                                 IsStatic = true,
                             },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Inspections =
+                            [
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.String,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                        Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String,
+                                            Parameter.String,
+                                            Parameter.IFormatProvider,
+                                            Parameter.DateTimeStyles,
+                                            Parameter.DateTimeOffset with { Kind = ParameterKind.OUTPUT },
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
@@ -1084,15 +1466,31 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 ],
                                 IsStatic = true,
                             },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                     ]
                 },
             };
+        }
 
         [Pure]
         static Dictionary<string, IReadOnlyCollection<Member>> CreateTimeSpanMembers()
-            => new(StringComparer.Ordinal)
+        {
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantTimeSpanFormat.FurtherArgumentCondition is { });
+
+            return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
             {
                 {
                     "", // constructors
@@ -1129,32 +1527,92 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.TimeSpanStyles],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgument.TimeSpanStylesNone with { ParameterIndex = 3 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider], IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                OtherArgument.NullFormatProviderForInvariantTimeSpanFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantTimeSpanFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider], IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringTimeSpanFormats with { ParameterIndex = 1 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.TimeSpanStyles],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantArgument.TimeSpanStylesNone with { ParameterIndex = 3 },
+                                OtherArgument.NullFormatProviderForInvariantTimeSpanFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantTimeSpanFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider, Parameter.TimeSpanStyles],
-                                IsStatic = true,
-                            },
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider], IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringTimeSpanFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters = [Parameter.String, Parameter.String, Parameter.IFormatProvider], ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters = [Parameter.String, Parameter.StringArray, Parameter.IFormatProvider, Parameter.TimeSpanStyles],
+                                    IsStatic = true,
+                                },
                             Inspections =
                             [
                                 RedundantArgument.TimeSpanStylesNone with { ParameterIndex = 3 },
                                 RedundantCollectionElement.StringTimeSpanFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.TimeSpanStyles,
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                         new Member
@@ -1163,10 +1621,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                             {
                                 Parameters =
                                 [
-                                    Parameter.ReadOnlySpanOfChar,
-                                    Parameter.StringArray,
-                                    Parameter.IFormatProvider,
-                                    Parameter.TimeSpanStyles,
+                                    Parameter.ReadOnlySpanOfChar, Parameter.StringArray, Parameter.IFormatProvider, Parameter.TimeSpanStyles,
                                 ],
                                 IsStatic = true,
                             },
@@ -1215,13 +1670,59 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 Parameters =
                                 [
                                     Parameter.String,
-                                    Parameter.StringArray,
+                                    Parameter.String,
                                     Parameter.IFormatProvider,
                                     Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
                                 ],
                                 IsStatic = true,
                             },
-                            Inspections = [RedundantCollectionElement.StringTimeSpanFormats with { ParameterIndex = 1 }],
+                            Inspections =
+                            [
+                                OtherArgument.NullFormatProviderForInvariantTimeSpanFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantTimeSpanFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.String,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringTimeSpanFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String,
+                                            Parameter.String,
+                                            Parameter.IFormatProvider,
+                                            Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
@@ -1246,38 +1747,6 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 [
                                     Parameter.String,
                                     Parameter.String,
-                                    Parameter.IFormatProvider,
-                                    Parameter.TimeSpanStyles,
-                                    Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgument.TimeSpanStylesNone with { ParameterIndex = 3 }],
-                        },
-                        new Member
-                        {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.ReadOnlySpanOfChar,
-                                    Parameter.ReadOnlySpanOfChar,
-                                    Parameter.IFormatProvider,
-                                    Parameter.TimeSpanStyles,
-                                    Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgument.TimeSpanStylesNone with { ParameterIndex = 3 }],
-                        },
-                        new Member
-                        {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.String,
-                                    Parameter.StringArray,
                                     Parameter.IFormatProvider,
                                     Parameter.TimeSpanStyles,
                                     Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
@@ -1287,7 +1756,69 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                             Inspections =
                             [
                                 RedundantArgument.TimeSpanStylesNone with { ParameterIndex = 3 },
+                                OtherArgument.NullFormatProviderForInvariantTimeSpanFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantTimeSpanFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.IFormatProvider,
+                                    Parameter.TimeSpanStyles,
+                                    Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            Inspections = [RedundantArgument.TimeSpanStylesNone with { ParameterIndex = 3 }],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.String,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.TimeSpanStyles,
+                                        Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantArgument.TimeSpanStylesNone with { ParameterIndex = 3 },
                                 RedundantCollectionElement.StringTimeSpanFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String,
+                                            Parameter.String,
+                                            Parameter.IFormatProvider,
+                                            Parameter.TimeSpanStyles,
+                                            Parameter.TimeSpan with { Kind = ParameterKind.OUTPUT },
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                         new Member
@@ -1313,10 +1844,15 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     ]
                 },
             };
+        }
 
         [Pure]
         static Dictionary<string, IReadOnlyCollection<Member>> CreateDateOnlyMembers()
-            => new(StringComparer.Ordinal)
+        {
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat.FurtherArgumentCondition is { });
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition is { });
+
+            return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
             {
                 {
                     "Parse", // todo: nameof(DateOnly.Parse) when available
@@ -1368,14 +1904,20 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         new Member
                         {
                             Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringArray], IsStatic = true },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature { Parameters = [Parameter.String, Parameter.String], ParameterIndex = 1 },
+                                },
+                            ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray], IsStatic = true,
-                            },
+                            Signature = new MethodSignature { Parameters = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray], IsStatic = true },
                             Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
                         },
                         new Member
@@ -1395,6 +1937,15 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.String, Parameter.String],
                                 },
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                         new Member
@@ -1415,18 +1966,44 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 },
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
                                 RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.ReadOnlySpanOfChar, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles,
-                                ],
-                                IsStatic = true,
-                            },
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.ReadOnlySpanOfChar,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                    ],
+                                    IsStatic = true,
+                                },
                             Inspections =
                             [
                                 RedundantArgument.Null with
@@ -1437,6 +2014,15 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 },
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
                                 RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                     ]
@@ -1507,80 +2093,33 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.String, Parameter.StringArray, Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
-                        },
-                        new Member
-                        {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.ReadOnlySpanOfChar,
-                                    Parameter.StringArray,
-                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
-                        },
-                        new Member
-                        {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.String,
-                                    Parameter.String,
-                                    Parameter.IFormatProvider,
-                                    Parameter.DateTimeStyles,
-                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
-                        },
-                        new Member
-                        {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.ReadOnlySpanOfChar,
-                                    Parameter.ReadOnlySpanOfChar,
-                                    Parameter.IFormatProvider,
-                                    Parameter.DateTimeStyles,
-                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
-                        },
-                        new Member
-                        {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.String,
-                                    Parameter.StringArray,
-                                    Parameter.IFormatProvider,
-                                    Parameter.DateTimeStyles,
-                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.String, Parameter.StringArray, Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
                             Inspections =
                             [
-                                RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
                                 RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String,
+                                            Parameter.String,
+                                            Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                         new Member
@@ -1591,6 +2130,20 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 [
                                     Parameter.ReadOnlySpanOfChar,
                                     Parameter.StringArray,
+                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            Inspections = [RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 }],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.String,
+                                    Parameter.String,
                                     Parameter.IFormatProvider,
                                     Parameter.DateTimeStyles,
                                     Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
@@ -1600,16 +2153,122 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                             Inspections =
                             [
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature = new MethodSignature
+                            {
+                                Parameters =
+                                [
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.ReadOnlySpanOfChar,
+                                    Parameter.IFormatProvider,
+                                    Parameter.DateTimeStyles,
+                                    Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                ],
+                                IsStatic = true,
+                            },
+                            Inspections = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.String,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                        Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
                                 RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String,
+                                            Parameter.String,
+                                            Parameter.IFormatProvider,
+                                            Parameter.DateTimeStyles,
+                                            Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.ReadOnlySpanOfChar,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                        Parameter.DateOnly with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
+                                RedundantCollectionElement.StringDateTimeFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                     ]
                 },
             };
+        }
 
         [Pure]
         static Dictionary<string, IReadOnlyCollection<Member>> CreateTimeOnlyMembers()
-            => new(StringComparer.Ordinal)
+        {
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat.FurtherArgumentCondition is { });
+            Debug.Assert(OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition is { });
+
+            return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
             {
                 {
                     "Add", // todo: nameof(TimeOnly.Add) when available
@@ -1693,18 +2352,21 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     [
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.String, Parameter.StringArray], IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 }],
+                            Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringArray], IsStatic = true },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature { Parameters = [Parameter.String, Parameter.String], ParameterIndex = 1 },
+                                },
+                            ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray], IsStatic = true,
-                            },
+                            Signature = new MethodSignature { Parameters = [Parameter.ReadOnlySpanOfChar, Parameter.StringArray], IsStatic = true },
                             Inspections = [RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 }],
                         },
                         new Member
@@ -1724,6 +2386,15 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     ReplacementSignatureParameters = [Parameter.String, Parameter.String],
                                 },
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                         new Member
@@ -1744,18 +2415,44 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 },
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
                                 RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String, Parameter.String, Parameter.IFormatProvider, Parameter.DateTimeStyles,
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.ReadOnlySpanOfChar, Parameter.StringArray, Parameter.IFormatProvider, Parameter.DateTimeStyles,
-                                ],
-                                IsStatic = true,
-                            },
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.ReadOnlySpanOfChar,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                    ],
+                                    IsStatic = true,
+                                },
                             Inspections =
                             [
                                 RedundantArgument.Null with
@@ -1766,6 +2463,15 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 },
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
                                 RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                     ]
@@ -1850,15 +2556,34 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         },
                         new Member
                         {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.String, Parameter.StringArray, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 }],
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.String, Parameter.StringArray, Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String,
+                                            Parameter.String,
+                                            Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
                         },
                         new Member
                         {
@@ -1868,38 +2593,6 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 [
                                     Parameter.String,
                                     Parameter.String,
-                                    Parameter.IFormatProvider,
-                                    Parameter.DateTimeStyles,
-                                    Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
-                        },
-                        new Member
-                        {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.ReadOnlySpanOfChar,
-                                    Parameter.ReadOnlySpanOfChar,
-                                    Parameter.IFormatProvider,
-                                    Parameter.DateTimeStyles,
-                                    Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
-                                ],
-                                IsStatic = true,
-                            },
-                            Inspections = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
-                        },
-                        new Member
-                        {
-                            Signature = new MethodSignature
-                            {
-                                Parameters =
-                                [
-                                    Parameter.String,
-                                    Parameter.StringArray,
                                     Parameter.IFormatProvider,
                                     Parameter.DateTimeStyles,
                                     Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
@@ -1909,7 +2602,15 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                             Inspections =
                             [
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
-                                RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormat.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                         new Member
@@ -1919,22 +2620,96 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 Parameters =
                                 [
                                     Parameter.ReadOnlySpanOfChar,
-                                    Parameter.StringArray,
+                                    Parameter.ReadOnlySpanOfChar,
                                     Parameter.IFormatProvider,
                                     Parameter.DateTimeStyles,
                                     Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
                                 ],
                                 IsStatic = true,
                             },
+                            Inspections = [RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 }],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.String,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                        Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
                             Inspections =
                             [
                                 RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
                                 RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 },
+                                OtherArgument.SingleCollectionElement with
+                                {
+                                    ParameterIndex = 1,
+                                    ReplacementSignature =
+                                    new ReplacementSignature
+                                    {
+                                        Parameters =
+                                        [
+                                            Parameter.String,
+                                            Parameter.String,
+                                            Parameter.IFormatProvider,
+                                            Parameter.DateTimeStyles,
+                                            Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                        ],
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
+                            ],
+                        },
+                        new Member
+                        {
+                            Signature =
+                                new MethodSignature
+                                {
+                                    Parameters =
+                                    [
+                                        Parameter.ReadOnlySpanOfChar,
+                                        Parameter.StringArray,
+                                        Parameter.IFormatProvider,
+                                        Parameter.DateTimeStyles,
+                                        Parameter.TimeOnly with { Kind = ParameterKind.OUTPUT },
+                                    ],
+                                    IsStatic = true,
+                                },
+                            Inspections =
+                            [
+                                RedundantArgumentRange.NullDateTimeStylesNone with { ParameterIndexRange = 2..4 },
+                                RedundantCollectionElement.StringTimeOnlyFormats with { ParameterIndex = 1 },
+                                OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection with
+                                {
+                                    ParameterIndex = 2,
+                                    FurtherArgumentCondition =
+                                    OtherArgument.NullFormatProviderForInvariantDateTimeOnlyFormatCollection.FurtherArgumentCondition with
+                                    {
+                                        ParameterIndex = 1,
+                                    },
+                                },
                             ],
                         },
                     ]
                 },
             };
+        }
 
         [Pure]
         static Dictionary<string, IReadOnlyCollection<Member>> CreateGuidMembers()
@@ -2210,7 +2985,10 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         },
                         new Member
                         {
-                            Signature = new MethodSignature { Parameters = [Parameter.StringArray, Parameter.Int32, Parameter.StringSplitOptions] },
+                            Signature = new MethodSignature
+                            {
+                                Parameters = [Parameter.StringArray, Parameter.Int32, Parameter.StringSplitOptions],
+                            },
                             Inspections = [RedundantCollectionElement.String with { ParameterIndex = 0 }],
                         },
                     ]
@@ -2416,12 +3194,14 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         return null;
     }
 
+    delegate bool HasMember(IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames);
+
     static void Analyze(
         IHighlightingConsumer consumer,
         Member member,
         int? parameterIndexOfParams,
         TreeNodeCollection<ICSharpArgument?> arguments,
-        Func<IReadOnlyList<Parameter>, bool> hasMember)
+        HasMember hasMember)
     {
         foreach (var inspection in member.Inspections)
         {
@@ -2436,7 +3216,9 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                         && (redundantArgumentByPosition.FurtherCondition == null || redundantArgumentByPosition.FurtherCondition(arguments))
                         && hasMember(
                             redundantArgumentByPosition.ReplacementSignatureParameters
-                            ?? member.Signature.Parameters.WithoutElementAt(redundantArgumentByPosition.ParameterIndex)))
+                            ?? member.Signature.Parameters.WithoutElementAt(redundantArgumentByPosition.ParameterIndex),
+                            false,
+                            out _))
                     {
                         consumer.AddHighlighting(new RedundantArgumentHint(inspection.Message, argument));
                     }
@@ -2457,7 +3239,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     var args = positionalArguments.GetSubrange(redundantArgumentRange.ParameterIndexRange);
 
                     if (redundantArgumentRange.Condition(args)
-                        && hasMember(member.Signature.Parameters.WithoutElementsAt(redundantArgumentRange.ParameterIndexRange)))
+                        && hasMember(member.Signature.Parameters.WithoutElementsAt(redundantArgumentRange.ParameterIndexRange), false, out _))
                     {
                         consumer.AddHighlighting(new RedundantArgumentRangeHint(redundantArgumentRange.Message, args));
                     }
@@ -2497,6 +3279,50 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     }
                     break;
                 }
+
+                case OtherArgument otherArgument:
+                {
+                    Debug.Assert(
+                        otherArgument is
+                        {
+                            ParameterIndex: >= 0,
+                            FurtherArgumentCondition: not { ParameterIndex: < 0 },
+                            ReplacementSignature: not { ParameterIndex: < 0 },
+                        });
+
+                    if (arguments[otherArgument.ParameterIndex] is { } argument
+                        && otherArgument.TryGetReplacement(argument) is { } replacement
+                        && (otherArgument.FurtherArgumentCondition == null
+                            || arguments[otherArgument.FurtherArgumentCondition.ParameterIndex] is { } furtherArgument
+                            && otherArgument.FurtherArgumentCondition.Condition(furtherArgument)))
+                    {
+                        if (otherArgument.ReplacementSignature is { })
+                        {
+                            if (hasMember(otherArgument.ReplacementSignature.Parameters, argument.NameIdentifier is { }, out var parameterNames))
+                            {
+                                consumer.AddHighlighting(
+                                    new UseOtherArgumentSuggestion(
+                                        otherArgument.Message,
+                                        argument,
+                                        otherArgument.ReplacementSignature.Parameters[otherArgument.ReplacementSignature.ParameterIndex].Kind,
+                                        argument.NameIdentifier is { } ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex] : null,
+                                        replacement));
+                            }
+                        }
+                        else
+                        {
+                            consumer.AddHighlighting(
+                                new UseOtherArgumentSuggestion(
+                                    otherArgument.Message,
+                                    argument,
+                                    member.Signature.Parameters[otherArgument.ParameterIndex].Kind,
+                                    argument.NameIdentifier?.Name,
+                                    replacement));
+                        }
+                    }
+
+                    break;
+                }
             }
         }
     }
@@ -2522,7 +3348,10 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     constructor,
                     parameterIndexOfParams,
                     arguments,
-                    parameters => containingType.HasConstructor(new Extensions.MethodFinding.ConstructorSignature { Parameters = parameters }));
+                    (IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames) => containingType.HasConstructor(
+                        new Extensions.MethodFinding.ConstructorSignature { Parameters = parameters },
+                        returnParameterNames,
+                        out parameterNames));
                 break;
             }
 
@@ -2547,14 +3376,16 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     method,
                     parameterIndexOfParams,
                     arguments,
-                    parameters => containingType.HasMethod(
+                    (IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames) => containingType.HasMethod(
                         new Extensions.MethodFinding.MethodSignature
                         {
                             Name = resolvedMethod.ShortName,
                             Parameters = parameters,
                             IsStatic = signature.IsStatic,
                             GenericParametersCount = signature.GenericParametersCount,
-                        }));
+                        },
+                        returnParameterNames,
+                        out parameterNames));
                 break;
             }
         }

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -16,8 +15,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\TimeSpan";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or UseUnaryOperatorSuggestion or UseOtherArgumentSuggestion
-            || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or UseUnaryOperatorSuggestion || highlighting.IsError();
 
     protected override System.TimeSpan[] TestValues { get; } =
     [
@@ -181,118 +179,12 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNetCore21]
-    [SuppressMessage("ReSharper", "UseOtherArgument")]
-    [SuppressMessage("ReSharper", "RedundantElement")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestParseExact()
-    {
-        var constantFormatSpecifiers = new[] { "c", "t", "T" };
-        var formatSpecifiers = new[] { "c", "t", "T", "g", "G" };
-        var timeSpanStyles = new[] { TimeSpanStyles.None, TimeSpanStyles.AssumeNegative };
-
-        Test(
-            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider),
-            (timeSpan, format, _) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null),
-            TestValues,
-            constantFormatSpecifiers,
-            FormatProviders);
-
-        Test(
-            (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, formatProvider, styles),
-            (timeSpan, format, _, styles) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null, styles),
-            TestValues,
-            constantFormatSpecifiers,
-            FormatProviders,
-            timeSpanStyles);
-
-        Test(
-            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, formatProvider), [format], formatProvider),
-            (timeSpan, format, formatProvider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, formatProvider), format, formatProvider),
-            TestValues,
-            formatSpecifiers,
-            FormatProviders);
-
-        Test(
-            (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(
-                timeSpan.ToString(format, formatProvider),
-                [format],
-                formatProvider,
-                styles),
-            (timeSpan, format, formatProvider, styles) => System.TimeSpan.ParseExact(
-                timeSpan.ToString(format, formatProvider),
-                format,
-                formatProvider,
-                styles),
-            TestValues,
-            formatSpecifiers,
-            FormatProviders,
-            timeSpanStyles);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestSubtract()
     {
         var values = TestValues.Except([System.TimeSpan.MinValue, System.TimeSpan.MaxValue]).ToArray();
 
         Test((timeSpan, ts) => timeSpan.Subtract(ts), (timeSpan, ts) => timeSpan - ts, values, values);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNetCore21]
-    [SuppressMessage("ReSharper", "UseOtherArgument")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    [SuppressMessage("ReSharper", "RedundantElement")]
-    public void TestTryParseExact()
-    {
-        var constantFormatSpecifiers = new[] { "c", "t", "T" };
-        var formatSpecifiers = new[] { "c", "t", "T", "g", "G" };
-        var timeSpanStyles = new[] { TimeSpanStyles.None, TimeSpanStyles.AssumeNegative };
-
-        Test(
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", format, formatProvider, out result),
-            (System.TimeSpan timeSpan, string format, IFormatProvider? _, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, out result),
-            TestValues,
-            constantFormatSpecifiers,
-            FormatProviders);
-
-        Test(
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", format, formatProvider, styles, out result),
-            (System.TimeSpan timeSpan, string format, IFormatProvider? _, TimeSpanStyles styles, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, styles, out result),
-            TestValues,
-            constantFormatSpecifiers,
-            FormatProviders,
-            timeSpanStyles);
-
-        Test(
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", [format], formatProvider, out result),
-            (System.TimeSpan timeSpan, string format, IFormatProvider? _, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, out result),
-            TestValues,
-            constantFormatSpecifiers,
-            FormatProviders);
-
-        Test(
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact(timeSpan.ToString(format, formatProvider), [format], formatProvider, styles, out result),
-            (System.TimeSpan timeSpan, string format, IFormatProvider? formatProvider, TimeSpanStyles styles, out System.TimeSpan result)
-                => System.TimeSpan.TryParseExact(timeSpan.ToString(format, formatProvider), format, formatProvider, styles, out result),
-            TestValues,
-            formatSpecifiers,
-            FormatProviders,
-            timeSpanStyles);
 
         DoNamedTest2();
     }

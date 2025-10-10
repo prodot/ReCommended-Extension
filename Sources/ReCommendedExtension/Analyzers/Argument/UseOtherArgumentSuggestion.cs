@@ -1,10 +1,11 @@
 ﻿using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes;
+namespace ReCommendedExtension.Analyzers.Argument;
 
 [RegisterConfigurableSeverity(
     SeverityId,
@@ -14,12 +15,18 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UseOtherArgumentSuggestion(string message, ICSharpArgument argument, string? parameterName, string replacement) : Highlighting(
-    message)
+public sealed class UseOtherArgumentSuggestion(
+    string message,
+    ICSharpArgument argument,
+    ParameterKind parameterKind,
+    string? parameterName,
+    string replacement) : Highlighting(message)
 {
     const string SeverityId = "UseOtherArgument";
 
     internal ICSharpArgument Argument => argument;
+
+    internal ParameterKind ParameterKind => parameterKind;
 
     internal string? ParameterName => parameterName;
 

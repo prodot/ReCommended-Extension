@@ -64,6 +64,35 @@ namespace Test
             var result22 = DateTime.TryParseExact(s1, ["d", |"d"|(57), "D", "f", "F", "g", "G", "m", |"M"|(58), "o", |"O"|(59), "r", |"R"|(60), "s", "t", "T", "u", "U", "y", |"Y"|(61)], provider, style, out result);
         }
 
+        public void OtherArgument(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out DateTime result)
+        {
+            var result11 = DateTime.ParseExact(s, "o", |provider|(62));
+            var result12 = DateTime.ParseExact(s, "O", |provider|(63));
+            var result13 = DateTime.ParseExact(s, "r", |provider|(64));
+            var result14 = DateTime.ParseExact(s, "R", |provider|(65));
+            var result15 = DateTime.ParseExact(s, "s", |provider|(66));
+            var result16 = DateTime.ParseExact(s, "u", |provider|(67));
+            var result17 = DateTime.ParseExact(s, "o", |provider|(68), style);
+            var result18 = DateTime.ParseExact(s, "O", |provider|(69), style);
+            var result19 = DateTime.ParseExact(s, "r", |provider|(70), style);
+            var result1A = DateTime.ParseExact(s, "R", |provider|(71), style);
+            var result1B = DateTime.ParseExact(s, "s", |provider|(72), style);
+            var result1C = DateTime.ParseExact(s, "u", |provider|(73), style);
+            var result1D = DateTime.ParseExact(s, |[format]|(74), provider, style);
+            var result1E = DateTime.ParseExact(s, ["o", "r", "s", "u"], |provider|(75), style);
+            var result1F = DateTime.ParseExact(s1, ["o", "r", "s", "u"], |provider|(76), style);
+
+            var result21 = DateTime.TryParseExact(s, "o", |provider|(77), style, out result);
+            var result22 = DateTime.TryParseExact(s, "O", |provider|(78), style, out result);
+            var result23 = DateTime.TryParseExact(s, "r", |provider|(79), style, out result);
+            var result24 = DateTime.TryParseExact(s, "R", |provider|(80), style, out result);
+            var result25 = DateTime.TryParseExact(s, "s", |provider|(81), style, out result);
+            var result26 = DateTime.TryParseExact(s, "u", |provider|(82), style, out result);
+            var result27 = DateTime.TryParseExact(s, |[format]|(83), provider, style, out result);
+            var result28 = DateTime.TryParseExact(s, ["o", "r", "s", "u"], |provider|(84), style, out result);
+            var result29 = DateTime.TryParseExact(s1, ["o", "r", "s", "u"], |provider|(85), style, out result);
+        }
+
         public void NoDetection(DateTime dateTime, long ticks, DateOnly date, TimeOnly time, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, Calendar calendar, DateTimeKind kind, char f, string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out DateTime result)
         {
             var result11 = new DateTime(ticks, kind);
@@ -101,6 +130,24 @@ namespace Test
 
             var result81 = DateTime.TryParseExact(s, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style, out result);
             var result82 = DateTime.TryParseExact(s1, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style, out result);
+
+            var result91 = DateTime.ParseExact(s, "o", null);
+            var result92 = DateTime.ParseExact(s, "O", null);
+            var result93 = DateTime.ParseExact(s, "r", null);
+            var result94 = DateTime.ParseExact(s, "R", null);
+            var result95 = DateTime.ParseExact(s, "s", null);
+            var result96 = DateTime.ParseExact(s, "u", null);
+            var result97 = DateTime.ParseExact(s, "o", null, style);
+            var result98 = DateTime.ParseExact(s, "O", null, style);
+            var result99 = DateTime.ParseExact(s, "r", null, style);
+            var result9A = DateTime.ParseExact(s, "R", null, style);
+            var result9B = DateTime.ParseExact(s, "s", null, style);
+            var result9C = DateTime.ParseExact(s, "u", null, style);
+            var result9D = DateTime.ParseExact(s, [format, format], provider, style);
+            var result9E = DateTime.ParseExact(s, ["o", "r", "s", "u"], null, style);
+            var result9F = DateTime.ParseExact(s, ["o", "r", "s", "u", "d"], provider, style);
+            var result9G = DateTime.ParseExact(s1, ["o", "r", "s", "u"], null, style);
+            var result9H = DateTime.ParseExact(s1, ["d", "o", "r", "s", "u"], provider, style);
         }
     }
 }
@@ -167,3 +214,27 @@ namespace Test
 (59): ReSharper Dead Code: The equivalent string is already passed.
 (60): ReSharper Dead Code: The equivalent string is already passed.
 (61): ReSharper Dead Code: The equivalent string is already passed.
+(62): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(63): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(64): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(65): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(66): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(67): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(68): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(69): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(70): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(71): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(72): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(73): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(74): ReSharper Suggestion: The only collection element should be passed directly.
+(75): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(76): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(77): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(78): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(79): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(80): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(81): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(82): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(83): ReSharper Suggestion: The only collection element should be passed directly.
+(84): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(85): ReSharper Suggestion: The format provider is ignored (pass null instead).

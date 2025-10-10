@@ -6,10 +6,10 @@ namespace Test
     {
         public void RedundantCollectionElement(string s, IFormatProvider provider)
         {
-            var result11 = TimeSpan.ParseExact(s, ["c", |"t"|(0), |"T"|(1), "g", |"g"|(2), "G"], provider);
-            var result12 = TimeSpan.ParseExact(s, (string[])["c", |"t"|(3), |"T"|(4), "g", |"g"|(5), "G"], provider);
-            var result13 = TimeSpan.ParseExact(s, new[] { "c", |"t"|(6), |"T"|(7), "g", |"g"|(8), "G" }, provider);
-            var result14 = TimeSpan.ParseExact(s, new string[] { "c", |"t"|(9), |"T"|(10), "g", |"g"|(11), "G" }, provider);
+            var result1 = TimeSpan.ParseExact(s, ["c", |"t"|(0), |"T"|(1), "g", |"g"|(2), "G"], provider);
+            var result2 = TimeSpan.ParseExact(s, (string[])["c", |"t"|(3), |"T"|(4), "g", |"g"|(5), "G"], provider);
+            var result3 = TimeSpan.ParseExact(s, new[] { "c", |"t"|(6), |"T"|(7), "g", |"g"|(8), "G" }, provider);
+            var result4 = TimeSpan.ParseExact(s, new string[] { "c", |"t"|(9), |"T"|(10), "g", |"g"|(11), "G" }, provider);
         }
     }
 }

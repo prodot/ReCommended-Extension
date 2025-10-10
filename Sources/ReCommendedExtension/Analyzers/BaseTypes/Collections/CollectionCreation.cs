@@ -71,7 +71,6 @@ internal abstract class CollectionCreation
         };
 
     IReadOnlyList<string?>? stringConstants;
-    bool? allElementsAreStringConstants;
 
     protected abstract IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions { get; }
 
@@ -102,49 +101,32 @@ internal abstract class CollectionCreation
     {
         get
         {
-            var allElementsAreStringConstants = true;
-
             foreach (var (element, expression) in ElementsWithExpressions)
             {
                 if (expression.TryGetStringConstant() is { } stringConstant)
                 {
                     yield return (element, stringConstant);
                 }
-                else
-                {
-                    allElementsAreStringConstants = false;
-                }
             }
-
-            this.allElementsAreStringConstants = allElementsAreStringConstants;
-        }
-    }
-
-    public bool AllElementsAreStringConstants
-    {
-        get
-        {
-            if (this.allElementsAreStringConstants is not { } allElementsAreStringConstants)
-            {
-                allElementsAreStringConstants = true;
-
-                foreach (var (_, expression) in ElementsWithExpressions)
-                {
-                    if (expression.TryGetStringConstant() == null)
-                    {
-                        allElementsAreStringConstants = false;
-                    }
-                }
-
-                this.allElementsAreStringConstants = allElementsAreStringConstants;
-            }
-
-            return allElementsAreStringConstants;
         }
     }
 
     /// <remarks>
-    /// Contains <c>null</c> if some elements is not string constants.
+    /// Returns <c>null</c> items if some elements are not non-null string constants.
+    /// </remarks>
+    public IEnumerable<string?> AllElementsAsStringConstants
+    {
+        get
+        {
+            foreach (var (_, expression) in ElementsWithExpressions)
+            {
+                yield return expression.TryGetStringConstant();
+            }
+        }
+    }
+
+    /// <remarks>
+    /// Contains <c>null</c> if some elements are not string constants.
     /// </remarks>
     public IReadOnlyList<string?> StringConstants
     {

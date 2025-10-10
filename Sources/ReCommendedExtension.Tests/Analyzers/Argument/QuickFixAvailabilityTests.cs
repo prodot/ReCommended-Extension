@@ -15,7 +15,8 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Argument\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantArgumentHint or RedundantArgumentRangeHint or RedundantElementHint || highlighting.IsError();
+        => highlighting is RedundantArgumentHint or RedundantArgumentRangeHint or RedundantElementHint or UseOtherArgumentSuggestion
+            || highlighting.IsError();
 
     [Test]
     public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
@@ -27,4 +28,9 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
     public void TestRemoveElementFixAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNetCore21]
+    public void TestUseOtherArgumentFixAvailability() => DoNamedTest2();
 }

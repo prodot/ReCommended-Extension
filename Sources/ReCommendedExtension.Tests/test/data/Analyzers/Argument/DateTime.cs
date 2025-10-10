@@ -64,6 +64,35 @@ namespace Test
             var result22 = DateTime.TryParseExact(s1, ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"], provider, style, out result);
         }
 
+        public void OtherArgument(string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out DateTime result)
+        {
+            var result11 = DateTime.ParseExact(s, "o", provider);
+            var result12 = DateTime.ParseExact(s, "O", provider);
+            var result13 = DateTime.ParseExact(s, "r", provider);
+            var result14 = DateTime.ParseExact(s, "R", provider);
+            var result15 = DateTime.ParseExact(s, "s", provider);
+            var result16 = DateTime.ParseExact(s, "u", provider);
+            var result17 = DateTime.ParseExact(s, "o", provider, style);
+            var result18 = DateTime.ParseExact(s, "O", provider, style);
+            var result19 = DateTime.ParseExact(s, "r", provider, style);
+            var result1A = DateTime.ParseExact(s, "R", provider, style);
+            var result1B = DateTime.ParseExact(s, "s", provider, style);
+            var result1C = DateTime.ParseExact(s, "u", provider, style);
+            var result1D = DateTime.ParseExact(s, [format], provider, style);
+            var result1E = DateTime.ParseExact(s, ["o", "r", "s", "u"], provider, style);
+            var result1F = DateTime.ParseExact(s1, ["o", "r", "s", "u"], provider, style);
+
+            var result21 = DateTime.TryParseExact(s, "o", provider, style, out result);
+            var result22 = DateTime.TryParseExact(s, "O", provider, style, out result);
+            var result23 = DateTime.TryParseExact(s, "r", provider, style, out result);
+            var result24 = DateTime.TryParseExact(s, "R", provider, style, out result);
+            var result25 = DateTime.TryParseExact(s, "s", provider, style, out result);
+            var result26 = DateTime.TryParseExact(s, "u", provider, style, out result);
+            var result27 = DateTime.TryParseExact(s, [format], provider, style, out result);
+            var result28 = DateTime.TryParseExact(s, ["o", "r", "s", "u"], provider, style, out result);
+            var result29 = DateTime.TryParseExact(s1, ["o", "r", "s", "u"], provider, style, out result);
+        }
+
         public void NoDetection(DateTime dateTime, long ticks, DateOnly date, TimeOnly time, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond, Calendar calendar, DateTimeKind kind, char f, string s, ReadOnlySpan<char> s1, string format, IFormatProvider provider, DateTimeStyles style, out DateTime result)
         {
             var result11 = new DateTime(ticks, kind);
@@ -101,6 +130,24 @@ namespace Test
 
             var result81 = DateTime.TryParseExact(s, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style, out result);
             var result82 = DateTime.TryParseExact(s1, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style, out result);
+
+            var result91 = DateTime.ParseExact(s, "o", null);
+            var result92 = DateTime.ParseExact(s, "O", null);
+            var result93 = DateTime.ParseExact(s, "r", null);
+            var result94 = DateTime.ParseExact(s, "R", null);
+            var result95 = DateTime.ParseExact(s, "s", null);
+            var result96 = DateTime.ParseExact(s, "u", null);
+            var result97 = DateTime.ParseExact(s, "o", null, style);
+            var result98 = DateTime.ParseExact(s, "O", null, style);
+            var result99 = DateTime.ParseExact(s, "r", null, style);
+            var result9A = DateTime.ParseExact(s, "R", null, style);
+            var result9B = DateTime.ParseExact(s, "s", null, style);
+            var result9C = DateTime.ParseExact(s, "u", null, style);
+            var result9D = DateTime.ParseExact(s, [format, format], provider, style);
+            var result9E = DateTime.ParseExact(s, ["o", "r", "s", "u"], null, style);
+            var result9F = DateTime.ParseExact(s, ["o", "r", "s", "u", "d"], provider, style);
+            var result9G = DateTime.ParseExact(s1, ["o", "r", "s", "u"], null, style);
+            var result9H = DateTime.ParseExact(s1, ["d", "o", "r", "s", "u"], provider, style);
         }
     }
 }

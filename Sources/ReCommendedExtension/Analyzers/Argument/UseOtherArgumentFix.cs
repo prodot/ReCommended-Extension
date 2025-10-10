@@ -1,14 +1,13 @@
 ﻿using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes;
+namespace ReCommendedExtension.Analyzers.Argument;
 
 [QuickFix]
 public sealed class UseOtherArgumentFix(UseOtherArgumentSuggestion highlighting) : QuickFixBase
@@ -25,7 +24,7 @@ public sealed class UseOtherArgumentFix(UseOtherArgumentSuggestion highlighting)
 
             ModificationUtil.ReplaceChild(
                 highlighting.Argument,
-                factory.CreateArgument(ParameterKind.UNKNOWN, highlighting.ParameterName, factory.CreateExpression(highlighting.Replacement)));
+                factory.CreateArgument(highlighting.ParameterKind, highlighting.ParameterName, factory.CreateExpression(highlighting.Replacement)));
         }
 
         return _ => { };

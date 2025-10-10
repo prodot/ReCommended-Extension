@@ -1,12 +1,10 @@
-﻿using System.Globalization;
-using JetBrains.Application.Settings;
+﻿using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
-using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.DateTime;
 
@@ -19,7 +17,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
         => highlighting is UseExpressionResultSuggestion
                 or UseDateTimePropertySuggestion
                 or UseBinaryOperatorSuggestion
-                or UseOtherArgumentSuggestion
                 or RedundantMethodInvocationHint
             || highlighting.IsError();
 
@@ -92,74 +89,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNetCore21]
-    [SuppressMessage("ReSharper", "UseOtherArgument")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    [SuppressMessage("ReSharper", "RedundantElement")]
-    public void TestParseExact()
-    {
-        var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y" };
-        var invariantFormats = new[] { "o", "O", "r", "R", "s", "u" };
-        var styles = new[]
-        {
-            DateTimeStyles.None,
-            DateTimeStyles.AllowInnerWhite
-            | DateTimeStyles.AllowLeadingWhite
-            | DateTimeStyles.AllowTrailingWhite
-            | DateTimeStyles.AllowWhiteSpaces,
-            DateTimeStyles.AssumeLocal,
-            DateTimeStyles.AssumeUniversal,
-            DateTimeStyles.AdjustToUniversal,
-        };
-
-        Test(
-            (dateTime, format, provider) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider),
-            (dateTime, format, provider) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, null),
-            TestValues,
-            invariantFormats,
-            FormatProviders);
-        Test(
-            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, style),
-            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, null, style),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            invariantFormats,
-            FormatProviders,
-            styles);
-        Test(
-            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), [format], provider, style),
-            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, style),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            formats,
-            FormatProviders,
-            styles);
-        Test(
-            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), invariantFormats, provider, style),
-            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), invariantFormats, null, style),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            invariantFormats,
-            FormatProviders,
-            styles);
-        Test(
-            (dateTime, format, provider, style) => MissingDateTimeMembers.ParseExact(
-                dateTime.ToString(format, provider).AsSpan(),
-                invariantFormats,
-                provider,
-                style),
-            (dateTime, format, provider, style) => MissingDateTimeMembers.ParseExact(
-                dateTime.ToString(format, provider).AsSpan(),
-                invariantFormats,
-                null,
-                style),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            invariantFormats,
-            FormatProviders,
-            styles);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestSubtract()
     {
@@ -168,67 +97,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
 
         Test(dateTime => dateTime.Subtract(dateTimeValue), dateTime => dateTime - dateTimeValue, [..TestValues.Except([System.DateTime.MinValue])]);
         Test(dateTime => dateTime.Subtract(timeSpanValue), dateTime => dateTime - timeSpanValue, [..TestValues.Except([System.DateTime.MinValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNetCore21]
-    [SuppressMessage("ReSharper", "UseOtherArgument")]
-    [SuppressMessage("ReSharper", "RedundantElement")]
-    public void TestTryParseExact()
-    {
-        var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y" };
-        var invariantFormats = new[] { "o", "O", "r", "R", "s", "u" };
-        var styles = new[]
-        {
-            DateTimeStyles.None,
-            DateTimeStyles.AllowInnerWhite
-            | DateTimeStyles.AllowLeadingWhite
-            | DateTimeStyles.AllowTrailingWhite
-            | DateTimeStyles.AllowWhiteSpaces,
-            DateTimeStyles.AssumeLocal,
-            DateTimeStyles.AssumeUniversal,
-            DateTimeStyles.AdjustToUniversal,
-        };
-
-        Test(
-            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
-                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), format, provider, style, out result),
-            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
-                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), format, null, style, out result),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            invariantFormats,
-            FormatProviders,
-            styles);
-        Test(
-            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
-                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), [format], provider, style, out result),
-            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
-                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), format, provider, style, out result),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            formats,
-            FormatProviders,
-            styles);
-        Test(
-            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
-                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), invariantFormats, provider, style, out result),
-            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
-                => System.DateTime.TryParseExact(dateTime.ToString(format, provider), invariantFormats, null, style, out result),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            formats,
-            FormatProviders,
-            styles);
-        Test(
-            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
-                => MissingDateTimeMembers.TryParseExact(dateTime.ToString(format, provider).AsSpan(), invariantFormats, provider, style, out result),
-            (System.DateTime dateTime, string format, IFormatProvider? provider, DateTimeStyles style, out System.DateTime result)
-                => MissingDateTimeMembers.TryParseExact(dateTime.ToString(format, provider).AsSpan(), invariantFormats, null, style, out result),
-            [..TestValues.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
-            formats,
-            FormatProviders,
-            styles);
 
         DoNamedTest2();
     }
