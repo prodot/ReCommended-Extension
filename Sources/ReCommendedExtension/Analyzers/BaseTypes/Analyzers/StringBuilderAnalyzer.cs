@@ -15,40 +15,20 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes =
-    [
-        typeof(PassSingleCharacterSuggestion),
-        typeof(PassSingleCharactersSuggestion),
-        typeof(UseOtherMethodSuggestion),
-        typeof(RedundantMethodInvocationHint),
-    ])]
+    HighlightingTypes = [typeof(PassSingleCharactersSuggestion), typeof(UseOtherMethodSuggestion), typeof(RedundantMethodInvocationHint)])]
 public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
     : ElementProblemAnalyzer<IInvocationExpression>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> Char { get; } = [Parameter.Char];
-
         public static IReadOnlyList<Parameter> Char_Char { get; } = [Parameter.Char, Parameter.Char];
 
         public static IReadOnlyList<Parameter> Char_Char_Int32_Int32 { get; } = [Parameter.Char, Parameter.Char, Parameter.Int32, Parameter.Int32];
 
-        public static IReadOnlyList<Parameter> Char_ObjectArray { get; } = [Parameter.Char, Parameter.ObjectArray];
-
-        public static IReadOnlyList<Parameter> Char_StringArray { get; } = [Parameter.Char, Parameter.StringArray];
-
-        public static IReadOnlyList<Parameter> Char_IEnumerableOfT { get; } = [Parameter.Char, Parameter.IEnumerableOfT];
-
-        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfString { get; } = [Parameter.Char, Parameter.ReadOnlySpanOfString];
-
-        public static IReadOnlyList<Parameter> Char_ReadOnlySpanOfObject { get; } = [Parameter.Char, Parameter.ReadOnlySpanOfObject];
-
         public static IReadOnlyList<Parameter> Object { get; } = [Parameter.Object];
 
         public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
-
-        public static IReadOnlyList<Parameter> Int32_Char { get; } = [Parameter.Int32, Parameter.Char];
     }
 
     /// <remarks>
@@ -137,8 +117,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
     /// <remarks>
     /// <c>builder.Append(null)</c> → <c>builder</c><para/>
-    /// <c>builder.Append("")</c> → <c>builder</c><para/>
-    /// <c>builder.Append("a")</c> → <c>builder.Append('a')</c>
+    /// <c>builder.Append("")</c> → <c>builder</c>
     /// </remarks>
     static void AnalyzeAppend_String(
         IHighlightingConsumer consumer,
@@ -156,36 +135,19 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
             return;
         }
 
-        switch (valueArgument.Value.TryGetStringConstant())
+        if (valueArgument.Value.TryGetStringConstant() == "")
         {
-            case "":
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Append)}' with an empty string is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                break;
-
-            case [var character] when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Char },
-                valueArgument.NameIdentifier is { },
-                out var parameterNames,
-                invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new PassSingleCharacterSuggestion(
-                        "Pass the single character.",
-                        valueArgument,
-                        parameterNames is [var valueParameterName] ? valueParameterName : null,
-                        character));
-                break;
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Calling '{nameof(StringBuilder.Append)}' with an empty string is redundant.",
+                    invocationExpression,
+                    invokedExpression));
         }
     }
 
     /// <remarks>
     /// <c>builder.Append(null, 0, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append(value, startIndex, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append("abc", 2, 1)</c> → <c>builder.Append('c')</c>
+    /// <c>builder.Append(value, startIndex, 0)</c> → <c>builder</c>
     /// </remarks>
     void AnalyzeAppend_String_Int32_Int32(
         IHighlightingConsumer consumer,
@@ -203,23 +165,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                         $"Calling '{nameof(StringBuilder.Append)}' with (null, 0, 0) is redundant.",
                         invocationExpression,
                         invokedExpression));
-                break;
-
-            case (var value, >= 0 and var startIndex, 1) when value.TryGetStringConstant() is { } s
-                && startIndex < s.Length
-                && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Char },
-                    valueArgument.NameIdentifier is { },
-                    out var parameterNames,
-                    invocationExpression.PsiModule):
-
-                consumer.AddHighlighting(
-                    new PassSingleCharacterSuggestion(
-                        "Pass the single character.",
-                        valueArgument,
-                        parameterNames is [var valueParameterName] ? valueParameterName : null,
-                        s[startIndex],
-                        redundantArguments: [startIndexArgument, countArgument]));
                 break;
 
             case ({ } value, >= 0, 0) when value.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
@@ -304,8 +249,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
 
     /// <remarks>
     /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
+    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_ObjectArray(
         IHighlightingConsumer consumer,
@@ -319,7 +263,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -370,25 +314,9 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                     nameof(StringBuilder.Append),
                                     false,
                                     [argument.Value.GetText()]));
-                            return;
                         }
                     }
                     break;
-            }
-
-            if (separatorArgument.Value.TryGetStringConstant() is [var character]
-                && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_ObjectArray }, // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    separatorArgument.NameIdentifier is { },
-                    out var parameterNames,
-                    invocationExpression.PsiModule))
-            {
-                consumer.AddHighlighting(
-                    new PassSingleCharacterSuggestion(
-                        "Pass the single character.",
-                        separatorArgument,
-                        parameterNames is [var separatorParameterName, _] ? separatorParameterName : null,
-                        character));
             }
         }
     }
@@ -397,8 +325,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     /// <c>builder.AppendJoin(separator, default(ReadOnlySpan&lt;object?&gt;))</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, new ReadOnlySpan&lt;object?&gt;())</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
+    /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_ReadOnlySpanOfObject(
         IHighlightingConsumer consumer,
@@ -412,7 +339,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -463,39 +390,21 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                     nameof(StringBuilder.Append),
                                     false,
                                     [argument.Value.GetText()]));
-                            return;
                         }
                     }
                     break;
-            }
-
-            if (separatorArgument.Value.TryGetStringConstant() is [var character]
-                && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_ReadOnlySpanOfObject }, // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    separatorArgument.NameIdentifier is { },
-                    out var parameterNames,
-                    invocationExpression.PsiModule))
-            {
-                consumer.AddHighlighting(
-                    new PassSingleCharacterSuggestion(
-                        "Pass the single character.",
-                        separatorArgument,
-                        parameterNames is [var separatorParameterName, _] ? separatorParameterName : null,
-                        character));
             }
         }
     }
 
     /// <remarks>
     /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
+    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_IEnumerableOfT(
         IHighlightingConsumer consumer,
         IInvocationExpression invocationExpression,
         IReferenceExpression invokedExpression,
-        ICSharpArgument separatorArgument,
         ICSharpArgument valuesArgument)
     {
         if (CollectionCreation.TryFrom(valuesArgument.Value) is { } collectionCreation)
@@ -525,27 +434,11 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     return;
             }
         }
-
-        if (separatorArgument.Value.TryGetStringConstant() is [var character]
-            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_IEnumerableOfT, GenericParametersCount = 1 }, // todo: use 'nameof(StringBuilder.AppendJoin)'
-                separatorArgument.NameIdentifier is { },
-                out var parameterNames,
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new PassSingleCharacterSuggestion(
-                    "Pass the single character.",
-                    separatorArgument,
-                    parameterNames is [var separatorParameterName, _] ? separatorParameterName : null,
-                    character));
-        }
     }
 
     /// <remarks>
     /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
+    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_StringArray(
         IHighlightingConsumer consumer,
@@ -559,7 +452,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -610,25 +503,9 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                     nameof(StringBuilder.Append),
                                     false,
                                     [argument.Value.GetText()]));
-                            return;
                         }
                     }
                     break;
-            }
-
-            if (separatorArgument.Value.TryGetStringConstant() is [var character]
-                && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_StringArray }, // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    separatorArgument.NameIdentifier is { },
-                    out var parameterNames,
-                    invocationExpression.PsiModule))
-            {
-                consumer.AddHighlighting(
-                    new PassSingleCharacterSuggestion(
-                        "Pass the single character.",
-                        separatorArgument,
-                        parameterNames is [var separatorParameterName, _] ? separatorParameterName : null,
-                        character));
             }
         }
     }
@@ -637,8 +514,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     /// <c>builder.AppendJoin(separator, default(ReadOnlySpan&lt;string?&gt;))</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, new ReadOnlySpan&lt;string?&gt;())</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c><para/>
-    /// <c>builder.AppendJoin(",", values)</c> → <c>builder.AppendJoin(',', values)</c>
+    /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_ReadOnlySpanOfString(
         IHighlightingConsumer consumer,
@@ -652,7 +528,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out var separatorArgument, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments))
         {
             switch (valuesArguments)
             {
@@ -703,25 +579,9 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                                     nameof(StringBuilder.Append),
                                     false,
                                     [argument.Value.GetText()]));
-                            return;
                         }
                     }
                     break;
-            }
-
-            if (separatorArgument.Value.TryGetStringConstant() is [var character]
-                && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = "AppendJoin", Parameters = Parameters.Char_ReadOnlySpanOfString }, // todo: use 'nameof(StringBuilder.AppendJoin)'
-                    separatorArgument.NameIdentifier is { },
-                    out var parameterNames,
-                    invocationExpression.PsiModule))
-            {
-                consumer.AddHighlighting(
-                    new PassSingleCharacterSuggestion(
-                        "Pass the single character.",
-                        separatorArgument,
-                        parameterNames is [var separatorParameterName, _] ? separatorParameterName : null,
-                        character));
             }
         }
     }
@@ -1066,54 +926,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Insert(index, "a", 1)</c> → <c>builder.Insert(index, 'a')</c>
-    /// </remarks>
-    static void AnalyzeInsert_Int32_String_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument countArgument)
-    {
-        if (valueArgument.Value.TryGetStringConstant() is [var character]
-            && countArgument.Value.TryGetInt32Constant() == 1
-            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Insert), Parameters = Parameters.Int32_Char },
-                valueArgument.NameIdentifier is { },
-                out var parameterNames,
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new PassSingleCharacterSuggestion(
-                    "Pass the single character.",
-                    valueArgument,
-                    parameterNames is [_, var valueParameterName] ? valueParameterName : null,
-                    character,
-                    redundantArguments: [countArgument]));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Insert(index, "a")</c> → <c>builder.Insert(int, 'a')</c>
-    /// </remarks>
-    static void AnalyzeInsert_Int32_String(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
-    {
-        if (valueArgument.Value.TryGetStringConstant() is [var character]
-            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Insert), Parameters = Parameters.Int32_Char },
-                valueArgument.NameIdentifier is { },
-                out var parameterNames,
-                invocationExpression.PsiModule))
-        {
-            consumer.AddHighlighting(
-                new PassSingleCharacterSuggestion(
-                    "Pass the single character.",
-                    valueArgument,
-                    parameterNames is [_, var valueParameterName] ? valueParameterName : null,
-                    character));
-        }
-    }
-
-    /// <remarks>
     /// <c>builder.Insert(index, null)</c> → <c>builder</c>
     /// </remarks>
     static void AnalyzeInsert_Int32_Object(
@@ -1320,11 +1132,10 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             AnalyzeAppendJoin_String_ReadOnlySpanOfObject(consumer, element, invokedExpression, arguments);
                             break;
 
-                        case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [
-                            { } separatorArgument, { } valuesArgument,
-                        ]) when separatorType.IsString() && valuesType.IsGenericIEnumerable():
+                        case ([_], [{ Type: var separatorType }, { Type: var valuesType }], [_, { } valuesArgument])
+                            when separatorType.IsString() && valuesType.IsGenericIEnumerable():
 
-                            AnalyzeAppendJoin_String_IEnumerableOfT(consumer, element, invokedExpression, separatorArgument, valuesArgument);
+                            AnalyzeAppendJoin_String_IEnumerableOfT(consumer, element, invokedExpression, valuesArgument);
                             break;
 
                         case ([], [{ Type: var separatorType }, { Type: var valuesType }], { } arguments)
@@ -1374,18 +1185,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 case (nameof(StringBuilder.Insert), []):
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
-                        case ([{ Type: var indexType }, { Type: var valueType }, { Type: var countType }], [_, { } valueArgument, { } countArgument])
-                            when indexType.IsInt() && valueType.IsString() && countType.IsInt():
-
-                            AnalyzeInsert_Int32_String_Int32(consumer, element, valueArgument, countArgument);
-                            break;
-
-                        case ([{ Type: var indexType }, { Type: var valueType }], [_, { } valueArgument])
-                            when indexType.IsInt() && valueType.IsString():
-
-                            AnalyzeInsert_Int32_String(consumer, element, valueArgument);
-                            break;
-
                         case ([{ Type: var indexType }, { Type: var valueType }], [_, { } valueArgument])
                             when indexType.IsInt() && valueType.IsObject():
 

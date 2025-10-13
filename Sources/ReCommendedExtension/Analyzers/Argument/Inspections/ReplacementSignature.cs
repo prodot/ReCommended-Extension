@@ -6,5 +6,5 @@ internal sealed record ReplacementSignature
 {
     public required IReadOnlyList<Parameter> Parameters { get; init; }
 
-    public int ParameterIndex { get; init; } = -1;
+    public required int ParameterIndex { get; init; }
 }

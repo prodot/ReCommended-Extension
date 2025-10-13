@@ -6,10 +6,14 @@ namespace Test
     {
         public void OtherArgument(string s, string format, IFormatProvider provider)
         {
-            var result1 = TimeSpan.ParseExact(s, |[format]|(0), provider);
-            var result2 = TimeSpan.ParseExact(s, |(string[])[format]|(1), provider);
-            var result3 = TimeSpan.ParseExact(s, |new[] { format }|(2), provider);
-            var result4 = TimeSpan.ParseExact(s, |new string[] { format }|(3), provider);
+            var result11 = TimeSpan.ParseExact(s, |[format]|(0), provider);
+            var result12 = TimeSpan.ParseExact(s, |(string[])[format]|(1), provider);
+            var result13 = TimeSpan.ParseExact(s, |new[] { format }|(2), provider);
+            var result14 = TimeSpan.ParseExact(s, |new string[] { format }|(3), provider);
+
+            var result21 = s.IndexOf(|"c"|(4));
+
+            var result31 = s.LastIndexOf(|"c"|(5), StringComparison.Ordinal);
         }
     }
 }
@@ -26,3 +30,9 @@ Replace with 'format'
 3: The only collection element should be passed directly.
 QUICKFIXES:
 Replace with 'format'
+4: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''c'' (and add 'StringComparison.CurrentCulture')
+5: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''c'' (and remove 'StringComparison.Ordinal')

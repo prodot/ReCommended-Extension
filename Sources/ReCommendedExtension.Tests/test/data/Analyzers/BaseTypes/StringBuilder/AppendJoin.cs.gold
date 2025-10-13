@@ -307,32 +307,32 @@ namespace Test
 
         public void SingleCharacter(StringBuilder builder, object?[] objectItems, int[] intItems, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings)
         {
-            var result1 = builder.AppendJoin(|","|(208), objectItems);
-            var result2 = builder.AppendJoin(|","|(209), intItems);
-            var result3 = builder.AppendJoin(|","|(210), stringItems);
-            var result4 = builder.AppendJoin(|","|(211), spanOfObjects);
-            var result5 = builder.AppendJoin(|","|(212), spanOfStrings);
+            var result1 = builder.AppendJoin(",", objectItems);
+            var result2 = builder.AppendJoin(",", intItems);
+            var result3 = builder.AppendJoin(",", stringItems);
+            var result4 = builder.AppendJoin(",", spanOfObjects);
+            var result5 = builder.AppendJoin(",", spanOfStrings);
 
-            builder.AppendJoin(|","|(213), objectItems);
-            builder.AppendJoin(|","|(214), intItems);
-            builder.AppendJoin(|","|(215), stringItems);
-            builder.AppendJoin(|","|(216), spanOfObjects);
-            builder.AppendJoin(|","|(217), spanOfStrings);
+            builder.AppendJoin(",", objectItems);
+            builder.AppendJoin(",", intItems);
+            builder.AppendJoin(",", stringItems);
+            builder.AppendJoin(",", spanOfObjects);
+            builder.AppendJoin(",", spanOfStrings);
         }
 
         public void SingleCharacter_Nullable(StringBuilder? builder, object?[] objectItems, int[] intItems, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings)
         {
-            var result1 = builder?.AppendJoin(|","|(218), objectItems);
-            var result2 = builder?.AppendJoin(|","|(219), intItems);
-            var result3 = builder?.AppendJoin(|","|(220), stringItems);
-            var result4 = builder?.AppendJoin(|","|(221), spanOfObjects);
-            var result5 = builder?.AppendJoin(|","|(222), spanOfStrings);
+            var result1 = builder?.AppendJoin(",", objectItems);
+            var result2 = builder?.AppendJoin(",", intItems);
+            var result3 = builder?.AppendJoin(",", stringItems);
+            var result4 = builder?.AppendJoin(",", spanOfObjects);
+            var result5 = builder?.AppendJoin(",", spanOfStrings);
 
-            builder?.AppendJoin(|","|(223), objectItems);
-            builder?.AppendJoin(|","|(224), intItems);
-            builder?.AppendJoin(|","|(225), stringItems);
-            builder?.AppendJoin(|","|(226), spanOfObjects);
-            builder?.AppendJoin(|","|(227), spanOfStrings);
+            builder?.AppendJoin(",", objectItems);
+            builder?.AppendJoin(",", intItems);
+            builder?.AppendJoin(",", stringItems);
+            builder?.AppendJoin(",", spanOfObjects);
+            builder?.AppendJoin(",", spanOfStrings);
         }
 
         public void NoDetection(StringBuilder builder, string s, char c, object objectItem, object?[] objectItems, int intItem, int[] intItems, string stringItem, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings)
@@ -588,23 +588,3 @@ namespace Test
 (205): ReSharper Suggestion: Use the 'Append' method.
 (206): ReSharper Suggestion: Use the 'Append' method.
 (207): ReSharper Suggestion: Use the 'Append' method.
-(208): ReSharper Suggestion: Pass the single character.
-(209): ReSharper Suggestion: Pass the single character.
-(210): ReSharper Suggestion: Pass the single character.
-(211): ReSharper Suggestion: Pass the single character.
-(212): ReSharper Suggestion: Pass the single character.
-(213): ReSharper Suggestion: Pass the single character.
-(214): ReSharper Suggestion: Pass the single character.
-(215): ReSharper Suggestion: Pass the single character.
-(216): ReSharper Suggestion: Pass the single character.
-(217): ReSharper Suggestion: Pass the single character.
-(218): ReSharper Suggestion: Pass the single character.
-(219): ReSharper Suggestion: Pass the single character.
-(220): ReSharper Suggestion: Pass the single character.
-(221): ReSharper Suggestion: Pass the single character.
-(222): ReSharper Suggestion: Pass the single character.
-(223): ReSharper Suggestion: Pass the single character.
-(224): ReSharper Suggestion: Pass the single character.
-(225): ReSharper Suggestion: Pass the single character.
-(226): ReSharper Suggestion: Pass the single character.
-(227): ReSharper Suggestion: Pass the single character.

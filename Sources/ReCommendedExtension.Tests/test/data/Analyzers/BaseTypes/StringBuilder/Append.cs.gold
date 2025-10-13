@@ -149,20 +149,20 @@ namespace Test
 
         public void SingleCharacter(StringBuilder builder)
         {
-            var result1 = builder.Append(|"a"|(90));
-            var result2 = builder.Append(|"abcde"|(91), 1, 1);
+            var result1 = builder.Append("a");
+            var result2 = builder.Append("abcde", 1, 1);
 
-            builder.Append(|"a"|(92));
-            builder.Append(|"abcde"|(93), 1, 1);
+            builder.Append("a");
+            builder.Append("abcde", 1, 1);
         }
 
         public void SingleCharacter_Nullable(StringBuilder? builder)
         {
-            var result1 = builder?.Append(|"a"|(94));
-            var result2 = builder?.Append(|"abcde"|(95), 1, 1);
+            var result1 = builder?.Append("a");
+            var result2 = builder?.Append("abcde", 1, 1);
 
-            builder?.Append(|"a"|(96));
-            builder?.Append(|"abcde"|(97), 1, 1);
+            builder?.Append("a");
+            builder?.Append("abcde", 1, 1);
         }
 
         public void NoDetection(StringBuilder builder, char c, int repeatCount, string s, string? sn, int startIndex, int count, StringBuilder sb, StringBuilder? sbn, object obj)
@@ -288,11 +288,3 @@ namespace Test
 (87): ReSharper Dead Code: Calling 'Append' with the count 0 is redundant.
 (88): ReSharper Dead Code: Calling 'Append' with null is redundant.
 (89): ReSharper Dead Code: Calling 'Append' with null is redundant.
-(90): ReSharper Suggestion: Pass the single character.
-(91): ReSharper Suggestion: Pass the single character.
-(92): ReSharper Suggestion: Pass the single character.
-(93): ReSharper Suggestion: Pass the single character.
-(94): ReSharper Suggestion: Pass the single character.
-(95): ReSharper Suggestion: Pass the single character.
-(96): ReSharper Suggestion: Pass the single character.
-(97): ReSharper Suggestion: Pass the single character.

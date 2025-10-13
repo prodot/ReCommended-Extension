@@ -83,48 +83,46 @@ namespace Test
             var result33 = DateOnly.TryParse(s, provider, style, out result);
             var result34 = DateOnly.TryParse(s1, provider, style, out result);
 
-            var result41 = DateOnly.Parse(s, style: DateTimeStyles.None, provider: null);
+            var result41 = DateOnly.ParseExact(s, format, provider, style);
+            var result42 = DateOnly.ParseExact(s, formats, provider, style);
+            var result43 = DateOnly.ParseExact(s1, formats, provider, style);
 
-            var result51 = DateOnly.ParseExact(s, format, provider, style);
-            var result52 = DateOnly.ParseExact(s, formats, provider, style);
-            var result53 = DateOnly.ParseExact(s1, formats, provider, style);
+            var result51 = DateOnly.TryParseExact(s, format, provider, style, out result);
+            var result52 = DateOnly.TryParseExact(s1, format, provider, style, out result);
+            var result53 = DateOnly.TryParseExact(s, formats, provider, style, out result);
+            var result54 = DateOnly.TryParseExact(s1, formats, provider, style, out result);
 
-            var result61 = DateOnly.TryParseExact(s, format, provider, style, out result);
-            var result62 = DateOnly.TryParseExact(s1, format, provider, style, out result);
-            var result63 = DateOnly.TryParseExact(s, formats, provider, style, out result);
-            var result64 = DateOnly.TryParseExact(s1, formats, provider, style, out result);
+            var result61 = DateOnly.ParseExact(s, ["d", "D", "m", "o", "r", "y"]);
+            var result62 = DateOnly.ParseExact(s1, ["d", "D", "m", "o", "r", "y"]);
+            var result63 = DateOnly.ParseExact(s, ["d", "D", "m", "o", "r", "y"], provider, style);
+            var result64 = DateOnly.ParseExact(s1, ["d", "D", "m", "o", "r", "y"], provider, style);
 
-            var result71 = DateOnly.ParseExact(s, ["d", "D", "m", "o", "r", "y"]);
-            var result72 = DateOnly.ParseExact(s1, ["d", "D", "m", "o", "r", "y"]);
-            var result73 = DateOnly.ParseExact(s, ["d", "D", "m", "o", "r", "y"], provider, style);
-            var result74 = DateOnly.ParseExact(s1, ["d", "D", "m", "o", "r", "y"], provider, style);
+            var result71 = DateOnly.TryParseExact(s, ["d", "D", "m", "o", "r", "y"], out result);
+            var result72 = DateOnly.TryParseExact(s1, ["d", "D", "m", "o", "r", "y"], out result);
+            var result73 = DateOnly.TryParseExact(s, ["d", "D", "m", "o", "r", "y"], provider, style, out result);
+            var result74 = DateOnly.TryParseExact(s1, ["d", "D", "m", "o", "r", "y"], provider, style, out result);
 
-            var result81 = DateOnly.TryParseExact(s, ["d", "D", "m", "o", "r", "y"], out result);
-            var result82 = DateOnly.TryParseExact(s1, ["d", "D", "m", "o", "r", "y"], out result);
-            var result83 = DateOnly.TryParseExact(s, ["d", "D", "m", "o", "r", "y"], provider, style, out result);
-            var result84 = DateOnly.TryParseExact(s1, ["d", "D", "m", "o", "r", "y"], provider, style, out result);
+            var result81 = DateOnly.ParseExact(s, [format, format]);
+            var result82 = DateOnly.ParseExact(s, "o", null, style);
+            var result83 = DateOnly.ParseExact(s, "O", null, style);
+            var result84 = DateOnly.ParseExact(s, "r", null, style);
+            var result85 = DateOnly.ParseExact(s, "R", null, style);
+            var result86 = DateOnly.ParseExact(s, [format, format], provider, style);
+            var result87 = DateOnly.ParseExact(s, ["o", "r"], null, style);
+            var result88 = DateOnly.ParseExact(s, ["d", "o", "r"], provider, style);
+            var result89 = DateOnly.ParseExact(s1, ["o", "r"], null, style);
+            var result8A = DateOnly.ParseExact(s1, ["o", "r", "d"], provider, style);
 
-            var result91 = DateOnly.ParseExact(s, [format, format]);
-            var result92 = DateOnly.ParseExact(s, "o", null, style);
-            var result93 = DateOnly.ParseExact(s, "O", null, style);
-            var result94 = DateOnly.ParseExact(s, "r", null, style);
-            var result95 = DateOnly.ParseExact(s, "R", null, style);
-            var result96 = DateOnly.ParseExact(s, [format, format], provider, style);
-            var result97 = DateOnly.ParseExact(s, ["o", "r"], null, style);
-            var result98 = DateOnly.ParseExact(s, ["d", "o", "r"], provider, style);
-            var result99 = DateOnly.ParseExact(s1, ["o", "r"], null, style);
-            var result9A = DateOnly.ParseExact(s1, ["o", "r", "d"], provider, style);
-
-            var resultA1 = DateOnly.TryParseExact(s, [format, format], out result);
-            var resultA2 = DateOnly.TryParseExact(s, "o", null, style, out result);
-            var resultA3 = DateOnly.TryParseExact(s, "O", null, style, out result);
-            var resultA4 = DateOnly.TryParseExact(s, "r", null, style, out result);
-            var resultA5 = DateOnly.TryParseExact(s, "R", null, style, out result);
-            var resultA6 = DateOnly.TryParseExact(s, [format, format], provider, style, out result);
-            var resultA7 = DateOnly.TryParseExact(s, ["o", "r"], null, style, out result);
-            var resultA8 = DateOnly.TryParseExact(s, ["d", "o", "r"], provider, style, out result);
-            var resultA9 = DateOnly.TryParseExact(s1, ["o", "r"], null, style, out result);
-            var resultAA = DateOnly.TryParseExact(s1, ["o", "r", "d"], provider, style, out result);
+            var result91 = DateOnly.TryParseExact(s, [format, format], out result);
+            var result92 = DateOnly.TryParseExact(s, "o", null, style, out result);
+            var result93 = DateOnly.TryParseExact(s, "O", null, style, out result);
+            var result94 = DateOnly.TryParseExact(s, "r", null, style, out result);
+            var result95 = DateOnly.TryParseExact(s, "R", null, style, out result);
+            var result96 = DateOnly.TryParseExact(s, [format, format], provider, style, out result);
+            var result97 = DateOnly.TryParseExact(s, ["o", "r"], null, style, out result);
+            var result98 = DateOnly.TryParseExact(s, ["d", "o", "r"], provider, style, out result);
+            var result99 = DateOnly.TryParseExact(s1, ["o", "r"], null, style, out result);
+            var result9A = DateOnly.TryParseExact(s1, ["o", "r", "d"], provider, style, out result);
         }
     }
 }

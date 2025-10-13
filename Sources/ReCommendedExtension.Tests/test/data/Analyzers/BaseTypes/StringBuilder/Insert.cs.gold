@@ -35,20 +35,20 @@ namespace Test
 
         public void SingleCharacter(StringBuilder builder, int index)
         {
-            var result1 = builder.Insert(index, |"a"|(4), 1);
-            var result2 = builder.Insert(index, |"a"|(5));
+            var result1 = builder.Insert(index, "a", 1);
+            var result2 = builder.Insert(index, "a");
 
-            builder.Insert(index, |"a"|(6), 1);
-            builder.Insert(index, |"a"|(7));
+            builder.Insert(index, "a", 1);
+            builder.Insert(index, "a");
         }
 
         public void SingleCharacter_Nullable(StringBuilder? builder, int index)
         {
-            var result1 = builder?.Insert(index, |"a"|(8), 1);
-            var result2 = builder?.Insert(index, |"a"|(9));
+            var result1 = builder?.Insert(index, "a", 1);
+            var result2 = builder?.Insert(index, "a");
 
-            builder?.Insert(index, |"a"|(10), 1);
-            builder?.Insert(index, |"a"|(11));
+            builder?.Insert(index, "a", 1);
+            builder?.Insert(index, "a");
         }
 
         public void NoDetection(StringBuilder builder, int index, string s, int repeatCount, object obj)
@@ -67,11 +67,3 @@ namespace Test
 (1): ReSharper Dead Code: Calling 'Insert' with null is redundant.
 (2): ReSharper Dead Code: Calling 'Insert' with null is redundant.
 (3): ReSharper Dead Code: Calling 'Insert' with null is redundant.
-(4): ReSharper Suggestion: Pass the single character.
-(5): ReSharper Suggestion: Pass the single character.
-(6): ReSharper Suggestion: Pass the single character.
-(7): ReSharper Suggestion: Pass the single character.
-(8): ReSharper Suggestion: Pass the single character.
-(9): ReSharper Suggestion: Pass the single character.
-(10): ReSharper Suggestion: Pass the single character.
-(11): ReSharper Suggestion: Pass the single character.

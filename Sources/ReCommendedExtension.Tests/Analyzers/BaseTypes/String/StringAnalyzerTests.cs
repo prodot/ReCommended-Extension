@@ -20,7 +20,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-                or PassSingleCharacterSuggestion
                 or PassSingleCharactersSuggestion
                 or UseStringListPatternSuggestion
                 or UseOtherMethodSuggestion
@@ -147,8 +146,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     public void TestContains()
     {
         Test("abcde", text => text.Contains(""), _ => true);
-        Test("abcde", text => text.Contains("c"), text => text.Contains('c'));
-        TestNullable("abcde", text => text?.Contains("c"), text => text?.Contains('c'));
 
         Test<StringComparison, bool>("abcde", (text, comparisonType) => text.Contains("", comparisonType), (_, _) => true);
 
@@ -247,9 +244,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
         Test("abcde", text => text.IndexOf(""), _ => 0);
 
-        Test("abcde", text => text.IndexOf("c"), text => text.IndexOf('c', StringComparison.CurrentCulture));
-        TestNullable("abcde", text => text?.IndexOf("c"), text => text?.IndexOf('c', StringComparison.CurrentCulture));
-
         Test("abcde", text => text.IndexOf("abc") == 0, text => text.StartsWith("abc"));
         Test("abcde", text => text.IndexOf("bcd") != 0, text => !text.StartsWith("bcd"));
 
@@ -260,14 +254,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.IndexOf("xyz") < 0, text => !text.Contains("xyz"));
 
         Test<StringComparison, int>("abcde", (text, comparisonType) => text.IndexOf("", comparisonType), (_, _) => 0);
-        Test<StringComparison, int>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("c", comparisonType),
-            (text, comparisonType) => text.IndexOf('c', comparisonType));
-        TestNullable<StringComparison, int?>(
-            "abcde",
-            (text, comparisonType) => text?.IndexOf("c", comparisonType),
-            (text, comparisonType) => text?.IndexOf('c', comparisonType));
 
         Test<StringComparison, bool>(
             "abcde",
@@ -334,36 +320,26 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     {
         Test(() => string.Join(", ", (object?[])[]), () => "");
         Test(() => string.Join(", ", (object?[])[100]), () => $"{100}");
-        Test(() => string.Join(",", (object?[])["item1", "item2"]), () => MissingStringMethods.Join(',', (object?[])["item1", "item2"]));
 
         Test(() => MissingStringMethods.Join(", ", default(ReadOnlySpan<object?>)), () => "");
         Test(() => MissingStringMethods.Join(", ", new ReadOnlySpan<object?>()), () => "");
         Test(() => MissingStringMethods.Join(", ", (ReadOnlySpan<object?>)[]), () => "");
         Test(() => MissingStringMethods.Join(", ", (ReadOnlySpan<object?>)[100]), () => $"{100}");
-        Test(
-            () => MissingStringMethods.Join(",", (ReadOnlySpan<object?>)["item1", "item2"]),
-            () => MissingStringMethods.Join(',', (ReadOnlySpan<object?>)["item1", "item2"]));
 
         Test(() => string.Join(", ", (IEnumerable<int>)[]), () => "");
         Test(() => string.Join(", ", (IEnumerable<int>)[100]), () => $"{100}");
-        Test(() => string.Join(",", (IEnumerable<int>)[1, 2, 3]), () => MissingStringMethods.Join(',', (IEnumerable<int>)[1, 2, 3]));
 
         Test(() => string.Join(", ", (string?[])[]), () => "");
         Test(() => string.Join(", ", (string?[])["item"]), () => "item");
-        Test(() => string.Join(",", (string?[])["item1", "item2"]), () => MissingStringMethods.Join(',', (string?[])["item1", "item2"]));
 
         Test(() => string.Join(", ", (string?[])["item1", "item2"], 0, 0), () => "");
         Test(() => string.Join(", ", (string?[])["item"], 1, 0), () => "");
         Test(() => string.Join(", ", (string?[])["item"], 0, 1), () => "item");
-        Test(() => string.Join(",", (string?[])["item1", "item2"], 1, 1), () => MissingStringMethods.Join(',', (string?[])["item1", "item2"], 1, 1));
 
         Test(() => MissingStringMethods.Join(", ", default(ReadOnlySpan<string?>)), () => "");
         Test(() => MissingStringMethods.Join(", ", new ReadOnlySpan<string?>()), () => "");
         Test(() => MissingStringMethods.Join(", ", (ReadOnlySpan<string?>)[]), () => "");
         Test(() => MissingStringMethods.Join(", ", (ReadOnlySpan<string?>)["item"]), () => "item");
-        Test(
-            () => MissingStringMethods.Join(",", (ReadOnlySpan<string?>)["item1", "item2"]),
-            () => MissingStringMethods.Join(',', (ReadOnlySpan<string?>)["item1", "item2"]));
 
         Test(() => MissingStringMethods.Join(',', (object?[])[]), () => "");
         Test(() => MissingStringMethods.Join(',', (object?[])[100]), () => $"{100}");
@@ -403,11 +379,13 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
         // todo: uncomment the tests below when this is built with .NET 5 (https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/5.0/lastindexof-improved-handling-of-empty-values)
 
-        // Test("abcde", text => text.LastIndexOf(""), text => text.Length);
-        // TestNullable("abcde", text => text?.LastIndexOf(""), text => text?.Length);
+        /*
+        Test("abcde", text => text.LastIndexOf(""), text => text.Length);
+        TestNullable("abcde", text => text?.LastIndexOf(""), text => text?.Length);
 
-        // Test<StringComparison, int>("abcde", (text, comparisonType) => text.LastIndexOf("", comparisonType), (text, _) => text.Length);
-        // TestNullable<StringComparison, int?>("abcde", (text, comparisonType) => text?.LastIndexOf("", comparisonType), (text, _) => text?.Length);
+        Test<StringComparison, int>("abcde", (text, comparisonType) => text.LastIndexOf("", comparisonType), (text, _) => text.Length);
+        TestNullable<StringComparison, int?>("abcde", (text, comparisonType) => text?.LastIndexOf("", comparisonType), (text, _) => text?.Length);
+        */
 
         Test("abcde", text => text.LastIndexOf("c", StringComparison.Ordinal), text => text.LastIndexOf('c'));
         TestNullable("abcde", text => text?.LastIndexOf("c", StringComparison.Ordinal), text => text?.LastIndexOf('c'));
@@ -476,7 +454,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     {
         // todo: uncomment the test below when this is built with .NET 6 (earlier frameworks throw exception for '"".Remove(0)')
 
-        //Test("abcde", text => text.Remove(0), _ => "");
+        /*Test("abcde", text => text.Remove(0), _ => "");*/
 
         Test("abcde", text => text.Remove(2), text => text[..2], true);
         TestNullable("abcde", text => text?.Remove(2), text => text?[..2], true);
@@ -534,14 +512,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("  abcde  ", text => text.Split(""), text => [text]);
         Test("  abcde  ", text => text.Split(null as string, MissingStringSplitOptions.TrimEntries), text => [text.Trim()]);
         Test("  abcde  ", text => text.Split("", MissingStringSplitOptions.TrimEntries), text => [text.Trim()]);
-        Test<MissingStringSplitOptions, string[]>(
-            "  ab,cd,e  ",
-            (text, options) => text.Split(",", options),
-            (text, options) => text.Split(',', options));
-        TestNullable<MissingStringSplitOptions, string[]?>(
-            "  ab,cd,e  ",
-            (text, options) => text?.Split(",", options),
-            (text, options) => text?.Split(',', options));
 
         Test<MissingStringSplitOptions, string[]>("abcde", (text, options) => text.Split("bc", 0, options), (_, _) => []);
         Test("  abcde  ", text => text.Split("bc", 1), text => [text]);
@@ -550,14 +520,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("  abcde  ", text => text.Split("", 10), text => [text]);
         Test("  abcde  ", text => text.Split(null as string, 10, MissingStringSplitOptions.TrimEntries), text => [text.Trim()]);
         Test("  abcde  ", text => text.Split("", 10, MissingStringSplitOptions.TrimEntries), text => [text.Trim()]);
-        Test<MissingStringSplitOptions, string[]>(
-            "  ab,cd,e  ",
-            (text, options) => text.Split(",", 2, options),
-            (text, options) => text.Split(',', 2, options));
-        TestNullable<MissingStringSplitOptions, string[]?>(
-            "  ab,cd,e  ",
-            (text, options) => text?.Split(",", 2, options),
-            (text, options) => text?.Split(',', 2, options));
 
         Test("  abcde  ", text => text.Split([""]), text => [text]);
         Test("  abcde  ", text => text.Split([""], MissingStringSplitOptions.TrimEntries), text => [text.Trim()]);

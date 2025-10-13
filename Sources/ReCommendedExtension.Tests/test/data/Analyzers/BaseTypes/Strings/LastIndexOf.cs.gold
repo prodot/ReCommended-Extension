@@ -17,7 +17,7 @@ namespace Test
 
         public void AsCharacter(string text)
         {
-            var result = text.LastIndexOf(|"a"|(3), StringComparison.Ordinal);
+            var result = text.LastIndexOf("a", StringComparison.Ordinal);
         }
 
         public void NoDetection(string text, char c, int startIndex, StringComparison sc)
@@ -31,9 +31,9 @@ namespace Test
             var result5 = text.LastIndexOf("a", StringComparison.OrdinalIgnoreCase);
             var result6 = text.LastIndexOf("a", sc);
 
-            text.|LastIndexOf|(4)(c, 0);
-            text.|LastIndexOf|(5)("");
-            text.|LastIndexOf|(6)("", StringComparison.OrdinalIgnoreCase);
+            text.|LastIndexOf|(3)(c, 0);
+            text.|LastIndexOf|(4)("");
+            text.|LastIndexOf|(5)("", StringComparison.OrdinalIgnoreCase);
         }
 
         public void NoDetection(string? text, char c)
@@ -46,7 +46,6 @@ namespace Test
 (0): ReSharper Suggestion: The expression is always -1.
 (1): ReSharper Suggestion: Use the 'Length' property.
 (2): ReSharper Suggestion: Use the 'Length' property.
-(3): ReSharper Suggestion: Pass the single character.
+(3): ReSharper Warning: Return value of pure method is not used
 (4): ReSharper Warning: Return value of pure method is not used
 (5): ReSharper Warning: Return value of pure method is not used
-(6): ReSharper Warning: Return value of pure method is not used

@@ -49,10 +49,18 @@ namespace Test
         public void RedundantArgumentRange(int year, int month, int day, Calendar calendar)
         {
             var result11 = new DateTime(year, month, day, 0, 0, 0);
-            var result12 = new DateTime(year, month, day, 0, 0, 0, calendar);
+            var result12 = new DateTime(year, month, day, hour: 0, minute: 0, second: 0);
+            var result13 = new DateTime(year, month, second: 0, day: day, minute: 0, hour: 0);
+            var result14 = new DateTime(year, month, day, 0, 0, 0, calendar);
+            var result15 = new DateTime(year, month, day, hour: 0, minute: 0, second: 0, calendar: calendar);
+            var result16 = new DateTime(year, month, second: 0, day: day, minute: 0, hour: 0, calendar: calendar);
 
             DateTime result21 = new(year, month, day, 0, 0, 0);
-            DateTime result22 = new(year, month, day, 0, 0, 0, calendar);
+            DateTime result22 = new(year, month, day, hour: 0, minute: 0, second: 0);
+            DateTime result23 = new(year, month, second: 0, day: day, minute: 0, hour: 0);
+            DateTime result24 = new(year, month, day, 0, 0, 0, calendar);
+            DateTime result25 = new(year, month, day, hour: 0, minute: 0, second: 0, calendar: calendar);
+            DateTime result26 = new(year, month, second: 0, day: day, minute: 0, hour: 0, calendar: calendar);
         }
 
         public void RedundantCollectionElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, DateTimeStyles style, out DateTime result)
@@ -123,7 +131,6 @@ namespace Test
 
             var result61 = new DateTime(year, month, day, hour, minute, second);
             var result62 = new DateTime(year, month, day, hour, minute, second, calendar);
-            var result63 = new DateTime(year, month, day, 0, second: 0, minute: 0);
 
             var result71 = DateTime.ParseExact(s, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style);
             var result72 = DateTime.ParseExact(s1, ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"], provider, style);

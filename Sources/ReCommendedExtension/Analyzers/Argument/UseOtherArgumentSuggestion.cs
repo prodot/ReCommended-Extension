@@ -20,7 +20,10 @@ public sealed class UseOtherArgumentSuggestion(
     ICSharpArgument argument,
     ParameterKind parameterKind,
     string? parameterName,
-    string replacement) : Highlighting(message)
+    string replacement,
+    string? additionalArgument,
+    string? additionalArgumentParameterName,
+    ICSharpArgument? redundantArgument) : Highlighting(message)
 {
     const string SeverityId = "UseOtherArgument";
 
@@ -31,6 +34,12 @@ public sealed class UseOtherArgumentSuggestion(
     internal string? ParameterName => parameterName;
 
     internal string Replacement => replacement;
+
+    internal string? AdditionalArgument => additionalArgument;
+
+    internal string? AdditionalArgumentParameterName => additionalArgumentParameterName;
+
+    internal ICSharpArgument? RedundantArgument => redundantArgument;
 
     public override DocumentRange CalculateRange() => argument.Value.GetDocumentRange();
 }

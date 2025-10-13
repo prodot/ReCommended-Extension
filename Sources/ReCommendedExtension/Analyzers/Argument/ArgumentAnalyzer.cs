@@ -25,7 +25,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     static void Analyze(
         IHighlightingConsumer consumer,
         Member member,
-        int? parameterIndexOfParams,
+        IList<IParameter> resolvedParameters,
         TreeNodeCollection<ICSharpArgument?> arguments,
         HasMember hasMember)
     {
@@ -60,14 +60,19 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     break;
                 }
 
-                case RedundantArgumentRange redundantArgumentRange when arguments.AsPositionalArguments() is [_, _, ..] positionalArguments:
+                case RedundantArgumentRange redundantArgumentRange when arguments.AsAllNonOptionalOrNull() is [_, _, ..] positionalArguments:
                 {
-                    var args = positionalArguments.GetSubrange(redundantArgumentRange.ParameterIndexRange);
+                    var redundantArguments = positionalArguments.GetSubrange(redundantArgumentRange.ParameterIndexRange);
 
-                    if (redundantArgumentRange.Condition(args)
+                    if (redundantArgumentRange.Condition(redundantArguments)
                         && hasMember(member.Signature.Parameters.WithoutElementsAt(redundantArgumentRange.ParameterIndexRange), false, out _))
                     {
-                        consumer.AddHighlighting(new RedundantArgumentRangeHint(inspection.Message, args));
+                        var highlighting = new RedundantArgumentRangeHint(inspection.Message, redundantArguments);
+
+                        foreach (var argument in redundantArguments)
+                        {
+                            consumer.AddHighlighting(highlighting, argument.GetDocumentRange());
+                        }
                     }
                     break;
                 }
@@ -77,8 +82,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     Debug.Assert(redundantCollectionElement.ParameterIndex >= 0);
 
                     if (arguments[redundantCollectionElement.ParameterIndex] is { } argument
-                        && (parameterIndexOfParams is not { } paramsIndex
-                            || redundantCollectionElement.ParameterIndex == paramsIndex && paramsIndex < arguments.Count)
+                        && (!resolvedParameters[^1].IsParams || resolvedParameters.Count == arguments.Count)
                         && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
                     {
                         switch (redundantCollectionElement)
@@ -106,13 +110,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 
                 case OtherArgument otherArgument:
                 {
-                    Debug.Assert(
-                        otherArgument is
-                        {
-                            ParameterIndex: >= 0,
-                            FurtherArgumentCondition: not { ParameterIndex: < 0 },
-                            ReplacementSignature: not { ParameterIndex: < 0 },
-                        });
+                    Debug.Assert(otherArgument is { ParameterIndex: >= 0, FurtherArgumentCondition: not { ParameterIndex: < 0 } });
 
                     if (arguments[otherArgument.ParameterIndex] is { } argument
                         && otherArgument.TryGetReplacement(argument) is { } replacement
@@ -130,7 +128,14 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                         argument,
                                         otherArgument.ReplacementSignature.Parameters[otherArgument.ReplacementSignature.ParameterIndex].Kind,
                                         argument.NameIdentifier is { } ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex] : null,
-                                        replacement));
+                                        replacement,
+                                        otherArgument.AdditionalArgument,
+                                        otherArgument.AdditionalArgument is { } && argument.NameIdentifier is { }
+                                            ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex + 1]
+                                            : null,
+                                        otherArgument.RedundantArgumentIndex is { } redundantArgumentIndex
+                                            ? arguments[redundantArgumentIndex]
+                                            : null));
                             }
                         }
                         else
@@ -141,7 +146,12 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                     argument,
                                     member.Signature.Parameters[otherArgument.ParameterIndex].Kind,
                                     argument.NameIdentifier?.Name,
-                                    replacement));
+                                    replacement,
+                                    otherArgument.AdditionalArgument,
+                                    otherArgument.AdditionalArgument is { } && argument.NameIdentifier is { }
+                                        ? resolvedParameters[otherArgument.ParameterIndex + 1].ShortName
+                                        : null,
+                                    otherArgument.RedundantArgumentIndex is { } redundantArgumentIndex ? arguments[redundantArgumentIndex] : null));
                         }
                     }
 
@@ -162,13 +172,13 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     IsStatic: false,
                     ContainingType: { } containingType,
                 } resolvedConstructor
-                && RuleDefinitions.TryGetConstructor(containingType, resolvedConstructor, out var parameterIndexOfParams) is { } constructor
+                && RuleDefinitions.TryGetConstructor(containingType, resolvedConstructor) is { } constructor
                 && objectCreationExpression.TryGetArgumentsInDeclarationOrder() is [_, ..] arguments:
             {
                 Analyze(
                     consumer,
                     constructor,
-                    parameterIndexOfParams,
+                    resolvedConstructor.Parameters,
                     arguments,
                     (IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames) => containingType.HasConstructor(
                         new ConstructorSignature { Parameters = parameters },
@@ -188,7 +198,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                 {
                     AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC, ContainingType: { } containingType,
                 } resolvedMethod
-                && RuleDefinitions.TryGetMethod(containingType, resolvedMethod, out var parameterIndexOfParams) is { } method
+                && RuleDefinitions.TryGetMethod(containingType, resolvedMethod) is { } method
                 && invocationExpression.TryGetArgumentsInDeclarationOrder() is [_, ..] arguments:
             {
                 Debug.Assert(method.Signature is Rules.MethodSignature);
@@ -198,7 +208,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                 Analyze(
                     consumer,
                     method,
-                    parameterIndexOfParams,
+                    resolvedMethod.Parameters,
                     arguments,
                     (IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames) => containingType.HasMethod(
                         new MethodSignature

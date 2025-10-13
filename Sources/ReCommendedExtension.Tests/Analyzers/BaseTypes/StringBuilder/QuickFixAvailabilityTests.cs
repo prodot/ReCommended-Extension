@@ -11,32 +11,19 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.StringBuilder;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
+[NullableContext(NullableContextKind.Enable)]
+[TestNet90]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilder\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is PassSingleCharacterSuggestion
-                or PassSingleCharactersSuggestion
-                or UseOtherMethodSuggestion
-                or RedundantMethodInvocationHint
-            || highlighting.IsError();
+        => highlighting is PassSingleCharactersSuggestion or UseOtherMethodSuggestion or RedundantMethodInvocationHint || highlighting.IsError();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet90]
-    public void TestPassSingleCharacterFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet90]
     public void TestUseOtherMethodFixAvailability() => DoNamedTest2();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet90]
     public void TestRemoveMethodInvocationAvailability() => DoNamedTest2();
 }

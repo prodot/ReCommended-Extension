@@ -101,47 +101,45 @@ namespace Test
             var result53 = TimeOnly.TryParse(s, provider, style, out result);
             var result54 = TimeOnly.TryParse(s1, provider, style, out result);
 
-            var result61 = TimeOnly.Parse(s, style: DateTimeStyles.None, provider: null);
+            var result61 = TimeOnly.ParseExact(s, formats, provider, style);
+            var result62 = TimeOnly.ParseExact(s1, formats, provider, style);
 
-            var result71 = TimeOnly.ParseExact(s, formats, provider, style);
-            var result72 = TimeOnly.ParseExact(s1, formats, provider, style);
+            var result71 = TimeOnly.TryParseExact(s, format, provider, style, out result);
+            var result72 = TimeOnly.TryParseExact(s1, format1, provider, style, out result);
+            var result73 = TimeOnly.TryParseExact(s, formats, provider, style, out result);
+            var result74 = TimeOnly.TryParseExact(s1, formats, provider, style, out result);
 
-            var result81 = TimeOnly.TryParseExact(s, format, provider, style, out result);
-            var result82 = TimeOnly.TryParseExact(s1, format1, provider, style, out result);
-            var result83 = TimeOnly.TryParseExact(s, formats, provider, style, out result);
-            var result84 = TimeOnly.TryParseExact(s1, formats, provider, style, out result);
+            var result81 = TimeOnly.ParseExact(s, ["t", "T", "o", "r"]);
+            var result82 = TimeOnly.ParseExact(s1, ["t", "T", "o", "r"]);
+            var result83 = TimeOnly.ParseExact(s, ["t", "T", "o", "r"], provider, style);
+            var result84 = TimeOnly.ParseExact(s1, ["t", "T", "o", "r"], provider, style);
 
-            var result91 = TimeOnly.ParseExact(s, ["t", "T", "o", "r"]);
-            var result92 = TimeOnly.ParseExact(s1, ["t", "T", "o", "r"]);
-            var result93 = TimeOnly.ParseExact(s, ["t", "T", "o", "r"], provider, style);
-            var result94 = TimeOnly.ParseExact(s1, ["t", "T", "o", "r"], provider, style);
+            var result91 = TimeOnly.TryParseExact(s, ["t", "T", "o", "r"], out result);
+            var result92 = TimeOnly.TryParseExact(s1, ["t", "T", "o", "r"], out result);
+            var result93 = TimeOnly.TryParseExact(s, ["t", "T", "o", "r"], provider, style, out result);
+            var result94 = TimeOnly.TryParseExact(s1, ["t", "T", "o", "r"], provider, style, out result);
 
-            var resultA1 = TimeOnly.TryParseExact(s, ["t", "T", "o", "r"], out result);
-            var resultA2 = TimeOnly.TryParseExact(s1, ["t", "T", "o", "r"], out result);
-            var resultA3 = TimeOnly.TryParseExact(s, ["t", "T", "o", "r"], provider, style, out result);
-            var resultA4 = TimeOnly.TryParseExact(s1, ["t", "T", "o", "r"], provider, style, out result);
+            var resultA1 = TimeOnly.ParseExact(s, [format, format]);
+            var resultA2 = TimeOnly.ParseExact(s, "o", null, style);
+            var resultA3 = TimeOnly.ParseExact(s, "O", null, style);
+            var resultA4 = TimeOnly.ParseExact(s, "r", null, style);
+            var resultA5 = TimeOnly.ParseExact(s, "R", null, style);
+            var resultA6 = TimeOnly.ParseExact(s, [format, format], provider, style);
+            var resultA7 = TimeOnly.ParseExact(s, ["o", "R"], null, style);
+            var resultA8 = TimeOnly.ParseExact(s, ["o", "R", "t"], provider, style);
+            var resultA9 = TimeOnly.ParseExact(s1, ["o", "R"], null, style);
+            var resultAA = TimeOnly.ParseExact(s1, ["t", "o", "R"], provider, style);
 
-            var resultB1 = TimeOnly.ParseExact(s, [format, format]);
-            var resultB2 = TimeOnly.ParseExact(s, "o", null, style);
-            var resultB3 = TimeOnly.ParseExact(s, "O", null, style);
-            var resultB4 = TimeOnly.ParseExact(s, "r", null, style);
-            var resultB5 = TimeOnly.ParseExact(s, "R", null, style);
-            var resultB6 = TimeOnly.ParseExact(s, [format, format], provider, style);
-            var resultB7 = TimeOnly.ParseExact(s, ["o", "R"], null, style);
-            var resultB8 = TimeOnly.ParseExact(s, ["o", "R", "t"], provider, style);
-            var resultB9 = TimeOnly.ParseExact(s1, ["o", "R"], null, style);
-            var resultBA = TimeOnly.ParseExact(s1, ["t", "o", "R"], provider, style);
-
-            var resultC1 = TimeOnly.TryParseExact(s, [format, format], out result);
-            var resultC2 = TimeOnly.TryParseExact(s, "o", null, style, out result);
-            var resultC3 = TimeOnly.TryParseExact(s, "O", null, style, out result);
-            var resultC4 = TimeOnly.TryParseExact(s, "r", null, style, out result);
-            var resultC5 = TimeOnly.TryParseExact(s, "R", null, style, out result);
-            var resultC6 = TimeOnly.TryParseExact(s, [format, format], provider, style, out result);
-            var resultC7 = TimeOnly.TryParseExact(s, ["o", "R"], null, style, out result);
-            var resultC8 = TimeOnly.TryParseExact(s, ["o", "R", "t"], provider, style, out result);
-            var resultC9 = TimeOnly.TryParseExact(s1, ["o", "R"], null, style, out result);
-            var resultCA = TimeOnly.TryParseExact(s1, ["t", "o", "R"], provider, style, out result);
+            var resultB1 = TimeOnly.TryParseExact(s, [format, format], out result);
+            var resultB2 = TimeOnly.TryParseExact(s, "o", null, style, out result);
+            var resultB3 = TimeOnly.TryParseExact(s, "O", null, style, out result);
+            var resultB4 = TimeOnly.TryParseExact(s, "r", null, style, out result);
+            var resultB5 = TimeOnly.TryParseExact(s, "R", null, style, out result);
+            var resultB6 = TimeOnly.TryParseExact(s, [format, format], provider, style, out result);
+            var resultB7 = TimeOnly.TryParseExact(s, ["o", "R"], null, style, out result);
+            var resultB8 = TimeOnly.TryParseExact(s, ["o", "R", "t"], provider, style, out result);
+            var resultB9 = TimeOnly.TryParseExact(s1, ["o", "R"], null, style, out result);
+            var resultBA = TimeOnly.TryParseExact(s1, ["t", "o", "R"], provider, style, out result);
         }
 
         public void NoDetection(TimeOnly timeOnly, TimeSpan timeSpanValue, double doubleValue)

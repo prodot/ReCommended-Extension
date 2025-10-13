@@ -16,4 +16,10 @@ public sealed class RemoveArgumentRangeFixTests : QuickFixTestBase<RemoveArgumen
 
     [Test]
     public void TestRemoveArgumentRange_Last() => DoNamedTest2();
+
+    [Test]
+    public void TestRemoveArgumentRange_Last_Named() => DoNamedTest2();
+
+    [Test]
+    public void TestRemoveArgumentRange_OutOfOrder() => DoNamedTest2();
 }

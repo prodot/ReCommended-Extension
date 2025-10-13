@@ -6,11 +6,17 @@ namespace Test
     {
         public void RedundantArgumentRange(int year, int month, int day)
         {
-            var result = new DateTime(year, month, day, |0, 0, 0|(0));
+            var result = new DateTime(year, month, day, |0|(0), |0|(1), |0|(2));
         }
     }
 }
 ------------------------------------------------
 0: Passing '0, 0, 0' is redundant.
+QUICKFIXES:
+Remove arguments
+1: Passing '0, 0, 0' is redundant.
+QUICKFIXES:
+Remove arguments
+2: Passing '0, 0, 0' is redundant.
 QUICKFIXES:
 Remove arguments

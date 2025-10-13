@@ -75,6 +75,36 @@ internal sealed record OtherArgument : Inspection
         Message = "The only collection element should be passed directly.",
     };
 
+    public static OtherArgument Char { get; } = new()
+    {
+        TryGetReplacement = arg => arg.Value.TryGetStringConstant() is [var character] ? $"'{character.ToString()}'" : null,
+        Message = "The only character should be passed directly.",
+    };
+
+    public static OtherArgument CharWithCurrentCulture { get; } = new()
+    {
+        TryGetReplacement = arg => arg.Value.TryGetStringConstant() is [var character] ? $"'{character.ToString()}'" : null,
+        Message = "The only character should be passed directly.",
+        AdditionalArgument = $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}",
+    };
+
+    public static OtherArgument CharForStringComparisonOrdinal { get; } = new()
+    {
+        TryGetReplacement = arg => arg.Value.TryGetStringConstant() is [var character] ? $"'{character.ToString()}'" : null,
+        FurtherArgumentCondition = new ArgumentCondition
+        {
+            Condition = arg => arg.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal,
+        },
+        Message = "The only character should be passed directly.",
+    };
+
+    public static OtherArgument CharForOne { get; } = new()
+    {
+        TryGetReplacement = arg => arg.Value.TryGetStringConstant() is [var character] ? $"'{character.ToString()}'" : null,
+        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.TryGetInt32Constant() == 1 },
+        Message = "The only character should be passed directly.",
+    };
+
     public int ParameterIndex { get; init; } = -1;
 
     public required Func<ICSharpArgument, string?> TryGetReplacement { get; init; }
@@ -82,4 +112,8 @@ internal sealed record OtherArgument : Inspection
     public ArgumentCondition? FurtherArgumentCondition { get; init; }
 
     public ReplacementSignature? ReplacementSignature { get; init; }
+
+    public string? AdditionalArgument { get; private init; }
+
+    public int? RedundantArgumentIndex { get; init; }
 }

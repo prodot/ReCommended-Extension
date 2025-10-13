@@ -42,7 +42,7 @@ internal static class CSharpArgumentsOwnerExtensions
                 return null; // no parameters, but has arguments (invalid case)
             }
 
-            if (argumentsOwner.Arguments.All(a => a is null or { NameIdentifier: null }))
+            if (argumentsOwner.Arguments.All(static a => a is null or { NameIdentifier: null }))
             {
                 // if all arguments are unnamed: the arguments already ordered
 

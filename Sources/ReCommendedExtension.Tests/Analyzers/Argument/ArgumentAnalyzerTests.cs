@@ -3051,10 +3051,12 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
+    [TestNet90]
     [SuppressMessage("ReSharper", "RedundantArgument")]
     [SuppressMessage("ReSharper", "RedundantExplicitParamsArrayCreation")]
     [SuppressMessage("ReSharper", "RedundantElement")]
+    [SuppressMessage("ReSharper", "RedundantCast")]
+    [SuppressMessage("ReSharper", "UseOtherArgument")]
     public void TestString()
     {
         var values = new[] { null, "", "abcde", "  abcde  ", "ab;cd;e", "..abcde.." };
@@ -3117,11 +3119,42 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
 
         Test(text => text?.TrimStart(['.', '.']), text => text?.TrimStart(['.']), values);
 
+        // other argument
+
+        Test(text => text?.Contains("c"), text => text?.Contains('c'), values);
+        Test((text, comparison) => text?.Contains("c", comparison), (text, comparison) => text?.Contains('c', comparison), values, comparisons);
+
+        Test(text => text?.IndexOf("c"), text => text?.IndexOf('c', StringComparison.CurrentCulture), values);
+        Test((text, comparison) => text?.IndexOf("c", comparison), (text, comparison) => text?.IndexOf('c', comparison), values, comparisons);
+
+        Test(() => string.Join(";", (IEnumerable<int>)[1, 2, 3]), () => MissingStringMethods.Join(';', (IEnumerable<int>)[1, 2, 3]));
+        Test(
+            () => string.Join(";", (string?[])["one", "two", "three", null]),
+            () => MissingStringMethods.Join(';', (string?[])["one", "two", "three", null]));
+        Test(
+            () => string.Join(";", (string?[])["one", "two", "three", null], 1, 2),
+            () => MissingStringMethods.Join(';', (string?[])["one", "two", "three", null], 1, 2));
+        Test(() => string.Join(";", (object?[])[1, "two", true, null]), () => MissingStringMethods.Join(';', (object?[])[1, "two", true, null]));
+        Test(
+            () => MissingStringMethods.Join(";", (ReadOnlySpan<string?>)["one", "two", "three", null]),
+            () => MissingStringMethods.Join(';', (ReadOnlySpan<string?>)["one", "two", "three", null]));
+        Test(
+            () => MissingStringMethods.Join(";", (ReadOnlySpan<object?>)[1, "two", true, null]),
+            () => MissingStringMethods.Join(';', (ReadOnlySpan<object?>)[1, "two", true, null]));
+
+        Test(text => text?.LastIndexOf("c", StringComparison.Ordinal), text => text?.LastIndexOf('c'), values);
+
+        Test((text, options) => text?.Split(";", options), (text, options) => text?.Split(';', options), values, stringSplitOptions);
+        Test((text, options) => text?.Split(";", 2, options), (text, options) => text?.Split(';', 2, options), values, stringSplitOptions);
+
         DoNamedTest2();
     }
 
     [Test]
+    [TestNet90]
     [SuppressMessage("ReSharper", "RedundantArgument")]
+    [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "RedundantCast")]
     public void TestStringBuilder()
     {
         var values = new[] { "", "abcde" };
@@ -3133,6 +3166,40 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
         Test(
             value => new StringBuilder(value).Insert(1, "xyz", 1).ToString(),
             value => new StringBuilder(value).Insert(1, "xyz").ToString(),
+            [..values.Except([""])]);
+
+        // other argument
+
+        Test(value => new StringBuilder(value).Append("x").ToString(), value => new StringBuilder(value).Append('x').ToString(), values);
+
+        Test(
+            value => new StringBuilder(value).AppendJoin("x", (IEnumerable<int>)[1, 2, 3]).ToString(),
+            value => new StringBuilder(value).AppendJoin('x', (IEnumerable<int>)[1, 2, 3]).ToString(),
+            values);
+        Test(
+            value => new StringBuilder(value).AppendJoin("x", (string?[])["one", "two", "three", null]).ToString(),
+            value => new StringBuilder(value).AppendJoin('x', (string?[])["one", "two", "three", null]).ToString(),
+            values);
+        Test(
+            value => new StringBuilder(value).AppendJoin("x", (object?[])[1, "two", true, null]).ToString(),
+            value => new StringBuilder(value).AppendJoin('x', (object?[])[1, "two", true, null]).ToString(),
+            values);
+        Test(
+            value => new StringBuilder(value).AppendJoin("x", (ReadOnlySpan<string?>)["one", "two", "three", null]).ToString(),
+            value => new StringBuilder(value).AppendJoin('x', (ReadOnlySpan<string?>)["one", "two", "three", null]).ToString(),
+            values);
+        Test(
+            value => new StringBuilder(value).AppendJoin("x", (ReadOnlySpan<object?>)[1, "two", true, null]).ToString(),
+            value => new StringBuilder(value).AppendJoin('x', (ReadOnlySpan<object?>)[1, "two", true, null]).ToString(),
+            values);
+
+        Test(
+            value => new StringBuilder(value).Insert(1, "x").ToString(),
+            value => new StringBuilder(value).Insert(1, 'x').ToString(),
+            [..values.Except([""])]);
+        Test(
+            value => new StringBuilder(value).Insert(1, "x", 1).ToString(),
+            value => new StringBuilder(value).Insert(1, 'x').ToString(),
             [..values.Except([""])]);
 
         DoNamedTest2();

@@ -74,7 +74,7 @@ internal sealed record Parameter
 
     public static Parameter ReadOnlySpanOfString { get; } = new() { IsType = t => t.IsReadOnlySpanOfString() };
 
-    public static Parameter ReadOnlySpanOfObject { get; } = new() { IsType = t => t.IsReadOnlySpanOfString() };
+    public static Parameter ReadOnlySpanOfObject { get; } = new() { IsType = t => t.IsReadOnlySpanOfObject() };
 
     public static Parameter ReadOnlySpanOfChar { get; } = new() { IsType = t => t.IsReadOnlySpanOfChar() };
 

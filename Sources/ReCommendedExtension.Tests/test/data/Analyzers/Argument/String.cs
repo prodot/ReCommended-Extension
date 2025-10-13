@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -19,15 +20,15 @@ namespace Test
             var result51 = text.Split(';', ';', ';');
 
             var result61 = text.Trim(null);
-            var result62 = text.Trim([]);
+            var result62 = text.Trim(Array.Empty<char>());
             var result63 = text.Trim('.', '.', '.');
 
             var result71 = text.TrimEnd(null);
-            var result72 = text.TrimEnd([]);
+            var result72 = text.TrimEnd(Array.Empty<char>());
             var result73 = text.TrimEnd('.', '.', '.');
 
             var result81 = text.TrimStart(null);
-            var result82 = text.TrimStart([]);
+            var result82 = text.TrimStart(Array.Empty<char>());
             var result82 = text.TrimStart('.', '.', '.');
         }
 
@@ -41,21 +42,42 @@ namespace Test
             var result22 = text.LastIndexOfAny(['a', 'a'], startIndex);
             var result23 = text.LastIndexOfAny(['a', 'a'], startIndex, count);
 
-            var result31 = text.Split([';', ';']);
+            var result31 = text.Split(new[] { ';', ';' });
             var result32 = text.Split([';', ';'], count);
             var result33 = text.Split([';', ';'], options);
             var result34 = text.Split([';', ';'], count, options);
             var result35 = text.Split([";", ";"], options);
             var result36 = text.Split([";", ";"], count, options);
 
-            var result41 = text.Trim(['.', '.', '.']);
+            var result41 = text.Trim(new [] { '.', '.', '.' });
 
-            var result51 = text.TrimEnd(['.', '.', '.']);
+            var result51 = text.TrimEnd(new[] { '.', '.', '.' });
 
-            var result61 = text.TrimStart(['.', '.', '.']);
+            var result61 = text.TrimStart(new[] { '.', '.', '.' });
         }
 
-        public void NoDetection(string text, char c, char[] charArray, string s, int startIndex, int count, StringComparison comparison, int totalWidth, StringSplitOptions options)
+        public void OtherArgument(string text, int startIndex, int count, IEnumerable<int> valuesGenericEnumerable, string[] valuesStringArray, object[] valuesObjectArray, ReadOnlySpan<string> valuesStrings, ReadOnlySpan<object> valuesObjects, StringComparison comparison, StringSplitOptions options)
+        {
+            var result11 = text.Contains("c");
+            var result12 = text.Contains("c", comparison);
+
+            var result21 = text.IndexOf("c");
+            var result22 = text.IndexOf("c", comparison);
+
+            var result31 = string.Join(";", valuesGenericEnumerable);
+            var result32 = string.Join(";", valuesStringArray);
+            var result33 = string.Join(";", valuesStringArray, startIndex, count);
+            var result34 = string.Join(";", valuesObjectArray);
+            var result35 = string.Join(";", valuesStrings);
+            var result36 = string.Join(";", valuesObjects);
+
+            var result41 = text.LastIndexOf("c", StringComparison.Ordinal);
+
+            var result51 = text.Split(";", options);
+            var result52 = text.Split(";", count, options);
+        }
+
+        public void NoDetection(string text, char c, char[] charArray, string s, int startIndex, int count, StringComparison comparison, int totalWidth, StringSplitOptions options, IEnumerable<int> valuesGenericEnumerable, string[] valuesStringArray, object[] valuesObjectArray, ReadOnlySpan<string> valuesStrings, ReadOnlySpan<object> valuesObjects)
         {
             var result11 = text.IndexOf(c, startIndex);
             var result12 = text.IndexOf(s, startIndex);
@@ -98,6 +120,37 @@ namespace Test
             var resultD1 = text.TrimEnd([';', '.']);
 
             var resultE1 = text.TrimStart([';', '.']);
+
+            var resultF1 = text.Contains("cc");
+            var resultF2 = text.Contains(s);
+            var resultF3 = text.Contains("cc", comparison);
+            var resultF4 = text.Contains(s, comparison);
+
+            var resultG1 = text.IndexOf("cc");
+            var resultG2 = text.IndexOf(s);
+            var resultG3 = text.IndexOf("cc", comparison);
+            var resultG4 = text.IndexOf(s, comparison);
+
+            var resultH1 = string.Join(";;", valuesGenericEnumerable);
+            var resultH2 = string.Join(s, valuesGenericEnumerable);
+            var resultH3 = string.Join(";;", valuesStringArray);
+            var resultH4 = string.Join(s, valuesStringArray);
+            var resultH5 = string.Join(";;", valuesStringArray, startIndex, count);
+            var resultH6 = string.Join(s, valuesStringArray, startIndex, count);
+            var resultH7 = string.Join(";;", valuesObjectArray);
+            var resultH8 = string.Join(s, valuesObjectArray);
+            var resultH9 = string.Join(";;", valuesStrings);
+            var resultHA = string.Join(s, valuesStrings);
+            var resultHB = string.Join("dd", valuesObjects);
+            var resultHC = string.Join(s, valuesObjects);
+
+            var resultI1 = text.LastIndexOf("cc", StringComparison.Ordinal);
+            var resultI2 = text.LastIndexOf(s, StringComparison.Ordinal);
+
+            var resultJ1 = text.Split(";;", options);
+            var resultJ2 = text.Split(s, options);
+            var resultJ3 = text.Split(";;", count, options);
+            var resultJ4 = text.Split(s, count, options);
         }
     }
 }

@@ -60,18 +60,10 @@ internal static class TreeNodeCollectionExtensions
         return false;
     }
 
-    public static TreeNodeCollection<ICSharpArgument>? AsPositionalArguments(this TreeNodeCollection<ICSharpArgument?> arguments)
-    {
-        foreach (var argument in arguments)
-        {
-            if (argument is null or { NameIdentifier: { } })
-            {
-                return null;
-            }
-        }
-
-        return arguments!;
-    }
+    /// <returns>The <paramref name="arguments"/> if it doesn't contain any optional argument.</returns>
+    [Pure]
+    public static TreeNodeCollection<ICSharpArgument>? AsAllNonOptionalOrNull(this TreeNodeCollection<ICSharpArgument?> arguments)
+        => arguments.Contains(null) ? null : arguments!;
 
     [Pure]
     public static IReadOnlyList<T> GetSubrange<T>(this TreeNodeCollection<T> treeNodeCollection, Range range) where T : ITreeNode

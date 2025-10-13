@@ -79,17 +79,17 @@ namespace Test
 
         public void PassSingleCharacter(string text, int count, StringSplitOptions options)
         {
-            var result11 = text.Split(|"a"|(41));
-            var result12 = text.Split(|"a"|(42), options);
+            var result11 = text.Split("a");
+            var result12 = text.Split("a", options);
 
-            var result21 = text.Split(|"a"|(43), count);
-            var result22 = text.Split(|"a"|(44), count, options);
+            var result21 = text.Split("a", count);
+            var result22 = text.Split("a", count, options);
 
-            var result31 = text.Split([|"a"|(45), |"a"|(46)], options);
-            var result32 = text.Split(new[] { |"a"|(47), |"a"|(48) }, options);
+            var result31 = text.Split([|"a"|(41), |"a"|(42)], options);
+            var result32 = text.Split(new[] { |"a"|(43), |"a"|(44) }, options);
 
-            var result41 = text.Split([|"a"|(49), |"a"|(50)], count, options);
-            var result42 = text.Split(new[] { |"a"|(51), |"a"|(52) }, count, options);
+            var result41 = text.Split([|"a"|(45), |"a"|(46)], count, options);
+            var result42 = text.Split(new[] { |"a"|(47), |"a"|(48) }, count, options);
         }
 
         public void NoDetection(string text, int count, StringSplitOptions options, char c, string s)
@@ -155,12 +155,12 @@ namespace Test
             text.Split('a', 1, StringSplitOptions.None);
             text.Split('a', 1, StringSplitOptions.TrimEntries);
 
-            text.|Split|(53)(['a'], 0);
-            text.|Split|(54)(['a'], 1);
+            text.|Split|(49)(['a'], 0);
+            text.|Split|(50)(['a'], 1);
 
-            text.|Split|(55)(['a'], 0, options);
-            text.|Split|(56)(['a'], 1, StringSplitOptions.None);
-            text.|Split|(57)(['a'], 1, StringSplitOptions.TrimEntries);
+            text.|Split|(51)(['a'], 0, options);
+            text.|Split|(52)(['a'], 1, StringSplitOptions.None);
+            text.|Split|(53)(['a'], 1, StringSplitOptions.TrimEntries);
 
             text.Split(null as string);
             text.Split((string?)null);
@@ -184,18 +184,18 @@ namespace Test
             text.Split("", count, StringSplitOptions.None);
             text.Split("", count, StringSplitOptions.TrimEntries);
 
-            text.|Split|(58)([""], StringSplitOptions.None);
-            text.|Split|(59)([""], StringSplitOptions.TrimEntries);
-            text.|Split|(60)(new[] { "" }, StringSplitOptions.None);
-            text.|Split|(61)(new[] { "" }, StringSplitOptions.TrimEntries);
+            text.|Split|(54)([""], StringSplitOptions.None);
+            text.|Split|(55)([""], StringSplitOptions.TrimEntries);
+            text.|Split|(56)(new[] { "" }, StringSplitOptions.None);
+            text.|Split|(57)(new[] { "" }, StringSplitOptions.TrimEntries);
 
-            text.|Split|(62)([s], 0, options);
-            text.|Split|(63)([s], 1, StringSplitOptions.None);
-            text.|Split|(64)([s], 1, StringSplitOptions.TrimEntries);
-            text.|Split|(65)([""], count, StringSplitOptions.None);
-            text.|Split|(66)([""], count, StringSplitOptions.TrimEntries);
-            text.|Split|(67)(new[] { "" }, count, StringSplitOptions.None);
-            text.|Split|(68)(new[] { "" }, count, StringSplitOptions.TrimEntries);
+            text.|Split|(58)([s], 0, options);
+            text.|Split|(59)([s], 1, StringSplitOptions.None);
+            text.|Split|(60)([s], 1, StringSplitOptions.TrimEntries);
+            text.|Split|(61)([""], count, StringSplitOptions.None);
+            text.|Split|(62)([""], count, StringSplitOptions.TrimEntries);
+            text.|Split|(63)(new[] { "" }, count, StringSplitOptions.None);
+            text.|Split|(64)(new[] { "" }, count, StringSplitOptions.TrimEntries);
         }
 
         public void NoDetection(string? text, StringSplitOptions options, string s, char c, int count)
@@ -300,10 +300,10 @@ namespace Test
 (46): ReSharper Suggestion: Pass the single character
 (47): ReSharper Suggestion: Pass the single character
 (48): ReSharper Suggestion: Pass the single character
-(49): ReSharper Suggestion: Pass the single character
-(50): ReSharper Suggestion: Pass the single character
-(51): ReSharper Suggestion: Pass the single character
-(52): ReSharper Suggestion: Pass the single character
+(49): ReSharper Warning: Return value of pure method is not used
+(50): ReSharper Warning: Return value of pure method is not used
+(51): ReSharper Warning: Return value of pure method is not used
+(52): ReSharper Warning: Return value of pure method is not used
 (53): ReSharper Warning: Return value of pure method is not used
 (54): ReSharper Warning: Return value of pure method is not used
 (55): ReSharper Warning: Return value of pure method is not used
@@ -316,7 +316,3 @@ namespace Test
 (62): ReSharper Warning: Return value of pure method is not used
 (63): ReSharper Warning: Return value of pure method is not used
 (64): ReSharper Warning: Return value of pure method is not used
-(65): ReSharper Warning: Return value of pure method is not used
-(66): ReSharper Warning: Return value of pure method is not used
-(67): ReSharper Warning: Return value of pure method is not used
-(68): ReSharper Warning: Return value of pure method is not used

@@ -17,7 +17,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-                or PassSingleCharacterSuggestion
                 or PassSingleCharactersSuggestion
                 or UseStringListPatternSuggestion
                 or UseOtherMethodSuggestion
@@ -31,11 +30,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [NullableContext(NullableContextKind.Enable)]
     [TestNet90]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
-    [TestNet90]
-    public void TestPassSingleCharacterFixAvailability() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]

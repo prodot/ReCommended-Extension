@@ -16,16 +16,16 @@ namespace Test
 
         public void SingleCharacter(string text, StringComparison comparison)
         {
-            var result1 = text.Contains(|"a"|(5));
-            var result2 = text.Contains(value: |"a"|(6));
+            var result1 = text.Contains("a");
+            var result2 = text.Contains(value: "a");
 
-            var result3 = text.Contains(|"a"|(7), comparison);
-            var result4 = text.Contains(value: |"a"|(8), comparison);
+            var result3 = text.Contains("a", comparison);
+            var result4 = text.Contains(value: "a", comparison);
         }
 
         public void NoDetection(string text, string value, StringComparison comparison)
         {
-            text.|Contains|(9)("");
+            text.|Contains|(5)("");
             text.Contains("", comparison);
 
             var result1 = text.Contains("abc");
@@ -48,8 +48,4 @@ namespace Test
 (2): ReSharper Suggestion: The expression is always true.
 (3): ReSharper Suggestion: The expression is always true.
 (4): ReSharper Suggestion: The expression is always true.
-(5): ReSharper Suggestion: Pass the single character.
-(6): ReSharper Suggestion: Pass the single character.
-(7): ReSharper Suggestion: Pass the single character.
-(8): ReSharper Suggestion: Pass the single character.
-(9): ReSharper Warning: Return value of pure method is not used
+(5): ReSharper Warning: Return value of pure method is not used

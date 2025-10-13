@@ -2404,8 +2404,44 @@ internal static class RuleDefinitions
 
     [Pure]
     static Dictionary<string, IReadOnlyCollection<Member>> CreateStringMembers()
-        => new(StringComparer.Ordinal)
+    {
+        Debug.Assert(OtherArgument.CharForStringComparisonOrdinal.FurtherArgumentCondition is { });
+
+        return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
         {
+            {
+                nameof(string.Contains),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature = new ReplacementSignature { Parameters = [Parameter.Char], ParameterIndex = 0 },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringComparison] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.StringComparison], ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
+                ]
+            },
             {
                 nameof(string.IndexOf),
                 [
@@ -2416,8 +2452,40 @@ internal static class RuleDefinitions
                     },
                     new Member
                     {
+                        Signature = new MethodSignature { Parameters = [Parameter.String] },
+                        Inspections =
+                        [
+                            OtherArgument.CharWithCurrentCulture with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.StringComparison], ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
                         Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.Int32] },
                         Inspections = [RedundantArgument.ZeroInt32 with { ParameterIndex = 1 }],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringComparison] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.StringComparison], ParameterIndex = 0,
+                                },
+                            },
+                        ],
                     },
                     new Member
                     {
@@ -2447,6 +2515,126 @@ internal static class RuleDefinitions
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.CharArray, Parameter.Int32, Parameter.Int32] },
                         Inspections = [RedundantCollectionElement.Char with { ParameterIndex = 0 }],
+                    },
+                ]
+            },
+            {
+                nameof(string.Join),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters = [Parameter.String, Parameter.IEnumerableOfT], IsStatic = true, GenericParametersCount = 1,
+                        },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature { Parameters = [Parameter.Char, Parameter.IEnumerableOfT], ParameterIndex = 0 },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringArray], IsStatic = true },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature { Parameters = [Parameter.Char, Parameter.StringArray], ParameterIndex = 0 },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature =
+                            new MethodSignature
+                            {
+                                Parameters = [Parameter.String, Parameter.StringArray, Parameter.Int32, Parameter.Int32], IsStatic = true,
+                            },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.StringArray, Parameter.Int32, Parameter.Int32],
+                                    ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ObjectArray], IsStatic = true },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature { Parameters = [Parameter.Char, Parameter.ObjectArray], ParameterIndex = 0 },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ReadOnlySpanOfString], IsStatic = true },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.ReadOnlySpanOfString], ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ReadOnlySpanOfObject], IsStatic = true },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.ReadOnlySpanOfObject], ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(string.LastIndexOf),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringComparison] },
+                        Inspections =
+                        [
+                            OtherArgument.CharForStringComparisonOrdinal with
+                            {
+                                ParameterIndex = 0,
+                                FurtherArgumentCondition =
+                                OtherArgument.CharForStringComparisonOrdinal.FurtherArgumentCondition with { ParameterIndex = 1 },
+                                ReplacementSignature = new ReplacementSignature { Parameters = [Parameter.Char], ParameterIndex = 0 },
+                                RedundantArgumentIndex = 1,
+                            },
+                        ],
                     },
                 ]
             },
@@ -2493,6 +2681,38 @@ internal static class RuleDefinitions
             {
                 nameof(string.Split),
                 [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringSplitOptions] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.StringSplitOptions], ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.Int32, Parameter.StringSplitOptions] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.Int32, Parameter.StringSplitOptions], ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
                     new Member
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.CharArray] },
@@ -2574,14 +2794,30 @@ internal static class RuleDefinitions
                 ]
             },
         };
+    }
 
     [Pure]
     static Dictionary<string, IReadOnlyCollection<Member>> CreateStringBuilderMembers()
-        => new(StringComparer.Ordinal)
+    {
+        Debug.Assert(OtherArgument.CharForOne.FurtherArgumentCondition is { });
+
+        return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
         {
             {
                 nameof(StringBuilder.Append),
                 [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature = new ReplacementSignature { Parameters = [Parameter.Char], ParameterIndex = 0 },
+                            },
+                        ],
+                    },
                     new Member
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Char, Parameter.Int32] },
@@ -2590,16 +2826,121 @@ internal static class RuleDefinitions
                 ]
             },
             {
+                "AppendJoin", // todo: use nameof(StringBuilder.AppendJoin) when available
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.IEnumerableOfT], GenericParametersCount = 1 },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature { Parameters = [Parameter.Char, Parameter.IEnumerableOfT], ParameterIndex = 0 },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringArray] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature { Parameters = [Parameter.Char, Parameter.StringArray], ParameterIndex = 0 },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ObjectArray] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature { Parameters = [Parameter.Char, Parameter.ObjectArray], ParameterIndex = 0 },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ReadOnlySpanOfString] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.ReadOnlySpanOfString], ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ReadOnlySpanOfObject] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature =
+                                new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Char, Parameter.ReadOnlySpanOfObject], ParameterIndex = 0,
+                                },
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
                 nameof(StringBuilder.Insert),
                 [
                     new Member
                     {
+                        Signature = new MethodSignature { Parameters = [Parameter.Int32, Parameter.String] },
+                        Inspections =
+                        [
+                            OtherArgument.Char with
+                            {
+                                ParameterIndex = 1,
+                                ReplacementSignature = new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Int32, Parameter.Char], ParameterIndex = 1,
+                                },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
                         Signature = new MethodSignature { Parameters = [Parameter.Int32, Parameter.String, Parameter.Int32] },
-                        Inspections = [RedundantArgument.OneInt32 with { ParameterIndex = 2 }],
+                        Inspections =
+                        [
+                            RedundantArgument.OneInt32 with { ParameterIndex = 2 },
+                            OtherArgument.CharForOne with
+                            {
+                                ParameterIndex = 1,
+                                FurtherArgumentCondition = OtherArgument.CharForOne.FurtherArgumentCondition with { ParameterIndex = 2 },
+                                ReplacementSignature = new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.Int32, Parameter.Char], ParameterIndex = 1,
+                                },
+                                RedundantArgumentIndex = 2,
+                            },
+                        ],
                     },
                 ]
             },
         };
+    }
 
     [Pure]
     static Dictionary<string, IReadOnlyCollection<Member>> CreateRandomMembers()
@@ -2638,13 +2979,11 @@ internal static class RuleDefinitions
         };
 
     [Pure]
-    static Member? TryFindMember(IReadOnlyCollection<Member> members, ITypeMember resolvedMember, out int? parameterIndexOfParams)
+    static Member? TryFindMember(IReadOnlyCollection<Member> members, ITypeMember resolvedMember)
     {
         [Pure]
-        static bool AreParametersMatching(IReadOnlyList<Parameter> parameters, IList<IParameter> resolvedParameters, out int? parameterIndexOfParams)
+        static bool AreParametersMatching(IReadOnlyList<Parameter> parameters, IList<IParameter> resolvedParameters)
         {
-            parameterIndexOfParams = null;
-
             if (parameters.Count != resolvedParameters.Count)
             {
                 return false;
@@ -2652,19 +2991,12 @@ internal static class RuleDefinitions
 
             for (var i = 0; i < parameters.Count; i++)
             {
-                Debug.Assert(parameterIndexOfParams == null);
-
                 var parameter = parameters[i];
                 var resolvedParameter = resolvedParameters[i];
 
                 if (parameter.Kind != resolvedParameter.Kind || !parameter.IsType(resolvedParameter.Type))
                 {
                     return false;
-                }
-
-                if (resolvedParameter.IsParams)
-                {
-                    parameterIndexOfParams = i;
                 }
             }
 
@@ -2677,56 +3009,51 @@ internal static class RuleDefinitions
             {
                 case (ConstructorSignature constructorSignature, IConstructor resolvedConstructor) when AreParametersMatching(
                     constructorSignature.Parameters,
-                    resolvedConstructor.Parameters,
-                    out parameterIndexOfParams):
+                    resolvedConstructor.Parameters):
 
                 case (MethodSignature methodSignature, IMethod resolvedMethod) when methodSignature.IsStatic == resolvedMethod.IsStatic
                     && methodSignature.GenericParametersCount == resolvedMethod.TypeParametersCount
-                    && AreParametersMatching(methodSignature.Parameters, resolvedMethod.Parameters, out parameterIndexOfParams):
+                    && AreParametersMatching(methodSignature.Parameters, resolvedMethod.Parameters):
                 {
                     return member;
                 }
             }
         }
 
-        parameterIndexOfParams = null;
         return null;
     }
 
 
     [Pure]
-    static Member? TryGetMember(ITypeElement type, string memberName, ITypeMember resolvedMember, out int? parameterIndexOfParams)
+    static Member? TryGetMember(ITypeElement type, string memberName, ITypeMember resolvedMember)
     {
         if (typeMembers.TryGetValue(type.GetClrName(), out var overloads) && overloads.TryGetValue(memberName, out var members))
         {
-            return TryFindMember(members, resolvedMember, out parameterIndexOfParams);
+            return TryFindMember(members, resolvedMember);
         }
 
-        parameterIndexOfParams = null;
         return null;
     }
 
     [Pure]
-    public static Member? TryGetConstructor(ITypeElement type, IConstructor resolvedConstructor, out int? parameterIndexOfParams)
+    public static Member? TryGetConstructor(ITypeElement type, IConstructor resolvedConstructor)
     {
-        if (TryGetMember(type, "", resolvedConstructor, out parameterIndexOfParams) is { Signature: ConstructorSignature } constructor)
+        if (TryGetMember(type, "", resolvedConstructor) is { Signature: ConstructorSignature } constructor)
         {
             return constructor;
         }
 
-        parameterIndexOfParams = null;
         return null;
     }
 
     [Pure]
-    public static Member? TryGetMethod(ITypeElement type, IMethod resolvedMethod, out int? parameterIndexOfParams)
+    public static Member? TryGetMethod(ITypeElement type, IMethod resolvedMethod)
     {
-        if (TryGetMember(type, resolvedMethod.ShortName, resolvedMethod, out parameterIndexOfParams) is { Signature: MethodSignature } method)
+        if (TryGetMember(type, resolvedMethod.ShortName, resolvedMethod) is { Signature: MethodSignature } method)
         {
             return method;
         }
 
-        parameterIndexOfParams = null;
         return null;
     }
 }
