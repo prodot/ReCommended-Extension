@@ -1,4 +1,5 @@
-﻿using JetBrains.ReSharper.Psi.CSharp.Tree;
+﻿using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Analyzers.BaseTypes.Collections;
 using ReCommendedExtension.Extensions;
 
@@ -77,20 +78,23 @@ internal sealed record OtherArgument : Inspection
 
     public static OtherArgument Char { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value.TryGetStringConstant() is [var character] ? $"'{character.ToString()}'" : null,
+        TryGetReplacement =
+            arg => arg.Value.TryGetStringConstant() is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
         Message = "The only character should be passed directly.",
     };
 
     public static OtherArgument CharWithCurrentCulture { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value.TryGetStringConstant() is [var character] ? $"'{character.ToString()}'" : null,
+        TryGetReplacement =
+            arg => arg.Value.TryGetStringConstant() is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
         Message = "The only character should be passed directly.",
         AdditionalArgument = $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}",
     };
 
     public static OtherArgument CharForStringComparisonOrdinal { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value.TryGetStringConstant() is [var character] ? $"'{character.ToString()}'" : null,
+        TryGetReplacement =
+            arg => arg.Value.TryGetStringConstant() is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
         FurtherArgumentCondition = new ArgumentCondition
         {
             Condition = arg => arg.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal,
@@ -100,9 +104,51 @@ internal sealed record OtherArgument : Inspection
 
     public static OtherArgument CharForOne { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value.TryGetStringConstant() is [var character] ? $"'{character.ToString()}'" : null,
+        TryGetReplacement =
+            arg => arg.Value.TryGetStringConstant() is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
         FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.TryGetInt32Constant() == 1 },
         Message = "The only character should be passed directly.",
+    };
+
+    public static OtherArgument CharCollection { get; } = new()
+    {
+        TryGetReplacement = arg =>
+        {
+            if (CollectionCreation.TryFrom(arg.Value) is
+                {
+                    Count: > 0, Expression: ICollectionExpression or IArrayCreationExpression,
+                } collectionCreation)
+            {
+                var characters = new List<char>(collectionCreation.Count);
+
+                foreach (var s in collectionCreation.AllElementsAsStringConstants)
+                {
+                    if (s is [var character])
+                    {
+                        characters.Add(character);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
+                var languageLevel = arg.GetCSharpLanguageLevel();
+
+                var elements = string.Join(", ", from c in characters select c.ToLiteralString(languageLevel));
+
+                return collectionCreation.Expression switch
+                {
+                    ICollectionExpression => $"[{elements}]",
+                    IArrayCreationExpression => $$"""new[] { {{elements}} }""",
+
+                    _ => throw new NotSupportedException(),
+                };
+            }
+
+            return null;
+        },
+        Message = "The only characters should be passed directly.",
     };
 
     public int ParameterIndex { get; init; } = -1;

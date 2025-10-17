@@ -20,7 +20,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
-                or PassSingleCharactersSuggestion
                 or UseStringListPatternSuggestion
                 or UseOtherMethodSuggestion
                 or UseStringPropertySuggestion
@@ -475,16 +474,11 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.Replace("bc", "bc", StringComparison.Ordinal), text => text);
         TestNullable("abcde", text => text?.Replace("bc", "bc", StringComparison.Ordinal), text => text);
 
-        Test("abcde", text => text.Replace("c", "x", StringComparison.Ordinal), text => text.Replace('c', 'x'));
-        TestNullable("abcde", text => text?.Replace("c", "x", StringComparison.Ordinal), text => text?.Replace('c', 'x'));
-
         Test("abcde", text => text.Replace('c', 'c'), text => text);
         TestNullable("abcde", text => text?.Replace('c', 'c'), text => text);
 
         Test("abcde", text => text.Replace("bc", "bc"), text => text);
         TestNullable("abcde", text => text?.Replace("bc", "bc"), text => text);
-
-        Test("abcde", text => text.Replace("c", "x"), text => text.Replace('c', 'x'));
 
         DoNamedTest2();
     }

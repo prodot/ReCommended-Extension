@@ -16,13 +16,5 @@ internal sealed class EmptyCollectionCreation(ICSharpExpression expression) : Co
 
     public override int Count => 0;
 
-    public override IEnumerable<IInitializerElement> Elements
-    {
-        get
-        {
-            yield break;
-        }
-    }
-
     public override IInitializerElement SingleElement => throw new NotSupportedException();
 }

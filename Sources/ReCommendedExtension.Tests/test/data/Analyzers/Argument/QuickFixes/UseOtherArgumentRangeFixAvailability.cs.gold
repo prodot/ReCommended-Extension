@@ -1,0 +1,26 @@
+﻿using System;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void OtherArgumentRange(string text)
+        {
+            var result1 = text.Replace(|"c"|(0), |"x"|(1));
+            var result2 = text.Replace(|"c"|(2), |"x"|(3), StringComparison.Ordinal);
+        }
+    }
+}
+------------------------------------------------
+0: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''c', 'x'', respectively
+1: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''c', 'x'', respectively
+2: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''c', 'x'', respectively (and remove 'StringComparison.Ordinal')
+3: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''c', 'x'', respectively (and remove 'StringComparison.Ordinal')

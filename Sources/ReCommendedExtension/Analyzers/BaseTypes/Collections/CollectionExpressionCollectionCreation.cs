@@ -22,8 +22,6 @@ internal sealed class CollectionExpressionCollectionCreation(ICollectionExpressi
 
     public override int Count => collectionExpression.CollectionElements.Count;
 
-    public override IEnumerable<IInitializerElement> Elements => collectionExpression.CollectionElements;
-
     public override IInitializerElement SingleElement
     {
         get

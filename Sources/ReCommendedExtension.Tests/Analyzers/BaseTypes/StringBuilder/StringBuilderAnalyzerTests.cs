@@ -20,7 +20,7 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilder";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is PassSingleCharactersSuggestion or UseOtherMethodSuggestion or RedundantMethodInvocationHint || highlighting.IsError();
+        => highlighting is UseOtherMethodSuggestion or RedundantMethodInvocationHint || highlighting.IsError();
 
     static void AreEqual<T>(T? expected, T? actual)
     {
@@ -135,8 +135,6 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", builder => builder.AppendJoin(", ", (object?[])["item"]), builder => builder.Append((object)"item"));
         TestNullable("abcde", builder => builder?.AppendJoin(", ", (object?[])["item"]), builder => builder?.Append((object)"item"));
 
-        // Test("abcde", builder => builder.AppendJoin(", ", default(ReadOnlySpan<object?>)), builder => builder);
-        // TestNullable("abcde", builder => builder?.AppendJoin(", ", default(ReadOnlySpan<object?>)), builder => builder);
         Test("abcde", builder => builder.AppendJoin(", ", new ReadOnlySpan<object?>()), builder => builder);
         TestNullable("abcde", builder => builder?.AppendJoin(", ", new ReadOnlySpan<object?>()), builder => builder);
         Test("abcde", builder => builder.AppendJoin(", ", new[] { (object?)"item" }.AsSpan()), builder => builder.Append((object)"item"));
@@ -220,14 +218,9 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
     {
         Test("abcde", builder => builder.Replace("cd", "cd"), builder => builder);
         TestNullable("abcde", builder => builder?.Replace("cd", "cd"), builder => builder);
-        Test("abcde", builder => builder.Replace("c", "x"), builder => builder.Replace('c', 'x'));
-        TestNullable("abcde", builder => builder?.Replace("c", "x"), builder => builder?.Replace('c', 'x'));
 
         Test("abcde", builder => builder.Replace('c', 'c'), builder => builder);
         TestNullable("abcde", builder => builder?.Replace('c', 'c'), builder => builder);
-
-        Test("abcde", builder => builder.Replace("c", "x", 1, 3), builder => builder.Replace('c', 'x', 1, 3), true);
-        TestNullable("abcde", builder => builder?.Replace("c", "x", 1, 3), builder => builder?.Replace('c', 'x', 1, 3), true);
 
         DoNamedTest2();
     }

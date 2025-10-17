@@ -31,8 +31,6 @@ internal sealed class ArrayCreationExpressionCollectionCreation : CollectionCrea
 
     public override int Count => arrayCreationExpression.ArrayInitializer.ElementInitializers.Count;
 
-    public override IEnumerable<IInitializerElement> Elements => arrayCreationExpression.ArrayInitializer.ElementInitializers;
-
     public override IInitializerElement SingleElement
     {
         get

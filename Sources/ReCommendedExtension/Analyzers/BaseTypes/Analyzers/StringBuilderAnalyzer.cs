@@ -13,19 +13,13 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(
-    typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(PassSingleCharactersSuggestion), typeof(UseOtherMethodSuggestion), typeof(RedundantMethodInvocationHint)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseOtherMethodSuggestion), typeof(RedundantMethodInvocationHint)])]
 public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
     : ElementProblemAnalyzer<IInvocationExpression>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
     {
-        public static IReadOnlyList<Parameter> Char_Char { get; } = [Parameter.Char, Parameter.Char];
-
-        public static IReadOnlyList<Parameter> Char_Char_Int32_Int32 { get; } = [Parameter.Char, Parameter.Char, Parameter.Int32, Parameter.Int32];
-
         public static IReadOnlyList<Parameter> Object { get; } = [Parameter.Object];
 
         public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
@@ -945,8 +939,7 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Replace("abc", "abc")</c> → <c>text</c><para/>
-    /// <c>builder.Replace("a", "b")</c> → <c>text.Replace('a', 'b')</c>
+    /// <c>builder.Replace("abc", "abc")</c> → <c>text</c>
     /// </remarks>
     static void AnalyzeReplace_String_String(
         IHighlightingConsumer consumer,
@@ -955,41 +948,15 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         ICSharpArgument oldValueArgument,
         ICSharpArgument newValueArgument)
     {
-        if (oldValueArgument.Value.TryGetStringConstant() is { } oldValue and not "" && newValueArgument.Value.TryGetStringConstant() is { } newValue)
+        if (oldValueArgument.Value.TryGetStringConstant() is { } oldValue and not ""
+            && newValueArgument.Value.TryGetStringConstant() is { } newValue
+            && oldValue == newValue)
         {
-            if (oldValue == newValue)
-            {
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Replace)}' with identical values is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                return;
-            }
-
-            if (oldValue is [var oldCharacter]
-                && newValue is [var newCharacter]
-                && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(StringBuilder.Replace), Parameters = Parameters.Char_Char },
-                    oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
-                    out var parameterNames,
-                    invocationExpression.PsiModule))
-            {
-                var highlighting = new PassSingleCharactersSuggestion(
-                    "Pass the single character.",
-                    [oldValueArgument, newValueArgument],
-                    parameterNames is [var oldCharParameterName, var newCharParameterName]
-                        ?
-                        [
-                            oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
-                            newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
-                        ]
-                        : new string?[2],
-                    [oldCharacter, newCharacter]);
-
-                consumer.AddHighlighting(highlighting, oldValueArgument.Value.GetDocumentRange());
-                consumer.AddHighlighting(highlighting, newValueArgument.Value.GetDocumentRange());
-            }
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Calling '{nameof(StringBuilder.Replace)}' with identical values is redundant.",
+                    invocationExpression,
+                    invokedExpression));
         }
     }
 
@@ -1012,40 +979,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                     $"Calling '{nameof(StringBuilder.Replace)}' with identical characters is redundant.",
                     invocationExpression,
                     invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Replace("a", "b", startIndex, count)</c> → <c>text.Replace('a', 'b', startIndex, count)</c>
-    /// </remarks>
-    static void AnalyzeReplace_String_String_Int32_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument oldValueArgument,
-        ICSharpArgument newValueArgument)
-    {
-        if (oldValueArgument.Value.TryGetStringConstant() is [var oldCharacter]
-            && newValueArgument.Value.TryGetStringConstant() is [var newCharacter]
-            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                new MethodSignature { Name = nameof(StringBuilder.Replace), Parameters = Parameters.Char_Char_Int32_Int32 },
-                oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
-                out var parameterNames,
-                invocationExpression.PsiModule))
-        {
-            var highlighting = new PassSingleCharactersSuggestion(
-                "Pass the single character.",
-                [oldValueArgument, newValueArgument],
-                parameterNames is [var oldCharParameterName, var newCharParameterName]
-                    ?
-                    [
-                        oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
-                        newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
-                    ]
-                    : new string?[2],
-                [oldCharacter, newCharacter]);
-
-            consumer.AddHighlighting(highlighting, oldValueArgument.Value.GetDocumentRange());
-            consumer.AddHighlighting(highlighting, newValueArgument.Value.GetDocumentRange());
         }
     }
 
@@ -1206,12 +1139,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             when oldCharType.IsChar() && newCharType.IsChar():
 
                             AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
-                            break;
-
-                        case ([{ Type: var oldValueType }, { Type: var newValueType }, { Type: var startIndexType }, { Type: var countType }], [
-                            { } oldValueArgument, { } newValueArgument, _, _,
-                        ]) when oldValueType.IsString() && newValueType.IsString() && startIndexType.IsInt() && countType.IsInt():
-                            AnalyzeReplace_String_String_Int32_Int32(consumer, element, oldValueArgument, newValueArgument);
                             break;
                     }
                     break;

@@ -2406,6 +2406,7 @@ internal static class RuleDefinitions
     static Dictionary<string, IReadOnlyCollection<Member>> CreateStringMembers()
     {
         Debug.Assert(OtherArgument.CharForStringComparisonOrdinal.FurtherArgumentCondition is { });
+        Debug.Assert(OtherArgumentRange.CharsForStringComparisonOrdinal.FurtherArgumentCondition is { });
 
         return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
         {
@@ -2679,6 +2680,45 @@ internal static class RuleDefinitions
                 ]
             },
             {
+                nameof(string.Replace),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.String] },
+                        Inspections =
+                        [
+                            OtherArgumentRange.Chars with
+                            {
+                                ReplacementSignature = new ReplacementSignatureRange
+                                {
+                                    Parameters = [Parameter.Char, Parameter.Char], ParameterIndexRange = ..,
+                                },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.String, Parameter.StringComparison] },
+                        Inspections =
+                        [
+                            OtherArgumentRange.CharsForStringComparisonOrdinal with
+                            {
+                                ParameterIndexRange = ..2,
+                                FurtherArgumentCondition = OtherArgumentRange.CharsForStringComparisonOrdinal.FurtherArgumentCondition with
+                                {
+                                    ParameterIndex = 2,
+                                },
+                                ReplacementSignature = new ReplacementSignatureRange
+                                {
+                                    Parameters = [Parameter.Char, Parameter.Char], ParameterIndexRange = ..,
+                                },
+                                RedundantArgumentIndex = 2,
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
                 nameof(string.Split),
                 [
                     new Member
@@ -2736,12 +2776,35 @@ internal static class RuleDefinitions
                     new Member
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.StringArray, Parameter.StringSplitOptions] },
-                        Inspections = [RedundantCollectionElement.String with { ParameterIndex = 0 }],
+                        Inspections =
+                        [
+                            RedundantCollectionElement.String with { ParameterIndex = 0 },
+                            OtherArgument.CharCollection with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature = new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.CharArray, Parameter.Int32, Parameter.StringSplitOptions],
+                                    ParameterIndex = 0,
+                                },
+                            },
+                        ],
                     },
                     new Member
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.StringArray, Parameter.Int32, Parameter.StringSplitOptions] },
-                        Inspections = [RedundantCollectionElement.String with { ParameterIndex = 0 }],
+                        Inspections =
+                        [
+                            RedundantCollectionElement.String with { ParameterIndex = 0 },
+                            OtherArgument.CharCollection with
+                            {
+                                ParameterIndex = 0,
+                                ReplacementSignature = new ReplacementSignature
+                                {
+                                    Parameters = [Parameter.CharArray, Parameter.Int32, Parameter.StringSplitOptions], ParameterIndex = 0,
+                                },
+                            },
+                        ],
                     },
                 ]
             },
@@ -2912,10 +2975,8 @@ internal static class RuleDefinitions
                             OtherArgument.Char with
                             {
                                 ParameterIndex = 1,
-                                ReplacementSignature = new ReplacementSignature
-                                {
-                                    Parameters = [Parameter.Int32, Parameter.Char], ParameterIndex = 1,
-                                },
+                                ReplacementSignature =
+                                new ReplacementSignature { Parameters = [Parameter.Int32, Parameter.Char], ParameterIndex = 1 },
                             },
                         ],
                     },
@@ -2929,11 +2990,44 @@ internal static class RuleDefinitions
                             {
                                 ParameterIndex = 1,
                                 FurtherArgumentCondition = OtherArgument.CharForOne.FurtherArgumentCondition with { ParameterIndex = 2 },
-                                ReplacementSignature = new ReplacementSignature
-                                {
-                                    Parameters = [Parameter.Int32, Parameter.Char], ParameterIndex = 1,
-                                },
+                                ReplacementSignature =
+                                new ReplacementSignature { Parameters = [Parameter.Int32, Parameter.Char], ParameterIndex = 1 },
                                 RedundantArgumentIndex = 2,
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(StringBuilder.Replace),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.String] },
+                        Inspections =
+                        [
+                            OtherArgumentRange.Chars with
+                            {
+                                ReplacementSignature = new ReplacementSignatureRange
+                                {
+                                    Parameters = [Parameter.Char, Parameter.Char], ParameterIndexRange = ..,
+                                },
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.String, Parameter.Int32, Parameter.Int32] },
+                        Inspections =
+                        [
+                            OtherArgumentRange.Chars with
+                            {
+                                ParameterIndexRange = ..2,
+                                ReplacementSignature = new ReplacementSignatureRange
+                                {
+                                    Parameters = [Parameter.Char, Parameter.Char, Parameter.Int32, Parameter.Int32],
+                                    ParameterIndexRange = ..2,
+                                },
                             },
                         ],
                     },

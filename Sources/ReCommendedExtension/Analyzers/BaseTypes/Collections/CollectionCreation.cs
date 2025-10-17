@@ -79,8 +79,6 @@ internal abstract class CollectionCreation
     [NonNegativeValue]
     public abstract int Count { get; }
 
-    public abstract IEnumerable<IInitializerElement> Elements { get; }
-
     public abstract IInitializerElement SingleElement { get; }
 
     public IEnumerable<(IInitializerElement, char)> ElementsWithCharConstants

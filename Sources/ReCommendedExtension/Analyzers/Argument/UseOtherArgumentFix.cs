@@ -2,7 +2,6 @@
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
@@ -24,15 +23,15 @@ public sealed class UseOtherArgumentFix(UseOtherArgumentSuggestion highlighting)
         {
             var builder = new StringBuilder();
 
-            builder.Append($"Replace with '{highlighting.Replacement}'");
+            builder.Append($"Replace with '{highlighting.ArgumentReplacement.Replacement.Value.TrimToSingleLineWithMaxLength(120)}'");
 
             if (highlighting is { AdditionalArgument: { } } or { RedundantArgument : { } })
             {
                 builder.Append(" (and ");
 
-                if (highlighting.AdditionalArgument is { })
+                if (highlighting.AdditionalArgument is { } additionalArgument)
                 {
-                    builder.Append($"add '{highlighting.AdditionalArgument}'");
+                    builder.Append($"add '{additionalArgument.Value}'");
                 }
 
                 if (highlighting is { AdditionalArgument: { }, RedundantArgument: { } })
@@ -56,24 +55,27 @@ public sealed class UseOtherArgumentFix(UseOtherArgumentSuggestion highlighting)
     {
         using (WriteLockCookie.Create())
         {
-            var factory = CSharpElementFactory.GetInstance(highlighting.Argument);
+            var factory = CSharpElementFactory.GetInstance(highlighting.ArgumentReplacement.Argument);
 
             var argument = ModificationUtil.ReplaceChild(
-                highlighting.Argument,
-                factory.CreateArgument(highlighting.ParameterKind, highlighting.ParameterName, factory.CreateExpression(highlighting.Replacement)));
+                highlighting.ArgumentReplacement.Argument,
+                factory.CreateArgument(
+                    highlighting.ArgumentReplacement.Replacement.ParameterKind,
+                    highlighting.ArgumentReplacement.Replacement.ParameterName,
+                    factory.CreateExpression(highlighting.ArgumentReplacement.Replacement.Value)));
 
             highlighting.RedundantArgument?.Remove();
 
-            if (highlighting.AdditionalArgument is { })
+            if (highlighting.AdditionalArgument is { } additionalArgument)
             {
                 var comma = ModificationUtil.AddChildAfter(argument, CSharpTokenType.COMMA.CreateTreeElement());
 
                 ModificationUtil.AddChildAfter(
                     comma,
                     factory.CreateArgument(
-                        ParameterKind.VALUE,
-                        highlighting.AdditionalArgumentParameterName,
-                        factory.CreateExpression(highlighting.AdditionalArgument)));
+                        additionalArgument.ParameterKind,
+                        additionalArgument.ParameterName,
+                        factory.CreateExpression(additionalArgument.Value)));
             }
         }
 

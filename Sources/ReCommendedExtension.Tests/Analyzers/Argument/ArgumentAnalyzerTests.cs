@@ -49,7 +49,11 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Argument";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantArgumentHint or RedundantArgumentRangeHint or RedundantElementHint or UseOtherArgumentSuggestion
+        => highlighting is RedundantArgumentHint
+                or RedundantArgumentRangeHint
+                or RedundantElementHint
+                or UseOtherArgumentSuggestion
+                or UseOtherArgumentRangeSuggestion
             || highlighting.IsError();
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
@@ -3057,9 +3061,10 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "RedundantElement")]
     [SuppressMessage("ReSharper", "RedundantCast")]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "UseOtherArgumentRange")]
     public void TestString()
     {
-        var values = new[] { null, "", "abcde", "  abcde  ", "ab;cd;e", "..abcde.." };
+        var values = new[] { null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.." };
         var comparisons = new[]
         {
             StringComparison.Ordinal,
@@ -3146,6 +3151,17 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
 
         Test((text, options) => text?.Split(";", options), (text, options) => text?.Split(';', options), values, stringSplitOptions);
         Test((text, options) => text?.Split(";", 2, options), (text, options) => text?.Split(';', 2, options), values, stringSplitOptions);
+        Test((text, options) => text?.Split([";", ":"], options), (text, options) => text?.Split([';', ':'], options), values, stringSplitOptions);
+        Test(
+            (text, options) => text?.Split([";", ":"], 10, options),
+            (text, options) => text?.Split([';', ':'], 10, options),
+            values,
+            stringSplitOptions);
+
+        // other argument range
+
+        Test(text => text?.Replace("c", "x"), text => text?.Replace('c', 'x'), values);
+        Test(text => text?.Replace("c", "x", StringComparison.Ordinal), text => text?.Replace('c', 'x'), values);
 
         DoNamedTest2();
     }
@@ -3154,6 +3170,7 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     [TestNet90]
     [SuppressMessage("ReSharper", "RedundantArgument")]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "UseOtherArgumentRange")]
     [SuppressMessage("ReSharper", "RedundantCast")]
     public void TestStringBuilder()
     {
@@ -3200,6 +3217,14 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
         Test(
             value => new StringBuilder(value).Insert(1, "x", 1).ToString(),
             value => new StringBuilder(value).Insert(1, 'x').ToString(),
+            [..values.Except([""])]);
+
+        // other argument range
+
+        Test(value => new StringBuilder(value).Replace("c", "x").ToString(), value => new StringBuilder(value).Replace('c', 'x').ToString(), values);
+        Test(
+            value => new StringBuilder(value).Replace("c", "x", 1, 3).ToString(),
+            value => new StringBuilder(value).Replace('c', 'x', 1, 3).ToString(),
             [..values.Except([""])]);
 
         DoNamedTest2();

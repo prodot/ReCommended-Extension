@@ -46,8 +46,8 @@ namespace Test
             var result32 = text.Split([';', ';'], count);
             var result33 = text.Split([';', ';'], options);
             var result34 = text.Split([';', ';'], count, options);
-            var result35 = text.Split([";", ";"], options);
-            var result36 = text.Split([";", ";"], count, options);
+            var result35 = text.Split([";;", ";;"], options);
+            var result36 = text.Split([";;", ";;"], count, options);
 
             var result41 = text.Trim(new [] { '.', '.', '.' });
 
@@ -75,6 +75,16 @@ namespace Test
 
             var result51 = text.Split(";", options);
             var result52 = text.Split(";", count, options);
+            var result53 = text.Split([";", ":"], options);
+            var result54 = text.Split(new[] { ";", ":" }, options);
+            var result55 = text.Split([";", ":"], count, options);
+            var result56 = text.Split(new[] { ";", ":" }, count, options);
+        }
+
+        public void OtherArgumentRange(string text)
+        {
+            var result1 = text.Replace("c", "x");
+            var result2 = text.Replace("c", "x", StringComparison.Ordinal);
         }
 
         public void NoDetection(string text, char c, char[] charArray, string s, int startIndex, int count, StringComparison comparison, int totalWidth, StringSplitOptions options, IEnumerable<int> valuesGenericEnumerable, string[] valuesStringArray, object[] valuesObjectArray, ReadOnlySpan<string> valuesStrings, ReadOnlySpan<object> valuesObjects)
@@ -146,11 +156,30 @@ namespace Test
 
             var resultI1 = text.LastIndexOf("cc", StringComparison.Ordinal);
             var resultI2 = text.LastIndexOf(s, StringComparison.Ordinal);
+            var resultI3 = text.LastIndexOf("c", StringComparison.OrdinalIgnoreCase);
 
             var resultJ1 = text.Split(";;", options);
             var resultJ2 = text.Split(s, options);
             var resultJ3 = text.Split(";;", count, options);
             var resultJ4 = text.Split(s, count, options);
+            var resultJ5 = text.Split([";;", ":"], options);
+            var resultJ6 = text.Split([s, ":"], options);
+            var resultJ7 = text.Split(new[] { ";;", ":" }, options);
+            var resultJ8 = text.Split(new[] { s, ":" }, options);
+            var resultJ9 = text.Split([";;", ":"], count, options);
+            var resultJA = text.Split([s, ":"], count, options);
+            var resultJB = text.Split(new[] { ";;", ":" }, count, options);
+            var resultJC = text.Split(new[] { s, ":" }, count, options);
+
+            var resultK1 = text.Replace("cc", "x");
+            var resultK2 = text.Replace("c", "xx");
+            var resultK3 = text.Replace(s, "x");
+            var resultK4 = text.Replace("c", s);
+            var resultK5 = text.Replace("cc", "x", StringComparison.Ordinal);
+            var resultK6 = text.Replace("c", "xx", StringComparison.Ordinal);
+            var resultK7 = text.Replace(s, "x", StringComparison.Ordinal);
+            var resultK8 = text.Replace("c", s, StringComparison.Ordinal);
+            var resultK9 = text.Replace("c", "x", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

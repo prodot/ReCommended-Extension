@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using JetBrains.Metadata.Reader.API;
+﻿using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -873,7 +872,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.BYTE_FQN,
         TypeCode = System.TypeCode.Byte,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -895,7 +893,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.SBYTE_FQN,
         TypeCode = System.TypeCode.SByte,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -917,7 +914,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.SHORT_FQN,
         TypeCode = System.TypeCode.Int16,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -939,7 +935,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.USHORT_FQN,
         TypeCode = System.TypeCode.UInt16,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -961,7 +956,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.INT_FQN,
         TypeCode = System.TypeCode.Int32,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -983,7 +977,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.UINT_FQN,
         TypeCode = System.TypeCode.UInt32,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -1005,7 +998,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.LONG_FQN,
         TypeCode = System.TypeCode.Int64,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -1027,7 +1019,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.ULONG_FQN,
         TypeCode = System.TypeCode.UInt64,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -1048,7 +1039,6 @@ public abstract record NumberInfo
     internal static NumberInfo<Int128> Int128 { get; } = new()
     {
         ClrTypeName = ClrTypeNames.Int128,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -1069,7 +1059,6 @@ public abstract record NumberInfo
     internal static NumberInfo<UInt128> UInt128 { get; } = new()
     {
         ClrTypeName = ClrTypeNames.UInt128,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -1090,7 +1079,6 @@ public abstract record NumberInfo
     internal static NumberInfo<nint> IntPtr { get; } = new()
     {
         ClrTypeName = PredefinedType.INTPTR_FQN,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -1110,7 +1098,6 @@ public abstract record NumberInfo
     internal static NumberInfo<nuint> UIntPtr { get; } = new()
     {
         ClrTypeName = PredefinedType.UINTPTR_FQN,
-        DefaultNumberStyles = NumberStyles.Integer,
         CanUseEqualityOperator = true,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
@@ -1131,7 +1118,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.DECIMAL_FQN,
         TypeCode = System.TypeCode.Decimal,
-        DefaultNumberStyles = NumberStyles.Number,
         CanUseEqualityOperator = true,
         FormatSpecifiers = FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision,
         TryGetConstant = TryGetDecimalConstant,
@@ -1145,7 +1131,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.DOUBLE_FQN,
         TypeCode = System.TypeCode.Double,
-        DefaultNumberStyles = NumberStyles.Float | NumberStyles.AllowThousands,
         CanUseEqualityOperator = false, // can only be checked by comparing literals
         FormatSpecifiers = FormatSpecifiers.GeneralZeroPrecisionRedundant | FormatSpecifiers.RoundtripToBeReplaced,
         RoundTripFormatSpecifierReplacement = "G17",
@@ -1160,7 +1145,6 @@ public abstract record NumberInfo
     {
         ClrTypeName = PredefinedType.FLOAT_FQN,
         TypeCode = System.TypeCode.Single,
-        DefaultNumberStyles = NumberStyles.Float | NumberStyles.AllowThousands,
         CanUseEqualityOperator = false, // can only be checked by comparing literals
         FormatSpecifiers = FormatSpecifiers.GeneralZeroPrecisionRedundant | FormatSpecifiers.RoundtripToBeReplaced,
         RoundTripFormatSpecifierReplacement = "G9",
@@ -1174,7 +1158,6 @@ public abstract record NumberInfo
     internal static NumberInfo<Half> Half { get; } = new()
     {
         ClrTypeName = ClrTypeNames.Half,
-        DefaultNumberStyles = NumberStyles.Float | NumberStyles.AllowThousands,
         CanUseEqualityOperator = false, // can only be checked by comparing literals
         FormatSpecifiers = FormatSpecifiers.GeneralZeroPrecisionRedundant | FormatSpecifiers.RoundtripPrecisionRedundant,
         TryGetConstant = TryGetHalfConstant,
@@ -1209,8 +1192,6 @@ public abstract record NumberInfo
     public required IClrTypeName ClrTypeName { get; init; }
 
     internal TypeCode? TypeCode { get; private init; }
-
-    public required NumberStyles DefaultNumberStyles { get; init; }
 
     public required bool CanUseEqualityOperator { get; init; }
 

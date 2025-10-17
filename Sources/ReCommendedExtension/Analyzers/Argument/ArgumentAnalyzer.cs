@@ -16,7 +16,11 @@ namespace ReCommendedExtension.Analyzers.Argument;
     typeof(ICSharpExpression),
     HighlightingTypes =
     [
-        typeof(RedundantArgumentHint), typeof(RedundantArgumentRangeHint), typeof(RedundantElementHint), typeof(UseOtherArgumentSuggestion),
+        typeof(RedundantArgumentHint),
+        typeof(RedundantArgumentRangeHint),
+        typeof(RedundantElementHint),
+        typeof(UseOtherArgumentSuggestion),
+        typeof(UseOtherArgumentRangeSuggestion),
     ])]
 public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 {
@@ -125,13 +129,33 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 consumer.AddHighlighting(
                                     new UseOtherArgumentSuggestion(
                                         inspection.Message,
-                                        argument,
-                                        otherArgument.ReplacementSignature.Parameters[otherArgument.ReplacementSignature.ParameterIndex].Kind,
-                                        argument.NameIdentifier is { } ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex] : null,
-                                        replacement,
-                                        otherArgument.AdditionalArgument,
-                                        otherArgument.AdditionalArgument is { } && argument.NameIdentifier is { }
-                                            ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex + 1]
+                                        new ArgumentReplacement
+                                        {
+                                            Argument = argument,
+                                            Replacement = new UpcomingArgument
+                                            {
+                                                ParameterKind =
+                                                    otherArgument.ReplacementSignature
+                                                        .Parameters[otherArgument.ReplacementSignature.ParameterIndex].Kind,
+                                                ParameterName =
+                                                    argument.NameIdentifier is { }
+                                                        ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex]
+                                                        : null,
+                                                Value = replacement,
+                                            },
+                                        },
+                                        otherArgument.AdditionalArgument is { }
+                                            ? new UpcomingArgument
+                                            {
+                                                ParameterKind =
+                                                    otherArgument.ReplacementSignature
+                                                        .Parameters[otherArgument.ReplacementSignature.ParameterIndex + 1].Kind,
+                                                ParameterName =
+                                                    argument.NameIdentifier is { }
+                                                        ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex + 1]
+                                                        : null,
+                                                Value = otherArgument.AdditionalArgument,
+                                            }
                                             : null,
                                         otherArgument.RedundantArgumentIndex is { } redundantArgumentIndex
                                             ? arguments[redundantArgumentIndex]
@@ -143,15 +167,113 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                             consumer.AddHighlighting(
                                 new UseOtherArgumentSuggestion(
                                     inspection.Message,
-                                    argument,
-                                    member.Signature.Parameters[otherArgument.ParameterIndex].Kind,
-                                    argument.NameIdentifier?.Name,
-                                    replacement,
-                                    otherArgument.AdditionalArgument,
-                                    otherArgument.AdditionalArgument is { } && argument.NameIdentifier is { }
-                                        ? resolvedParameters[otherArgument.ParameterIndex + 1].ShortName
+                                    new ArgumentReplacement
+                                    {
+                                        Argument = argument,
+                                        Replacement =
+                                            new UpcomingArgument
+                                            {
+                                                ParameterKind = member.Signature.Parameters[otherArgument.ParameterIndex].Kind,
+                                                ParameterName = argument.NameIdentifier?.Name,
+                                                Value = replacement,
+                                            },
+                                    },
+                                    otherArgument.AdditionalArgument is { }
+                                        ? new UpcomingArgument
+                                        {
+                                            ParameterKind = member.Signature.Parameters[otherArgument.ParameterIndex + 1].Kind,
+                                            ParameterName =
+                                                argument.NameIdentifier is { }
+                                                    ? resolvedParameters[otherArgument.ParameterIndex + 1].ShortName
+                                                    : null,
+                                            Value = otherArgument.AdditionalArgument,
+                                        }
                                         : null,
                                     otherArgument.RedundantArgumentIndex is { } redundantArgumentIndex ? arguments[redundantArgumentIndex] : null));
+                        }
+                    }
+
+                    break;
+                }
+
+                case OtherArgumentRange otherArgumentRange when arguments.AsAllNonOptionalOrNull() is [_, _, ..] positionalArguments:
+                {
+                    Debug.Assert(otherArgumentRange.FurtherArgumentCondition is not { ParameterIndex: < 0 });
+
+                    var otherArguments = positionalArguments.GetSubrange(otherArgumentRange.ParameterIndexRange);
+
+                    var highlighting = null as UseOtherArgumentRangeSuggestion;
+
+                    if (otherArgumentRange.TryGetReplacements(otherArguments) is [_, _, ..] replacements
+                        && (otherArgumentRange.FurtherArgumentCondition == null
+                            || otherArgumentRange.FurtherArgumentCondition.Condition(
+                                positionalArguments[otherArgumentRange.FurtherArgumentCondition.ParameterIndex])))
+                    {
+                        if (otherArgumentRange.ReplacementSignature is { })
+                        {
+                            if (hasMember(
+                                otherArgumentRange.ReplacementSignature.Parameters,
+                                otherArguments.Any(arg => arg.NameIdentifier is { }),
+                                out var parameterNames))
+                            {
+                                var (offset, _) = parameterNames is [_, ..]
+                                    ? otherArgumentRange.ReplacementSignature.ParameterIndexRange.GetOffsetAndLength(parameterNames.Length)
+                                    : (null as int?, null as int?);
+
+                                Debug.Assert(otherArguments.All(arg => arg.NameIdentifier == null) || offset is { });
+
+                                highlighting = new UseOtherArgumentRangeSuggestion(
+                                    inspection.Message,
+                                    [
+                                        ..
+                                        from i in Enumerable.Range(0, replacements.Count)
+                                        select new ArgumentReplacement
+                                        {
+                                            Argument = otherArguments[i],
+                                            Replacement = new UpcomingArgument
+                                            {
+                                                ParameterKind = otherArgumentRange.ReplacementSignature.Parameters[i].Kind,
+                                                ParameterName = otherArguments[i].NameIdentifier is { } ? parameterNames[i + (int)offset!] : null,
+                                                Value = replacements[i],
+                                            },
+                                        },
+                                    ],
+                                    otherArgumentRange.RedundantArgumentIndex is { } redundantArgumentIndex
+                                        ? positionalArguments[redundantArgumentIndex]
+                                        : null);
+                            }
+                        }
+                        else
+                        {
+                            var (offset, _) = otherArgumentRange.ParameterIndexRange.GetOffsetAndLength(member.Signature.Parameters.Count);
+
+                            highlighting = new UseOtherArgumentRangeSuggestion(
+                                inspection.Message,
+                                [
+                                    ..
+                                    from i in Enumerable.Range(0, replacements.Count)
+                                    select new ArgumentReplacement
+                                    {
+                                        Argument = otherArguments[i],
+                                        Replacement = new UpcomingArgument
+                                        {
+                                            ParameterKind = member.Signature.Parameters[i + offset].Kind,
+                                            ParameterName = otherArguments[i].NameIdentifier?.Name,
+                                            Value = replacements[i],
+                                        },
+                                    },
+                                ],
+                                otherArgumentRange.RedundantArgumentIndex is { } redundantArgumentIndex
+                                    ? positionalArguments[redundantArgumentIndex]
+                                    : null);
+                        }
+                    }
+
+                    if (highlighting is { })
+                    {
+                        foreach (var argument in otherArguments)
+                        {
+                            consumer.AddHighlighting(highlighting, argument.GetDocumentRange());
                         }
                     }
 

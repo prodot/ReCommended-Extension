@@ -23,20 +23,20 @@ namespace Test
 
         public void SingleCharacter(StringBuilder builder, int startIndex, int count)
         {
-            var result1 = builder.Replace(|"a"|(6), |"b"|(7));
-            var result2 = builder.Replace(|"a"|(8), |"b"|(9), startIndex, count);
+            var result1 = builder.Replace("a", "b");
+            var result2 = builder.Replace("a", "b", startIndex, count);
 
-            builder.Replace(|"a"|(10), |"b"|(11));
-            builder.Replace(|"a"|(12), |"b"|(13), startIndex, count);
+            builder.Replace("a", "b");
+            builder.Replace("a", "b", startIndex, count);
         }
 
         public void SingleCharacter_Nullable(StringBuilder? builder, int startIndex, int count)
         {
-            var result1 = builder?.Replace(|"a"|(14), |"b"|(15));
-            var result2 = builder?.Replace(|"a"|(16), |"b"|(17), startIndex, count);
+            var result1 = builder?.Replace("a", "b");
+            var result2 = builder?.Replace("a", "b", startIndex, count);
 
-            builder?.Replace(|"a"|(18), |"b"|(19));
-            builder?.Replace(|"a"|(20), |"b"|(21), startIndex, count);
+            builder?.Replace("a", "b");
+            builder?.Replace("a", "b", startIndex, count);
         }
 
         public void NoDetection(StringBuilder builder)
@@ -53,19 +53,3 @@ namespace Test
 (3): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
 (4): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
 (5): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
-(6): ReSharper Suggestion: Pass the single character.
-(7): ReSharper Suggestion: Pass the single character.
-(8): ReSharper Suggestion: Pass the single character.
-(9): ReSharper Suggestion: Pass the single character.
-(10): ReSharper Suggestion: Pass the single character.
-(11): ReSharper Suggestion: Pass the single character.
-(12): ReSharper Suggestion: Pass the single character.
-(13): ReSharper Suggestion: Pass the single character.
-(14): ReSharper Suggestion: Pass the single character.
-(15): ReSharper Suggestion: Pass the single character.
-(16): ReSharper Suggestion: Pass the single character.
-(17): ReSharper Suggestion: Pass the single character.
-(18): ReSharper Suggestion: Pass the single character.
-(19): ReSharper Suggestion: Pass the single character.
-(20): ReSharper Suggestion: Pass the single character.
-(21): ReSharper Suggestion: Pass the single character.

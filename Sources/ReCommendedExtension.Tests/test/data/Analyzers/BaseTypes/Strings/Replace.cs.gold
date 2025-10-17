@@ -6,19 +6,19 @@ namespace Test
     {
         public void SingleCharacters(string text)
         {
-            var result1 = text.Replace(|"a"|(0), |"b"|(1), StringComparison.Ordinal);
-            var result2 = text.Replace(|"a"|(2), |"b"|(3));
+            var result1 = text.Replace("a", "b", StringComparison.Ordinal);
+            var result2 = text.Replace("a", "b");
         }
 
         public void RedundantInvocation(string text)
         {
-            var result11 = text.|Replace("a", "a", StringComparison.Ordinal)|(4);
-            var result12 = text.|Replace("aa", "aa", StringComparison.Ordinal)|(5);
+            var result11 = text.|Replace("a", "a", StringComparison.Ordinal)|(0);
+            var result12 = text.|Replace("aa", "aa", StringComparison.Ordinal)|(1);
 
-            var result21 = text.|Replace("a", "a")|(6);
-            var result22 = text.|Replace("aa", "aa")|(7);
+            var result21 = text.|Replace("a", "a")|(2);
+            var result22 = text.|Replace("aa", "aa")|(3);
 
-            var result31 = text.|Replace('a', 'a')|(8);
+            var result31 = text.|Replace('a', 'a')|(4);
         }
 
         public void NoDetection(string text, string oldValue, string newValue, StringComparison comparisonType, char oldChar, char newChar)
@@ -45,20 +45,16 @@ namespace Test
             var result42 = text.Replace("aa", "aa", StringComparison.OrdinalIgnoreCase);
 
             text.Replace("aa", "aa", StringComparison.Ordinal);
-            text.|Replace|(9)("aa", "aa");
-            text.|Replace|(10)('a', 'a');
+            text.|Replace|(5)("aa", "aa");
+            text.|Replace|(6)('a', 'a');
         }
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: Pass the single character.
-(1): ReSharper Suggestion: Pass the single character.
-(2): ReSharper Suggestion: Pass the single character.
-(3): ReSharper Suggestion: Pass the single character.
-(4): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
-(5): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
-(6): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
-(7): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
-(8): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
-(9): ReSharper Warning: Return value of pure method is not used
-(10): ReSharper Warning: Return value of pure method is not used
+(0): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(1): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(2): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(3): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(4): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
+(5): ReSharper Warning: Return value of pure method is not used
+(6): ReSharper Warning: Return value of pure method is not used

@@ -20,7 +20,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
     HighlightingTypes =
     [
         typeof(UseExpressionResultSuggestion),
-        typeof(PassSingleCharactersSuggestion),
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
         typeof(UseStringPropertySuggestion),
@@ -35,20 +34,11 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         public static IReadOnlyList<Parameter> Char { get; } = [Parameter.Char];
 
-        public static IReadOnlyList<Parameter> Char_Char { get; } = [Parameter.Char, Parameter.Char];
-
         public static IReadOnlyList<Parameter> Char_Int32 { get; } = [Parameter.Char, Parameter.Int32];
 
         public static IReadOnlyList<Parameter> Char_StringComparison { get; } = [Parameter.Char, Parameter.StringComparison];
 
         public static IReadOnlyList<Parameter> Char_Int32_Int32 { get; } = [Parameter.Char, Parameter.Int32, Parameter.Int32];
-
-        public static IReadOnlyList<Parameter> CharArray_StringSplitOptions { get; } = [Parameter.CharArray, Parameter.StringSplitOptions];
-
-        public static IReadOnlyList<Parameter> CharArray_Int32_StringSplitOptions { get; } =
-        [
-            Parameter.CharArray, Parameter.Int32, Parameter.StringSplitOptions,
-        ];
 
         public static IReadOnlyList<Parameter> String { get; } = [Parameter.String];
 
@@ -1723,8 +1713,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Replace("abc", "abc", Ordinal)</c> → <c>text</c><para/>
-    /// <c>text.Replace("a", "b", Ordinal)</c> → <c>text.Replace('a', 'b')</c>
+    /// <c>text.Replace("abc", "abc", Ordinal)</c> → <c>text</c>
     /// </remarks>
     static void AnalyzeReplace_String_String_StringComparison(
         IHighlightingConsumer consumer,
@@ -1736,42 +1725,15 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         if (oldValueArgument.Value.TryGetStringConstant() is { } oldValue and not ""
             && newValueArgument.Value.TryGetStringConstant() is { } newValue
-            && comparisonTypeArgument.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal)
+            && comparisonTypeArgument.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal
+            && !invocationExpression.IsUsedAsStatement()
+            && oldValue == newValue)
         {
-            if (!invocationExpression.IsUsedAsStatement() && oldValue == newValue)
-            {
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(string.Replace)}' with identical values is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                return;
-            }
-
-            if (oldValue is [var oldCharacter]
-                && newValue is [var newCharacter]
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.Replace), Parameters = Parameters.Char_Char },
-                    oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
-                    out var parameterNames,
-                    invocationExpression.PsiModule))
-            {
-                var highlighting = new PassSingleCharactersSuggestion(
-                    "Pass the single character.",
-                    [oldValueArgument, newValueArgument],
-                    parameterNames is [var oldCharParameterName, var newCharParameterName]
-                        ?
-                        [
-                            oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
-                            newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
-                        ]
-                        : new string?[2],
-                    [oldCharacter, newCharacter],
-                    comparisonTypeArgument);
-
-                consumer.AddHighlighting(highlighting, oldValueArgument.Value.GetDocumentRange());
-                consumer.AddHighlighting(highlighting, newValueArgument.Value.GetDocumentRange());
-            }
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Calling '{nameof(string.Replace)}' with identical values is redundant.",
+                    invocationExpression,
+                    invokedExpression));
         }
     }
 
@@ -1799,8 +1761,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.Replace("abc", "abc")</c> → <c>text</c><para/>
-    /// <c>text.Replace("a", "b")</c> → <c>text.Replace('a', 'b')</c>
+    /// <c>text.Replace("abc", "abc")</c> → <c>text</c>
     /// </remarks>
     static void AnalyzeReplace_String_String(
         IHighlightingConsumer consumer,
@@ -1809,41 +1770,16 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         ICSharpArgument oldValueArgument,
         ICSharpArgument newValueArgument)
     {
-        if (oldValueArgument.Value.TryGetStringConstant() is { } oldValue and not "" && newValueArgument.Value.TryGetStringConstant() is { } newValue)
+        if (oldValueArgument.Value.TryGetStringConstant() is { } oldValue and not ""
+            && newValueArgument.Value.TryGetStringConstant() is { } newValue
+            && !invocationExpression.IsUsedAsStatement()
+            && oldValue == newValue)
         {
-            if (!invocationExpression.IsUsedAsStatement() && oldValue == newValue)
-            {
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(string.Replace)}' with identical values is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                return;
-            }
-
-            if (oldValue is [var oldCharacter]
-                && newValue is [var newCharacter]
-                && PredefinedType.STRING_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(string.Replace), Parameters = Parameters.Char_Char },
-                    oldValueArgument.NameIdentifier is { } || newValueArgument.NameIdentifier is { },
-                    out var parameterNames,
-                    invocationExpression.PsiModule))
-            {
-                var highlighting = new PassSingleCharactersSuggestion(
-                    "Pass the single character.",
-                    [oldValueArgument, newValueArgument],
-                    parameterNames is [var oldCharParameterName, var newCharParameterName]
-                        ?
-                        [
-                            oldValueArgument.NameIdentifier is { } ? oldCharParameterName : null,
-                            newValueArgument.NameIdentifier is { } ? newCharParameterName : null,
-                        ]
-                        : new string?[2],
-                    [oldCharacter, newCharacter]);
-
-                consumer.AddHighlighting(highlighting, oldValueArgument.Value.GetDocumentRange());
-                consumer.AddHighlighting(highlighting, newValueArgument.Value.GetDocumentRange());
-            }
+            consumer.AddHighlighting(
+                new RedundantMethodInvocationHint(
+                    $"Calling '{nameof(string.Replace)}' with identical values is redundant.",
+                    invocationExpression,
+                    invokedExpression));
         }
     }
 
@@ -2109,8 +2045,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
     /// <remarks>
     /// <c>text.Split([""], None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split([""], TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(["a", "b"], options)</c> → <c>text.Split(['a', 'b'], options)</c>
+    /// <c>text.Split([""], TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)
     /// </remarks>
     void AnalyzeSplit_StringArray_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -2121,67 +2056,30 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     {
         Debug.Assert(invokedExpression.QualifierExpression is { });
 
-        if (CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0 } collectionCreation)
+        if (CollectionCreation.TryFrom(separatorArgument.Value) is { Count: > 0, StringConstants: [""] }
+            && !invocationExpression.IsUsedAsStatement()
+            && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
         {
-            if (collectionCreation.StringConstants is [""])
+            switch (optionsArgument.Value.TryGetStringSplitOptionsConstant())
             {
-                if (!invocationExpression.IsUsedAsStatement()
-                    && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
-                {
-                    Debug.Assert(invokedExpression.QualifierExpression is { });
+                case StringSplitOptions.None:
+                    consumer.AddHighlighting(
+                        new UseExpressionResultSuggestion(
+                            "The expression is always an array with a single element.",
+                            invocationExpression,
+                            CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
+                    break;
 
-                    switch (optionsArgument.Value.TryGetStringSplitOptionsConstant())
-                    {
-                        case StringSplitOptions.None:
-                            consumer.AddHighlighting(
-                                new UseExpressionResultSuggestion(
-                                    "The expression is always an array with a single element.",
-                                    invocationExpression,
-                                    CreateStringArray([invokedExpression.QualifierExpression.GetText()], invocationExpression)));
-                            break;
+                case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(
+                    new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
+                    invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
 
-                        case (StringSplitOptions)2 when PredefinedType.STRING_FQN.HasMethod(
-                            new MethodSignature { Name = nameof(string.Trim), Parameters = [] },
-                            invocationExpression.PsiModule): // todo: use StringSplitOptions.TrimEntries
-
-                            consumer.AddHighlighting(
-                                new UseExpressionResultSuggestion(
-                                    "The expression is always an array with a single trimmed element.",
-                                    invocationExpression,
-                                    CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
-                            break;
-                    }
-                }
-            }
-            else
-            {
-                if (collectionCreation.StringConstants.All(s => s is [_]))
-                {
-                    if (PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.Split), Parameters = Parameters.CharArray_StringSplitOptions },
-                        invocationExpression.PsiModule))
-                    {
-                        var highlighting = collectionCreation.Expression switch
-                        {
-                            ICollectionExpression collectionExpression => new PassSingleCharactersSuggestion(
-                                "Pass the single character",
-                                [..collectionExpression.CollectionElements],
-                                [..from s in collectionCreation.StringConstants select s[0]]),
-
-                            IArrayCreationExpression arrayCreationExpression => new PassSingleCharactersSuggestion(
-                                "Pass the single character",
-                                arrayCreationExpression,
-                                [..from s in collectionCreation.StringConstants select s[0]]),
-
-                            _ => throw new NotSupportedException(),
-                        };
-
-                        foreach (var element in collectionCreation.Elements)
-                        {
-                            consumer.AddHighlighting(highlighting, element.GetDocumentRange());
-                        }
-                    }
-                }
+                    consumer.AddHighlighting(
+                        new UseExpressionResultSuggestion(
+                            "The expression is always an array with a single trimmed element.",
+                            invocationExpression,
+                            CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
+                    break;
             }
         }
     }
@@ -2191,8 +2089,7 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     /// <c>text.Split(separator, 1, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
     /// <c>text.Split(separator, 1, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
     /// <c>text.Split([""], count, None)</c> → <c>new[] { text }</c> or <c>[text]</c> (C# 12)<para/>
-    /// <c>text.Split([""], count, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)<para/>
-    /// <c>text.Split(["a", "b"], count, options)</c> → <c>text.Split(['a', 'b'], count, options)</c>
+    /// <c>text.Split([""], count, TrimEntries)</c> → <c>new[] { text.Trim() }</c> or <c>[text.Trim()]</c> (C# 12)
     /// </remarks>
     void AnalyzeSplit_StringArray_Int32_StringSplitOptions(
         IHighlightingConsumer consumer,
@@ -2219,8 +2116,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             case (_, 1) or ({ StringConstants: [""] }, _) when !invocationExpression.IsUsedAsStatement()
                 && invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
 
-                Debug.Assert(invokedExpression.QualifierExpression is { });
-
                 switch (optionsArgument.Value.TryGetStringSplitOptionsConstant())
                 {
                     case StringSplitOptions.None:
@@ -2238,36 +2133,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                 invocationExpression,
                                 CreateStringArray([$"{invokedExpression.QualifierExpression.GetText()}.Trim()"], invocationExpression)));
                         break;
-                }
-                break;
-
-            case ({ Count: > 0 } collectionCreation, _):
-                if (collectionCreation.StringConstants.All(s => s is [_]))
-                {
-                    if (PredefinedType.STRING_FQN.HasMethod(
-                        new MethodSignature { Name = nameof(string.Split), Parameters = Parameters.CharArray_Int32_StringSplitOptions },
-                        invocationExpression.PsiModule))
-                    {
-                        var highlighting = collectionCreation.Expression switch
-                        {
-                            ICollectionExpression collectionExpression => new PassSingleCharactersSuggestion(
-                                "Pass the single character",
-                                [..collectionExpression.CollectionElements],
-                                [..from s in collectionCreation.StringConstants select s[0]]),
-
-                            IArrayCreationExpression arrayCreationExpression => new PassSingleCharactersSuggestion(
-                                "Pass the single character",
-                                arrayCreationExpression,
-                                [..from s in collectionCreation.StringConstants select s[0]]),
-
-                            _ => throw new NotSupportedException(),
-                        };
-
-                        foreach (var element in collectionCreation.Elements)
-                        {
-                            consumer.AddHighlighting(highlighting, element.GetDocumentRange());
-                        }
-                    }
                 }
                 break;
         }
