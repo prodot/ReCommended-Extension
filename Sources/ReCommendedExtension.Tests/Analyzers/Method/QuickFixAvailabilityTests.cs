@@ -4,22 +4,19 @@ using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
-using ReCommendedExtension.Analyzers.BaseTypes;
+using ReCommendedExtension.Analyzers.Method;
 
-namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.DateOnly;
+namespace ReCommendedExtension.Tests.Analyzers.Method;
 
 [TestFixture]
-[TestNet60]
+[TestNetCore21]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
-    protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateOnly\QuickFixes";
+    protected override string RelativeTestDataPath => @"Analyzers\Method\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion || highlighting.IsError();
+        => highlighting is RedundantMethodInvocationHint || highlighting.IsError();
 
     [Test]
-    public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
-
-    [Test]
-    public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
+    public void TestRemoveMethodInvocationFixAvailability() => DoNamedTest2();
 }

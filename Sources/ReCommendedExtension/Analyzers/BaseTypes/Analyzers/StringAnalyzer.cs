@@ -23,7 +23,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
         typeof(UseStringListPatternSuggestion),
         typeof(UseOtherMethodSuggestion),
         typeof(UseStringPropertySuggestion),
-        typeof(RedundantMethodInvocationHint),
         typeof(UseRangeIndexerSuggestion),
     ])]
 public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
@@ -1573,82 +1572,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
     }
 
     /// <remarks>
-    /// <c>text.PadLeft(0)</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzePadLeft_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument totalWidthArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && totalWidthArgument.Value.TryGetInt32Constant() == 0)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.PadLeft)}' with 0 is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.PadLeft(0, c)</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzePadLeft_Int32_Char(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument totalWidthArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && totalWidthArgument.Value.TryGetInt32Constant() == 0)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.PadLeft)}' with 0 is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.PadRight(0)</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzePadRight_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument totalWidthArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && totalWidthArgument.Value.TryGetInt32Constant() == 0)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.PadRight)}' with 0 is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.PadRight(0, c)</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzePadRight_Int32_Char(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument totalWidthArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && totalWidthArgument.Value.TryGetInt32Constant() == 0)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.PadRight)}' with 0 is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
     /// <c>text.Remove(0)</c> → <c>""</c> (.NET 6)<para/>
     /// <c>text.Remove(startIndex)</c> → <c>text[..startIndex]</c> (C# 8)
     /// </remarks>
@@ -1709,77 +1632,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     invokedExpression,
                     countArgument.Value.GetText(),
                     ""));
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.Replace("abc", "abc", Ordinal)</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzeReplace_String_String_StringComparison(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument oldValueArgument,
-        ICSharpArgument newValueArgument,
-        ICSharpArgument comparisonTypeArgument)
-    {
-        if (oldValueArgument.Value.TryGetStringConstant() is { } oldValue and not ""
-            && newValueArgument.Value.TryGetStringConstant() is { } newValue
-            && comparisonTypeArgument.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal
-            && !invocationExpression.IsUsedAsStatement()
-            && oldValue == newValue)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.Replace)}' with identical values is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.Replace('a', 'a')</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzeReplace_Char_Char(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument oldCharArgument,
-        ICSharpArgument newCharArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement()
-            && oldCharArgument.Value.TryGetCharConstant() is { } oldCharacter
-            && newCharArgument.Value.TryGetCharConstant() is { } newCharacter
-            && oldCharacter == newCharacter)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.Replace)}' with identical characters is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>text.Replace("abc", "abc")</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzeReplace_String_String(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument oldValueArgument,
-        ICSharpArgument newValueArgument)
-    {
-        if (oldValueArgument.Value.TryGetStringConstant() is { } oldValue and not ""
-            && newValueArgument.Value.TryGetStringConstant() is { } newValue
-            && !invocationExpression.IsUsedAsStatement()
-            && oldValue == newValue)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.Replace)}' with identical values is redundant.",
-                    invocationExpression,
-                    invokedExpression));
         }
     }
 
@@ -2251,25 +2103,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         }
     }
 
-    /// <remarks>
-    /// <c>text.Substring(0)</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzeSubstring_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument startIndexArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && startIndexArgument.Value.TryGetInt32Constant() == 0)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(string.Substring)}' with 0 is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
     protected override void Run(IInvocationExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { InvokedExpression: IReferenceExpression { Reference: var reference } invokedExpression }
@@ -2431,36 +2264,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                             }
                             break;
 
-                        case nameof(string.PadLeft):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var totalWidthType }], [{ } totalWidthArgument]) when totalWidthType.IsInt():
-                                    AnalyzePadLeft_Int32(consumer, element, invokedExpression, totalWidthArgument);
-                                    break;
-
-                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [{ } totalWidthArgument, _])
-                                    when totalWidthType.IsInt() && paddingCharType.IsChar():
-
-                                    AnalyzePadLeft_Int32_Char(consumer, element, invokedExpression, totalWidthArgument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(string.PadRight):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var totalWidthType }], [{ } totalWidthArgument]) when totalWidthType.IsInt():
-                                    AnalyzePadRight_Int32(consumer, element, invokedExpression, totalWidthArgument);
-                                    break;
-
-                                case ([{ Type: var totalWidthType }, { Type: var paddingCharType }], [{ } totalWidthArgument, _])
-                                    when totalWidthType.IsInt() && paddingCharType.IsChar():
-
-                                    AnalyzePadRight_Int32_Char(consumer, element, invokedExpression, totalWidthArgument);
-                                    break;
-                            }
-                            break;
-
                         case nameof(string.Remove):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
@@ -2472,35 +2275,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                     when startIndexType.IsInt() && countType.IsInt():
 
                                     AnalyzeRemove_Int32_Int32(consumer, element, invokedExpression, startIndexArgument, countArgument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(string.Replace):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var oldValueType }, { Type: var newValueType }, { Type: var stringComparisonType }], [
-                                    { } oldValueArgument, { } newValueArgument, { } comparisonTypeArgument,
-                                ]) when oldValueType.IsString() && newValueType.IsString() && stringComparisonType.IsStringComparison():
-                                    AnalyzeReplace_String_String_StringComparison(
-                                        consumer,
-                                        element,
-                                        invokedExpression,
-                                        oldValueArgument,
-                                        newValueArgument,
-                                        comparisonTypeArgument);
-                                    break;
-
-                                case ([{ Type: var oldCharType }, { Type: var newCharType }], [{ } oldCharArgument, { } newCharArgument])
-                                    when oldCharType.IsChar() && newCharType.IsChar():
-
-                                    AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
-                                    break;
-
-                                case ([{ Type: var oldValueType }, { Type: var newValueType }], [{ } oldValueArgument, { } newValueArgument])
-                                    when oldValueType.IsString() && newValueType.IsString():
-
-                                    AnalyzeReplace_String_String(consumer, element, invokedExpression, oldValueArgument, newValueArgument);
                                     break;
                             }
                             break;
@@ -2591,15 +2365,6 @@ public sealed class StringAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                                         invokedExpression,
                                         valueArgument,
                                         comparisonTypeArgument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(string.Substring):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var startIndexType }], [{ } startIndexArgument]) when startIndexType.IsInt():
-                                    AnalyzeSubstring_Int32(consumer, element, invokedExpression, startIndexArgument);
                                     break;
                             }
                             break;

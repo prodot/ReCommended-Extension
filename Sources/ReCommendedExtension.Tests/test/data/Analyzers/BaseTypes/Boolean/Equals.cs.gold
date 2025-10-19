@@ -12,8 +12,8 @@
 
         public void RedundantMethodInvocation(bool flag, bool obj)
         {
-            var result1 = flag.|Equals(true)|(3);
-            var result2 = |true.Equals|(4)(obj);
+            var result1 = |flag.Equals(true)|(3);
+            var result2 = |true.Equals(obj)|(4);
         }
 
         public void Operator(bool flag, bool obj)
@@ -40,6 +40,6 @@
 (0): ReSharper Suggestion: The expression is always the same as the inverted qualifier.
 (1): ReSharper Suggestion: The expression is always the same as the inverted argument.
 (2): ReSharper Suggestion: The expression is always false.
-(3): ReSharper Dead Code: Calling 'Equals' with true is redundant.
-(4): ReSharper Dead Code: Calling 'true.Equals' is redundant.
+(3): ReSharper Suggestion: Use the '==' operator.
+(4): ReSharper Suggestion: The expression is always the same as the argument.
 (5): ReSharper Suggestion: Use the '==' operator.

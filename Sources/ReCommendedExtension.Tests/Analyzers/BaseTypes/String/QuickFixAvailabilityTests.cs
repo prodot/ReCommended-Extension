@@ -20,7 +20,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
                 or UseStringListPatternSuggestion
                 or UseOtherMethodSuggestion
                 or UseStringPropertySuggestion
-                or RedundantMethodInvocationHint
                 or UseRangeIndexerSuggestion
             || highlighting.IsError();
 
@@ -46,11 +45,6 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet50]
     public void TestUseStringPropertyAvailability() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore21]
-    public void TestRemoveMethodInvocationAvailability() => DoNamedTest2();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]

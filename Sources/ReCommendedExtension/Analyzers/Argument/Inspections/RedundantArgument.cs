@@ -71,15 +71,7 @@ internal abstract record RedundantArgument : Inspection
     public static RedundantArgumentByPosition NumberStylesFloat { get; } = new()
     {
         Condition = arg => arg.Value.TryGetNumberStylesConstant() == (NumberStyles.Float | NumberStyles.AllowThousands),
-        Message = $"Passing {
-            nameof(NumberStyles)
-        }.{
-            nameof(NumberStyles.Float)
-        } | {
-            nameof(NumberStyles)
-        }.{
-            nameof(NumberStyles.AllowThousands)
-        } is redundant.",
+        Message = $"Passing {nameof(NumberStyles)}.{nameof(NumberStyles.Float)} | {nameof(NumberStyles)}.{nameof(NumberStyles.AllowThousands)} is redundant.",
     };
 
     public static RedundantArgumentByPosition MidpointRoundingToEven { get; } = new()

@@ -20,7 +20,7 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilder";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseOtherMethodSuggestion or RedundantMethodInvocationHint || highlighting.IsError();
+        => highlighting is UseOtherMethodSuggestion || highlighting.IsError();
 
     static void AreEqual<T>(T? expected, T? actual)
     {
@@ -81,43 +81,8 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "PassSingleCharacter")]
     public void TestAppend()
     {
-        Test("abcde", builder => builder.Append('x', 0), builder => builder);
-        TestNullable("abcde", builder => builder?.Append('x', 0), builder => builder);
-
-        Test("abcde", builder => builder.Append(null as char[]), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(null as char[]), builder => builder);
-        Test("abcde", builder => builder.Append([]), builder => builder);
-        TestNullable("abcde", builder => builder?.Append([]), builder => builder);
-
-        Test("abcde", builder => builder.Append(null as char[], 0, 0), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(null as char[], 0, 0), builder => builder);
-        Test("abcde", builder => builder.Append([], 0, 0), builder => builder);
-        TestNullable("abcde", builder => builder?.Append([], 0, 0), builder => builder);
-
-        Test("abcde", builder => builder.Append(null as string), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(null as string), builder => builder);
-        Test("abcde", builder => builder.Append(""), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(""), builder => builder);
-
-        Test("abcde", builder => builder.Append(null as string, 0, 0), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(null as string, 0, 0), builder => builder);
-        Test("abcde", builder => builder.Append("", 10, 0), builder => builder);
-        TestNullable("abcde", builder => builder?.Append("", 10, 0), builder => builder);
-        Test("abcde", builder => builder.Append("xyz", 10, 0), builder => builder);
-        TestNullable("abcde", builder => builder?.Append("xyz", 10, 0), builder => builder);
         Test("abcde", builder => builder.Append("xyz", 1, 1), builder => builder.Append('y'));
         TestNullable("abcde", builder => builder?.Append("xyz", 1, 1), builder => builder?.Append('y'));
-
-        Test("abcde", builder => builder.Append(null as System.Text.StringBuilder), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(null as System.Text.StringBuilder), builder => builder);
-
-        Test("abcde", builder => builder.Append(null as System.Text.StringBuilder, 0, 0), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(null as System.Text.StringBuilder, 0, 0), builder => builder);
-        Test("abcde", builder => builder.Append(new System.Text.StringBuilder(), 10, 0), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(new System.Text.StringBuilder(), 10, 0), builder => builder);
-
-        Test("abcde", builder => builder.Append(null as object), builder => builder);
-        TestNullable("abcde", builder => builder?.Append(null as object), builder => builder);
 
         DoNamedTest2();
     }
@@ -130,15 +95,9 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "RedundantExplicitArrayCreation")]
     public void TestAppendJoin()
     {
-        Test("abcde", builder => builder.AppendJoin(", ", (object?[])[]), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin("..", (object?[])[]), builder => builder);
         Test("abcde", builder => builder.AppendJoin(", ", (object?[])["item"]), builder => builder.Append((object)"item"));
         TestNullable("abcde", builder => builder?.AppendJoin(", ", (object?[])["item"]), builder => builder?.Append((object)"item"));
 
-        Test("abcde", builder => builder.AppendJoin(", ", new ReadOnlySpan<object?>()), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(", ", new ReadOnlySpan<object?>()), builder => builder);
-        Test("abcde", builder => builder.AppendJoin(", ", new[] { (object?)"item" }.AsSpan()), builder => builder.Append((object)"item"));
-        TestNullable("abcde", builder => builder?.AppendJoin(", ", new[] { (object?)"item" }.AsSpan()), builder => builder?.Append((object)"item"));
         Test("abcde", builder => builder.AppendJoin(", ", (ReadOnlySpan<object?>)[1]), builder => builder.Append((object)1));
         TestNullable("abcde", builder => builder?.AppendJoin(", ", (ReadOnlySpan<object?>)[1]), builder => builder?.Append((object)1));
         Test(
@@ -146,81 +105,32 @@ public sealed class StringBuilderAnalyzerTests : CSharpHighlightingTestBase
             builder => builder.AppendJoin(",", new object?[] { 1, 2, 3 }.AsSpan()),
             builder => builder.AppendJoin(',', new object?[] { 1, 2, 3 }.AsSpan()));
 
-        Test("abcde", builder => builder.AppendJoin(", ", (IEnumerable<int>)[]), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(", ", (IEnumerable<int>)[]), builder => builder);
         Test("abcde", builder => builder.AppendJoin(", ", (IEnumerable<int>)[3]), builder => builder.Append(3));
         TestNullable("abcde", builder => builder?.AppendJoin(", ", (IEnumerable<int>)[3]), builder => builder?.Append(3));
 
-        Test("abcde", builder => builder.AppendJoin(", ", (string?[])[]), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(", ", (string?[])[]), builder => builder);
         Test("abcde", builder => builder.AppendJoin(", ", (string?[])["item"]), builder => builder.Append("item"));
         TestNullable("abcde", builder => builder?.AppendJoin(", ", (string?[])["item"]), builder => builder?.Append("item"));
 
-        Test("abcde", builder => builder.AppendJoin(", ", default(ReadOnlySpan<string?>)), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(", ", default(ReadOnlySpan<string?>)), builder => builder);
-        Test("abcde", builder => builder.AppendJoin(", ", new ReadOnlySpan<string?>()), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(", ", new ReadOnlySpan<string?>()), builder => builder);
         Test("abcde", builder => builder.AppendJoin(", ", new[] { (string?)"item" }.AsSpan()), builder => builder.Append("item"));
         TestNullable("abcde", builder => builder?.AppendJoin(", ", new[] { (string?)"item" }.AsSpan()), builder => builder?.Append("item"));
         Test("abcde", builder => builder.AppendJoin(", ", (ReadOnlySpan<string?>)["item"]), builder => builder.Append("item"));
         TestNullable("abcde", builder => builder?.AppendJoin(", ", (ReadOnlySpan<string?>)["item"]), builder => builder?.Append("item"));
 
-        Test("abcde", builder => builder.AppendJoin(',', (object?[])[]), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(',', (object?[])[]), builder => builder);
         Test("abcde", builder => builder.AppendJoin(',', (object?[])["item"]), builder => builder.Append("item"));
         TestNullable("abcde", builder => builder?.AppendJoin(',', (object?[])["item"]), builder => builder?.Append("item"));
 
-        Test("abcde", builder => builder.AppendJoin(',', default(ReadOnlySpan<object?>)), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(',', default(ReadOnlySpan<object?>)), builder => builder);
-        Test("abcde", builder => builder.AppendJoin(',', new ReadOnlySpan<object?>()), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(',', new ReadOnlySpan<object?>()), builder => builder);
         Test("abcde", builder => builder.AppendJoin(',', new[] { (object?)"item" }.AsSpan()), builder => builder.Append((object)"item"));
         TestNullable("abcde", builder => builder?.AppendJoin(',', new[] { (object?)"item" }.AsSpan()), builder => builder?.Append((object)"item"));
         Test("abcde", builder => builder.AppendJoin(',', (ReadOnlySpan<object?>)[1]), builder => builder.Append((object)1));
         TestNullable("abcde", builder => builder?.AppendJoin(',', (ReadOnlySpan<object?>)[1]), builder => builder?.Append((object)1));
 
-        Test("abcde", builder => builder.AppendJoin(',', (IEnumerable<int>)[]), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(',', (IEnumerable<int>)[]), builder => builder);
-        Test("abcde", builder => builder.AppendJoin(',', (IEnumerable<int>)[3]), builder => builder.Append(3));
-        TestNullable("abcde", builder => builder?.AppendJoin(',', (IEnumerable<int>)[3]), builder => builder?.Append(3));
-
-        Test("abcde", builder => builder.AppendJoin(',', (string?[])[]), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(',', (string?[])[]), builder => builder);
         Test("abcde", builder => builder.AppendJoin(',', (string?[])["item"]), builder => builder.Append("item"));
         TestNullable("abcde", builder => builder?.AppendJoin(',', (string?[])["item"]), builder => builder?.Append("item"));
 
-        Test("abcde", builder => builder.AppendJoin(',', default(ReadOnlySpan<string?>)), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(',', default(ReadOnlySpan<string?>)), builder => builder);
-        Test("abcde", builder => builder.AppendJoin(',', new ReadOnlySpan<string?>()), builder => builder);
-        TestNullable("abcde", builder => builder?.AppendJoin(',', new ReadOnlySpan<string?>()), builder => builder);
         Test("abcde", builder => builder.AppendJoin(',', new[] { (string?)"item" }.AsSpan()), builder => builder.Append("item"));
         TestNullable("abcde", builder => builder?.AppendJoin(',', new[] { (string?)"item" }.AsSpan()), builder => builder?.Append("item"));
         Test("abcde", builder => builder.AppendJoin(',', (ReadOnlySpan<string?>)["item"]), builder => builder.Append("item"));
         TestNullable("abcde", builder => builder?.AppendJoin(',', (ReadOnlySpan<string?>)["item"]), builder => builder?.Append("item"));
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "PassSingleCharacter")]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    public void TestInsert()
-    {
-        Test("abcde", builder => builder.Insert(10, null as object), builder => builder);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    [SuppressMessage("ReSharper", "PassSingleCharacters")]
-    public void TestReplace()
-    {
-        Test("abcde", builder => builder.Replace("cd", "cd"), builder => builder);
-        TestNullable("abcde", builder => builder?.Replace("cd", "cd"), builder => builder);
-
-        Test("abcde", builder => builder.Replace('c', 'c'), builder => builder);
-        TestNullable("abcde", builder => builder?.Replace('c', 'c'), builder => builder);
 
         DoNamedTest2();
     }

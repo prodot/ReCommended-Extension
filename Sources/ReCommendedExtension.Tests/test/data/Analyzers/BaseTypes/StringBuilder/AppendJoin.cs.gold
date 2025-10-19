@@ -7,302 +7,302 @@ namespace Test
     {
         public void RedundantInvocation(StringBuilder builder, string s, char c)
         {
-            var result11 = builder.|AppendJoin(s, (object?[])[])|(0);
-            var result12 = builder.|AppendJoin(s, new object?[0])|(1);
-            var result13 = builder.|AppendJoin(s, new object?[] { })|(2);
-            var result14 = builder.|AppendJoin(s, Array.Empty<object?>())|(3);
+            var result11 = builder.AppendJoin(s, (object?[])[]);
+            var result12 = builder.AppendJoin(s, new object?[0]);
+            var result13 = builder.AppendJoin(s, new object?[] { });
+            var result14 = builder.AppendJoin(s, Array.Empty<object?>());
 
-            var result21 = builder.|AppendJoin(s, (int[])[])|(4);
-            var result22 = builder.|AppendJoin(s, new int[0])|(5);
-            var result23 = builder.|AppendJoin(s, new int[] { })|(6);
-            var result24 = builder.|AppendJoin(s, Array.Empty<int>())|(7);
+            var result21 = builder.AppendJoin(s, (int[])[]);
+            var result22 = builder.AppendJoin(s, new int[0]);
+            var result23 = builder.AppendJoin(s, new int[] { });
+            var result24 = builder.AppendJoin(s, Array.Empty<int>());
 
-            var result31 = builder.|AppendJoin(s, (string?[])[])|(8);
-            var result32 = builder.|AppendJoin(s, new string?[0])|(9);
-            var result33 = builder.|AppendJoin(s, new string?[] { })|(10);
-            var result34 = builder.|AppendJoin(s, Array.Empty<string?>())|(11);
+            var result31 = builder.AppendJoin(s, (string?[])[]);
+            var result32 = builder.AppendJoin(s, new string?[0]);
+            var result33 = builder.AppendJoin(s, new string?[] { });
+            var result34 = builder.AppendJoin(s, Array.Empty<string?>());
 
-            var result41 = builder.|AppendJoin(c, (object?[])[])|(12);
-            var result42 = builder.|AppendJoin(c, new object?[0])|(13);
-            var result43 = builder.|AppendJoin(c, new object?[] { })|(14);
-            var result44 = builder.|AppendJoin(c, Array.Empty<object?>())|(15);
+            var result41 = builder.AppendJoin(c, (object?[])[]);
+            var result42 = builder.AppendJoin(c, new object?[0]);
+            var result43 = builder.AppendJoin(c, new object?[] { });
+            var result44 = builder.AppendJoin(c, Array.Empty<object?>());
 
-            var result51 = builder.|AppendJoin(c, (int[])[])|(16);
-            var result52 = builder.|AppendJoin(c, new int[0])|(17);
-            var result53 = builder.|AppendJoin(c, new int[] { })|(18);
-            var result54 = builder.|AppendJoin(c, Array.Empty<int>())|(19);
+            var result51 = builder.AppendJoin(c, (int[])[]);
+            var result52 = builder.AppendJoin(c, new int[0]);
+            var result53 = builder.AppendJoin(c, new int[] { });
+            var result54 = builder.AppendJoin(c, Array.Empty<int>());
 
-            var result61 = builder.|AppendJoin(c, (string?[])[])|(20);
-            var result62 = builder.|AppendJoin(c, new string?[0])|(21);
-            var result63 = builder.|AppendJoin(c, new string?[] { })|(22);
-            var result64 = builder.|AppendJoin(c, Array.Empty<string?>())|(23);
+            var result61 = builder.AppendJoin(c, (string?[])[]);
+            var result62 = builder.AppendJoin(c, new string?[0]);
+            var result63 = builder.AppendJoin(c, new string?[] { });
+            var result64 = builder.AppendJoin(c, Array.Empty<string?>());
 
-            var result71 = builder.|AppendJoin(s, default(ReadOnlySpan<object?>))|(24);
-            var result72 = builder.|AppendJoin(s, new ReadOnlySpan<object?>())|(25);
+            var result71 = builder.AppendJoin(s, default(ReadOnlySpan<object?>));
+            var result72 = builder.AppendJoin(s, new ReadOnlySpan<object?>());
 
-            var result81 = builder.|AppendJoin(s, default(ReadOnlySpan<string?>))|(26);
-            var result82 = builder.|AppendJoin(s, new ReadOnlySpan<string?>())|(27);
+            var result81 = builder.AppendJoin(s, default(ReadOnlySpan<string?>));
+            var result82 = builder.AppendJoin(s, new ReadOnlySpan<string?>());
 
-            var result91 = builder.|AppendJoin(c, default(ReadOnlySpan<object?>))|(28);
-            var result92 = builder.|AppendJoin(c, new ReadOnlySpan<object?>())|(29);
+            var result91 = builder.AppendJoin(c, default(ReadOnlySpan<object?>));
+            var result92 = builder.AppendJoin(c, new ReadOnlySpan<object?>());
 
-            var resultA1 = builder.|AppendJoin(c, default(ReadOnlySpan<string?>))|(30);
-            var resultA2 = builder.|AppendJoin(c, new ReadOnlySpan<string?>())|(31);
+            var resultA1 = builder.AppendJoin(c, default(ReadOnlySpan<string?>));
+            var resultA2 = builder.AppendJoin(c, new ReadOnlySpan<string?>());
 
-            |builder.AppendJoin(s, (object?[])[])|(32);
-            |builder.AppendJoin(s, new object?[0])|(33);
-            |builder.AppendJoin(s, new object?[] { })|(34);
-            |builder.AppendJoin(s, Array.Empty<object?>())|(35);
+            builder.AppendJoin(s, (object?[])[]);
+            builder.AppendJoin(s, new object?[0]);
+            builder.AppendJoin(s, new object?[] { });
+            builder.AppendJoin(s, Array.Empty<object?>());
 
-            |builder.AppendJoin(s, (int[])[])|(36);
-            |builder.AppendJoin(s, new int[0])|(37);
-            |builder.AppendJoin(s, new int[] { })|(38);
-            |builder.AppendJoin(s, Array.Empty<int>())|(39);
+            builder.AppendJoin(s, (int[])[]);
+            builder.AppendJoin(s, new int[0]);
+            builder.AppendJoin(s, new int[] { });
+            builder.AppendJoin(s, Array.Empty<int>());
 
-            |builder.AppendJoin(s, (string?[])[])|(40);
-            |builder.AppendJoin(s, new string?[0])|(41);
-            |builder.AppendJoin(s, new string?[] { })|(42);
-            |builder.AppendJoin(s, Array.Empty<string?>())|(43);
+            builder.AppendJoin(s, (string?[])[]);
+            builder.AppendJoin(s, new string?[0]);
+            builder.AppendJoin(s, new string?[] { });
+            builder.AppendJoin(s, Array.Empty<string?>());
 
-            |builder.AppendJoin(c, (object?[])[])|(44);
-            |builder.AppendJoin(c, new object?[0])|(45);
-            |builder.AppendJoin(c, new object?[] { })|(46);
-            |builder.AppendJoin(c, Array.Empty<object?>())|(47);
+            builder.AppendJoin(c, (object?[])[]);
+            builder.AppendJoin(c, new object?[0]);
+            builder.AppendJoin(c, new object?[] { });
+            builder.AppendJoin(c, Array.Empty<object?>());
 
-            |builder.AppendJoin(c, (int[])[])|(48);
-            |builder.AppendJoin(c, new int[0])|(49);
-            |builder.AppendJoin(c, new int[] { })|(50);
-            |builder.AppendJoin(c, Array.Empty<int>())|(51);
+            builder.AppendJoin(c, (int[])[]);
+            builder.AppendJoin(c, new int[0]);
+            builder.AppendJoin(c, new int[] { });
+            builder.AppendJoin(c, Array.Empty<int>());
 
-            |builder.AppendJoin(c, (string?[])[])|(52);
-            |builder.AppendJoin(c, new string?[0])|(53);
-            |builder.AppendJoin(c, new string?[] { })|(54);
-            |builder.AppendJoin(c, Array.Empty<string?>())|(55);
+            builder.AppendJoin(c, (string?[])[]);
+            builder.AppendJoin(c, new string?[0]);
+            builder.AppendJoin(c, new string?[] { });
+            builder.AppendJoin(c, Array.Empty<string?>());
 
-            |builder.AppendJoin(s, default(ReadOnlySpan<object?>))|(56);
-            |builder.AppendJoin(s, new ReadOnlySpan<object?>())|(57);
+            builder.AppendJoin(s, default(ReadOnlySpan<object?>));
+            builder.AppendJoin(s, new ReadOnlySpan<object?>());
 
-            |builder.AppendJoin(s, default(ReadOnlySpan<string?>))|(58);
-            |builder.AppendJoin(s, new ReadOnlySpan<string?>())|(59);
+            builder.AppendJoin(s, default(ReadOnlySpan<string?>));
+            builder.AppendJoin(s, new ReadOnlySpan<string?>());
 
-            |builder.AppendJoin(c, default(ReadOnlySpan<object?>))|(60);
-            |builder.AppendJoin(c, new ReadOnlySpan<object?>())|(61);
+            builder.AppendJoin(c, default(ReadOnlySpan<object?>));
+            builder.AppendJoin(c, new ReadOnlySpan<object?>());
 
-            |builder.AppendJoin(c, default(ReadOnlySpan<string?>))|(62);
-            |builder.AppendJoin(c, new ReadOnlySpan<string?>())|(63);
+            builder.AppendJoin(c, default(ReadOnlySpan<string?>));
+            builder.AppendJoin(c, new ReadOnlySpan<string?>());
         }
 
         public void RedundantInvocation_Nullable(StringBuilder? builder, string s, char c)
         {
-            var result11 = builder?.|AppendJoin(s, (object?[])[])|(64);
-            var result12 = builder?.|AppendJoin(s, new object?[0])|(65);
-            var result13 = builder?.|AppendJoin(s, new object?[] { })|(66);
-            var result14 = builder?.|AppendJoin(s, Array.Empty<object?>())|(67);
+            var result11 = builder?.AppendJoin(s, (object?[])[]);
+            var result12 = builder?.AppendJoin(s, new object?[0]);
+            var result13 = builder?.AppendJoin(s, new object?[] { });
+            var result14 = builder?.AppendJoin(s, Array.Empty<object?>());
 
-            var result21 = builder?.|AppendJoin(s, (int[])[])|(68);
-            var result22 = builder?.|AppendJoin(s, new int[0])|(69);
-            var result23 = builder?.|AppendJoin(s, new int[] { })|(70);
-            var result24 = builder?.|AppendJoin(s, Array.Empty<int>())|(71);
+            var result21 = builder?.AppendJoin(s, (int[])[]);
+            var result22 = builder?.AppendJoin(s, new int[0]);
+            var result23 = builder?.AppendJoin(s, new int[] { });
+            var result24 = builder?.AppendJoin(s, Array.Empty<int>());
 
-            var result31 = builder?.|AppendJoin(s, (string?[])[])|(72);
-            var result32 = builder?.|AppendJoin(s, new string?[0])|(73);
-            var result33 = builder?.|AppendJoin(s, new string?[] { })|(74);
-            var result34 = builder?.|AppendJoin(s, Array.Empty<string?>())|(75);
+            var result31 = builder?.AppendJoin(s, (string?[])[]);
+            var result32 = builder?.AppendJoin(s, new string?[0]);
+            var result33 = builder?.AppendJoin(s, new string?[] { });
+            var result34 = builder?.AppendJoin(s, Array.Empty<string?>());
 
-            var result41 = builder?.|AppendJoin(c, (object?[])[])|(76);
-            var result42 = builder?.|AppendJoin(c, new object?[0])|(77);
-            var result43 = builder?.|AppendJoin(c, new object?[] { })|(78);
-            var result44 = builder?.|AppendJoin(c, Array.Empty<object?>())|(79);
+            var result41 = builder?.AppendJoin(c, (object?[])[]);
+            var result42 = builder?.AppendJoin(c, new object?[0]);
+            var result43 = builder?.AppendJoin(c, new object?[] { });
+            var result44 = builder?.AppendJoin(c, Array.Empty<object?>());
 
-            var result51 = builder?.|AppendJoin(c, (int[])[])|(80);
-            var result52 = builder?.|AppendJoin(c, new int[0])|(81);
-            var result53 = builder?.|AppendJoin(c, new int[] { })|(82);
-            var result54 = builder?.|AppendJoin(c, Array.Empty<int>())|(83);
+            var result51 = builder?.AppendJoin(c, (int[])[]);
+            var result52 = builder?.AppendJoin(c, new int[0]);
+            var result53 = builder?.AppendJoin(c, new int[] { });
+            var result54 = builder?.AppendJoin(c, Array.Empty<int>());
 
-            var result61 = builder?.|AppendJoin(c, (string?[])[])|(84);
-            var result62 = builder?.|AppendJoin(c, new string?[0])|(85);
-            var result63 = builder?.|AppendJoin(c, new string?[] { })|(86);
-            var result64 = builder?.|AppendJoin(c, Array.Empty<string?>())|(87);
+            var result61 = builder?.AppendJoin(c, (string?[])[]);
+            var result62 = builder?.AppendJoin(c, new string?[0]);
+            var result63 = builder?.AppendJoin(c, new string?[] { });
+            var result64 = builder?.AppendJoin(c, Array.Empty<string?>());
 
-            var result71 = builder?.|AppendJoin(s, default(ReadOnlySpan<object?>))|(88);
-            var result72 = builder?.|AppendJoin(s, new ReadOnlySpan<object?>())|(89);
+            var result71 = builder?.AppendJoin(s, default(ReadOnlySpan<object?>));
+            var result72 = builder?.AppendJoin(s, new ReadOnlySpan<object?>());
 
-            var result81 = builder?.|AppendJoin(s, default(ReadOnlySpan<string?>))|(90);
-            var result82 = builder?.|AppendJoin(s, new ReadOnlySpan<string?>())|(91);
+            var result81 = builder?.AppendJoin(s, default(ReadOnlySpan<string?>));
+            var result82 = builder?.AppendJoin(s, new ReadOnlySpan<string?>());
 
-            var result91 = builder?.|AppendJoin(c, default(ReadOnlySpan<object?>))|(92);
-            var result92 = builder?.|AppendJoin(c, new ReadOnlySpan<object?>())|(93);
+            var result91 = builder?.AppendJoin(c, default(ReadOnlySpan<object?>));
+            var result92 = builder?.AppendJoin(c, new ReadOnlySpan<object?>());
 
-            var resultA1 = builder?.|AppendJoin(c, default(ReadOnlySpan<string?>))|(94);
-            var resultA2 = builder?.|AppendJoin(c, new ReadOnlySpan<string?>())|(95);
+            var resultA1 = builder?.AppendJoin(c, default(ReadOnlySpan<string?>));
+            var resultA2 = builder?.AppendJoin(c, new ReadOnlySpan<string?>());
 
-            |builder?.AppendJoin(s, (object?[])[])|(96);
-            |builder?.AppendJoin(s, new object?[0])|(97);
-            |builder?.AppendJoin(s, new object?[] { })|(98);
-            |builder?.AppendJoin(s, Array.Empty<object?>())|(99);
+            builder?.AppendJoin(s, (object?[])[]);
+            builder?.AppendJoin(s, new object?[0]);
+            builder?.AppendJoin(s, new object?[] { });
+            builder?.AppendJoin(s, Array.Empty<object?>());
 
-            |builder?.AppendJoin(s, (int[])[])|(100);
-            |builder?.AppendJoin(s, new int[0])|(101);
-            |builder?.AppendJoin(s, new int[] { })|(102);
-            |builder?.AppendJoin(s, Array.Empty<int>())|(103);
+            builder?.AppendJoin(s, (int[])[]);
+            builder?.AppendJoin(s, new int[0]);
+            builder?.AppendJoin(s, new int[] { });
+            builder?.AppendJoin(s, Array.Empty<int>());
 
-            |builder?.AppendJoin(s, (string?[])[])|(104);
-            |builder?.AppendJoin(s, new string?[0])|(105);
-            |builder?.AppendJoin(s, new string?[] { })|(106);
-            |builder?.AppendJoin(s, Array.Empty<string?>())|(107);
+            builder?.AppendJoin(s, (string?[])[]);
+            builder?.AppendJoin(s, new string?[0]);
+            builder?.AppendJoin(s, new string?[] { });
+            builder?.AppendJoin(s, Array.Empty<string?>());
 
-            |builder?.AppendJoin(c, (object?[])[])|(108);
-            |builder?.AppendJoin(c, new object?[0])|(109);
-            |builder?.AppendJoin(c, new object?[] { })|(110);
-            |builder?.AppendJoin(c, Array.Empty<object?>())|(111);
+            builder?.AppendJoin(c, (object?[])[]);
+            builder?.AppendJoin(c, new object?[0]);
+            builder?.AppendJoin(c, new object?[] { });
+            builder?.AppendJoin(c, Array.Empty<object?>());
 
-            |builder?.AppendJoin(c, (int[])[])|(112);
-            |builder?.AppendJoin(c, new int[0])|(113);
-            |builder?.AppendJoin(c, new int[] { })|(114);
-            |builder?.AppendJoin(c, Array.Empty<int>())|(115);
+            builder?.AppendJoin(c, (int[])[]);
+            builder?.AppendJoin(c, new int[0]);
+            builder?.AppendJoin(c, new int[] { });
+            builder?.AppendJoin(c, Array.Empty<int>());
 
-            |builder?.AppendJoin(c, (string?[])[])|(116);
-            |builder?.AppendJoin(c, new string?[0])|(117);
-            |builder?.AppendJoin(c, new string?[] { })|(118);
-            |builder?.AppendJoin(c, Array.Empty<string?>())|(119);
+            builder?.AppendJoin(c, (string?[])[]);
+            builder?.AppendJoin(c, new string?[0]);
+            builder?.AppendJoin(c, new string?[] { });
+            builder?.AppendJoin(c, Array.Empty<string?>());
 
-            |builder?.AppendJoin(s, default(ReadOnlySpan<object?>))|(120);
-            |builder?.AppendJoin(s, new ReadOnlySpan<object?>())|(121);
+            builder?.AppendJoin(s, default(ReadOnlySpan<object?>));
+            builder?.AppendJoin(s, new ReadOnlySpan<object?>());
 
-            |builder?.AppendJoin(s, default(ReadOnlySpan<string?>))|(122);
-            |builder?.AppendJoin(s, new ReadOnlySpan<string?>())|(123);
+            builder?.AppendJoin(s, default(ReadOnlySpan<string?>));
+            builder?.AppendJoin(s, new ReadOnlySpan<string?>());
 
-            |builder?.AppendJoin(c, default(ReadOnlySpan<object?>))|(124);
-            |builder?.AppendJoin(c, new ReadOnlySpan<object?>())|(125);
+            builder?.AppendJoin(c, default(ReadOnlySpan<object?>));
+            builder?.AppendJoin(c, new ReadOnlySpan<object?>());
 
-            |builder?.AppendJoin(c, default(ReadOnlySpan<string?>))|(126);
-            |builder?.AppendJoin(c, new ReadOnlySpan<string?>())|(127);
+            builder?.AppendJoin(c, default(ReadOnlySpan<string?>));
+            builder?.AppendJoin(c, new ReadOnlySpan<string?>());
         }
 
         public void OtherMethod(StringBuilder builder, string s, char c, object objectItem, int intItem, string stringItem)
         {
-            var result11 = builder.|AppendJoin(s, (object?[])[objectItem])|(128);
-            var result12 = builder.|AppendJoin(s, new[] { objectItem })|(129);
+            var result11 = builder.|AppendJoin(s, (object?[])[objectItem])|(0);
+            var result12 = builder.|AppendJoin(s, new[] { objectItem })|(1);
 
-            var result21 = builder.|AppendJoin(s, (int[])[intItem])|(130);
-            var result22 = builder.|AppendJoin(s, new[] { intItem })|(131);
+            var result21 = builder.|AppendJoin(s, (int[])[intItem])|(2);
+            var result22 = builder.|AppendJoin(s, new[] { intItem })|(3);
 
-            var result31 = builder.|AppendJoin(s, (string?[])[stringItem])|(132);
-            var result32 = builder.|AppendJoin(s, new[] { stringItem })|(133);
+            var result31 = builder.|AppendJoin(s, (string?[])[stringItem])|(4);
+            var result32 = builder.|AppendJoin(s, new[] { stringItem })|(5);
 
-            var result41 = builder.|AppendJoin(c, (object?[])[objectItem])|(134);
-            var result43 = builder.|AppendJoin(c, new[] { objectItem })|(135);
+            var result41 = builder.|AppendJoin(c, (object?[])[objectItem])|(6);
+            var result43 = builder.|AppendJoin(c, new[] { objectItem })|(7);
 
-            var result51 = builder.|AppendJoin(c, (int[])[intItem])|(136);
-            var result52 = builder.|AppendJoin(c, new[] { intItem })|(137);
+            var result51 = builder.|AppendJoin(c, (int[])[intItem])|(8);
+            var result52 = builder.|AppendJoin(c, new[] { intItem })|(9);
 
-            var result61 = builder.|AppendJoin(c, (string?[])[stringItem])|(138);
-            var result62 = builder.|AppendJoin(c, new[] { stringItem })|(139);
+            var result61 = builder.|AppendJoin(c, (string?[])[stringItem])|(10);
+            var result62 = builder.|AppendJoin(c, new[] { stringItem })|(11);
 
-            var result71 = builder.|AppendJoin(s, [(object)"item"])|(140);
-            var result72 = builder.|AppendJoin(s, (object)"item")|(141);
+            var result71 = builder.|AppendJoin(s, [(object)"item"])|(12);
+            var result72 = builder.|AppendJoin(s, (object)"item")|(13);
 
-            var result81 = builder.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(142);
-            var result82 = builder.|AppendJoin(s, "item")|(143);
+            var result81 = builder.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(14);
+            var result82 = builder.|AppendJoin(s, "item")|(15);
 
-            var result91 = builder.|AppendJoin(c, [(object)"item"])|(144);
-            var result92 = builder.|AppendJoin(c, (object)"item")|(145);
+            var result91 = builder.|AppendJoin(c, [(object)"item"])|(16);
+            var result92 = builder.|AppendJoin(c, (object)"item")|(17);
 
-            var resultA1 = builder.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(146);
-            var resultA2 = builder.|AppendJoin(c, "item")|(147);
+            var resultA1 = builder.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(18);
+            var resultA2 = builder.|AppendJoin(c, "item")|(19);
 
-            builder.|AppendJoin(s, (object?[])[objectItem])|(148);
-            builder.|AppendJoin(s, new[] { objectItem })|(149);
+            builder.|AppendJoin(s, (object?[])[objectItem])|(20);
+            builder.|AppendJoin(s, new[] { objectItem })|(21);
 
-            builder.|AppendJoin(s, (int[])[intItem])|(150);
-            builder.|AppendJoin(s, new[] { intItem })|(151);
+            builder.|AppendJoin(s, (int[])[intItem])|(22);
+            builder.|AppendJoin(s, new[] { intItem })|(23);
 
-            builder.|AppendJoin(s, (string?[])[stringItem])|(152);
-            builder.|AppendJoin(s, new[] { stringItem })|(153);
+            builder.|AppendJoin(s, (string?[])[stringItem])|(24);
+            builder.|AppendJoin(s, new[] { stringItem })|(25);
 
-            builder.|AppendJoin(c, (object?[])[objectItem])|(154);
-            builder.|AppendJoin(c, new[] { objectItem })|(155);
+            builder.|AppendJoin(c, (object?[])[objectItem])|(26);
+            builder.|AppendJoin(c, new[] { objectItem })|(27);
 
-            builder.|AppendJoin(c, (int[])[intItem])|(156);
-            builder.|AppendJoin(c, new[] { intItem })|(157);
+            builder.|AppendJoin(c, (int[])[intItem])|(28);
+            builder.|AppendJoin(c, new[] { intItem })|(29);
 
-            builder.|AppendJoin(c, (string?[])[stringItem])|(158);
-            builder.|AppendJoin(c, new[] { stringItem })|(159);
+            builder.|AppendJoin(c, (string?[])[stringItem])|(30);
+            builder.|AppendJoin(c, new[] { stringItem })|(31);
 
-            builder.|AppendJoin(s, [(object)"item"])|(160);
-            builder.|AppendJoin(s, (object)"item")|(161);
+            builder.|AppendJoin(s, [(object)"item"])|(32);
+            builder.|AppendJoin(s, (object)"item")|(33);
 
-            builder.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(162);
-            builder.|AppendJoin(s, "item")|(163);
+            builder.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(34);
+            builder.|AppendJoin(s, "item")|(35);
 
-            builder.|AppendJoin(c, [(object)"item"])|(164);
-            builder.|AppendJoin(c, (object)"item")|(165);
+            builder.|AppendJoin(c, [(object)"item"])|(36);
+            builder.|AppendJoin(c, (object)"item")|(37);
 
-            builder.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(166);
-            builder.|AppendJoin(c, "item")|(167);
+            builder.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(38);
+            builder.|AppendJoin(c, "item")|(39);
         }
 
         public void OtherMethod_Nullable(StringBuilder? builder, string s, char c, object objectItem, int intItem, string stringItem)
         {
-            var result11 = builder?.|AppendJoin(s, (object?[])[objectItem])|(168);
-            var result12 = builder?.|AppendJoin(s, new[] { objectItem })|(169);
+            var result11 = builder?.|AppendJoin(s, (object?[])[objectItem])|(40);
+            var result12 = builder?.|AppendJoin(s, new[] { objectItem })|(41);
 
-            var result21 = builder?.|AppendJoin(s, (int[])[intItem])|(170);
-            var result22 = builder?.|AppendJoin(s, new[] { intItem })|(171);
+            var result21 = builder?.|AppendJoin(s, (int[])[intItem])|(42);
+            var result22 = builder?.|AppendJoin(s, new[] { intItem })|(43);
 
-            var result31 = builder?.|AppendJoin(s, (string?[])[stringItem])|(172);
-            var result32 = builder?.|AppendJoin(s, new[] { stringItem })|(173);
+            var result31 = builder?.|AppendJoin(s, (string?[])[stringItem])|(44);
+            var result32 = builder?.|AppendJoin(s, new[] { stringItem })|(45);
 
-            var result41 = builder?.|AppendJoin(c, (object?[])[objectItem])|(174);
-            var result43 = builder?.|AppendJoin(c, new[] { objectItem })|(175);
+            var result41 = builder?.|AppendJoin(c, (object?[])[objectItem])|(46);
+            var result43 = builder?.|AppendJoin(c, new[] { objectItem })|(47);
 
-            var result51 = builder?.|AppendJoin(c, (int[])[intItem])|(176);
-            var result52 = builder?.|AppendJoin(c, new[] { intItem })|(177);
+            var result51 = builder?.|AppendJoin(c, (int[])[intItem])|(48);
+            var result52 = builder?.|AppendJoin(c, new[] { intItem })|(49);
 
-            var result61 = builder?.|AppendJoin(c, (string?[])[stringItem])|(178);
-            var result62 = builder?.|AppendJoin(c, new[] { stringItem })|(179);
+            var result61 = builder?.|AppendJoin(c, (string?[])[stringItem])|(50);
+            var result62 = builder?.|AppendJoin(c, new[] { stringItem })|(51);
 
-            var result71 = builder?.|AppendJoin(s, [(object)"item"])|(180);
-            var result72 = builder?.|AppendJoin(s, (object)"item")|(181);
+            var result71 = builder?.|AppendJoin(s, [(object)"item"])|(52);
+            var result72 = builder?.|AppendJoin(s, (object)"item")|(53);
 
-            var result81 = builder?.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(182);
-            var result82 = builder?.|AppendJoin(s, "item")|(183);
+            var result81 = builder?.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(54);
+            var result82 = builder?.|AppendJoin(s, "item")|(55);
 
-            var result91 = builder?.|AppendJoin(c, [(object)"item"])|(184);
-            var result92 = builder?.|AppendJoin(c, (object)"item")|(185);
+            var result91 = builder?.|AppendJoin(c, [(object)"item"])|(56);
+            var result92 = builder?.|AppendJoin(c, (object)"item")|(57);
 
-            var resultA1 = builder?.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(186);
-            var resultA2 = builder?.|AppendJoin(c, "item")|(187);
+            var resultA1 = builder?.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(58);
+            var resultA2 = builder?.|AppendJoin(c, "item")|(59);
 
-            builder?.|AppendJoin(s, (object?[])[objectItem])|(188);
-            builder?.|AppendJoin(s, new[] { objectItem })|(189);
+            builder?.|AppendJoin(s, (object?[])[objectItem])|(60);
+            builder?.|AppendJoin(s, new[] { objectItem })|(61);
 
-            builder?.|AppendJoin(s, (int[])[intItem])|(190);
-            builder?.|AppendJoin(s, new[] { intItem })|(191);
+            builder?.|AppendJoin(s, (int[])[intItem])|(62);
+            builder?.|AppendJoin(s, new[] { intItem })|(63);
 
-            builder?.|AppendJoin(s, (string?[])[stringItem])|(192);
-            builder?.|AppendJoin(s, new[] { stringItem })|(193);
+            builder?.|AppendJoin(s, (string?[])[stringItem])|(64);
+            builder?.|AppendJoin(s, new[] { stringItem })|(65);
 
-            builder?.|AppendJoin(c, (object?[])[objectItem])|(194);
-            builder?.|AppendJoin(c, new[] { objectItem })|(195);
+            builder?.|AppendJoin(c, (object?[])[objectItem])|(66);
+            builder?.|AppendJoin(c, new[] { objectItem })|(67);
 
-            builder?.|AppendJoin(c, (int[])[intItem])|(196);
-            builder?.|AppendJoin(c, new[] { intItem })|(197);
+            builder?.|AppendJoin(c, (int[])[intItem])|(68);
+            builder?.|AppendJoin(c, new[] { intItem })|(69);
 
-            builder?.|AppendJoin(c, (string?[])[stringItem])|(198);
-            builder?.|AppendJoin(c, new[] { stringItem })|(199);
+            builder?.|AppendJoin(c, (string?[])[stringItem])|(70);
+            builder?.|AppendJoin(c, new[] { stringItem })|(71);
 
-            builder?.|AppendJoin(s, [(object)"item"])|(200);
-            builder?.|AppendJoin(s, (object)"item")|(201);
+            builder?.|AppendJoin(s, [(object)"item"])|(72);
+            builder?.|AppendJoin(s, (object)"item")|(73);
 
-            builder?.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(202);
-            builder?.|AppendJoin(s, "item")|(203);
+            builder?.|AppendJoin(s, (ReadOnlySpan<string?>)["item"])|(74);
+            builder?.|AppendJoin(s, "item")|(75);
 
-            builder?.|AppendJoin(c, [(object)"item"])|(204);
-            builder?.|AppendJoin(c, (object)"item")|(205);
+            builder?.|AppendJoin(c, [(object)"item"])|(76);
+            builder?.|AppendJoin(c, (object)"item")|(77);
 
-            builder?.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(206);
-            builder?.|AppendJoin(c, "item")|(207);
+            builder?.|AppendJoin(c, (ReadOnlySpan<string?>)["item"])|(78);
+            builder?.|AppendJoin(c, "item")|(79);
         }
 
         public void SingleCharacter(StringBuilder builder, object?[] objectItems, int[] intItems, string?[] stringItems, ReadOnlySpan<object?> spanOfObjects, ReadOnlySpan<string?> spanOfStrings)
@@ -380,211 +380,83 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(1): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(2): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(3): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(4): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(5): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(6): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(7): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(8): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(9): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(10): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(11): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(12): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(13): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(14): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(15): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(16): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(17): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(18): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(19): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(20): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(21): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(22): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(23): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(24): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(25): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(26): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(27): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(28): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(29): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(30): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(31): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(32): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(33): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(34): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(35): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(36): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(37): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(38): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(39): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(40): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(41): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(42): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(43): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(44): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(45): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(46): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(47): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(48): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(49): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(50): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(51): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(52): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(53): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(54): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(55): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(56): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(57): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(58): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(59): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(60): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(61): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(62): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(63): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(64): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(65): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(66): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(67): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(68): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(69): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(70): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(71): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(72): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(73): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(74): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(75): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(76): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(77): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(78): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(79): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(80): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(81): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(82): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(83): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(84): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(85): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(86): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(87): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(88): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(89): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(90): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(91): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(92): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(93): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(94): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(95): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(96): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(97): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(98): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(99): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(100): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(101): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(102): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(103): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(104): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(105): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(106): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(107): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(108): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(109): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(110): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(111): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(112): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(113): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(114): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(115): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(116): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(117): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(118): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(119): ReSharper Dead Code: Calling 'AppendJoin' with an empty array is redundant.
-(120): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(121): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(122): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(123): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(124): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(125): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(126): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(127): ReSharper Dead Code: Calling 'AppendJoin' with an empty span is redundant.
-(128): ReSharper Suggestion: Use the 'Append' method.
-(129): ReSharper Suggestion: Use the 'Append' method.
-(130): ReSharper Suggestion: Use the 'Append' method.
-(131): ReSharper Suggestion: Use the 'Append' method.
-(132): ReSharper Suggestion: Use the 'Append' method.
-(133): ReSharper Suggestion: Use the 'Append' method.
-(134): ReSharper Suggestion: Use the 'Append' method.
-(135): ReSharper Suggestion: Use the 'Append' method.
-(136): ReSharper Suggestion: Use the 'Append' method.
-(137): ReSharper Suggestion: Use the 'Append' method.
-(138): ReSharper Suggestion: Use the 'Append' method.
-(139): ReSharper Suggestion: Use the 'Append' method.
-(140): ReSharper Suggestion: Use the 'Append' method.
-(141): ReSharper Suggestion: Use the 'Append' method.
-(142): ReSharper Suggestion: Use the 'Append' method.
-(143): ReSharper Suggestion: Use the 'Append' method.
-(144): ReSharper Suggestion: Use the 'Append' method.
-(145): ReSharper Suggestion: Use the 'Append' method.
-(146): ReSharper Suggestion: Use the 'Append' method.
-(147): ReSharper Suggestion: Use the 'Append' method.
-(148): ReSharper Suggestion: Use the 'Append' method.
-(149): ReSharper Suggestion: Use the 'Append' method.
-(150): ReSharper Suggestion: Use the 'Append' method.
-(151): ReSharper Suggestion: Use the 'Append' method.
-(152): ReSharper Suggestion: Use the 'Append' method.
-(153): ReSharper Suggestion: Use the 'Append' method.
-(154): ReSharper Suggestion: Use the 'Append' method.
-(155): ReSharper Suggestion: Use the 'Append' method.
-(156): ReSharper Suggestion: Use the 'Append' method.
-(157): ReSharper Suggestion: Use the 'Append' method.
-(158): ReSharper Suggestion: Use the 'Append' method.
-(159): ReSharper Suggestion: Use the 'Append' method.
-(160): ReSharper Suggestion: Use the 'Append' method.
-(161): ReSharper Suggestion: Use the 'Append' method.
-(162): ReSharper Suggestion: Use the 'Append' method.
-(163): ReSharper Suggestion: Use the 'Append' method.
-(164): ReSharper Suggestion: Use the 'Append' method.
-(165): ReSharper Suggestion: Use the 'Append' method.
-(166): ReSharper Suggestion: Use the 'Append' method.
-(167): ReSharper Suggestion: Use the 'Append' method.
-(168): ReSharper Suggestion: Use the 'Append' method.
-(169): ReSharper Suggestion: Use the 'Append' method.
-(170): ReSharper Suggestion: Use the 'Append' method.
-(171): ReSharper Suggestion: Use the 'Append' method.
-(172): ReSharper Suggestion: Use the 'Append' method.
-(173): ReSharper Suggestion: Use the 'Append' method.
-(174): ReSharper Suggestion: Use the 'Append' method.
-(175): ReSharper Suggestion: Use the 'Append' method.
-(176): ReSharper Suggestion: Use the 'Append' method.
-(177): ReSharper Suggestion: Use the 'Append' method.
-(178): ReSharper Suggestion: Use the 'Append' method.
-(179): ReSharper Suggestion: Use the 'Append' method.
-(180): ReSharper Suggestion: Use the 'Append' method.
-(181): ReSharper Suggestion: Use the 'Append' method.
-(182): ReSharper Suggestion: Use the 'Append' method.
-(183): ReSharper Suggestion: Use the 'Append' method.
-(184): ReSharper Suggestion: Use the 'Append' method.
-(185): ReSharper Suggestion: Use the 'Append' method.
-(186): ReSharper Suggestion: Use the 'Append' method.
-(187): ReSharper Suggestion: Use the 'Append' method.
-(188): ReSharper Suggestion: Use the 'Append' method.
-(189): ReSharper Suggestion: Use the 'Append' method.
-(190): ReSharper Suggestion: Use the 'Append' method.
-(191): ReSharper Suggestion: Use the 'Append' method.
-(192): ReSharper Suggestion: Use the 'Append' method.
-(193): ReSharper Suggestion: Use the 'Append' method.
-(194): ReSharper Suggestion: Use the 'Append' method.
-(195): ReSharper Suggestion: Use the 'Append' method.
-(196): ReSharper Suggestion: Use the 'Append' method.
-(197): ReSharper Suggestion: Use the 'Append' method.
-(198): ReSharper Suggestion: Use the 'Append' method.
-(199): ReSharper Suggestion: Use the 'Append' method.
-(200): ReSharper Suggestion: Use the 'Append' method.
-(201): ReSharper Suggestion: Use the 'Append' method.
-(202): ReSharper Suggestion: Use the 'Append' method.
-(203): ReSharper Suggestion: Use the 'Append' method.
-(204): ReSharper Suggestion: Use the 'Append' method.
-(205): ReSharper Suggestion: Use the 'Append' method.
-(206): ReSharper Suggestion: Use the 'Append' method.
-(207): ReSharper Suggestion: Use the 'Append' method.
+(0): ReSharper Suggestion: Use the 'Append' method.
+(1): ReSharper Suggestion: Use the 'Append' method.
+(2): ReSharper Suggestion: Use the 'Append' method.
+(3): ReSharper Suggestion: Use the 'Append' method.
+(4): ReSharper Suggestion: Use the 'Append' method.
+(5): ReSharper Suggestion: Use the 'Append' method.
+(6): ReSharper Suggestion: Use the 'Append' method.
+(7): ReSharper Suggestion: Use the 'Append' method.
+(8): ReSharper Suggestion: Use the 'Append' method.
+(9): ReSharper Suggestion: Use the 'Append' method.
+(10): ReSharper Suggestion: Use the 'Append' method.
+(11): ReSharper Suggestion: Use the 'Append' method.
+(12): ReSharper Suggestion: Use the 'Append' method.
+(13): ReSharper Suggestion: Use the 'Append' method.
+(14): ReSharper Suggestion: Use the 'Append' method.
+(15): ReSharper Suggestion: Use the 'Append' method.
+(16): ReSharper Suggestion: Use the 'Append' method.
+(17): ReSharper Suggestion: Use the 'Append' method.
+(18): ReSharper Suggestion: Use the 'Append' method.
+(19): ReSharper Suggestion: Use the 'Append' method.
+(20): ReSharper Suggestion: Use the 'Append' method.
+(21): ReSharper Suggestion: Use the 'Append' method.
+(22): ReSharper Suggestion: Use the 'Append' method.
+(23): ReSharper Suggestion: Use the 'Append' method.
+(24): ReSharper Suggestion: Use the 'Append' method.
+(25): ReSharper Suggestion: Use the 'Append' method.
+(26): ReSharper Suggestion: Use the 'Append' method.
+(27): ReSharper Suggestion: Use the 'Append' method.
+(28): ReSharper Suggestion: Use the 'Append' method.
+(29): ReSharper Suggestion: Use the 'Append' method.
+(30): ReSharper Suggestion: Use the 'Append' method.
+(31): ReSharper Suggestion: Use the 'Append' method.
+(32): ReSharper Suggestion: Use the 'Append' method.
+(33): ReSharper Suggestion: Use the 'Append' method.
+(34): ReSharper Suggestion: Use the 'Append' method.
+(35): ReSharper Suggestion: Use the 'Append' method.
+(36): ReSharper Suggestion: Use the 'Append' method.
+(37): ReSharper Suggestion: Use the 'Append' method.
+(38): ReSharper Suggestion: Use the 'Append' method.
+(39): ReSharper Suggestion: Use the 'Append' method.
+(40): ReSharper Suggestion: Use the 'Append' method.
+(41): ReSharper Suggestion: Use the 'Append' method.
+(42): ReSharper Suggestion: Use the 'Append' method.
+(43): ReSharper Suggestion: Use the 'Append' method.
+(44): ReSharper Suggestion: Use the 'Append' method.
+(45): ReSharper Suggestion: Use the 'Append' method.
+(46): ReSharper Suggestion: Use the 'Append' method.
+(47): ReSharper Suggestion: Use the 'Append' method.
+(48): ReSharper Suggestion: Use the 'Append' method.
+(49): ReSharper Suggestion: Use the 'Append' method.
+(50): ReSharper Suggestion: Use the 'Append' method.
+(51): ReSharper Suggestion: Use the 'Append' method.
+(52): ReSharper Suggestion: Use the 'Append' method.
+(53): ReSharper Suggestion: Use the 'Append' method.
+(54): ReSharper Suggestion: Use the 'Append' method.
+(55): ReSharper Suggestion: Use the 'Append' method.
+(56): ReSharper Suggestion: Use the 'Append' method.
+(57): ReSharper Suggestion: Use the 'Append' method.
+(58): ReSharper Suggestion: Use the 'Append' method.
+(59): ReSharper Suggestion: Use the 'Append' method.
+(60): ReSharper Suggestion: Use the 'Append' method.
+(61): ReSharper Suggestion: Use the 'Append' method.
+(62): ReSharper Suggestion: Use the 'Append' method.
+(63): ReSharper Suggestion: Use the 'Append' method.
+(64): ReSharper Suggestion: Use the 'Append' method.
+(65): ReSharper Suggestion: Use the 'Append' method.
+(66): ReSharper Suggestion: Use the 'Append' method.
+(67): ReSharper Suggestion: Use the 'Append' method.
+(68): ReSharper Suggestion: Use the 'Append' method.
+(69): ReSharper Suggestion: Use the 'Append' method.
+(70): ReSharper Suggestion: Use the 'Append' method.
+(71): ReSharper Suggestion: Use the 'Append' method.
+(72): ReSharper Suggestion: Use the 'Append' method.
+(73): ReSharper Suggestion: Use the 'Append' method.
+(74): ReSharper Suggestion: Use the 'Append' method.
+(75): ReSharper Suggestion: Use the 'Append' method.
+(76): ReSharper Suggestion: Use the 'Append' method.
+(77): ReSharper Suggestion: Use the 'Append' method.
+(78): ReSharper Suggestion: Use the 'Append' method.
+(79): ReSharper Suggestion: Use the 'Append' method.

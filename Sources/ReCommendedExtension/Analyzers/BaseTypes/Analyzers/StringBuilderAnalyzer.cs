@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.BaseTypes.Collections;
@@ -13,9 +12,8 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseOtherMethodSuggestion), typeof(RedundantMethodInvocationHint)])]
-public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-    : ElementProblemAnalyzer<IInvocationExpression>
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseOtherMethodSuggestion)])]
+public sealed class StringBuilderAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Underscore character used intentionally as a separator.")]
     static class Parameters
@@ -26,223 +24,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
     }
 
     /// <remarks>
-    /// <c>builder.Append(value, 0)</c> → <c>builder</c>
-    /// </remarks>
-    static void AnalyzeAppend_Char_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument repeatCountArgument)
-    {
-        if (repeatCountArgument.Value.TryGetInt32Constant() == 0)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Append)}' with the repeat count 0 is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Append(null)</c> → <c>builder</c><para/>
-    /// <c>builder.Append([])</c> → <c>builder</c>
-    /// </remarks>
-    static void AnalyzeAppend_CharArray(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        if (valueArgument.Value.IsDefaultValue())
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Append)}' with null is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-            return;
-        }
-
-        if (CollectionCreation.TryFrom(valueArgument.Value) is { Count: 0 })
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Append)}' with an empty array is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Append(null, 0, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append([], 0, 0)</c> → <c>builder</c>
-    /// </remarks>
-    static void AnalyzeAppend_CharArray_Int32_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument startIndexArgument,
-        ICSharpArgument charCountArgument)
-    {
-        if (startIndexArgument.Value.TryGetInt32Constant() == 0 && charCountArgument.Value.TryGetInt32Constant() == 0)
-        {
-            if (valueArgument.Value.IsDefaultValue())
-            {
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Append)}' with null is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                return;
-            }
-
-            if (CollectionCreation.TryFrom(valueArgument.Value) is { Count: 0 })
-            {
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Append)}' with an empty array is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Append(null)</c> → <c>builder</c><para/>
-    /// <c>builder.Append("")</c> → <c>builder</c>
-    /// </remarks>
-    static void AnalyzeAppend_String(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        if (valueArgument.Value.IsDefaultValue())
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Append)}' with null is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-            return;
-        }
-
-        if (valueArgument.Value.TryGetStringConstant() == "")
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Append)}' with an empty string is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Append(null, 0, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append(value, startIndex, 0)</c> → <c>builder</c>
-    /// </remarks>
-    void AnalyzeAppend_String_Int32_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument startIndexArgument,
-        ICSharpArgument countArgument)
-    {
-        switch (valueArgument.Value, startIndexArgument.Value.TryGetInt32Constant(), countArgument.Value.TryGetInt32Constant())
-        {
-            case (var value, 0, 0) when value.IsDefaultValue():
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Append)}' with (null, 0, 0) is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                break;
-
-            case ({ } value, >= 0, 0) when value.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Append)}' with the count 0 is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                break;
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Append(null)</c> → <c>builder</c>
-    /// </remarks>
-    static void AnalyzeAppend_StringBuilder(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        if (valueArgument.Value.IsDefaultValue())
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Append)}' with null is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Append(null, 0, 0)</c> → <c>builder</c><para/>
-    /// <c>builder.Append(value, startIndex, 0)</c> → <c>builder</c>
-    /// </remarks>
-    void AnalyzeAppend_StringBuilder_Int32_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument,
-        ICSharpArgument startIndexArgument,
-        ICSharpArgument countArgument)
-    {
-        switch (valueArgument.Value, startIndexArgument.Value.TryGetInt32Constant(), countArgument.Value.TryGetInt32Constant())
-        {
-            case (var value, 0, 0) when value.IsDefaultValue():
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Append)}' with (null, 0, 0) is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                break;
-
-            case ({ } value, >= 0, 0) when value.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
-                consumer.AddHighlighting(
-                    new RedundantMethodInvocationHint(
-                        $"Calling '{nameof(StringBuilder.Append)}' with the count 0 is redundant.",
-                        invocationExpression,
-                        invokedExpression));
-                break;
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Append(null)</c> → <c>builder</c>
-    /// </remarks>
-    static void AnalyzeAppend_Object(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        if (valueArgument.Value.IsDefaultValue())
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Append)}' with null is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_ObjectArray(
@@ -257,67 +38,40 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out _, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments) && valuesArguments is [{ Value: { } } argument])
         {
-            switch (valuesArguments)
+            if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
             {
-                case []:
+                if (collectionCreation.Count == 1 && MethodExists())
+                {
                     consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
                             invocationExpression,
-                            invokedExpression));
-                    return;
-
-                case [{ Value: { } } argument]:
-                    if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
-                    {
-                        switch (collectionCreation.Count)
-                        {
-                            case 0:
-                                consumer.AddHighlighting(
-                                    new RedundantMethodInvocationHint(
-                                        "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                                        invocationExpression,
-                                        invokedExpression));
-                                return;
-
-                            case 1 when MethodExists():
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(StringBuilder.Append),
-                                        false,
-                                        [collectionCreation.SingleElement.GetText()]));
-                                return;
-                        }
-                    }
-                    else
-                    {
-                        if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsGenericArrayOfObject()
-                            && MethodExists())
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(StringBuilder.Append),
-                                    false,
-                                    [argument.Value.GetText()]));
-                        }
-                    }
-                    break;
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [collectionCreation.SingleElement.GetText()]));
+                }
+            }
+            else
+            {
+                if (argument.Value.GetExpressionType().ToIType() is { } argumentType && !argumentType.IsGenericArrayOfObject() && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [argument.Value.GetText()]));
+                }
             }
         }
     }
 
     /// <remarks>
-    /// <c>builder.AppendJoin(separator, default(ReadOnlySpan&lt;object?&gt;))</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, new ReadOnlySpan&lt;object?&gt;())</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
     /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c>
     /// </remarks>
@@ -333,90 +87,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out _, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments) && valuesArguments is [{ Value: { } } argument])
         {
-            switch (valuesArguments)
+            if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
             {
-                case []:
-                    consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty span is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                            invocationExpression,
-                            invokedExpression));
-                    return;
-
-                case [{ Value: { } } argument]:
-                    if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
-                    {
-                        switch (collectionCreation.Count)
-                        {
-                            case 0:
-                                consumer.AddHighlighting(
-                                    new RedundantMethodInvocationHint(
-                                        "Calling 'AppendJoin' with an empty span is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                                        invocationExpression,
-                                        invokedExpression));
-                                return;
-
-                            case 1 when MethodExists():
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(StringBuilder.Append),
-                                        false,
-                                        [collectionCreation.SingleElement.GetText()]));
-                                return;
-                        }
-                    }
-                    else
-                    {
-                        if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsReadOnlySpanOfObject()
-                            && MethodExists())
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(StringBuilder.Append),
-                                    false,
-                                    [argument.Value.GetText()]));
-                        }
-                    }
-                    break;
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
-    /// </remarks>
-    static void AnalyzeAppendJoin_String_IEnumerableOfT(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valuesArgument)
-    {
-        if (CollectionCreation.TryFrom(valuesArgument.Value) is { } collectionCreation)
-        {
-            switch (collectionCreation.Count)
-            {
-                case 0:
-                    consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                            invocationExpression,
-                            invokedExpression));
-                    return;
-
-                case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
-                    invocationExpression.PsiModule):
-
+                if (collectionCreation.Count == 1 && MethodExists())
+                {
                     consumer.AddHighlighting(
                         new UseOtherMethodSuggestion(
                             $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -425,13 +101,51 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             nameof(StringBuilder.Append),
                             false,
                             [collectionCreation.SingleElement.GetText()]));
-                    return;
+                }
+            }
+            else
+            {
+                if (argument.Value.GetExpressionType().ToIType() is { } argumentType && !argumentType.IsReadOnlySpanOfObject() && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [argument.Value.GetText()]));
+                }
             }
         }
     }
 
     /// <remarks>
-    /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
+    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
+    /// </remarks>
+    static void AnalyzeAppendJoin_String_IEnumerableOfT(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valuesArgument)
+    {
+        if (CollectionCreation.TryFrom(valuesArgument.Value) is { Count: 1 } collectionCreation
+            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new UseOtherMethodSuggestion(
+                    $"Use the '{nameof(StringBuilder.Append)}' method.",
+                    invocationExpression,
+                    invokedExpression,
+                    nameof(StringBuilder.Append),
+                    false,
+                    [collectionCreation.SingleElement.GetText()]));
+        }
+    }
+
+    /// <remarks>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_String_StringArray(
@@ -446,67 +160,40 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out _, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments) && valuesArguments is [{ Value: { } } argument])
         {
-            switch (valuesArguments)
+            if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
             {
-                case []:
+                if (collectionCreation.Count == 1 && MethodExists())
+                {
                     consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
                             invocationExpression,
-                            invokedExpression));
-                    return;
-
-                case [{ Value: { } } argument]:
-                    if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
-                    {
-                        switch (collectionCreation.Count)
-                        {
-                            case 0:
-                                consumer.AddHighlighting(
-                                    new RedundantMethodInvocationHint(
-                                        "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                                        invocationExpression,
-                                        invokedExpression));
-                                return;
-
-                            case 1 when MethodExists():
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(StringBuilder.Append),
-                                        false,
-                                        [collectionCreation.SingleElement.GetText()]));
-                                return;
-                        }
-                    }
-                    else
-                    {
-                        if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsGenericArrayOfString()
-                            && MethodExists())
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(StringBuilder.Append),
-                                    false,
-                                    [argument.Value.GetText()]));
-                        }
-                    }
-                    break;
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [collectionCreation.SingleElement.GetText()]));
+                }
+            }
+            else
+            {
+                if (argument.Value.GetExpressionType().ToIType() is { } argumentType && !argumentType.IsGenericArrayOfString() && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [argument.Value.GetText()]));
+                }
             }
         }
     }
 
     /// <remarks>
-    /// <c>builder.AppendJoin(separator, default(ReadOnlySpan&lt;string?&gt;))</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, new ReadOnlySpan&lt;string?&gt;())</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
     /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c>
     /// </remarks>
@@ -522,66 +209,40 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out _, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments) && valuesArguments is [{ Value: { } } argument])
         {
-            switch (valuesArguments)
+            if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
             {
-                case []:
+                if (collectionCreation.Count == 1 && MethodExists())
+                {
                     consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty span is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
                             invocationExpression,
-                            invokedExpression));
-                    return;
-
-                case [{ Value: { } } argument]:
-                    if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
-                    {
-                        switch (collectionCreation.Count)
-                        {
-                            case 0:
-                                consumer.AddHighlighting(
-                                    new RedundantMethodInvocationHint(
-                                        "Calling 'AppendJoin' with an empty span is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                                        invocationExpression,
-                                        invokedExpression));
-                                return;
-
-                            case 1 when MethodExists():
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(StringBuilder.Append),
-                                        false,
-                                        [collectionCreation.SingleElement.GetText()]));
-                                return;
-                        }
-                    }
-                    else
-                    {
-                        if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsReadOnlySpanOfString()
-                            && MethodExists())
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(StringBuilder.Append),
-                                    false,
-                                    [argument.Value.GetText()]));
-                        }
-                    }
-                    break;
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [collectionCreation.SingleElement.GetText()]));
+                }
+            }
+            else
+            {
+                if (argument.Value.GetExpressionType().ToIType() is { } argumentType && !argumentType.IsReadOnlySpanOfString() && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [argument.Value.GetText()]));
+                }
             }
         }
     }
 
     /// <remarks>
-    /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_Char_ObjectArray(
@@ -596,67 +257,40 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out _, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments) && valuesArguments is [{ Value: { } } argument])
         {
-            switch (valuesArguments)
+            if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
             {
-                case []:
+                if (collectionCreation.Count == 1 && MethodExists())
+                {
                     consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
                             invocationExpression,
-                            invokedExpression));
-                    break;
-
-                case [{ Value: { } } argument]:
-                    if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
-                    {
-                        switch (collectionCreation.Count)
-                        {
-                            case 0:
-                                consumer.AddHighlighting(
-                                    new RedundantMethodInvocationHint(
-                                        "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                                        invocationExpression,
-                                        invokedExpression));
-                                break;
-
-                            case 1 when MethodExists():
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(StringBuilder.Append),
-                                        false,
-                                        [collectionCreation.SingleElement.GetText()]));
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsGenericArrayOfObject()
-                            && MethodExists())
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(StringBuilder.Append),
-                                    false,
-                                    [argument.Value.GetText()]));
-                        }
-                    }
-                    break;
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [collectionCreation.SingleElement.GetText()]));
+                }
+            }
+            else
+            {
+                if (argument.Value.GetExpressionType().ToIType() is { } argumentType && !argumentType.IsGenericArrayOfObject() && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [argument.Value.GetText()]));
+                }
             }
         }
     }
 
     /// <remarks>
-    /// <c>builder.AppendJoin(separator, default(ReadOnlySpan&lt;object?&gt;))</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, new ReadOnlySpan&lt;object?&gt;())</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
     /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c>
     /// </remarks>
@@ -672,90 +306,12 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out _, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments) && valuesArguments is [{ Value: { } } argument])
         {
-            switch (valuesArguments)
+            if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
             {
-                case []:
-                    consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty span is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                            invocationExpression,
-                            invokedExpression));
-                    break;
-
-                case [{ Value: { } } argument]:
-                    if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
-                    {
-                        switch (collectionCreation.Count)
-                        {
-                            case 0:
-                                consumer.AddHighlighting(
-                                    new RedundantMethodInvocationHint(
-                                        "Calling 'AppendJoin' with an empty span is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                                        invocationExpression,
-                                        invokedExpression));
-                                break;
-
-                            case 1 when MethodExists():
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(StringBuilder.Append),
-                                        false,
-                                        [collectionCreation.SingleElement.GetText()]));
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsReadOnlySpanOfObject()
-                            && MethodExists())
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(StringBuilder.Append),
-                                    false,
-                                    [argument.Value.GetText()]));
-                        }
-                    }
-                    break;
-            }
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
-    /// </remarks>
-    static void AnalyzeAppendJoin_Char_IEnumerableOfT(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valuesArgument)
-    {
-        if (CollectionCreation.TryFrom(valuesArgument.Value) is { } collectionCreation)
-        {
-            switch (collectionCreation.Count)
-            {
-                case 0:
-                    consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                            invocationExpression,
-                            invokedExpression));
-                    return;
-
-                case 1 when PredefinedType.STRING_BUILDER_FQN.HasMethod(
-                    new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
-                    invocationExpression.PsiModule):
-
+                if (collectionCreation.Count == 1 && MethodExists())
+                {
                     consumer.AddHighlighting(
                         new UseOtherMethodSuggestion(
                             $"Use the '{nameof(StringBuilder.Append)}' method.",
@@ -764,13 +320,51 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             nameof(StringBuilder.Append),
                             false,
                             [collectionCreation.SingleElement.GetText()]));
-                    return;
+                }
+            }
+            else
+            {
+                if (argument.Value.GetExpressionType().ToIType() is { } argumentType && !argumentType.IsReadOnlySpanOfObject() && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [argument.Value.GetText()]));
+                }
             }
         }
     }
 
     /// <remarks>
-    /// <c>builder.AppendJoin(separator, [])</c> → <c>builder</c><para/>
+    /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
+    /// </remarks>
+    static void AnalyzeAppendJoin_Char_IEnumerableOfT(
+        IHighlightingConsumer consumer,
+        IInvocationExpression invocationExpression,
+        IReferenceExpression invokedExpression,
+        ICSharpArgument valuesArgument)
+    {
+        if (CollectionCreation.TryFrom(valuesArgument.Value) is { Count: 1 } collectionCreation
+            && PredefinedType.STRING_BUILDER_FQN.HasMethod(
+                new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.Object },
+                invocationExpression.PsiModule))
+        {
+            consumer.AddHighlighting(
+                new UseOtherMethodSuggestion(
+                    $"Use the '{nameof(StringBuilder.Append)}' method.",
+                    invocationExpression,
+                    invokedExpression,
+                    nameof(StringBuilder.Append),
+                    false,
+                    [collectionCreation.SingleElement.GetText()]));
+        }
+    }
+
+    /// <remarks>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c>
     /// </remarks>
     static void AnalyzeAppendJoin_Char_StringArray(
@@ -785,67 +379,40 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out _, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments) && valuesArguments is [{ Value: { } } argument])
         {
-            switch (valuesArguments)
+            if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
             {
-                case []:
+                if (collectionCreation.Count == 1 && MethodExists())
+                {
                     consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
                             invocationExpression,
-                            invokedExpression));
-                    break;
-
-                case [{ Value: { } } argument]:
-                    if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
-                    {
-                        switch (collectionCreation.Count)
-                        {
-                            case 0:
-                                consumer.AddHighlighting(
-                                    new RedundantMethodInvocationHint(
-                                        "Calling 'AppendJoin' with an empty array is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                                        invocationExpression,
-                                        invokedExpression));
-                                break;
-
-                            case 1 when MethodExists():
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(StringBuilder.Append),
-                                        false,
-                                        [collectionCreation.SingleElement.GetText()]));
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsGenericArrayOfString()
-                            && MethodExists())
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(StringBuilder.Append),
-                                    false,
-                                    [argument.Value.GetText()]));
-                        }
-                    }
-                    break;
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [collectionCreation.SingleElement.GetText()]));
+                }
+            }
+            else
+            {
+                if (argument.Value.GetExpressionType().ToIType() is { } argumentType && !argumentType.IsGenericArrayOfString() && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [argument.Value.GetText()]));
+                }
             }
         }
     }
 
     /// <remarks>
-    /// <c>builder.AppendJoin(separator, default(ReadOnlySpan&lt;string?&gt;))</c> → <c>builder</c><para/>
-    /// <c>builder.AppendJoin(separator, new ReadOnlySpan&lt;string?&gt;())</c> → <c>builder</c><para/>
     /// <c>builder.AppendJoin(separator, [item])</c> → <c>builder.Append(item)</c><para/>
     /// <c>builder.AppendJoin(separator, item)</c> → <c>builder.Append(item)</c>
     /// </remarks>
@@ -861,124 +428,36 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                 new MethodSignature { Name = nameof(StringBuilder.Append), Parameters = Parameters.String },
                 invocationExpression.PsiModule);
 
-        if (arguments.TrySplit(out _, out var valuesArguments))
+        if (arguments.TrySplit(out _, out var valuesArguments) && valuesArguments is [{ Value: { } } argument])
         {
-            switch (valuesArguments)
+            if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
             {
-                case []:
+                if (collectionCreation.Count == 1 && MethodExists())
+                {
                     consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            "Calling 'AppendJoin' with an empty span is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
                             invocationExpression,
-                            invokedExpression));
-                    break;
-
-                case [{ Value: { } } argument]:
-                    if (CollectionCreation.TryFrom(argument.Value) is { } collectionCreation)
-                    {
-                        switch (collectionCreation.Count)
-                        {
-                            case 0:
-                                consumer.AddHighlighting(
-                                    new RedundantMethodInvocationHint(
-                                        "Calling 'AppendJoin' with an empty span is redundant.", // todo: use 'nameof(StringBuilder.AppendJoin)'
-                                        invocationExpression,
-                                        invokedExpression));
-                                break;
-
-                            case 1 when MethodExists():
-                                consumer.AddHighlighting(
-                                    new UseOtherMethodSuggestion(
-                                        $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                        invocationExpression,
-                                        invokedExpression,
-                                        nameof(StringBuilder.Append),
-                                        false,
-                                        [collectionCreation.SingleElement.GetText()]));
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        if (argument.Value.GetExpressionType().ToIType() is { } argumentType
-                            && !argumentType.IsReadOnlySpanOfString()
-                            && MethodExists())
-                        {
-                            consumer.AddHighlighting(
-                                new UseOtherMethodSuggestion(
-                                    $"Use the '{nameof(StringBuilder.Append)}' method.",
-                                    invocationExpression,
-                                    invokedExpression,
-                                    nameof(StringBuilder.Append),
-                                    false,
-                                    [argument.Value.GetText()]));
-                        }
-                    }
-                    break;
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [collectionCreation.SingleElement.GetText()]));
+                }
             }
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Insert(index, null)</c> → <c>builder</c>
-    /// </remarks>
-    static void AnalyzeInsert_Int32_Object(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        if (valueArgument.Value.IsDefaultValue())
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Insert)}' with null is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Replace("abc", "abc")</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzeReplace_String_String(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument oldValueArgument,
-        ICSharpArgument newValueArgument)
-    {
-        if (oldValueArgument.Value.TryGetStringConstant() is { } oldValue and not ""
-            && newValueArgument.Value.TryGetStringConstant() is { } newValue
-            && oldValue == newValue)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Replace)}' with identical values is redundant.",
-                    invocationExpression,
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>builder.Replace('a', 'a')</c> → <c>text</c>
-    /// </remarks>
-    static void AnalyzeReplace_Char_Char(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument oldCharArgument,
-        ICSharpArgument newCharArgument)
-    {
-        if (oldCharArgument.Value.TryGetCharConstant() is { } oldCharacter
-            && newCharArgument.Value.TryGetCharConstant() is { } newCharacter
-            && oldCharacter == newCharacter)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(StringBuilder.Replace)}' with identical characters is redundant.",
-                    invocationExpression,
-                    invokedExpression));
+            else
+            {
+                if (argument.Value.GetExpressionType().ToIType() is { } argumentType && !argumentType.IsReadOnlySpanOfString() && MethodExists())
+                {
+                    consumer.AddHighlighting(
+                        new UseOtherMethodSuggestion(
+                            $"Use the '{nameof(StringBuilder.Append)}' method.",
+                            invocationExpression,
+                            invokedExpression,
+                            nameof(StringBuilder.Append),
+                            false,
+                            [argument.Value.GetText()]));
+                }
+            }
         }
     }
 
@@ -993,63 +472,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
         {
             switch (method.ShortName, method.TypeParameters)
             {
-                case (nameof(StringBuilder.Append), []):
-                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                    {
-                        case ([{ Type: var valueType }, { Type: var repeatCountType }], [_, { } repeatCountArgument])
-                            when valueType.IsChar() && repeatCountType.IsInt():
-
-                            AnalyzeAppend_Char_Int32(consumer, element, invokedExpression, repeatCountArgument);
-                            break;
-
-                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsGenericArrayOfChar():
-                            AnalyzeAppend_CharArray(consumer, element, invokedExpression, valueArgument);
-                            break;
-
-                        case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var charCountType }], [
-                            { } valueArgument, { } startIndexArgument, { } charCountArgument,
-                        ]) when valueType.IsGenericArrayOfChar() && startIndexType.IsInt() && charCountType.IsInt():
-                            AnalyzeAppend_CharArray_Int32_Int32(
-                                consumer,
-                                element,
-                                invokedExpression,
-                                valueArgument,
-                                startIndexArgument,
-                                charCountArgument);
-                            break;
-
-                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsString():
-                            AnalyzeAppend_String(consumer, element, invokedExpression, valueArgument);
-                            break;
-
-                        case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
-                            { } valueArgument, { } startIndexArgument, { } countArgument,
-                        ]) when valueType.IsString() && startIndexType.IsInt() && countType.IsInt():
-                            AnalyzeAppend_String_Int32_Int32(consumer, element, invokedExpression, valueArgument, startIndexArgument, countArgument);
-                            break;
-
-                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsStringBuilder():
-                            AnalyzeAppend_StringBuilder(consumer, element, invokedExpression, valueArgument);
-                            break;
-
-                        case ([{ Type: var valueType }, { Type: var startIndexType }, { Type: var countType }], [
-                            { } valueArgument, { } startIndexArgument, { } countArgument,
-                        ]) when valueType.IsStringBuilder() && startIndexType.IsInt() && countType.IsInt():
-                            AnalyzeAppend_StringBuilder_Int32_Int32(
-                                consumer,
-                                element,
-                                invokedExpression,
-                                valueArgument,
-                                startIndexArgument,
-                                countArgument);
-                            break;
-
-                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsObject():
-                            AnalyzeAppend_Object(consumer, element, invokedExpression, valueArgument);
-                            break;
-                    }
-                    break;
-
                 case ("AppendJoin", _): // todo: use 'nameof(StringBuilder.AppendJoin)' when available
                     switch (method.TypeParameters, method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {
@@ -1111,34 +533,6 @@ public sealed class StringBuilderAnalyzer(NullableReferenceTypesDataFlowAnalysis
                             when separatorType.IsChar() && valuesType.IsReadOnlySpanOfString():
 
                             AnalyzeAppendJoin_Char_ReadOnlySpanOfString(consumer, element, invokedExpression, arguments);
-                            break;
-                    }
-                    break;
-
-                case (nameof(StringBuilder.Insert), []):
-                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                    {
-                        case ([{ Type: var indexType }, { Type: var valueType }], [_, { } valueArgument])
-                            when indexType.IsInt() && valueType.IsObject():
-
-                            AnalyzeInsert_Int32_Object(consumer, element, invokedExpression, valueArgument);
-                            break;
-                    }
-                    break;
-
-                case (nameof(StringBuilder.Replace), []):
-                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                    {
-                        case ([{ Type: var oldValueType }, { Type: var newValueType }], [{ } oldValueArgument, { } newValueArgument])
-                            when oldValueType.IsString() && newValueType.IsString():
-
-                            AnalyzeReplace_String_String(consumer, element, invokedExpression, oldValueArgument, newValueArgument);
-                            break;
-
-                        case ([{ Type: var oldCharType }, { Type: var newCharType }], [{ } oldCharArgument, { } newCharArgument])
-                            when oldCharType.IsChar() && newCharType.IsChar():
-
-                            AnalyzeReplace_Char_Char(consumer, element, invokedExpression, oldCharArgument, newCharArgument);
                             break;
                     }
                     break;

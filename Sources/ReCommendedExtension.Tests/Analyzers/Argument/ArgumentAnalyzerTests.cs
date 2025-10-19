@@ -1211,14 +1211,6 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     }
 
     // [Test]
-    public void TestBoolean()
-    {
-        var values = new[] { true, false };
-
-        DoNamedTest2();
-    }
-
-    // [Test]
     public void TestChar()
     {
         var values = new[] { 'a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue };

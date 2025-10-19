@@ -100,6 +100,8 @@ internal sealed record Parameter
 
     public static Parameter Calendar { get; } = new() { IsType = t => t.IsCalendar() };
 
+    public static Parameter StringBuilder { get; } = new() { IsType = t => t.IsStringBuilder() };
+
     public required Func<IType, bool> IsType { get; init; }
 
     public ParameterKind Kind { get; init; } = ParameterKind.VALUE;

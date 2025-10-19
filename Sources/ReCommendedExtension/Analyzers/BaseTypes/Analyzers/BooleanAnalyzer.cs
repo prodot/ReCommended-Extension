@@ -10,11 +10,10 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(RedundantMethodInvocationHint)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion)])]
 public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
     /// <remarks>
-    /// <c>flag.Equals(true)</c> → <c>flag</c><para/>
     /// <c>flag.Equals(false)</c> → <c>!flag</c><para/>
     /// <c>true.Equals(obj)</c> → <c>obj</c><para/>
     /// <c>false.Equals(obj)</c> → <c>!obj</c><para/>
@@ -32,14 +31,6 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
         {
             switch (invokedExpression.QualifierExpression.TryGetBooleanConstant(), objArgument.Value.TryGetBooleanConstant())
             {
-                case (null, true):
-                    consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            $"Calling '{nameof(bool.Equals)}' with true is redundant.",
-                            invocationExpression,
-                            invokedExpression));
-                    break;
-
                 case (null, false):
                     consumer.AddHighlighting(
                         new UseExpressionResultSuggestion(
@@ -50,11 +41,10 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
 
                 case (true, null) when objArgument.Value is { }:
                     consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(
-                            $"Calling 'true.{nameof(bool.Equals)}' is redundant.",
+                        new UseExpressionResultSuggestion(
+                            "The expression is always the same as the argument.",
                             invocationExpression,
-                            invokedExpression,
-                            objArgument.Value));
+                            objArgument.Value.GetText()));
                     break;
 
                 case (false, null) when objArgument.Value is { }:

@@ -12,7 +12,7 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTimeOffset";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantMethodInvocationHint or UseBinaryOperatorSuggestion or UseExpressionResultSuggestion || highlighting.IsError();
+        => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override System.DateTimeOffset[] TestValues { get; } =
     [
@@ -30,15 +30,6 @@ public sealed class DateTimeOffsetAnalyzerTests : BaseTypeAnalyzerTests<System.D
         var value = new System.TimeSpan(1, 2, 3, 4, 5);
 
         Test(dateTimeOffset => dateTimeOffset.Add(value), dateTime => dateTime + value, [..TestValues.Except([System.DateTimeOffset.MaxValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    public void TestAddTicks()
-    {
-        Test(dateTimeOffset => dateTimeOffset.AddTicks(0), dateTimeOffset => dateTimeOffset);
 
         DoNamedTest2();
     }

@@ -14,11 +14,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTime";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion
-                or UseDateTimePropertySuggestion
-                or UseBinaryOperatorSuggestion
-                or RedundantMethodInvocationHint
-            || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseDateTimePropertySuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
 
     protected override System.DateTime[] TestValues { get; } =
     [
@@ -53,15 +49,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
         var value = new System.TimeSpan(1, 2, 3, 4, 5);
 
         Test(dateTime => dateTime.Add(value), dateTime => dateTime + value, [..TestValues.Except([System.DateTime.MaxValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    public void TestAddTicks()
-    {
-        Test(dateTime => dateTime.AddTicks(0), dateTime => dateTime);
 
         DoNamedTest2();
     }

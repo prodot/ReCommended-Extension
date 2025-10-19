@@ -8,26 +8,6 @@ namespace ReCommendedExtension.Analyzers.Argument.Rules;
 
 internal static class RuleDefinitions
 {
-    sealed class ClrTypeNameEqualityComparer : IEqualityComparer<IClrTypeName>
-    {
-        public bool Equals(IClrTypeName? x, IClrTypeName? y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                return false;
-            }
-
-            return x.FullName == y.FullName;
-        }
-
-        public int GetHashCode(IClrTypeName obj) => obj.FullName.GetHashCode();
-    }
-
     /// <remarks>
     /// type → (member name (or "" for constructors) → member overloads)
     /// </remarks>
@@ -3116,7 +3096,6 @@ internal static class RuleDefinitions
 
         return null;
     }
-
 
     [Pure]
     static Member? TryGetMember(ITypeElement type, string memberName, ITypeMember resolvedMember)

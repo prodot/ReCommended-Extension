@@ -12,7 +12,7 @@ public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Boolean";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or RedundantMethodInvocationHint || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
 
     protected override bool[] TestValues { get; } = [true, false];
 
@@ -22,7 +22,6 @@ public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void TestEquals()
     {
-        Test(flag => flag.Equals(true), flag => flag);
         Test(flag => flag.Equals(false), flag => !flag);
         Test(obj => true.Equals(obj), obj => obj);
         Test(obj => false.Equals(obj), obj => !obj);

@@ -23,7 +23,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
                 or UseStringListPatternSuggestion
                 or UseOtherMethodSuggestion
                 or UseStringPropertySuggestion
-                or RedundantMethodInvocationHint
                 or UseRangeIndexerSuggestion
                 or RedundantToStringCallWarning // to figure out which cases are supported by R#
                 or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
@@ -417,34 +416,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestPadLeft()
-    {
-        Test("abcde", text => text.PadLeft(0), text => text);
-        TestNullable("abcde", text => text?.PadLeft(0), text => text);
-
-        Test("abcde", text => text.PadLeft(0, 'x'), text => text);
-        TestNullable("abcde", text => text?.PadLeft(0, 'x'), text => text);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestPadRight()
-    {
-        Test("abcde", text => text.PadRight(0), text => text);
-        TestNullable("abcde", text => text?.PadRight(0), text => text);
-
-        Test("abcde", text => text.PadRight(0, 'x'), text => text);
-        TestNullable("abcde", text => text?.PadRight(0, 'x'), text => text);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet60]
@@ -460,25 +431,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
         Test("abcde", text => text.Remove(0, 2), text => text[2..], true);
         TestNullable("abcde", text => text?.Remove(0, 2), text => text?[2..], true);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
-    [TestNetCore20]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    [SuppressMessage("ReSharper", "PassSingleCharacters")]
-    public void TestReplace()
-    {
-        Test("abcde", text => text.Replace("bc", "bc", StringComparison.Ordinal), text => text);
-        TestNullable("abcde", text => text?.Replace("bc", "bc", StringComparison.Ordinal), text => text);
-
-        Test("abcde", text => text.Replace('c', 'c'), text => text);
-        TestNullable("abcde", text => text?.Replace('c', 'c'), text => text);
-
-        Test("abcde", text => text.Replace("bc", "bc"), text => text);
-        TestNullable("abcde", text => text?.Replace("bc", "bc"), text => text);
 
         DoNamedTest2();
     }
@@ -559,18 +511,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test<StringComparison, bool>("abcde", (text, comparisonType) => text.StartsWith("", comparisonType), (_, _) => true);
         Test("abcde", text => text.StartsWith("a", StringComparison.Ordinal), text => text is ['a', ..]);
         Test("abcde", text => text.StartsWith("a", StringComparison.OrdinalIgnoreCase), text => text is ['a' or 'A', ..]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [NullableContext(NullableContextKind.Enable)]
-    [SuppressMessage("ReSharper", "ReplaceSubstringWithRangeIndexer")]
-    [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
-    public void TestSubstring()
-    {
-        Test("abcde", text => text.Substring(0), text => text);
-        TestNullable("abcde", text => text?.Substring(0), text => text);
 
         DoNamedTest2();
     }

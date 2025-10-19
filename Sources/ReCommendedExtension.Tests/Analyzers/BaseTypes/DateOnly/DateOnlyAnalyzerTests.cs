@@ -14,17 +14,9 @@ public sealed class DateOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.DateOn
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateOnly";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantMethodInvocationHint or UseBinaryOperatorSuggestion or UseExpressionResultSuggestion || highlighting.IsError();
+        => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override Missing.DateOnly[] TestValues { get; } = [Missing.DateOnly.MinValue, Missing.DateOnly.MaxValue, new(2025, 7, 15)];
-
-    [Test]
-    public void TestAddDays()
-    {
-        Test(dateOnly => dateOnly.AddDays(0), dateOnly => dateOnly);
-
-        DoNamedTest2();
-    }
 
     [Test]
     public void TestEquals()

@@ -19,11 +19,8 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\StringBuilder\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseOtherMethodSuggestion or RedundantMethodInvocationHint || highlighting.IsError();
+        => highlighting is UseOtherMethodSuggestion || highlighting.IsError();
 
     [Test]
     public void TestUseOtherMethodFixAvailability() => DoNamedTest2();
-
-    [Test]
-    public void TestRemoveMethodInvocationAvailability() => DoNamedTest2();
 }

@@ -1,0 +1,19 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void RedundantMethodInvocation(bool flag)
+        {
+            var result = flag.|Equals(true)|(0);
+        }
+
+        public void NoDetection(bool flag, bool value)
+        {
+            var result = flag.Equals(value);
+
+            flag.Equals(true);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Calling 'Equals' with true is redundant.

@@ -1,0 +1,50 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void RedundantMethodInvocation(string text, char c)
+        {
+            var result11 = text.|PadLeft(0)|(0);
+            var result12 = text.|PadLeft(0, c)|(1);
+
+            var result21 = text.|PadRight(0)|(2);
+            var result22 = text.|PadRight(0, c)|(3);
+
+            var result31 = text.|Replace('c', 'c')|(4);
+            var result32 = text.|Replace("cd", "cd")|(5);
+            var result33 = text.|Replace("cd", "cd", StringComparison.Ordinal)|(6);
+
+            var result41 = text.|Substring(0)|(7);
+        }
+
+        public void NoDetection(string text, int totalWidth, char c, string s, int startIndex)
+        {
+            var result11 = text.PadLeft(totalWidth);
+            var result12 = text.PadLeft(totalWidth, c);
+
+            var result21 = text.PadRight(totalWidth);
+            var result22 = text.PadRight(totalWidth, c);
+
+            var result31 = text.Replace('c', c);
+            var result32 = text.Replace(c, 'c');
+            var result33 = text.Replace(c, c);
+            var result34 = text.Replace("", "");
+            var result35 = text.Replace("cd", s);
+            var result36 = text.Replace(s, "cd");
+            var result37 = text.Replace(s, s);
+
+            var result41 = text.Substring(startIndex);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Calling 'PadLeft' with 0 is redundant.
+(1): ReSharper Dead Code: Calling 'PadLeft' with 0 is redundant.
+(2): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
+(3): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
+(4): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
+(5): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(6): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(7): ReSharper Dead Code: Calling 'Substring' with 0 is redundant.

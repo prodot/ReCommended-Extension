@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(ICSharpInvocationInfo),
-    HighlightingTypes = [typeof(RedundantMethodInvocationHint), typeof(UseBinaryOperatorSuggestion), typeof(UseExpressionResultSuggestion)])]
+    HighlightingTypes = [typeof(UseBinaryOperatorSuggestion), typeof(UseExpressionResultSuggestion)])]
 public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     /// <remarks>
@@ -34,25 +34,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                     "+",
                     invokedExpression.QualifierExpression.GetText(),
                     timeSpanArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateTimeOffset.AddTicks(0)</c> → <c>dateTimeOffset</c>
-    /// </remarks>
-    static void AnalyzeAddTicks_Int64(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value.TryGetInt64Constant() == 0)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint(
-                    $"Calling '{nameof(DateTimeOffset.AddTicks)}' with 0 is redundant.",
-                    invocationExpression,
-                    invokedExpression));
         }
     }
 
@@ -181,15 +162,6 @@ public sealed class DateTimeOffsetAnalyzer : ElementProblemAnalyzer<ICSharpInvoc
                                 {
                                     case ([{ Type: var timeSpanType }], [{ } timeSpanArgument]) when timeSpanType.IsTimeSpan():
                                         AnalyzeAdd_TimeSpan(consumer, invocationExpression, invokedExpression, timeSpanArgument);
-                                        break;
-                                }
-                                break;
-
-                            case nameof(DateTimeOffset.AddTicks):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsLong():
-                                        AnalyzeAddTicks_Int64(consumer, invocationExpression, invokedExpression, valueArgument);
                                         break;
                                 }
                                 break;

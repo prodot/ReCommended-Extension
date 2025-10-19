@@ -10,25 +10,9 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(RedundantMethodInvocationHint), typeof(UseBinaryOperatorSuggestion), typeof(UseExpressionResultSuggestion)])]
+    HighlightingTypes = [typeof(UseBinaryOperatorSuggestion), typeof(UseExpressionResultSuggestion)])]
 public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
-    /// <remarks>
-    /// <c>dateOnly.AddDays(0)</c> → <c>dateOnly</c>
-    /// </remarks>
-    static void AnalyzeAddDays_Int32(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value.TryGetInt32Constant() == 0)
-        {
-            consumer.AddHighlighting(
-                new RedundantMethodInvocationHint("Calling 'AddDays' with 0 is redundant.", invocationExpression, invokedExpression)); // todo: nameof(DateOnly.AddDays) when available
-        }
-    }
-
     /// <remarks>
     /// <c>dateOnly.Equals(value)</c> → <c>dateOnly == value</c>
     /// </remarks>
@@ -77,15 +61,6 @@ public sealed class DateOnlyAnalyzer : ElementProblemAnalyzer<IInvocationExpress
                 case ({ QualifierExpression: { } }, { IsStatic: false }):
                     switch (method.ShortName)
                     {
-                        case "AddDays": // todo: nameof(DateOnly.AddDays) when available
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var valueType}], [{ } valueArgument]) when valueType.IsInt():
-                                    AnalyzeAddDays_Int32(consumer, element, invokedExpression, valueArgument);
-                                    break;
-                            }
-                            break;
-
                         case "Equals": // todo: nameof(DateOnly.Equals) when available
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {

@@ -1,0 +1,284 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void RedundantMethodInvocation(StringBuilder builder, char c, string s, StringBuilder b, int startIndex, int index)
+        {
+            var result11 = builder.|Append(null as string)|(0);
+            var result12 = builder.|Append("")|(1);
+            var result13 = builder.|Append(null as char[])|(2);
+            var result14 = builder.|Append(Array.Empty<char>())|(3);
+            var result15 = builder.|Append(null as object)|(4);
+            var result16 = builder.|Append(null as StringBuilder)|(5);
+            var result17 = builder.|Append(c, 0)|(6);
+            var result18 = builder.|Append(null as string, 0, 0)|(7);
+            var result19 = builder.|Append(s, startIndex, 0)|(8);
+            var result1A = builder.|Append(null as StringBuilder, 0, 0)|(9);
+            var result1B = builder.|Append(b, startIndex, 0)|(10);
+            var result1C = builder.|Append(null as char[], 0, 0)|(11);
+            var result1D = builder.|Append(Array.Empty<char>(), 0, 0)|(12);
+
+            builder.|Append(null as string)|(13).Append(s);
+            |builder.Append(null as string)|(14);
+            builder.|Append("")|(15).Append(s);
+            |builder.Append("")|(16);
+            builder.|Append(null as char[])|(17).Append(s);
+            |builder.Append(null as char[])|(18);
+            builder.|Append(Array.Empty<char>())|(19).Append(s);
+            |builder.Append(Array.Empty<char>())|(20);
+            builder.|Append(null as object)|(21).Append(s);
+            |builder.Append(null as object)|(22);
+            builder.|Append(null as StringBuilder)|(23).Append(s);
+            |builder.Append(null as StringBuilder)|(24);
+            builder.|Append(c, 0)|(25).Append(s);
+            |builder.Append(c, 0)|(26);
+            builder.|Append(null as string, 0, 0)|(27).Append(s);
+            |builder.Append(null as string, 0, 0)|(28);
+            builder.|Append(s, startIndex, 0)|(29).Append(s);
+            |builder.Append(s, startIndex, 0)|(30);
+            builder.|Append(null as StringBuilder, 0, 0)|(31).Append(s);
+            |builder.Append(null as StringBuilder, 0, 0)|(32);
+            builder.|Append(b, startIndex, 0)|(33).Append(s);
+            |builder.Append(b, startIndex, 0)|(34);
+            builder.|Append(null as char[], 0, 0)|(35).Append(s);
+            |builder.Append(null as char[], 0, 0)|(36);
+            builder.|Append(Array.Empty<char>(), 0, 0)|(37).Append(s);
+            |builder.Append(Array.Empty<char>(), 0, 0)|(38);
+
+            var result21 = builder.|AppendJoin(c, Array.Empty<int>())|(39);
+            var result22 = builder.|AppendJoin(c, Array.Empty<string>())|(40);
+            var result23 = builder.|AppendJoin(c, Array.Empty<object>())|(41);
+            var result24 = builder.|AppendJoin(c, default(ReadOnlySpan<string>))|(42);
+            var result25 = builder.|AppendJoin(c, new ReadOnlySpan<string>())|(43);
+            var result26 = builder.|AppendJoin(c, new ReadOnlySpan<string> { })|(44);
+            var result27 = builder.|AppendJoin(c, (ReadOnlySpan<string>)[])|(45);
+            var result28 = builder.|AppendJoin(c, default(ReadOnlySpan<object>))|(46);
+            var result29 = builder.|AppendJoin(c, new ReadOnlySpan<object>())|(47);
+            var result2A = builder.|AppendJoin(c, new ReadOnlySpan<object> { })|(48);
+            var result2B = builder.|AppendJoin(c, (ReadOnlySpan<object>)[])|(49);
+            var result2C = builder.|AppendJoin(s, Array.Empty<int>())|(50);
+            var result2D = builder.|AppendJoin(s, Array.Empty<string>())|(51);
+            var result2E = builder.|AppendJoin(s, Array.Empty<object>())|(52);
+            var result2F = builder.|AppendJoin(s, default(ReadOnlySpan<string>))|(53);
+            var result2G = builder.|AppendJoin(s, new ReadOnlySpan<string>())|(54);
+            var result2H = builder.|AppendJoin(s, new ReadOnlySpan<string> { })|(55);
+            var result2I = builder.|AppendJoin(s, (ReadOnlySpan<string>)[])|(56);
+            var result2J = builder.|AppendJoin(s, default(ReadOnlySpan<object>))|(57);
+            var result2K = builder.|AppendJoin(s, new ReadOnlySpan<object>())|(58);
+            var result2L = builder.|AppendJoin(s, new ReadOnlySpan<object> { })|(59);
+            var result2M = builder.|AppendJoin(s, (ReadOnlySpan<object>)[])|(60);
+
+            builder.|AppendJoin(c, Array.Empty<int>())|(61).Append(s);
+            |builder.AppendJoin(c, Array.Empty<int>())|(62);
+            builder.|AppendJoin(c, Array.Empty<string>())|(63).Append(s);
+            |builder.AppendJoin(c, Array.Empty<string>())|(64);
+            builder.|AppendJoin(c, Array.Empty<object>())|(65).Append(s);
+            |builder.AppendJoin(c, Array.Empty<object>())|(66);
+            builder.|AppendJoin(c, default(ReadOnlySpan<string>))|(67).Append(s);
+            |builder.AppendJoin(c, default(ReadOnlySpan<string>))|(68);
+            builder.|AppendJoin(c, new ReadOnlySpan<string>())|(69).Append(s);
+            |builder.AppendJoin(c, new ReadOnlySpan<string>())|(70);
+            builder.|AppendJoin(c, new ReadOnlySpan<string> { })|(71).Append(s);
+            |builder.AppendJoin(c, new ReadOnlySpan<string> { })|(72);
+            builder.|AppendJoin(c, (ReadOnlySpan<string>)[])|(73).Append(s);
+            |builder.AppendJoin(c, (ReadOnlySpan<string>)[])|(74);
+            builder.|AppendJoin(c, default(ReadOnlySpan<object>))|(75).Append(s);
+            |builder.AppendJoin(c, default(ReadOnlySpan<object>))|(76);
+            builder.|AppendJoin(c, new ReadOnlySpan<object>())|(77).Append(s);
+            |builder.AppendJoin(c, new ReadOnlySpan<object>())|(78);
+            builder.|AppendJoin(c, new ReadOnlySpan<object> { })|(79).Append(s);
+            |builder.AppendJoin(c, new ReadOnlySpan<object> { })|(80);
+            builder.|AppendJoin(c, (ReadOnlySpan<object>)[])|(81).Append(s);
+            |builder.AppendJoin(c, (ReadOnlySpan<object>)[])|(82);
+            builder.|AppendJoin(s, Array.Empty<int>())|(83).Append(s);
+            |builder.AppendJoin(s, Array.Empty<int>())|(84);
+            builder.|AppendJoin(s, Array.Empty<string>())|(85).Append(s);
+            |builder.AppendJoin(s, Array.Empty<string>())|(86);
+            builder.|AppendJoin(s, Array.Empty<object>())|(87).Append(s);
+            |builder.AppendJoin(s, Array.Empty<object>())|(88);
+            builder.|AppendJoin(s, default(ReadOnlySpan<string>))|(89).Append(s);
+            |builder.AppendJoin(s, default(ReadOnlySpan<string>))|(90);
+            builder.|AppendJoin(s, new ReadOnlySpan<string>())|(91).Append(s);
+            |builder.AppendJoin(s, new ReadOnlySpan<string>())|(92);
+            builder.|AppendJoin(s, new ReadOnlySpan<string> { })|(93).Append(s);
+            |builder.AppendJoin(s, new ReadOnlySpan<string> { })|(94);
+            builder.|AppendJoin(s, (ReadOnlySpan<string>)[])|(95).Append(s);
+            |builder.AppendJoin(s, (ReadOnlySpan<string>)[])|(96);
+            builder.|AppendJoin(s, default(ReadOnlySpan<object>))|(97).Append(s);
+            |builder.AppendJoin(s, default(ReadOnlySpan<object>))|(98);
+            builder.|AppendJoin(s, new ReadOnlySpan<object>())|(99).Append(s);
+            |builder.AppendJoin(s, new ReadOnlySpan<object>())|(100);
+            builder.|AppendJoin(s, new ReadOnlySpan<object> { })|(101).Append(s);
+            |builder.AppendJoin(s, new ReadOnlySpan<object> { })|(102);
+            builder.|AppendJoin(s, (ReadOnlySpan<object>)[])|(103).Append(s);
+            |builder.AppendJoin(s, (ReadOnlySpan<object>)[])|(104);
+
+            var result31 = builder.|Insert(index, null as object)|(105);
+
+            builder.|Insert(index, null as object)|(106).Append(s);
+            |builder.Insert(index, null as object)|(107);
+
+            var result41 = builder.|Replace('c', 'c')|(108);
+            var result42 = builder.|Replace("cd", "cd")|(109);
+
+            builder.|Replace('c', 'c')|(110).Append(s);
+            |builder.Replace('c', 'c')|(111);
+            builder.|Replace("cd", "cd")|(112).Append(s);
+            |builder.Replace("cd", "cd")|(113);
+        }
+
+        public void NoDetection(StringBuilder builder, char[] chars, char c, string s, string? sNullable, object obj, StringBuilder b, StringBuilder? bNullable, int repeatCount, int startIndex, int index, int count, IEnumerable<int> numbers, string[] stringArray, object[] objectArray, ReadOnlySpan<string> strings, ReadOnlySpan<object> objects)
+        {
+            var result11 = builder.Append(s);
+            var result12 = builder.Append(chars);
+            var result13 = builder.Append(obj);
+            var result14 = builder.Append(b);
+            var result15 = builder.Append(c, repeatCount);
+            var result16 = builder.Append(s, startIndex, count);
+            var result17 = builder.Append(sNullable, startIndex, 0);
+            var result18 = builder.Append(b, startIndex, count);
+            var result19 = builder.Append(bNullable, startIndex, 0);
+            var result1A = builder.Append(chars, startIndex, count);
+
+            var result21 = builder.AppendJoin(c, numbers);
+            var result22 = builder.AppendJoin(c, stringArray);
+            var result23 = builder.AppendJoin(c, objectArray);
+            var result24 = builder.AppendJoin(c, strings);
+            var result25 = builder.AppendJoin(c, objects);
+            var result26 = builder.AppendJoin(s, numbers);
+            var result27 = builder.AppendJoin(s, stringArray);
+            var result28 = builder.AppendJoin(s, objectArray);
+            var result29 = builder.AppendJoin(s, strings);
+            var result2A = builder.AppendJoin(s, objects);
+
+            var result31 = builder.Insert(index, obj);
+
+            var result41 = builder.Replace('c', c);
+            var result42 = builder.Replace(c, 'c');
+            var result43 = builder.Replace(c, c);
+            var result44 = builder.Replace("", "");
+            var result45 = builder.Replace("cd", s);
+            var result46 = builder.Replace(s, "cd");
+            var result47 = builder.Replace(s, s);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(1): ReSharper Dead Code: Calling 'Append' with an empty string is redundant.
+(2): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(3): ReSharper Dead Code: Calling 'Append' with an empty collection is redundant.
+(4): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(5): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(6): ReSharper Dead Code: Calling 'Append' with the repeat count 0 is redundant.
+(7): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(8): ReSharper Dead Code: Calling 'Append' with count 0 is redundant.
+(9): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(10): ReSharper Dead Code: Calling 'Append' with count 0 is redundant.
+(11): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(12): ReSharper Dead Code: Calling 'Append' with an empty collection and '0, 0' is redundant.
+(13): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(14): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(15): ReSharper Dead Code: Calling 'Append' with an empty string is redundant.
+(16): ReSharper Dead Code: Calling 'Append' with an empty string is redundant.
+(17): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(18): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(19): ReSharper Dead Code: Calling 'Append' with an empty collection is redundant.
+(20): ReSharper Dead Code: Calling 'Append' with an empty collection is redundant.
+(21): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(22): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(23): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(24): ReSharper Dead Code: Calling 'Append' with null is redundant.
+(25): ReSharper Dead Code: Calling 'Append' with the repeat count 0 is redundant.
+(26): ReSharper Dead Code: Calling 'Append' with the repeat count 0 is redundant.
+(27): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(28): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(29): ReSharper Dead Code: Calling 'Append' with count 0 is redundant.
+(30): ReSharper Dead Code: Calling 'Append' with count 0 is redundant.
+(31): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(32): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(33): ReSharper Dead Code: Calling 'Append' with count 0 is redundant.
+(34): ReSharper Dead Code: Calling 'Append' with count 0 is redundant.
+(35): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(36): ReSharper Dead Code: Calling 'Append' with 'null, 0, 0' is redundant.
+(37): ReSharper Dead Code: Calling 'Append' with an empty collection and '0, 0' is redundant.
+(38): ReSharper Dead Code: Calling 'Append' with an empty collection and '0, 0' is redundant.
+(39): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(40): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(41): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(42): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(43): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(44): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(45): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(46): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(47): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(48): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(49): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(50): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(51): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(52): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(53): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(54): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(55): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(56): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(57): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(58): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(59): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(60): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(61): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(62): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(63): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(64): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(65): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(66): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(67): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(68): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(69): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(70): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(71): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(72): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(73): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(74): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(75): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(76): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(77): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(78): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(79): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(80): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(81): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(82): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(83): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(84): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(85): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(86): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(87): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(88): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(89): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(90): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(91): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(92): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(93): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(94): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(95): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(96): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(97): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(98): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(99): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(100): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(101): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(102): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(103): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(104): ReSharper Dead Code: Calling 'AppendJoin' with an empty collection is redundant.
+(105): ReSharper Dead Code: Calling 'Insert' with null is redundant.
+(106): ReSharper Dead Code: Calling 'Insert' with null is redundant.
+(107): ReSharper Dead Code: Calling 'Insert' with null is redundant.
+(108): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
+(109): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(110): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
+(111): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
+(112): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(113): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
