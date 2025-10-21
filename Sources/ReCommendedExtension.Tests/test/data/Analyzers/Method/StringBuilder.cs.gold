@@ -131,6 +131,32 @@ namespace Test
             |builder.Replace("cd", "cd")|(113);
         }
 
+        public void OtherMethodInvocation(StringBuilder builder, char c, string s, int number, object obj)
+        {
+            var result11 = builder.|AppendJoin(c, (IEnumerable<int>)[number])|(114);
+            var result12 = builder.|AppendJoin(s, (IEnumerable<int>)[number])|(115);
+
+            var result21 = builder.|AppendJoin(c, (string[])[s])|(116);
+            var result22 = builder.|AppendJoin(c, s)|(117);
+            var result23 = builder.|AppendJoin(s, (string[])[s])|(118);
+            var result24 = builder.|AppendJoin(s, s)|(119);
+
+            var result31 = builder.|AppendJoin(c, (object[])[obj])|(120);
+            var result32 = builder.|AppendJoin(c, obj)|(121);
+            var result33 = builder.|AppendJoin(s, (object[])[obj])|(122);
+            var result34 = builder.|AppendJoin(s, obj)|(123);
+
+            var result41 = builder.|AppendJoin(c, (ReadOnlySpan<string>)[s])|(124);
+            var result42 = builder.|AppendJoin(c, s)|(125);
+            var result43 = builder.|AppendJoin(s, (ReadOnlySpan<string>)[s])|(126);
+            var result44 = builder.|AppendJoin(s, s)|(127);
+
+            var result51 = builder.|AppendJoin(c, (ReadOnlySpan<object>)[obj])|(128);
+            var result52 = builder.|AppendJoin(c, obj)|(129);
+            var result53 = builder.|AppendJoin(s, (ReadOnlySpan<object>)[obj])|(130);
+            var result54 = builder.|AppendJoin(s, obj)|(131);
+        }
+
         public void NoDetection(StringBuilder builder, char[] chars, char c, string s, string? sNullable, object obj, StringBuilder b, StringBuilder? bNullable, int repeatCount, int startIndex, int index, int count, IEnumerable<int> numbers, string[] stringArray, object[] objectArray, ReadOnlySpan<string> strings, ReadOnlySpan<object> objects)
         {
             var result11 = builder.Append(s);
@@ -282,3 +308,21 @@ namespace Test
 (111): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
 (112): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
 (113): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(114): ReSharper Suggestion: Use the 'Append' method.
+(115): ReSharper Suggestion: Use the 'Append' method.
+(116): ReSharper Suggestion: Use the 'Append' method.
+(117): ReSharper Suggestion: Use the 'Append' method.
+(118): ReSharper Suggestion: Use the 'Append' method.
+(119): ReSharper Suggestion: Use the 'Append' method.
+(120): ReSharper Suggestion: Use the 'Append' method.
+(121): ReSharper Suggestion: Use the 'Append' method.
+(122): ReSharper Suggestion: Use the 'Append' method.
+(123): ReSharper Suggestion: Use the 'Append' method.
+(124): ReSharper Suggestion: Use the 'Append' method.
+(125): ReSharper Suggestion: Use the 'Append' method.
+(126): ReSharper Suggestion: Use the 'Append' method.
+(127): ReSharper Suggestion: Use the 'Append' method.
+(128): ReSharper Suggestion: Use the 'Append' method.
+(129): ReSharper Suggestion: Use the 'Append' method.
+(130): ReSharper Suggestion: Use the 'Append' method.
+(131): ReSharper Suggestion: Use the 'Append' method.

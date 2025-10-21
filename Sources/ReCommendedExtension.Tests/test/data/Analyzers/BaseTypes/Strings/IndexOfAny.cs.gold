@@ -37,16 +37,16 @@ namespace Test
 
         public void OtherMethod(string text, char c, int startIndex, int count)
         {
-            var result1 = text.|IndexOfAny([c])|(1);
-            var result2 = text.|IndexOfAny([c], startIndex)|(2);
-            var result3 = text.|IndexOfAny([c], startIndex, count)|(3);
+            var result1 = text.IndexOfAny([c]);
+            var result2 = text.IndexOfAny([c], startIndex);
+            var result3 = text.IndexOfAny([c], startIndex, count);
         }
 
         public void OtherMethod_Nullable(string? text, char c, int startIndex, int count)
         {
-            var result1 = text?.|IndexOfAny([c])|(4);
-            var result2 = text?.|IndexOfAny([c], startIndex)|(5);
-            var result3 = text?.|IndexOfAny([c], startIndex, count)|(6);
+            var result1 = text?.IndexOfAny([c]);
+            var result2 = text?.IndexOfAny([c], startIndex);
+            var result3 = text?.IndexOfAny([c], startIndex, count);
         }
 
         public void NoDetection(string text, char c, char[] ca, int startIndex)
@@ -56,7 +56,7 @@ namespace Test
             var result21 = text.IndexOfAny(ca, 1);
             var result22 = text.IndexOfAny(ca, startIndex);
 
-            text.|IndexOfAny|(7)([]);
+            text.|IndexOfAny|(1)([]);
         }
 
         public void NoDetection_Nullable(string? text, char[] c, int startIndex)
@@ -67,10 +67,4 @@ namespace Test
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always -1.
-(1): ReSharper Suggestion: Use the 'IndexOf' method.
-(2): ReSharper Suggestion: Use the 'IndexOf' method.
-(3): ReSharper Suggestion: Use the 'IndexOf' method.
-(4): ReSharper Suggestion: Use the 'IndexOf' method.
-(5): ReSharper Suggestion: Use the 'IndexOf' method.
-(6): ReSharper Suggestion: Use the 'IndexOf' method.
-(7): ReSharper Warning: Return value of pure method is not used
+(1): ReSharper Warning: Return value of pure method is not used

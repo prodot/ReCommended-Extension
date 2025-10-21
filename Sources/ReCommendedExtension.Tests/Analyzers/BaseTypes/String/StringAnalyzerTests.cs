@@ -21,7 +21,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is UseExpressionResultSuggestion
                 or UseStringListPatternSuggestion
-                or UseOtherMethodSuggestion
                 or UseStringPropertySuggestion
                 or UseRangeIndexerSuggestion
                 or RedundantToStringCallWarning // to figure out which cases are supported by R#
@@ -213,75 +212,9 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
         Test("abcde", text => text.IndexOf('c') != 0, text => text is not [var firstChar, ..] || firstChar != 'c');
         TestNullable("abcde", text => text?.IndexOf('c') != 0, text => text is not [var firstChar, ..] || firstChar != 'c');
 
-        Test("abcde", text => text.IndexOf('c') > -1, text => text.Contains('c'));
-        Test("abcde", text => text.IndexOf('c') != -1, text => text.Contains('c'));
-        Test("abcde", text => text.IndexOf('c') >= 0, text => text.Contains('c'));
-        Test("abcde", text => text.IndexOf('x') == -1, text => !text.Contains('x'));
-        Test("abcde", text => text.IndexOf('x') < 0, text => !text.Contains('x'));
-
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf('c', comparisonType) > -1,
-            (text, comparisonType) => text.Contains('c', comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf('c', comparisonType) != -1,
-            (text, comparisonType) => text.Contains('c', comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf('c', comparisonType) >= 0,
-            (text, comparisonType) => text.Contains('c', comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf('x', comparisonType) == -1,
-            (text, comparisonType) => !text.Contains('x', comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf('x', comparisonType) < 0,
-            (text, comparisonType) => !text.Contains('x', comparisonType));
-
         Test("abcde", text => text.IndexOf(""), _ => 0);
 
-        Test("abcde", text => text.IndexOf("abc") == 0, text => text.StartsWith("abc"));
-        Test("abcde", text => text.IndexOf("bcd") != 0, text => !text.StartsWith("bcd"));
-
-        Test("abcde", text => text.IndexOf("bcd") > -1, text => text.Contains("bcd"));
-        Test("abcde", text => text.IndexOf("bcd") != -1, text => text.Contains("bcd"));
-        Test("abcde", text => text.IndexOf("bcd") >= 0, text => text.Contains("bcd"));
-        Test("abcde", text => text.IndexOf("xyz") == -1, text => !text.Contains("xyz"));
-        Test("abcde", text => text.IndexOf("xyz") < 0, text => !text.Contains("xyz"));
-
         Test<StringComparison, int>("abcde", (text, comparisonType) => text.IndexOf("", comparisonType), (_, _) => 0);
-
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("abc", comparisonType) == 0,
-            (text, comparisonType) => text.StartsWith("abc", comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("bcd", comparisonType) != 0,
-            (text, comparisonType) => !text.StartsWith("bcd", comparisonType));
-
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("bcd", comparisonType) > -1,
-            (text, comparisonType) => text.Contains("bcd", comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("bcd", comparisonType) != -1,
-            (text, comparisonType) => text.Contains("bcd", comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("bcd", comparisonType) >= 0,
-            (text, comparisonType) => text.Contains("bcd", comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("xyz", comparisonType) == -1,
-            (text, comparisonType) => !text.Contains("xyz", comparisonType));
-        Test<StringComparison, bool>(
-            "abcde",
-            (text, comparisonType) => text.IndexOf("xyz", comparisonType) < 0,
-            (text, comparisonType) => !text.Contains("xyz", comparisonType));
 
         DoNamedTest2();
     }
@@ -296,14 +229,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     public void TestIndexOfAny()
     {
         Test("abcde", text => text.IndexOfAny([]), _ => -1);
-        Test("abcde", text => text.IndexOfAny(['c']), text => text.IndexOf('c'));
-        TestNullable("abcde", text => text?.IndexOfAny(['c']), text => text?.IndexOf('c'));
-
-        Test("abcde", text => text.IndexOfAny(['c'], 1), text => text.IndexOf('c', 1), true);
-        TestNullable("abcde", text => text?.IndexOfAny(['c'], 1), text => text?.IndexOf('c', 1), true);
-
-        Test("abcde", text => text.IndexOfAny(['c'], 1, 3), text => text.IndexOf('c', 1, 3), true);
-        TestNullable("abcde", text => text?.IndexOfAny(['c'], 1, 3), text => text?.IndexOf('c', 1, 3), true);
 
         DoNamedTest2();
     }
@@ -400,17 +325,11 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     public void TestLastIndexOfAny()
     {
         Test("abcde", text => text.LastIndexOfAny([]), _ => -1);
-        Test("abcde", text => text.LastIndexOfAny(['c']), text => text.LastIndexOf('c'));
-        TestNullable("abcde", text => text?.LastIndexOfAny(['c']), text => text?.LastIndexOf('c'));
 
         Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0), _ => -1);
-        Test("abcde", text => text.LastIndexOfAny(['c'], 4), text => text.LastIndexOf('c', 4));
-        TestNullable("abcde", text => text?.LastIndexOfAny(['c'], 4), text => text?.LastIndexOf('c', 4));
 
         Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0, 0), _ => -1);
         Test("abcde", text => text.LastIndexOfAny(['b', 'c'], 0, 1), _ => -1);
-        Test("abcde", text => text.LastIndexOfAny(['c'], 4, 3), text => text.LastIndexOf('c', 4, 3));
-        TestNullable("abcde", text => text?.LastIndexOfAny(['c'], 4, 3), text => text?.LastIndexOf('c', 4, 3));
 
         DoNamedTest2();
     }

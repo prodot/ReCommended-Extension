@@ -47,13 +47,26 @@ internal abstract class CollectionCreation
             } objectCreationExpression when (reference.Resolve().DeclaredElement as ITypeElement).IsClrType(
                 PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN) => new EmptyCollectionCreation(objectCreationExpression),
 
-            // (ReadOnlySpan<T>)[...]
+            // (ReadOnlySpan<T>)[...] or (IEnumerable<T>)[...]
             ICastExpression
                 {
                     TargetType: IUserTypeUsage { ScalarTypeName: { Reference: var reference, TypeArgumentList.TypeArguments: [_] } },
                     Op: ICollectionExpression collectionExpression,
-                } when (reference.Resolve().DeclaredElement as ITypeElement).IsClrType(PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN) =>
+                } when reference.Resolve().DeclaredElement is ITypeElement typeElement
+                && (typeElement.IsClrType(PredefinedType.SYSTEM_READ_ONLY_SPAN_FQN)
+                    || typeElement.IsClrType(PredefinedType.GENERIC_IENUMERABLE_FQN)) =>
                 new CollectionExpressionCollectionCreation(collectionExpression),
+
+            // (IEnumerable<T>?)[...]
+            ICastExpression
+                {
+                    TargetType: INullableTypeUsage
+                    {
+                        UnderlyingType: IUserTypeUsage { ScalarTypeName: { Reference: var reference, TypeArgumentList.TypeArguments: [_] } },
+                    },
+                    Op: ICollectionExpression collectionExpression,
+                } when reference.Resolve().DeclaredElement is ITypeElement typeElement
+                && typeElement.IsClrType(PredefinedType.GENERIC_IENUMERABLE_FQN) => new CollectionExpressionCollectionCreation(collectionExpression),
 
             // Array.Empty<T>()
             IInvocationExpression { InvokedExpression: IReferenceExpression { Reference: var reference } } invocationExpression when

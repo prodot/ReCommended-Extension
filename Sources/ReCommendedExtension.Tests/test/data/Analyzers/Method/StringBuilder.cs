@@ -131,6 +131,32 @@ namespace Test
             builder.Replace("cd", "cd");
         }
 
+        public void OtherMethodInvocation(StringBuilder builder, char c, string s, int number, object obj)
+        {
+            var result11 = builder.AppendJoin(c, (IEnumerable<int>)[number]);
+            var result12 = builder.AppendJoin(s, (IEnumerable<int>)[number]);
+
+            var result21 = builder.AppendJoin(c, (string[])[s]);
+            var result22 = builder.AppendJoin(c, s);
+            var result23 = builder.AppendJoin(s, (string[])[s]);
+            var result24 = builder.AppendJoin(s, s);
+
+            var result31 = builder.AppendJoin(c, (object[])[obj]);
+            var result32 = builder.AppendJoin(c, obj);
+            var result33 = builder.AppendJoin(s, (object[])[obj]);
+            var result34 = builder.AppendJoin(s, obj);
+
+            var result41 = builder.AppendJoin(c, (ReadOnlySpan<string>)[s]);
+            var result42 = builder.AppendJoin(c, s);
+            var result43 = builder.AppendJoin(s, (ReadOnlySpan<string>)[s]);
+            var result44 = builder.AppendJoin(s, s);
+
+            var result51 = builder.AppendJoin(c, (ReadOnlySpan<object>)[obj]);
+            var result52 = builder.AppendJoin(c, obj);
+            var result53 = builder.AppendJoin(s, (ReadOnlySpan<object>)[obj]);
+            var result54 = builder.AppendJoin(s, obj);
+        }
+
         public void NoDetection(StringBuilder builder, char[] chars, char c, string s, string? sNullable, object obj, StringBuilder b, StringBuilder? bNullable, int repeatCount, int startIndex, int index, int count, IEnumerable<int> numbers, string[] stringArray, object[] objectArray, ReadOnlySpan<string> strings, ReadOnlySpan<object> objects)
         {
             var result11 = builder.Append(s);

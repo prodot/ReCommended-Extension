@@ -89,6 +89,214 @@ internal static class RuleDefinitions
         => new(StringComparer.Ordinal)
         {
             {
+                nameof(string.IndexOf),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Char] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.ComparingResultAsContains with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.Contains), Parameters = [Parameter.Char],
+                                },
+                            },
+                            OtherMethodInvocation.ComparingResultAsNotContains with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.Contains), Parameters = [Parameter.Char],
+                                },
+                            },
+                        ],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.ComparingResultAsStartsWith with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.StartsWith), Parameters = [Parameter.String],
+                                },
+                            },
+                            OtherMethodInvocation.ComparingResultAsNotStartsWith with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.StartsWith), Parameters = [Parameter.String],
+                                },
+                            },
+                            OtherMethodInvocation.ComparingResultAsContainsWithCurrentCulture with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.Contains), Parameters = [Parameter.String, Parameter.StringComparison],
+                                },
+                            },
+                            OtherMethodInvocation.ComparingResultAsNotContainsWithCurrentCulture with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.Contains), Parameters = [Parameter.String, Parameter.StringComparison],
+                                },
+                            },
+                        ],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Char, Parameter.StringComparison] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.ComparingResultAsContains with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.Contains), Parameters = [Parameter.Char, Parameter.StringComparison],
+                                },
+                            },
+                            OtherMethodInvocation.ComparingResultAsNotContains with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.Contains), Parameters = [Parameter.Char, Parameter.StringComparison],
+                                },
+                            },
+                        ],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringComparison] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.ComparingResultAsStartsWith with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.StartsWith), Parameters = [Parameter.String, Parameter.StringComparison],
+                                },
+                            },
+                            OtherMethodInvocation.ComparingResultAsNotStartsWith with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.StartsWith), Parameters = [Parameter.String, Parameter.StringComparison],
+                                },
+                            },
+                            OtherMethodInvocation.ComparingResultAsContains with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.Contains), Parameters = [Parameter.String, Parameter.StringComparison],
+                                },
+                            },
+                            OtherMethodInvocation.ComparingResultAsNotContains with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.Contains), Parameters = [Parameter.String, Parameter.StringComparison],
+                                },
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(string.IndexOfAny),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.CharArray] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.SingleElementCollectionWithFurtherArguments with
+                            {
+                                ReplacementMethod =
+                                new ReplacementMethod { Name = nameof(string.IndexOf), Parameters = [Parameter.Char] },
+                            },
+                        ],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.CharArray, Parameter.Int32] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.SingleElementCollectionWithFurtherArguments with
+                            {
+                                ReplacementMethod =
+                                new ReplacementMethod { Name = nameof(string.IndexOf), Parameters = [Parameter.Char, Parameter.Int32] },
+                            },
+                        ],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.CharArray, Parameter.Int32, Parameter.Int32] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.SingleElementCollectionWithFurtherArguments with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.IndexOf), Parameters = [Parameter.Char, Parameter.Int32, Parameter.Int32],
+                                },
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(string.LastIndexOfAny),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.CharArray] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.SingleElementCollectionWithFurtherArguments with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.LastIndexOf), Parameters = [Parameter.Char],
+                                },
+                            },
+                        ],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.CharArray, Parameter.Int32] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.SingleElementCollectionWithFurtherArguments with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.LastIndexOf), Parameters = [Parameter.Char, Parameter.Int32],
+                                },
+                            },
+                        ],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.CharArray, Parameter.Int32, Parameter.Int32] },
+                        Inspections =
+                        [
+                            OtherMethodInvocation.SingleElementCollectionWithFurtherArguments with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(string.LastIndexOf),
+                                    Parameters = [Parameter.Char, Parameter.Int32, Parameter.Int32],
+                                },
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
                 nameof(string.PadLeft),
                 [
                     new Method
@@ -225,52 +433,149 @@ internal static class RuleDefinitions
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Char, Parameter.IEnumerableOfT], GenericParametersCount = 1 },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementIEnumerableOfTInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.Object],
+                                },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Char, Parameter.StringArray] },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementParamsStringArrayInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.String],
+                                },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Char, Parameter.ObjectArray] },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementParamsObjectArrayInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.Object],
+                                },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Char, Parameter.ReadOnlySpanOfString] },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementParamsReadOnlySpanOfStringInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.String],
+                                },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Char, Parameter.ReadOnlySpanOfObject] },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementParamsReadOnlySpanOfObjectInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.Object],
+                                },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.IEnumerableOfT], GenericParametersCount = 1 },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementIEnumerableOfTInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod { Name = nameof(StringBuilder.Append), Parameters = [Parameter.Object] },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringArray] },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementParamsStringArrayInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.String],
+                                },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ObjectArray] },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementParamsObjectArrayInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.Object],
+                                },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ReadOnlySpanOfString] },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementParamsReadOnlySpanOfStringInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.String],
+                                },
+                            },
+                        ],
                     },
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.ReadOnlySpanOfObject] },
-                        Inspections = [RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false }],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.WithEmptyCollectionInParamsArg1 with { IsPureMethod = false },
+                            OtherMethodInvocation.SingleElementParamsReadOnlySpanOfObjectInArg1WithoutArg0 with
+                            {
+                                ReplacementMethod = new ReplacementMethod
+                                {
+                                    Name = nameof(StringBuilder.Append), Parameters = [Parameter.Object],
+                                },
+                            },
+                        ],
                     },
                 ]
             },
