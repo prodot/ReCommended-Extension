@@ -9,7 +9,7 @@
 
         public void Operator(short number, short obj)
         {
-            var result = |number.Equals(obj)|(1);
+            var result = number.Equals(obj);
         }
 
         public void NoDetection(short number, short obj, short? otherObj)
@@ -24,4 +24,3 @@
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.

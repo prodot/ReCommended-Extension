@@ -7,11 +7,15 @@
             var result = flag.Equals(true);
         }
 
-        public void NoDetection(bool flag, bool value)
+        public void BinaryOperator(bool flag, bool value)
         {
             var result = flag.Equals(value);
+        }
 
+        public void NoDetection(bool flag, bool value)
+        {
             flag.Equals(true);
+            flag.Equals(value);
         }
     }
 }

@@ -15,7 +15,7 @@ public sealed class TimeOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.TimeOn
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\TimeOnly";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override Missing.TimeOnly[] TestValues { get; } =
     [
@@ -39,7 +39,6 @@ public sealed class TimeOnlyAnalyzerTests : BaseTypeAnalyzerTests<Missing.TimeOn
     [Test]
     public void TestEquals()
     {
-        Test((timeOnly, value) => timeOnly.Equals(value), (timeSpan, value) => timeSpan == value, TestValues, TestValues);
         Test(timeOnly => timeOnly.Equals(null), _ => false);
 
         DoNamedTest2();

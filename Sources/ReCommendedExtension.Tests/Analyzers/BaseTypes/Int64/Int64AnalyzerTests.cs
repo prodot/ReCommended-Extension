@@ -14,7 +14,7 @@ public sealed class Int64AnalyzerTests : BaseTypeAnalyzerTests<long>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int64";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override long[] TestValues { get; } = [0, 1, 2, -1, -2, long.MinValue, long.MaxValue];
 
@@ -47,8 +47,6 @@ public sealed class Int64AnalyzerTests : BaseTypeAnalyzerTests<long>
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
-
         Test(number => number.Equals(null), _ => false);
 
         DoNamedTest2();
@@ -59,26 +57,6 @@ public sealed class Int64AnalyzerTests : BaseTypeAnalyzerTests<long>
     public void TestGetTypeCode()
     {
         Test(number => number.GetTypeCode(), _ => TypeCode.Int64);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
-    public void TestIsNegative()
-    {
-        Test(number => MissingInt64Methods.IsNegative(number), number => number < 0);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
-    public void TestIsPositive()
-    {
-        Test(number => MissingInt64Methods.IsPositive(number), number => number >= 0);
 
         DoNamedTest2();
     }

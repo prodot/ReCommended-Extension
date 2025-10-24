@@ -9,9 +9,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(
-    typeof(ICSharpInvocationInfo),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion)])]
+[ElementProblemAnalyzer(typeof(ICSharpInvocationInfo), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
 public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     /// <remarks>
@@ -111,29 +109,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>timeOnly.Equals(value)</c> → <c>timeOnly == value</c>
-    /// </remarks>
-    static void AnalyzeEquals_TimeOnly(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '==' operator.",
-                    invocationExpression,
-                    "==",
-                    invokedExpression.QualifierExpression.GetText(),
-                    valueArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
     /// <c>timeOnly.Equals(null)</c> → <c>false</c>
     /// </remarks>
     static void AnalyzeEquals_Object(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
@@ -224,10 +199,6 @@ public sealed class TimeOnlyAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                             case "Equals": // todo: nameof(TimeOnly.Equals) when available
                                 switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
                                 {
-                                    case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsTimeOnly():
-                                        AnalyzeEquals_TimeOnly(consumer, invocationExpression, invokedExpression, valueArgument);
-                                        break;
-
                                     case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsObject():
                                         AnalyzeEquals_Object(consumer, invocationExpression, valueArgument);
                                         break;

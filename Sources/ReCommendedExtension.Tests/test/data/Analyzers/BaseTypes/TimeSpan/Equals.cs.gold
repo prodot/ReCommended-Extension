@@ -11,8 +11,8 @@ namespace Test
 
         public void Operator(TimeSpan timeSpan, TimeSpan obj)
         {
-            var result1 = |timeSpan.Equals(obj)|(1);
-            var result2 = |TimeSpan.Equals(timeSpan, obj)|(2);
+            var result1 = timeSpan.Equals(obj);
+            var result2 = TimeSpan.Equals(timeSpan, obj);
         }
 
         public void NoDetection(TimeSpan timeSpan, TimeSpan obj, TimeSpan? otherObj)
@@ -28,5 +28,3 @@ namespace Test
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.
-(2): ReSharper Suggestion: Use the '==' operator.

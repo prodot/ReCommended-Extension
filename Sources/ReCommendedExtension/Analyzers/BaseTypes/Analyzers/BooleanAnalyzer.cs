@@ -8,16 +8,13 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(
-    typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
 public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
     /// <remarks>
     /// <c>flag.Equals(false)</c> → <c>!flag</c><para/>
     /// <c>true.Equals(obj)</c> → <c>obj</c><para/>
-    /// <c>false.Equals(obj)</c> → <c>!obj</c><para/>
-    /// <c>flag.Equals(obj)</c> → <c>flag == obj</c>
+    /// <c>false.Equals(obj)</c> → <c>!obj</c>
     /// </remarks>
     static void AnalyzeEquals_Boolean(
         IHighlightingConsumer consumer,
@@ -53,19 +50,6 @@ public sealed class BooleanAnalyzer : ElementProblemAnalyzer<IInvocationExpressi
                             "The expression is always the same as the inverted argument.",
                             invocationExpression,
                             $"!({objArgument.Value.GetText()})"));
-                    break;
-
-                default:
-                    if (objArgument.Value is { })
-                    {
-                        consumer.AddHighlighting(
-                            new UseBinaryOperatorSuggestion(
-                                "Use the '==' operator.",
-                                invocationExpression,
-                                "==",
-                                invokedExpression.QualifierExpression.GetText(),
-                                objArgument.Value.GetText()));
-                    }
                     break;
             }
         }

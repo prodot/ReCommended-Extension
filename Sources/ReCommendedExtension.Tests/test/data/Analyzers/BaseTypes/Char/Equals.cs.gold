@@ -9,7 +9,7 @@
 
         public void Operator(char character, char obj)
         {
-            var result = |character.Equals(obj)|(1);
+            var result = character.Equals(obj);
         }
 
         public void NoDetection(char character, char obj, char? otherObj)
@@ -24,4 +24,3 @@
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.

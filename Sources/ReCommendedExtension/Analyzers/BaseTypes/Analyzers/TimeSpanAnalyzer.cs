@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(ICSharpInvocationInfo),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion), typeof(UseUnaryOperatorSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseUnaryOperatorSuggestion)])]
 public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     /// <remarks>
@@ -152,98 +152,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>timeSpan.Add(ts)</c> → <c>timeSpan + ts</c>
-    /// </remarks>
-    static void AnalyzeAdd_TimeSpan(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument tsArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && tsArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '+' operator.",
-                    invocationExpression,
-                    "+",
-                    invokedExpression.QualifierExpression.GetText(),
-                    tsArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
-    /// <c>timeSpan.Divide(divisor)</c> → <c>timeSpan / divisor</c> (.NET Core 2.0)
-    /// </remarks>
-    static void AnalyzeDivide_Double(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument divisorArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && divisorArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '/' operator.",
-                    invocationExpression,
-                    "/",
-                    invokedExpression.QualifierExpression.GetText(),
-                    divisorArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
-    /// <c>timeSpan.Divide(ts)</c> → <c>timeSpan / ts</c> (.NET Core 2.0)
-    /// </remarks>
-    static void AnalyzeDivide_TimeSpan(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument tsArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && tsArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '/' operator.",
-                    invocationExpression,
-                    "/",
-                    invokedExpression.QualifierExpression.GetText(),
-                    tsArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
-    /// <c>timeSpan.Equals(obj)</c> → <c>timeSpan == obj</c>
-    /// </remarks>
-    static void AnalyzeEquals_TimeSpan(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument objArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '==' operator.",
-                    invocationExpression,
-                    "==",
-                    invokedExpression.QualifierExpression.GetText(),
-                    objArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
     /// <c>timeSpan.Equals(null)</c> → <c>false</c>
     /// </remarks>
     static void AnalyzeEquals_Object(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
@@ -251,27 +159,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         if (!invocationExpression.IsUsedAsStatement() && objArgument.Value.IsDefaultValue())
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always false.", invocationExpression, "false"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>TimeSpan.Equals(t1, t2)</c> → <c>t1 == t2</c>
-    /// </remarks>
-    static void AnalyzeEquals_TimeSpan_TimeSpan(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument t1Argument,
-        ICSharpArgument t2Argument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && t1Argument.Value is { } && t2Argument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '==' operator.",
-                    invocationExpression,
-                    "==",
-                    t1Argument.Value.GetText(),
-                    t2Argument.Value.GetText()));
         }
     }
 
@@ -517,29 +404,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
     }
 
     /// <remarks>
-    /// <c>timeSpan.Multiply(factor)</c> → <c>timeSpan * factor</c> (.NET Core 2.0)
-    /// </remarks>
-    static void AnalyzeMultiply_Double(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument factorArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && factorArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '*' operator.",
-                    invocationExpression,
-                    "*",
-                    invokedExpression.QualifierExpression.GetText(),
-                    factorArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
     /// <c>timeSpan.Negate()</c> → <c>-timeSpan</c>
     /// </remarks>
     static void AnalyzeNegate(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
@@ -550,29 +414,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         {
             consumer.AddHighlighting(
                 new UseUnaryOperatorSuggestion("Use the '-' operator.", invocationExpression, "-", invokedExpression.QualifierExpression.GetText()));
-        }
-    }
-
-    /// <remarks>
-    /// <c>timeSpan.Subtract(ts)</c> → <c>timeSpan - ts</c>
-    /// </remarks>
-    static void AnalyzeSubtract_TimeSpan(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument tsArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && tsArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '-' operator.",
-                    invocationExpression,
-                    "-",
-                    invokedExpression.QualifierExpression.GetText(),
-                    tsArgument.Value.GetText()));
         }
     }
 
@@ -677,46 +518,11 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     case ({ QualifierExpression: { } }, { IsStatic: false }):
                         switch (method.ShortName)
                         {
-                            case nameof(TimeSpan.Add):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var tsType }], [{ } tsArgument]) when tsType.IsTimeSpan():
-                                        AnalyzeAdd_TimeSpan(consumer, invocationExpression, invokedExpression, tsArgument);
-                                        break;
-                                }
-                                break;
-
-                            case "Divide": // todo: nameof(TimeSpan.Divide) when available
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var divisorType }], [{ } divisorArgument]) when divisorType.IsDouble():
-                                        AnalyzeDivide_Double(consumer, invocationExpression, invokedExpression, divisorArgument);
-                                        break;
-
-                                    case ([{ Type: var tsType }], [{ } tsArgument]) when tsType.IsTimeSpan():
-                                        AnalyzeDivide_TimeSpan(consumer, invocationExpression, invokedExpression, tsArgument);
-                                        break;
-                                }
-                                break;
-
                             case nameof(TimeSpan.Equals):
                                 switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
                                 {
-                                    case ([{ Type: var objType }], [{ } objArgument]) when objType.IsTimeSpan():
-                                        AnalyzeEquals_TimeSpan(consumer, invocationExpression, invokedExpression, objArgument);
-                                        break;
-
                                     case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                         AnalyzeEquals_Object(consumer, invocationExpression, objArgument);
-                                        break;
-                                }
-                                break;
-
-                            case "Multiply": // todo: nameof(TimeSpan.Multiply) when available
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var factorType }], [{ } factorArgument]) when factorType.IsDouble():
-                                        AnalyzeMultiply_Double(consumer, invocationExpression, invokedExpression, factorArgument);
                                         break;
                                 }
                                 break;
@@ -727,32 +533,12 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                     case ([], []): AnalyzeNegate(consumer, invocationExpression, invokedExpression); break;
                                 }
                                 break;
-
-                            case nameof(TimeSpan.Subtract):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var tsType }], [{ } tsArgument]) when tsType.IsTimeSpan():
-                                        AnalyzeSubtract_TimeSpan(consumer, invocationExpression, invokedExpression, tsArgument);
-                                        break;
-                                }
-                                break;
                         }
                         break;
 
                     case (_, { IsStatic: true }):
                         switch (method.ShortName)
                         {
-                            case nameof(TimeSpan.Equals):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var t1Type }, { Type: var t2Type }], [{ } t1Argument, { } t2Argument])
-                                        when t1Type.IsTimeSpan() && t2Type.IsTimeSpan():
-
-                                        AnalyzeEquals_TimeSpan_TimeSpan(consumer, invocationExpression, t1Argument, t2Argument);
-                                        break;
-                                }
-                                break;
-
                             case nameof(TimeSpan.FromDays):
                                 switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
                                 {

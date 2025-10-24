@@ -11,10 +11,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IReferenceExpression),
-    HighlightingTypes =
-    [
-        typeof(UseNullableHasValueAlternativeSuggestion), typeof(ReplaceNullableValueWithTypeCastSuggestion), typeof(UseBinaryOperatorSuggestion),
-    ])]
+    HighlightingTypes = [typeof(UseNullableHasValueAlternativeSuggestion), typeof(ReplaceNullableValueWithTypeCastSuggestion)])]
 public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpression>
 {
     /// <remarks>
@@ -44,53 +41,6 @@ public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpressi
         }
     }
 
-    /// <remarks>
-    /// <c>nullable.GetValueOrDefault()</c> → <c>nullable ?? default</c>
-    /// </remarks>
-    static void AnalyzeGetValueOrDefault(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement())
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '??' operator.",
-                    invocationExpression,
-                    "??",
-                    invokedExpression.QualifierExpression.GetText(),
-                    invokedExpression.QualifierExpression.Type().Unlift().TryGetDefaultValue(invokedExpression) ?? "default",
-                    invokedExpression));
-        }
-    }
-
-    /// <remarks>
-    /// <c>nullable.GetValueOrDefault(defaultValue)</c> → <c>nullable ?? defaultValue</c>
-    /// </remarks>
-    static void AnalyzeGetValueOrDefault_T(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument defaultValueArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && defaultValueArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '??' operator.",
-                    invocationExpression,
-                    "??",
-                    invokedExpression.QualifierExpression.GetText(),
-                    defaultValueArgument.Value.GetText(),
-                    invokedExpression));
-        }
-    }
-
     protected override void Run(IReferenceExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         if (element is { Reference: var reference, QualifierExpression: { } })
@@ -105,26 +55,6 @@ public sealed class NullableAnalyzer : ElementProblemAnalyzer<IReferenceExpressi
                         case nameof(Nullable<int>.HasValue): AnalyzeHasValue(consumer, element); break;
 
                         case nameof(Nullable<int>.Value): AnalyzeValue(consumer, element); break;
-                    }
-                    break;
-
-                case IMethod
-                {
-                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC, IsStatic: false, TypeParameters: [],
-                } method when method.ContainingType.IsNullableOfT() && element.Parent is IInvocationExpression invocationExpression:
-
-                    switch (method.ShortName)
-                    {
-                        case nameof(Nullable<int>.GetValueOrDefault):
-                            switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([], []): AnalyzeGetValueOrDefault(consumer, invocationExpression, element); break;
-
-                                case ([_], [{ } defaultValueArgument]):
-                                    AnalyzeGetValueOrDefault_T(consumer, invocationExpression, element, defaultValueArgument);
-                                    break;
-                            }
-                            break;
                     }
                     break;
             }

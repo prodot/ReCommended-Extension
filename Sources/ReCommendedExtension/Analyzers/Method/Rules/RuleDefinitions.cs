@@ -14,12 +14,74 @@ internal static class RuleDefinitions
     static readonly Dictionary<IClrTypeName, Dictionary<string, IReadOnlyCollection<Method>>> typeMethods = new(new ClrTypeNameEqualityComparer())
     {
         { PredefinedType.BOOLEAN_FQN, CreateBooleanMethods() },
+        { PredefinedType.BYTE_FQN, CreateNumberMethods(Parameter.Byte) },
+        { PredefinedType.SBYTE_FQN, CreateSignedIntegerMethods(Parameter.SByte) },
+        { PredefinedType.SHORT_FQN, CreateSignedIntegerMethods(Parameter.Int16) },
+        { PredefinedType.USHORT_FQN, CreateNumberMethods(Parameter.UInt16) },
+        { PredefinedType.INT_FQN, CreateSignedIntegerMethods(Parameter.Int32) },
+        { PredefinedType.UINT_FQN, CreateNumberMethods(Parameter.UInt32) },
+        { PredefinedType.LONG_FQN, CreateSignedIntegerMethods(Parameter.Int64) },
+        { PredefinedType.ULONG_FQN, CreateNumberMethods(Parameter.UInt64) },
+        { ClrTypeNames.Int128, CreateSignedIntegerMethods(Parameter.Int128) },
+        { ClrTypeNames.UInt128, CreateNumberMethods(Parameter.UInt128) },
+        { PredefinedType.INTPTR_FQN, CreateSignedIntegerMethods(Parameter.IntPtr) },
+        { PredefinedType.UINTPTR_FQN, CreateNumberMethods(Parameter.UIntPtr) },
+        { PredefinedType.DECIMAL_FQN, CreateDecimalMethods() },
         { PredefinedType.DATETIME_FQN, CreateDateTimeMethods() },
         { PredefinedType.DATETIMEOFFSET_FQN, CreateDateTimeOffsetMethods() },
+        { PredefinedType.TIMESPAN_FQN, CreateTimeSpanMethods() },
         { PredefinedType.DATE_ONLY_FQN, CreateDateOnlyMethods() },
+        { PredefinedType.TIME_ONLY_FQN, CreateTimeOnlyMethods() },
+        { PredefinedType.GUID_FQN, CreateGuidMethods() },
+        { PredefinedType.CHAR_FQN, CreateCharMethods() },
         { PredefinedType.STRING_FQN, CreateStringMethods() },
         { PredefinedType.STRING_BUILDER_FQN, CreateStringBuilderMethods() },
+        { PredefinedType.GENERIC_NULLABLE_FQN, CreateNullableMethods() },
     };
+
+    [Pure]
+    static Dictionary<string, IReadOnlyCollection<Method>> CreateNumberMethods(Parameter numberTypeParameter)
+        => new(StringComparer.Ordinal)
+        {
+            {
+                nameof(Equals),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [numberTypeParameter] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "==" }],
+                    },
+                ]
+            },
+        };
+
+    [Pure]
+    static Dictionary<string, IReadOnlyCollection<Method>> CreateSignedIntegerMethods(Parameter numberTypeParameter)
+    {
+        var methods = CreateNumberMethods(numberTypeParameter);
+
+        methods.Add(
+            "IsNegative", // todo: nameof(INumberBase<T>.IsNegative) when available
+            [
+                new Method
+                {
+                    Signature = new MethodSignature { Parameters = [numberTypeParameter], IsStatic = true },
+                    Inspections = [BinaryOperator.ArgumentZero with { Operator = "<" }],
+                },
+            ]);
+
+        methods.Add(
+            "IsPositive", // todo: nameof(INumberBase<T>.IsPositive) when available
+            [
+                new Method
+                {
+                    Signature = new MethodSignature { Parameters = [numberTypeParameter], IsStatic = true },
+                    Inspections = [BinaryOperator.ArgumentZero with { Operator = ">=" }],
+                },
+            ]);
+
+        return methods;
+    }
 
     [Pure]
     static Dictionary<string, IReadOnlyCollection<Method>> CreateBooleanMethods()
@@ -31,16 +93,88 @@ internal static class RuleDefinitions
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Boolean] },
-                        Inspections = [RedundantMethodInvocation.NonConstantWithTrue],
+                        Inspections =
+                        [
+                            RedundantMethodInvocation.NonBooleanConstantWithTrue,
+                            BinaryOperator.QualifierArgumentNonBooleanConstants with { Operator = "==" },
+                        ],
                     },
                 ]
             },
         };
 
     [Pure]
+    static Dictionary<string, IReadOnlyCollection<Method>> CreateDecimalMethods()
+    {
+        var methods = CreateNumberMethods(Parameter.Decimal);
+
+        methods.Add(
+            nameof(decimal.Add),
+            [
+                new Method
+                {
+                    Signature = new MethodSignature { Parameters = [Parameter.Decimal, Parameter.Decimal], IsStatic = true },
+                    Inspections = [BinaryOperator.ArgumentsDecimal with { Operator = "+" }],
+                },
+            ]);
+
+        methods.Add(
+            nameof(decimal.Divide),
+            [
+                new Method
+                {
+                    Signature = new MethodSignature { Parameters = [Parameter.Decimal, Parameter.Decimal], IsStatic = true },
+                    Inspections = [BinaryOperator.ArgumentsDecimal with { Operator = "/" }],
+                },
+            ]);
+
+        methods.Add(
+            nameof(decimal.Multiply),
+            [
+                new Method
+                {
+                    Signature = new MethodSignature { Parameters = [Parameter.Decimal, Parameter.Decimal], IsStatic = true },
+                    Inspections = [BinaryOperator.ArgumentsDecimal with { Operator = "*" }],
+                },
+            ]);
+
+        methods.Add(
+            nameof(decimal.Remainder),
+            [
+                new Method
+                {
+                    Signature = new MethodSignature { Parameters = [Parameter.Decimal, Parameter.Decimal], IsStatic = true },
+                    Inspections = [BinaryOperator.ArgumentsDecimal with { Operator = "%" }],
+                },
+            ]);
+
+        methods.Add(
+            nameof(decimal.Subtract),
+            [
+                new Method
+                {
+                    Signature = new MethodSignature { Parameters = [Parameter.Decimal, Parameter.Decimal], IsStatic = true },
+                    Inspections = [BinaryOperator.ArgumentsDecimal with { Operator = "-" }],
+                },
+            ]);
+
+        return methods;
+    }
+
+    [Pure]
     static Dictionary<string, IReadOnlyCollection<Method>> CreateDateTimeMethods()
         => new(StringComparer.Ordinal)
         {
+            {
+                nameof(DateTime.Add),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "+" }],
+                    },
+                ]
+            },
             {
                 nameof(DateTime.AddTicks),
                 [
@@ -51,6 +185,36 @@ internal static class RuleDefinitions
                     },
                 ]
             },
+            {
+                nameof(DateTime.Equals),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.DateTime] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "==" }],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.DateTime, Parameter.DateTime], IsStatic = true },
+                        Inspections = [BinaryOperator.Arguments with { Operator = "==" }],
+                    },
+                ]
+            },
+            {
+                nameof(DateTime.Subtract),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.DateTime] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "-" }],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "-" }],
+                    },
+                ]
+            },
         };
 
     [Pure]
@@ -58,12 +222,118 @@ internal static class RuleDefinitions
         => new(StringComparer.Ordinal)
         {
             {
+                nameof(DateTimeOffset.Add),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "+" }],
+                    },
+                ]
+            },
+            {
                 nameof(DateTimeOffset.AddTicks),
                 [
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Int64] },
                         Inspections = [RedundantMethodInvocation.WithInt64Zero],
+                    },
+                ]
+            },
+            {
+                nameof(DateTimeOffset.Equals),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.DateTimeOffset] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "==" }],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.DateTimeOffset, Parameter.DateTimeOffset], IsStatic = true },
+                        Inspections = [BinaryOperator.Arguments with { Operator = "==" }],
+                    },
+                ]
+            },
+            {
+                nameof(DateTimeOffset.Subtract),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.DateTimeOffset] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "-" }],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "-" }],
+                    },
+                ]
+            },
+        };
+
+    [Pure]
+    static Dictionary<string, IReadOnlyCollection<Method>> CreateTimeSpanMethods()
+        => new(StringComparer.Ordinal)
+        {
+            {
+                nameof(TimeSpan.Add),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "+" }],
+                    },
+                ]
+            },
+            {
+                "Divide", // todo: nameof(TimeSpan.Divide) when available
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Double] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "/" }],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "/" }],
+                    },
+                ]
+            },
+            {
+                nameof(TimeSpan.Equals),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "==" }],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan, Parameter.TimeSpan], IsStatic = true },
+                        Inspections = [BinaryOperator.Arguments with { Operator = "==" }],
+                    },
+                ]
+            },
+            {
+                "Multiply", // todo: nameof(TimeSpan.Multiply) when available
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Double] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "*" }],
+                    },
+                ]
+            },
+            {
+                nameof(TimeSpan.Subtract),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeSpan] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "-" }],
                     },
                 ]
             },
@@ -79,6 +349,64 @@ internal static class RuleDefinitions
                     new Method
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Int32] }, Inspections = [RedundantMethodInvocation.WithInt32Zero],
+                    },
+                ]
+            },
+            {
+                "Equals", // todo: nameof(DateOnly.Equals) when available
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.DateOnly] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "==" }],
+                    },
+                ]
+            },
+        };
+
+    [Pure]
+    static Dictionary<string, IReadOnlyCollection<Method>> CreateTimeOnlyMethods()
+        => new(StringComparer.Ordinal)
+        {
+            {
+                "Equals", // todo: nameof(TimeOnly.Equals) when available
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.TimeOnly] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "==" }],
+                    },
+                ]
+            },
+        };
+
+    [Pure]
+    static Dictionary<string, IReadOnlyCollection<Method>> CreateGuidMethods()
+        => new(StringComparer.Ordinal)
+        {
+            {
+                nameof(Guid.Equals),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Guid] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "==" }],
+                    },
+                ]
+            },
+        };
+
+    [Pure]
+    static Dictionary<string, IReadOnlyCollection<Method>> CreateCharMethods()
+        => new(StringComparer.Ordinal)
+        {
+            {
+                nameof(char.Equals),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Char] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "==" }],
                     },
                 ]
             },
@@ -601,6 +929,27 @@ internal static class RuleDefinitions
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.String] },
                         Inspections = [RedundantMethodInvocation.WithIdenticalNonEmptyStrings with { IsPureMethod = false }],
+                    },
+                ]
+            },
+        };
+
+    [Pure]
+    static Dictionary<string, IReadOnlyCollection<Method>> CreateNullableMethods()
+        => new(StringComparer.Ordinal)
+        {
+            {
+                nameof(Nullable<int>.GetValueOrDefault),
+                [
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [] },
+                        Inspections = [BinaryOperator.NullableQualifierDefault with { Operator = "??", HighlightInvokedMethodOnly = true }],
+                    },
+                    new Method
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.T] },
+                        Inspections = [BinaryOperator.QualifierArgument with { Operator = "??", HighlightInvokedMethodOnly = true }],
                     },
                 ]
             },

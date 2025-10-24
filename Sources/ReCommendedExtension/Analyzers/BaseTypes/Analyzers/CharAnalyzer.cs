@@ -11,32 +11,9 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseBinaryOperatorSuggestion), typeof(UseExpressionResultSuggestion), typeof(UseCharRangePatternSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseCharRangePatternSuggestion)])]
 public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
-    /// <remarks>
-    /// <c>character.Equals(obj)</c> → <c>character == obj</c>
-    /// </remarks>
-    static void AnalyzeEquals_Char(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument objArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '==' operator.",
-                    invocationExpression,
-                    "==",
-                    invokedExpression.QualifierExpression.GetText(),
-                    objArgument.Value.GetText()));
-        }
-    }
-
     /// <remarks>
     /// <c>character.Equals(null)</c> → <c>false</c>
     /// </remarks>
@@ -239,10 +216,6 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
                         case nameof(char.Equals):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var objType }], [{ } objArgument]) when objType.IsChar():
-                                    AnalyzeEquals_Char(consumer, element, invokedExpression, objArgument);
-                                    break;
-
                                 case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, objArgument);
                                     break;

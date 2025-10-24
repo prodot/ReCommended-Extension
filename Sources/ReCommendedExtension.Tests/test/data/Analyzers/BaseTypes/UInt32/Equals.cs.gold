@@ -9,7 +9,7 @@
 
         public void Operator(uint number, uint obj)
         {
-            var result = |number.Equals(obj)|(1);
+            var result = number.Equals(obj);
         }
 
         public void NoDetection(uint number, uint obj, uint? otherObj)
@@ -24,4 +24,3 @@
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.

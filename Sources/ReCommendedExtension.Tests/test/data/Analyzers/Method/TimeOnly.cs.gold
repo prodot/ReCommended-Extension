@@ -1,0 +1,19 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(TimeOnly timeOnly, TimeOnly value)
+        {
+            var result = |timeOnly.Equals(value)|(0);
+        }
+
+        public void NoDetection(TimeOnly timeOnly, TimeOnly value)
+        {
+            timeOnly.Equals(value);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '==' operator.

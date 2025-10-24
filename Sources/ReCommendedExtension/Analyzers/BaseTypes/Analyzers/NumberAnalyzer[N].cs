@@ -51,29 +51,6 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : ElementProbl
     }
 
     /// <remarks>
-    /// <c>number.Equals(obj)</c> → <c>number == obj</c>
-    /// </remarks>
-    void AnalyzeEquals_N(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument objArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (numberInfo.CanUseEqualityOperator && !invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '==' operator.",
-                    invocationExpression,
-                    "==",
-                    invokedExpression.QualifierExpression.GetText(),
-                    objArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
     /// <c>number.Equals(null)</c> → <c>false</c>
     /// </remarks>
     static void AnalyzeEquals_Object(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
@@ -166,10 +143,6 @@ public abstract class NumberAnalyzer<N>(NumberInfo<N> numberInfo) : ElementProbl
                         case nameof(Equals):
                             switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                             {
-                                case ([{ Type: var objType }], [{ } objArgument]) when objType.IsClrType(numberInfo.ClrTypeName):
-                                    AnalyzeEquals_N(consumer, element, invokedExpression, objArgument);
-                                    break;
-
                                 case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                     AnalyzeEquals_Object(consumer, element, objArgument);
                                     break;

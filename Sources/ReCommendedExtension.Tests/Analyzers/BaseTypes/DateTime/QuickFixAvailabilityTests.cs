@@ -15,7 +15,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTime\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseDateTimePropertySuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseDateTimePropertySuggestion || highlighting.IsError();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
@@ -24,7 +24,4 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
     public void TestUseDateTimePropertyFixAvailability() => DoNamedTest2();
-
-    [Test]
-    public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
 }

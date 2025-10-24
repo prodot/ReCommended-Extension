@@ -12,7 +12,7 @@ public sealed class GuidAnalyzerTests : BaseTypeAnalyzerTests<System.Guid>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Guid";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override System.Guid[] TestValues { get; } = [System.Guid.Empty, new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])];
 
@@ -21,8 +21,6 @@ public sealed class GuidAnalyzerTests : BaseTypeAnalyzerTests<System.Guid>
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
-        Test((guid, g) => guid.Equals(g), (guid, g) => guid == g, TestValues, TestValues);
-
         Test(guid => guid.Equals(null), _ => false);
 
         DoNamedTest2();

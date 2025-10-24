@@ -12,7 +12,9 @@ using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSign
 
 namespace ReCommendedExtension.Analyzers.Method;
 
-[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(RedundantMethodInvocationHint), typeof(UseOtherMethodSuggestion)])]
+[ElementProblemAnalyzer(
+    typeof(IInvocationExpression),
+    HighlightingTypes = [typeof(RedundantMethodInvocationHint), typeof(UseOtherMethodSuggestion), typeof(UseBinaryOperatorSuggestion)])]
 public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
     : ElementProblemAnalyzer<IInvocationExpression>
 {
@@ -111,6 +113,23 @@ public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                         }
                     }
 
+                    break;
+                }
+
+                case BinaryOperator binaryOperator when !invocationExpression.IsUsedAsStatement():
+                {
+                    Debug.Assert(binaryOperator.Operator is { });
+
+                    if (binaryOperator.TryGetOperands(qualifier, arguments) is { } operands)
+                    {
+                        consumer.AddHighlighting(
+                            new UseBinaryOperatorSuggestion(
+                                inspection.Message(binaryOperator.Operator),
+                                invocationExpression,
+                                operands,
+                                binaryOperator.Operator,
+                                binaryOperator.HighlightInvokedMethodOnly ? invokedExpression : null));
+                    }
                     break;
                 }
             }

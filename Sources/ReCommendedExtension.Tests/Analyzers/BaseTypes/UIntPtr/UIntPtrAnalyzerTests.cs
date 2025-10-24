@@ -17,7 +17,7 @@ public sealed class UIntPtrAnalyzerTests : BaseTypeAnalyzerTests<nuint>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UIntPtr";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override nuint[] TestValues { get; } = [0, 1, 2];
 
@@ -47,8 +47,6 @@ public sealed class UIntPtrAnalyzerTests : BaseTypeAnalyzerTests<nuint>
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
-
         Test(number => number.Equals(null), _ => false);
 
         DoNamedTest2();

@@ -1,0 +1,25 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(sbyte number, sbyte value)
+        {
+            var result11 = |number.Equals(value)|(0);
+
+            var result21 = |sbyte.IsNegative(number)|(1);
+            var result22 = |sbyte.IsPositive(number)|(2);
+        }
+
+        public void NoDetection(sbyte number, sbyte value)
+        {
+            number.Equals(value);
+
+            sbyte.IsNegative(number);
+            sbyte.IsPositive(number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '==' operator.
+(1): ReSharper Suggestion: Use the '<' operator.
+(2): ReSharper Suggestion: Use the '>=' operator.

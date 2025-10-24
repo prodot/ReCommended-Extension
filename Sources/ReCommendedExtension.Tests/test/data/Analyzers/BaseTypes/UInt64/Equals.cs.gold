@@ -9,7 +9,7 @@
 
         public void Operator(ulong number, ulong obj)
         {
-            var result = |number.Equals(obj)|(1);
+            var result = number.Equals(obj);
         }
 
         public void NoDetection(ulong number, ulong obj, ulong? otherObj)
@@ -24,4 +24,3 @@
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.

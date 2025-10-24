@@ -15,7 +15,7 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Char";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion or UseCharRangePatternSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseCharRangePatternSuggestion || highlighting.IsError();
 
     protected override char[] TestValues { get; } = ['a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue];
 
@@ -24,8 +24,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
-        Test((c, obj) => c.Equals(obj), (c, obj) => c == obj, TestValues, TestValues);
-
         Test(c => c.Equals(null), _ => false);
 
         DoNamedTest2();

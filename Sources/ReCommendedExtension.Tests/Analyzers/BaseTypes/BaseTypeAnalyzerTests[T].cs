@@ -16,15 +16,4 @@ public abstract class BaseTypeAnalyzerTests<T> : CSharpHighlightingTestBase
             Assert.AreEqual(expected(value), actual(value), $"with values: {value}");
         }
     }
-
-    protected void Test<U, R>(Func<T, U, R> expected, Func<T, U, R> actual, T[] xValues, U[] yValues)
-    {
-        foreach (var x in xValues)
-        {
-            foreach (var y in yValues)
-            {
-                Assert.AreEqual(expected(x, y), actual(x, y), $"with values: {x}, {y}");
-            }
-        }
-    }
 }

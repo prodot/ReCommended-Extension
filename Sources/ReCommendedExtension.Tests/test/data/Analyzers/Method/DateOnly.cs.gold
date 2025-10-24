@@ -9,13 +9,20 @@ namespace Test
             var result = dateOnly.|AddDays(0)|(0);
         }
 
+        public void BinaryOperator(DateOnly dateOnly, DateOnly value)
+        {
+            var result = |dateOnly.Equals(value)|(1);
+        }
+
         public void NoDetection(DateOnly dateOnly, int value)
         {
             var result = dateOnly.AddDays(value);
 
             dateOnly.AddDays(0);
+            dateOnly.Equals(value);
         }
     }
 }
 ---------------------------------------------------------
 (0): ReSharper Dead Code: Calling 'AddDays' with 0 is redundant.
+(1): ReSharper Suggestion: Use the '==' operator.

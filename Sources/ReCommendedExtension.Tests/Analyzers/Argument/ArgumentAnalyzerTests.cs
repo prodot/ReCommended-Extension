@@ -1210,14 +1210,6 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
         DoNamedTest2();
     }
 
-    // [Test]
-    public void TestChar()
-    {
-        var values = new[] { 'a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue };
-
-        DoNamedTest2();
-    }
-
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     enum SampleEnum
     {

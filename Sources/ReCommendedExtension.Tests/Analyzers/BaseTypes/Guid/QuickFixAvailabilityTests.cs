@@ -13,11 +13,8 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Guid\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseBinaryOperatorSuggestion or UseExpressionResultSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     [Test]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
-
-    [Test]
-    public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
 }

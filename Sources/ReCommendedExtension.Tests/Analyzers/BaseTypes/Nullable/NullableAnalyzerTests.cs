@@ -10,13 +10,13 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Nullable;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
 public sealed class NullableAnalyzerTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Nullable";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseNullableHasValueAlternativeSuggestion or ReplaceNullableValueWithTypeCastSuggestion or UseBinaryOperatorSuggestion
-            || highlighting.IsError();
+        => highlighting is UseNullableHasValueAlternativeSuggestion or ReplaceNullableValueWithTypeCastSuggestion || highlighting.IsError();
 
     static void Test<T, R>(Func<T?, R> expected, Func<T?, R> actual, T value, bool useNull = true) where T : struct
     {
@@ -29,7 +29,6 @@ public sealed class NullableAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [SuppressMessage("ReSharper", "ArrangeNullCheckingPattern")]
     [SuppressMessage("ReSharper", "Solution.PatternMatchingNullCheck")]
     [SuppressMessage("ReSharper", "UseNullableHasValueAlternative")]
@@ -44,21 +43,10 @@ public sealed class NullableAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [SuppressMessage("ReSharper", "ReplaceNullableValueWithTypeCast")]
     public void TestValue()
     {
         Test(nullable => nullable!.Value, nullable => (int)nullable!, 1, false);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "UseBinaryOperator")]
-    public void TestGetValueOrDefault()
-    {
-        Test(nullable => nullable.GetValueOrDefault(), nullable => nullable ?? 0, 1);
-        Test(nullable => nullable.GetValueOrDefault(1), nullable => nullable ?? 1, 1);
 
         DoNamedTest2();
     }

@@ -15,16 +15,12 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\TimeSpan\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or UseUnaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseUnaryOperatorSuggestion || highlighting.IsError();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet90]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [TestNetCore20]
-    public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
 
     [Test]
     public void TestUseUnaryOperatorFixAvailability() => DoNamedTest2();

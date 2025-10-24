@@ -10,7 +10,10 @@ namespace ReCommendedExtension.Analyzers.Method.Inspections;
 
 internal sealed record OtherMethodInvocation : Inspection
 {
-    record struct BinaryExpression(BinaryExpressionOperand LeftOperand, Operator Operator, BinaryExpressionOperand RightOperand)
+    record struct BinaryOperatorExpression(
+        BinaryOperatorExpressionOperand LeftOperand,
+        Operator Operator,
+        BinaryOperatorExpressionOperand RightOperand)
     {
         [Pure]
         static Operator? TryGetOperator(IEqualityExpression equalityExpression)
@@ -35,7 +38,7 @@ internal sealed record OtherMethodInvocation : Inspection
             };
 
         [Pure]
-        public static BinaryExpression? TryFrom(IInvocationExpression invocationExpression)
+        public static BinaryOperatorExpression? TryFrom(IInvocationExpression invocationExpression)
         {
             if (invocationExpression.Parent is IBinaryExpression binaryExpression)
             {
@@ -52,7 +55,7 @@ internal sealed record OtherMethodInvocation : Inspection
                     if (binaryExpression.LeftOperand == invocationExpression
                         && binaryExpression.RightOperand.TryGetInt32Constant() is { } rightOperandValue)
                     {
-                        return new BinaryExpression(InvocationExpression.Default, op, Number.From(rightOperandValue))
+                        return new BinaryOperatorExpression(InvocationExpression.Default, op, Number.From(rightOperandValue))
                         {
                             Expression = binaryExpression,
                         };
@@ -61,7 +64,7 @@ internal sealed record OtherMethodInvocation : Inspection
                     if (binaryExpression.LeftOperand.TryGetInt32Constant() is { } leftOperandValue
                         && binaryExpression.RightOperand == invocationExpression)
                     {
-                        return new BinaryExpression(Number.From(leftOperandValue), op, InvocationExpression.Default)
+                        return new BinaryOperatorExpression(Number.From(leftOperandValue), op, InvocationExpression.Default)
                         {
                             Expression = binaryExpression,
                         };
@@ -75,14 +78,14 @@ internal sealed record OtherMethodInvocation : Inspection
         public required IBinaryExpression Expression { get; init; }
     }
 
-    abstract record BinaryExpressionOperand;
+    abstract record BinaryOperatorExpressionOperand;
 
-    sealed record InvocationExpression : BinaryExpressionOperand
+    sealed record InvocationExpression : BinaryOperatorExpressionOperand
     {
         public static InvocationExpression Default { get; } = new();
     }
 
-    sealed record Number : BinaryExpressionOperand
+    sealed record Number : BinaryOperatorExpressionOperand
     {
         static readonly Number zero = new() { Value = 0 };
         static readonly Number minusOne = new() { Value = -1 };
@@ -112,10 +115,10 @@ internal sealed record OtherMethodInvocation : Inspection
     [Pure]
     static InvocationReplacement? TryGetReplacementForBinaryExpression(
         IInvocationExpression invocationExpression,
-        Func<BinaryExpression, MethodInvocationContext?> tryGetContext,
+        Func<BinaryOperatorExpression, MethodInvocationContext?> tryGetContext,
         Func<IReadOnlyList<string>?> tryCreateArguments,
         bool isNegated)
-        => BinaryExpression.TryFrom(invocationExpression) is { } binaryExpression
+        => BinaryOperatorExpression.TryFrom(invocationExpression) is { } binaryExpression
             && tryGetContext(binaryExpression) is { } context
             && tryCreateArguments() is { } arguments
                 ? new InvocationReplacement

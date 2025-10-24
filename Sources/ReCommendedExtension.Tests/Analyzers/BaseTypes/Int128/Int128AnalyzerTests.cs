@@ -16,7 +16,7 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Int128";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override int128[] TestValues { get; } = [0, 1, 2, -1, -2, int128.MinValue, int128.MaxValue];
 
@@ -40,27 +40,7 @@ public sealed class Int128AnalyzerTests : BaseTypeAnalyzerTests<int128>
     [Test]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
-
         Test(number => number.Equals(null), _ => false);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
-    public void TestIsNegative()
-    {
-        Test(number => int128.IsNegative(number), number => number < 0);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
-    public void TestIsPositive()
-    {
-        Test(number => int128.IsPositive(number), number => number >= 0);
 
         DoNamedTest2();
     }

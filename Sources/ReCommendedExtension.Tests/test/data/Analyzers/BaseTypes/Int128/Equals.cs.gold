@@ -11,7 +11,7 @@ namespace Test
 
         public void Operator(Int128 number, Int128 obj)
         {
-            var result = |number.Equals(obj)|(1);
+            var result = number.Equals(obj);
         }
 
         public void NoDetection(Int128 number, Int128 obj, Int128? otherObj)
@@ -26,4 +26,3 @@ namespace Test
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.

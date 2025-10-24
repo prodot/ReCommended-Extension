@@ -170,9 +170,9 @@ internal static class RuleDefinitions
         RedundantArgumentByPosition defaultNumberStyles,
         Parameter numberTypeParameter)
     {
-        var methods = CreateNumberMembers(defaultNumberStyles, numberTypeParameter);
+        var members = CreateNumberMembers(defaultNumberStyles, numberTypeParameter);
 
-        methods.Add(
+        members.Add(
             "Round", // todo: nameof(IFloatingPoint<T>.Round) when available
             [
                 new Member
@@ -197,7 +197,7 @@ internal static class RuleDefinitions
                 },
             ]);
 
-        return methods;
+        return members;
     }
 
     [Pure]

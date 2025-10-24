@@ -7,13 +7,18 @@
             var result = flag.|Equals(true)|(0);
         }
 
+        public void BinaryOperator(bool flag, bool value)
+        {
+            var result = |flag.Equals(value)|(1);
+        }
+
         public void NoDetection(bool flag, bool value)
         {
-            var result = flag.Equals(value);
-
             flag.Equals(true);
+            flag.Equals(value);
         }
     }
 }
 ---------------------------------------------------------
 (0): ReSharper Dead Code: Calling 'Equals' with true is redundant.
+(1): ReSharper Suggestion: Use the '==' operator.

@@ -15,7 +15,7 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\TimeSpan";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion or UseUnaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseUnaryOperatorSuggestion || highlighting.IsError();
 
     protected override System.TimeSpan[] TestValues { get; } =
     [
@@ -50,39 +50,12 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "UseBinaryOperator")]
-    public void TestAdd()
-    {
-        var values = TestValues.Except([System.TimeSpan.MinValue, System.TimeSpan.MaxValue]).ToArray();
-
-        Test((timeSpan, ts) => timeSpan.Add(ts), (timeSpan, ts) => timeSpan + ts, values, values);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNetCore20]
-    public void TestDivide()
-    {
-        Test(
-            (timeSpan, divisor) => timeSpan.Divide(divisor),
-            (timeSpan, divisor) => MissingTimeSpanMembers.op_Division(timeSpan, divisor),
-            [..TestValues.Except([System.TimeSpan.MinValue, System.TimeSpan.MaxValue])],
-            [1d, 2d, -1d, double.MaxValue, double.MinValue, double.PositiveInfinity, double.NegativeInfinity]);
-        Test((timeSpan, ts) => timeSpan.Divide(ts), (timeSpan, ts) => MissingTimeSpanMembers.op_Division(timeSpan, ts), TestValues, TestValues);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
-        Test((timeSpan, obj) => timeSpan.Equals(obj), (timeSpan, obj) => timeSpan == obj, TestValues, TestValues);
         Test(timeSpan => timeSpan.Equals(null), _ => false);
-        Test((t1, t2) => System.TimeSpan.Equals(t1, t2), (t1, t2) => t1 == t2, TestValues, TestValues);
 
         DoNamedTest2();
     }
@@ -157,34 +130,10 @@ public sealed class TimeSpanAnalyzerTests : BaseTypeAnalyzerTests<System.TimeSpa
     }
 
     [Test]
-    [TestNetCore20]
-    public void TestMultiply()
-    {
-        Test(
-            (timeSpan, factor) => timeSpan.Multiply(factor),
-            (timeSpan, factor) => MissingTimeSpanMembers.op_Multiply(timeSpan, factor),
-            [..TestValues.Except([System.TimeSpan.MinValue, System.TimeSpan.MaxValue])],
-            [0d, -0d, 1d, 2d, double.Epsilon]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [SuppressMessage("ReSharper", "UseUnaryOperator")]
     public void TestNegate()
     {
         Test(timeSpan => timeSpan.Negate(), timeSpan => -timeSpan, [..TestValues.Except([System.TimeSpan.MinValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "UseBinaryOperator")]
-    public void TestSubtract()
-    {
-        var values = TestValues.Except([System.TimeSpan.MinValue, System.TimeSpan.MaxValue]).ToArray();
-
-        Test((timeSpan, ts) => timeSpan.Subtract(ts), (timeSpan, ts) => timeSpan - ts, values, values);
 
         DoNamedTest2();
     }

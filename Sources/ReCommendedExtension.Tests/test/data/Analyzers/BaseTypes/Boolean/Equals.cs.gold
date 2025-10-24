@@ -12,13 +12,13 @@
 
         public void RedundantMethodInvocation(bool flag, bool obj)
         {
-            var result1 = |flag.Equals(true)|(3);
-            var result2 = |true.Equals(obj)|(4);
+            var result1 = flag.Equals(true);
+            var result2 = |true.Equals(obj)|(3);
         }
 
         public void Operator(bool flag, bool obj)
         {
-            var result = |flag.Equals(obj)|(5);
+            var result = flag.Equals(obj);
         }
 
         public void NoDetection(bool flag, bool obj, bool? otherObj)
@@ -40,6 +40,4 @@
 (0): ReSharper Suggestion: The expression is always the same as the inverted qualifier.
 (1): ReSharper Suggestion: The expression is always the same as the inverted argument.
 (2): ReSharper Suggestion: The expression is always false.
-(3): ReSharper Suggestion: Use the '==' operator.
-(4): ReSharper Suggestion: The expression is always the same as the argument.
-(5): ReSharper Suggestion: Use the '==' operator.
+(3): ReSharper Suggestion: The expression is always the same as the argument.

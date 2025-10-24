@@ -1,0 +1,27 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(Int128 number, Int128 value)
+        {
+            var result11 = |number.Equals(value)|(0);
+
+            var result21 = |Int128.IsNegative(number)|(1);
+            var result22 = |Int128.IsPositive(number)|(2);
+        }
+
+        public void NoDetection(Int128 number, Int128 value)
+        {
+            number.Equals(value);
+
+            Int128.IsNegative(number);
+            Int128.IsPositive(number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '==' operator.
+(1): ReSharper Suggestion: Use the '<' operator.
+(2): ReSharper Suggestion: Use the '>=' operator.

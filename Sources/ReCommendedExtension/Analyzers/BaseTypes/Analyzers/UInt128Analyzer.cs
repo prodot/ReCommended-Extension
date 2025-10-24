@@ -7,7 +7,5 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(
-    typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseBinaryOperatorSuggestion)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
 public sealed class UInt128Analyzer() : UnsignedIntegerAnalyzer<UInt128>(BaseTypes.NumberInfos.NumberInfo.UInt128);

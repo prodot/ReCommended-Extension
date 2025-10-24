@@ -11,7 +11,7 @@ namespace Test
 
         public void Operator(DateOnly dateOnly, DateOnly value)
         {
-            var result = |dateOnly.Equals(value)|(1);
+            var result = dateOnly.Equals(value);
         }
 
         public void NoDetection(DateOnly dateOnly, DateOnly value, DateOnly? otherValue)
@@ -26,4 +26,3 @@ namespace Test
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.

@@ -11,7 +11,7 @@ namespace Test
 
         public void Operator(TimeOnly timeOnly, TimeOnly value)
         {
-            var result = |timeOnly.Equals(value)|(1);
+            var result = timeOnly.Equals(value);
         }
 
         public void NoDetection(TimeOnly timeOnly, TimeOnly value, TimeOnly? otherValue)
@@ -26,4 +26,3 @@ namespace Test
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.

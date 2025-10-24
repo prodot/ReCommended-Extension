@@ -16,7 +16,7 @@ public sealed class UInt128AnalyzerTests : BaseTypeAnalyzerTests<uint128>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt128";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override uint128[] TestValues { get; } = [0, 1, 2, uint128.MaxValue];
 
@@ -40,8 +40,6 @@ public sealed class UInt128AnalyzerTests : BaseTypeAnalyzerTests<uint128>
     [Test]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
-
         Test(number => number.Equals(null), _ => false);
 
         DoNamedTest2();

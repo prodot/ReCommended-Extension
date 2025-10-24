@@ -14,7 +14,7 @@ public sealed class SByteAnalyzerTests : BaseTypeAnalyzerTests<sbyte>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\SByte";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override sbyte[] TestValues { get; } = [0, 1, 2, -1, -2, sbyte.MinValue, sbyte.MaxValue];
 
@@ -47,8 +47,6 @@ public sealed class SByteAnalyzerTests : BaseTypeAnalyzerTests<sbyte>
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
-
         Test(number => number.Equals(null), _ => false);
 
         DoNamedTest2();
@@ -59,26 +57,6 @@ public sealed class SByteAnalyzerTests : BaseTypeAnalyzerTests<sbyte>
     public void TestGetTypeCode()
     {
         Test(number => number.GetTypeCode(), _ => TypeCode.SByte);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
-    public void TestIsNegative()
-    {
-        Test(number => MissingSByteMethods.IsNegative(number), number => number < 0);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
-    public void TestIsPositive()
-    {
-        Test(number => MissingSByteMethods.IsPositive(number), number => number >= 0);
 
         DoNamedTest2();
     }

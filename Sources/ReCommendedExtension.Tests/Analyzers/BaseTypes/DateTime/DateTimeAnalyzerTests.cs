@@ -14,7 +14,7 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTime";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseDateTimePropertySuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or UseDateTimePropertySuggestion || highlighting.IsError();
 
     protected override System.DateTime[] TestValues { get; } =
     [
@@ -43,25 +43,12 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     public void TestDate() => DoNamedTest2();
 
     [Test]
-    [SuppressMessage("ReSharper", "UseBinaryOperator")]
-    public void TestAdd()
-    {
-        var value = new System.TimeSpan(1, 2, 3, 4, 5);
-
-        Test(dateTime => dateTime.Add(value), dateTime => dateTime + value, [..TestValues.Except([System.DateTime.MaxValue])]);
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
-        Test((dateTime, value) => dateTime.Equals(value), (dateTime, value) => dateTime == value, TestValues, TestValues);
         Test(dateTime => dateTime.Equals(null), _ => false);
-        Test((t1, t2) => System.DateTime.Equals(t1, t2), (t1, t2) => t1 == t2, TestValues, TestValues);
 
         DoNamedTest2();
     }
@@ -71,19 +58,6 @@ public sealed class DateTimeAnalyzerTests : BaseTypeAnalyzerTests<System.DateTim
     public void TestGetTypeCode()
     {
         Test(dateTime => dateTime.GetTypeCode(), _ => TypeCode.DateTime);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "UseBinaryOperator")]
-    public void TestSubtract()
-    {
-        var dateTimeValue = new System.DateTime(2021, 7, 21);
-        var timeSpanValue = new System.TimeSpan(1, 2, 3, 4, 5);
-
-        Test(dateTime => dateTime.Subtract(dateTimeValue), dateTime => dateTime - dateTimeValue, [..TestValues.Except([System.DateTime.MinValue])]);
-        Test(dateTime => dateTime.Subtract(timeSpanValue), dateTime => dateTime - timeSpanValue, [..TestValues.Except([System.DateTime.MinValue])]);
 
         DoNamedTest2();
     }

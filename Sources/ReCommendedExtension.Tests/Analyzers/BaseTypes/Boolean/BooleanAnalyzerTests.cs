@@ -12,7 +12,7 @@ public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Boolean";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override bool[] TestValues { get; } = [true, false];
 
@@ -25,7 +25,6 @@ public sealed class BooleanAnalyzerTests : BaseTypeAnalyzerTests<bool>
         Test(flag => flag.Equals(false), flag => !flag);
         Test(obj => true.Equals(obj), obj => obj);
         Test(obj => false.Equals(obj), obj => !obj);
-        Test((flag, obj) => flag.Equals(obj), (flag, obj) => flag == obj, TestValues, TestValues);
 
         Test(flag => flag.Equals(null), _ => false);
 

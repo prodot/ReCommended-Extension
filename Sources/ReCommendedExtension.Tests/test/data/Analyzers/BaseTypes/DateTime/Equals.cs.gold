@@ -11,8 +11,8 @@ namespace Test
 
         public void Operator(DateTime dateTime, DateTime value)
         {
-            var result1 = |dateTime.Equals(value)|(1);
-            var result2 = |DateTime.Equals(dateTime, value)|(2);
+            var result1 = dateTime.Equals(value);
+            var result2 = DateTime.Equals(dateTime, value);
         }
 
         public void NoDetection(DateTime dateTime, DateTime value, DateTime? otherValue)
@@ -28,5 +28,3 @@ namespace Test
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.
-(2): ReSharper Suggestion: Use the '==' operator.

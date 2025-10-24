@@ -9,40 +9,6 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : IntegerAnalyzer<N>(numberInfo) where N : struct
 {
     /// <remarks>
-    /// <c>T.IsNegative(n)</c> → <c>n &lt; 0</c>
-    /// </remarks>
-    static void AnalyzeIsNegative(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '<' operator to compare to 0.",
-                    invocationExpression,
-                    "<",
-                    objArgument.Value.GetText(),
-                    "0"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>T.IsPositive(n)</c> → <c>n >= 0</c>
-    /// </remarks>
-    static void AnalyzeIsPositive(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && objArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '>=' operator to compare to 0.",
-                    invocationExpression,
-                    ">=",
-                    objArgument.Value.GetText(),
-                    "0"));
-        }
-    }
-
-    /// <remarks>
     /// <c>T.MaxMagnitude(n, n)</c> → <c>n</c>
     /// </remarks>
     void AnalyzeMaxMagnitude(
@@ -112,24 +78,6 @@ public abstract class SignedIntegerAnalyzer<N>(NumberInfo<N> numberInfo) : Integ
         {
             switch (method.ShortName)
             {
-                case "IsNegative": // todo: nameof(INumberBase<T>.IsNegative) when available
-                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                    {
-                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
-                            AnalyzeIsNegative(consumer, element, valueArgument);
-                            break;
-                    }
-                    break;
-
-                case "IsPositive": // todo: nameof(INumberBase<T>.IsPositive) when available
-                    switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                    {
-                        case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsClrType(NumberInfo.ClrTypeName):
-                            AnalyzeIsPositive(consumer, element, valueArgument);
-                            break;
-                    }
-                    break;
-
                 case "MaxMagnitude": // todo: nameof(INumberBase<T>.MaxMagnitude) when available
                     switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
                     {

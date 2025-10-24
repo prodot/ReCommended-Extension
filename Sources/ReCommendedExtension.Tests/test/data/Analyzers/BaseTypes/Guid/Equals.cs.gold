@@ -11,7 +11,7 @@ namespace Test
 
         public void Operator(Guid guid, Guid g)
         {
-            var result = |guid.Equals(g)|(1);
+            var result = guid.Equals(g);
         }
 
         public void NoDetection(Guid guid, Guid g, Guid? otherGuid)
@@ -26,4 +26,3 @@ namespace Test
 }
 ---------------------------------------------------------
 (0): ReSharper Suggestion: The expression is always false.
-(1): ReSharper Suggestion: Use the '==' operator.

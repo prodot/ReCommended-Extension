@@ -14,7 +14,7 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\UInt16";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override ushort[] TestValues { get; } = [0, 1, 2, ushort.MaxValue];
 
@@ -47,8 +47,6 @@ public sealed class UInt16AnalyzerTests : BaseTypeAnalyzerTests<ushort>
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestEquals()
     {
-        Test((number, obj) => number.Equals(obj), (number, obj) => number == obj, TestValues, TestValues);
-
         Test(number => number.Equals(null), _ => false);
 
         DoNamedTest2();

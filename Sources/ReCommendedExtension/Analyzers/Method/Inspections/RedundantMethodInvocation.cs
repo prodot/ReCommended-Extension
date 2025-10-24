@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Analyzers.Method.Inspections;
 
 internal sealed record RedundantMethodInvocation : Inspection
 {
-    public static RedundantMethodInvocation NonConstantWithTrue { get; } = new()
+    public static RedundantMethodInvocation NonBooleanConstantWithTrue { get; } = new()
     {
         Condition = (qualifier, args, _) => qualifier.TryGetBooleanConstant() == null && args[0]?.Value.TryGetBooleanConstant() == true,
         Message = methodName => $"Calling '{methodName}' with true is redundant.",

@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// </remarks>
 [ElementProblemAnalyzer(
     typeof(ICSharpExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseDateTimePropertySuggestion), typeof(UseBinaryOperatorSuggestion)])]
+    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseDateTimePropertySuggestion)])]
 public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
 {
     /// <remarks>
@@ -26,29 +26,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     $"The expression is always {nameof(DateTime)}.{nameof(DateTime.MinValue)}.",
                     objectCreationExpression,
                     $"{nameof(DateTime)}.{nameof(DateTime.MinValue)}"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateTime.Add(value)</c> → <c>dateTime + value</c>
-    /// </remarks>
-    static void AnalyzeAdd_TimeSpan(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '+' operator.",
-                    invocationExpression,
-                    "+",
-                    invokedExpression.QualifierExpression.GetText(),
-                    valueArgument.Value.GetText()));
         }
     }
 
@@ -85,29 +62,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
     }
 
     /// <remarks>
-    /// <c>dateTime.Equals(value)</c> → <c>dateTime == value</c>
-    /// </remarks>
-    static void AnalyzeEquals_DateTime(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '==' operator.",
-                    invocationExpression,
-                    "==",
-                    invokedExpression.QualifierExpression.GetText(),
-                    valueArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
     /// <c>dateTime.Equals(null)</c> → <c>false</c>
     /// </remarks>
     static void AnalyzeEquals_Object(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument valueArgument)
@@ -115,27 +69,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value.IsDefaultValue())
         {
             consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always false.", invocationExpression, "false"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>DateTime.Equals(t1, t2)</c> → <c>t1 == t2</c>
-    /// </remarks>
-    static void AnalyzeEquals_DateTime_DateTime(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        ICSharpArgument t1Argument,
-        ICSharpArgument t2Argument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && t1Argument.Value is { } && t2Argument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '==' operator.",
-                    invocationExpression,
-                    "==",
-                    t1Argument.Value.GetText(),
-                    t2Argument.Value.GetText()));
         }
     }
 
@@ -151,52 +84,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     $"The expression is always {nameof(TypeCode)}.{nameof(TypeCode.DateTime)}.",
                     invocationExpression,
                     $"{nameof(TypeCode)}.{nameof(TypeCode.DateTime)}"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateTime.Subtract(value)</c> → <c>dateTime - value</c>
-    /// </remarks>
-    static void AnalyzeSubtract_DateTime(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '-' operator.",
-                    invocationExpression,
-                    "-",
-                    invokedExpression.QualifierExpression.GetText(),
-                    valueArgument.Value.GetText()));
-        }
-    }
-
-    /// <remarks>
-    /// <c>dateTime.Subtract(value)</c> → <c>dateTime - value</c>
-    /// </remarks>
-    static void AnalyzeSubtract_TimeSpan(
-        IHighlightingConsumer consumer,
-        IInvocationExpression invocationExpression,
-        IReferenceExpression invokedExpression,
-        ICSharpArgument valueArgument)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement() && valueArgument.Value is { })
-        {
-            consumer.AddHighlighting(
-                new UseBinaryOperatorSuggestion(
-                    "Use the '-' operator.",
-                    invocationExpression,
-                    "-",
-                    invokedExpression.QualifierExpression.GetText(),
-                    valueArgument.Value.GetText()));
         }
     }
 
@@ -234,22 +121,9 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                     case ({ QualifierExpression: { } }, { IsStatic: false }):
                         switch (method.ShortName)
                         {
-                            case nameof(DateTime.Add):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsTimeSpan():
-                                        AnalyzeAdd_TimeSpan(consumer, invocationExpression, invokedExpression, valueArgument);
-                                        break;
-                                }
-                                break;
-
                             case nameof(DateTime.Equals):
                                 switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
                                 {
-                                    case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsDateTime():
-                                        AnalyzeEquals_DateTime(consumer, invocationExpression, invokedExpression, valueArgument);
-                                        break;
-
                                     case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsObject():
                                         AnalyzeEquals_Object(consumer, invocationExpression, valueArgument);
                                         break;
@@ -260,35 +134,6 @@ public sealed class DateTimeAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
                                 switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
                                 {
                                     case ([], []): AnalyzeGetTypeCode(consumer, invocationExpression); break;
-                                }
-                                break;
-
-                            case nameof(DateTime.Subtract):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsDateTime():
-                                        AnalyzeSubtract_DateTime(consumer, invocationExpression, invokedExpression, valueArgument);
-                                        break;
-
-                                    case ([{ Type: var valueType }], [{ } valueArgument]) when valueType.IsTimeSpan():
-                                        AnalyzeSubtract_TimeSpan(consumer, invocationExpression, invokedExpression, valueArgument);
-                                        break;
-                                }
-                                break;
-                        }
-                        break;
-
-                    case (_, { IsStatic: true }):
-                        switch (method.ShortName)
-                        {
-                            case nameof(DateTime.Equals):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([{ Type: var t1Type }, { Type: var t2Type }], [{ } t1Argument, { } t2Argument])
-                                        when t1Type.IsDateTime() && t2Type.IsDateTime():
-
-                                        AnalyzeEquals_DateTime_DateTime(consumer, invocationExpression, t1Argument, t2Argument);
-                                        break;
                                 }
                                 break;
                         }
