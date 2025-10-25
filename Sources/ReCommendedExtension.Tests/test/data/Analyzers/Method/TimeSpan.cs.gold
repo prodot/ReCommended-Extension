@@ -19,6 +19,11 @@ namespace Test
             var result52 = |TimeSpan.Equals(timeSpan, ts)|(6);
         }
 
+        public void UnaryOperator(TimeSpan timeSpan)
+        {
+            var result = |timeSpan.Negate()|(7);
+        }
+
         public void NoDetection(TimeSpan timeSpan, TimeSpan ts, double factor)
         {
             timeSpan.Add(ts);
@@ -32,6 +37,8 @@ namespace Test
 
             timeSpan.Equals(ts);
             TimeSpan.Equals(timeSpan, ts);
+
+            timeSpan.Negate();
         }
     }
 }
@@ -43,3 +50,4 @@ namespace Test
 (4): ReSharper Suggestion: Use the '/' operator.
 (5): ReSharper Suggestion: Use the '==' operator.
 (6): ReSharper Suggestion: Use the '==' operator.
+(7): ReSharper Suggestion: Use the '-' operator.

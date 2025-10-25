@@ -19,6 +19,11 @@ namespace Test
             var result52 = TimeSpan.Equals(timeSpan, ts);
         }
 
+        public void UnaryOperator(TimeSpan timeSpan)
+        {
+            var result = timeSpan.Negate();
+        }
+
         public void NoDetection(TimeSpan timeSpan, TimeSpan ts, double factor)
         {
             timeSpan.Add(ts);
@@ -32,6 +37,8 @@ namespace Test
 
             timeSpan.Equals(ts);
             TimeSpan.Equals(timeSpan, ts);
+
+            timeSpan.Negate();
         }
     }
 }

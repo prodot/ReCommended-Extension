@@ -9,7 +9,7 @@ using JetBrains.TextControl;
 using JetBrains.Util;
 using ReCommendedExtension.Extensions;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes;
+namespace ReCommendedExtension.Analyzers.Method;
 
 [QuickFix]
 public sealed class UseUnaryOperatorFix(UseUnaryOperatorSuggestion highlighting) : QuickFixBase

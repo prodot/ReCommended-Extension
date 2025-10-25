@@ -14,7 +14,7 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Decimal";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseUnaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
 
     protected override decimal[] TestValues { get; } = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MinValue, decimal.MaxValue];
 
@@ -66,16 +66,6 @@ public sealed class DecimalAnalyzerTests : BaseTypeAnalyzerTests<decimal>
     {
         Test(n => MissingDecimalMethods.Min(n, n), n => n);
         Test(n => Math.Min(n, n), n => n);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
-    [SuppressMessage("ReSharper", "UseUnaryOperator")]
-    public void TestNegate()
-    {
-        Test(d => decimal.Negate(d), d => -d);
 
         DoNamedTest2();
     }

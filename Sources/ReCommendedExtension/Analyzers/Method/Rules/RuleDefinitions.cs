@@ -139,6 +139,16 @@ internal static class RuleDefinitions
             ]);
 
         methods.Add(
+            nameof(decimal.Negate),
+            [
+                new Method
+                {
+                    Signature = new MethodSignature { Parameters = [Parameter.Decimal], IsStatic = true },
+                    Inspections = [UnaryOperator.ArgumentDecimal with { Operator = "-" }],
+                },
+            ]);
+
+        methods.Add(
             nameof(decimal.Remainder),
             [
                 new Method
@@ -326,6 +336,10 @@ internal static class RuleDefinitions
                         Inspections = [BinaryOperator.QualifierArgument with { Operator = "*" }],
                     },
                 ]
+            },
+            {
+                nameof(TimeSpan.Negate),
+                [new Method { Signature = new MethodSignature { Parameters = [] }, Inspections = [UnaryOperator.Qualifier with { Operator = "-" }] }]
             },
             {
                 nameof(TimeSpan.Subtract),

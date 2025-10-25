@@ -21,7 +21,8 @@ public sealed class MethodAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Method";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantMethodInvocationHint or UseOtherMethodSuggestion or UseBinaryOperatorSuggestion || highlighting.IsError();
+        => highlighting is RedundantMethodInvocationHint or UseOtherMethodSuggestion or UseBinaryOperatorSuggestion or UseUnaryOperatorSuggestion
+            || highlighting.IsError();
 
     static void Test<T, R>(Func<T, R> expected, Func<T, R> actual, T[] args)
     {
@@ -264,6 +265,7 @@ public sealed class MethodAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
+    [SuppressMessage("ReSharper", "UseUnaryOperator")]
     public void TestDecimal()
     {
         var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
@@ -289,6 +291,10 @@ public sealed class MethodAnalyzerTests : CSharpHighlightingTestBase
         Test((d1, d2) => decimal.Remainder(d1, d2), (d1, d2) => d1 % d2, [..values.Except([decimal.MinValue, decimal.MaxValue])], [1, -1, 2, -2]);
 
         Test((number, value) => number.Equals(value), (number, value) => number == value, values, values);
+
+        // unary operator
+
+        Test(d => decimal.Negate(d), d => -d, values);
 
         DoNamedTest2();
     }
@@ -387,6 +393,7 @@ public sealed class MethodAnalyzerTests : CSharpHighlightingTestBase
     [TestNetCore20]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+    [SuppressMessage("ReSharper", "UseUnaryOperator")]
     public void TestTimeSpan()
     {
         var values = new[]
@@ -432,6 +439,10 @@ public sealed class MethodAnalyzerTests : CSharpHighlightingTestBase
 
         Test((timeSpan, obj) => timeSpan.Equals(obj), (timeSpan, obj) => timeSpan == obj, values, values);
         Test((t1, t2) => TimeSpan.Equals(t1, t2), (t1, t2) => t1 == t2, values, values);
+
+        // unary operator
+
+        Test(timeSpan => timeSpan.Negate(), timeSpan => -timeSpan, [..values.Except([TimeSpan.MinValue])]);
 
         DoNamedTest2();
     }

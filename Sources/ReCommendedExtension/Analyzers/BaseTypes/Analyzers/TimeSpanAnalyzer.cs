@@ -9,9 +9,7 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(
-    typeof(ICSharpInvocationInfo),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseUnaryOperatorSuggestion)])]
+[ElementProblemAnalyzer(typeof(ICSharpInvocationInfo), HighlightingTypes = [typeof(UseExpressionResultSuggestion)])]
 public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     /// <remarks>
@@ -403,20 +401,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
         }
     }
 
-    /// <remarks>
-    /// <c>timeSpan.Negate()</c> → <c>-timeSpan</c>
-    /// </remarks>
-    static void AnalyzeNegate(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, IReferenceExpression invokedExpression)
-    {
-        Debug.Assert(invokedExpression.QualifierExpression is { });
-
-        if (!invocationExpression.IsUsedAsStatement())
-        {
-            consumer.AddHighlighting(
-                new UseUnaryOperatorSuggestion("Use the '-' operator.", invocationExpression, "-", invokedExpression.QualifierExpression.GetText()));
-        }
-    }
-
     protected override void Run(ICSharpInvocationInfo element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         switch (element)
@@ -524,13 +508,6 @@ public sealed class TimeSpanAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                     case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
                                         AnalyzeEquals_Object(consumer, invocationExpression, objArgument);
                                         break;
-                                }
-                                break;
-
-                            case nameof(TimeSpan.Negate):
-                                switch (method.Parameters, invocationExpression.TryGetArgumentsInDeclarationOrder())
-                                {
-                                    case ([], []): AnalyzeNegate(consumer, invocationExpression, invokedExpression); break;
                                 }
                                 break;
                         }

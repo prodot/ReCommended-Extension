@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes;
+namespace ReCommendedExtension.Analyzers.Method;
 
 [RegisterConfigurableSeverity(
     SeverityId,
@@ -14,19 +14,16 @@ namespace ReCommendedExtension.Analyzers.BaseTypes;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UseUnaryOperatorSuggestion(
-    string message,
-    IInvocationExpression invocationExpression,
-    string @operator,
-    string operand) : Highlighting(message)
+public sealed class UseUnaryOperatorSuggestion(string message, IInvocationExpression invocationExpression, string operand, string op) : Highlighting(
+    message)
 {
     const string SeverityId = "UseUnaryOperator";
 
     internal IInvocationExpression InvocationExpression => invocationExpression;
 
-    internal string Operator => @operator;
-
     internal string Operand => operand;
+
+    internal string Operator => op;
 
     public override DocumentRange CalculateRange() => invocationExpression.GetDocumentRange();
 }

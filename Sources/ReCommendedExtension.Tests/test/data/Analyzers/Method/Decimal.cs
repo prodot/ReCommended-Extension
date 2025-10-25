@@ -13,6 +13,11 @@
             var result21 = d1.Equals(d2);
         }
 
+        public void UnaryOperator(decimal d)
+        {
+            var result = decimal.Negate(d);
+        }
+
         public void NoDetection(decimal d1, decimal d2)
         {
             decimal.Add(d1, d2);
@@ -22,6 +27,8 @@
             decimal.Remainder(d1, d2);
 
             d1.Equals(d2);
+
+            decimal.Negate(d1);
         }
     }
 }

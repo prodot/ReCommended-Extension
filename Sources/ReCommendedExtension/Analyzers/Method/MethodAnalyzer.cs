@@ -14,7 +14,13 @@ namespace ReCommendedExtension.Analyzers.Method;
 
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(RedundantMethodInvocationHint), typeof(UseOtherMethodSuggestion), typeof(UseBinaryOperatorSuggestion)])]
+    HighlightingTypes =
+    [
+        typeof(RedundantMethodInvocationHint),
+        typeof(UseOtherMethodSuggestion),
+        typeof(UseBinaryOperatorSuggestion),
+        typeof(UseUnaryOperatorSuggestion),
+    ])]
 public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
     : ElementProblemAnalyzer<IInvocationExpression>
 {
@@ -26,7 +32,6 @@ public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
         Rules.Method method,
         string methodName,
         ITypeElement containingType,
-        IList<IParameter> resolvedParameters,
         TreeNodeCollection<ICSharpArgument?> arguments)
     {
         foreach (var inspection in method.Inspections)
@@ -132,6 +137,20 @@ public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     }
                     break;
                 }
+
+                case UnaryOperator unaryOperator when !invocationExpression.IsUsedAsStatement():
+                {
+                    if (unaryOperator.TryGetOperand(qualifier, arguments) is { } operand)
+                    {
+                        consumer.AddHighlighting(
+                            new UseUnaryOperatorSuggestion(
+                                inspection.Message(unaryOperator.Operator),
+                                invocationExpression,
+                                operand,
+                                unaryOperator.Operator));
+                    }
+                    break;
+                }
             }
         }
     }
@@ -152,16 +171,7 @@ public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             && RuleDefinitions.TryGetMethod(containingType, resolvedMethod) is { } method
             && element.TryGetArgumentsInDeclarationOrder() is { } arguments)
         {
-            Analyze(
-                consumer,
-                element,
-                qualifierExpression,
-                invokedExpression,
-                method,
-                resolvedMethod.ShortName,
-                containingType,
-                resolvedMethod.Parameters,
-                arguments);
+            Analyze(consumer, element, qualifierExpression, invokedExpression, method, resolvedMethod.ShortName, containingType, arguments);
         }
     }
 }
