@@ -12,6 +12,10 @@ internal sealed record Parameter
 {
     public static Parameter T { get; } = new() { IsType = _ => true };
 
+    public static Parameter TArray { get; } = new() { IsType = t => t.IsGenericArray() };
+
+    public static Parameter ReadOnlySpanOfT { get; } = new() { IsType = t => t.IsReadOnlySpan() };
+
     public static Parameter Type { get; } = new() { IsType = t => t.IsSystemType() };
 
     public static Parameter Object { get; } = new() { IsType = t => t.IsObject() };

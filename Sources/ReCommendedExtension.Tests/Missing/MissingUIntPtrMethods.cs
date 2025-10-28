@@ -75,21 +75,21 @@ internal static class MissingUIntPtrMethods // todo: consider implementing IForm
         => Parse(s.ToString(), style, provider);
 
     [Pure]
-    public static nuint RotateLeft(nuint value, int offset)
+    public static nuint RotateLeft(nuint value, int rotateAmount)
         => UIntPtr.Size switch
         {
-            8 => (nuint)MissingUInt64Methods.RotateLeft(value, offset),
-            4 => MissingUInt32Methods.RotateLeft((uint)value, offset),
+            8 => (nuint)MissingUInt64Methods.RotateLeft(value, rotateAmount),
+            4 => MissingUInt32Methods.RotateLeft((uint)value, rotateAmount),
 
             _ => throw new PlatformNotSupportedException(),
         };
 
     [Pure]
-    public static nuint RotateRight(nuint value, int offset)
+    public static nuint RotateRight(nuint value, int rotateAmount)
         => UIntPtr.Size switch
         {
-            8 => (nuint)MissingUInt64Methods.RotateRight(value, offset),
-            4 => MissingUInt32Methods.RotateRight((uint)value, offset),
+            8 => (nuint)MissingUInt64Methods.RotateRight(value, rotateAmount),
+            4 => MissingUInt32Methods.RotateRight((uint)value, rotateAmount),
 
             _ => throw new PlatformNotSupportedException(),
         };

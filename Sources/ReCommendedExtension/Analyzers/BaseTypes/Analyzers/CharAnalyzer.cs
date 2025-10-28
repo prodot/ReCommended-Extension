@@ -9,37 +9,9 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(
-    typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseCharRangePatternSuggestion)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseCharRangePatternSuggestion)])]
 public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
 {
-    /// <remarks>
-    /// <c>character.Equals(null)</c> → <c>false</c>
-    /// </remarks>
-    static void AnalyzeEquals_Object(IHighlightingConsumer consumer, IInvocationExpression invocationExpression, ICSharpArgument objArgument)
-    {
-        if (!invocationExpression.IsUsedAsStatement() && objArgument.Value.IsDefaultValue())
-        {
-            consumer.AddHighlighting(new UseExpressionResultSuggestion("The expression is always false.", invocationExpression, "false"));
-        }
-    }
-
-    /// <remarks>
-    /// <c>character.GetTypeCode()</c> → <c>TypeCode.Char</c>
-    /// </remarks>
-    static void AnalyzeGetTypeCode(IHighlightingConsumer consumer, IInvocationExpression invocationExpression)
-    {
-        if (!invocationExpression.IsUsedAsStatement())
-        {
-            consumer.AddHighlighting(
-                new UseExpressionResultSuggestion(
-                    $"The expression is always {nameof(TypeCode)}.{nameof(TypeCode.Char)}.",
-                    invocationExpression,
-                    $"{nameof(TypeCode)}.{nameof(TypeCode.Char)}"));
-        }
-    }
-
     /// <remarks>
     /// <c>char.IsAsciiDigit(c)</c> → <c>c is >= '0' and &lt;= '9'</c> (C# 9)
     /// </remarks>
@@ -210,27 +182,6 @@ public sealed class CharAnalyzer : ElementProblemAnalyzer<IInvocationExpression>
         {
             switch (invokedExpression, method)
             {
-                case ({ QualifierExpression: { } }, { IsStatic: false }):
-                    switch (method.ShortName)
-                    {
-                        case nameof(char.Equals):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([{ Type: var objType }], [{ } objArgument]) when objType.IsObject():
-                                    AnalyzeEquals_Object(consumer, element, objArgument);
-                                    break;
-                            }
-                            break;
-
-                        case nameof(char.GetTypeCode):
-                            switch (method.Parameters, element.TryGetArgumentsInDeclarationOrder())
-                            {
-                                case ([], []): AnalyzeGetTypeCode(consumer, element); break;
-                            }
-                            break;
-                    }
-                    break;
-
                 case (_, { IsStatic: true }):
                     switch (method.ShortName)
                     {

@@ -57,8 +57,8 @@ namespace Test
 
         public void ExpressionResult(string text)
         {
-            var result1 = |text.IndexOf("")|(4);
-            var result2 = |text.IndexOf("", StringComparison.CurrentCulture)|(5);
+            var result1 = text.IndexOf("");
+            var result2 = text.IndexOf("", StringComparison.CurrentCulture);
         }
 
         public void AsCharacter(string text)
@@ -72,8 +72,8 @@ namespace Test
             var result1 = text.IndexOf(c, 1);
             var result2 = text.IndexOf(c, startIndex);
 
-            text.|IndexOf|(6)("");
-            text.|IndexOf|(7)("", StringComparison.CurrentCulture);
+            text.|IndexOf|(4)("");
+            text.|IndexOf|(5)("", StringComparison.CurrentCulture);
         }
 
         public void NoDetection(string? text, StringComparison comparisonType, char c, string s)
@@ -118,7 +118,5 @@ namespace Test
 (1): ReSharper Suggestion: Use list pattern.
 (2): ReSharper Suggestion: Use list pattern.
 (3): ReSharper Suggestion: Use list pattern.
-(4): ReSharper Suggestion: The expression is always 0.
-(5): ReSharper Suggestion: The expression is always 0.
-(6): ReSharper Warning: Return value of pure method is not used
-(7): ReSharper Warning: Return value of pure method is not used
+(4): ReSharper Warning: Return value of pure method is not used
+(5): ReSharper Warning: Return value of pure method is not used

@@ -83,8 +83,6 @@ internal abstract class CollectionCreation
             _ => null,
         };
 
-    IReadOnlyList<string?>? stringConstants;
-
     protected abstract IEnumerable<(IInitializerElement, ICSharpExpression)> ElementsWithExpressions { get; }
 
     public abstract ICSharpExpression Expression { get; }
@@ -133,33 +131,6 @@ internal abstract class CollectionCreation
             {
                 yield return expression.TryGetStringConstant();
             }
-        }
-    }
-
-    /// <remarks>
-    /// Contains <c>null</c> if some elements are not string constants.
-    /// </remarks>
-    public IReadOnlyList<string?> StringConstants
-    {
-        get
-        {
-            if (stringConstants == null)
-            {
-                var array = new string?[Count];
-
-                var i = 0;
-                foreach (var (_, expression) in ElementsWithExpressions)
-                {
-                    if (expression.TryGetStringConstant() is { } stringConstant)
-                    {
-                        array[i++] = stringConstant;
-                    }
-                }
-
-                stringConstants = [..array];
-            }
-
-            return stringConstants;
         }
     }
 }

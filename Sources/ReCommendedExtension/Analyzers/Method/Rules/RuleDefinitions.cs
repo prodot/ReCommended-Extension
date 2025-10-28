@@ -746,7 +746,7 @@ internal static class RuleDefinitions
                         Inspections =
                         [
                             RedundantMethodInvocation.WithNullZeroZero with { IsPureMethod = false },
-                            RedundantMethodInvocation.WithNonNullCountZero with { IsPureMethod = false },
+                            RedundantMethodInvocation.WithNonNullCountZero with { IsPureMethod = false, EnsureFirstArgumentNotNull = true },
                         ],
                     },
                     new Method
@@ -755,7 +755,7 @@ internal static class RuleDefinitions
                         Inspections =
                         [
                             RedundantMethodInvocation.WithNullZeroZero with { IsPureMethod = false },
-                            RedundantMethodInvocation.WithNonNullCountZero with { IsPureMethod = false },
+                            RedundantMethodInvocation.WithNonNullCountZero with { IsPureMethod = false, EnsureFirstArgumentNotNull = true },
                         ],
                     },
                     new Method

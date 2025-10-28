@@ -7,8 +7,6 @@ public abstract class BaseTypeAnalyzerTests<T> : CSharpHighlightingTestBase
 {
     protected abstract T[] TestValues { get; }
 
-    protected void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
-
     protected void Test<R>(Func<T, R> expected, Func<T, R> actual, T[]? values = null)
     {
         foreach (var value in values ?? TestValues)

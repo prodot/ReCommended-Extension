@@ -23,13 +23,9 @@ public abstract class FloatingPointNumberAnalyzer<N>(NumberInfo<N> numberInfo) :
         }
     }
 
-    private protected override void Analyze(
-        IInvocationExpression element,
-        IReferenceExpression invokedExpression,
-        IMethod method,
-        IHighlightingConsumer consumer)
+    private protected override void Analyze(IInvocationExpression element, IMethod method, IHighlightingConsumer consumer)
     {
-        base.Analyze(element, invokedExpression, method, consumer);
+        base.Analyze(element, method, consumer);
 
         if (method.ContainingType.IsClrType(NumberInfo.ClrTypeName) && method.IsStatic)
         {

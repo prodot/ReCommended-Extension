@@ -6,13 +6,13 @@ namespace Test
     {
         public void ExpressionResult(string text, char c)
         {
-            var result = |text.LastIndexOf(c, 0)|(0);
+            var result = text.LastIndexOf(c, 0);
         }
 
         public void StringProperty(string text)
         {
-            var result1 = text.|LastIndexOf("")|(1);
-            var result2 = text.|LastIndexOf("", StringComparison.OrdinalIgnoreCase)|(2);
+            var result1 = text.|LastIndexOf("")|(0);
+            var result2 = text.|LastIndexOf("", StringComparison.OrdinalIgnoreCase)|(1);
         }
 
         public void AsCharacter(string text)
@@ -31,9 +31,9 @@ namespace Test
             var result5 = text.LastIndexOf("a", StringComparison.OrdinalIgnoreCase);
             var result6 = text.LastIndexOf("a", sc);
 
-            text.|LastIndexOf|(3)(c, 0);
-            text.|LastIndexOf|(4)("");
-            text.|LastIndexOf|(5)("", StringComparison.OrdinalIgnoreCase);
+            text.|LastIndexOf|(2)(c, 0);
+            text.|LastIndexOf|(3)("");
+            text.|LastIndexOf|(4)("", StringComparison.OrdinalIgnoreCase);
         }
 
         public void NoDetection(string? text, char c)
@@ -43,9 +43,8 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: The expression is always -1.
+(0): ReSharper Suggestion: Use the 'Length' property.
 (1): ReSharper Suggestion: Use the 'Length' property.
-(2): ReSharper Suggestion: Use the 'Length' property.
+(2): ReSharper Warning: Return value of pure method is not used
 (3): ReSharper Warning: Return value of pure method is not used
 (4): ReSharper Warning: Return value of pure method is not used
-(5): ReSharper Warning: Return value of pure method is not used

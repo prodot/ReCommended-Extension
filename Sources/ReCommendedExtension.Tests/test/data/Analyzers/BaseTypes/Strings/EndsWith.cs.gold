@@ -6,30 +6,30 @@ namespace Test
     {
         public void Empty(string text, StringComparison comparisonType)
         {
-            var result1 = |text.EndsWith("")|(0);
-            var result2 = |text.EndsWith("", comparisonType)|(1);
+            var result1 = text.EndsWith("");
+            var result2 = text.EndsWith("", comparisonType);
         }
 
         public void Char(string text, char c)
         {
-            var result1 = text.|EndsWith('a')|(2);
-            var result2 = text.|EndsWith(c)|(3);
+            var result1 = text.|EndsWith('a')|(0);
+            var result2 = text.|EndsWith(c)|(1);
         }
 
         public void SingleCharacter(string text)
         {
-            var result1 = text.|EndsWith("a", StringComparison.Ordinal)|(4);
-            var result2 = text.|EndsWith("a", StringComparison.OrdinalIgnoreCase)|(5);
+            var result1 = text.|EndsWith("a", StringComparison.Ordinal)|(2);
+            var result2 = text.|EndsWith("a", StringComparison.OrdinalIgnoreCase)|(3);
         }
 
         public void NoDetection(string text, string value, StringComparison comparisonType)
         {
-            text.|EndsWith|(6)("");
-            text.|EndsWith|(7)("", StringComparison.OrdinalIgnoreCase);
+            text.|EndsWith|(4)("");
+            text.|EndsWith|(5)("", StringComparison.OrdinalIgnoreCase);
 
             text.EndsWith('a');
-            text.|EndsWith|(8)("a", StringComparison.Ordinal);
-            text.|EndsWith|(9)("a", StringComparison.OrdinalIgnoreCase);
+            text.|EndsWith|(6)("a", StringComparison.Ordinal);
+            text.|EndsWith|(7)("a", StringComparison.OrdinalIgnoreCase);
 
             var result1 = text.EndsWith("abc", StringComparison.Ordinal);
             var result2 = text.EndsWith(value, StringComparison.Ordinal);
@@ -49,13 +49,11 @@ namespace Test
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Suggestion: The expression is always true.
-(1): ReSharper Suggestion: The expression is always true.
+(0): ReSharper Suggestion: Use list pattern.
+(1): ReSharper Suggestion: Use list pattern.
 (2): ReSharper Suggestion: Use list pattern.
 (3): ReSharper Suggestion: Use list pattern.
-(4): ReSharper Suggestion: Use list pattern.
-(5): ReSharper Suggestion: Use list pattern.
+(4): ReSharper Warning: Return value of pure method is not used
+(5): ReSharper Warning: Return value of pure method is not used
 (6): ReSharper Warning: Return value of pure method is not used
 (7): ReSharper Warning: Return value of pure method is not used
-(8): ReSharper Warning: Return value of pure method is not used
-(9): ReSharper Warning: Return value of pure method is not used

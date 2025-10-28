@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(int x)
+        {
+            var result = !{caret}(x > 0);
+        }
+    }
+}

@@ -10,37 +10,18 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Char;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+[TestNet70]
 public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Char";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseCharRangePatternSuggestion || highlighting.IsError();
+        => highlighting is UseCharRangePatternSuggestion || highlighting.IsError();
 
     protected override char[] TestValues { get; } = ['a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue];
 
     [Test]
-    [SuppressMessage("ReSharper", "UseBinaryOperator")]
-    [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestEquals()
-    {
-        Test(c => c.Equals(null), _ => false);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestGetTypeCode()
-    {
-        Test(character => character.GetTypeCode(), _ => TypeCode.Char);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestIsAsciiDigit()
     {
@@ -50,8 +31,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestIsAsciiHexDigit()
     {
@@ -61,8 +40,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestIsAsciiHexDigitLower()
     {
@@ -72,8 +49,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestIsAsciiHexDigitUpper()
     {
@@ -83,8 +58,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestIsAsciiLetter()
     {
@@ -94,8 +67,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestIsAsciiLetterLower()
     {
@@ -105,8 +76,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestIsAsciiLetterOrDigit()
     {
@@ -116,8 +85,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestIsAsciiLetterUpper()
     {
@@ -127,8 +94,6 @@ public sealed class CharAnalyzerTests : BaseTypeAnalyzerTests<char>
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet70]
     public void TestIsBetween()
     {
         Test(c => MissingCharMethods.IsBetween(c, 'a', 'c'), c => c is >= 'a' and <= 'c');

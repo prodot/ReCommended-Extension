@@ -868,7 +868,7 @@ public abstract record NumberInfo
         return constant.GetText();
     }
 
-    internal static NumberInfo<byte> Byte { get; } = new()
+    static NumberInfo<byte> Byte { get; } = new()
     {
         ClrTypeName = PredefinedType.BYTE_FQN,
         TypeCode = System.TypeCode.Byte,
@@ -883,12 +883,13 @@ public abstract record NumberInfo
         CastConstant = CastConstantToByte,
         Cast = expression => expression.Cast("byte").GetText(),
         CastZero = _ => "(byte)0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (byte.MinValue, byte.MaxValue),
+        IsZeroConstant = expression => TryGetByteConstant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetByteConstant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetByteConstant(a, out _) is { } x && TryGetByteConstant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetByteConstant(a, out _) == byte.MinValue && TryGetByteConstant(b, out _) == byte.MaxValue,
     };
 
-    internal static NumberInfo<sbyte> SByte { get; } = new()
+    static NumberInfo<sbyte> SByte { get; } = new()
     {
         ClrTypeName = PredefinedType.SBYTE_FQN,
         TypeCode = System.TypeCode.SByte,
@@ -903,12 +904,13 @@ public abstract record NumberInfo
         CastConstant = CastConstantToSByte,
         Cast = expression => expression.Cast("sbyte").GetText(),
         CastZero = _ => "(sbyte)0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (sbyte.MinValue, sbyte.MaxValue),
+        IsZeroConstant = expression => TryGetSByteConstant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetSByteConstant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetSByteConstant(a, out _) is { } x && TryGetSByteConstant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetSByteConstant(a, out _) == sbyte.MinValue && TryGetSByteConstant(b, out _) == sbyte.MaxValue,
     };
 
-    internal static NumberInfo<short> Int16 { get; } = new()
+    static NumberInfo<short> Int16 { get; } = new()
     {
         ClrTypeName = PredefinedType.SHORT_FQN,
         TypeCode = System.TypeCode.Int16,
@@ -923,12 +925,13 @@ public abstract record NumberInfo
         CastConstant = CastConstantToInt16,
         Cast = expression => expression.Cast("short").GetText(),
         CastZero = _ => "(short)0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (short.MinValue, short.MaxValue),
+        IsZeroConstant = expression => TryGetInt16Constant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetInt16Constant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetInt16Constant(a, out _) is { } x && TryGetInt16Constant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetInt16Constant(a, out _) == short.MinValue && TryGetInt16Constant(b, out _) == short.MaxValue,
     };
 
-    internal static NumberInfo<ushort> UInt16 { get; } = new()
+    static NumberInfo<ushort> UInt16 { get; } = new()
     {
         ClrTypeName = PredefinedType.USHORT_FQN,
         TypeCode = System.TypeCode.UInt16,
@@ -943,9 +946,10 @@ public abstract record NumberInfo
         CastConstant = CastConstantToUInt16,
         Cast = expression => expression.Cast("ushort").GetText(),
         CastZero = _ => "(ushort)0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (ushort.MinValue, ushort.MaxValue),
+        IsZeroConstant = expression => TryGetUInt16Constant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetUInt16Constant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetUInt16Constant(a, out _) is { } x && TryGetUInt16Constant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetUInt16Constant(a, out _) == ushort.MinValue && TryGetUInt16Constant(b, out _) == ushort.MaxValue,
     };
 
     internal static NumberInfo<int> Int32 { get; } = new()
@@ -963,12 +967,13 @@ public abstract record NumberInfo
         CastConstant = CastConstantToInt32,
         Cast = expression => expression.Cast("int").GetText(),
         CastZero = _ => "0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (int.MinValue, int.MaxValue),
+        IsZeroConstant = expression => TryGetInt32Constant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetInt32Constant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetInt32Constant(a, out _) is { } x && TryGetInt32Constant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetInt32Constant(a, out _) == int.MinValue && TryGetInt32Constant(b, out _) == int.MaxValue,
     };
 
-    internal static NumberInfo<uint> UInt32 { get; } = new()
+    static NumberInfo<uint> UInt32 { get; } = new()
     {
         ClrTypeName = PredefinedType.UINT_FQN,
         TypeCode = System.TypeCode.UInt32,
@@ -983,9 +988,10 @@ public abstract record NumberInfo
         CastConstant = CastConstantToUInt32,
         Cast = expression => expression.Cast("uint").GetText(),
         CastZero = _ => "0u",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (uint.MinValue, uint.MaxValue),
+        IsZeroConstant = expression => TryGetUInt32Constant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetUInt32Constant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetUInt32Constant(a, out _) is { } x && TryGetUInt32Constant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetUInt32Constant(a, out _) == uint.MinValue && TryGetUInt32Constant(b, out _) == uint.MaxValue,
     };
 
     internal static NumberInfo<long> Int64 { get; } = new()
@@ -1003,12 +1009,13 @@ public abstract record NumberInfo
         CastConstant = CastConstantToInt64,
         Cast = expression => expression.Cast("long").GetText(),
         CastZero = _ => "0L",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (long.MinValue, long.MaxValue),
+        IsZeroConstant = expression => TryGetInt64Constant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetInt64Constant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetInt64Constant(a, out _) is { } x && TryGetInt64Constant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetInt64Constant(a, out _) == long.MinValue && TryGetInt64Constant(b, out _) == long.MaxValue,
     };
 
-    internal static NumberInfo<ulong> UInt64 { get; } = new()
+    static NumberInfo<ulong> UInt64 { get; } = new()
     {
         ClrTypeName = PredefinedType.ULONG_FQN,
         TypeCode = System.TypeCode.UInt64,
@@ -1023,12 +1030,13 @@ public abstract record NumberInfo
         CastConstant = CastConstantToUInt64,
         Cast = expression => expression.Cast("ulong").GetText(),
         CastZero = _ => "0ul",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (ulong.MinValue, ulong.MaxValue),
+        IsZeroConstant = expression => TryGetUInt64Constant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetUInt64Constant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetUInt64Constant(a, out _) is { } x && TryGetUInt64Constant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetUInt64Constant(a, out _) == ulong.MinValue && TryGetUInt64Constant(b, out _) == ulong.MaxValue,
     };
 
-    internal static NumberInfo<Int128> Int128 { get; } = new()
+    static NumberInfo<Int128> Int128 { get; } = new()
     {
         ClrTypeName = ClrTypeNames.Int128,
         FormatSpecifiers =
@@ -1042,12 +1050,15 @@ public abstract record NumberInfo
         CastConstant = CastConstantToInt128,
         Cast = expression => expression.Cast("Int128").GetText(),
         CastZero = _ => "(Int128)0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (BaseTypes.NumberInfos.Int128.MinValue, BaseTypes.NumberInfos.Int128.MaxValue),
+        IsZeroConstant = expression => TryGetInt128Constant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetInt128Constant(expression, out _) is { } value && value != 0,
+        AreEqualConstants = (a, b) => TryGetInt128Constant(a, out _) is { } x && TryGetInt128Constant(b, out _) is { } y && x == y,
+        AreMinMaxConstants =
+            (a, b) => TryGetInt128Constant(a, out _) == BaseTypes.NumberInfos.Int128.MinValue
+                && TryGetInt128Constant(b, out _) == BaseTypes.NumberInfos.Int128.MaxValue,
     };
 
-    internal static NumberInfo<UInt128> UInt128 { get; } = new()
+    static NumberInfo<UInt128> UInt128 { get; } = new()
     {
         ClrTypeName = ClrTypeNames.UInt128,
         FormatSpecifiers =
@@ -1061,12 +1072,15 @@ public abstract record NumberInfo
         CastConstant = CastConstantToUInt128,
         Cast = expression => expression.Cast("UInt128").GetText(),
         CastZero = _ => "(UInt128)0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (NumberInfos.UInt128.MinValue, NumberInfos.UInt128.MaxValue),
+        IsZeroConstant = expression => TryGetUInt128Constant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetUInt128Constant(expression, out _) is { } value && value != 0,
+        AreEqualConstants = (a, b) => TryGetUInt128Constant(a, out _) is { } x && TryGetUInt128Constant(b, out _) is { } y && x == y,
+        AreMinMaxConstants =
+            (a, b) => TryGetUInt128Constant(a, out _) == BaseTypes.NumberInfos.UInt128.MinValue
+                && TryGetUInt128Constant(b, out _) == BaseTypes.NumberInfos.UInt128.MaxValue,
     };
 
-    internal static NumberInfo<nint> IntPtr { get; } = new()
+    static NumberInfo<nint> IntPtr { get; } = new()
     {
         ClrTypeName = PredefinedType.INTPTR_FQN,
         FormatSpecifiers =
@@ -1079,12 +1093,12 @@ public abstract record NumberInfo
         CastConstant = CastConstantToIntPtr,
         Cast = expression => expression.Cast(expression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? "nint" : "IntPtr").GetText(),
         CastZero = languageLevel => languageLevel >= CSharpLanguageLevel.CSharp90 ? "(nint)0" : "(IntPtr)0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (_, _) => false, // nint.MinValue and nint.MaxValue are platform-dependent
+        IsZeroConstant = expression => TryGetIntPtrConstant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetIntPtrConstant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetIntPtrConstant(a, out _) is { } x && TryGetIntPtrConstant(b, out _) is { } y && x == y,
     };
 
-    internal static NumberInfo<nuint> UIntPtr { get; } = new()
+    static NumberInfo<nuint> UIntPtr { get; } = new()
     {
         ClrTypeName = PredefinedType.UINTPTR_FQN,
         FormatSpecifiers =
@@ -1097,9 +1111,9 @@ public abstract record NumberInfo
         CastConstant = CastConstantToUIntPtr,
         Cast = expression => expression.Cast(expression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90 ? "nuint" : "UIntPtr").GetText(),
         CastZero = languageLevel => languageLevel >= CSharpLanguageLevel.CSharp90 ? "(nuint)0" : "(UIntPtr)0",
-        IsZero = value => value == 0,
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (_, _) => false, // nuint.MinValue and nuint.MaxValue are platform-dependent
+        IsZeroConstant = expression => TryGetUIntPtrConstant(expression, out _) == 0,
+        IsNonZeroConstant = expression => TryGetUIntPtrConstant(expression, out _) is { } and not 0,
+        AreEqualConstants = (a, b) => TryGetUIntPtrConstant(a, out _) is { } x && TryGetUIntPtrConstant(b, out _) is { } y && x == y,
     };
 
     internal static NumberInfo<decimal> Decimal { get; } = new()
@@ -1110,8 +1124,8 @@ public abstract record NumberInfo
         TryGetConstant = TryGetDecimalConstant,
         CastConstant = CastConstantToDecimal,
         Cast = expression => expression.Cast("decimal").GetText(),
-        AreEqual = (x, y) => x == y,
-        AreMinMaxValues = (min, max) => (min, max) == (decimal.MinValue, decimal.MaxValue),
+        AreEqualConstants = (a, b) => TryGetDecimalConstant(a, out _) is { } x && TryGetDecimalConstant(b, out _) is { } y && x == y,
+        AreMinMaxConstants = (a, b) => TryGetDecimalConstant(a, out _) == decimal.MinValue && TryGetDecimalConstant(b, out _) == decimal.MaxValue,
     };
 
     internal static NumberInfo<double> Double { get; } = new()
@@ -1122,8 +1136,6 @@ public abstract record NumberInfo
         RoundTripFormatSpecifierReplacement = "G17",
         TryGetConstant = TryGetDoubleConstant,
         Cast = expression => expression.Cast("double").GetText(),
-        AreEqual = (_, _) => false, // can only be checked by comparing literals
-        AreMinMaxValues = (_, _) => false, // can only be checked by comparing literals
         NanConstant = $"double.{nameof(double.NaN)}",
     };
 
@@ -1135,19 +1147,15 @@ public abstract record NumberInfo
         RoundTripFormatSpecifierReplacement = "G9",
         TryGetConstant = TryGetSingleConstant,
         Cast = expression => expression.Cast("float").GetText(),
-        AreEqual = (_, _) => false, // can only be checked by comparing literals
-        AreMinMaxValues = (_, _) => false, // can only be checked by comparing literals
         NanConstant = $"float.{nameof(float.NaN)}",
     };
 
-    internal static NumberInfo<Half> Half { get; } = new()
+    static NumberInfo<Half> Half { get; } = new()
     {
         ClrTypeName = ClrTypeNames.Half,
         FormatSpecifiers = FormatSpecifiers.GeneralZeroPrecisionRedundant | FormatSpecifiers.RoundtripPrecisionRedundant,
         TryGetConstant = TryGetHalfConstant,
         Cast = expression => expression.Cast("Half").GetText(),
-        AreEqual = (_, _) => false, // can only be checked by comparing literals
-        AreMinMaxValues = (_, _) => false, // can only be checked by comparing literals
     };
 
     [Pure]
@@ -1190,4 +1198,15 @@ public abstract record NumberInfo
     internal Func<ICSharpExpression, string>? Cast { get; private init; }
 
     internal Func<CSharpLanguageLevel, string>? CastZero { get; private init; }
+
+    internal Func<ICSharpExpression?, bool>? IsZeroConstant { get; private init; }
+
+    internal Func<ICSharpExpression?, bool>? IsNonZeroConstant { get; private init; }
+
+    internal Func<ICSharpExpression?, ICSharpExpression?, bool>? AreEqualConstants { get; private init; }
+
+    internal Func<ICSharpExpression?, ICSharpExpression?, bool>? AreMinMaxConstants { get; private init; }
+
+    [Pure]
+    internal abstract string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue);
 }

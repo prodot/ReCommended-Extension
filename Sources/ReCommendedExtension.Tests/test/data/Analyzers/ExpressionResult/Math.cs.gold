@@ -1,0 +1,201 @@
+﻿using System;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(byte byteValue, sbyte sbyteValue, short int16Value, ushort uint16Value, int int32Value, uint uint32Value, long int64Value, ulong uint64Value, nint intPtrValue, nuint uintPtrValue, decimal decimalValue)
+        {
+            (byte quotient1, byte remainder1) = |Math.DivRem((byte)0, (byte)10)|(0);
+            (sbyte quotient2, sbyte remainder2) = |Math.DivRem((sbyte)0, (sbyte)10)|(1);
+            (short quotient3, short remainder3) = |Math.DivRem((short)0, (short)10)|(2);
+            (ushort quotient4, ushort remainder4) = |Math.DivRem((ushort)0, (ushort)10)|(3);
+            (int quotient5, int remainder5) = |Math.DivRem(0, 10)|(4);
+            (uint quotient6, uint remainder6) = |Math.DivRem(0u, 10u)|(5);
+            (long quotient7, long remainder7) = |Math.DivRem(0L, 10L)|(6);
+            (ulong quotient8, ulong remainder8) = |Math.DivRem(0ul, 10ul)|(7);
+            (nint quotient9, nint remainder9) = |Math.DivRem((nint)0, 10)|(8);
+            (nuint quotientA, nuint remainderA) = |Math.DivRem((nuint)0, 10u)|(9);
+
+            var result11 = |Math.DivRem((byte)0, (byte)10)|(10);
+            var result12 = |Math.DivRem((sbyte)0, (sbyte)10)|(11);
+            var result13 = |Math.DivRem((short)0, (short)10)|(12);
+            var result14 = |Math.DivRem((ushort)0, (ushort)10)|(13);
+            var result15 = |Math.DivRem(0, 10)|(14);
+            var result16 = |Math.DivRem(0u, 10u)|(15);
+            var result17 = |Math.DivRem(0L, 10L)|(16);
+            var result18 = |Math.DivRem(0ul, 10ul)|(17);
+            var result19 = |Math.DivRem((nint)0, 10)|(18);
+            var result1A = |Math.DivRem((nuint)0, 10)|(19);
+
+            var result21 = |Math.Clamp(byteValue, (byte)1, (byte)1)|(20);
+            var result22 = |Math.Clamp(sbyteValue, (sbyte)1, (sbyte)1)|(21);
+            var result23 = |Math.Clamp(int16Value, (short)1, (short)1)|(22);
+            var result24 = |Math.Clamp(uint16Value, (ushort)1, (ushort)1)|(23);
+            var result25 = |Math.Clamp(int32Value, 1, 1)|(24);
+            var result26 = |Math.Clamp(uint32Value, 1, 1)|(25);
+            var result27 = |Math.Clamp(int64Value, 1, 1)|(26);
+            var result28 = |Math.Clamp(uint64Value, 1, 1)|(27);
+            var result29 = |Math.Clamp(intPtrValue, 1, 1)|(28);
+            var result2A = |Math.Clamp(uintPtrValue, 1, 1)|(29);
+            var result2B = |Math.Clamp(decimalValue, 1, 1)|(30);
+
+            var result31 = |Math.Clamp(byteValue, byte.MinValue, byte.MaxValue)|(31);
+            var result32 = |Math.Clamp(sbyteValue, sbyte.MinValue, sbyte.MaxValue)|(32);
+            var result33 = |Math.Clamp(int16Value, short.MinValue, short.MaxValue)|(33);
+            var result34 = |Math.Clamp(uint16Value, ushort.MinValue, ushort.MaxValue)|(34);
+            var result35 = |Math.Clamp(int32Value, int.MinValue, int.MaxValue)|(35);
+            var result36 = |Math.Clamp(uint32Value, uint.MinValue, uint.MaxValue)|(36);
+            var result37 = |Math.Clamp(int64Value, long.MinValue, long.MaxValue)|(37);
+            var result38 = |Math.Clamp(uint64Value, ulong.MinValue, ulong.MaxValue)|(38);
+            var result39 = |Math.Clamp(decimalValue, decimal.MinValue, decimal.MaxValue)|(39);
+
+            var result41 = |Math.Max((byte)1, (byte)1)|(40);
+            var result42 = |Math.Max((sbyte)1, (sbyte)1)|(41);
+            var result43 = |Math.Max((short)1, (short)1)|(42);
+            var result44 = |Math.Max((ushort)1, (ushort)1)|(43);
+            var result45 = |Math.Max(1, 1)|(44);
+            var result46 = |Math.Max(1u, 1u)|(45);
+            var result47 = |Math.Max(1L, 1L)|(46);
+            var result48 = |Math.Max(1ul, 1ul)|(47);
+            var result49 = |Math.Max((nint)1, (nint)1)|(48);
+            var result4A = |Math.Max((nuint)1, (nuint)1)|(49);
+            var result4B = |Math.Max(1m, 1m)|(50);
+
+            var result51 = |Math.Min((byte)1, (byte)1)|(51);
+            var result52 = |Math.Min((sbyte)1, (sbyte)1)|(52);
+            var result53 = |Math.Min((short)1, (short)1)|(53);
+            var result54 = |Math.Min((ushort)1, (ushort)1)|(54);
+            var result55 = |Math.Min(1, 1)|(55);
+            var result56 = |Math.Min(1u, 1u)|(56);
+            var result57 = |Math.Min(1L, 1L)|(57);
+            var result58 = |Math.Min(1ul, 1ul)|(58);
+            var result59 = |Math.Min((nint)1, (nint)1)|(59);
+            var result5A = |Math.Min((nuint)1, (nuint)1)|(60);
+            var result5B = |Math.Min(1m, 1m)|(61);
+        }
+
+        public void NoDetection(byte byteValue, sbyte sbyteValue, short int16Value, ushort uint16Value, int int32Value, uint uint32Value, long int64Value, ulong uint64Value, nint intPtrValue, nuint uintPtrValue, decimal decimalValue)
+        {
+            Math.DivRem((byte)0, (byte)10);
+            Math.DivRem((sbyte)0, (sbyte)10);
+            Math.DivRem((short)0, (short)10);
+            Math.DivRem((ushort)0, (ushort)10);
+            Math.DivRem(0, 10);
+            Math.DivRem(0u, 10u);
+            Math.DivRem(0L, 10L);
+            Math.DivRem(0ul, 10ul);
+            Math.DivRem((nint)0, 10);
+            Math.DivRem((nuint)0, 10u);
+
+            Math.Clamp(byteValue, (byte)1, (byte)1);
+            Math.Clamp(sbyteValue, (sbyte)1, (sbyte)1);
+            Math.Clamp(int16Value, (short)1, (short)1);
+            Math.Clamp(uint16Value, (ushort)1, (ushort)1);
+            Math.Clamp(int32Value, 1, 1);
+            Math.Clamp(uint32Value, 1, 1);
+            Math.Clamp(int64Value, 1, 1);
+            Math.Clamp(uint64Value, 1, 1);
+            Math.Clamp(intPtrValue, 1, 1);
+            Math.Clamp(uintPtrValue, 1, 1);
+            Math.Clamp(decimalValue, 1, 1);
+
+            Math.Clamp(byteValue, byte.MinValue, byte.MaxValue);
+            Math.Clamp(sbyteValue, sbyte.MinValue, sbyte.MaxValue);
+            Math.Clamp(int16Value, short.MinValue, short.MaxValue);
+            Math.Clamp(uint16Value, ushort.MinValue, ushort.MaxValue);
+            Math.Clamp(int32Value, int.MinValue, int.MaxValue);
+            Math.Clamp(uint32Value, uint.MinValue, uint.MaxValue);
+            Math.Clamp(int64Value, long.MinValue, long.MaxValue);
+            Math.Clamp(uint64Value, ulong.MinValue, ulong.MaxValue);
+            Math.Clamp(decimalValue, decimal.MinValue, decimal.MaxValue);
+
+            Math.Max((byte)1, (byte)1);
+            Math.Max((sbyte)1, (sbyte)1);
+            Math.Max((short)1, (short)1);
+            Math.Max((ushort)1, (ushort)1);
+            Math.Max(1, 1);
+            Math.Max(1u, 1u);
+            Math.Max(1L, 1L);
+            Math.Max(1ul, 1ul);
+            Math.Max((nint)1, (nint)1);
+            Math.Max((nuint)1, (nuint)1);
+            Math.Max(1m, 1m);
+
+            Math.Min((byte)1, (byte)1);
+            Math.Min((sbyte)1, (sbyte)1);
+            Math.Min((short)1, (short)1);
+            Math.Min((ushort)1, (ushort)1);
+            Math.Min(1, 1);
+            Math.Min(1u, 1u);
+            Math.Min(1L, 1L);
+            Math.Min(1ul, 1ul);
+            Math.Min((nint)1, (nint)1);
+            Math.Min((nuint)1, (nuint)1);
+            Math.Min(1m, 1m);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always (0, 0).
+(1): ReSharper Suggestion: The expression is always (0, 0).
+(2): ReSharper Suggestion: The expression is always (0, 0).
+(3): ReSharper Suggestion: The expression is always (0, 0).
+(4): ReSharper Suggestion: The expression is always (0, 0).
+(5): ReSharper Suggestion: The expression is always (0, 0).
+(6): ReSharper Suggestion: The expression is always (0, 0).
+(7): ReSharper Suggestion: The expression is always (0, 0).
+(8): ReSharper Suggestion: The expression is always (0, 0).
+(9): ReSharper Suggestion: The expression is always (0, 0).
+(10): ReSharper Suggestion: The expression is always (0, 0).
+(11): ReSharper Suggestion: The expression is always (0, 0).
+(12): ReSharper Suggestion: The expression is always (0, 0).
+(13): ReSharper Suggestion: The expression is always (0, 0).
+(14): ReSharper Suggestion: The expression is always (0, 0).
+(15): ReSharper Suggestion: The expression is always (0, 0).
+(16): ReSharper Suggestion: The expression is always (0, 0).
+(17): ReSharper Suggestion: The expression is always (0, 0).
+(18): ReSharper Suggestion: The expression is always (0, 0).
+(19): ReSharper Suggestion: The expression is always (0, 0).
+(20): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(21): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(22): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(23): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(24): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(25): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(26): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(27): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(28): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(29): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(30): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(31): ReSharper Suggestion: The expression is always the same as the first argument.
+(32): ReSharper Suggestion: The expression is always the same as the first argument.
+(33): ReSharper Suggestion: The expression is always the same as the first argument.
+(34): ReSharper Suggestion: The expression is always the same as the first argument.
+(35): ReSharper Suggestion: The expression is always the same as the first argument.
+(36): ReSharper Suggestion: The expression is always the same as the first argument.
+(37): ReSharper Suggestion: The expression is always the same as the first argument.
+(38): ReSharper Suggestion: The expression is always the same as the first argument.
+(39): ReSharper Suggestion: The expression is always the same as the first argument.
+(40): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(41): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(42): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(43): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(44): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(45): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(46): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(47): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(48): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(49): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(50): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(51): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(52): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(53): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(54): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(55): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(56): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(57): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(58): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(59): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(60): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(61): ReSharper Suggestion: The expression is always the same as the first or second argument.

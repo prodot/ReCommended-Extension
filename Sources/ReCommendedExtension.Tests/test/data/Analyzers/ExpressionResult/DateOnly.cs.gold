@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(DateOnly dateOnly)
+        {
+            var result = |dateOnly.Equals(null)|(0);
+        }
+
+        public void NoDetection(DateOnly dateOnly, object obj)
+        {
+            var result = dateOnly.Equals(obj);
+
+            dateOnly.Equals(null);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always false.

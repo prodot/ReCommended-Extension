@@ -1,0 +1,34 @@
+﻿namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(bool flag)
+        {
+            var result11 = |flag.Equals(false)|(0);
+            var result12 = |true.Equals(flag)|(1);
+            var result13 = |false.Equals(flag)|(2);
+            var result14 = |flag.Equals(null)|(3);
+
+            var result21 = |flag.GetTypeCode()|(4);
+        }
+
+        public void NoDetection(bool flag, bool value, object obj)
+        {
+            var result1 = flag.Equals(value);
+            var result2 = flag.Equals(obj);
+
+            flag.Equals(false);
+            true.Equals(flag);
+            false.Equals(flag);
+            flag.Equals(null);
+
+            flag.GetTypeCode();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always the same as the inverted qualifier.
+(1): ReSharper Suggestion: The expression is always the same as the argument.
+(2): ReSharper Suggestion: The expression is always the same as the inverted argument.
+(3): ReSharper Suggestion: The expression is always false.
+(4): ReSharper Suggestion: The expression is always a TypeCode constant.

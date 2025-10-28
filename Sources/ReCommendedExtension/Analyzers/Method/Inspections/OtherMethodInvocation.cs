@@ -145,7 +145,7 @@ internal sealed record OtherMethodInvocation : Inspection
             },
             () => args.All(a => a is { Value: { } }) ? [..from arg in args select arg.Value!.GetText()] : null,
             false),
-        QualifierCanBeNull = false,
+        EnsureQualifierNotNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -165,7 +165,7 @@ internal sealed record OtherMethodInvocation : Inspection
             },
             () => args.All(a => a is { Value: { } }) ? [..from arg in args select arg.Value!.GetText()] : null,
             true),
-        QualifierCanBeNull = false,
+        EnsureQualifierNotNull = true,
         Message = methodName => $"Use the negated '{methodName}' method.",
     };
 
@@ -189,7 +189,7 @@ internal sealed record OtherMethodInvocation : Inspection
                 ? [argValue.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"]
                 : null,
             false),
-        QualifierCanBeNull = false,
+        EnsureQualifierNotNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -211,7 +211,7 @@ internal sealed record OtherMethodInvocation : Inspection
                 ? [argValue.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"]
                 : null,
             true),
-        QualifierCanBeNull = false,
+        EnsureQualifierNotNull = true,
         Message = methodName => $"Use the negated '{methodName}' method.",
     };
 
@@ -228,7 +228,7 @@ internal sealed record OtherMethodInvocation : Inspection
             },
             () => args.All(a => a is { Value: { } }) ? [..from arg in args select arg.Value!.GetText()] : null,
             false),
-        QualifierCanBeNull = false,
+        EnsureQualifierNotNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -245,7 +245,7 @@ internal sealed record OtherMethodInvocation : Inspection
             },
             () => args.All(a => a is { Value: { } }) ? [..from arg in args select arg.Value!.GetText()] : null,
             true),
-        QualifierCanBeNull = false,
+        EnsureQualifierNotNull = true,
         Message = methodName => $"Use the negated '{methodName}' method.",
     };
 
@@ -262,7 +262,6 @@ internal sealed record OtherMethodInvocation : Inspection
                         IsNegated = false,
                     }
                     : null,
-        QualifierCanBeNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -316,7 +315,6 @@ internal sealed record OtherMethodInvocation : Inspection
                 invocationExpression,
                 args,
                 _ => true), // not a "params" modifier
-        QualifierCanBeNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -327,7 +325,6 @@ internal sealed record OtherMethodInvocation : Inspection
                 invocationExpression,
                 args,
                 type => type.IsGenericArrayOfString()),
-        QualifierCanBeNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -338,7 +335,6 @@ internal sealed record OtherMethodInvocation : Inspection
                 invocationExpression,
                 args,
                 type => type.IsGenericArrayOfObject()),
-        QualifierCanBeNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -349,7 +345,6 @@ internal sealed record OtherMethodInvocation : Inspection
                 invocationExpression,
                 args,
                 type => type.IsReadOnlySpanOfString()),
-        QualifierCanBeNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -360,11 +355,10 @@ internal sealed record OtherMethodInvocation : Inspection
                 invocationExpression,
                 args,
                 type => type.IsReadOnlySpanOfObject()),
-        QualifierCanBeNull = true,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
-    public required bool QualifierCanBeNull { get; init; }
+    public bool EnsureQualifierNotNull { get; private init; }
 
     public required Func<IInvocationExpression, TreeNodeCollection<ICSharpArgument?>, InvocationReplacement?> TryGetReplacement { get; init; }
 

@@ -9,12 +9,13 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.Double;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
 public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Double";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseFloatingPointPatternSuggestion || highlighting.IsError();
+        => highlighting is UseFloatingPointPatternSuggestion || highlighting.IsError();
 
     protected override double[] TestValues { get; } =
     [
@@ -35,25 +36,6 @@ public sealed class DoubleAnalyzerTests : BaseTypeAnalyzerTests<double>
     ];
 
     [Test]
-    [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestEquals()
-    {
-        Test(number => number.Equals(null), _ => false);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestGetTypeCode()
-    {
-        Test(number => number.GetTypeCode(), _ => TypeCode.Double);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "UseFloatingPointPattern")]
     public void TestIsNaN()

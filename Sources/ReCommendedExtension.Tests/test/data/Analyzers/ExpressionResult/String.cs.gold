@@ -1,0 +1,377 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(string text, StringComparison comparisonType, char c, string s, string[] stringArray, char[] charArray, StringSplitOptions options, int count)
+        {
+            var result11 = |text.Contains("")|(0);
+            var result12 = |text.Contains("", comparisonType)|(1);
+
+            var result21 = |text.EndsWith("")|(2);
+            var result22 = |text.EndsWith("", comparisonType)|(3);
+
+            var result31 = |text.GetTypeCode()|(4);
+
+            var result41 = |text.IndexOf("")|(5);
+            var result42 = |text.IndexOf("", comparisonType)|(6);
+
+            var result51 = |text.IndexOfAny([])|(7);
+
+            var result61 = |string.Join(c, (IEnumerable<int>)[])|(8);
+            var result62 = |string.Join(c, (IEnumerable<int>)[100])|(9);
+            var result63 = |string.Join(c, (string[])[])|(10);
+            var result64 = |string.Join(c, (string[])["item"])|(11);
+            var result65 = |string.Join(c, (object[])[])|(12);
+            var result66 = |string.Join(c, (object[])[true])|(13);
+            var result67 = |string.Join(c, (ReadOnlySpan<string?>)[])|(14);
+            var result68 = |string.Join(c, (ReadOnlySpan<string?>)["item"])|(15);
+            var result69 = |string.Join(c, (ReadOnlySpan<object?>)[])|(16);
+            var result6A = |string.Join(c, (ReadOnlySpan<object?>)[true])|(17);
+            var result6B = |string.Join(c, 100)|(18);
+            var result6C = |string.Join(c, true)|(19);
+            var result6D = |string.Join(c, "item")|(20);
+            var result6E = |string.Join(s, (IEnumerable<int>)[])|(21);
+            var result6F = |string.Join(s, (IEnumerable<int>)[100])|(22);
+            var result6G = |string.Join(s, (string[])[])|(23);
+            var result6H = |string.Join(s, (string[])["item"])|(24);
+            var result6I = |string.Join(s, (object[])[])|(25);
+            var result6J = |string.Join(s, (object[])[true])|(26);
+            var result6K = |string.Join(s, (ReadOnlySpan<string?>)[])|(27);
+            var result6L = |string.Join(s, (ReadOnlySpan<string?>)["item"])|(28);
+            var result6M = |string.Join(s, (ReadOnlySpan<object?>)[])|(29);
+            var result6N = |string.Join(s, (ReadOnlySpan<object?>)[true])|(30);
+            var result6O = |string.Join(s, 100)|(31);
+            var result6P = |string.Join(s, true)|(32);
+            var result6Q = |string.Join(s, "item")|(33);
+            var result6R = |string.Join(c, stringArray, 0, 0)|(34);
+            var result6S = |string.Join(c, ["item"], 1, 0)|(35);
+            var result6T = |string.Join(c, ["item"], 0, 1)|(36);
+            var result6U = |string.Join(s, stringArray, 0, 0)|(37);
+            var result6V = |string.Join(s, ["item"], 1, 0)|(38);
+            var result6W = |string.Join(s, ["item"], 0, 1)|(39);
+
+            var result71 = |text.LastIndexOf(c, 0)|(40);
+
+            var result81 = |text.LastIndexOfAny([])|(41);
+            var result82 = |text.LastIndexOfAny(charArray, 0)|(42);
+            var result83 = |text.LastIndexOfAny(charArray, 0, 0)|(43);
+            var result84 = |text.LastIndexOfAny(charArray, 0, 1)|(44);
+
+            var result91 = |text.Remove(0)|(45);
+
+            var resultA1 = |text.Split(null as string)|(46);
+            var resultA2 = |text.Split(null as string, StringSplitOptions.None)|(47);
+            var resultA3 = |text.Split("")|(48);
+            var resultA4 = |text.Split("", StringSplitOptions.None)|(49);
+            var resultA5 = |text.Split(null as string, StringSplitOptions.TrimEntries)|(50);
+            var resultA6 = |text.Split("", StringSplitOptions.TrimEntries)|(51);
+            var resultA7 = |text.Split([';'], 0)|(52);
+            var resultA8 = |text.Split([';'], 1)|(53);
+            var resultA9 = |text.Split([""], StringSplitOptions.None)|(54);
+            var resultAA = |text.Split([""], StringSplitOptions.TrimEntries)|(55);
+            var resultAB = |text.Split(';', 0)|(56);
+            var resultAC = |text.Split(';', 0, options)|(57);
+            var resultAD = |text.Split(';', 1)|(58);
+            var resultAE = |text.Split(';', 1, StringSplitOptions.None)|(59);
+            var resultAF = |text.Split(';', 1, StringSplitOptions.TrimEntries)|(60);
+            var resultAG = |text.Split("; ", 0)|(61);
+            var resultAH = |text.Split("; ", 0, options)|(62);
+            var resultAI = |text.Split("; ", 1)|(63);
+            var resultAJ = |text.Split("; ", 1, StringSplitOptions.None)|(64);
+            var resultAK = |text.Split(null as string, count)|(65);
+            var resultAL = |text.Split(null as string, count, StringSplitOptions.None)|(66);
+            var resultAM = |text.Split("", count)|(67);
+            var resultAN = |text.Split("", count, StringSplitOptions.None)|(68);
+            var resultAO = |text.Split("; ", 1, StringSplitOptions.TrimEntries)|(69);
+            var resultAP = |text.Split(null as string, count, StringSplitOptions.TrimEntries)|(70);
+            var resultAQ = |text.Split("", count, StringSplitOptions.TrimEntries)|(71);
+            var resultAR = |text.Split([';'], 0, options)|(72);
+            var resultAS = |text.Split([';'], 1, StringSplitOptions.None)|(73);
+            var resultAT = |text.Split([';'], 1, StringSplitOptions.TrimEntries)|(74);
+            var resultAU = |text.Split(["; "], 0, options)|(75);
+            var resultAV = |text.Split(["; "], 1, StringSplitOptions.None)|(76);
+            var resultAW = |text.Split([""], count, StringSplitOptions.None)|(77);
+            var resultAX = |text.Split(["; "], 1, StringSplitOptions.TrimEntries)|(78);
+            var resultAY = |text.Split([""], count, StringSplitOptions.TrimEntries)|(79);
+
+            var resultB1 = |text.StartsWith("")|(80);
+            var resultB2 = |text.StartsWith("", comparisonType)|(81);
+        }
+
+        public void NoDetection(string text, string? textNullable, string value, StringComparison comparisonType, char[] charArray, char c, string s, string[] stringArray, int startIndex, StringSplitOptions options, int count)
+        {
+            var result11 = text.Contains(value);
+            var result12 = text.Contains(value, comparisonType);
+            var result13 = textNullable?.Contains("");
+            var result14 = textNullable?.Contains("", comparisonType);
+
+            var result21 = text.EndsWith(value);
+            var result22 = text.EndsWith(value, comparisonType);
+            var result23 = textNullable?.EndsWith("");
+            var result24 = textNullable?.EndsWith("", comparisonType);
+
+            var result31 = textNullable?.GetTypeCode();
+
+            var result41 = text.IndexOf(value);
+            var result42 = text.IndexOf(value, comparisonType);
+            var result43 = textNullable?.IndexOf("");
+            var result44 = textNullable?.IndexOf("", comparisonType);
+
+            var result51 = text.IndexOfAny(charArray);
+            var result52 = textNullable?.IndexOfAny([]);
+
+            var result61 = string.Join(c, (IEnumerable<int>)[100, 100]);
+            var result62 = string.Join(c, (string[])["item", "item"]);
+            var result63 = string.Join(c, (object[])[true, true]);
+            var result64 = string.Join(c, (ReadOnlySpan<string?>)["item", "item"]);
+            var result65 = string.Join(c, (ReadOnlySpan<object?>)[true, true]);
+            var result66 = string.Join(c, 100, 100);
+            var result67 = string.Join(c, true, true);
+            var result68 = string.Join(c, "item", "item");
+            var result69 = string.Join(s, (IEnumerable<int>)[100, 100]);
+            var result6A = string.Join(s, (string[])["item", "item"]);
+            var result6B = string.Join(s, (object[])[true, true]);
+            var result6C = string.Join(s, (ReadOnlySpan<string?>)["item", "item"]);
+            var result6D = string.Join(s, (ReadOnlySpan<object?>)[true, true]);
+            var result6E = string.Join(s, 100, 100);
+            var result6F = string.Join(s, true, true);
+            var result6G = string.Join(s, "item", "item");
+            var result6H = string.Join(c, stringArray, 1, 2);
+            var result6I = string.Join(s, stringArray, 1, 2);
+
+            var result71 = text.LastIndexOf(c, startIndex);
+            var result72 = textNullable?.LastIndexOf(c, 0);
+
+            var result81 = text.LastIndexOfAny(charArray);
+            var result82 = text.LastIndexOfAny(charArray, 1);
+            var result83 = text.LastIndexOfAny(charArray, 1, 2);
+            var result84 = text.LastIndexOfAny(charArray, 1, 2);
+            var result85 = textNullable?.LastIndexOfAny([]);
+            var result86 = textNullable?.LastIndexOfAny(charArray, 0);
+            var result87 = textNullable?.LastIndexOfAny(charArray, 0, 0);
+            var result88 = textNullable?.LastIndexOfAny(charArray, 0, 1);
+
+            var result91 = text.Remove(startIndex);
+            var result92 = textNullable?.Remove(0);
+
+            var resultA1 = textNullable?.Split(null as string);
+            var resultA2 = textNullable?.Split(null as string, StringSplitOptions.None);
+            var resultA3 = textNullable?.Split("");
+            var resultA4 = textNullable?.Split("", StringSplitOptions.None);
+            var resultA5 = textNullable?.Split(null as string, StringSplitOptions.TrimEntries);
+            var resultA6 = textNullable?.Split("", StringSplitOptions.TrimEntries);
+            var resultA7 = textNullable?.Split([';'], 0);
+            var resultA8 = textNullable?.Split([';'], 1);
+            var resultA9 = textNullable?.Split([""], StringSplitOptions.None);
+            var resultAA = textNullable?.Split([""], StringSplitOptions.TrimEntries);
+            var resultAB = textNullable?.Split(';', 0);
+            var resultAC = textNullable?.Split(';', 0, options);
+            var resultAD = textNullable?.Split(';', 1);
+            var resultAE = textNullable?.Split(';', 1, StringSplitOptions.None);
+            var resultAF = textNullable?.Split(';', 1, StringSplitOptions.TrimEntries);
+            var resultAG = textNullable?.Split("; ", 0);
+            var resultAH = textNullable?.Split("; ", 0, options);
+            var resultAI = textNullable?.Split("; ", 1);
+            var resultAJ = textNullable?.Split("; ", 1, StringSplitOptions.None);
+            var resultAK = textNullable?.Split(null as string, count);
+            var resultAL = textNullable?.Split(null as string, count, StringSplitOptions.None);
+            var resultAM = textNullable?.Split("", count);
+            var resultAN = textNullable?.Split("", count, StringSplitOptions.None);
+            var resultAO = textNullable?.Split("; ", 1, StringSplitOptions.TrimEntries);
+            var resultAP = textNullable?.Split(null as string, count, StringSplitOptions.TrimEntries);
+            var resultAQ = textNullable?.Split("", count, StringSplitOptions.TrimEntries);
+            var resultAR = textNullable?.Split([';'], 0, options);
+            var resultAS = textNullable?.Split([';'], 1, StringSplitOptions.None);
+            var resultAT = textNullable?.Split([';'], 1, StringSplitOptions.TrimEntries);
+            var resultAU = textNullable?.Split(["; "], 0, options);
+            var resultAV = textNullable?.Split(["; "], 1, StringSplitOptions.None);
+            var resultAW = textNullable?.Split([""], count, StringSplitOptions.None);
+            var resultAX = textNullable?.Split(["; "], 1, StringSplitOptions.TrimEntries);
+            var resultAY = textNullable?.Split([""], count, StringSplitOptions.TrimEntries);
+
+            var resultB1 = text.StartsWith(value);
+            var resultB2 = text.StartsWith(value, comparisonType);
+            var resultB3 = textNullable?.StartsWith("");
+            var resultB4 = textNullable?.StartsWith("", comparisonType);
+
+            text.Contains("");
+            text.Contains("", comparisonType);
+
+            text.EndsWith("");
+            text.EndsWith("", comparisonType);
+
+            text.GetTypeCode();
+
+            text.IndexOf("");
+            text.IndexOf("", comparisonType);
+
+            text.IndexOfAny([]);
+
+            string.Join(c, (IEnumerable<int>)[]);
+            string.Join(c, (IEnumerable<int>)[100]);
+            string.Join(c, (string[])[]);
+            string.Join(c, (string[])["item"]);
+            string.Join(c, (object[])[]);
+            string.Join(c, (object[])[true]);
+            string.Join(c, (ReadOnlySpan<string?>)[]);
+            string.Join(c, (ReadOnlySpan<string?>)["item"]);
+            string.Join(c, (ReadOnlySpan<object?>)[]);
+            string.Join(c, (ReadOnlySpan<object?>)[true]);
+            string.Join(c, 100);
+            string.Join(c, true);
+            string.Join(c, "item");
+            string.Join(s, (IEnumerable<int>)[]);
+            string.Join(s, (IEnumerable<int>)[100]);
+            string.Join(s, (string[])[]);
+            string.Join(s, (string[])["item"]);
+            string.Join(s, (object[])[]);
+            string.Join(s, (object[])[true]);
+            string.Join(s, (ReadOnlySpan<string?>)[]);
+            string.Join(s, (ReadOnlySpan<string?>)["item"]);
+            string.Join(s, (ReadOnlySpan<object?>)[]);
+            string.Join(s, (ReadOnlySpan<object?>)[true]);
+            string.Join(s, 100);
+            string.Join(s, true);
+            string.Join(s, "item");
+            string.Join(c, stringArray, 0, 0);
+            string.Join(c, ["item"], 1, 0);
+            string.Join(c, ["item"], 0, 1);
+            string.Join(s, stringArray, 0, 0);
+            string.Join(s, ["item"], 1, 0);
+            string.Join(s, ["item"], 0, 1);
+
+            text.LastIndexOf(c, 0);
+
+            text.LastIndexOfAny([]);
+            text.LastIndexOfAny(charArray, 0);
+            text.LastIndexOfAny(charArray, 0, 0);
+            text.LastIndexOfAny(charArray, 0, 1);
+
+            text.Remove(0);
+
+            text.Split(null as string);
+            text.Split(null as string, StringSplitOptions.None);
+            text.Split("");
+            text.Split("", StringSplitOptions.None);
+            text.Split(null as string, StringSplitOptions.TrimEntries);
+            text.Split("", StringSplitOptions.TrimEntries);
+            text.Split([';'], 0);
+            text.Split([';'], 1);
+            text.Split([""], StringSplitOptions.None);
+            text.Split([""], StringSplitOptions.TrimEntries);
+            text.Split(';', 0);
+            text.Split(';', 0, options);
+            text.Split(';', 1);
+            text.Split(';', 1, StringSplitOptions.None);
+            text.Split(';', 1, StringSplitOptions.TrimEntries);
+            text.Split("; ", 0);
+            text.Split("; ", 0, options);
+            text.Split("; ", 1);
+            text.Split("; ", 1, StringSplitOptions.None);
+            text.Split(null as string, count);
+            text.Split(null as string, count, StringSplitOptions.None);
+            text.Split("", count);
+            text.Split("", count, StringSplitOptions.None);
+            text.Split("; ", 1, StringSplitOptions.TrimEntries);
+            text.Split(null as string, count, StringSplitOptions.TrimEntries);
+            text.Split("", count, StringSplitOptions.TrimEntries);
+            text.Split([';'], 0, options);
+            text.Split([';'], 1, StringSplitOptions.None);
+            text.Split([';'], 1, StringSplitOptions.TrimEntries);
+            text.Split(["; "], 0, options);
+            text.Split(["; "], 1, StringSplitOptions.None);
+            text.Split([""], count, StringSplitOptions.None);
+            text.Split(["; "], 1, StringSplitOptions.TrimEntries);
+            text.Split([""], count, StringSplitOptions.TrimEntries);
+
+            text.StartsWith("");
+            text.StartsWith("", comparisonType);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always true.
+(1): ReSharper Suggestion: The expression is always true.
+(2): ReSharper Suggestion: The expression is always true.
+(3): ReSharper Suggestion: The expression is always true.
+(4): ReSharper Suggestion: The expression is always a TypeCode constant.
+(5): ReSharper Suggestion: The expression is always 0.
+(6): ReSharper Suggestion: The expression is always 0.
+(7): ReSharper Suggestion: The expression is always -1.
+(8): ReSharper Suggestion: The expression is always an empty string.
+(9): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(10): ReSharper Suggestion: The expression is always an empty string.
+(11): ReSharper Suggestion: The expression is always the same as the passed collection element.
+(12): ReSharper Suggestion: The expression is always an empty string.
+(13): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(14): ReSharper Suggestion: The expression is always an empty string.
+(15): ReSharper Suggestion: The expression is always the same as the passed collection element.
+(16): ReSharper Suggestion: The expression is always an empty string.
+(17): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(18): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(19): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(20): ReSharper Suggestion: The expression is always the same as the passed collection element.
+(21): ReSharper Suggestion: The expression is always an empty string.
+(22): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(23): ReSharper Suggestion: The expression is always an empty string.
+(24): ReSharper Suggestion: The expression is always the same as the passed collection element.
+(25): ReSharper Suggestion: The expression is always an empty string.
+(26): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(27): ReSharper Suggestion: The expression is always an empty string.
+(28): ReSharper Suggestion: The expression is always the same as the passed collection element.
+(29): ReSharper Suggestion: The expression is always an empty string.
+(30): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(31): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(32): ReSharper Suggestion: The expression is always the same as the passed collection element converted to string.
+(33): ReSharper Suggestion: The expression is always the same as the passed collection element.
+(34): ReSharper Suggestion: The expression is always an empty string.
+(35): ReSharper Suggestion: The expression is always an empty string.
+(36): ReSharper Suggestion: The expression is always the same as the passed collection element.
+(37): ReSharper Suggestion: The expression is always an empty string.
+(38): ReSharper Suggestion: The expression is always an empty string.
+(39): ReSharper Suggestion: The expression is always the same as the passed collection element.
+(40): ReSharper Suggestion: The expression is always -1.
+(41): ReSharper Suggestion: The expression is always -1.
+(42): ReSharper Suggestion: The expression is always -1.
+(43): ReSharper Suggestion: The expression is always -1.
+(44): ReSharper Suggestion: The expression is always -1.
+(45): ReSharper Suggestion: The expression is always an empty string.
+(46): ReSharper Suggestion: The expression is always an array with a single element.
+(47): ReSharper Suggestion: The expression is always an array with a single element.
+(48): ReSharper Suggestion: The expression is always an array with a single element.
+(49): ReSharper Suggestion: The expression is always an array with a single element.
+(50): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(51): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(52): ReSharper Suggestion: The expression is always an empty array.
+(53): ReSharper Suggestion: The expression is always an array with a single element.
+(54): ReSharper Suggestion: The expression is always an array with a single element.
+(55): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(56): ReSharper Suggestion: The expression is always an empty array.
+(57): ReSharper Suggestion: The expression is always an empty array.
+(58): ReSharper Suggestion: The expression is always an array with a single element.
+(59): ReSharper Suggestion: The expression is always an array with a single element.
+(60): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(61): ReSharper Suggestion: The expression is always an empty array.
+(62): ReSharper Suggestion: The expression is always an empty array.
+(63): ReSharper Suggestion: The expression is always an array with a single element.
+(64): ReSharper Suggestion: The expression is always an array with a single element.
+(65): ReSharper Suggestion: The expression is always an array with a single element.
+(66): ReSharper Suggestion: The expression is always an array with a single element.
+(67): ReSharper Suggestion: The expression is always an array with a single element.
+(68): ReSharper Suggestion: The expression is always an array with a single element.
+(69): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(70): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(71): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(72): ReSharper Suggestion: The expression is always an empty array.
+(73): ReSharper Suggestion: The expression is always an array with a single element.
+(74): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(75): ReSharper Suggestion: The expression is always an empty array.
+(76): ReSharper Suggestion: The expression is always an array with a single element.
+(77): ReSharper Suggestion: The expression is always an array with a single element.
+(78): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(79): ReSharper Suggestion: The expression is always an array with a single trimmed element.
+(80): ReSharper Suggestion: The expression is always true.
+(81): ReSharper Suggestion: The expression is always true.

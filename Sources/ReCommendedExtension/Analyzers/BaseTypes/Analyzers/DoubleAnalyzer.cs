@@ -6,7 +6,5 @@ namespace ReCommendedExtension.Analyzers.BaseTypes.Analyzers;
 /// <remarks>
 /// C# language version checks are only done when a quick fix would require it.
 /// </remarks>
-[ElementProblemAnalyzer(
-    typeof(IInvocationExpression),
-    HighlightingTypes = [typeof(UseExpressionResultSuggestion), typeof(UseFloatingPointPatternSuggestion)])]
+[ElementProblemAnalyzer(typeof(IInvocationExpression), HighlightingTypes = [typeof(UseFloatingPointPatternSuggestion)])]
 public sealed class DoubleAnalyzer() : FloatingPointNumberAnalyzer<double>(NumberInfos.NumberInfo.Double);

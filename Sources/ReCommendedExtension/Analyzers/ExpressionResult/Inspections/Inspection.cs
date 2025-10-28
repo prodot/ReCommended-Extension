@@ -1,0 +1,715 @@
+﻿using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Analyzers.BaseTypes.Collections;
+using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.MethodFinding;
+
+namespace ReCommendedExtension.Analyzers.ExpressionResult.Inspections;
+
+internal sealed record Inspection
+{
+    public static Inspection NullToFalse { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => args[0] is { } arg && arg.Value.IsDefaultValue() ? new ExpressionResultReplacements { Main = "false" } : null,
+        Message = "The expression is always false.",
+    };
+
+    public static Inspection EmptyStringToTrue { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => args[0]?.Value.TryGetStringConstant() == "" ? new ExpressionResultReplacements { Main = "true" } : null,
+        Message = "The expression is always true.",
+    };
+
+    public static Inspection EmptyStringToZero { get; } = new()
+    {
+        TryGetReplacements = (_, _, args, _) => args[0]?.Value.TryGetStringConstant() == "" ? new ExpressionResultReplacements { Main = "0" } : null,
+        Message = "The expression is always 0.",
+    };
+
+    public static Inspection ZeroInArg1ToMinusOne { get; } = new()
+    {
+        TryGetReplacements = (_, _, args, _) => args[1]?.Value.TryGetInt32Constant() == 0 ? new ExpressionResultReplacements { Main = "-1" } : null,
+        Message = "The expression is always -1.",
+    };
+
+    public static Inspection ZeroInArg1ZeroOrOneInArg2ToMinusOne { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => args[1]?.Value.TryGetInt32Constant() == 0 && args[2]?.Value.TryGetInt32Constant() is 0 or 1
+                ? new ExpressionResultReplacements { Main = "-1" }
+                : null,
+        Message = "The expression is always -1.",
+    };
+
+    public static Inspection EmptyCollectionToMinusOne { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => CollectionCreation.TryFrom(args[0]?.Value) is { Count: 0 } ? new ExpressionResultReplacements { Main = "-1" } : null,
+        Message = "The expression is always -1.",
+    };
+
+    public static Inspection ZeroToEmptyStringIfNet6 { get; } = new()
+    {
+        TryGetReplacements =
+            (invocationExpression, _, args, _)
+                => invocationExpression is { PsiModule.TargetFrameworkId.Version.Major: >= 6 } && args[0]?.Value.TryGetInt32Constant() == 0
+                    ? new ExpressionResultReplacements { Main = "\"\"" }
+                    : null,
+        Message = "The expression is always an empty string.",
+    };
+
+    public static Inspection EmptyCollectionInParamsArg1ToEmptyString { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => args is [_] || args is [_, { Value: { } arg }] && CollectionCreation.TryFrom(arg) is { Count: 0 }
+                ? new ExpressionResultReplacements { Main = "\"\"" }
+                : null,
+        Message = "The expression is always an empty string.",
+    };
+
+    public static Inspection ZeroInArg2ZeroInArg3ToEmptyString { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => args[2]?.Value.TryGetInt32Constant() == 0 && args[3]?.Value.TryGetInt32Constant() == 0
+                ? new ExpressionResultReplacements { Main = "\"\"" }
+                : null,
+        Message = "The expression is always an empty string.",
+    };
+
+    public static Inspection SingleElementCollectionInArg1OneInArg2ZeroInArg3ToEmptyString { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => CollectionCreation.TryFrom(args[1]?.Value) is { Count: 1 }
+                && args[2]?.Value.TryGetInt32Constant() == 1
+                && args[3]?.Value.TryGetInt32Constant() == 0
+                    ? new ExpressionResultReplacements { Main = "\"\"" }
+                    : null,
+        Message = "The expression is always an empty string.",
+    };
+
+    public static Inspection SingleElementCollectionInArg1ZeroInArg2OneInArg3ToElement { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => CollectionCreation.TryFrom(args[1]?.Value) is { Count: 1 } collectionCreation
+                && args[2]?.Value.TryGetInt32Constant() == 0
+                && args[3]?.Value.TryGetInt32Constant() == 1
+                    ? new ExpressionResultReplacements { Main = collectionCreation.SingleElement.GetText() }
+                    : null,
+        Message = "The expression is always the same as the passed collection element.",
+    };
+
+    static ExpressionResultReplacements? TryGetReplacementsForSingleElementParamsCollectionInArg1(
+        IInvocationExpression? invocationExpression,
+        TreeNodeCollection<ICSharpArgument?> arguments,
+        bool convertToString,
+        Func<IType, bool> isCollectionTypeToExclude)
+    {
+        [Pure]
+        static string CreateConversionToString(string item, CSharpLanguageLevel languageLevel)
+        {
+            if (languageLevel >= CSharpLanguageLevel.CSharp60)
+            {
+                return $"$\"{{{item}}}\"";
+            }
+
+            return $"({item}).{nameof(ToString)}()";
+        }
+
+        if (invocationExpression is { } && arguments is [_, var arg])
+        {
+            if (CollectionCreation.TryFrom(arg?.Value) is { } collectionCreation)
+            {
+                // passed as an explicit collection creation
+
+                if (collectionCreation.Count == 1)
+                {
+                    return new ExpressionResultReplacements
+                    {
+                        Main = convertToString
+                            ? CreateConversionToString(collectionCreation.SingleElement.GetText(), invocationExpression.GetLanguageVersion())
+                            : collectionCreation.SingleElement.GetText(),
+                    };
+                }
+            }
+            else
+            {
+                if (arg?.Value?.GetExpressionType().ToIType() is { } argType && !isCollectionTypeToExclude(argType))
+                {
+                    // passed not as an explicit collection creation (collection created by the "params" modifier)
+
+                    return new ExpressionResultReplacements
+                    {
+                        Main = convertToString
+                            ? CreateConversionToString(arg.Value.GetText(), invocationExpression.GetLanguageVersion())
+                            : arg.Value.GetText(),
+                    };
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static Inspection SingleElementIEnumerableOfTInArg1ToElementConvertedToString { get; } = new()
+    {
+        TryGetReplacements =
+            (invocationExpression, _, args, _) => TryGetReplacementsForSingleElementParamsCollectionInArg1(
+                invocationExpression,
+                args,
+                true,
+                _ => true), // not a "params" modifier
+        Message = "The expression is always the same as the passed collection element converted to string.",
+    };
+
+    public static Inspection SingleElementParamsStringArrayInArg1ToElement { get; } = new()
+    {
+        TryGetReplacements =
+            (invocationExpression, _, args, _) => TryGetReplacementsForSingleElementParamsCollectionInArg1(
+                invocationExpression,
+                args,
+                false,
+                type => type.IsGenericArrayOfString()),
+        Message = "The expression is always the same as the passed collection element.",
+    };
+
+    public static Inspection SingleElementParamsReadOnlySpanOfStringInArg1ToElement { get; } = new()
+    {
+        TryGetReplacements =
+            (invocationExpression, _, args, _) => TryGetReplacementsForSingleElementParamsCollectionInArg1(
+                invocationExpression,
+                args,
+                false,
+                type => type.IsReadOnlySpanOfString()),
+        Message = "The expression is always the same as the passed collection element.",
+    };
+
+    public static Inspection SingleElementParamsObjectArrayInArg1ToElementConvertedToString { get; } = new()
+    {
+        TryGetReplacements =
+            (invocationExpression, _, args, _) => TryGetReplacementsForSingleElementParamsCollectionInArg1(
+                invocationExpression,
+                args,
+                true,
+                type => type.IsGenericArrayOfObject()),
+        Message = "The expression is always the same as the passed collection element converted to string.",
+    };
+
+    public static Inspection SingleElementParamsReadOnlySpanOfObjectInArg1ToElementConvertedToString { get; } = new()
+    {
+        TryGetReplacements =
+            (invocationExpression, _, args, _) => TryGetReplacementsForSingleElementParamsCollectionInArg1(
+                invocationExpression,
+                args,
+                true,
+                type => type.IsReadOnlySpanOfObject()),
+        Message = "The expression is always the same as the passed collection element converted to string.",
+    };
+
+    public static Inspection ToTypeCodeForBoolean { get; } = new()
+    {
+        TryGetReplacements = (_, _, _, _) => new ExpressionResultReplacements { Main = $"{nameof(TypeCode)}.{TypeCode.Boolean}" },
+        Message = $"The expression is always a {nameof(TypeCode)} constant.",
+    };
+
+    public static Inspection ToTypeCodeForNumber { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, _, tryGetNumberInfo) => tryGetNumberInfo() is { TypeCode: { } typeCode }
+                ? new ExpressionResultReplacements { Main = $"{nameof(TypeCode)}.{typeCode}" }
+                : null,
+        Message = $"The expression is always a {nameof(TypeCode)} constant.",
+    };
+
+    public static Inspection ToTypeCodeForDateTime { get; } = new()
+    {
+        TryGetReplacements = (_, _, _, _) => new ExpressionResultReplacements { Main = $"{nameof(TypeCode)}.{TypeCode.DateTime}" },
+        Message = $"The expression is always a {nameof(TypeCode)} constant.",
+    };
+
+    public static Inspection ToTypeCodeForChar { get; } = new()
+    {
+        TryGetReplacements = (_, _, _, _) => new ExpressionResultReplacements { Main = $"{nameof(TypeCode)}.{TypeCode.Char}" },
+        Message = $"The expression is always a {nameof(TypeCode)} constant.",
+    };
+
+    public static Inspection ToTypeCodeForString { get; } = new()
+    {
+        TryGetReplacements = (_, _, _, _) => new ExpressionResultReplacements { Main = $"{nameof(TypeCode)}.{TypeCode.String}" },
+        Message = $"The expression is always a {nameof(TypeCode)} constant.",
+    };
+
+    public static Inspection ZeroNonZeroToQuotientRemainder { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, tryGetNumberInfo) =>
+        {
+            if (invocationExpression is { }
+                && tryGetNumberInfo() is { IsZeroConstant: { }, IsNonZeroConstant: { }, CastZero: { } } numberInfo
+                && numberInfo.IsZeroConstant(args[0]?.Value)
+                && numberInfo.IsNonZeroConstant(args[1]?.Value))
+            {
+                if (invocationExpression.TryGetTargetType(false).IsValueTuple(out var t1TypeArgument, out var t2TypeArgument)
+                    && t1TypeArgument.IsClrType(numberInfo.ClrTypeName)
+                    && t2TypeArgument.IsClrType(numberInfo.ClrTypeName))
+                {
+                    return new ExpressionResultReplacements { Main = "(0, 0)" };
+                }
+
+                var zero = numberInfo.CastZero(invocationExpression.GetCSharpLanguageLevel());
+
+                return new ExpressionResultReplacements { Main = $"(Quotient: {zero}, Remainder: {zero})" };
+            }
+
+            return null;
+        },
+        Message = "The expression is always (0, 0).",
+    };
+
+    public static Inspection NumberZeroToNumber { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, tryGetNumberInfo)
+            => invocationExpression is { }
+            && args[0] is { Value: { } value }
+            && args[1]?.Value.TryGetInt32Constant() == 0
+            && tryGetNumberInfo() is { } numberInfo
+                ? new ExpressionResultReplacements { Main = numberInfo.GetReplacementFromArgument(invocationExpression, value) }
+                : null,
+        Message = "The expression is always the same as the first argument.",
+    };
+
+    public static Inspection NumberMinMaxEqualToMinOrMax { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, tryGetNumberInfo) =>
+        {
+            if (invocationExpression is { }
+                && args[1] is { Value: { } minArgValue }
+                && args[2] is { Value: { } maxArgValue }
+                && tryGetNumberInfo() is { AreEqualConstants: { } } numberInfo
+                && numberInfo.AreEqualConstants(minArgValue, maxArgValue))
+            {
+                var replacementMin = numberInfo.GetReplacementFromArgument(invocationExpression, minArgValue);
+                var replacementMax = numberInfo.GetReplacementFromArgument(invocationExpression, maxArgValue);
+
+                return new ExpressionResultReplacements
+                {
+                    Main = replacementMin, Alternative = replacementMax != replacementMin ? replacementMax : null,
+                };
+            }
+
+            return null;
+        },
+        Message = "The expression is always the same as the second or third argument.",
+    };
+
+    public static Inspection NumberTypeMinTypeMaxToNumber { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, tryGetNumberInfo) => invocationExpression is { }
+            && args[0] is { Value: { } argValue }
+            && args[1] is { Value: { } minArgValue }
+            && args[2] is { Value: { } maxArgValue }
+            && tryGetNumberInfo() is { AreMinMaxConstants: { } } numberInfo
+            && numberInfo.AreMinMaxConstants(minArgValue, maxArgValue)
+                ? new ExpressionResultReplacements { Main = numberInfo.GetReplacementFromArgument(invocationExpression, argValue) }
+                : null,
+        Message = "The expression is always the same as the first argument.",
+    };
+
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Parameter names used to construct the property name.")]
+    public static Inspection XYEqualToXOrY { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, tryGetNumberInfo) =>
+        {
+            if (invocationExpression is { }
+                && args[0] is { Value: { } xArgValue }
+                && args[1] is { Value: { } yArgValue }
+                && tryGetNumberInfo() is { AreEqualConstants: { } } numberInfo
+                && numberInfo.AreEqualConstants(xArgValue, yArgValue))
+            {
+                var replacementX = numberInfo.GetReplacementFromArgument(invocationExpression, xArgValue);
+                var replacementY = numberInfo.GetReplacementFromArgument(invocationExpression, yArgValue);
+
+                return new ExpressionResultReplacements
+                {
+                    Main = replacementX,
+                    Alternative = replacementY != replacementX ? replacementY : null,
+                };
+            }
+
+            return null;
+        },
+        Message = "The expression is always the same as the first or second argument.",
+    };
+
+    public static Inspection Int32ZeroOrOneToZero { get; } = new()
+    {
+        TryGetReplacements = (_, _, args, _) => args[0]?.Value.TryGetInt32Constant() is 0 or 1
+            ? new ExpressionResultReplacements { Main = "0" }
+            : null,
+        Message = "The expression is always 0.",
+    };
+
+    public static Inspection Int64ZeroOrOneToZero { get; } = new()
+    {
+        TryGetReplacements = (_, _, args, _) => args[0]?.Value.TryGetInt64Constant() is 0 or 1
+            ? new ExpressionResultReplacements { Main = "0L" }
+            : null,
+        Message = "The expression is always 0.",
+    };
+
+    public static Inspection Int32ValueValueOrValueNextValueToValue { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, _)
+            => invocationExpression is { }
+            && args[0] is { Value: { } } minValueArg
+            && minValueArg.Value.TryGetInt32Constant() is { } minValue
+            && args[1]?.Value.TryGetInt32Constant() is { } maxValue
+            && (minValue == maxValue || minValue == unchecked(maxValue - 1))
+                ? new ExpressionResultReplacements { Main = NumberInfo.Int32.GetReplacementFromArgument(invocationExpression, minValueArg.Value) }
+                : null,
+        Message = "The expression is the same as the first argument.",
+    };
+
+    public static Inspection Int64ValueValueOrValueNextValueToValue { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, _)
+            => invocationExpression is { }
+            && args[0] is { Value: { } } minValueArg
+            && minValueArg.Value.TryGetInt64Constant() is { } minValue
+            && args[1]?.Value.TryGetInt64Constant() is { } maxValue
+            && (minValue == maxValue || minValue == unchecked(maxValue - 1))
+                ? new ExpressionResultReplacements { Main = NumberInfo.Int64.GetReplacementFromArgument(invocationExpression, minValueArg.Value) }
+                : null,
+        Message = "The expression is the same as the first argument.",
+    };
+
+    [Pure]
+    static string CreateArray(IType itemType, string[] elements, IInvocationExpression invocationExpression)
+    {
+        if (invocationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120 && invocationExpression.TryGetTargetType(true) is { })
+        {
+            return $"[{string.Join(", ", elements)}]";
+        }
+
+        if (elements is [])
+        {
+            Debug.Assert(CSharpLanguage.Instance is { });
+
+            var type = itemType.GetPresentableName(CSharpLanguage.Instance);
+
+            if (PredefinedType.ARRAY_FQN.HasMethod(
+                new MethodSignature { Name = nameof(Array.Empty), Parameters = [], GenericParametersCount = 1, IsStatic = true },
+                invocationExpression.GetPsiModule()))
+            {
+                return $"{nameof(Array)}.{nameof(Array.Empty)}<{type}>()";
+            }
+
+            return $"new {type}[0]";
+        }
+
+        return $$"""new[] { {{string.Join(", ", elements)}} }""";
+    }
+
+    public static Inspection ArrayZeroToEmptyArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, _) =>
+        {
+            if (invocationExpression is { } && args[0] is { Value: { } arg0Value } && args[1]?.Value.TryGetInt32Constant() == 0)
+            {
+                var elementType = invocationExpression.TypeArguments is [var typeArgument]
+                    ? typeArgument
+                    : CollectionTypeUtil.ElementTypeByCollectionType(arg0Value.Type(), invocationExpression, false);
+
+                if (elementType is { })
+                {
+                    return new ExpressionResultReplacements { Main = CreateArray(elementType, [], invocationExpression) };
+                }
+            }
+
+            return null;
+        },
+        Message = "The expression is always an empty array.",
+    };
+
+    public static Inspection ReadOnlySpanZeroToEmptyArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, _) =>
+        {
+            if (invocationExpression is { } && args[1]?.Value.TryGetInt32Constant() == 0)
+            {
+                var elementType = invocationExpression.TypeArguments is [var typeArgument]
+                    ? typeArgument
+                    : args[0] is { Value: { } arg0Value }
+                        ? TypesUtil.GetTypeArgumentValue(arg0Value.Type(), 0)
+                        : null;
+
+                if (elementType is { })
+                {
+                    return new ExpressionResultReplacements { Main = CreateArray(elementType, [], invocationExpression) };
+                }
+            }
+
+            return null;
+        },
+        Message = "The expression is always an empty array.",
+    };
+
+    public static Inspection ZeroInArg1ToEmptyArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, _, args, _)
+            => invocationExpression is { }
+            && args[1]?.Value.TryGetInt32Constant() == 0
+            && PredefinedType.STRING_FQN.TryGetTypeElement(invocationExpression.PsiModule) is { } stringTypeElement
+                ? new ExpressionResultReplacements { Main = CreateArray(TypeFactory.CreateType(stringTypeElement), [], invocationExpression) }
+                : null,
+        Message = "The expression is always an empty array.",
+    };
+
+    public static Inspection OneInArg1ToSingleElementArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, qualifier, args, _) => args[1]?.Value.TryGetInt32Constant() == 1
+            && invocationExpression is { }
+            && qualifier is { }
+            && PredefinedType.STRING_FQN.TryGetTypeElement(invocationExpression.PsiModule) is { } stringTypeElement
+                ? new ExpressionResultReplacements
+                {
+                    Main = CreateArray(TypeFactory.CreateType(stringTypeElement), [qualifier.GetText()], invocationExpression),
+                }
+                : null,
+        Message = "The expression is always an array with a single element.",
+    };
+
+    public static Inspection OneInArg1OptionalStringSplitOptionsInArg2ToSingleElementArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, qualifier, args, _) => args[1]?.Value.TryGetInt32Constant() == 1
+            && args[2] is var arg2
+            && (arg2 == null || arg2.Value.TryGetStringSplitOptionsConstant() == StringSplitOptions.None)
+            && invocationExpression is { }
+            && qualifier is { }
+            && PredefinedType.STRING_FQN.TryGetTypeElement(invocationExpression.PsiModule) is { } stringTypeElement
+                ? new ExpressionResultReplacements
+                {
+                    Main = CreateArray(TypeFactory.CreateType(stringTypeElement), [qualifier.GetText()], invocationExpression),
+                }
+                : null,
+        Message = "The expression is always an array with a single element.",
+    };
+
+    public static Inspection OneInArg1StringSplitOptionsInArg2ToSingleTrimmedElementArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, qualifier, args, _) => args[1]?.Value.TryGetInt32Constant() == 1
+            && args[2]?.Value.TryGetStringSplitOptionsConstant() == (StringSplitOptions)2 // todo: use StringSplitOptions.TrimEntries when available
+            && invocationExpression is { }
+            && PredefinedType.STRING_FQN.TryGetTypeElement(invocationExpression.PsiModule) is { } stringTypeElement
+            && stringTypeElement.HasMethod(new MethodSignature { Name = nameof(string.Trim), Parameters = [] })
+            && qualifier is { }
+                ? new ExpressionResultReplacements
+                {
+                    Main = CreateArray(TypeFactory.CreateType(stringTypeElement), [$"{qualifier.GetText()}.Trim()"], invocationExpression),
+                }
+                : null,
+        Message = "The expression is always an array with a single trimmed element.",
+    };
+
+    public static Inspection NullOrEmptyStringInArg0OptionalStringSplitOptionsInLastArgToSingleElementArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, qualifier, args, _)
+            => args is [{ Value: { } arg0Value }, .., var lastArg]
+            && (arg0Value.IsDefaultValue() || arg0Value.TryGetStringConstant() == "")
+            && (lastArg == null || lastArg.Value.TryGetStringSplitOptionsConstant() == StringSplitOptions.None)
+            && invocationExpression is { }
+            && qualifier is { }
+            && PredefinedType.STRING_FQN.TryGetTypeElement(invocationExpression.PsiModule) is { } stringTypeElement
+                ? new ExpressionResultReplacements
+                {
+                    Main = CreateArray(TypeFactory.CreateType(stringTypeElement), [qualifier.GetText()], invocationExpression),
+                }
+                : null,
+        Message = "The expression is always an array with a single element.",
+    };
+
+    public static Inspection NullOrEmptyStringInArg0StringSplitOptionsInLastArgToSingleTrimmedElementArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, qualifier, args, _) => args is [{ Value: { } arg0Value }, .., var lastArg]
+            && (arg0Value.IsDefaultValue() || arg0Value.TryGetStringConstant() == "")
+            && lastArg?.Value.TryGetStringSplitOptionsConstant() == (StringSplitOptions)2 // todo: use StringSplitOptions.TrimEntries when available
+            && invocationExpression is { }
+            && PredefinedType.STRING_FQN.TryGetTypeElement(invocationExpression.PsiModule) is { } stringTypeElement
+            && stringTypeElement.HasMethod(new MethodSignature { Name = nameof(string.Trim), Parameters = [] })
+            && qualifier is { }
+                ? new ExpressionResultReplacements
+                {
+                    Main = CreateArray(TypeFactory.CreateType(stringTypeElement), [$"{qualifier.GetText()}.Trim()"], invocationExpression),
+                }
+                : null,
+        Message = "The expression is always an array with a single trimmed element.",
+    };
+
+    public static Inspection EmptyStringCollectionInArg0StringSplitOptionsInLastArgToSingleElementArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, qualifier, args, _)
+            => args is [var arg0, .., var lastArg]
+            && CollectionCreation.TryFrom(arg0?.Value) is { Count: > 0 } collectionCreation
+            && collectionCreation.AllElementsAsStringConstants.All(item => item == "")
+            && lastArg?.Value.TryGetStringSplitOptionsConstant() == StringSplitOptions.None
+            && invocationExpression is { }
+            && qualifier is { }
+            && PredefinedType.STRING_FQN.TryGetTypeElement(invocationExpression.PsiModule) is { } stringTypeElement
+                ? new ExpressionResultReplacements
+                {
+                    Main = CreateArray(TypeFactory.CreateType(stringTypeElement), [qualifier.GetText()], invocationExpression),
+                }
+                : null,
+        Message = "The expression is always an array with a single element.",
+    };
+
+    public static Inspection EmptyStringCollectionInArg0StringSplitOptionsInLastArgToSingleTrimmedElementArray { get; } = new()
+    {
+        TryGetReplacements = (invocationExpression, qualifier, args, _) => args is [var arg0, .., var lastArg]
+            && CollectionCreation.TryFrom(arg0?.Value) is { Count: > 0 } collectionCreation
+            && collectionCreation.AllElementsAsStringConstants.All(item => item == "")
+            && lastArg?.Value.TryGetStringSplitOptionsConstant() == (StringSplitOptions)2 // todo: use StringSplitOptions.TrimEntries when available
+            && invocationExpression is { }
+            && PredefinedType.STRING_FQN.TryGetTypeElement(invocationExpression.PsiModule) is { } stringTypeElement
+            && stringTypeElement.HasMethod(new MethodSignature { Name = nameof(string.Trim), Parameters = [] })
+            && qualifier is { }
+                ? new ExpressionResultReplacements
+                {
+                    Main = CreateArray(TypeFactory.CreateType(stringTypeElement), [$"{qualifier.GetText()}.Trim()"], invocationExpression),
+                }
+                : null,
+        Message = "The expression is always an array with a single trimmed element.",
+    };
+
+    public static Inspection NonBooleanConstantWithFalseToInvertedQualifier { get; } = new()
+    {
+        TryGetReplacements =
+            (_, qualifier, args, _)
+                => qualifier is { } && qualifier.TryGetBooleanConstant() == null && args[0]?.Value.TryGetBooleanConstant() == false
+                    ? new ExpressionResultReplacements { Main = $"!{qualifier.GetText()}" }
+                    : null,
+        Message = "The expression is always the same as the inverted qualifier.",
+    };
+
+    public static Inspection TrueWithNonBooleanConstantToArg { get; } = new()
+    {
+        TryGetReplacements =
+            (_, qualifier, args, _)
+                => qualifier.TryGetBooleanConstant() == true && args[0] is { Value: { } value } && value.TryGetBooleanConstant() == null
+                    ? new ExpressionResultReplacements { Main = $"{value.GetText()}" }
+                    : null,
+        Message = "The expression is always the same as the argument.",
+    };
+
+    public static Inspection FalseWithNonBooleanConstantToInvertedArg { get; } = new()
+    {
+        TryGetReplacements =
+            (_, qualifier, args, _)
+                => qualifier.TryGetBooleanConstant() == false && args[0] is { Value: { } value } && value.TryGetBooleanConstant() == null
+                    ? new ExpressionResultReplacements { Main = $"!({value.GetText()})" }
+                    : null,
+        Message = "The expression is always the same as the inverted argument.",
+    };
+
+    public static Inspection ZeroToDateTimeMinValue { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => args[0]?.Value.TryGetInt64Constant() == 0
+                ? new ExpressionResultReplacements { Main = $"{nameof(DateTime)}.{nameof(DateTime.MinValue)}" }
+                : null,
+        Message = $"The expression is always {nameof(DateTime)}.{nameof(DateTime.MinValue)}.",
+    };
+
+    public static Inspection ZerosToTimeOnlyMinValue { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _)
+                => args is [var arg0] && arg0?.Value.TryGetInt64Constant() == 0
+                || args.Count is >= 2 and <= 5 && args.All(a => a?.Value.TryGetInt32Constant() == 0)
+                    ? new ExpressionResultReplacements { Main = "TimeOnly.MinValue" } // todo: nameof(TimeOnly), nameof(TimeOnly.MinValue) when available
+                    : null,
+        Message = "The expression is always TimeOnly.MinValue.", // todo: nameof(TimeOnly), nameof(TimeOnly.MinValue) when available
+    };
+
+    public static Inspection ZerosToTimeSpanZero { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _)
+                => args is [var arg0] && arg0?.Value.TryGetInt64Constant() == 0
+                || args.Count is >= 3 and <= 6 && args.All(a => a?.Value.TryGetInt32Constant() == 0)
+                    ? new ExpressionResultReplacements { Main = $"{nameof(TimeSpan)}.{nameof(TimeSpan.Zero)}" }
+                    : null,
+        Message = $"The expression is always {nameof(TimeSpan)}.{nameof(TimeSpan.Zero)}.",
+    };
+
+    public static Inspection Int32ZerosOptionalToTimeSpanZero { get; } = new()
+    {
+        TryGetReplacements = (_, _, args, _)
+            => args is [var arg0] && arg0?.Value.TryGetInt32Constant() == 0
+            || args.Count == 5
+            && args[0]?.Value.TryGetInt32Constant() == 0
+            && (args[1] == null || args[1]?.Value.TryGetInt64Constant() == 0)
+            && (args[2] == null || args[2]?.Value.TryGetInt64Constant() == 0)
+            && (args[3] == null || args[3]?.Value.TryGetInt64Constant() == 0)
+            && (args[4] == null || args[4]?.Value.TryGetInt64Constant() == 0)
+            || args.Count == 6
+            && args[0]?.Value.TryGetInt32Constant() == 0
+            && (args[1] == null || args[1]?.Value.TryGetInt32Constant() == 0)
+            && (args[2] == null || args[2]?.Value.TryGetInt64Constant() == 0)
+            && (args[3] == null || args[3]?.Value.TryGetInt64Constant() == 0)
+            && (args[4] == null || args[4]?.Value.TryGetInt64Constant() == 0)
+            && (args[5] == null || args[5]?.Value.TryGetInt64Constant() == 0)
+                ? new ExpressionResultReplacements { Main = $"{nameof(TimeSpan)}.{nameof(TimeSpan.Zero)}" }
+                : null,
+        Message = $"The expression is always {nameof(TimeSpan)}.{nameof(TimeSpan.Zero)}.",
+    };
+
+    public static Inspection Int64ZerosOptionalToTimeSpanZero { get; } = new()
+    {
+        TryGetReplacements = (_, _, args, _)
+            => args is [var arg0] && arg0?.Value.TryGetInt64Constant() == 0
+            || args.Count == 2 && args[0]?.Value.TryGetInt64Constant() == 0 && (args[1] == null || args[1]?.Value.TryGetInt64Constant() == 0)
+            || args.Count == 3
+            && args[0]?.Value.TryGetInt64Constant() == 0
+            && (args[1] == null || args[1]?.Value.TryGetInt64Constant() == 0)
+            && (args[2] == null || args[2]?.Value.TryGetInt64Constant() == 0)
+            || args.Count == 4
+            && args[0]?.Value.TryGetInt64Constant() == 0
+            && (args[1] == null || args[1]?.Value.TryGetInt64Constant() == 0)
+            && (args[2] == null || args[2]?.Value.TryGetInt64Constant() == 0)
+            && (args[3] == null || args[3]?.Value.TryGetInt64Constant() == 0)
+                ? new ExpressionResultReplacements { Main = $"{nameof(TimeSpan)}.{nameof(TimeSpan.Zero)}" }
+                : null,
+        Message = $"The expression is always {nameof(TimeSpan)}.{nameof(TimeSpan.Zero)}.",
+    };
+
+    public static Inspection Int64MinValueToTimeSpanMinValue { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => args[0]?.Value.TryGetInt64Constant() == long.MinValue
+                ? new ExpressionResultReplacements { Main = $"{nameof(TimeSpan)}.{nameof(TimeSpan.MinValue)}" }
+                : null,
+        Message = $"The expression is always {nameof(TimeSpan)}.{nameof(TimeSpan.MinValue)}.",
+    };
+
+    public static Inspection Int64MaxValueToTimeSpanMaxValue { get; } = new()
+    {
+        TryGetReplacements =
+            (_, _, args, _) => args[0]?.Value.TryGetInt64Constant() == long.MaxValue
+                ? new ExpressionResultReplacements { Main = $"{nameof(TimeSpan)}.{nameof(TimeSpan.MaxValue)}" }
+                : null,
+        Message = $"The expression is always {nameof(TimeSpan)}.{nameof(TimeSpan.MaxValue)}.",
+    };
+
+    public bool EnsureQualifierNotNull { get; init; }
+
+    public bool EnsureFirstArgumentNotNull { get; init; }
+
+    public required Func<IInvocationExpression?, ICSharpExpression?, TreeNodeCollection<ICSharpArgument?>, Func<NumberInfo?>, ExpressionResultReplacements?> TryGetReplacements { get; init; }
+
+    public required string Message { get; init; }
+}

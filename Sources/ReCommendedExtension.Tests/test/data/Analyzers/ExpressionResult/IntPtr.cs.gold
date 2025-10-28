@@ -1,0 +1,64 @@
+﻿namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(nint number)
+        {
+            (nint quotient, nint remainder) = |nint.DivRem(0, 10)|(0);
+
+            var result11 = |nint.DivRem(0, 10)|(1);
+
+            var result21 = |nint.RotateLeft(number, 0)|(2);
+            var result22 = |nint.RotateRight(number, 0)|(3);
+
+            var result31 = |number.Equals(null)|(4);
+
+            var result41 = |nint.Clamp(number, 1, 1)|(5);
+
+            var result51 = |nint.Max(1, 1)|(6);
+            var result52 = |nint.Min(1, 1)|(7);
+
+            var result61 = |nint.MaxMagnitude(1, 1)|(8);
+            var result62 = |nint.MaxMagnitude(1, 1)|(9);
+        }
+
+        public void NoDetection(nint number, nint left, nint right, int rotateAmount, nint min, nint max)
+        {
+            var result11 = nint.DivRem(left, right);
+            var result12 = nint.DivRem(left, 10);
+            var result13 = nint.DivRem(0, right);
+            var result14 = nint.DivRem(0, 0);
+
+            var result21 = nint.RotateLeft(number, rotateAmount);
+            var result22 = nint.RotateRight(number, rotateAmount);
+
+            var result31 = nint.Clamp(number, min, max);
+
+            nint.DivRem(0, 10);
+
+            nint.RotateLeft(number, 0);
+            nint.RotateRight(number, 0);
+
+            number.Equals(null);
+
+            nint.Clamp(number, 1, 1);
+
+            nint.Max(1, 1);
+            nint.Min(1, 1);
+
+            nint.MaxMagnitude(1, 1);
+            nint.MaxMagnitude(1, 1);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always (0, 0).
+(1): ReSharper Suggestion: The expression is always (0, 0).
+(2): ReSharper Suggestion: The expression is always the same as the first argument.
+(3): ReSharper Suggestion: The expression is always the same as the first argument.
+(4): ReSharper Suggestion: The expression is always false.
+(5): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(6): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(7): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(8): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(9): ReSharper Suggestion: The expression is always the same as the first or second argument.

@@ -55,10 +55,10 @@ internal static class MissingUInt64Methods
         => ulong.Parse(s.ToString(), style, provider);
 
     [Pure]
-    public static ulong RotateLeft(ulong value, int offset) => value << offset | value >> (64 - offset);
+    public static ulong RotateLeft(ulong value, int rotateAmount) => value << rotateAmount | value >> (64 - rotateAmount);
 
     [Pure]
-    public static ulong RotateRight(ulong value, int offset) => value >> offset | value << (64 - offset);
+    public static ulong RotateRight(ulong value, int rotateAmount) => value >> rotateAmount | value << (64 - rotateAmount);
 
     [Pure]
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out ulong result)

@@ -86,11 +86,7 @@ internal static class MissingStringMethods
     }
 
     [Pure]
-    public static string[] Split(
-        this string source,
-        char[]? separator,
-        [NonNegativeValue] int count,
-        MissingStringSplitOptions options = MissingStringSplitOptions.None)
+    public static string[] Split(this string source, char[]? separator, [NonNegativeValue] int count, MissingStringSplitOptions options)
     {
         var result = source.Split(separator, count, (StringSplitOptions)(options & ~MissingStringSplitOptions.TrimEntries));
 
@@ -118,7 +114,7 @@ internal static class MissingStringMethods
     }
 
     [Pure]
-    public static string[] Split(this string source, string[]? separator, MissingStringSplitOptions options = MissingStringSplitOptions.None)
+    public static string[] Split(this string source, string[]? separator, MissingStringSplitOptions options)
     {
         var result = source.Split(separator, (StringSplitOptions)(options & ~MissingStringSplitOptions.TrimEntries));
 
@@ -126,11 +122,7 @@ internal static class MissingStringMethods
     }
 
     [Pure]
-    public static string[] Split(
-        this string source,
-        string[]? separator,
-        [NonNegativeValue] int count,
-        MissingStringSplitOptions options = MissingStringSplitOptions.None)
+    public static string[] Split(this string source, string[]? separator, [NonNegativeValue] int count, MissingStringSplitOptions options)
     {
         var result = source.Split(separator, count, (StringSplitOptions)(options & ~MissingStringSplitOptions.TrimEntries));
 

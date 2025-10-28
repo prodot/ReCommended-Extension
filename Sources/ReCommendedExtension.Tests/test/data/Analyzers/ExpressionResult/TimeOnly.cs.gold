@@ -1,0 +1,51 @@
+﻿using System;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(TimeOnly timeOnly)
+        {
+            var result11 = |new TimeOnly(0)|(0);
+            var result12 = |new TimeOnly(0, 0)|(1);
+            var result13 = |new TimeOnly(0, 0, 0)|(2);
+            var result14 = |new TimeOnly(0, 0, 0, 0)|(3);
+            var result15 = |new TimeOnly(0, 0, 0, 0, 0)|(4);
+
+            TimeOnly result21 = |new(0)|(5);
+            TimeOnly result22 = |new(0, 0)|(6);
+            TimeOnly result23 = |new(0, 0, 0)|(7);
+            TimeOnly result24 = |new(0, 0, 0, 0)|(8);
+            TimeOnly result25 = |new(0, 0, 0, 0, 0)|(9);
+
+            var result31 = |timeOnly.Equals(null)|(10);
+        }
+
+        public void NoDetection(TimeOnly timeOnly, long ticks, int hour, int minute, int second, int millisecond, int microsecond, object obj)
+        {
+            var result11 = new TimeOnly(ticks);
+            var result12 = new TimeOnly(hour, minute);
+            var result13 = new TimeOnly(hour, minute, second);
+            var result14 = new TimeOnly(hour, minute, second, millisecond);
+            var result15 = new TimeOnly(hour, minute, second, millisecond, microsecond);
+
+            var result21 = timeOnly.Equals(obj);
+
+            new TimeOnly(0);
+
+            timeOnly.Equals(null);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(1): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(2): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(3): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(4): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(5): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(6): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(7): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(8): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(9): ReSharper Suggestion: The expression is always TimeOnly.MinValue.
+(10): ReSharper Suggestion: The expression is always false.

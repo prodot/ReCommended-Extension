@@ -16,14 +16,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Strings\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseStringListPatternSuggestion or UseStringPropertySuggestion or UseRangeIndexerSuggestion
-            || highlighting.IsError();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet90]
-    public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
+        => highlighting is UseStringListPatternSuggestion or UseStringPropertySuggestion or UseRangeIndexerSuggestion || highlighting.IsError();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]

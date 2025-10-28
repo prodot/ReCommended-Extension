@@ -10,18 +10,14 @@ using ReCommendedExtension.Analyzers.BaseTypes;
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.DateTime;
 
 [TestFixture]
+[CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
 public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\DateTime\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or UseDateTimePropertySuggestion || highlighting.IsError();
+        => highlighting is UseDateTimePropertySuggestion || highlighting.IsError();
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
     public void TestUseDateTimePropertyFixAvailability() => DoNamedTest2();
 }

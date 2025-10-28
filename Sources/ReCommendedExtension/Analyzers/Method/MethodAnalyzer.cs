@@ -12,6 +12,9 @@ using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSign
 
 namespace ReCommendedExtension.Analyzers.Method;
 
+/// <remarks>
+/// C# language version checks are only done when a quick fix would require it.
+/// </remarks>
 [ElementProblemAnalyzer(
     typeof(IInvocationExpression),
     HighlightingTypes =
@@ -40,7 +43,10 @@ public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
             {
                 case RedundantMethodInvocation redundantMethodInvocation
                     when (!redundantMethodInvocation.IsPureMethod || !invocationExpression.IsUsedAsStatement())
-                    && redundantMethodInvocation.Condition(qualifier, arguments, nullableReferenceTypesDataFlowAnalysisRunSynchronizer):
+                    && redundantMethodInvocation.Condition(qualifier, arguments)
+                    && (!redundantMethodInvocation.EnsureFirstArgumentNotNull
+                        || arguments is [{ Value: { } firstArgValue }, ..]
+                        && firstArgValue.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)):
                 {
                     consumer.AddHighlighting(
                         new RedundantMethodInvocationHint(inspection.Message(methodName), invocationExpression, invokedExpression));
@@ -54,7 +60,7 @@ public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
                     Debug.Assert(invokedExpression.QualifierExpression is { });
 
                     if (otherMethodInvocation.TryGetReplacement(invocationExpression, arguments) is { } replacement
-                        && (otherMethodInvocation.QualifierCanBeNull
+                        && (!otherMethodInvocation.EnsureQualifierNotNull
                             || invokedExpression.QualifierExpression.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                         && containingType.HasMethod(
                             new MethodSignature
@@ -140,6 +146,8 @@ public sealed class MethodAnalyzer(NullableReferenceTypesDataFlowAnalysisRunSync
 
                 case UnaryOperator unaryOperator when !invocationExpression.IsUsedAsStatement():
                 {
+                    Debug.Assert(unaryOperator.Operator is { });
+
                     if (unaryOperator.TryGetOperand(qualifier, arguments) is { } operand)
                     {
                         consumer.AddHighlighting(

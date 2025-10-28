@@ -206,51 +206,34 @@ internal static class RuleDefinitions
 
     [Pure]
     static Dictionary<string, IReadOnlyCollection<Member>> CreateMathMembers()
-        => new(StringComparer.Ordinal)
+    {
+        Parameter[] parameterTypes = [Parameter.Decimal, Parameter.Double];
+
+        return new Dictionary<string, IReadOnlyCollection<Member>>(StringComparer.Ordinal)
         {
             {
                 nameof(Math.Round),
                 [
-                    new Member
+                    ..
+                    from parameterType in parameterTypes
+                    select new Member
                     {
-                        Signature = new MethodSignature { Parameters = [Parameter.Decimal, Parameter.Int32], IsStatic = true },
+                        Signature = new MethodSignature { Parameters = [parameterType, Parameter.Int32], IsStatic = true },
                         Inspections = [RedundantArgument.ZeroInt32 with { ParameterIndex = 1 }],
                     },
-                    new Member
+                    ..
+                    from parameterType in parameterTypes
+                    select new Member
                     {
-                        Signature = new MethodSignature { Parameters = [Parameter.Double, Parameter.Int32], IsStatic = true },
-                        Inspections = [RedundantArgument.ZeroInt32 with { ParameterIndex = 1 }],
-                    },
-                    new Member
-                    {
-                        Signature = new MethodSignature { Parameters = [Parameter.Decimal, Parameter.MidpointRounding], IsStatic = true },
+                        Signature = new MethodSignature { Parameters = [parameterType, Parameter.MidpointRounding], IsStatic = true },
                         Inspections = [RedundantArgument.MidpointRoundingToEven with { ParameterIndex = 1 }],
                     },
-                    new Member
-                    {
-                        Signature = new MethodSignature { Parameters = [Parameter.Double, Parameter.MidpointRounding], IsStatic = true },
-                        Inspections = [RedundantArgument.MidpointRoundingToEven with { ParameterIndex = 1 }],
-                    },
-                    new Member
+                    ..
+                    from parameterType in parameterTypes
+                    select new Member
                     {
                         Signature =
-                            new MethodSignature
-                            {
-                                Parameters = [Parameter.Decimal, Parameter.Int32, Parameter.MidpointRounding], IsStatic = true,
-                            },
-                        Inspections =
-                        [
-                            RedundantArgument.ZeroInt32 with { ParameterIndex = 1 },
-                            RedundantArgument.MidpointRoundingToEven with { ParameterIndex = 2 },
-                        ],
-                    },
-                    new Member
-                    {
-                        Signature =
-                            new MethodSignature
-                            {
-                                Parameters = [Parameter.Double, Parameter.Int32, Parameter.MidpointRounding], IsStatic = true,
-                            },
+                            new MethodSignature { Parameters = [parameterType, Parameter.Int32, Parameter.MidpointRounding], IsStatic = true },
                         Inspections =
                         [
                             RedundantArgument.ZeroInt32 with { ParameterIndex = 1 },
@@ -260,6 +243,7 @@ internal static class RuleDefinitions
                 ]
             },
         };
+    }
 
     [Pure]
     static Dictionary<string, IReadOnlyCollection<Member>> CreateMathFMembers()

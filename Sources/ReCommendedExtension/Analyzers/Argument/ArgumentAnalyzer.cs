@@ -1,5 +1,6 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.Argument.Inspections;
@@ -12,8 +13,11 @@ using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSign
 
 namespace ReCommendedExtension.Analyzers.Argument;
 
+/// <remarks>
+/// C# language version checks are only done when a quick fix would require it.
+/// </remarks>
 [ElementProblemAnalyzer(
-    typeof(ICSharpExpression),
+    typeof(ICSharpInvocationInfo),
     HighlightingTypes =
     [
         typeof(RedundantArgumentHint),
@@ -22,7 +26,7 @@ namespace ReCommendedExtension.Analyzers.Argument;
         typeof(UseOtherArgumentSuggestion),
         typeof(UseOtherArgumentRangeSuggestion),
     ])]
-public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
+public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
     delegate bool HasMember(IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames);
 
@@ -283,7 +287,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpExpression>
         }
     }
 
-    protected override void Run(ICSharpExpression element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
+    protected override void Run(ICSharpInvocationInfo element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
         switch (element)
         {
