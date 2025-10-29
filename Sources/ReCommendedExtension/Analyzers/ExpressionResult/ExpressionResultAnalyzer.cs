@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl.ControlFlow.NullableAnalysis.Runner;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+using ReCommendedExtension.Analyzers.ExpressionResult.Inspections;
 using ReCommendedExtension.Extensions;
 using ReCommendedExtension.Analyzers.ExpressionResult.Rules;
 
@@ -23,21 +23,16 @@ public sealed class ExpressionResultAnalyzer(
         ICSharpInvocationInfo invocationInfo,
         ICSharpExpression? qualifier,
         Member member,
-        IList<IParameter> resolvedParameters,
-        ITypeElement containingType,
+        InspectionContext context,
         TreeNodeCollection<ICSharpArgument?> arguments)
     {
         foreach (var inspection in member.Inspections)
         {
             Debug.Assert(!inspection.EnsureQualifierNotNull || qualifier is { });
 
-            if (inspection.TryGetReplacements(
-                    invocationInfo as IInvocationExpression,
-                    qualifier,
-                    arguments,
-                    () => resolvedParameters is [var parameter, ..]
-                        ? NumberInfo.TryGet(parameter.Type)
-                        : NumberInfo.TryGet(TypeFactory.CreateType(containingType))) is { } replacements
+            if ((inspection.MinimumFrameworkVersion == null
+                    || invocationInfo.PsiModule.TargetFrameworkId.Version >= inspection.MinimumFrameworkVersion)
+                && inspection.TryGetReplacements(qualifier, arguments, context) is { } replacements
                 && (!inspection.EnsureQualifierNotNull || qualifier!.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                 && (!inspection.EnsureFirstArgumentNotNull
                     || arguments is [{ Value: { } firstArgValue }, ..]
@@ -67,7 +62,13 @@ public sealed class ExpressionResultAnalyzer(
                 && RuleDefinitions.TryGetConstructor(containingType, resolvedConstructor) is { } constructor
                 && objectCreationExpression.TryGetArgumentsInDeclarationOrder() is { } arguments:
             {
-                Analyze(consumer, element, null, constructor, resolvedConstructor.Parameters, containingType, arguments);
+                Analyze(
+                    consumer,
+                    element,
+                    null,
+                    constructor,
+                    new InspectionContext(objectCreationExpression, resolvedConstructor.Parameters, containingType),
+                    arguments);
                 break;
             }
 
@@ -85,7 +86,13 @@ public sealed class ExpressionResultAnalyzer(
                 && RuleDefinitions.TryGetMethod(containingType, resolvedMethod) is { } method
                 && invocationExpression.TryGetArgumentsInDeclarationOrder() is { } arguments:
             {
-                Analyze(consumer, element, qualifierExpression, method, resolvedMethod.Parameters, containingType, arguments);
+                Analyze(
+                    consumer,
+                    element,
+                    qualifierExpression,
+                    method,
+                    new InspectionContext(invocationExpression, resolvedMethod.Parameters, containingType),
+                    arguments);
                 break;
             }
         }

@@ -1,5 +1,5 @@
-﻿using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Extensions;
+﻿using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 
@@ -7,9 +7,9 @@ public sealed record NumberInfo<N> : NumberInfo where N : struct
 {
     public required TryGetConstant<N> TryGetConstant { get; init; }
 
-    internal override string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue)
+    internal override string GetReplacementFromArgument(IType? targetType, ICSharpExpression argumentValue)
     {
-        if (invocationExpression.TryGetTargetType(false).IsClrType(ClrTypeName) || argumentValue.Type().IsClrType(ClrTypeName))
+        if (targetType.IsClrType(ClrTypeName) || argumentValue.Type().IsClrType(ClrTypeName))
         {
             return argumentValue.GetText();
         }

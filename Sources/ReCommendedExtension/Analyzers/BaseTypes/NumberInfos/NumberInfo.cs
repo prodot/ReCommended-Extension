@@ -1208,5 +1208,5 @@ public abstract record NumberInfo
     internal Func<ICSharpExpression?, ICSharpExpression?, bool>? AreMinMaxConstants { get; private init; }
 
     [Pure]
-    internal abstract string GetReplacementFromArgument(IInvocationExpression invocationExpression, ICSharpExpression argumentValue);
+    internal abstract string GetReplacementFromArgument(IType? targetType, ICSharpExpression argumentValue);
 }

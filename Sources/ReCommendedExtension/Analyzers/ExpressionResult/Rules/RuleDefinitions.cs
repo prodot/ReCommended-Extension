@@ -730,12 +730,18 @@ internal static class RuleDefinitions
                 ]
             },
             {
-                nameof(string.Remove),
-                [
+                nameof(string.Remove), [
                     new Member
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Int32] },
-                        Inspections = [Inspection.ZeroToEmptyStringIfNet6 with { EnsureQualifierNotNull = true }],
+                        Inspections =
+                        [
+                            Inspection.ZeroToEmptyString with
+                            {
+                                MinimumFrameworkVersion = new Version(6, 0), // frameworks earlier than .NET 6 throw an exception for '"".Remove(0)'
+                                EnsureQualifierNotNull = true,
+                            },
+                        ],
                     },
                 ]
             },
