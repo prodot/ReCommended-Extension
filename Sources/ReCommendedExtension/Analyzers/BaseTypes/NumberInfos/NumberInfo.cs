@@ -1128,7 +1128,7 @@ public abstract record NumberInfo
         AreMinMaxConstants = (a, b) => TryGetDecimalConstant(a, out _) == decimal.MinValue && TryGetDecimalConstant(b, out _) == decimal.MaxValue,
     };
 
-    internal static NumberInfo<double> Double { get; } = new()
+    static NumberInfo<double> Double { get; } = new()
     {
         ClrTypeName = PredefinedType.DOUBLE_FQN,
         TypeCode = System.TypeCode.Double,
@@ -1136,10 +1136,9 @@ public abstract record NumberInfo
         RoundTripFormatSpecifierReplacement = "G17",
         TryGetConstant = TryGetDoubleConstant,
         Cast = expression => expression.Cast("double").GetText(),
-        NanConstant = $"double.{nameof(double.NaN)}",
     };
 
-    internal static NumberInfo<float> Single { get; } = new()
+    static NumberInfo<float> Single { get; } = new()
     {
         ClrTypeName = PredefinedType.FLOAT_FQN,
         TypeCode = System.TypeCode.Single,
@@ -1147,7 +1146,6 @@ public abstract record NumberInfo
         RoundTripFormatSpecifierReplacement = "G9",
         TryGetConstant = TryGetSingleConstant,
         Cast = expression => expression.Cast("float").GetText(),
-        NanConstant = $"float.{nameof(float.NaN)}",
     };
 
     static NumberInfo<Half> Half { get; } = new()
@@ -1190,8 +1188,6 @@ public abstract record NumberInfo
     internal string? RoundTripFormatSpecifierReplacement { get; private init; }
 
     internal int? MaxValueStringLength { get; private init; }
-
-    internal string? NanConstant { get; private init; }
 
     internal Func<ICSharpExpression, bool, string>? CastConstant { get; private init; }
 

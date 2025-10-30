@@ -8,7 +8,6 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.BaseTypes;
-using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.BaseTypes.String;
 
@@ -18,8 +17,7 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseTypes\Strings";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseStringListPatternSuggestion
-                or UseStringPropertySuggestion
+        => highlighting is UseStringPropertySuggestion
                 or UseRangeIndexerSuggestion
                 or RedundantToStringCallWarning // to figure out which cases are supported by R#
                 or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
@@ -64,51 +62,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "StringEndsWithIsCultureSpecific")]
-    [SuppressMessage("ReSharper", "MergeIntoPattern")]
-    public void TestEndsWith()
-    {
-        Test("abcde", text => text.EndsWith('e'), text => text is [.., 'e']);
-        Test("abcde", text => text.EndsWith('e'), text => text is [.., var lastChar] && lastChar == 'e');
-
-        Test("abcde", text => text.EndsWith("e", StringComparison.Ordinal), text => text is [.., 'e']);
-        Test("abcde", text => text.EndsWith("e", StringComparison.OrdinalIgnoreCase), text => text is [.., 'e' or 'E']);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.1")]
-    [SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.2")]
-    [SuppressMessage("ReSharper", "StringStartsWithIsCultureSpecific")]
-    [SuppressMessage("ReSharper", "MergeIntoPattern")]
-    [SuppressMessage("ReSharper", "MergeIntoNegatedPattern")]
-    [SuppressMessage("ReSharper", "UseStringListPattern")]
-    [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestIndexOf()
-    {
-        Test("abcde", text => text.IndexOf('a') == 0, text => text is ['a', ..]);
-        TestNullable("abcde", text => text?.IndexOf('a') == 0, text => text is ['a', ..]);
-
-        Test("abcde", text => text.IndexOf('a') == 0, text => text is [var firstChar, ..] && firstChar == 'a');
-        TestNullable("abcde", text => text?.IndexOf('a') == 0, text => text is [var firstChar, ..] && firstChar == 'a');
-
-        Test("abcde", text => text.IndexOf('c') != 0, text => text is not ['c', ..]);
-        TestNullable("abcde", text => text?.IndexOf('c') != 0, text => text is not ['c', ..]);
-
-        Test("abcde", text => text.IndexOf('c') != 0, text => text is not [var firstChar, ..] || firstChar != 'c');
-        TestNullable("abcde", text => text?.IndexOf('c') != 0, text => text is not [var firstChar, ..] || firstChar != 'c');
-
-        DoNamedTest2();
-    }
-
-    [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet50]
@@ -141,23 +94,6 @@ public sealed class StringAnalyzerTests : CSharpHighlightingTestBase
 
         Test("abcde", text => text.Remove(0, 2), text => text[2..], true);
         TestNullable("abcde", text => text?.Remove(0, 2), text => text?[2..], true);
-
-        DoNamedTest2();
-    }
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet70]
-    [SuppressMessage("ReSharper", "StringStartsWithIsCultureSpecific")]
-    [SuppressMessage("ReSharper", "MergeIntoPattern")]
-    public void TestStartsWith()
-    {
-        Test("abcde", text => text.StartsWith('a'), text => text is ['a', ..]);
-        Test("abcde", text => text.StartsWith('a'), text => text is [var firstChar, ..] && firstChar == 'a');
-
-        Test("abcde", text => text.StartsWith("a", StringComparison.Ordinal), text => text is ['a', ..]);
-        Test("abcde", text => text.StartsWith("a", StringComparison.OrdinalIgnoreCase), text => text is ['a' or 'A', ..]);
 
         DoNamedTest2();
     }

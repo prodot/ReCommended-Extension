@@ -1,0 +1,51 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(char c, char value)
+        {
+            var result = |c.Equals(value)|(0);
+        }
+
+        public void Pattern(char c)
+        {
+            var result1 = |char.IsAsciiDigit(c)|(1);
+            var result2 = |char.IsAsciiHexDigit(c)|(2);
+            var result3 = |char.IsAsciiHexDigitLower(c)|(3);
+            var result4 = |char.IsAsciiHexDigitUpper(c)|(4);
+            var result5 = |char.IsAsciiLetter(c)|(5);
+            var result6 = |char.IsAsciiLetterLower(c)|(6);
+            var result7 = |char.IsAsciiLetterOrDigit(c)|(7);
+            var result8 = |char.IsAsciiLetterUpper(c)|(8);
+            var result9 = |char.IsBetween(c, 'a', 'c')|(9);
+        }
+
+        public void NoDetection(char c, char value, char minInclusive, char maxInclusive)
+        {
+            var result = char.IsBetween(c, minInclusive, maxInclusive);
+
+            c.Equals(value);
+
+            char.IsAsciiDigit(c);
+            char.IsAsciiHexDigit(c);
+            char.IsAsciiHexDigitLower(c);
+            char.IsAsciiHexDigitUpper(c);
+            char.IsAsciiLetter(c);
+            char.IsAsciiLetterLower(c);
+            char.IsAsciiLetterOrDigit(c);
+            char.IsAsciiLetterUpper(c);
+            char.IsBetween(c, 'a', 'c');
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '==' operator.
+(1): ReSharper Suggestion: Use pattern.
+(2): ReSharper Suggestion: Use pattern.
+(3): ReSharper Suggestion: Use pattern.
+(4): ReSharper Suggestion: Use pattern.
+(5): ReSharper Suggestion: Use pattern.
+(6): ReSharper Suggestion: Use pattern.
+(7): ReSharper Suggestion: Use pattern.
+(8): ReSharper Suggestion: Use pattern.
+(9): ReSharper Suggestion: Use pattern.

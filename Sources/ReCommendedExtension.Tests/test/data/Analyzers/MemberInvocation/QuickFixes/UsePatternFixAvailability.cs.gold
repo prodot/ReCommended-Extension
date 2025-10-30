@@ -1,0 +1,148 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void Pattern(char c, double d, float f, string text, string? textNullable)
+        {
+            var result11 = |char.IsAsciiDigit(c)|(0);
+            var result12 = |char.IsAsciiHexDigit(c)|(1);
+            var result13 = |char.IsAsciiHexDigitLower(c)|(2);
+            var result14 = |char.IsAsciiHexDigitUpper(c)|(3);
+            var result15 = |char.IsAsciiLetter(c)|(4);
+            var result16 = |char.IsAsciiLetterLower(c)|(5);
+            var result17 = |char.IsAsciiLetterOrDigit(c)|(6);
+            var result18 = |char.IsAsciiLetterUpper(c)|(7);
+            var result19 = |char.IsBetween(c, 'a', 'c')|(8);
+
+            var result21 = |double.IsNaN(d)|(9);
+            var result22 = |float.IsNaN(f)|(10);
+
+            var result31 = |text.EndsWith('c')|(11);
+            var result32 = |text.EndsWith(c)|(12);
+            var result33 = |text.EndsWith("c", StringComparison.Ordinal)|(13);
+            var result34 = |text.EndsWith("\a", StringComparison.Ordinal)|(14);
+            var result35 = |text.EndsWith("\u200b", StringComparison.Ordinal)|(15);
+            var result36 = |text.EndsWith("c", StringComparison.OrdinalIgnoreCase)|(16);
+            var result37 = |text.EndsWith("ß", StringComparison.OrdinalIgnoreCase)|(17);
+
+            var result41 = |textNullable?.IndexOf('c')|(18) == 0;
+            var result42 = 0 == |textNullable?.IndexOf('c')|(19);
+            var result43 = |textNullable?.IndexOf('c')|(20) != 0;
+            var result44 = 0 != |textNullable?.IndexOf('c')|(21);
+            var result45 = |textNullable?.IndexOf(c)|(22) == 0;
+            var result46 = 0 == |textNullable?.IndexOf(c)|(23);
+            var result47 = |textNullable?.IndexOf(c)|(24) != 0;
+            var result48 = 0 != |textNullable?.IndexOf(c)|(25);
+
+            var result51 = |text.StartsWith('c')|(26);
+            var result52 = |text.StartsWith(c)|(27);
+            var result53 = |text.StartsWith("c", StringComparison.Ordinal)|(28);
+            var result54 = |text.StartsWith("\r", StringComparison.Ordinal)|(29);
+            var result55 = |text.StartsWith("\u200b", StringComparison.Ordinal)|(30);
+            var result56 = |text.StartsWith("c", StringComparison.OrdinalIgnoreCase)|(31);
+            var result57 = |text.StartsWith("€", StringComparison.OrdinalIgnoreCase)|(32);
+        }
+    }
+}
+------------------------------------------------
+0: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= '0' and <= '9''
+1: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= '0' and <= '9' or >= 'A' and <= 'F' or >= 'a' and <= 'f''
+2: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= '0' and <= '9' or >= 'a' and <= 'f''
+3: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= '0' and <= '9' or >= 'A' and <= 'F''
+4: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= 'A' and <= 'Z' or >= 'a' and <= 'z''
+5: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= 'a' and <= 'z''
+6: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= 'A' and <= 'Z' or >= 'a' and <= 'z' or >= '0' and <= '9''
+7: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= 'A' and <= 'Z''
+8: Use pattern.
+QUICKFIXES:
+Replace with 'c is >= 'a' and <= 'c''
+9: Use pattern.
+QUICKFIXES:
+Replace with 'd is double.NaN'
+10: Use pattern.
+QUICKFIXES:
+Replace with 'f is float.NaN'
+11: Use list pattern.
+QUICKFIXES:
+Replace with 'text is [.., 'c']'
+12: Use list pattern.
+QUICKFIXES:
+Replace with 'text is [.., var lastChar] && lastChar == c'
+13: Use list pattern.
+QUICKFIXES:
+Replace with 'text is [.., 'c']'
+14: Use list pattern.
+QUICKFIXES:
+Replace with 'text is [.., '\a']'
+15: Use list pattern.
+QUICKFIXES:
+Replace with 'text is [.., '\u200B']'
+16: Use list pattern.
+QUICKFIXES:
+Replace with 'text is [.., 'c' or 'C']'
+17: Use list pattern.
+QUICKFIXES:
+Replace with 'text is [.., 'ß']'
+18: Use list pattern.
+QUICKFIXES:
+Replace with 'textNullable is ['c', ..]'
+19: Use list pattern.
+QUICKFIXES:
+Replace with 'textNullable is ['c', ..]'
+20: Use list pattern.
+QUICKFIXES:
+Replace with 'textNullable is not ['c', ..]'
+21: Use list pattern.
+QUICKFIXES:
+Replace with 'textNullable is not ['c', ..]'
+22: Use list pattern.
+QUICKFIXES:
+Replace with 'textNullable is [var firstChar, ..] && firstChar == c'
+23: Use list pattern.
+QUICKFIXES:
+Replace with 'textNullable is [var firstChar, ..] && firstChar == c'
+24: Use list pattern.
+QUICKFIXES:
+Replace with 'textNullable is not [var firstChar, ..] || firstChar != c'
+25: Use list pattern.
+QUICKFIXES:
+Replace with 'textNullable is not [var firstChar, ..] || firstChar != c'
+26: Use list pattern.
+QUICKFIXES:
+Replace with 'text is ['c', ..]'
+27: Use list pattern.
+QUICKFIXES:
+Replace with 'text is [var firstChar, ..] && firstChar == c'
+28: Use list pattern.
+QUICKFIXES:
+Replace with 'text is ['c', ..]'
+29: Use list pattern.
+QUICKFIXES:
+Replace with 'text is ['\r', ..]'
+30: Use list pattern.
+QUICKFIXES:
+Replace with 'text is ['\u200B', ..]'
+31: Use list pattern.
+QUICKFIXES:
+Replace with 'text is ['c' or 'C', ..]'
+32: Use list pattern.
+QUICKFIXES:
+Replace with 'text is ['€', ..]'
