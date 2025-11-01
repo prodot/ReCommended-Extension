@@ -23,6 +23,9 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
                 or UsePatternSuggestion
                 or UseNullableHasValueAlternativeSuggestion
                 or ReplaceNullableValueWithTypeCastSuggestion
+                or UseRangeIndexerSuggestion
+                or UsePropertySuggestion
+                or UseStaticPropertySuggestion
             || highlighting.IsError();
 
     [Test]
@@ -58,4 +61,19 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     [Test]
     public void TestReplaceNullableValueWithTypeCastFixAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNetCore30]
+    public void TestUseRangeIndexerAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
+    [TestNet50]
+    public void TestUsePropertyAvailability() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
+    public void TestUseStaticPropertyAvailability() => DoNamedTest2();
 }

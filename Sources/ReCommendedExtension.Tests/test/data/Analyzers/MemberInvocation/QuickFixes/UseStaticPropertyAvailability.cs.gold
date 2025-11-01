@@ -1,0 +1,21 @@
+﻿using System;
+using static System.DateTime;
+
+namespace Test
+{
+    public class Properties
+    {
+        public void StaticProperty()
+        {
+            var result1 = DateTime.|Now.Date|(0);
+            var result2 = |Now.Date|(1);
+        }
+    }
+}
+------------------------------------------------
+0: Use the 'Today' property.
+QUICKFIXES:
+Replace with 'Today'
+1: Use the 'Today' property.
+QUICKFIXES:
+Replace with 'Today'

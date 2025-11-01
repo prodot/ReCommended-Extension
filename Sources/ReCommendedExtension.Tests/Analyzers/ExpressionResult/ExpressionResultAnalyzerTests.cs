@@ -25,6 +25,8 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
+    static void TestRandom<R>(Func<Random, R> expected, Func<Random, R> actual) => Test(() => expected(new Random()), () => actual(new Random()));
+
     static void Test<T, R>(Func<T, R> expected, Func<T, R> actual, T[] args)
     {
         foreach (var a in args)
@@ -864,18 +866,18 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
     {
         // expression result
 
-        Test(() => new Random().GetItems((int[])[1, 2, 3], 0), () => []);
-        Test(() => new Random().GetItems([1, 2, 3], 0), () => []);
+        TestRandom(random => random.GetItems((int[])[1, 2, 3], 0), _ => []);
+        TestRandom(random => random.GetItems([1, 2, 3], 0), _ => []);
 
-        Test(() => new Random().Next(0), () => 0);
-        Test(() => new Random().Next(1), () => 0);
-        Test(() => new Random().Next(10, 10), () => 10);
-        Test(() => new Random().Next(10, 11), () => 10);
+        TestRandom(random => random.Next(0), _ => 0);
+        TestRandom(random => random.Next(1), _ => 0);
+        TestRandom(random => random.Next(10, 10), _ => 10);
+        TestRandom(random => random.Next(10, 11), _ => 10);
 
-        Test(() => new Random().NextInt64(0), () => 0);
-        Test(() => new Random().NextInt64(1), () => 0);
-        Test(() => new Random().NextInt64(10, 10), () => 10);
-        Test(() => new Random().NextInt64(10, 11), () => 10);
+        TestRandom(random => random.NextInt64(0), _ => 0);
+        TestRandom(random => random.NextInt64(1), _ => 0);
+        TestRandom(random => random.NextInt64(10, 10), _ => 10);
+        TestRandom(random => random.NextInt64(10, 11), _ => 10);
 
         DoNamedTest2();
     }

@@ -58,6 +58,8 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
+    static void TestRandom<R>(Func<Random, R> expected, Func<Random, R> actual) => Test(() => expected(new Random(1)), () => actual(new Random(1)));
+
     static void Test<T, R>(Func<T, R> expected, Func<T, R> actual, T[] args)
     {
         foreach (var a in args)
@@ -65,6 +67,9 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
             Assert.AreEqual(expected(a), actual(a), $"with value: {a}");
         }
     }
+
+    static void TestStringBuilder(Func<StringBuilder, StringBuilder> expected, Func<StringBuilder, StringBuilder> actual, string[] args)
+        => Test(value => expected(new StringBuilder(value)).ToString(), value => actual(new StringBuilder(value)).ToString(), args);
 
     delegate R FuncWithOut<in T, O, out R>(T arg1, out O arg2);
 
@@ -3162,54 +3167,42 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
 
         // redundant argument
 
-        Test(value => new StringBuilder(value).Append('x', 1).ToString(), value => new StringBuilder(value).Append('x').ToString(), values);
+        TestStringBuilder(builder => builder.Append('x', 1), builder => builder.Append('x'), values);
 
-        Test(
-            value => new StringBuilder(value).Insert(1, "xyz", 1).ToString(),
-            value => new StringBuilder(value).Insert(1, "xyz").ToString(),
-            [..values.Except([""])]);
+        TestStringBuilder(builder => builder.Insert(1, "xyz", 1), builder => builder.Insert(1, "xyz"), [..values.Except([""])]);
 
         // other argument
 
-        Test(value => new StringBuilder(value).Append("x").ToString(), value => new StringBuilder(value).Append('x').ToString(), values);
+        TestStringBuilder(builder => builder.Append("x"), builder => builder.Append('x'), values);
 
-        Test(
-            value => new StringBuilder(value).AppendJoin("x", (IEnumerable<int>)[1, 2, 3]).ToString(),
-            value => new StringBuilder(value).AppendJoin('x', (IEnumerable<int>)[1, 2, 3]).ToString(),
+        TestStringBuilder(
+            builder => builder.AppendJoin("x", (IEnumerable<int>)[1, 2, 3]),
+            builder => builder.AppendJoin('x', (IEnumerable<int>)[1, 2, 3]),
             values);
-        Test(
-            value => new StringBuilder(value).AppendJoin("x", (string?[])["one", "two", "three", null]).ToString(),
-            value => new StringBuilder(value).AppendJoin('x', (string?[])["one", "two", "three", null]).ToString(),
+        TestStringBuilder(
+            builder => builder.AppendJoin("x", (string?[])["one", "two", "three", null]),
+            builder => builder.AppendJoin('x', (string?[])["one", "two", "three", null]),
             values);
-        Test(
-            value => new StringBuilder(value).AppendJoin("x", (object?[])[1, "two", true, null]).ToString(),
-            value => new StringBuilder(value).AppendJoin('x', (object?[])[1, "two", true, null]).ToString(),
+        TestStringBuilder(
+            builder => builder.AppendJoin("x", (object?[])[1, "two", true, null]),
+            builder => builder.AppendJoin('x', (object?[])[1, "two", true, null]),
             values);
-        Test(
-            value => new StringBuilder(value).AppendJoin("x", (ReadOnlySpan<string?>)["one", "two", "three", null]).ToString(),
-            value => new StringBuilder(value).AppendJoin('x', (ReadOnlySpan<string?>)["one", "two", "three", null]).ToString(),
+        TestStringBuilder(
+            builder => builder.AppendJoin("x", (ReadOnlySpan<string?>)["one", "two", "three", null]),
+            builder => builder.AppendJoin('x', (ReadOnlySpan<string?>)["one", "two", "three", null]),
             values);
-        Test(
-            value => new StringBuilder(value).AppendJoin("x", (ReadOnlySpan<object?>)[1, "two", true, null]).ToString(),
-            value => new StringBuilder(value).AppendJoin('x', (ReadOnlySpan<object?>)[1, "two", true, null]).ToString(),
+        TestStringBuilder(
+            builder => builder.AppendJoin("x", (ReadOnlySpan<object?>)[1, "two", true, null]),
+            builder => builder.AppendJoin('x', (ReadOnlySpan<object?>)[1, "two", true, null]),
             values);
 
-        Test(
-            value => new StringBuilder(value).Insert(1, "x").ToString(),
-            value => new StringBuilder(value).Insert(1, 'x').ToString(),
-            [..values.Except([""])]);
-        Test(
-            value => new StringBuilder(value).Insert(1, "x", 1).ToString(),
-            value => new StringBuilder(value).Insert(1, 'x').ToString(),
-            [..values.Except([""])]);
+        TestStringBuilder(builder => builder.Insert(1, "x"), builder => builder.Insert(1, 'x'), [..values.Except([""])]);
+        TestStringBuilder(builder => builder.Insert(1, "x", 1), builder => builder.Insert(1, 'x'), [..values.Except([""])]);
 
         // other argument range
 
-        Test(value => new StringBuilder(value).Replace("c", "x").ToString(), value => new StringBuilder(value).Replace('c', 'x').ToString(), values);
-        Test(
-            value => new StringBuilder(value).Replace("c", "x", 1, 3).ToString(),
-            value => new StringBuilder(value).Replace('c', 'x', 1, 3).ToString(),
-            [..values.Except([""])]);
+        TestStringBuilder(builder => builder.Replace("c", "x"), builder => builder.Replace('c', 'x'), values);
+        TestStringBuilder(builder => builder.Replace("c", "x", 1, 3), builder => builder.Replace('c', 'x', 1, 3), [..values.Except([""])]);
 
         DoNamedTest2();
     }
@@ -3302,11 +3295,11 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     {
         // redundant argument
 
-        Test(() => new Random(1).Next(int.MaxValue), () => new Random(1).Next());
-        Test(() => new Random(1).Next(0, 10), () => new Random(1).Next(10));
+        TestRandom(random => random.Next(int.MaxValue), random => random.Next());
+        TestRandom(random => random.Next(0, 10), random => random.Next(10));
 
-        Test(() => new Random(1).NextInt64(long.MaxValue), () => new Random(1).NextInt64());
-        Test(() => new Random(1).NextInt64(0, 10), () => new Random(1).NextInt64(10));
+        TestRandom(random => random.NextInt64(long.MaxValue), random => random.NextInt64());
+        TestRandom(random => random.NextInt64(0, 10), random => random.NextInt64(10));
 
         DoNamedTest2();
     }

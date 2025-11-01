@@ -10,6 +10,7 @@ using ReCommendedExtension.Analyzers.MemberInvocation.Rules;
 using ReCommendedExtension.Extensions;
 using ReCommendedExtension.Extensions.MethodFinding;
 using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSignature;
+using PropertySignature = ReCommendedExtension.Extensions.MethodFinding.PropertySignature;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation;
 
@@ -27,6 +28,9 @@ namespace ReCommendedExtension.Analyzers.MemberInvocation;
         typeof(UsePatternSuggestion),
         typeof(UseNullableHasValueAlternativeSuggestion),
         typeof(ReplaceNullableValueWithTypeCastSuggestion),
+        typeof(UseRangeIndexerSuggestion),
+        typeof(UsePropertySuggestion),
+        typeof(UseStaticPropertySuggestion),
     ])]
 public sealed class MemberInvocationAnalyzer(
     NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
@@ -242,6 +246,61 @@ public sealed class MemberInvocationAnalyzer(
                     }
                     break;
                 }
+
+                case PropertyOfString propertyOfString when invocationExpression is { }
+                    && !invocationExpression.IsUsedAsStatement()
+                    && (propertyOfString.MinimumFrameworkVersion == null
+                        || invocationExpression.PsiModule.TargetFrameworkId.Version >= propertyOfString.MinimumFrameworkVersion)
+                    && propertyOfString.Condition(arguments):
+                {
+                    Debug.Assert(propertyOfString.Name is { });
+
+                    if (containingType.HasProperty(new PropertySignature { Name = propertyOfString.Name }))
+                    {
+                        consumer.AddHighlighting(
+                            new UsePropertySuggestion(
+                                inspection.Message(propertyOfString.Name),
+                                invocationExpression,
+                                invokedExpression,
+                                propertyOfString.Name));
+                    }
+                    break;
+                }
+
+                case PropertyOfDateTime propertyOfDateTime when !invokedExpression.IsPropertyAssignment()
+                    && !invokedExpression.IsWithinNameofExpression()
+                    && invokedExpression.QualifierExpression is IReferenceExpression
+                    {
+                        Reference: var reference, QualifierExpression: var qualifierExpression,
+                    }
+                    && propertyOfDateTime.Condition(reference):
+                {
+                    Debug.Assert(propertyOfDateTime.Name is { });
+
+                    if (containingType.HasProperty(new PropertySignature { Name = propertyOfDateTime.Name, IsStatic = true }))
+                    {
+                        consumer.AddHighlighting(
+                            new UseStaticPropertySuggestion(
+                                inspection.Message(propertyOfDateTime.Name),
+                                reference,
+                                qualifierExpression,
+                                invokedExpression,
+                                propertyOfDateTime.Name));
+                    }
+
+                    break;
+                }
+
+                case RangeIndexer rangeIndexer when invocationExpression is { }
+                    && !invocationExpression.IsUsedAsStatement()
+                    && (rangeIndexer.MinimumLanguageVersion == null
+                        || invocationExpression.GetLanguageVersion() >= rangeIndexer.MinimumLanguageVersion)
+                    && rangeIndexer.TryGetReplacement(arguments) is { } replacement:
+                {
+                    consumer.AddHighlighting(
+                        new UseRangeIndexerSuggestion(inspection.Message(""), invocationExpression, invokedExpression, replacement));
+                    break;
+                }
             }
         }
     }
@@ -271,12 +330,13 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case IProperty
+                case IProperty { AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC } resolvedProperty:
                 {
-                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC, ContainingType: { } containingType,
-                } resolvedProperty when RuleDefinitions.TryGetProperty(containingType, resolvedProperty) is { } property:
-                {
-                    Analyze(consumer, null, qualifierExpression, element, property, resolvedProperty.ShortName, containingType, []);
+                    if (resolvedProperty.ContainingType is { } containingType
+                        && RuleDefinitions.TryGetProperty(containingType, resolvedProperty) is { } property)
+                    {
+                        Analyze(consumer, null, qualifierExpression, element, property, resolvedProperty.ShortName, containingType, []);
+                    }
                     break;
                 }
             }

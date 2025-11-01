@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.DateTime;
 
 namespace Test
 {
@@ -20,9 +21,19 @@ namespace Test
             var result32 = DateTime.Equals(dateTime, dt);
         }
 
+        public void StaticProperty()
+        {
+            var result1 = DateTime.Now.Date;
+            var result2 = Now.Date;
+        }
+
         public void NoDetection(DateTime dateTime, long value, TimeSpan timeSpan, DateTime dt)
         {
-            var result = dateTime.AddTicks(value);
+            var result11 = dateTime.AddTicks(value);
+
+            var result21 = nameof(DateTime.Now.Date);
+            var result22 = nameof(Now.Date);
+            var result23 = dt.Date;
 
             dateTime.AddTicks(0);
 
@@ -33,6 +44,11 @@ namespace Test
 
             dateTime.Equals(dt);
             DateTime.Equals(dateTime, dt);
+        }
+
+        public void NoDetectionWithErrors(DateTime dt)
+        {
+            dt.Date = dt;
         }
     }
 }

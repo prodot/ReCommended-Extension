@@ -315,10 +315,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
             case IInvocationExpression
                 {
-                    InvokedExpression: IReferenceExpression
-                    {
-                        QualifierExpression: { } qualifierExpression, Reference: var reference,
-                    } invokedExpression,
+                    InvokedExpression: IReferenceExpression { QualifierExpression: { }, Reference: var reference },
                 } invocationExpression
                 when reference.Resolve().DeclaredElement is IMethod
                 {

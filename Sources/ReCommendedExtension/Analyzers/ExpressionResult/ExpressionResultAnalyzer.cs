@@ -74,10 +74,7 @@ public sealed class ExpressionResultAnalyzer(
 
             case IInvocationExpression
                 {
-                    InvokedExpression: IReferenceExpression
-                    {
-                        QualifierExpression: { } qualifierExpression, Reference: var reference,
-                    } invokedExpression,
+                    InvokedExpression: IReferenceExpression { QualifierExpression: { } qualifierExpression, Reference: var reference },
                 } invocationExpression
                 when reference.Resolve().DeclaredElement is IMethod
                 {

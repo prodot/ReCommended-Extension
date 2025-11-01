@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void RangeIndexer(string? text, int startIndex)
+        {
+            var result = text?.Remove({caret}startIndex + 1);
+        }
+    }
+}

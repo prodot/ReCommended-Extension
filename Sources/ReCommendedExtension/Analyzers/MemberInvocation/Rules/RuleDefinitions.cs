@@ -247,6 +247,15 @@ internal static class RuleDefinitions
                 ]
             },
             {
+                nameof(DateTime.Date),
+                [
+                    new Member
+                    {
+                        Signature = new PropertySignature(), Inspections = [PropertyOfDateTime.NowDate with { Name = nameof(DateTime.Today) }],
+                    },
+                ]
+            },
+            {
                 nameof(DateTime.Equals),
                 [
                     new Member
@@ -835,6 +844,34 @@ internal static class RuleDefinitions
                 ]
             },
             {
+                nameof(string.LastIndexOf), [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String] },
+                        Inspections =
+                        [
+                            PropertyOfString.Arg0Empty with
+                            {
+                                MinimumFrameworkVersion = new Version(5, 0), // frameworks earlier than .NET 5 do not return the string length for non-empty strings (s. https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/5.0/lastindexof-improved-handling-of-empty-values)
+                                Name = nameof(string.Length),
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.String, Parameter.StringComparison] },
+                        Inspections =
+                        [
+                            PropertyOfString.Arg0Empty with
+                            {
+                                MinimumFrameworkVersion = new Version(5, 0), // frameworks earlier than .NET 5 do not return the string length for non-empty strings (s. https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/5.0/lastindexof-improved-handling-of-empty-values)
+                                Name = nameof(string.Length),
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
                 nameof(string.LastIndexOfAny),
                 [
                     new Member
@@ -913,6 +950,21 @@ internal static class RuleDefinitions
                 ]
             },
             {
+                nameof(string.Remove),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Int32] },
+                        Inspections = [RangeIndexer.FromStartToArg with { MinimumLanguageVersion = CSharpLanguageLevel.CSharp80 }],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Int32, Parameter.Int32] },
+                        Inspections = [RangeIndexer.FromArg1ToEndWhenArg0Zero with { MinimumLanguageVersion = CSharpLanguageLevel.CSharp80 }],
+                    },
+                ]
+            },
+            {
                 nameof(string.Replace),
                 [
                     new Member
@@ -964,16 +1016,6 @@ internal static class RuleDefinitions
                                 MinimumLanguageVersion = CSharpLanguageLevel.CSharp110, EnsureQualifierNotNull = true,
                             },
                         ],
-                    },
-                ]
-            },
-            {
-                nameof(string.Substring),
-                [
-                    new Member
-                    {
-                        Signature = new MethodSignature { Parameters = [Parameter.Int32] },
-                        Inspections = [RedundantMethodInvocation.WithInt32Zero],
                     },
                 ]
             },

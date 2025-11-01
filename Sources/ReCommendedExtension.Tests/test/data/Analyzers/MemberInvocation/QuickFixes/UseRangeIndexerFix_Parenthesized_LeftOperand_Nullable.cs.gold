@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void RangeIndexer(string? text, int count)
+        {
+            var result = text?[({caret}count + 1)..];
+        }
+    }
+}

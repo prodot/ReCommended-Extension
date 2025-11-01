@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -28,6 +29,11 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
                 or UsePatternSuggestion
                 or UseNullableHasValueAlternativeSuggestion
                 or ReplaceNullableValueWithTypeCastSuggestion
+                or UseRangeIndexerSuggestion
+                or UsePropertySuggestion
+                or UseStaticPropertySuggestion
+                or RedundantToStringCallWarning // to figure out which cases are supported by R#
+                or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
             || highlighting.IsError();
 
     static void Test<T, R>(Func<T, R> expected, Func<T, R> actual, T[] args)
@@ -37,6 +43,9 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
             Assert.AreEqual(expected(a), actual(a), $"with value: {a}");
         }
     }
+
+    static void TestStringBuilder(Func<StringBuilder, StringBuilder> expected, Func<StringBuilder, StringBuilder> actual, string[] args)
+        => Test(value => expected(new StringBuilder(value)).ToString(), value => actual(new StringBuilder(value)).ToString(), args);
 
     static void Test<T, U, R>(Func<T, U, R> expected, Func<T, U, R> actual, T[] args1, U[] args2)
     {
@@ -368,6 +377,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
     [SuppressMessage("ReSharper", "RedundantMethodInvocation")]
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
@@ -596,6 +606,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "UseOtherMethod")]
     [SuppressMessage("ReSharper", "MergeIntoPattern")]
     [SuppressMessage("ReSharper", "MergeIntoNegatedPattern")]
+    [SuppressMessage("ReSharper", "UseRangeIndexer")]
     public void TestString()
     {
         var values = new[] { null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.." };
@@ -621,8 +632,6 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
         Test(text => text?.Replace('c', 'c'), text => text, values);
         Test(text => text?.Replace("cd", "cd"), text => text, values);
         Test(text => text?.Replace("cd", "cd", StringComparison.Ordinal), text => text, values);
-
-        Test(text => text?.Substring(0), text => text, values);
 
         // other method invocation
 
@@ -833,6 +842,18 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
         Test(text => text.StartsWith("a", StringComparison.Ordinal), text => text is ['a', ..], valuesNonNull);
         Test(text => text.StartsWith("a", StringComparison.OrdinalIgnoreCase), text => text is ['a' or 'A', ..], valuesNonNull);
 
+        // range indexer
+
+        Test(text => text?.Remove(1), text => text?[..1], [..values.Except([""])]);
+        Test(text => text?.Remove(0, 1), text => text?[1..], [..values.Except([""])]);
+
+        // property
+        // todo: uncomment the tests below when this is built with .NET 5 (https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/5.0/lastindexof-improved-handling-of-empty-values)
+        /*
+        Test(text => text?.LastIndexOf(""), text => text?.Length, values);
+        Test((text, comparisonType) => text?.LastIndexOf("", comparisonType), (text, _) => text?.Length, values, comparisons);        
+        */
+
         DoNamedTest2();
     }
 
@@ -848,111 +869,49 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
 
         // redundant method invocation
 
-        Test(value => new StringBuilder(value).Append(null as string).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append("").ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append(null as char[]).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append([]).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append(null as object).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append(null as StringBuilder).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append('x', 0).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append(null as string, 0, 0).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append("abcde", 1, 0).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append(null as StringBuilder, 0, 0).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(
-            value => new StringBuilder(value).Append(new StringBuilder("abcde"), 1, 0).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(value => new StringBuilder(value).Append(null as char[], 0, 0).ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Append([], 0, 0).ToString(), value => new StringBuilder(value).ToString(), values);
+        TestStringBuilder(builder => builder.Append(null as string), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(null as string), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(""), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(null as char[]), builder => builder, values);
+        TestStringBuilder(builder => builder.Append([]), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(null as object), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(null as StringBuilder), builder => builder, values);
+        TestStringBuilder(builder => builder.Append('x', 0), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(null as string, 0, 0), builder => builder, values);
+        TestStringBuilder(builder => builder.Append("abcde", 1, 0), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(null as StringBuilder, 0, 0), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(new StringBuilder("abcde"), 1, 0), builder => builder, values);
+        TestStringBuilder(builder => builder.Append(null as char[], 0, 0), builder => builder, values);
+        TestStringBuilder(builder => builder.Append([], 0, 0), builder => builder, values);
 
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (IEnumerable<int>)[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (string[])[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (object[])[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (ReadOnlySpan<string?>)[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (ReadOnlySpan<object?>)[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (IEnumerable<int>)[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (string[])[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (object[])[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (ReadOnlySpan<string?>)[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (ReadOnlySpan<object?>)[]).ToString(),
-            value => new StringBuilder(value).ToString(),
-            values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (IEnumerable<int>)[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (string[])[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (object[])[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (ReadOnlySpan<string?>)[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (ReadOnlySpan<object?>)[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (IEnumerable<int>)[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (string[])[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (object[])[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (ReadOnlySpan<string?>)[]), builder => builder, values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (ReadOnlySpan<object?>)[]), builder => builder, values);
 
-        Test(value => new StringBuilder(value).Insert(0, null as object).ToString(), value => new StringBuilder(value).ToString(), values);
+        TestStringBuilder(builder => builder.Insert(0, null as object), builder => builder, values);
 
-        Test(value => new StringBuilder(value).Replace('c', 'c').ToString(), value => new StringBuilder(value).ToString(), values);
-        Test(value => new StringBuilder(value).Replace("cd", "cd").ToString(), value => new StringBuilder(value).ToString(), values);
+        TestStringBuilder(builder => builder.Replace('c', 'c'), builder => builder, values);
+        TestStringBuilder(builder => builder.Replace("cd", "cd"), builder => builder, values);
 
         // other method invocation
 
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (IEnumerable<int>)[1]).ToString(),
-            value => new StringBuilder(value).Append((object)1).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (IEnumerable<int>)[1]).ToString(),
-            value => new StringBuilder(value).Append((object)1).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (string[])["item"]).ToString(),
-            value => new StringBuilder(value).Append("item").ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (string[])["item"]).ToString(),
-            value => new StringBuilder(value).Append("item").ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (object[])[1]).ToString(),
-            value => new StringBuilder(value).Append((object)1).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (object[])[1]).ToString(),
-            value => new StringBuilder(value).Append((object)1).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (ReadOnlySpan<string?>)["item"]).ToString(),
-            value => new StringBuilder(value).Append("item").ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (ReadOnlySpan<string?>)["item"]).ToString(),
-            value => new StringBuilder(value).Append("item").ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(',', (ReadOnlySpan<object?>)[1]).ToString(),
-            value => new StringBuilder(value).Append((object)1).ToString(),
-            values);
-        Test(
-            value => new StringBuilder(value).AppendJoin(", ", (ReadOnlySpan<object?>)[1]).ToString(),
-            value => new StringBuilder(value).Append((object)1).ToString(),
-            values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (IEnumerable<int>)[1]), builder => builder.Append((object)1), values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (IEnumerable<int>)[1]), builder => builder.Append((object)1), values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (string[])["item"]), builder => builder.Append("item"), values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (string[])["item"]), builder => builder.Append("item"), values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (object[])[1]), builder => builder.Append((object)1), values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (object[])[1]), builder => builder.Append((object)1), values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (ReadOnlySpan<string?>)["item"]), builder => builder.Append("item"), values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (ReadOnlySpan<string?>)["item"]), builder => builder.Append("item"), values);
+        TestStringBuilder(builder => builder.AppendJoin(',', (ReadOnlySpan<object?>)[1]), builder => builder.Append((object)1), values);
+        TestStringBuilder(builder => builder.AppendJoin(", ", (ReadOnlySpan<object?>)[1]), builder => builder.Append((object)1), values);
 
         DoNamedTest2();
     }
