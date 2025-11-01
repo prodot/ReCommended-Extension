@@ -1,4 +1,4 @@
-﻿using ReCommendedExtension.Extensions.MethodFinding;
+﻿using ReCommendedExtension.Extensions.MemberFinding;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation.Rules;
 

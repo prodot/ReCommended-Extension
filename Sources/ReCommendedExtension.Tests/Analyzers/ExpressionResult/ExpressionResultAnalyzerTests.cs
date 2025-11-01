@@ -7,13 +7,10 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ExpressionResult;
+using ReCommendedExtension.Extensions.NumberInfos;
 using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.ExpressionResult;
-
-using int128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Int128;
-using uint128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.UInt128;
-using half = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Half;
 
 [TestFixture]
 public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
@@ -297,25 +294,25 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
     [TestNet70]
     public void TestInt128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue };
+        var values = new[] { 0, 1, 2, -1, -2, Int128.MaxValue, Int128.MinValue };
 
         // expression result
 
-        Test(right => int128.DivRem(0, right), _ => (0, 0), [..values.Except(new int128[1])]);
+        Test(right => Int128.DivRem(0, right), _ => (0, 0), [..values.Except(new Int128[1])]);
 
-        Test(n => int128.RotateLeft(n, 0), n => n, values);
-        Test(n => int128.RotateRight(n, 0), n => n, values);
+        Test(n => Int128.RotateLeft(n, 0), n => n, values);
+        Test(n => Int128.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => int128.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => int128.Clamp(n, int128.MinValue, int128.MaxValue), n => n, values);
+        Test(n => Int128.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => Int128.Clamp(n, Int128.MinValue, Int128.MaxValue), n => n, values);
 
-        Test(n => int128.Max(n, n), n => n, values);
-        Test(n => int128.Min(n, n), n => n, values);
+        Test(n => Int128.Max(n, n), n => n, values);
+        Test(n => Int128.Min(n, n), n => n, values);
 
-        Test(n => int128.MaxMagnitude(n, n), n => n, values);
-        Test(n => int128.MinMagnitude(n, n), n => n, values);
+        Test(n => Int128.MaxMagnitude(n, n), n => n, values);
+        Test(n => Int128.MinMagnitude(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -324,22 +321,22 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
     [TestNet70]
     public void TestUInt128()
     {
-        var values = new[] { 0, 1, 2, uint128.MaxValue };
+        var values = new[] { 0, 1, 2, UInt128.MaxValue };
 
         // expression result
 
-        Test(right => uint128.DivRem(0, right), _ => (0, 0), [..values.Except(new uint128[1])]);
+        Test(right => UInt128.DivRem(0, right), _ => (0, 0), [..values.Except(new UInt128[1])]);
 
-        Test(n => uint128.RotateLeft(n, 0), n => n, values);
-        Test(n => uint128.RotateRight(n, 0), n => n, values);
+        Test(n => UInt128.RotateLeft(n, 0), n => n, values);
+        Test(n => UInt128.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => uint128.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => uint128.Clamp(n, 0, uint128.MaxValue), n => n, values);
+        Test(n => UInt128.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => UInt128.Clamp(n, 0, UInt128.MaxValue), n => n, values);
 
-        Test(n => uint128.Max(n, n), n => n, values);
-        Test(n => uint128.Min(n, n), n => n, values);
+        Test(n => UInt128.Max(n, n), n => n, values);
+        Test(n => UInt128.Min(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -492,15 +489,15 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
             (sbyte)2,
             (sbyte)-1,
             (sbyte)-2,
-            (half)(-0f),
-            (half)1.2f,
-            (half)(-1.2f),
-            half.MaxValue,
-            half.MinValue,
-            half.Epsilon,
-            half.NaN,
-            half.PositiveInfinity,
-            half.NegativeInfinity,
+            (Half)(-0f),
+            (Half)1.2f,
+            (Half)(-1.2f),
+            Half.MaxValue,
+            Half.MinValue,
+            Half.Epsilon,
+            Half.NaN,
+            Half.PositiveInfinity,
+            Half.NegativeInfinity,
         };
 
         // expression result

@@ -3,10 +3,10 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using ReCommendedExtension.Analyzers.BaseTypes.Collections;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.MethodFinding;
+using ReCommendedExtension.Extensions.Collections;
+using ReCommendedExtension.Extensions.MemberFinding;
+using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.ExpressionResult.Inspections;
 

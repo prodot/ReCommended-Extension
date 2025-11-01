@@ -8,13 +8,10 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Argument;
+using ReCommendedExtension.Extensions.NumberInfos;
 using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.Argument;
-
-using int128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Int128;
-using uint128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.UInt128;
-using half = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Half;
 
 [TestFixture]
 public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
@@ -637,51 +634,51 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestInt128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue };
+        var values = new[] { 0, 1, 2, -1, -2, Int128.MaxValue, Int128.MinValue };
 
         // redundant argument
 
-        Test(n => int128.Parse($"{n}", NumberStyles.Integer), n => int128.Parse($"{n}"), values);
-        Test(n => int128.Parse($"{n}", null), n => int128.Parse($"{n}"), values);
+        Test(n => Int128.Parse($"{n}", NumberStyles.Integer), n => Int128.Parse($"{n}"), values);
+        Test(n => Int128.Parse($"{n}", null), n => Int128.Parse($"{n}"), values);
         Test(
-            (n, provider) => int128.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => int128.Parse($"{n}", provider),
+            (n, provider) => Int128.Parse($"{n}", NumberStyles.Integer, provider),
+            (n, provider) => Int128.Parse($"{n}", provider),
             values,
             formatProviders);
-        Test((n, style) => int128.Parse($"{n}", style, null), (n, style) => int128.Parse($"{n}", style), values, signedIntegerStyles);
+        Test((n, style) => Int128.Parse($"{n}", style, null), (n, style) => Int128.Parse($"{n}", style), values, signedIntegerStyles);
         Test(n => MissingInt128Methods.Parse($"{n}".AsSpan(), null), n => MissingInt128Methods.Parse($"{n}".AsSpan()), values);
         Test(n => MissingInt128Methods.Parse($"{n}".AsUtf8Bytes(), null), n => MissingInt128Methods.Parse($"{n}".AsUtf8Bytes()), values);
 
         Test(
-            (int128 n, out int128 result) => int128.TryParse($"{n}", null, out result),
-            (int128 n, out int128 result) => int128.TryParse($"{n}", out result),
+            (Int128 n, out Int128 result) => Int128.TryParse($"{n}", null, out result),
+            (Int128 n, out Int128 result) => Int128.TryParse($"{n}", out result),
             values);
         Test(
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), out result),
+            (Int128 n, out Int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
+            (Int128 n, out Int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), out result),
             values);
         Test(
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsUtf8Bytes(), null, out result),
-            (int128 n, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsUtf8Bytes(), out result),
+            (Int128 n, out Int128 result) => MissingInt128Methods.TryParse($"{n}".AsUtf8Bytes(), null, out result),
+            (Int128 n, out Int128 result) => MissingInt128Methods.TryParse($"{n}".AsUtf8Bytes(), out result),
             values);
         Test(
-            (int128 n, IFormatProvider? provider, out int128 result) => int128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (int128 n, IFormatProvider? provider, out int128 result) => int128.TryParse($"{n}", provider, out result),
+            (Int128 n, IFormatProvider? provider, out Int128 result) => Int128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
+            (Int128 n, IFormatProvider? provider, out Int128 result) => Int128.TryParse($"{n}", provider, out result),
             values,
             formatProviders);
         Test(
-            (int128 n, IFormatProvider? provider, out int128 result)
+            (Int128 n, IFormatProvider? provider, out Int128 result)
                 => MissingInt128Methods.TryParse($"{n}".AsSpan(), NumberStyles.Integer, provider, out result),
-            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), provider, out result),
+            (Int128 n, IFormatProvider? provider, out Int128 result) => MissingInt128Methods.TryParse($"{n}".AsSpan(), provider, out result),
             values,
             formatProviders);
         Test(
-            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse(
+            (Int128 n, IFormatProvider? provider, out Int128 result) => MissingInt128Methods.TryParse(
                 $"{n}".AsUtf8Bytes(),
                 NumberStyles.Integer,
                 provider,
                 out result),
-            (int128 n, IFormatProvider? provider, out int128 result) => MissingInt128Methods.TryParse($"{n}".AsUtf8Bytes(), provider, out result),
+            (Int128 n, IFormatProvider? provider, out Int128 result) => MissingInt128Methods.TryParse($"{n}".AsUtf8Bytes(), provider, out result),
             values,
             formatProviders);
 
@@ -693,54 +690,54 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestUInt128()
     {
-        var values = new[] { 0, 1, 2, uint128.MaxValue };
+        var values = new[] { 0, 1, 2, UInt128.MaxValue };
 
         // redundant argument
 
-        Test(n => uint128.Parse($"{n}", NumberStyles.Integer), n => uint128.Parse($"{n}"), values);
-        Test(n => uint128.Parse($"{n}", null), n => uint128.Parse($"{n}"), values);
+        Test(n => UInt128.Parse($"{n}", NumberStyles.Integer), n => UInt128.Parse($"{n}"), values);
+        Test(n => UInt128.Parse($"{n}", null), n => UInt128.Parse($"{n}"), values);
         Test(
-            (n, provider) => uint128.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => uint128.Parse($"{n}", provider),
+            (n, provider) => UInt128.Parse($"{n}", NumberStyles.Integer, provider),
+            (n, provider) => UInt128.Parse($"{n}", provider),
             values,
             formatProviders);
-        Test((n, style) => uint128.Parse($"{n}", style, null), (n, style) => uint128.Parse($"{n}", style), values, unsignedIntegerStyles);
+        Test((n, style) => UInt128.Parse($"{n}", style, null), (n, style) => UInt128.Parse($"{n}", style), values, unsignedIntegerStyles);
         Test(n => MissingUInt128Methods.Parse($"{n}".AsSpan(), null), n => MissingUInt128Methods.Parse($"{n}".AsSpan()), values);
         Test(n => MissingUInt128Methods.Parse($"{n}".AsUtf8Bytes(), null), n => MissingUInt128Methods.Parse($"{n}".AsUtf8Bytes()), values);
 
         Test(
-            (uint128 n, out uint128 result) => uint128.TryParse($"{n}", null, out result),
-            (uint128 n, out uint128 result) => uint128.TryParse($"{n}", out result),
+            (UInt128 n, out UInt128 result) => UInt128.TryParse($"{n}", null, out result),
+            (UInt128 n, out UInt128 result) => UInt128.TryParse($"{n}", out result),
             values);
         Test(
-            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
-            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), out result),
+            (UInt128 n, out UInt128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), null, out result),
+            (UInt128 n, out UInt128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), out result),
             values);
         Test(
-            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsUtf8Bytes(), null, out result),
-            (uint128 n, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsUtf8Bytes(), out result),
+            (UInt128 n, out UInt128 result) => MissingUInt128Methods.TryParse($"{n}".AsUtf8Bytes(), null, out result),
+            (UInt128 n, out UInt128 result) => MissingUInt128Methods.TryParse($"{n}".AsUtf8Bytes(), out result),
             values);
         Test(
-            (uint128 n, IFormatProvider? provider, out uint128 result) => uint128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (uint128 n, IFormatProvider? provider, out uint128 result) => uint128.TryParse($"{n}", provider, out result),
+            (UInt128 n, IFormatProvider? provider, out UInt128 result) => UInt128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
+            (UInt128 n, IFormatProvider? provider, out UInt128 result) => UInt128.TryParse($"{n}", provider, out result),
             values,
             formatProviders);
         Test(
-            (uint128 n, IFormatProvider? provider, out uint128 result) => MissingUInt128Methods.TryParse(
+            (UInt128 n, IFormatProvider? provider, out UInt128 result) => MissingUInt128Methods.TryParse(
                 $"{n}".AsSpan(),
                 NumberStyles.Integer,
                 provider,
                 out result),
-            (uint128 n, IFormatProvider? provider, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), provider, out result),
+            (UInt128 n, IFormatProvider? provider, out UInt128 result) => MissingUInt128Methods.TryParse($"{n}".AsSpan(), provider, out result),
             values,
             formatProviders);
         Test(
-            (uint128 n, IFormatProvider? provider, out uint128 result) => MissingUInt128Methods.TryParse(
+            (UInt128 n, IFormatProvider? provider, out UInt128 result) => MissingUInt128Methods.TryParse(
                 $"{n}".AsUtf8Bytes(),
                 NumberStyles.Integer,
                 provider,
                 out result),
-            (uint128 n, IFormatProvider? provider, out uint128 result) => MissingUInt128Methods.TryParse($"{n}".AsUtf8Bytes(), provider, out result),
+            (UInt128 n, IFormatProvider? provider, out UInt128 result) => MissingUInt128Methods.TryParse($"{n}".AsUtf8Bytes(), provider, out result),
             values,
             formatProviders);
 
@@ -1138,67 +1135,67 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
             (sbyte)2,
             (sbyte)-1,
             (sbyte)-2,
-            (half)(-0f),
-            (half)1.2f,
-            (half)(-1.2f),
-            half.MaxValue,
-            half.MinValue,
-            half.Epsilon,
-            half.NaN,
-            half.PositiveInfinity,
-            half.NegativeInfinity,
+            (Half)(-0f),
+            (Half)1.2f,
+            (Half)(-1.2f),
+            Half.MaxValue,
+            Half.MinValue,
+            Half.Epsilon,
+            Half.NaN,
+            Half.PositiveInfinity,
+            Half.NegativeInfinity,
         };
 
         // redundant argument
 
-        Test(n => half.Parse($"{n}", NumberStyles.Float | NumberStyles.AllowThousands), n => half.Parse($"{n}"), values);
-        Test(n => half.Parse($"{n}", null), n => half.Parse($"{n}"), values);
+        Test(n => Half.Parse($"{n}", NumberStyles.Float | NumberStyles.AllowThousands), n => Half.Parse($"{n}"), values);
+        Test(n => Half.Parse($"{n}", null), n => Half.Parse($"{n}"), values);
         Test(
-            (n, provider) => half.Parse(n.ToString(provider), NumberStyles.Float | NumberStyles.AllowThousands, provider),
-            (n, provider) => half.Parse(n.ToString(provider), provider),
+            (n, provider) => Half.Parse(n.ToString(provider), NumberStyles.Float | NumberStyles.AllowThousands, provider),
+            (n, provider) => Half.Parse(n.ToString(provider), provider),
             values,
             formatProviders);
-        Test((n, style) => half.Parse($"{n}", style, null), (n, style) => half.Parse($"{n}", style), values, floatingPointStyles);
+        Test((n, style) => Half.Parse($"{n}", style, null), (n, style) => Half.Parse($"{n}", style), values, floatingPointStyles);
         Test(n => MissingHalfMethods.Parse($"{n}".AsSpan(), null), n => MissingHalfMethods.Parse($"{n}".AsSpan()), values);
         Test(n => MissingHalfMethods.Parse($"{n}".AsUtf8Bytes(), null), n => MissingHalfMethods.Parse($"{n}".AsUtf8Bytes()), values);
 
         Test(
-            (half n, out half result) => half.TryParse($"{n}", null, out result),
-            (half n, out half result) => half.TryParse($"{n}", out result),
+            (Half n, out Half result) => Half.TryParse($"{n}", null, out result),
+            (Half n, out Half result) => Half.TryParse($"{n}", out result),
             values);
         Test(
-            (half n, out half result) => MissingHalfMethods.TryParse($"{n}".AsSpan(), null, out result),
-            (half n, out half result) => MissingHalfMethods.TryParse($"{n}".AsSpan(), out result),
+            (Half n, out Half result) => MissingHalfMethods.TryParse($"{n}".AsSpan(), null, out result),
+            (Half n, out Half result) => MissingHalfMethods.TryParse($"{n}".AsSpan(), out result),
             values);
         Test(
-            (half n, out half result) => MissingHalfMethods.TryParse($"{n}".AsUtf8Bytes(), null, out result),
-            (half n, out half result) => MissingHalfMethods.TryParse($"{n}".AsUtf8Bytes(), out result),
+            (Half n, out Half result) => MissingHalfMethods.TryParse($"{n}".AsUtf8Bytes(), null, out result),
+            (Half n, out Half result) => MissingHalfMethods.TryParse($"{n}".AsUtf8Bytes(), out result),
             values);
         Test(
-            (half n, IFormatProvider? provider, out half result) => half.TryParse(
+            (Half n, IFormatProvider? provider, out Half result) => Half.TryParse(
                 n.ToString(provider),
                 NumberStyles.Float | NumberStyles.AllowThousands,
                 provider,
                 out result),
-            (half n, IFormatProvider? provider, out half result) => half.TryParse(n.ToString(provider), provider, out result),
+            (Half n, IFormatProvider? provider, out Half result) => Half.TryParse(n.ToString(provider), provider, out result),
             values,
             formatProviders);
         Test(
-            (half n, IFormatProvider? provider, out half result) => MissingHalfMethods.TryParse(
+            (Half n, IFormatProvider? provider, out Half result) => MissingHalfMethods.TryParse(
                 n.ToString(provider).AsSpan(),
                 NumberStyles.Float | NumberStyles.AllowThousands,
                 provider,
                 out result),
-            (half n, IFormatProvider? provider, out half result) => MissingHalfMethods.TryParse(n.ToString(provider).AsSpan(), provider, out result),
+            (Half n, IFormatProvider? provider, out Half result) => MissingHalfMethods.TryParse(n.ToString(provider).AsSpan(), provider, out result),
             values,
             formatProviders);
         Test(
-            (half n, IFormatProvider? provider, out half result) => MissingHalfMethods.TryParse(
+            (Half n, IFormatProvider? provider, out Half result) => MissingHalfMethods.TryParse(
                 n.ToString(provider).AsUtf8Bytes(),
                 NumberStyles.Float | NumberStyles.AllowThousands,
                 provider,
                 out result),
-            (half n, IFormatProvider? provider, out half result)
+            (Half n, IFormatProvider? provider, out Half result)
                 => MissingHalfMethods.TryParse(n.ToString(provider).AsUtf8Bytes(), provider, out result),
             values,
             formatProviders);

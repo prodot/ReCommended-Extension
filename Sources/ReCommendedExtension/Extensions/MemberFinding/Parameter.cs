@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using JetBrains.ReSharper.Psi;
 
-namespace ReCommendedExtension.Extensions.MethodFinding;
+namespace ReCommendedExtension.Extensions.MemberFinding;
 
 [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using original type names.")]
 [SuppressMessage("ReSharper", "NotAccessedPositionalProperty.Global", Justification = "Used for debugging only.")]

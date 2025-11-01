@@ -1,9 +1,8 @@
 ﻿using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using ReCommendedExtension.Extensions;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes.Collections;
+namespace ReCommendedExtension.Extensions.Collections;
 
 internal abstract class CollectionCreation
 {

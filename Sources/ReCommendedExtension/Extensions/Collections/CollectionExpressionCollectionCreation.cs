@@ -1,6 +1,6 @@
 ﻿using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes.Collections;
+namespace ReCommendedExtension.Extensions.Collections;
 
 internal sealed class CollectionExpressionCollectionCreation(ICollectionExpression collectionExpression) : CollectionCreation
 {

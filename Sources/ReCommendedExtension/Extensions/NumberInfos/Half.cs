@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+namespace ReCommendedExtension.Extensions.NumberInfos;
 
 /// <remarks>
 /// Original code from <see href="https://github.com/dotnet/dotnet"/><para/>

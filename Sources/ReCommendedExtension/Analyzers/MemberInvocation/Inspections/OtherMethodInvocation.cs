@@ -1,9 +1,9 @@
 ﻿using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.Collections;
 using ReCommendedExtension.Analyzers.MemberInvocation.Rules;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.Collections;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
 

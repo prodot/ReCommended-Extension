@@ -2,9 +2,8 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Extensions;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+namespace ReCommendedExtension.Extensions.NumberInfos;
 
 public abstract record NumberInfo
 {
@@ -1045,7 +1044,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Binary
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
-        MaxValueStringLength = BaseTypes.NumberInfos.Int128.MaxValue.ToString().Length,
+        MaxValueStringLength = Extensions.NumberInfos.Int128.MaxValue.ToString().Length,
         TryGetConstant = TryGetInt128Constant,
         CastConstant = CastConstantToInt128,
         Cast = expression => expression.Cast("Int128").GetText(),
@@ -1054,8 +1053,8 @@ public abstract record NumberInfo
         IsNonZeroConstant = expression => TryGetInt128Constant(expression, out _) is { } value && value != 0,
         AreEqualConstants = (a, b) => TryGetInt128Constant(a, out _) is { } x && TryGetInt128Constant(b, out _) is { } y && x == y,
         AreMinMaxConstants =
-            (a, b) => TryGetInt128Constant(a, out _) == BaseTypes.NumberInfos.Int128.MinValue
-                && TryGetInt128Constant(b, out _) == BaseTypes.NumberInfos.Int128.MaxValue,
+            (a, b) => TryGetInt128Constant(a, out _) == Extensions.NumberInfos.Int128.MinValue
+                && TryGetInt128Constant(b, out _) == Extensions.NumberInfos.Int128.MaxValue,
     };
 
     static NumberInfo<UInt128> UInt128 { get; } = new()
@@ -1076,8 +1075,8 @@ public abstract record NumberInfo
         IsNonZeroConstant = expression => TryGetUInt128Constant(expression, out _) is { } value && value != 0,
         AreEqualConstants = (a, b) => TryGetUInt128Constant(a, out _) is { } x && TryGetUInt128Constant(b, out _) is { } y && x == y,
         AreMinMaxConstants =
-            (a, b) => TryGetUInt128Constant(a, out _) == BaseTypes.NumberInfos.UInt128.MinValue
-                && TryGetUInt128Constant(b, out _) == BaseTypes.NumberInfos.UInt128.MaxValue,
+            (a, b) => TryGetUInt128Constant(a, out _) == NumberInfos.UInt128.MinValue
+                && TryGetUInt128Constant(b, out _) == NumberInfos.UInt128.MaxValue,
     };
 
     static NumberInfo<nint> IntPtr { get; } = new()

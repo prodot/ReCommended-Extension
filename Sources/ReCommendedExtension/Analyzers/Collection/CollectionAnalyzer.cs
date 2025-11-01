@@ -11,8 +11,8 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.MethodFinding;
-using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSignature;
+using ReCommendedExtension.Extensions.MemberFinding;
+using MethodSignature = ReCommendedExtension.Extensions.MemberFinding.MethodSignature;
 
 namespace ReCommendedExtension.Analyzers.Collection;
 
@@ -52,9 +52,9 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
-        => PredefinedType.ARRAY_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Array.Empty), Parameters = [], GenericParametersCount = 1, IsStatic = true },
-            psiModule);
+        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } typeElement
+            && typeElement.HasMethod(
+                new MethodSignature { Name = nameof(Array.Empty), Parameters = [], GenericParametersCount = 1, IsStatic = true });
 
     [Pure]
     static bool HasAccessibleAddMethod(IAccessContext accessContext, ITypeElement typeElement, bool checkBaseClasses = true)

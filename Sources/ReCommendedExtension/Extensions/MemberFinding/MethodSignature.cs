@@ -1,4 +1,4 @@
-﻿namespace ReCommendedExtension.Extensions.MethodFinding;
+﻿namespace ReCommendedExtension.Extensions.MemberFinding;
 
 internal record struct MethodSignature
 {

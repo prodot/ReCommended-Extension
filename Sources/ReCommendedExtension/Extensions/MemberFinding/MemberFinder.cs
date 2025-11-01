@@ -1,8 +1,6 @@
-﻿using JetBrains.Metadata.Reader.API;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Modules;
+﻿using JetBrains.ReSharper.Psi;
 
-namespace ReCommendedExtension.Extensions.MethodFinding;
+namespace ReCommendedExtension.Extensions.MemberFinding;
 
 internal static class MemberFinder
 {
@@ -72,29 +70,8 @@ internal static class MemberFinder
             select constructor).HasMember(signature.Parameters, returnParameterNames, out parameterNames);
 
     [Pure]
-    public static bool HasConstructor(
-        this IClrTypeName clrTypeName,
-        ConstructorSignature signature,
-        bool returnParameterNames,
-        out string[] parameterNames,
-        IPsiModule psiModule)
-    {
-        if (clrTypeName.TryGetTypeElement(psiModule) is { } typeElement)
-        {
-            return typeElement.HasConstructor(signature, returnParameterNames, out parameterNames);
-        }
-
-        parameterNames = [];
-        return false;
-    }
-
-    [Pure]
     public static bool HasConstructor(this ITypeElement typeElement, ConstructorSignature signature)
         => typeElement.HasConstructor(signature, false, out _);
-
-    [Pure]
-    public static bool HasConstructor(this IClrTypeName clrTypeName, ConstructorSignature signature, IPsiModule psiModule)
-        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasConstructor(signature);
 
     [Pure]
     public static bool HasProperty(this ITypeElement typeElement, PropertySignature signature)
@@ -104,10 +81,6 @@ internal static class MemberFinder
                 && property.IsStatic == signature.IsStatic
                 && property.ShortName == signature.Name
             select property).HasMember([], false, out _);
-
-    [Pure]
-    public static bool HasProperty(this IClrTypeName clrTypeName, PropertySignature signature, IPsiModule psiModule)
-        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasProperty(signature);
 
     [Pure]
     public static bool HasMethod(this ITypeElement typeElement, MethodSignature signature, bool returnParameterNames, out string[] parameterNames)
@@ -121,26 +94,5 @@ internal static class MemberFinder
             select method).HasMember(signature.Parameters, returnParameterNames, out parameterNames);
 
     [Pure]
-    public static bool HasMethod(
-        this IClrTypeName clrTypeName,
-        MethodSignature signature,
-        bool returnParameterNames,
-        out string[] parameterNames,
-        IPsiModule psiModule)
-    {
-        if (clrTypeName.TryGetTypeElement(psiModule) is { } typeElement)
-        {
-            return typeElement.HasMethod(signature, returnParameterNames, out parameterNames);
-        }
-
-        parameterNames = [];
-        return false;
-    }
-
-    [Pure]
     public static bool HasMethod(this ITypeElement typeElement, MethodSignature signature) => typeElement.HasMethod(signature, false, out _);
-
-    [Pure]
-    public static bool HasMethod(this IClrTypeName clrTypeName, MethodSignature signature, IPsiModule psiModule)
-        => clrTypeName.TryGetTypeElement(psiModule) is { } typeElement && typeElement.HasMethod(signature);
 }

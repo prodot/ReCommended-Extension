@@ -1,5 +1,5 @@
 ﻿using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.Collections;
+using ReCommendedExtension.Extensions.Collections;
 
 namespace ReCommendedExtension.Analyzers.Argument.Inspections;
 

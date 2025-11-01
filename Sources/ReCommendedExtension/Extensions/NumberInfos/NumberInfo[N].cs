@@ -1,7 +1,7 @@
 ﻿using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+namespace ReCommendedExtension.Extensions.NumberInfos;
 
 public sealed record NumberInfo<N> : NumberInfo where N : struct
 {

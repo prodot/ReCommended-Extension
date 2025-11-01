@@ -7,9 +7,9 @@ using JetBrains.ReSharper.Psi.CSharp.Conversions;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.MethodFinding;
+using ReCommendedExtension.Extensions.MemberFinding;
+using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.Formatter;
 

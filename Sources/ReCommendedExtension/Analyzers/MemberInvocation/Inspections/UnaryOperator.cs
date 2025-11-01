@@ -1,7 +1,7 @@
 ﻿using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
 

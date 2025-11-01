@@ -2,8 +2,8 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.ExpressionResult.Inspections;
 

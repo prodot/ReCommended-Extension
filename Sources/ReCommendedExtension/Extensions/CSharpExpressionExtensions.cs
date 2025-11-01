@@ -11,7 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util.Literals;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Extensions;
 

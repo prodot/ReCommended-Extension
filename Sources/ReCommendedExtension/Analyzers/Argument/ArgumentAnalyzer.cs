@@ -5,11 +5,11 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.Argument.Inspections;
 using ReCommendedExtension.Analyzers.Argument.Rules;
-using ReCommendedExtension.Analyzers.BaseTypes.Collections;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.MethodFinding;
-using ConstructorSignature = ReCommendedExtension.Extensions.MethodFinding.ConstructorSignature;
-using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSignature;
+using ReCommendedExtension.Extensions.Collections;
+using ReCommendedExtension.Extensions.MemberFinding;
+using ConstructorSignature = ReCommendedExtension.Extensions.MemberFinding.ConstructorSignature;
+using MethodSignature = ReCommendedExtension.Extensions.MemberFinding.MethodSignature;
 
 namespace ReCommendedExtension.Analyzers.Argument;
 

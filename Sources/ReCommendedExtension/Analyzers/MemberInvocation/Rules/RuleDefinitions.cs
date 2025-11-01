@@ -3,7 +3,7 @@ using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
-using ReCommendedExtension.Extensions.MethodFinding;
+using ReCommendedExtension.Extensions.MemberFinding;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation.Rules;
 

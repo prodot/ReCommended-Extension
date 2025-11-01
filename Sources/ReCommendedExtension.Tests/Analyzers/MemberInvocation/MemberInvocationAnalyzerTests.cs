@@ -9,12 +9,10 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.MemberInvocation;
+using ReCommendedExtension.Extensions.NumberInfos;
 using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
-
-using int128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.Int128;
-using uint128 = ReCommendedExtension.Analyzers.BaseTypes.NumberInfos.UInt128;
 
 [TestFixture]
 public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
@@ -219,14 +217,14 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestInt128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue };
+        var values = new[] { 0, 1, 2, -1, -2, Int128.MaxValue, Int128.MinValue };
 
         // binary operator
 
         Test((number, value) => number.Equals(value), (number, value) => number == value, values, values);
 
-        Test(number => int128.IsNegative(number), number => number < 0, values);
-        Test(number => int128.IsPositive(number), number => number >= 0, values);
+        Test(number => Int128.IsNegative(number), number => number < 0, values);
+        Test(number => Int128.IsPositive(number), number => number >= 0, values);
 
         DoNamedTest2();
     }
@@ -236,7 +234,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void TestUInt128()
     {
-        var values = new[] { 0, 1, 2, uint128.MaxValue };
+        var values = new[] { 0, 1, 2, UInt128.MaxValue };
 
         // binary operator
 

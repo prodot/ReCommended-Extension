@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using ReCommendedExtension.Analyzers.BaseTypes.Collections;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.Collections;
 
 namespace ReCommendedExtension.Analyzers.Argument.Inspections;
 

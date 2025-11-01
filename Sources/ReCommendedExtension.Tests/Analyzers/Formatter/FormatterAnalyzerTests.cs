@@ -7,8 +7,8 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
 using ReCommendedExtension.Analyzers.Formatter;
+using ReCommendedExtension.Extensions.NumberInfos;
 using ReCommendedExtension.Tests.Missing;
 
 namespace ReCommendedExtension.Tests.Analyzers.Formatter;

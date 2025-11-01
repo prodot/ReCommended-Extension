@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Tests.Missing;
 

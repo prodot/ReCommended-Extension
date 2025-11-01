@@ -1,4 +1,4 @@
-﻿namespace ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+﻿namespace ReCommendedExtension.Extensions.NumberInfos;
 
 [Flags]
 public enum FormatSpecifiers

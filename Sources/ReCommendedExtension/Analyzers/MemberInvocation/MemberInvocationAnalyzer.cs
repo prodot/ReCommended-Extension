@@ -8,9 +8,9 @@ using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
 using ReCommendedExtension.Analyzers.MemberInvocation.Rules;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.MethodFinding;
-using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSignature;
-using PropertySignature = ReCommendedExtension.Extensions.MethodFinding.PropertySignature;
+using ReCommendedExtension.Extensions.MemberFinding;
+using MethodSignature = ReCommendedExtension.Extensions.MemberFinding.MethodSignature;
+using PropertySignature = ReCommendedExtension.Extensions.MemberFinding.PropertySignature;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation;
 

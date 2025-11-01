@@ -1,7 +1,7 @@
 ﻿using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Psi;
 using ReCommendedExtension.Analyzers.ExpressionResult.Inspections;
-using ReCommendedExtension.Extensions.MethodFinding;
+using ReCommendedExtension.Extensions.MemberFinding;
 
 namespace ReCommendedExtension.Analyzers.ExpressionResult.Rules;
 
