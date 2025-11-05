@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Test
 {
     public class Methods
     {
-        public void Pattern(char c, double d, float f, string text, string? textNullable)
+        public void Pattern(char c, double d, float f, string text, string? textNullable, int[] array, List<int> list)
         {
             var result11 = |char.IsAsciiDigit(c)|(0);
             var result12 = |char.IsAsciiHexDigit(c)|(1);
@@ -27,14 +29,14 @@ namespace Test
             var result36 = |text.EndsWith("c", StringComparison.OrdinalIgnoreCase)|(16);
             var result37 = |text.EndsWith("ß", StringComparison.OrdinalIgnoreCase)|(17);
 
-            var result41 = |textNullable?.IndexOf('c')|(18) == 0;
-            var result42 = 0 == |textNullable?.IndexOf('c')|(19);
-            var result43 = |textNullable?.IndexOf('c')|(20) != 0;
-            var result44 = 0 != |textNullable?.IndexOf('c')|(21);
-            var result45 = |textNullable?.IndexOf(c)|(22) == 0;
-            var result46 = 0 == |textNullable?.IndexOf(c)|(23);
-            var result47 = |textNullable?.IndexOf(c)|(24) != 0;
-            var result48 = 0 != |textNullable?.IndexOf(c)|(25);
+            var result41 = |textNullable?.IndexOf('c') == 0|(18);
+            var result42 = |0 == textNullable?.IndexOf('c')|(19);
+            var result43 = |textNullable?.IndexOf('c') != 0|(20);
+            var result44 = |0 != textNullable?.IndexOf('c')|(21);
+            var result45 = |textNullable?.IndexOf(c) == 0|(22);
+            var result46 = |0 == textNullable?.IndexOf(c)|(23);
+            var result47 = |textNullable?.IndexOf(c) != 0|(24);
+            var result48 = |0 != textNullable?.IndexOf(c)|(25);
 
             var result51 = |text.StartsWith('c')|(26);
             var result52 = |text.StartsWith(c)|(27);
@@ -43,6 +45,20 @@ namespace Test
             var result55 = |text.StartsWith("\u200b", StringComparison.Ordinal)|(30);
             var result56 = |text.StartsWith("c", StringComparison.OrdinalIgnoreCase)|(31);
             var result57 = |text.StartsWith("€", StringComparison.OrdinalIgnoreCase)|(32);
+
+            var result61 = array.|FirstOrDefault()|(33);
+            var result62 = array.|FirstOrDefault(-1)|(34);
+
+            var result71 = array.|LastOrDefault()|(35);
+            var result72 = array.|LastOrDefault(-1)|(36);
+
+            var result81 = text.|Single()|(37);
+            var result82 = array.|Single()|(38);
+
+            var result91 = text.|SingleOrDefault()|(39);
+            var result92 = text.|SingleOrDefault('c')|(40);
+            var result93 = list.|SingleOrDefault()|(41);
+            var result94 = array.|SingleOrDefault(-1)|(42);
         }
     }
 }
@@ -146,3 +162,33 @@ Replace with 'text is ['c' or 'C', ..]'
 32: Use list pattern.
 QUICKFIXES:
 Replace with 'text is ['€', ..]'
+33: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var first, ..] ? first : 0'
+34: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var first, ..] ? first : -1'
+35: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., var last] ? last : 0'
+36: Use list pattern.
+QUICKFIXES:
+Replace with 'is [.., var last] ? last : -1'
+37: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var item] ? item : throw new InvalidOperationException(...)'
+38: Use list pattern.
+QUICKFIXES:
+Replace with 'is [var item] ? item : throw new InvalidOperationException(...)'
+39: Use switch expression.
+QUICKFIXES:
+Replace with 'switch { [] => '\0', [var item] => item, _ => throw new InvalidOperationException(...) }'
+40: Use switch expression.
+QUICKFIXES:
+Replace with 'switch { [] => 'c', [var item] => item, _ => throw new InvalidOperationException(...) }'
+41: Use switch expression.
+QUICKFIXES:
+Replace with 'switch { [] => 0, [var item] => item, _ => throw new InvalidOperationException(...) }'
+42: Use switch expression.
+QUICKFIXES:
+Replace with 'switch { [] => -1, [var item] => item, _ => throw new InvalidOperationException(...) }'

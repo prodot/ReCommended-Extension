@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.MemberInvocation.Rules;
 
@@ -15,14 +16,20 @@ namespace ReCommendedExtension.Analyzers.MemberInvocation;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class UsePatternSuggestion(string message, IInvocationExpression invocationExpression, PatternReplacement replacement) : Highlighting(
-    message)
+public sealed class UsePatternSuggestion(
+    string message,
+    ICSharpExpression expression,
+    IReferenceExpression invokedExpression,
+    PatternReplacement replacement) : Highlighting(message)
 {
     const string SeverityId = "UsePattern";
 
-    internal IInvocationExpression InvocationExpression => invocationExpression;
+    internal ICSharpExpression Expression => expression;
 
     internal PatternReplacement Replacement => replacement;
 
-    public override DocumentRange CalculateRange() => invocationExpression.GetDocumentRange();
+    public override DocumentRange CalculateRange()
+        => replacement.HighlightOnlyInvokedMethod
+            ? expression.GetDocumentRange().SetStartTo(invokedExpression.Reference.GetDocumentRange().StartOffset)
+            : expression.GetDocumentRange();
 }

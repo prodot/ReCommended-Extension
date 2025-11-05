@@ -15,7 +15,7 @@ public sealed class ReplaceTypeCastWithFormatSpecifierFix(ReplaceTypeCastWithFor
     public override string Text
         => $"Replace with '{highlighting.Expression.GetText().TrimToSingleLineWithMaxLength(120)}:{highlighting.FormatSpecifier}'";
 
-    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         => _ =>
         {
             using (WriteLockCookie.Create())

@@ -34,4 +34,11 @@ public sealed class UseRangeIndexerFixTests : QuickFixTestBase<UseRangeIndexerFi
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     public void TestUseRangeIndexerFix_Parenthesized_RightOperand_Nullable() => DoNamedTest2();
+
+    [Test]
+    public void TestUseRangeIndexerFix_Linq() => DoNamedTest2();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    public void TestUseRangeIndexerFix_Linq_Nullable() => DoNamedTest2();
 }

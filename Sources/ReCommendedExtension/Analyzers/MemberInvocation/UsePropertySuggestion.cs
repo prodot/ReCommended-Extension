@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation;
 
@@ -19,7 +20,8 @@ public sealed class UsePropertySuggestion(
     string message,
     IInvocationExpression invocationExpression,
     IReferenceExpression invokedExpression,
-    string propertyName) : Highlighting(message)
+    string propertyName,
+    TargetType? ensureTargetType) : Highlighting(message)
 {
     const string SeverityId = "UseProperty";
 
@@ -28,6 +30,8 @@ public sealed class UsePropertySuggestion(
     internal IReferenceExpression InvokedExpression => invokedExpression;
 
     internal string PropertyName => propertyName;
+
+    internal TargetType? EnsureTargetType => ensureTargetType;
 
     public override DocumentRange CalculateRange()
         => invocationExpression.GetDocumentRange().SetStartTo(invokedExpression.Reference.GetDocumentRange().StartOffset);

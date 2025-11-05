@@ -38,7 +38,7 @@ public sealed class UseOtherArgumentRangeFix(UseOtherArgumentRangeSuggestion hig
         }
     }
 
-    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {

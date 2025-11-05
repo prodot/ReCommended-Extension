@@ -14,7 +14,9 @@ public record struct RangeIndexerReplacement
         IndexDisplayText = $"{startIndex}..{endIndex}";
     }
 
-    public string Index { get; }
+    internal string Index { get; }
 
-    public string IndexDisplayText { get; }
+    internal string IndexDisplayText { get; }
+
+    internal bool CanThrowOtherException { get; init; }
 }

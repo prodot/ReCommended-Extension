@@ -1,5 +1,9 @@
-﻿using JetBrains.ReSharper.Psi.CSharp.Parsing;
+﻿using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
@@ -106,6 +110,120 @@ internal abstract record Inspection
         GreaterThanOrEqual,
         LessThan,
         LessThanOrEqual,
+    }
+
+    [Pure]
+    static IEnumerable<IProperty> GetAllProperties(ITypeElement typeElement)
+        => typeElement.Properties.Concat(
+            from baseTypeElement in typeElement.GetAllSuperTypeElements() from property in baseTypeElement.Properties select property);
+
+    [Pure]
+    static IEnumerable<IProperty> GetIndexers(IEnumerable<IProperty> properties)
+        => from property in properties where property.Parameters is [{ Type: var parameterType }] && parameterType.IsInt() select property;
+
+    [Pure]
+    protected static bool IsIndexableCollectionOrString(IType type, ITreeNode context)
+    {
+        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray() || type.IsString())
+        {
+            return true;
+        }
+
+        if (type.GetTypeElement() is { } typeElement)
+        {
+            var psiModule = context.GetPsiModule();
+
+            return typeElement.IsDescendantOf(PredefinedType.GENERIC_ILIST_FQN.TryGetTypeElement(psiModule))
+                || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlyList.TryGetTypeElement(psiModule));
+        }
+
+        return false;
+    }
+
+    [Pure]
+    protected static bool IsIndexableCollectionOrString(IType type, ICSharpExpression expression, out bool hasAccessibleIndexer)
+    {
+        if (type.IsGenericIList() || type.IsGenericIReadOnlyList() || type.IsGenericList() || type.IsGenericArray() || type.IsString())
+        {
+            hasAccessibleIndexer = true;
+            return true;
+        }
+
+        if (type.GetTypeElement() is { } typeElement)
+        {
+            var psiModule = expression.GetPsiModule();
+
+            var implementedListTypeElement = PredefinedType.GENERIC_ILIST_FQN.TryGetTypeElement(psiModule) is { } t1 && typeElement.IsDescendantOf(t1)
+                ? t1
+                : null;
+
+            var implementedReadOnlyListTypeElement =
+                ClrTypeNames.IReadOnlyList.TryGetTypeElement(psiModule) is { } t2 && typeElement.IsDescendantOf(t2) ? t2 : null;
+
+            if (implementedListTypeElement is { } || implementedReadOnlyListTypeElement is { })
+            {
+                if (typeElement is ITypeParameter typeParameter)
+                {
+                    var hasAccessibleIndexerIfIndexableCollection = false;
+                    if (typeParameter.TypeConstraints.Any(t => IsIndexableCollectionOrString(
+                        t,
+                        expression,
+                        out hasAccessibleIndexerIfIndexableCollection)))
+                    {
+                        hasAccessibleIndexer = hasAccessibleIndexerIfIndexableCollection;
+                        return true;
+                    }
+                }
+
+                var listIndexer = implementedListTypeElement is { } ? GetIndexers(implementedListTypeElement.Properties).FirstOrDefault() : null;
+                var readOnlyListIndexer = implementedReadOnlyListTypeElement is { }
+                    ? GetIndexers(implementedReadOnlyListTypeElement.Properties).FirstOrDefault()
+                    : null;
+
+                hasAccessibleIndexer = GetIndexers(GetAllProperties(typeElement))
+                    .Any(indexer
+                        => (listIndexer is { } && indexer.OverridesOrImplements(listIndexer)
+                            || readOnlyListIndexer is { } && indexer.OverridesOrImplements(readOnlyListIndexer))
+                        && AccessUtil.IsSymbolAccessible(indexer, new ElementAccessContext(expression)));
+                return true;
+            }
+        }
+
+        hasAccessibleIndexer = false;
+        return false;
+    }
+
+    [Pure]
+    protected static bool IsDistinctCollection(IType type, ITreeNode context)
+    {
+        if (type.IsClrType(PredefinedType.ISET_FQN)
+            || type.IsClrType(ClrTypeNames.IReadOnlySet)
+            || type.IsClrType(ClrTypeNames.DictionaryKeyCollection))
+        {
+            return true;
+        }
+
+        if (type.GetTypeElement() is { } typeElement)
+        {
+            var psiModule = context.GetPsiModule();
+
+            return typeElement.IsDescendantOf(PredefinedType.ISET_FQN.TryGetTypeElement(psiModule))
+                || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlySet.TryGetTypeElement(psiModule));
+        }
+
+        return false;
+    }
+
+    [Pure]
+    protected static bool IsCollection(IType type, ITreeNode context)
+    {
+        var psiModule = context.GetPsiModule();
+
+        return type.IsGenericICollection()
+            || type.IsGenericIReadOnlyCollection()
+            || type.GetTypeElement() is { } typeElement
+            && (typeElement.IsDescendantOf(PredefinedType.GENERIC_ICOLLECTION_FQN.TryGetTypeElement(psiModule))
+                || typeElement.IsDescendantOf(PredefinedType.GENERIC_IREADONLYCOLLECTION_FQN.TryGetTypeElement(psiModule)));
     }
 
     public required Func<string, string> Message { get; init; }

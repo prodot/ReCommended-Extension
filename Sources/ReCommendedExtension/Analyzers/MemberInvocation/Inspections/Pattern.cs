@@ -1,5 +1,7 @@
-﻿using JetBrains.ReSharper.Psi.CSharp;
+﻿using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.MemberInvocation.Rules;
 using ReCommendedExtension.Extensions;
 
@@ -7,6 +9,27 @@ namespace ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
 
 internal abstract record Pattern : Inspection
 {
+    [Pure]
+    static string? TryGetItemDefaultValue(IType collectionType, ITreeNode context)
+    {
+        if (collectionType.IsString() && PredefinedType.CHAR_FQN.TryGetTypeElement(context.GetPsiModule()) is { } charTypeElement)
+        {
+            return TypeFactory.CreateType(charTypeElement).TryGetDefaultValue(context);
+        }
+
+        if (collectionType is IArrayType(var elementType, 1))
+        {
+            return elementType.TryGetDefaultValue(context);
+        }
+
+        if (collectionType is IDeclaredType declaredType && declaredType.TryGetGenericParameterTypes() is [{ } itemType])
+        {
+            return itemType.TryGetDefaultValue(context);
+        }
+
+        return null;
+    }
+
     public static PatternByArgument ByArgument { get; } = new() { Message = _ => "Use pattern." };
 
     public static PatternByArguments Arg0BetweenArg1Arg2 { get; } = new()
@@ -15,7 +38,7 @@ internal abstract record Pattern : Inspection
             => args is [{ Value: { } arg0Value }, { Value: { } arg1Value }, { Value: { } arg2Value }]
             && arg1Value.TryGetCharConstant() is { }
             && arg2Value.TryGetCharConstant() is { }
-                ? new PatternReplacement { Expression = arg0Value, Pattern = $">= {arg1Value.GetText()} and <= {arg2Value.GetText()}" }
+                ? new PatternReplacement { Expression = arg0Value, Pattern = $"is >= {arg1Value.GetText()} and <= {arg2Value.GetText()}" }
                 : null,
         Message = _ => "Use pattern.",
     };
@@ -24,11 +47,15 @@ internal abstract record Pattern : Inspection
     static PatternReplacement? TryGetReplacementForBinaryExpression(
         IInvocationExpression invocationExpression,
         ICSharpExpression qualifier,
-        Func<BinaryOperatorExpression, string?> tryGetPattern)
+        Func<BinaryOperatorExpression, string?> tryGetPattern,
+        Func<BinaryOperatorExpression, string?>? tryGetPatternDisplayText = null)
         => BinaryOperatorExpression.TryFrom(invocationExpression) is { } binaryExpression
             && !binaryExpression.Expression.IsUsedAsStatement()
             && tryGetPattern(binaryExpression) is { } pattern
-                ? new PatternReplacement { Expression = qualifier, Pattern = pattern }
+                ? new PatternReplacement
+                {
+                    Expression = qualifier, Pattern = pattern, PatternDisplayText = tryGetPatternDisplayText?.Invoke(binaryExpression),
+                }
                 : null;
 
     public static PatternByBinaryExpression IsFirstConstantCharacterWhenComparingToZero { get; } = new()
@@ -39,11 +66,11 @@ internal abstract record Pattern : Inspection
                 qualifier,
                 binaryExpression => binaryExpression switch
                 {
-                    (InvocationExpression, Operator.Equal, Number { Value: 0 }) => $"[{value.GetText()}, ..]",
-                    (Number { Value: 0 }, Operator.Equal, InvocationExpression) => $"[{value.GetText()}, ..]",
+                    (InvocationExpression, Operator.Equal, Number { Value: 0 }) => $"is [{value.GetText()}, ..]",
+                    (Number { Value: 0 }, Operator.Equal, InvocationExpression) => $"is [{value.GetText()}, ..]",
 
-                    (InvocationExpression, Operator.NotEqual, Number { Value: 0 }) => $"not [{value.GetText()}, ..]",
-                    (Number { Value: 0 }, Operator.NotEqual, InvocationExpression) => $"not [{value.GetText()}, ..]",
+                    (InvocationExpression, Operator.NotEqual, Number { Value: 0 }) => $"is not [{value.GetText()}, ..]",
+                    (Number { Value: 0 }, Operator.NotEqual, InvocationExpression) => $"is not [{value.GetText()}, ..]",
 
                     _ => null,
                 })
@@ -59,11 +86,25 @@ internal abstract record Pattern : Inspection
                 qualifier,
                 binaryExpression => binaryExpression switch
                 {
-                    (InvocationExpression, Operator.Equal, Number { Value: 0 }) => $"[var firstChar, ..] && firstChar == {value.GetText()}",
-                    (Number { Value: 0 }, Operator.Equal, InvocationExpression) => $"[var firstChar, ..] && firstChar == {value.GetText()}",
+                    (InvocationExpression, Operator.Equal, Number { Value: 0 }) => $"is [var firstChar, ..] && firstChar == ({value.GetText()})",
+                    (Number { Value: 0 }, Operator.Equal, InvocationExpression) => $"is [var firstChar, ..] && firstChar == ({value.GetText()})",
 
-                    (InvocationExpression, Operator.NotEqual, Number { Value: 0 }) => $"not [var firstChar, ..] || firstChar != {value.GetText()}",
-                    (Number { Value: 0 }, Operator.NotEqual, InvocationExpression) => $"not [var firstChar, ..] || firstChar != {value.GetText()}",
+                    (InvocationExpression, Operator.NotEqual, Number { Value: 0 }) => $"is not [var firstChar, ..] || firstChar != ({
+                        value.GetText()
+                    })",
+                    (Number { Value: 0 }, Operator.NotEqual, InvocationExpression) => $"is not [var firstChar, ..] || firstChar != ({
+                        value.GetText()
+                    })",
+
+                    _ => null,
+                },
+                binaryExpression => binaryExpression switch
+                {
+                    (InvocationExpression, Operator.Equal, Number { Value: 0 }) => $"is [var firstChar, ..] && firstChar == {value.GetText()}",
+                    (Number { Value: 0 }, Operator.Equal, InvocationExpression) => $"is [var firstChar, ..] && firstChar == {value.GetText()}",
+
+                    (InvocationExpression, Operator.NotEqual, Number { Value: 0 }) => $"is not [var firstChar, ..] || firstChar != {value.GetText()}",
+                    (Number { Value: 0 }, Operator.NotEqual, InvocationExpression) => $"is not [var firstChar, ..] || firstChar != {value.GetText()}",
 
                     _ => null,
                 })
@@ -75,17 +116,21 @@ internal abstract record Pattern : Inspection
     {
         TryGetReplacement =
             (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() is { }
-                ? new PatternReplacement { Expression = qualifier, Pattern = $"[{value.GetText()}, ..]" }
+                ? new PatternReplacement { Expression = qualifier, Pattern = $"is [{value.GetText()}, ..]" }
                 : null,
         Message = _ => "Use list pattern.",
     };
 
     public static PatternByQualifierArguments IsFirstNonConstantCharacter { get; } = new()
     {
-        TryGetReplacement =
-            (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() == null
-                ? new PatternReplacement { Expression = qualifier, Pattern = $"[var firstChar, ..] && firstChar == {value.GetText()}" }
-                : null,
+        TryGetReplacement = (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() == null
+            ? new PatternReplacement
+            {
+                Expression = qualifier,
+                Pattern = $"is [var firstChar, ..] && firstChar == ({value.GetText()})",
+                PatternDisplayText = $"is [var firstChar, ..] && firstChar == {value.GetText()}",
+            }
+            : null,
         Message = _ => "Use list pattern.",
     };
 
@@ -98,7 +143,7 @@ internal abstract record Pattern : Inspection
                 ? new PatternReplacement
                 {
                     Expression = qualifier,
-                    Pattern = $"[{character.ToLiteralString(value.GetCSharpLanguageLevel())}, ..]",
+                    Pattern = $"is [{character.ToLiteralString(value.GetCSharpLanguageLevel())}, ..]",
                 }
                 : null,
         Message = _ => "Use list pattern.",
@@ -121,8 +166,8 @@ internal abstract record Pattern : Inspection
                 {
                     Expression = qualifier,
                     Pattern = lowerCaseCharacter == upperCaseCharacter
-                        ? $"[{character.ToLiteralString(languageLevel)}, ..]"
-                        : $"[{lowerCaseCharacter.ToLiteralString(languageLevel)} or {upperCaseCharacter.ToLiteralString(languageLevel)}, ..]",
+                        ? $"is [{character.ToLiteralString(languageLevel)}, ..]"
+                        : $"is [{lowerCaseCharacter.ToLiteralString(languageLevel)} or {upperCaseCharacter.ToLiteralString(languageLevel)}, ..]",
                 };
             }
             return null;
@@ -134,17 +179,21 @@ internal abstract record Pattern : Inspection
     {
         TryGetReplacement =
             (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() is { }
-                ? new PatternReplacement { Expression = qualifier, Pattern = $"[.., {value.GetText()}]" }
+                ? new PatternReplacement { Expression = qualifier, Pattern = $"is [.., {value.GetText()}]" }
                 : null,
         Message = _ => "Use list pattern.",
     };
 
     public static PatternByQualifierArguments IsLastNonConstantCharacter { get; } = new()
     {
-        TryGetReplacement =
-            (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() == null
-                ? new PatternReplacement { Expression = qualifier, Pattern = $"[.., var lastChar] && lastChar == {value.GetText()}" }
-                : null,
+        TryGetReplacement = (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() == null
+            ? new PatternReplacement
+            {
+                Expression = qualifier,
+                Pattern = $"is [.., var lastChar] && lastChar == ({value.GetText()})",
+                PatternDisplayText = $"is [.., var lastChar] && lastChar == {value.GetText()}",
+            }
+            : null,
         Message = _ => "Use list pattern.",
     };
 
@@ -156,7 +205,7 @@ internal abstract record Pattern : Inspection
             && args[1]?.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal
                 ? new PatternReplacement
                 {
-                    Expression = qualifier, Pattern = $"[.., {character.ToLiteralString(value.GetCSharpLanguageLevel())}]",
+                    Expression = qualifier, Pattern = $"is [.., {character.ToLiteralString(value.GetCSharpLanguageLevel())}]",
                 }
                 : null,
         Message = _ => "Use list pattern.",
@@ -179,13 +228,135 @@ internal abstract record Pattern : Inspection
                 {
                     Expression = qualifier,
                     Pattern = lowerCaseCharacter == upperCaseCharacter
-                        ? $"[.., {character.ToLiteralString(languageLevel)}]"
-                        : $"[.., {lowerCaseCharacter.ToLiteralString(languageLevel)} or {upperCaseCharacter.ToLiteralString(languageLevel)}]",
+                        ? $"is [.., {character.ToLiteralString(languageLevel)}]"
+                        : $"is [.., {lowerCaseCharacter.ToLiteralString(languageLevel)} or {upperCaseCharacter.ToLiteralString(languageLevel)}]",
                 };
             }
             return null;
         },
         Message = _ => "Use list pattern.",
+    };
+
+    public static PatternByQualifierArguments FirstItemOrDefault { get; } = new()
+    {
+        TryGetReplacement = (qualifier, args) =>
+        {
+            var type = qualifier.Type();
+
+            if (IsIndexableCollectionOrString(type, qualifier, out var hasAccessibleIndexer) && hasAccessibleIndexer)
+            {
+                var defaultValue = args is [_, { Value: { } value }, ..] ? value : null;
+
+                return new PatternReplacement
+                {
+                    Expression = qualifier,
+                    Pattern = defaultValue is { }
+                        ? $"is [var first, ..] ? first : ({defaultValue.GetText()})"
+                        : $"is [var first, ..] ? first : {TryGetItemDefaultValue(type, qualifier) ?? "default"}",
+                    PatternDisplayText = defaultValue is { }
+                        ? $"is [var first, ..] ? first : {defaultValue.GetText()}"
+                        : $"is [var first, ..] ? first : {TryGetItemDefaultValue(type, qualifier) ?? "default"}",
+                    HighlightOnlyInvokedMethod = true,
+                };
+            }
+
+            return null;
+        },
+        Message = _ => "Use list pattern.",
+    };
+
+    public static PatternByQualifierArguments LastItemOrDefault { get; } = new()
+    {
+        TryGetReplacement = (qualifier, args) =>
+        {
+            var type = qualifier.Type();
+
+            if (IsIndexableCollectionOrString(type, qualifier, out var hasAccessibleIndexer) && hasAccessibleIndexer)
+            {
+                var defaultValue = args is [_, { Value: { } value }, ..] ? value : null;
+
+                return new PatternReplacement
+                {
+                    Expression = qualifier,
+                    Pattern = defaultValue is { }
+                        ? $"is [.., var last] ? last : ({defaultValue.GetText()})"
+                        : $"is [.., var last] ? last : {TryGetItemDefaultValue(type, qualifier) ?? "default"}",
+                    PatternDisplayText = defaultValue is { }
+                        ? $"is [.., var last] ? last : {defaultValue.GetText()}"
+                        : $"is [.., var last] ? last : {TryGetItemDefaultValue(type, qualifier) ?? "default"}",
+                    HighlightOnlyInvokedMethod = true,
+                };
+            }
+
+            return null;
+        },
+        Message = _ => "Use list pattern.",
+    };
+
+    public static PatternByQualifierArguments SingleItem { get; } = new()
+    {
+        TryGetReplacement = (qualifier, _) =>
+        {
+            var type = qualifier.Type();
+
+            if (IsIndexableCollectionOrString(type, qualifier, out var hasAccessibleIndexer) && hasAccessibleIndexer)
+            {
+                var exceptionMessage = type.IsString()
+                    ? "String is either empty or contains more than one character."
+                    : "List is either empty or contains more than one element.";
+
+                return new PatternReplacement
+                {
+                    Expression = qualifier,
+                    Pattern = $"""is [var item] ? item : throw new {nameof(InvalidOperationException)}("{exceptionMessage}")""",
+                    PatternDisplayText = $"is [var item] ? item : throw new {nameof(InvalidOperationException)}(...)",
+                    HighlightOnlyInvokedMethod = true,
+                };
+            }
+
+            return null;
+        },
+        Message = _ => "Use list pattern.",
+    };
+
+    public static PatternByQualifierArguments SingleItemOrDefault { get; } = new()
+    {
+        TryGetReplacement = (qualifier, args) =>
+        {
+            var type = qualifier.Type();
+
+            if (IsIndexableCollectionOrString(type, qualifier, out var hasAccessibleIndexer) && hasAccessibleIndexer)
+            {
+                var defaultValue = args is [_, { Value: { } value }, ..] ? value : null;
+
+                var exceptionMessage = type.IsString() ? "String contains more than one character." : "List contains more than one element.";
+
+                return new PatternReplacement
+                {
+                    Expression = qualifier,
+                    Pattern = defaultValue is { }
+                        ? $$"""switch { [] => ({{
+                            defaultValue.GetText()
+                        }}), [var item] => item, _ => throw new InvalidOperationException("{{
+                            exceptionMessage
+                        }}") }"""
+                        : $$"""switch { [] => {{
+                            TryGetItemDefaultValue(type, qualifier) ?? "default"
+                        }}, [var item] => item, _ => throw new InvalidOperationException("{{
+                            exceptionMessage
+                        }}") }""",
+                    PatternDisplayText = defaultValue is { }
+                        ? $$"""switch { [] => {{defaultValue.GetText()}}, [var item] => item, _ => throw new InvalidOperationException(...) }"""
+                        : $$"""switch { [] => {{
+                            TryGetItemDefaultValue(type, qualifier) ?? "default"
+                        }}, [var item] => item, _ => throw new InvalidOperationException(...) }""",
+                    HighlightOnlyInvokedMethod = true,
+                };
+            }
+
+            return null;
+        },
+        Message = _ => "Use switch expression.",
     };
 
     public CSharpLanguageLevel? MinimumLanguageVersion { get; init; }

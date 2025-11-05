@@ -7,6 +7,4 @@ namespace ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
 internal sealed record PatternByBinaryExpression : Pattern
 {
     public required Func<IInvocationExpression, ICSharpExpression, TreeNodeCollection<ICSharpArgument?>, PatternReplacement?> TryGetReplacement { get; init; }
-
-    public bool EnsureQualifierNotNull { get; init; }
 }

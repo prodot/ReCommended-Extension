@@ -30,8 +30,10 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
                 or UseRangeIndexerSuggestion
                 or UsePropertySuggestion
                 or UseStaticPropertySuggestion
+                or SuspiciousElementAccessWarning
                 or RedundantToStringCallWarning // to figure out which cases are supported by R#
                 or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
+                or UseCollectionCountPropertyWarning // to figure out which cases are supported by R#
             || highlighting.IsError();
 
     static void Test<T, R>(Func<T, R> expected, Func<T, R> actual, T[] args)
@@ -939,6 +941,94 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
         Test(nullable => nullable.HasValue, nullable => nullable is (_, _), tupleValues);
 
         Test(nullable => nullable!.Value, nullable => (int)nullable!, [..values.Except(new int?[1])]);
+
+        DoNamedTest2();
+    }
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet90]
+    public void TestEnumerable()
+    {
+        var strings = new[] { null, "", "one", "two", "three" };
+        var arrays = new[] { null, [], new[] { 1, 2, 3 } };
+        var lists = new[] { null, [], new List<int> { 1, 2, 3 } };
+
+        var stringsNonNull = (from item in strings where item is { } select item).ToArray();
+        var arraysNonNull = (from item in arrays where item is { } select item).ToArray();
+        var listsNonNull = (from item in lists where item is { } select item).ToArray();
+
+        var stringsNonEmpty = strings.Except([""]).ToArray();
+        var arraysNonEmpty = arrays.Except([[]]).ToArray();
+        var listsNonEmpty = (from list in lists where list is [_, ..] select list).ToArray();
+
+        // range indexer
+
+        Test(source => source?.ElementAt(1), source => source?[1], stringsNonEmpty);
+        Test(source => source?.ElementAt(^2), source => source?[^2], stringsNonEmpty);
+        Test(source => source?.ElementAt(1), source => source?[1], arraysNonEmpty);
+        Test(source => source?.ElementAt(^2), source => source?[^2], arraysNonEmpty);
+        Test(source => source?.ElementAt(1), source => source?[1], listsNonEmpty);
+        Test(source => source?.ElementAt(^2), source => source?[^2], listsNonEmpty);
+
+        Test(source => source?.First(), source => source?[0], stringsNonEmpty);
+        Test(source => source?.First(), source => source?[0], arraysNonEmpty);
+        Test(source => source?.First(), source => source?[0], listsNonEmpty);
+
+        Test(source => source.FirstOrDefault(), source => source is [var first, ..] ? first : '\0', stringsNonNull);
+        Test(source => source.FirstOrDefault('x'), source => source is [var first, ..] ? first : 'x', stringsNonNull);
+        Test(source => source.FirstOrDefault(), source => source is [var first, ..] ? first : 0, arraysNonNull);
+        Test(source => source.FirstOrDefault(-1), source => source is [var first, ..] ? first : -1, arraysNonNull);
+        Test(source => source.FirstOrDefault(), source => source is [var first, ..] ? first : 0, listsNonNull);
+        Test(source => source.FirstOrDefault(-1), source => source is [var first, ..] ? first : -1, listsNonNull);
+
+        Test(source => source?.Last(), source => source?[^1], stringsNonEmpty);
+        Test(source => source?.Last(), source => source?[^1], arraysNonEmpty);
+        Test(source => source?.Last(), source => source?[^1], listsNonEmpty);
+
+        Test(source => source.LastOrDefault(), source => source is [.., var last] ? last : '\0', stringsNonNull);
+        Test(source => source.LastOrDefault('x'), source => source is [.., var last] ? last : 'x', stringsNonNull);
+        Test(source => source.LastOrDefault(), source => source is [.., var last] ? last : 0, arraysNonNull);
+        Test(source => source.LastOrDefault(-1), source => source is [.., var last] ? last : -1, arraysNonNull);
+        Test(source => source.LastOrDefault(), source => source is [.., var last] ? last : 0, listsNonNull);
+        Test(source => source.LastOrDefault(-1), source => source is [.., var last] ? last : -1, listsNonNull);
+
+        Test(source => source?.LongCount(), source => source?.Length, strings);
+        Test(source => source?.LongCount(), source => source?.Length, arrays);
+        Test(source => source?.LongCount(), source => source?.Count, lists);
+
+        Test(source => source.Single(), source => source is [var item] ? item : throw new InvalidOperationException(), ["a"]);
+        Test(source => source.Single(), source => source is [var item] ? item : throw new InvalidOperationException(), [new[] { 1 }]);
+        Test(source => source.Single(), source => source is [var item] ? item : throw new InvalidOperationException(), [new List<int> { 1 }]);
+
+        Test(
+            source => source.SingleOrDefault(),
+            source => source switch
+            {
+                [] => '\0',
+                [var item] => item,
+                _ => throw new InvalidOperationException(),
+            },
+            ["", "a"]);
+        Test(
+            source => source.SingleOrDefault(),
+            source => source switch
+            {
+                [] => 0,
+                [var item] => item,
+                _ => throw new InvalidOperationException(),
+            },
+            [[], new[] { 1 }]);
+        Test(
+            source => source.SingleOrDefault(),
+            source => source switch
+            {
+                [] => 0,
+                [var item] => item,
+                _ => throw new InvalidOperationException(),
+            },
+            [[], new List<int> { 1 }]);
 
         DoNamedTest2();
     }

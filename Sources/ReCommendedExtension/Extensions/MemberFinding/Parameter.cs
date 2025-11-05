@@ -76,6 +76,8 @@ internal sealed record Parameter
 
     public static Parameter TimeOnly { get; } = new() { IsType = t => t.IsTimeOnly() };
 
+    public static Parameter Index { get; } = new() { IsType = t => t.IsSystemIndex() };
+
     public static Parameter ReadOnlySpanOfString { get; } = new() { IsType = t => t.IsReadOnlySpanOfString() };
 
     public static Parameter ReadOnlySpanOfObject { get; } = new() { IsType = t => t.IsReadOnlySpanOfObject() };

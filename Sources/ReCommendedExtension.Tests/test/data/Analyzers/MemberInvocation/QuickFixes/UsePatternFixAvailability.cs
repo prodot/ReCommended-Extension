@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Test
 {
     public class Methods
     {
-        public void Pattern(char c, double d, float f, string text, string? textNullable)
+        public void Pattern(char c, double d, float f, string text, string? textNullable, int[] array, List<int> list)
         {
             var result11 = char.IsAsciiDigit(c);
             var result12 = char.IsAsciiHexDigit(c);
@@ -43,6 +45,20 @@ namespace Test
             var result55 = text.StartsWith("\u200b", StringComparison.Ordinal);
             var result56 = text.StartsWith("c", StringComparison.OrdinalIgnoreCase);
             var result57 = text.StartsWith("€", StringComparison.OrdinalIgnoreCase);
+
+            var result61 = array.FirstOrDefault();
+            var result62 = array.FirstOrDefault(-1);
+
+            var result71 = array.LastOrDefault();
+            var result72 = array.LastOrDefault(-1);
+
+            var result81 = text.Single();
+            var result82 = array.Single();
+
+            var result91 = text.SingleOrDefault();
+            var result92 = text.SingleOrDefault('c');
+            var result93 = list.SingleOrDefault();
+            var result94 = array.SingleOrDefault(-1);
         }
     }
 }

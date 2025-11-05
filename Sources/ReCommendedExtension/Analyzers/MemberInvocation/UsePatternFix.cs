@@ -20,28 +20,52 @@ public sealed class UsePatternFix(UsePatternSuggestion highlighting) : QuickFixB
     {
         get
         {
-            var expression = highlighting.Replacement.Expression.GetText().TrimToSingleLineWithMaxLength(120);
-            var pattern = highlighting.Replacement.Pattern.TrimToSingleLineWithMaxLength(120);
+            var pattern = (highlighting.Replacement.PatternDisplayText ?? highlighting.Replacement.Pattern).TrimToSingleLineWithMaxLength(120);
 
-            return $"Replace with '{expression} is {pattern}'";
+            if (highlighting.Replacement.HighlightOnlyInvokedMethod)
+            {
+                return $"Replace with '{pattern}'";
+            }
+
+            var expression = highlighting.Replacement.Expression.GetText().TrimToSingleLineWithMaxLength(120);
+
+            return $"Replace with '{expression} {pattern}'";
         }
     }
 
-    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
-            var factory = CSharpElementFactory.GetInstance(highlighting.InvocationExpression);
+            var factory = CSharpElementFactory.GetInstance(highlighting.Expression);
 
             var expression = ModificationUtil
                 .ReplaceChild(
-                    highlighting.InvocationExpression,
-                    factory.CreateExpression($"(($0) is {highlighting.Replacement.Pattern})", highlighting.Replacement.Expression))
+                    highlighting.Expression,
+                    factory.CreateExpression($"(($0) {highlighting.Replacement.Pattern})", highlighting.Replacement.Expression))
                 .TryRemoveParentheses(factory);
 
-            if (expression is IIsExpression isExpression)
+            switch (expression)
             {
-                isExpression.Operand.TryRemoveParentheses(factory);
+                case IIsExpression isExpression: isExpression.Operand.TryRemoveParentheses(factory); break;
+
+                case IBinaryExpression binaryExpression:
+                    (binaryExpression.LeftOperand as IIsExpression)?.Operand.TryRemoveParentheses(factory);
+                    (binaryExpression.RightOperand as IBinaryExpression)?.RightOperand.TryRemoveParentheses(factory);
+                    break;
+
+                case IConditionalTernaryExpression conditionalTernaryExpression:
+                    (conditionalTernaryExpression.ConditionOperand as IIsExpression)?.Operand.TryRemoveParentheses(factory);
+                    conditionalTernaryExpression.ElseResult.TryRemoveParentheses(factory);
+                    break;
+
+                case ISwitchExpression switchExpression:
+                    switchExpression.GoverningExpression.TryRemoveParentheses(factory);
+                    if (switchExpression.Arms is [var arm, ..])
+                    {
+                        arm.Expression.TryRemoveParentheses(factory);
+                    }
+                    break;
             }
         }
 

@@ -16,7 +16,15 @@ public sealed class UseRangeIndexerFix(UseRangeIndexerSuggestion highlighting) :
 {
     public override bool IsAvailable(IUserDataHolder cache) => true;
 
-    public override string Text => $"Replace with '[{highlighting.Replacement.IndexDisplayText.TrimToSingleLineWithMaxLength(120)}]'";
+    public override string Text
+    {
+        get
+        {
+            var otherException = highlighting.Replacement.CanThrowOtherException ? " (other exception could be thrown)" : "";
+
+            return $"Replace with '[{highlighting.Replacement.IndexDisplayText.TrimToSingleLineWithMaxLength(120)}]'{otherException}";
+        }
+    }
 
     protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {

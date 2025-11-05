@@ -40,6 +40,7 @@ internal static class RuleDefinitions
         { PredefinedType.STRING_FQN, CreateStringMembers() },
         { PredefinedType.STRING_BUILDER_FQN, CreateStringBuilderMembers() },
         { PredefinedType.GENERIC_NULLABLE_FQN, CreateNullableMembers() },
+        { PredefinedType.ENUMERABLE_CLASS, CreateEnumerableMembers() },
     };
 
     [Pure]
@@ -1290,6 +1291,266 @@ internal static class RuleDefinitions
             },
             { nameof(Nullable<int>.HasValue), [new Member { Signature = new PropertySignature(), Inspections = [PropertyOfNullable.HasValue] }] },
             { nameof(Nullable<int>.Value), [new Member { Signature = new PropertySignature(), Inspections = [PropertyOfNullable.Value] }] },
+        };
+
+    [Pure]
+    static Dictionary<string, IReadOnlyCollection<Member>> CreateEnumerableMembers()
+        => new(StringComparer.Ordinal)
+        {
+            {
+                nameof(Enumerable.ElementAt),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters = [Parameter.IEnumerableOfT, Parameter.Int32], IsStatic = true, GenericParametersCount = 1,
+                        },
+                        Inspections =
+                        [
+                            RangeIndexer.FromArg1WhenArg0IsIndexableCollectionOrString with
+                            {
+                                EnsureExtensionInvokedAsExtension = true, EnsureNoTypeArguments = true,
+                            },
+                            SuspiciousElementAccess.ByIndexWhenArg0IsDistinctCollection,
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters = [Parameter.IEnumerableOfT, Parameter.Index], IsStatic = true, GenericParametersCount = 1,
+                        },
+                        Inspections =
+                        [
+                            RangeIndexer.FromArg1WhenArg0IsIndexableCollectionOrString with
+                            {
+                                EnsureExtensionInvokedAsExtension = true, EnsureNoTypeArguments = true,
+                            },
+                            SuspiciousElementAccess.ByIndexWhenArg0IsDistinctCollection,
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(Enumerable.ElementAtOrDefault),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters = [Parameter.IEnumerableOfT, Parameter.Int32], IsStatic = true, GenericParametersCount = 1,
+                        },
+                        Inspections = [SuspiciousElementAccess.ByIndexWhenArg0IsDistinctCollection],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters = [Parameter.IEnumerableOfT, Parameter.Index], IsStatic = true, GenericParametersCount = 1,
+                        },
+                        Inspections = [SuspiciousElementAccess.ByIndexWhenArg0IsDistinctCollection],
+                    },
+                ]
+            },
+            {
+                nameof(Enumerable.First),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.IEnumerableOfT], IsStatic = true, GenericParametersCount = 1 },
+                        Inspections =
+                        [
+                            RangeIndexer.ZeroWhenArg0IsIndexableCollectionOrString with
+                            {
+                                EnsureExtensionInvokedAsExtension = true, EnsureNoTypeArguments = true,
+                            },
+                            SuspiciousElementAccess.FirstWhenArg0IsDistinctCollection,
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(Enumerable.FirstOrDefault),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.IEnumerableOfT], IsStatic = true, GenericParametersCount = 1 },
+                        Inspections =
+                        [
+                            Pattern.FirstItemOrDefault with
+                            {
+                                MinimumLanguageVersion = CSharpLanguageLevel.CSharp110,
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureQualifierNotNull = true,
+                                EnsureNoTypeArguments = true,
+                            },
+                            SuspiciousElementAccess.FirstWhenArg0IsDistinctCollection,
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature =
+                            new MethodSignature
+                            {
+                                Parameters = [Parameter.IEnumerableOfT, Parameter.T], IsStatic = true, GenericParametersCount = 1,
+                            },
+                        Inspections =
+                        [
+                            Pattern.FirstItemOrDefault with
+                            {
+                                MinimumLanguageVersion = CSharpLanguageLevel.CSharp110,
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureQualifierNotNull = true,
+                                EnsureNoTypeArguments = true,
+                            },
+                            SuspiciousElementAccess.FirstWhenArg0IsDistinctCollection,
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(Enumerable.Last),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.IEnumerableOfT], IsStatic = true, GenericParametersCount = 1 },
+                        Inspections =
+                        [
+                            RangeIndexer.LastWhenArg0IsIndexableCollectionOrString with
+                            {
+                                MinimumLanguageVersion = CSharpLanguageLevel.CSharp80,
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureNoTypeArguments = true,
+                            },
+                            SuspiciousElementAccess.LastWhenArg0IsDistinctCollection,
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(Enumerable.LastOrDefault),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.IEnumerableOfT], IsStatic = true, GenericParametersCount = 1 },
+                        Inspections =
+                        [
+                            Pattern.LastItemOrDefault with
+                            {
+                                MinimumLanguageVersion = CSharpLanguageLevel.CSharp110,
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureQualifierNotNull = true,
+                                EnsureNoTypeArguments = true,
+                            },
+                            SuspiciousElementAccess.LastWhenArg0IsDistinctCollection,
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature =
+                            new MethodSignature
+                            {
+                                Parameters = [Parameter.IEnumerableOfT, Parameter.T], IsStatic = true, GenericParametersCount = 1,
+                            },
+                        Inspections =
+                        [
+                            Pattern.LastItemOrDefault with
+                            {
+                                MinimumLanguageVersion = CSharpLanguageLevel.CSharp110,
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureQualifierNotNull = true,
+                                EnsureNoTypeArguments = true,
+                            },
+                            SuspiciousElementAccess.LastWhenArg0IsDistinctCollection,
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(Enumerable.LongCount),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.IEnumerableOfT], IsStatic = true, GenericParametersCount = 1 },
+                        Inspections =
+                        [
+                            PropertyOfString.QualifierIsString with
+                            {
+                                Name = nameof(string.Length),
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureTargetType = TargetType.Long,
+                            },
+                            PropertyOfArray.QualifierIsArray with
+                            {
+                                Name = nameof(Array.Length), EnsureExtensionInvokedAsExtension = true, EnsureTargetType = TargetType.Long,
+                            },
+                            PropertyOfCollection.QualifierIsCollection with
+                            {
+                                Name = nameof(ICollection<int>.Count),
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureTargetType = TargetType.Long,
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(Enumerable.Single),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.IEnumerableOfT], IsStatic = true, GenericParametersCount = 1 },
+                        Inspections =
+                        [
+                            Pattern.SingleItem with
+                            {
+                                MinimumLanguageVersion = CSharpLanguageLevel.CSharp110,
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureQualifierNotNull = true,
+                                EnsureNoTypeArguments = true,
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
+                nameof(Enumerable.SingleOrDefault),
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.IEnumerableOfT], IsStatic = true, GenericParametersCount = 1 },
+                        Inspections =
+                        [
+                            Pattern.SingleItemOrDefault with
+                            {
+                                MinimumLanguageVersion = CSharpLanguageLevel.CSharp110,
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureQualifierNotNull = true,
+                                EnsureNoTypeArguments = true,
+                            },
+                        ],
+                    },
+                    new Member
+                    {
+                        Signature =
+                            new MethodSignature
+                            {
+                                Parameters = [Parameter.IEnumerableOfT, Parameter.T], IsStatic = true, GenericParametersCount = 1,
+                            },
+                        Inspections =
+                        [
+                            Pattern.SingleItemOrDefault with
+                            {
+                                MinimumLanguageVersion = CSharpLanguageLevel.CSharp110,
+                                EnsureExtensionInvokedAsExtension = true,
+                                EnsureQualifierNotNull = true,
+                                EnsureNoTypeArguments = true,
+                            },
+                        ],
+                    },
+                ]
+            },
         };
 
     [Pure]

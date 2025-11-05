@@ -105,14 +105,14 @@ namespace Test
             var result13 = |text.EndsWith("c", StringComparison.Ordinal)|(99);
             var result14 = |text.EndsWith("c", StringComparison.OrdinalIgnoreCase)|(100);
 
-            var result21 = |textNullable?.IndexOf('c')|(101) == 0;
-            var result22 = 0 == |textNullable?.IndexOf('c')|(102);
-            var result23 = |textNullable?.IndexOf('c')|(103) != 0;
-            var result24 = 0 != |textNullable?.IndexOf('c')|(104);
-            var result25 = |textNullable?.IndexOf(c)|(105) == 0;
-            var result26 = 0 == |textNullable?.IndexOf(c)|(106);
-            var result27 = |textNullable?.IndexOf(c)|(107) != 0;
-            var result28 = 0 != |textNullable?.IndexOf(c)|(108);
+            var result21 = |textNullable?.IndexOf('c') == 0|(101);
+            var result22 = |0 == textNullable?.IndexOf('c')|(102);
+            var result23 = |textNullable?.IndexOf('c') != 0|(103);
+            var result24 = |0 != textNullable?.IndexOf('c')|(104);
+            var result25 = |textNullable?.IndexOf(c) == 0|(105);
+            var result26 = |0 == textNullable?.IndexOf(c)|(106);
+            var result27 = |textNullable?.IndexOf(c) != 0|(107);
+            var result28 = |0 != textNullable?.IndexOf(c)|(108);
 
             var result31 = |text.StartsWith('c')|(109);
             var result32 = |text.StartsWith(c)|(110);

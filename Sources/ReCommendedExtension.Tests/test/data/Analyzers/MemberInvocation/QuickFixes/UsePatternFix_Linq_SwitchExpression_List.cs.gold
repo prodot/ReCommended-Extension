@@ -1,0 +1,18 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void SingleOrDefault(List<int> list)
+        {
+            var result = list switch
+            {
+              [] => 0,
+              [var item] => item,
+              _ => throw new InvalidOperationException("List contains more than one element."{caret})
+            };
+        }
+    }
+}

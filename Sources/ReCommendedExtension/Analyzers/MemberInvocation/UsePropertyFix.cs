@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation;
 
@@ -24,9 +25,23 @@ public sealed class UsePropertyFix(UsePropertySuggestion highlighting) : QuickFi
 
             var conditionalAccess = highlighting.InvokedExpression.HasConditionalAccessSign ? "?" : "";
 
+            var castType = highlighting.EnsureTargetType is { } targetType
+                ? highlighting.InvocationExpression.TryGetTargetType(false) is var type && highlighting.InvokedExpression.HasConditionalAccessSign
+                    ? targetType.IsNullableType(type) ? null : targetType.Name
+                    : targetType.IsType(type) || targetType.IsNullableType(type)
+                        ? null
+                        : targetType.Name
+                : null;
+
             ModificationUtil.ReplaceChild(
                 highlighting.InvocationExpression,
-                factory.CreateExpression($"$0{conditionalAccess}.{highlighting.PropertyName}", highlighting.InvokedExpression.QualifierExpression));
+                castType is { }
+                    ? factory.CreateExpression(
+                        $"({castType}{conditionalAccess})$0{conditionalAccess}.{highlighting.PropertyName}",
+                        highlighting.InvokedExpression.QualifierExpression)
+                    : factory.CreateExpression(
+                        $"$0{conditionalAccess}.{highlighting.PropertyName}",
+                        highlighting.InvokedExpression.QualifierExpression));
         }
 
         return _ => { };

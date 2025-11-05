@@ -1,0 +1,12 @@
+﻿using System.Linq;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void Pattern(int[] array, int? fallback)
+        {
+            var result = array is [var first, ..] ? first : {caret}fallback ?? -1;
+        }
+    }
+}

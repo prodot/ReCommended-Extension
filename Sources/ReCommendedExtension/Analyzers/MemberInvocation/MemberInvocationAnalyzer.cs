@@ -31,6 +31,7 @@ namespace ReCommendedExtension.Analyzers.MemberInvocation;
         typeof(UseRangeIndexerSuggestion),
         typeof(UsePropertySuggestion),
         typeof(UseStaticPropertySuggestion),
+        typeof(SuspiciousElementAccessWarning),
     ])]
 public sealed class MemberInvocationAnalyzer(
     NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
@@ -43,6 +44,7 @@ public sealed class MemberInvocationAnalyzer(
         IReferenceExpression invokedExpression,
         Member member,
         string memberName,
+        bool isExtension,
         ITypeElement containingType,
         TreeNodeCollection<ICSharpArgument?> arguments)
     {
@@ -182,7 +184,8 @@ public sealed class MemberInvocationAnalyzer(
                                 new UsePatternSuggestion(
                                     inspection.Message(""),
                                     invocationExpression,
-                                    new PatternReplacement { Expression = value, Pattern = pattern.Pattern }));
+                                    invokedExpression,
+                                    new PatternReplacement { Expression = value, Pattern = $"is {pattern.Pattern}" }));
                         }
                     }
                     break;
@@ -195,7 +198,8 @@ public sealed class MemberInvocationAnalyzer(
                     if (invocationExpression.GetLanguageVersion() >= pattern.MinimumLanguageVersion
                         && pattern.TryGetReplacement(arguments) is { } replacement)
                     {
-                        consumer.AddHighlighting(new UsePatternSuggestion(inspection.Message(""), invocationExpression, replacement));
+                        consumer.AddHighlighting(
+                            new UsePatternSuggestion(inspection.Message(""), invocationExpression, invokedExpression, replacement));
                     }
                     break;
                 }
@@ -205,24 +209,27 @@ public sealed class MemberInvocationAnalyzer(
                     Debug.Assert(pattern.MinimumLanguageVersion is { });
 
                     if (invocationExpression.GetLanguageVersion() >= pattern.MinimumLanguageVersion
-                        && (!pattern.EnsureQualifierNotNull || qualifier.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
-                        && pattern.TryGetReplacement(qualifier, arguments) is { } replacement)
+                        && (!pattern.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())
+                        && (!pattern.EnsureNoTypeArguments || invocationExpression.TypeArguments is [])
+                        && pattern.TryGetReplacement(qualifier, arguments) is { } replacement
+                        && (!pattern.EnsureQualifierNotNull || qualifier.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)))
                     {
-                        consumer.AddHighlighting(new UsePatternSuggestion(inspection.Message(""), invocationExpression, replacement));
+                        consumer.AddHighlighting(
+                            new UsePatternSuggestion(inspection.Message(""), invocationExpression, invokedExpression, replacement));
                     }
 
                     break;
                 }
 
-                case PatternByBinaryExpression pattern when invocationExpression is { }:
+                case PatternByBinaryExpression pattern when invocationExpression is { Parent: IBinaryExpression binaryExpression }:
                 {
                     Debug.Assert(pattern.MinimumLanguageVersion is { });
 
                     if (invocationExpression.GetLanguageVersion() >= pattern.MinimumLanguageVersion
-                        && (!pattern.EnsureQualifierNotNull || qualifier.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer))
                         && pattern.TryGetReplacement(invocationExpression, qualifier, arguments) is { } replacement)
                     {
-                        consumer.AddHighlighting(new UsePatternSuggestion(inspection.Message(""), invocationExpression, replacement));
+                        consumer.AddHighlighting(
+                            new UsePatternSuggestion(inspection.Message(""), binaryExpression, invokedExpression, replacement));
                     }
 
                     break;
@@ -251,19 +258,61 @@ public sealed class MemberInvocationAnalyzer(
                     && !invocationExpression.IsUsedAsStatement()
                     && (propertyOfString.MinimumFrameworkVersion == null
                         || invocationExpression.PsiModule.TargetFrameworkId.Version >= propertyOfString.MinimumFrameworkVersion)
+                    && (!propertyOfString.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())
                     && propertyOfString.Condition(arguments):
                 {
                     Debug.Assert(propertyOfString.Name is { });
 
-                    if (containingType.HasProperty(new PropertySignature { Name = propertyOfString.Name }))
+                    var propertyTypeElement = propertyOfString.EnsureExtensionInvokedAsExtension ? qualifier.Type().GetTypeElement() : containingType;
+
+                    if (propertyTypeElement is { } && propertyTypeElement.HasProperty(new PropertySignature { Name = propertyOfString.Name }))
                     {
                         consumer.AddHighlighting(
                             new UsePropertySuggestion(
                                 inspection.Message(propertyOfString.Name),
                                 invocationExpression,
                                 invokedExpression,
-                                propertyOfString.Name));
+                                propertyOfString.Name,
+                                propertyOfString.EnsureTargetType));
                     }
+                    break;
+                }
+
+                case PropertyOfArray propertyOfArray when invocationExpression is { }
+                    && !invocationExpression.IsUsedAsStatement()
+                    && (!propertyOfArray.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())
+                    && propertyOfArray.Condition(arguments):
+                {
+                    Debug.Assert(propertyOfArray.Name is { });
+
+                    // intentionally skipping the check if the property exists
+
+                    consumer.AddHighlighting(
+                        new UsePropertySuggestion(
+                            inspection.Message(propertyOfArray.Name),
+                            invocationExpression,
+                            invokedExpression,
+                            propertyOfArray.Name,
+                            propertyOfArray.EnsureTargetType));
+                    break;
+                }
+
+                case PropertyOfCollection propertyOfCollection when invocationExpression is { }
+                    && !invocationExpression.IsUsedAsStatement()
+                    && (!propertyOfCollection.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())
+                    && propertyOfCollection.Condition(arguments):
+                {
+                    Debug.Assert(propertyOfCollection.Name is { });
+
+                    // intentionally skipping the check if the property exists
+
+                    consumer.AddHighlighting(
+                        new UsePropertySuggestion(
+                            inspection.Message(propertyOfCollection.Name),
+                            invocationExpression,
+                            invokedExpression,
+                            propertyOfCollection.Name,
+                            propertyOfCollection.EnsureTargetType));
                     break;
                 }
 
@@ -295,10 +344,18 @@ public sealed class MemberInvocationAnalyzer(
                     && !invocationExpression.IsUsedAsStatement()
                     && (rangeIndexer.MinimumLanguageVersion == null
                         || invocationExpression.GetLanguageVersion() >= rangeIndexer.MinimumLanguageVersion)
+                    && (!rangeIndexer.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())
+                    && (!rangeIndexer.EnsureNoTypeArguments || invocationExpression.TypeArguments is [])
                     && rangeIndexer.TryGetReplacement(arguments) is { } replacement:
                 {
                     consumer.AddHighlighting(
                         new UseRangeIndexerSuggestion(inspection.Message(""), invocationExpression, invokedExpression, replacement));
+                    break;
+                }
+
+                case SuspiciousElementAccess suspiciousElementAccess when invocationExpression is { } && suspiciousElementAccess.Condition(arguments):
+                {
+                    consumer.AddHighlighting(new SuspiciousElementAccessWarning(inspection.Message(""), invocationExpression, invokedExpression));
                     break;
                 }
             }
@@ -325,6 +382,8 @@ public sealed class MemberInvocationAnalyzer(
                         element,
                         method,
                         resolvedMethod.ShortName,
+                        resolvedMethod.GetExtensionMemberKind() is var kind
+                        && (kind == ExtensionMemberKind.CLASSIC_METHOD || kind == ExtensionMemberKind.INSTANCE_METHOD),
                         containingType,
                         arguments);
                     break;
@@ -335,7 +394,16 @@ public sealed class MemberInvocationAnalyzer(
                     if (resolvedProperty.ContainingType is { } containingType
                         && RuleDefinitions.TryGetProperty(containingType, resolvedProperty) is { } property)
                     {
-                        Analyze(consumer, null, qualifierExpression, element, property, resolvedProperty.ShortName, containingType, []);
+                        Analyze(
+                            consumer,
+                            null,
+                            qualifierExpression,
+                            element,
+                            property,
+                            resolvedProperty.ShortName,
+                            resolvedProperty.GetExtensionMemberKind() == ExtensionMemberKind.INSTANCE_PROPERTY,
+                            containingType,
+                            []);
                     }
                     break;
                 }

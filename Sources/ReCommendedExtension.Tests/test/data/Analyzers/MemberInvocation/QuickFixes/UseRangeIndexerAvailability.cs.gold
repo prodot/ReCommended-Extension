@@ -1,15 +1,23 @@
-﻿namespace Test
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
 {
     public class Methods
     {
-        public void RangeIndexer(string text, string? textNullable, int startIndex, int count)
+        public void RangeIndexer(string text, string? textNullable, int[] array, List<int> list, int startIndex, int count)
         {
-            var result1 = text.|Remove(startIndex)|(0);
-            var result2 = text.|Remove(1)|(1);
-            var result3 = textNullable?.|Remove(startIndex)|(2);
-            var result4 = textNullable?.|Remove(1)|(3);
-            var result5 = text.|Remove(0, count)|(4);
-            var result6 = textNullable?.|Remove(0, count)|(5);
+            var result11 = text.|Remove(startIndex)|(0);
+            var result12 = text.|Remove(1)|(1);
+            var result13 = textNullable?.|Remove(startIndex)|(2);
+            var result14 = textNullable?.|Remove(1)|(3);
+            var result15 = text.|Remove(0, count)|(4);
+            var result16 = textNullable?.|Remove(0, count)|(5);
+
+            var result21 = list.|ElementAt(1)|(6);
+            var result22 = text.|ElementAt(1)|(7);
+            var result23 = textNullable?.|ElementAt(1)|(8);
+            var result24 = array.|ElementAt(1)|(9);
         }
     }
 }
@@ -32,3 +40,15 @@ Replace with '[count..]'
 5: Use the range indexer.
 QUICKFIXES:
 Replace with '[count..]'
+6: Use the indexer.
+QUICKFIXES:
+Replace with '[1]'
+7: Use the indexer.
+QUICKFIXES:
+Replace with '[1]' (other exception could be thrown)
+8: Use the indexer.
+QUICKFIXES:
+Replace with '[1]' (other exception could be thrown)
+9: Use the indexer.
+QUICKFIXES:
+Replace with '[1]' (other exception could be thrown)
