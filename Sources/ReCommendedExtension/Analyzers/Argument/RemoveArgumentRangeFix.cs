@@ -15,7 +15,7 @@ public sealed class RemoveArgumentRangeFix(RedundantArgumentRangeHint highlighti
 
     public override string Text => "Remove arguments";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -25,6 +25,6 @@ public sealed class RemoveArgumentRangeFix(RedundantArgumentRangeHint highlighti
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

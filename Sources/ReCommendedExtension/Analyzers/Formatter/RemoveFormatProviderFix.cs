@@ -15,13 +15,13 @@ public sealed class RemoveFormatProviderFix(RedundantFormatProviderHint highligh
 
     public override string Text => "Remove format provider";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
             highlighting.ProviderArgument.Remove();
         }
 
-        return _ => { };
+        return null;
     }
 }

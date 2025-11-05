@@ -33,7 +33,7 @@ public sealed class CoerceValueRangeBoundary(InvalidValueRangeBoundaryWarning hi
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -55,6 +55,6 @@ public sealed class CoerceValueRangeBoundary(InvalidValueRangeBoundaryWarning hi
             highlighting.PositionParameter.ReplaceBy(factory.CreateExpressionAsIs(expression));
         }
 
-        return _ => { };
+        return null;
     }
 }

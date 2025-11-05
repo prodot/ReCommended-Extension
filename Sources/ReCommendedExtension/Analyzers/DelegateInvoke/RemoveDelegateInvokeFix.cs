@@ -16,7 +16,7 @@ public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeHint highligh
 
     public override string Text => $"Remove '{nameof(Action.Invoke)}'";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -26,6 +26,6 @@ public sealed class RemoveDelegateInvokeFix(RedundantDelegateInvokeHint highligh
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

@@ -15,13 +15,13 @@ public sealed class RemoveArgumentFix(RedundantArgumentHint highlighting) : Quic
 
     public override string Text => "Remove argument";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
             highlighting.Argument.Remove();
         }
 
-        return _ => { };
+        return null;
     }
 }

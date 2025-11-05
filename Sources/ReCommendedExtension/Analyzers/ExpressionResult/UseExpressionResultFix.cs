@@ -18,7 +18,7 @@ public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlig
 
     public override string Text => $"Replace with '{highlighting.Replacements.Main.TrimToSingleLineWithMaxLength(120)}'";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -34,6 +34,6 @@ public sealed class UseExpressionResultFix(UseExpressionResultSuggestion highlig
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

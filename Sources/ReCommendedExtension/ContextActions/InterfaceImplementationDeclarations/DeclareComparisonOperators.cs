@@ -64,7 +64,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         try
         {
@@ -77,7 +77,7 @@ public sealed class DeclareComparisonOperators(ICSharpContextActionDataProvider 
                 TypeFactory.CreateType(comparisonOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(PsiModule)]),
                 false);
 
-            return _ => { };
+            return null;
         }
         finally
         {

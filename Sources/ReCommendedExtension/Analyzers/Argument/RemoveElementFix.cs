@@ -17,7 +17,7 @@ public sealed class RemoveElementFix(RedundantElementHint highlighting) : QuickF
 
     public override string Text => "Remove element";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -34,6 +34,6 @@ public sealed class RemoveElementFix(RedundantElementHint highlighting) : QuickF
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

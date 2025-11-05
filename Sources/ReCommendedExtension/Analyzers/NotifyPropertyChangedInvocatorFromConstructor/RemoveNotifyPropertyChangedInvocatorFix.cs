@@ -16,7 +16,7 @@ public sealed class RemoveNotifyPropertyChangedInvocatorFix(NotifyPropertyChange
 
     public override string Text => "Remove invocation";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -28,6 +28,6 @@ public sealed class RemoveNotifyPropertyChangedInvocatorFix(NotifyPropertyChange
                     : highlighting.InvocationExpression);
         }
 
-        return _ => { };
+        return null;
     }
 }

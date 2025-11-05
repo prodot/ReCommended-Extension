@@ -33,7 +33,7 @@ public sealed class UsePatternFix(UsePatternSuggestion highlighting) : QuickFixB
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -69,6 +69,6 @@ public sealed class UsePatternFix(UsePatternSuggestion highlighting) : QuickFixB
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

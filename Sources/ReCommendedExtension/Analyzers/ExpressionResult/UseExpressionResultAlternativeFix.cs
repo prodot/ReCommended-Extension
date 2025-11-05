@@ -26,7 +26,7 @@ public sealed class UseExpressionResultAlternativeFix(UseExpressionResultSuggest
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -42,6 +42,6 @@ public sealed class UseExpressionResultAlternativeFix(UseExpressionResultSuggest
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

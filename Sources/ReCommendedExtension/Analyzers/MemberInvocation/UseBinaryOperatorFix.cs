@@ -27,7 +27,7 @@ public sealed class UseBinaryOperatorFix(UseBinaryOperatorSuggestion highlightin
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -46,6 +46,6 @@ public sealed class UseBinaryOperatorFix(UseBinaryOperatorSuggestion highlightin
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

@@ -26,7 +26,7 @@ public sealed class UseUnaryOperatorFix(UseUnaryOperatorSuggestion highlighting)
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -44,6 +44,6 @@ public sealed class UseUnaryOperatorFix(UseUnaryOperatorSuggestion highlighting)
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

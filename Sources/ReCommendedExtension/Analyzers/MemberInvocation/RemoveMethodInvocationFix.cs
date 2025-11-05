@@ -19,7 +19,7 @@ public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationHint high
 
     public override string Text => "Remove method invocation";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -44,6 +44,6 @@ public sealed class RemoveMethodInvocationFix(RedundantMethodInvocationHint high
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

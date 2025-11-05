@@ -18,7 +18,7 @@ public sealed class RemoveLinqQueryFix(RedundantLinqQueryHint highlighting) : Qu
 
     public override string Text => "Remove LINQ query";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -34,6 +34,6 @@ public sealed class RemoveLinqQueryFix(RedundantLinqQueryHint highlighting) : Qu
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

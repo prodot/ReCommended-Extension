@@ -16,7 +16,7 @@ public sealed class UseStaticPropertyFix(UseStaticPropertySuggestion highlightin
 
     public override string Text => $"Replace with '{highlighting.PropertyName}'";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -31,6 +31,6 @@ public sealed class UseStaticPropertyFix(UseStaticPropertySuggestion highlightin
                     : factory.CreateExpression(highlighting.PropertyName));
         }
 
-        return _ => { };
+        return null;
     }
 }

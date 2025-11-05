@@ -163,7 +163,7 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         try
         {
@@ -178,7 +178,7 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
                     .TryRemoveParentheses(factory);
             }
 
-            return _ => { };
+            return null;
         }
         finally
         {

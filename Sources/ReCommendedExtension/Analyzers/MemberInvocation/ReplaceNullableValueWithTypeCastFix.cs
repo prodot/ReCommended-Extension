@@ -35,7 +35,7 @@ public sealed class ReplaceNullableValueWithTypeCastFix(ReplaceNullableValueWith
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -53,6 +53,6 @@ public sealed class ReplaceNullableValueWithTypeCastFix(ReplaceNullableValueWith
                 .TryRemoveParentheses(factory);
         }
 
-        return _ => { };
+        return null;
     }
 }

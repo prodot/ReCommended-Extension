@@ -27,7 +27,7 @@ public sealed class UseNullableHasValueNotNullFix(UseNullableHasValueAlternative
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -40,6 +40,6 @@ public sealed class UseNullableHasValueNotNullFix(UseNullableHasValueAlternative
                 .TryRemoveParentheses(factory);
         }
 
-        return _ => { };
+        return null;
     }
 }

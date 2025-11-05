@@ -22,13 +22,13 @@ public sealed class ChangeConstructorVisibilityFix(InternalConstructorVisibility
             _ => throw new NotSupportedException(),
         };
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
             highlighting.ConstructorDeclaration.SetAccessRights(highlighting.Visibility);
         }
 
-        return _ => { };
+        return null;
     }
 }

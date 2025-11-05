@@ -51,7 +51,7 @@ public sealed class UseOtherArgumentFix(UseOtherArgumentSuggestion highlighting)
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -79,6 +79,6 @@ public sealed class UseOtherArgumentFix(UseOtherArgumentSuggestion highlighting)
             }
         }
 
-        return _ => { };
+        return null;
     }
 }

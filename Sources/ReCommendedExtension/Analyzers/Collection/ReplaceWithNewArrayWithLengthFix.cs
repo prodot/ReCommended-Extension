@@ -17,7 +17,7 @@ public sealed class ReplaceWithNewArrayWithLengthFix(ArrayWithDefaultValuesIniti
 
     public override string Text => $"Replace with '{highlighting.SuggestedCode}'";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -28,6 +28,6 @@ public sealed class ReplaceWithNewArrayWithLengthFix(ArrayWithDefaultValuesIniti
             ModificationUtil.ReplaceChild(node, factory.CreateExpression(highlighting.SuggestedCode));
         }
 
-        return _ => { };
+        return null;
     }
 }

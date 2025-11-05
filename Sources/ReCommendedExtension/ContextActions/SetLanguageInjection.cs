@@ -44,7 +44,7 @@ public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provid
 
         public override string Text => InjectorProvider.InjectDescription;
 
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             Debug.Assert(LanguageEqualsCommentTexts is { });
 
@@ -89,7 +89,7 @@ public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provid
                 }
             }
 
-            return _ => { };
+            return null;
         }
     }
 
