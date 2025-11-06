@@ -31,7 +31,10 @@ internal static class CSharpExpressionExtensions
         {
             switch (expression.Parent)
             {
-                case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
+                case IReferenceExpression referenceExpression when referenceExpression.GetExtensionInvocationKind() is var kind
+                    && (kind == ExtensionMemberKind.CLASSIC_METHOD
+                        || kind == ExtensionMemberKind.INSTANCE_METHOD
+                        || kind == ExtensionMemberKind.INSTANCE_PROPERTY):
                 case IQueryFirstFrom or IQueryParameterPlatform:
                     return null;
             }

@@ -7,5 +7,5 @@ internal static class CSharpInvocationInfoExtensions
 {
     [Pure]
     public static bool IsUsedAsStatement(this ICSharpInvocationInfo invocationInfo)
-        => (invocationInfo as ICSharpTreeNode)?.Parent is IExpressionStatement or IForInitializer or IForIterator;
+        => invocationInfo is ICSharpTreeNode { Parent: IExpressionStatement or IForInitializer or IForIterator };
 }
