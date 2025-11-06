@@ -221,4 +221,9 @@ public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     public void TestCausingExpression() => DoNamedTest2();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNetCore20]
+    public void TestParameterizedCollectionCreationWithInferredTypeArgument() => DoNamedTest2();
 }

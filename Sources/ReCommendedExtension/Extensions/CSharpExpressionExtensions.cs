@@ -74,6 +74,9 @@ internal static class CSharpExpressionExtensions
     public static long? TryGetInt64Constant(this ICSharpExpression? expression) => NumberInfo.Int64.TryGetConstant(expression, out _);
 
     [Pure]
+    public static ulong? TryGetUInt64Constant(this ICSharpExpression? expression) => NumberInfo.UInt64.TryGetConstant(expression, out _);
+
+    [Pure]
     public static bool? TryGetBooleanConstant(this ICSharpExpression? expression)
         => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: var value } } ? value : null;
 

@@ -25,10 +25,8 @@ internal abstract class CollectionCreation
                 arrayCreationExpression),
 
             // new T[0]
-            IArrayCreationExpression
-            {
-                DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }], ArrayInitializer: null,
-            } arrayCreationExpression => new EmptyCollectionCreation(arrayCreationExpression),
+            IArrayCreationExpression { DimInits: [var e], ArrayInitializer: null } arrayCreationExpression when e.TryGetInt32Constant() == 0 =>
+                new EmptyCollectionCreation(arrayCreationExpression),
 
             // default(ReadOnlySpan<T>)
             IDefaultExpression

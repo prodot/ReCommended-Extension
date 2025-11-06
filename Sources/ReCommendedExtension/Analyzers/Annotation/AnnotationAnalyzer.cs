@@ -199,13 +199,12 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             var attributeType = attribute.GetAttributeType();
 
             if (attributeType.IsClrType(ClrTypeNames.SuppressMessageAttribute)
-                && attribute.TryGetArgumentsInDeclarationOrder() is
-                [
-                    { Value.ConstantValue: { Kind: ConstantValueKind.String, StringValue: var category } },
-                    { Value.ConstantValue: { Kind: ConstantValueKind.String, StringValue: var checkId } },
-                ]
-                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == nameof(SuppressMessageAttribute.Justification))
-                        ?.Source is not { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var suppressMessageJustification } }
+                && attribute.TryGetArgumentsInDeclarationOrder() is [{ } categoryArg, { } checkIdArg]
+                && categoryArg.Value.TryGetStringConstant() is { } category
+                && checkIdArg.Value.TryGetStringConstant() is { } checkId
+                && (attribute
+                        .PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == nameof(SuppressMessageAttribute.Justification))
+                        ?.Source.TryGetStringConstant() is not { } suppressMessageJustification
                     || string.IsNullOrWhiteSpace(suppressMessageJustification)))
             {
                 consumer.AddHighlighting(
@@ -217,11 +216,8 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             if (excludeFromCodeCoverageJustificationPropertyExists
                 && attributeType.IsClrType(ClrTypeNames.ExcludeFromCodeCoverageAttribute)
-                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == "Justification")?.Source is
-                        not // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
-                        {
-                            ConstantValue: { Kind: ConstantValueKind.String, StringValue: var excludeFromCodeCoverageJustification },
-                        }
+                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == "Justification")?.Source.TryGetStringConstant() // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
+                        is not { } excludeFromCodeCoverageJustification
                     || string.IsNullOrWhiteSpace(excludeFromCodeCoverageJustification)))
             {
                 consumer.AddHighlighting(
@@ -1256,55 +1252,17 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                         switch (attribute.TryGetArgumentsInDeclarationOrder())
                         {
-                            case
-                            [
-                                {
-                                    Value.ConstantValue:
-                                    {
-                                        Kind: ConstantValueKind.Int
-                                        or ConstantValueKind.Uint
-                                        or ConstantValueKind.Long
-                                        or ConstantValueKind.Ulong
-                                        or ConstantValueKind.Sbyte
-                                        or ConstantValueKind.Byte
-                                        or ConstantValueKind.Short
-                                        or ConstantValueKind.Ushort,
-                                    } constantValue,
-                                },
-                            ]:
-                                from = to = constantValue.ToDecimalUnchecked();
+                            case [{ } arg] when arg.Value.TryGetInt64Constant() is { } value: from = to = value; break;
+                            case [{ } arg] when arg.Value.TryGetUInt64Constant() is { } value: from = to = value; break;
+
+                            case [{ } arg0, { } arg1]
+                                when arg0.Value.TryGetInt64Constant() is { } fromValue && arg1.Value.TryGetInt64Constant() is { } toValue:
+                                (from, to) = (fromValue, toValue);
                                 break;
 
-                            case
-                            [
-                                {
-                                    Value.ConstantValue:
-                                    {
-                                        Kind: ConstantValueKind.Int
-                                        or ConstantValueKind.Uint
-                                        or ConstantValueKind.Long
-                                        or ConstantValueKind.Ulong
-                                        or ConstantValueKind.Sbyte
-                                        or ConstantValueKind.Byte
-                                        or ConstantValueKind.Short
-                                        or ConstantValueKind.Ushort,
-                                    } fromConstantValue,
-                                },
-                                {
-                                    Value.ConstantValue:
-                                    {
-                                        Kind: ConstantValueKind.Int
-                                        or ConstantValueKind.Uint
-                                        or ConstantValueKind.Long
-                                        or ConstantValueKind.Ulong
-                                        or ConstantValueKind.Sbyte
-                                        or ConstantValueKind.Byte
-                                        or ConstantValueKind.Short
-                                        or ConstantValueKind.Ushort,
-                                    } toConstantValue,
-                                },
-                            ]:
-                                (from, to) = (fromConstantValue.ToDecimalUnchecked(), toConstantValue.ToDecimalUnchecked());
+                            case [{ } arg0, { } arg1]
+                                when arg0.Value.TryGetUInt64Constant() is { } fromValue && arg1.Value.TryGetUInt64Constant() is { } toValue:
+                                (from, to) = (fromValue, toValue);
                                 break;
 
                             default: continue;

@@ -1,0 +1,17 @@
+﻿using System.Collections.Generic;
+
+namespace Test
+{
+    public class C
+    {
+        void NoDetection(int capacity)
+        {
+            Method(new List<char>(capacity));
+            Method(new HashSet<char>(capacity));
+        }
+
+        void Method<T>(List<T> list) { }
+        void Method<T>(HashSet<T> hashSet) { }
+    }
+}
+---------------------------------------------------------

@@ -1014,7 +1014,7 @@ public abstract record NumberInfo
         AreMinMaxConstants = (a, b) => TryGetInt64Constant(a, out _) == long.MinValue && TryGetInt64Constant(b, out _) == long.MaxValue,
     };
 
-    static NumberInfo<ulong> UInt64 { get; } = new()
+    internal static NumberInfo<ulong> UInt64 { get; } = new()
     {
         ClrTypeName = PredefinedType.ULONG_FQN,
         TypeCode = System.TypeCode.UInt64,
