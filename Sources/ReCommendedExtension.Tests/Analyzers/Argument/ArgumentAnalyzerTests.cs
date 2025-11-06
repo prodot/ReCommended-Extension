@@ -1335,6 +1335,7 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "RedundantArgument")]
     [SuppressMessage("ReSharper", "RedundantElement")]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
+    [SuppressMessage("ReSharper", "RedundantFormatProvider")]
     public void TestTimeSpan()
     {
         var values = new[]

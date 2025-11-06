@@ -607,6 +607,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
     [SuppressMessage("ReSharper", "MergeIntoPattern")]
     [SuppressMessage("ReSharper", "MergeIntoNegatedPattern")]
     [SuppressMessage("ReSharper", "UseRangeIndexer")]
+    [SuppressMessage("ReSharper", "UsePattern")]
     public void TestString()
     {
         var values = new[] { null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.." };
@@ -949,6 +950,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet90]
+    [SuppressMessage("ReSharper", "UseRangeIndexer")]
+    [SuppressMessage("ReSharper", "UseProperty")]
     public void TestEnumerable()
     {
         var strings = new[] { null, "", "one", "two", "three" };

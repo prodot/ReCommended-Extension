@@ -635,6 +635,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet90]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
+    [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestTimeSpan()
     {
         var values = new[]
