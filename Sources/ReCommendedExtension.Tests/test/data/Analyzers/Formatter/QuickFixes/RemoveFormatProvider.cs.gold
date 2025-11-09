@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class Formatters
+    {
+        public void Availability(int number, IFormatProvider formatProvider)
+        {
+            var result = number.ToString("X"{caret});
+        }
+    }
+}

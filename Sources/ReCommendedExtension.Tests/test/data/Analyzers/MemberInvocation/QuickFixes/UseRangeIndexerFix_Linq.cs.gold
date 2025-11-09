@@ -1,0 +1,12 @@
+﻿using System.Linq;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void RangeIndexer(int[] array)
+        {
+            var result = (from i in array where i > 0 select i).ToList()[0]{caret};
+        }
+    }
+}

@@ -1,0 +1,302 @@
+﻿using System;
+
+namespace Test
+{
+    public class Formatters
+    {
+        public void RedundantFormatSpecifier(int number)
+        {
+            var result11 = $"{number:G}";
+            var result12 = $"{number:G0}";
+            var result13 = $"{number:G10}";
+            var result14 = $"{number:G11}";
+            var result15 = $"{number:g}";
+            var result16 = $"{number:g0}";
+            var result17 = $"{number:g10}";
+            var result18 = $"{number:g11}";
+
+            var result21 = string.Format("{0:G}", number);
+            var result22 = string.Format("{0:G0}", number);
+            var result23 = string.Format("{0:G10}", number);
+            var result24 = string.Format("{0:G11}", number);
+            var result25 = string.Format("{0:g}", number);
+            var result26 = string.Format("{0:g0}", number);
+            var result27 = string.Format("{0:g10}", number);
+            var result28 = string.Format("{0:g11}", number);
+        }
+
+        public void RedundantFormatSpecifier(int? number)
+        {
+            var result11 = $"{number:G}";
+            var result12 = $"{number:G0}";
+            var result13 = $"{number:G10}";
+            var result14 = $"{number:G11}";
+            var result15 = $"{number:g}";
+            var result16 = $"{number:g0}";
+            var result17 = $"{number:g10}";
+            var result18 = $"{number:g11}";
+
+            var result21 = string.Format("{0:G}", number);
+            var result22 = string.Format("{0:G0}", number);
+            var result23 = string.Format("{0:G10}", number);
+            var result24 = string.Format("{0:G11}", number);
+            var result25 = string.Format("{0:g}", number);
+            var result26 = string.Format("{0:g0}", number);
+            var result27 = string.Format("{0:g10}", number);
+            var result28 = string.Format("{0:g11}", number);
+        }
+
+        public void RedundantFormatSpecifierProvider(int number, string format, IFormatProvider provider)
+        {
+            var result11 = number.ToString(null as string);
+            var result12 = number.ToString("");
+
+            var result21 = number.ToString("G");
+            var result22 = number.ToString("G0");
+            var result23 = number.ToString("G10");
+            var result24 = number.ToString("g");
+            var result25 = number.ToString("g0");
+            var result26 = number.ToString("g10");
+
+            var result31 = number.ToString(null as IFormatProvider);
+            var result32 = number.ToString(null, provider);
+            var result33 = number.ToString("", provider);
+            var result34 = number.ToString(format, null);
+            var result35 = number.ToString("", null);
+
+            var result41 = number.ToString("G", provider);
+            var result42 = number.ToString("G0", provider);
+            var result43 = number.ToString("G10", provider);
+            var result44 = number.ToString("g", provider);
+            var result45 = number.ToString("g0", provider);
+            var result46 = number.ToString("g10", provider);
+        }
+
+        public void RedundantFormatPrecisionSpecifier(int number)
+        {
+            var result11 = $"{number:E6}";
+            var result12 = $"{number:e6}";
+
+            var result21 = $"{number:D0}";
+            var result22 = $"{number:D1}";
+            var result23 = $"{number:d0}";
+            var result24 = $"{number:d1}";
+
+            var result31 = $"{number:B0}";
+            var result32 = $"{number:B1}";
+            var result33 = $"{number:b0}";
+            var result34 = $"{number:b1}";
+
+            var result41 = $"{number:X0}";
+            var result42 = $"{number:X1}";
+            var result43 = $"{number:x0}";
+            var result44 = $"{number:x1}";
+
+            var result51 = string.Format("{0:E6}", number);
+            var result52 = string.Format("{0:e6}", number);
+
+            var result61 = string.Format("{0:D0}", number);
+            var result62 = string.Format("{0:D1}", number);
+            var result63 = string.Format("{0:d0}", number);
+            var result64 = string.Format("{0:d1}", number);
+
+            var result71 = string.Format("{0:B0}", number);
+            var result72 = string.Format("{0:B1}", number);
+            var result73 = string.Format("{0:b0}", number);
+            var result74 = string.Format("{0:b1}", number);
+
+            var result81 = string.Format("{0:X0}", number);
+            var result82 = string.Format("{0:X1}", number);
+            var result83 = string.Format("{0:x0}", number);
+            var result84 = string.Format("{0:x1}", number);
+        }
+
+        public void RedundantFormatPrecisionSpecifier(int? number)
+        {
+            var result11 = $"{number:E6}";
+            var result12 = $"{number:e6}";
+
+            var result21 = $"{number:D0}";
+            var result22 = $"{number:D1}";
+            var result23 = $"{number:d0}";
+            var result24 = $"{number:d1}";
+
+            var result31 = $"{number:B0}";
+            var result32 = $"{number:B1}";
+            var result33 = $"{number:b0}";
+            var result34 = $"{number:b1}";
+
+            var result41 = $"{number:X0}";
+            var result42 = $"{number:X1}";
+            var result43 = $"{number:x0}";
+            var result44 = $"{number:x1}";
+
+            var result51 = string.Format("{0:E6}", number);
+            var result52 = string.Format("{0:e6}", number);
+
+            var result61 = string.Format("{0:D0}", number);
+            var result62 = string.Format("{0:D1}", number);
+            var result63 = string.Format("{0:d0}", number);
+            var result64 = string.Format("{0:d1}", number);
+
+            var result71 = string.Format("{0:B0}", number);
+            var result72 = string.Format("{0:B1}", number);
+            var result73 = string.Format("{0:b0}", number);
+            var result74 = string.Format("{0:b1}", number);
+
+            var result81 = string.Format("{0:X0}", number);
+            var result82 = string.Format("{0:X1}", number);
+            var result83 = string.Format("{0:x0}", number);
+            var result84 = string.Format("{0:x1}", number);
+        }
+
+        public void RedundantFormatPrecisionSpecifierProvider(int number, IFormatProvider provider)
+        {
+            var result11 = number.ToString("E6");
+            var result12 = number.ToString("e6");
+
+            var result21 = number.ToString("D0");
+            var result22 = number.ToString("D1");
+            var result23 = number.ToString("d0");
+            var result24 = number.ToString("d1");
+
+            var result31 = number.ToString("B0");
+            var result32 = number.ToString("B1");
+            var result33 = number.ToString("b0");
+            var result34 = number.ToString("b1");
+            var result35 = number.ToString("X0");
+            var result36 = number.ToString("X1");
+            var result37 = number.ToString("x0");
+            var result38 = number.ToString("x1");
+
+            var result41 = number.ToString("E6", provider);
+            var result42 = number.ToString("e6", provider);
+
+            var result51 = number.ToString("D0", provider);
+            var result52 = number.ToString("D1", provider);
+            var result53 = number.ToString("d0", provider);
+            var result54 = number.ToString("d1", provider);
+
+            var result61 = number.ToString("B0", provider);
+            var result62 = number.ToString("B1", provider);
+            var result63 = number.ToString("b0", provider);
+            var result64 = number.ToString("b1", provider);
+            var result65 = number.ToString("X0", provider);
+            var result66 = number.ToString("X1", provider);
+            var result67 = number.ToString("x0", provider);
+            var result68 = number.ToString("x1", provider);
+
+            const string formatSpecifier = "E6";
+
+            var result71 = number.ToString(formatSpecifier);
+            var result72 = number.ToString(formatSpecifier, provider);
+
+            var result81 = number.ToString(@"E6");
+            var result82 = number.ToString($@"E6");
+            var result83 = number.ToString(@$"E6");
+            var result84 = number.ToString("""E06""");
+            var result85 = number.ToString($"""E06""");
+            var result86 = number.ToString($$"""E06""");
+            var result87 = number.ToString("""
+                                           E006
+                                           """);
+        }
+
+        public void SuspiciousFormatSpecifier(int number)
+        {
+            var result11 = $"{number:R}";
+            var result12 = $"{number:R3}";
+            var result13 = $"{number:r}";
+            var result14 = $"{number:r3}";
+
+            var result21 = string.Format("{0:R}", number);
+            var result22 = string.Format("{0:R3}", number);
+            var result23 = string.Format("{0:r}", number);
+            var result24 = string.Format("{0:r3}", number);
+        }
+
+        public void SuspiciousFormatSpecifier(int? number)
+        {
+            var result11 = $"{number:R}";
+            var result12 = $"{number:R3}";
+            var result13 = $"{number:r}";
+            var result14 = $"{number:r3}";
+
+            var result21 = string.Format("{0:R}", number);
+            var result22 = string.Format("{0:R3}", number);
+            var result23 = string.Format("{0:r}", number);
+            var result24 = string.Format("{0:r3}", number);
+        }
+
+        public void SuspiciousFormatSpecifier(int number, IFormatProvider provider)
+        {
+            var result11 = number.ToString("R");
+            var result12 = number.ToString("R3");
+            var result13 = number.ToString("r");
+            var result14 = number.ToString("r3");
+
+            var result21 = number.ToString("R", provider);
+            var result22 = number.ToString("R3", provider);
+            var result23 = number.ToString("r", provider);
+            var result24 = number.ToString("r3", provider);
+        }
+
+        public void NoDetection(int number)
+        {
+            var result11 = $"{number:G9}";
+            var result12 = $"{number:E}";
+            var result13 = $"{number:E5}";
+            var result14 = $"{number:D}";
+            var result15 = $"{number:D2}";
+            var result16 = $"{number:b8}";
+            var result17 = $"{number:x8}";
+
+            var result21 = string.Format("{0:G9}", number);
+            var result22 = string.Format("{0:E}", number);
+            var result23 = string.Format("{0:E5}", number);
+            var result24 = string.Format("{0:D}", number);
+            var result25 = string.Format("{0:D2}", number);
+            var result26 = string.Format("{0:b8}", number);
+            var result27 = string.Format("{0:x8}", number);
+        }
+
+        public void NoDetection(int? number)
+        {
+            var result11 = $"{number:G9}";
+            var result12 = $"{number:E}";
+            var result13 = $"{number:E5}";
+            var result14 = $"{number:D}";
+            var result15 = $"{number:D2}";
+            var result16 = $"{number:b8}";
+            var result17 = $"{number:x8}";
+
+            var result21 = string.Format("{0:G9}", number);
+            var result22 = string.Format("{0:E}", number);
+            var result23 = string.Format("{0:E5}", number);
+            var result24 = string.Format("{0:D}", number);
+            var result25 = string.Format("{0:D2}", number);
+            var result26 = string.Format("{0:b8}", number);
+            var result27 = string.Format("{0:x8}", number);
+        }
+
+        public void NoDetection(int number, string format, IFormatProvider provider)
+        {
+            var result11 = number.ToString(format);
+            var result12 = number.ToString("G2");
+            var result13 = number.ToString("E");
+            var result14 = number.ToString("E5");
+            var result15 = number.ToString("D");
+            var result16 = number.ToString("D2");
+            var result17 = number.ToString("b8");
+            var result18 = number.ToString("x8");
+
+            var result21 = number.ToString(provider);
+            var result22 = number.ToString(format, provider);
+            var result23 = number.ToString("G2", provider);
+            var result24 = number.ToString("E", provider);
+            var result25 = number.ToString("E5", provider);
+            var result26 = number.ToString("D", provider);
+            var result27 = number.ToString("D2", provider);
+        }
+    }
+}

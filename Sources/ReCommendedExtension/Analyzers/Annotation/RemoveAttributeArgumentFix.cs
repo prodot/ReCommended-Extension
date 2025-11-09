@@ -14,7 +14,7 @@ public sealed class RemoveAttributeArgumentFix(RedundantAnnotationArgumentSugges
 
     public override string Text => "Remove attribute argument";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         Debug.Assert(highlighting.Attribute.Arguments is [_]);
 
@@ -23,6 +23,6 @@ public sealed class RemoveAttributeArgumentFix(RedundantAnnotationArgumentSugges
             ModificationUtil.DeleteChildRange(highlighting.Attribute.LPar, highlighting.Attribute.RPar);
         }
 
-        return _ => { };
+        return null;
     }
 }

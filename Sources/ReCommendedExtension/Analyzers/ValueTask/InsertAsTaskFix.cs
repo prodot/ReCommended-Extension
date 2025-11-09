@@ -16,7 +16,7 @@ public sealed class InsertAsTaskFix(IntentionalBlockingAttemptWarning highlighti
 
     public override string Text => "Insert '.AsTask()'";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -27,6 +27,6 @@ public sealed class InsertAsTaskFix(IntentionalBlockingAttemptWarning highlighti
                 factory.CreateExpression("$0.AsTask().GetAwaiter().GetResult", highlighting.ValueTaskExpression));
         }
 
-        return _ => { };
+        return null;
     }
 }

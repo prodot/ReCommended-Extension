@@ -53,7 +53,7 @@ public abstract class ReplaceIsNullOrEmpty(ICSharpContextActionDataProvider prov
         }
     }
 
-    protected sealed override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected sealed override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         try
         {
@@ -69,7 +69,7 @@ public abstract class ReplaceIsNullOrEmpty(ICSharpContextActionDataProvider prov
                     .TryRemoveParentheses(factory);
             }
 
-            return _ => { };
+            return null;
         }
         finally
         {

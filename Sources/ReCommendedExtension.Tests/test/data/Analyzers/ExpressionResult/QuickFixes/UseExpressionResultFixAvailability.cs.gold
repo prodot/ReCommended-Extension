@@ -1,0 +1,132 @@
+﻿using System;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(byte byteValue)
+        {
+            var result11 = |byte.DivRem(0, 10)|(0);
+            var result12 = |sbyte.DivRem(0, 10)|(1);
+            var result13 = |short.DivRem(0, 10)|(2);
+            var result14 = |ushort.DivRem(0, 10)|(3);
+            var result15 = |int.DivRem(0, 10)|(4);
+            var result16 = |uint.DivRem(0, 10)|(5);
+            var result17 = |long.DivRem(0, 10)|(6);
+            var result18 = |ulong.DivRem(0, 10)|(7);
+            var result19 = |Int128.DivRem(0, 10)|(8);
+            var result1A = |UInt128.DivRem(0, 10)|(9);
+            var result1B = |nint.DivRem(0, 10)|(10);
+            var result1C = |nuint.DivRem(0, 10)|(11);
+
+            (byte, byte) result21 = |byte.DivRem(0, 10)|(12);
+            (sbyte, sbyte) result22 = |sbyte.DivRem(0, 10)|(13);
+            (short, short) result23 = |short.DivRem(0, 10)|(14);
+            (ushort, ushort) result24 = |ushort.DivRem(0, 10)|(15);
+            (int, int) result25 = |int.DivRem(0, 10)|(16);
+            (uint, uint) result26 = |uint.DivRem(0, 10)|(17);
+            (long, long) result27 = |long.DivRem(0, 10)|(18);
+            (ulong, ulong) result28 = |ulong.DivRem(0, 10)|(19);
+            (Int128, Int128) result29 = |Int128.DivRem(0, 10)|(20);
+            (UInt128, UInt128) result2A = |UInt128.DivRem(0, 10)|(21);
+            (nint, nint) result2B = |nint.DivRem(0, 10)|(22);
+            (nuint, nuint) result2C = |nuint.DivRem(0, 10)|(23);
+
+            var result31 = |byte.RotateLeft(byteValue, 0)|(24);
+            byte result32 = |byte.RotateLeft(1, 0)|(25);
+            var result33 = |byte.RotateLeft(1, 0)|(26);
+            var result34 = |uint.RotateLeft(byteValue, 0)|(27);
+
+            var result41 = |int.Clamp(byteValue, 1, 0x01)|(28);
+        }
+    }
+}
+------------------------------------------------
+0: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (byte)0, Remainder: (byte)0)'
+1: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (sbyte)0, Remainder: (sbyte)0)'
+2: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (short)0, Remainder: (short)0)'
+3: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (ushort)0, Remainder: (ushort)0)'
+4: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0, Remainder: 0)'
+5: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0u, Remainder: 0u)'
+6: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0L, Remainder: 0L)'
+7: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: 0ul, Remainder: 0ul)'
+8: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (Int128)0, Remainder: (Int128)0)'
+9: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (UInt128)0, Remainder: (UInt128)0)'
+10: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (nint)0, Remainder: (nint)0)'
+11: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(Quotient: (nuint)0, Remainder: (nuint)0)'
+12: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+13: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+14: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+15: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+16: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+17: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+18: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+19: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+20: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+21: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+22: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+23: The expression is always (0, 0).
+QUICKFIXES:
+Replace with '(0, 0)'
+24: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with 'byteValue'
+25: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '1'
+26: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(byte)1'
+27: The expression is always the same as the first argument.
+QUICKFIXES:
+Replace with '(uint)byteValue'
+28: The expression is always the same as the second or third argument.
+QUICKFIXES:
+Replace with '0x01'
+Replace with '1'

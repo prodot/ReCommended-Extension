@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(int number)
+        {
+            var result = {caret}0x01;
+        }
+    }
+}

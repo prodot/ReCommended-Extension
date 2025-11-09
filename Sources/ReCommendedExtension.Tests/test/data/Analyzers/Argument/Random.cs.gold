@@ -1,0 +1,30 @@
+﻿using System;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void RedundantArgument(Random r, int maxValueInt32, long maxValueInt64)
+        {
+            var result11 = r.Next(|2_147_483_647|(0));
+            var result12 = r.Next(|0|(1), maxValueInt32);
+
+            var result21 = r.NextInt64(|long.MaxValue|(2));
+            var result22 = r.NextInt64(|0|(3), maxValueInt64);
+        }
+
+        public void NoDetection(Random r, int minValue, int maxValueInt32, long maxValueInt64)
+        {
+            var result11 = r.Next(maxValueInt32);
+            var result12 = r.Next(minValue, maxValueInt32);
+
+            var result21 = r.NextInt64(maxValueInt64);
+            var result22 = r.NextInt64(minValue, maxValueInt64);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing the int.MaxValue is redundant.
+(1): ReSharper Dead Code: Passing 0 is redundant.
+(2): ReSharper Dead Code: Passing the long.MaxValue is redundant.
+(3): ReSharper Dead Code: Passing 0 is redundant.

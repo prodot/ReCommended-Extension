@@ -1,0 +1,12 @@
+﻿using static System.DateTime;
+
+namespace Test
+{
+    public class Properties
+    {
+        public void StaticProperty()
+        {
+            var result = Tod{caret}ay;
+        }
+    }
+}

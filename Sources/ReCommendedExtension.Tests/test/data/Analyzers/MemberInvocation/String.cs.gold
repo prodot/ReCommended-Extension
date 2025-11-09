@@ -1,0 +1,404 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void RedundantMethodInvocation(string? text, char c)
+        {
+            var result11 = text?.|PadLeft(0)|(0);
+            var result12 = text?.|PadLeft(0, c)|(1);
+
+            var result21 = text?.|PadRight(0)|(2);
+            var result22 = text?.|PadRight(0, c)|(3);
+
+            var result31 = text?.|Replace('c', 'c')|(4);
+            var result32 = text?.|Replace("cd", "cd")|(5);
+            var result33 = text?.|Replace("cd", "cd", StringComparison.Ordinal)|(6);
+        }
+
+        public void OtherMethodInvocation(string text, string? textNullable, char c, string s, StringComparison comparisonType, int startIndex, int count)
+        {
+            var result11 = text.|IndexOf(c) != -1|(7);
+            var result12 = text.|IndexOf(c) > -1|(8);
+            var result13 = text.|IndexOf(c) >= 0|(9);
+            var result14 = |-1 !=|(10) text.|IndexOf(c)|(11);
+            var result15 = |-1 <|(12) text.|IndexOf(c)|(13);
+            var result16 = |0 <=|(14) text.|IndexOf(c)|(15);
+
+            var result21 = text.|IndexOf(c) == -1|(16);
+            var result22 = text.|IndexOf(c) < 0|(17);
+            var result23 = |-1 ==|(18) text.|IndexOf(c)|(19);
+            var result24 = |0 >|(20) text.|IndexOf(c)|(21);
+
+            var result31 = text.|IndexOf(c, comparisonType) != -1|(22);
+            var result32 = text.|IndexOf(c, comparisonType) > -1|(23);
+            var result33 = text.|IndexOf(c, comparisonType) >= 0|(24);
+            var result34 = |-1 !=|(25) text.|IndexOf(c, comparisonType)|(26);
+            var result35 = |-1 <|(27) text.|IndexOf(c, comparisonType)|(28);
+            var result36 = |0 <=|(29) text.|IndexOf(c, comparisonType)|(30);
+
+            var result41 = text.|IndexOf(c, comparisonType) == -1|(31);
+            var result42 = text.|IndexOf(c, comparisonType) < 0|(32);
+            var result43 = |-1 ==|(33) text.|IndexOf(c, comparisonType)|(34);
+            var result44 = |0 >|(35) text.|IndexOf(c, comparisonType)|(36);
+
+            var result51 = text.|IndexOf(s) == 0|(37);
+            var result52 = text.|IndexOf(s) != 0|(38);
+            var result53 = |0 ==|(39) text.|IndexOf(s)|(40);
+            var result54 = |0 !=|(41) text.|IndexOf(s)|(42);
+
+            var result61 = text.|IndexOf(s) != -1|(43);
+            var result62 = text.|IndexOf(s) > -1|(44);
+            var result63 = text.|IndexOf(s) >= 0|(45);
+            var result64 = |-1 !=|(46) text.|IndexOf(s)|(47);
+            var result65 = |-1 <|(48) text.|IndexOf(s)|(49);
+            var result66 = |0 <=|(50) text.|IndexOf(s)|(51);
+
+            var result71 = text.|IndexOf(s) == -1|(52);
+            var result72 = text.|IndexOf(s) < 0|(53);
+            var result73 = |-1 ==|(54) text.|IndexOf(s)|(55);
+            var result74 = |0 >|(56) text.|IndexOf(s)|(57);
+
+            var result81 = text.|IndexOf(s, comparisonType) == 0|(58);
+            var result82 = text.|IndexOf(s, comparisonType) != 0|(59);
+            var result83 = |0 ==|(60) text.|IndexOf(s, comparisonType)|(61);
+            var result84 = |0 !=|(62) text.|IndexOf(s, comparisonType)|(63);
+
+            var result91 = text.|IndexOf(s, comparisonType) != -1|(64);
+            var result92 = text.|IndexOf(s, comparisonType) > -1|(65);
+            var result93 = text.|IndexOf(s, comparisonType) >= 0|(66);
+            var result94 = |-1 !=|(67) text.|IndexOf(s, comparisonType)|(68);
+            var result95 = |-1 <|(69) text.|IndexOf(s, comparisonType)|(70);
+            var result96 = |0 <=|(71) text.|IndexOf(s, comparisonType)|(72);
+
+            var resultA1 = text.|IndexOf(s, comparisonType) == -1|(73);
+            var resultA2 = text.|IndexOf(s, comparisonType) < 0|(74);
+            var resultA3 = |-1 ==|(75) text.|IndexOf(s, comparisonType)|(76);
+            var resultA4 = |0 >|(77) text.|IndexOf(s, comparisonType)|(78);
+
+            var resultB1 = textNullable?.|IndexOfAny([c])|(79);
+            var resultB2 = textNullable?.|IndexOfAny([c], startIndex)|(80);
+            var resultB3 = textNullable?.|IndexOfAny([c], startIndex, count)|(81);
+            var resultB4 = textNullable?.|IndexOfAny((char[])[c])|(82);
+            var resultB5 = textNullable?.|IndexOfAny((char[])[c], startIndex)|(83);
+            var resultB6 = textNullable?.|IndexOfAny((char[])[c], startIndex, count)|(84);
+            var resultB7 = textNullable?.|IndexOfAny(new[]{ c })|(85);
+            var resultB8 = textNullable?.|IndexOfAny(new[]{ c }, startIndex)|(86);
+            var resultB9 = textNullable?.|IndexOfAny(new[]{ c }, startIndex, count)|(87);
+
+            var resultC1 = textNullable?.|LastIndexOfAny([c])|(88);
+            var resultC2 = textNullable?.|LastIndexOfAny([c], startIndex)|(89);
+            var resultC3 = textNullable?.|LastIndexOfAny([c], startIndex, count)|(90);
+            var resultC4 = textNullable?.|LastIndexOfAny((char[])[c])|(91);
+            var resultC5 = textNullable?.|LastIndexOfAny((char[])[c], startIndex)|(92);
+            var resultC6 = textNullable?.|LastIndexOfAny((char[])[c], startIndex, count)|(93);
+            var resultC7 = textNullable?.|LastIndexOfAny(new[] { c })|(94);
+            var resultC8 = textNullable?.|LastIndexOfAny(new[] { c }, startIndex)|(95);
+            var resultC9 = textNullable?.|LastIndexOfAny(new[] { c }, startIndex, count)|(96);
+        }
+
+        public void Pattern(string text, string? textNullable, char c)
+        {
+            var result11 = |text.EndsWith('c')|(97);
+            var result12 = |text.EndsWith(c)|(98);
+            var result13 = |text.EndsWith("c", StringComparison.Ordinal)|(99);
+            var result14 = |text.EndsWith("c", StringComparison.OrdinalIgnoreCase)|(100);
+
+            var result21 = |textNullable?.IndexOf('c') == 0|(101);
+            var result22 = |0 == textNullable?.IndexOf('c')|(102);
+            var result23 = |textNullable?.IndexOf('c') != 0|(103);
+            var result24 = |0 != textNullable?.IndexOf('c')|(104);
+            var result25 = |textNullable?.IndexOf(c) == 0|(105);
+            var result26 = |0 == textNullable?.IndexOf(c)|(106);
+            var result27 = |textNullable?.IndexOf(c) != 0|(107);
+            var result28 = |0 != textNullable?.IndexOf(c)|(108);
+
+            var result31 = |text.StartsWith('c')|(109);
+            var result32 = |text.StartsWith(c)|(110);
+            var result33 = |text.StartsWith("c", StringComparison.Ordinal)|(111);
+            var result34 = |text.StartsWith("c", StringComparison.OrdinalIgnoreCase)|(112);
+        }
+
+        public void RangeIndexer(string text, string? textNullable, int startIndex, int count)
+        {
+            var result1 = text.|Remove(startIndex)|(113);
+            var result2 = text.|Remove(1)|(114);
+            var result3 = textNullable?.|Remove(startIndex)|(115);
+            var result4 = textNullable?.|Remove(1)|(116);
+            var result5 = text.|Remove(0, count)|(117);
+            var result6 = textNullable?.|Remove(0, count)|(118);
+        }
+
+        public void Property(string text, string? textNullable, StringComparison comparisonType)
+        {
+            var result1 = text.|LastIndexOf("")|(119);
+            var result2 = text.|LastIndexOf("", comparisonType)|(120);
+            var result3 = textNullable?.|LastIndexOf("")|(121);
+            var result4 = textNullable?.|LastIndexOf("", comparisonType)|(122);
+        }
+
+        public void NoDetection(string text, string? textNullable, int totalWidth, char c, string s, int startIndex, int count, StringComparison comparisonType)
+        {
+            var result11 = text.PadLeft(totalWidth);
+            var result12 = text.PadLeft(totalWidth, c);
+
+            var result21 = text.PadRight(totalWidth);
+            var result22 = text.PadRight(totalWidth, c);
+
+            var result31 = text.Replace('c', c);
+            var result32 = text.Replace(c, 'c');
+            var result33 = text.Replace(c, c);
+            var result34 = text.Replace("", "");
+            var result35 = text.Replace("cd", s);
+            var result36 = text.Replace(s, "cd");
+            var result37 = text.Replace(s, s);
+
+            var result41 = textNullable?.IndexOf(c) != -1;
+            var result42 = textNullable?.IndexOf(c) > -1;
+            var result43 = textNullable?.IndexOf(c) >= 0;
+            var result44 = -1 != textNullable?.IndexOf(c);
+            var result45 = -1 < textNullable?.IndexOf(c);
+            var result46 = 0 <= textNullable?.IndexOf(c);
+
+            var result51 = textNullable?.IndexOf(c) == -1;
+            var result52 = textNullable?.IndexOf(c) < 0;
+            var result53 = -1 == textNullable?.IndexOf(c);
+            var result54 = 0 > textNullable?.IndexOf(c);
+
+            var result61 = textNullable?.IndexOf(c, comparisonType) != -1;
+            var result62 = textNullable?.IndexOf(c, comparisonType) > -1;
+            var result63 = textNullable?.IndexOf(c, comparisonType) >= 0;
+            var result64 = -1 != textNullable?.IndexOf(c, comparisonType);
+            var result65 = -1 < textNullable?.IndexOf(c, comparisonType);
+            var result66 = 0 <= textNullable?.IndexOf(c, comparisonType);
+
+            var result71 = textNullable?.IndexOf(c, comparisonType) == -1;
+            var result72 = textNullable?.IndexOf(c, comparisonType) < 0;
+            var result73 = -1 == textNullable?.IndexOf(c, comparisonType);
+            var result74 = 0 > textNullable?.IndexOf(c, comparisonType);
+
+            var result81 = textNullable?.IndexOf(s) == 0;
+            var result82 = textNullable?.IndexOf(s) != 0;
+            var result83 = 0 == textNullable?.IndexOf(s);
+            var result84 = 0 != textNullable?.IndexOf(s);
+
+            var result91 = textNullable?.IndexOf(s) != -1;
+            var result92 = textNullable?.IndexOf(s) > -1;
+            var result93 = textNullable?.IndexOf(s) >= 0;
+            var result94 = -1 != textNullable?.IndexOf(s);
+            var result95 = -1 < textNullable?.IndexOf(s);
+            var result96 = 0 <= textNullable?.IndexOf(s);
+
+            var resultA1 = textNullable?.IndexOf(s) == -1;
+            var resultA2 = textNullable?.IndexOf(s) < 0;
+            var resultA3 = -1 == textNullable?.IndexOf(s);
+            var resultA4 = 0 > textNullable?.IndexOf(s);
+
+            var resultB1 = textNullable?.IndexOf(s, comparisonType) == 0;
+            var resultB2 = textNullable?.IndexOf(s, comparisonType) != 0;
+            var resultB3 = 0 == textNullable?.IndexOf(s, comparisonType);
+            var resultB4 = 0 != textNullable?.IndexOf(s, comparisonType);
+
+            var resultC1 = textNullable?.IndexOf(s, comparisonType) != -1;
+            var resultC2 = textNullable?.IndexOf(s, comparisonType) > -1;
+            var resultC3 = textNullable?.IndexOf(s, comparisonType) >= 0;
+            var resultC4 = -1 != textNullable?.IndexOf(s, comparisonType);
+            var resultC5 = -1 < textNullable?.IndexOf(s, comparisonType);
+            var resultC6 = 0 <= textNullable?.IndexOf(s, comparisonType);
+
+            var resultD1 = textNullable?.IndexOf(s, comparisonType) == -1;
+            var resultD2 = textNullable?.IndexOf(s, comparisonType) < 0;
+            var resultD3 = -1 == textNullable?.IndexOf(s, comparisonType);
+            var resultD4 = 0 > textNullable?.IndexOf(s, comparisonType);
+
+            var resultE1 = textNullable?.IndexOfAny([c, c]);
+            var resultE2 = textNullable?.IndexOfAny([c, c], startIndex);
+            var resultE3 = textNullable?.IndexOfAny([c, c], startIndex, count);
+            var resultE4 = textNullable?.IndexOfAny((char[])[c, c]);
+            var resultE5 = textNullable?.IndexOfAny((char[])[c, c], startIndex);
+            var resultE6 = textNullable?.IndexOfAny((char[])[c, c], startIndex, count);
+            var resultE7 = textNullable?.IndexOfAny(new[] { c, c });
+            var resultE8 = textNullable?.IndexOfAny(new[] { c, c }, startIndex);
+            var resultE9 = textNullable?.IndexOfAny(new[] { c, c }, startIndex, count);
+
+            var resultF1 = textNullable?.LastIndexOfAny([c, c]);
+            var resultF2 = textNullable?.LastIndexOfAny([c, c], startIndex);
+            var resultF3 = textNullable?.LastIndexOfAny([c, c], startIndex, count);
+            var resultF4 = textNullable?.LastIndexOfAny((char[])[c, c]);
+            var resultF5 = textNullable?.LastIndexOfAny((char[])[c, c], startIndex);
+            var resultF6 = textNullable?.LastIndexOfAny((char[])[c, c], startIndex, count);
+            var resultF7 = textNullable?.LastIndexOfAny(new[] { c, c });
+            var resultF8 = textNullable?.LastIndexOfAny(new[] { c, c }, startIndex);
+            var resultF9 = textNullable?.LastIndexOfAny(new[] { c, c }, startIndex, count);
+
+            var resultG1 = text.EndsWith(s, comparisonType);
+            var resultG2 = textNullable?.EndsWith('c');
+            var resultG3 = textNullable?.EndsWith(c);
+            var resultG4 = textNullable?.EndsWith("c", StringComparison.Ordinal);
+            var resultG5 = textNullable?.EndsWith("c", StringComparison.OrdinalIgnoreCase);
+
+            var resultH1 = text.StartsWith(s, comparisonType);
+            var resultH2 = textNullable?.StartsWith('c');
+            var resultH3 = textNullable?.StartsWith(c);
+            var resultH4 = textNullable?.StartsWith("c", StringComparison.Ordinal);
+            var resultH5 = textNullable?.StartsWith("c", StringComparison.OrdinalIgnoreCase);
+
+            var resultI1 = text.Remove(0);
+            var resultI2 = textNullable?.Remove(0);
+            var resultI3 = text.Remove(1, count);
+            var resultI4 = textNullable?.Remove(1, count);
+
+            var resultJ1 = text.LastIndexOf(s);
+            var resultJ2 = text.LastIndexOf(s, comparisonType);
+            var resultJ3 = textNullable?.LastIndexOf(s);
+            var resultJ4 = textNullable?.LastIndexOf(s, comparisonType);
+
+            text.EndsWith('c');
+            text.EndsWith(c);
+            text.EndsWith("c", StringComparison.Ordinal);
+            text.EndsWith("c", StringComparison.OrdinalIgnoreCase);
+
+            text.StartsWith('c');
+            text.StartsWith(c);
+            text.StartsWith("c", StringComparison.Ordinal);
+            text.StartsWith("c", StringComparison.OrdinalIgnoreCase);
+
+            text.Remove(startIndex);
+            text.Remove(1);
+            textNullable?.Remove(startIndex);
+            textNullable?.Remove(1);
+            text.Remove(0, count);
+            textNullable?.Remove(0, count);
+
+            text.LastIndexOf("");
+            text.LastIndexOf("", comparisonType);
+            textNullable?.LastIndexOf("");
+            textNullable?.LastIndexOf("", comparisonType);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Calling 'PadLeft' with 0 is redundant.
+(1): ReSharper Dead Code: Calling 'PadLeft' with 0 is redundant.
+(2): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
+(3): ReSharper Dead Code: Calling 'PadRight' with 0 is redundant.
+(4): ReSharper Dead Code: Calling 'Replace' with identical characters is redundant.
+(5): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(6): ReSharper Dead Code: Calling 'Replace' with identical values is redundant.
+(7): ReSharper Suggestion: Use the 'Contains' method.
+(8): ReSharper Suggestion: Use the 'Contains' method.
+(9): ReSharper Suggestion: Use the 'Contains' method.
+(10): ReSharper Suggestion: Use the 'Contains' method.
+(11): ReSharper Suggestion: Use the 'Contains' method.
+(12): ReSharper Suggestion: Use the 'Contains' method.
+(13): ReSharper Suggestion: Use the 'Contains' method.
+(14): ReSharper Suggestion: Use the 'Contains' method.
+(15): ReSharper Suggestion: Use the 'Contains' method.
+(16): ReSharper Suggestion: Use the negated 'Contains' method.
+(17): ReSharper Suggestion: Use the negated 'Contains' method.
+(18): ReSharper Suggestion: Use the negated 'Contains' method.
+(19): ReSharper Suggestion: Use the negated 'Contains' method.
+(20): ReSharper Suggestion: Use the negated 'Contains' method.
+(21): ReSharper Suggestion: Use the negated 'Contains' method.
+(22): ReSharper Suggestion: Use the 'Contains' method.
+(23): ReSharper Suggestion: Use the 'Contains' method.
+(24): ReSharper Suggestion: Use the 'Contains' method.
+(25): ReSharper Suggestion: Use the 'Contains' method.
+(26): ReSharper Suggestion: Use the 'Contains' method.
+(27): ReSharper Suggestion: Use the 'Contains' method.
+(28): ReSharper Suggestion: Use the 'Contains' method.
+(29): ReSharper Suggestion: Use the 'Contains' method.
+(30): ReSharper Suggestion: Use the 'Contains' method.
+(31): ReSharper Suggestion: Use the negated 'Contains' method.
+(32): ReSharper Suggestion: Use the negated 'Contains' method.
+(33): ReSharper Suggestion: Use the negated 'Contains' method.
+(34): ReSharper Suggestion: Use the negated 'Contains' method.
+(35): ReSharper Suggestion: Use the negated 'Contains' method.
+(36): ReSharper Suggestion: Use the negated 'Contains' method.
+(37): ReSharper Suggestion: Use the 'StartsWith' method.
+(38): ReSharper Suggestion: Use the negated 'StartsWith' method.
+(39): ReSharper Suggestion: Use the 'StartsWith' method.
+(40): ReSharper Suggestion: Use the 'StartsWith' method.
+(41): ReSharper Suggestion: Use the negated 'StartsWith' method.
+(42): ReSharper Suggestion: Use the negated 'StartsWith' method.
+(43): ReSharper Suggestion: Use the 'Contains' method.
+(44): ReSharper Suggestion: Use the 'Contains' method.
+(45): ReSharper Suggestion: Use the 'Contains' method.
+(46): ReSharper Suggestion: Use the 'Contains' method.
+(47): ReSharper Suggestion: Use the 'Contains' method.
+(48): ReSharper Suggestion: Use the 'Contains' method.
+(49): ReSharper Suggestion: Use the 'Contains' method.
+(50): ReSharper Suggestion: Use the 'Contains' method.
+(51): ReSharper Suggestion: Use the 'Contains' method.
+(52): ReSharper Suggestion: Use the negated 'Contains' method.
+(53): ReSharper Suggestion: Use the negated 'Contains' method.
+(54): ReSharper Suggestion: Use the negated 'Contains' method.
+(55): ReSharper Suggestion: Use the negated 'Contains' method.
+(56): ReSharper Suggestion: Use the negated 'Contains' method.
+(57): ReSharper Suggestion: Use the negated 'Contains' method.
+(58): ReSharper Suggestion: Use the 'StartsWith' method.
+(59): ReSharper Suggestion: Use the negated 'StartsWith' method.
+(60): ReSharper Suggestion: Use the 'StartsWith' method.
+(61): ReSharper Suggestion: Use the 'StartsWith' method.
+(62): ReSharper Suggestion: Use the negated 'StartsWith' method.
+(63): ReSharper Suggestion: Use the negated 'StartsWith' method.
+(64): ReSharper Suggestion: Use the 'Contains' method.
+(65): ReSharper Suggestion: Use the 'Contains' method.
+(66): ReSharper Suggestion: Use the 'Contains' method.
+(67): ReSharper Suggestion: Use the 'Contains' method.
+(68): ReSharper Suggestion: Use the 'Contains' method.
+(69): ReSharper Suggestion: Use the 'Contains' method.
+(70): ReSharper Suggestion: Use the 'Contains' method.
+(71): ReSharper Suggestion: Use the 'Contains' method.
+(72): ReSharper Suggestion: Use the 'Contains' method.
+(73): ReSharper Suggestion: Use the negated 'Contains' method.
+(74): ReSharper Suggestion: Use the negated 'Contains' method.
+(75): ReSharper Suggestion: Use the negated 'Contains' method.
+(76): ReSharper Suggestion: Use the negated 'Contains' method.
+(77): ReSharper Suggestion: Use the negated 'Contains' method.
+(78): ReSharper Suggestion: Use the negated 'Contains' method.
+(79): ReSharper Suggestion: Use the 'IndexOf' method.
+(80): ReSharper Suggestion: Use the 'IndexOf' method.
+(81): ReSharper Suggestion: Use the 'IndexOf' method.
+(82): ReSharper Suggestion: Use the 'IndexOf' method.
+(83): ReSharper Suggestion: Use the 'IndexOf' method.
+(84): ReSharper Suggestion: Use the 'IndexOf' method.
+(85): ReSharper Suggestion: Use the 'IndexOf' method.
+(86): ReSharper Suggestion: Use the 'IndexOf' method.
+(87): ReSharper Suggestion: Use the 'IndexOf' method.
+(88): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(89): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(90): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(91): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(92): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(93): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(94): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(95): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(96): ReSharper Suggestion: Use the 'LastIndexOf' method.
+(97): ReSharper Suggestion: Use list pattern.
+(98): ReSharper Suggestion: Use list pattern.
+(99): ReSharper Suggestion: Use list pattern.
+(100): ReSharper Suggestion: Use list pattern.
+(101): ReSharper Suggestion: Use list pattern.
+(102): ReSharper Suggestion: Use list pattern.
+(103): ReSharper Suggestion: Use list pattern.
+(104): ReSharper Suggestion: Use list pattern.
+(105): ReSharper Suggestion: Use list pattern.
+(106): ReSharper Suggestion: Use list pattern.
+(107): ReSharper Suggestion: Use list pattern.
+(108): ReSharper Suggestion: Use list pattern.
+(109): ReSharper Suggestion: Use list pattern.
+(110): ReSharper Suggestion: Use list pattern.
+(111): ReSharper Suggestion: Use list pattern.
+(112): ReSharper Suggestion: Use list pattern.
+(113): ReSharper Suggestion: Use the range indexer.
+(114): ReSharper Suggestion: Use the range indexer.
+(115): ReSharper Suggestion: Use the range indexer.
+(116): ReSharper Suggestion: Use the range indexer.
+(117): ReSharper Suggestion: Use the range indexer.
+(118): ReSharper Suggestion: Use the range indexer.
+(119): ReSharper Suggestion: Use the 'Length' property.
+(120): ReSharper Suggestion: Use the 'Length' property.
+(121): ReSharper Suggestion: Use the 'Length' property.
+(122): ReSharper Suggestion: Use the 'Length' property.

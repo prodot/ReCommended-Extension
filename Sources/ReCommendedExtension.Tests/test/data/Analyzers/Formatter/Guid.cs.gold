@@ -1,0 +1,65 @@
+﻿using System;
+
+namespace Test
+{
+    public class Formatters
+    {
+        public void RedundantFormatSpecifier(Guid value)
+        {
+            var result11 = $"{value|:D|(0)}";
+            var result12 = $"{value|:d|(1)}";
+
+            var result21 = string.Format("{0|:D|(2)}", value);
+            var result22 = string.Format("{0|:d|(3)}", value);
+        }
+
+        public void RedundantFormatSpecifier(Guid? value)
+        {
+            var result11 = $"{value|:D|(4)}";
+            var result12 = $"{value|:d|(5)}";
+
+            var result21 = string.Format("{0|:D|(6)}", value);
+            var result22 = string.Format("{0|:d|(7)}", value);
+        }
+
+        public void RedundantFormatSpecifierProvider(Guid guid, string format, IFormatProvider provider)
+        {
+            var result11 = guid.ToString(|null|(8));
+            var result12 = guid.ToString(|""|(9));
+            var result13 = guid.ToString(|"D"|(10));
+            var result14 = guid.ToString(|"d"|(11));
+
+            var result21 = guid.ToString(format, |provider|(12));
+        }
+
+        public void NoDetection(Guid value)
+        {
+            var result1 = $"{value:N}";
+
+            var result2 = string.Format("{0:N}", value);
+
+            var result3 = value.ToString("N");
+        }
+
+        public void NoDetection(Guid? value)
+        {
+            var result1 = $"{value:N}";
+
+            var result2 = string.Format("{0:N}", value);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'D' is redundant.
+(1): ReSharper Dead Code: Specifying 'd' is redundant.
+(2): ReSharper Dead Code: Specifying 'D' is redundant.
+(3): ReSharper Dead Code: Specifying 'd' is redundant.
+(4): ReSharper Dead Code: Specifying 'D' is redundant.
+(5): ReSharper Dead Code: Specifying 'd' is redundant.
+(6): ReSharper Dead Code: Specifying 'D' is redundant.
+(7): ReSharper Dead Code: Specifying 'd' is redundant.
+(8): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(9): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(10): ReSharper Dead Code: Specifying 'D' is redundant.
+(11): ReSharper Dead Code: Specifying 'd' is redundant.
+(12): ReSharper Dead Code: Passing a format provider is redundant.

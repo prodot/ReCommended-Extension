@@ -16,13 +16,13 @@ public sealed class ChangeToAsyncTaskFix(AvoidAsyncVoidWarning highlighting) : Q
 
     public override string Text => $"Change return type to '{taskType.GetClrName().ShortName}'";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
             highlighting.Declaration.SetType(taskType.ToIType());
         }
 
-        return _ => { };
+        return null;
     }
 }

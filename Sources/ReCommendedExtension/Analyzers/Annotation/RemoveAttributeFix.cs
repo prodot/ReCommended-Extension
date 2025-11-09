@@ -21,13 +21,13 @@ public sealed class RemoveAttributeFix : QuickFixBase
 
     public override string Text => "Remove attribute";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
             highlighting.AttributesOwnerDeclaration.RemoveAttribute(highlighting.Attribute);
         }
 
-        return _ => { };
+        return null;
     }
 }

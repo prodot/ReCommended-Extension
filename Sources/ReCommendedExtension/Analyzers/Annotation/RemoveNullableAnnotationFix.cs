@@ -14,13 +14,13 @@ public sealed class RemoveNullableAnnotationFix(RedundantNullableAnnotationHint 
 
     public override string Text => "Make method return type not nullable";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
             ModificationUtil.ReplaceChild(highlighting.NullableTypeUsage, highlighting.NullableTypeUsage.UnderlyingType);
         }
 
-        return _ => { };
+        return null;
     }
 }

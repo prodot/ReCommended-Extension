@@ -3,6 +3,10 @@
 internal static class MissingEnumerableMethods
 {
     [Pure]
+    public static T ElementAt<T>([InstantHandle] this IEnumerable<T> source, Index index)
+        => index.IsFromEnd ? Enumerable.ElementAt(source.Reverse(), index.Value - 1) : Enumerable.ElementAt(source, index.Value);
+
+    [Pure]
     public static T FirstOrDefault<T>([InstantHandle] this IEnumerable<T> source, T defaultValue)
     {
         foreach (var item in source)

@@ -14,7 +14,7 @@ public sealed class RemoveBaseTypeDeclarationFix(RemoveRedundantBaseTypeDeclarat
 
     public override string Text => "Remove redundant 'object'";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -23,6 +23,6 @@ public sealed class RemoveBaseTypeDeclarationFix(RemoveRedundantBaseTypeDeclarat
             highlighting.BaseTypes.RemoveExtendedType(highlighting.BaseTypes.ExtendedTypes[0]);
         }
 
-        return _ => { };
+        return null;
     }
 }

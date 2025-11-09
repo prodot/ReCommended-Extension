@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Formatters
+    {
+        public void Availability(double number)
+        {
+            var result = $"{number:R{caret}}";
+        }
+    }
+}

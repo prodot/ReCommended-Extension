@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(nuint number, nuint value)
+        {
+            var result = |number.Equals(value)|(0);
+        }
+
+        public void NoDetection(nuint number, nuint value)
+        {
+            number.Equals(value);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '==' operator.

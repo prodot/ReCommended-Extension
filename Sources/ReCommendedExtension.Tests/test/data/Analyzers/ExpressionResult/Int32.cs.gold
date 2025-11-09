@@ -1,0 +1,72 @@
+﻿namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(int number)
+        {
+            (int quotient, int remainder) = |int.DivRem(0, 10)|(0);
+
+            var result11 = |int.DivRem(0, 10)|(1);
+
+            var result21 = |int.RotateLeft(number, 0)|(2);
+            var result22 = |int.RotateRight(number, 0)|(3);
+
+            var result31 = |number.Equals(null)|(4);
+
+            var result41 = |int.Clamp(number, 1, 1)|(5);
+            var result42 = |int.Clamp(number, int.MinValue, int.MaxValue)|(6);
+
+            var result51 = |number.GetTypeCode()|(7);
+
+            var result61 = |int.Max(1, 1)|(8);
+            var result62 = |int.Min(1, 1)|(9);
+
+            var result71 = |int.MaxMagnitude(1, 1)|(10);
+            var result72 = |int.MaxMagnitude(1, 1)|(11);
+        }
+
+        public void NoDetection(int number, int left, int right, int rotateAmount, int min, int max)
+        {
+            var result11 = int.DivRem(left, right);
+            var result12 = int.DivRem(left, 10);
+            var result13 = int.DivRem(0, right);
+            var result14 = int.DivRem(0, 0);
+
+            var result21 = int.RotateLeft(number, rotateAmount);
+            var result22 = int.RotateRight(number, rotateAmount);
+
+            var result31 = int.Clamp(number, min, max);
+
+            int.DivRem(0, 10);
+
+            int.RotateLeft(number, 0);
+            int.RotateRight(number, 0);
+
+            number.Equals(null);
+
+            int.Clamp(number, 1, 1);
+            int.Clamp(number, int.MinValue, int.MaxValue);
+
+            number.GetTypeCode();
+
+            int.Max(1, 1);
+            int.Min(1, 1);
+
+            int.MaxMagnitude(1, 1);
+            int.MaxMagnitude(1, 1);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always (0, 0).
+(1): ReSharper Suggestion: The expression is always (0, 0).
+(2): ReSharper Suggestion: The expression is always the same as the first argument.
+(3): ReSharper Suggestion: The expression is always the same as the first argument.
+(4): ReSharper Suggestion: The expression is always false.
+(5): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(6): ReSharper Suggestion: The expression is always the same as the first argument.
+(7): ReSharper Suggestion: The expression is always a TypeCode constant.
+(8): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(9): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(10): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(11): ReSharper Suggestion: The expression is always the same as the first or second argument.

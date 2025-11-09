@@ -84,7 +84,7 @@ public abstract class EncompassInDocComment(ICSharpContextActionDataProvider pro
         return false;
     }
 
-    protected sealed override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected sealed override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         try
         {
@@ -104,7 +104,7 @@ public abstract class EncompassInDocComment(ICSharpContextActionDataProvider pro
 
             docCommentNode.ReplaceBy(updatedDocCommentNode);
 
-            return _ => { };
+            return null;
         }
         finally
         {

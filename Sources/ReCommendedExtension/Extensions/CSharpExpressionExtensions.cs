@@ -11,7 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util.Literals;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using ReCommendedExtension.Analyzers.BaseTypes.NumberInfos;
+using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Extensions;
 
@@ -31,7 +31,10 @@ internal static class CSharpExpressionExtensions
         {
             switch (expression.Parent)
             {
-                case IReferenceExpression referenceExpression when referenceExpression.IsExtensionMethodInvocation():
+                case IReferenceExpression referenceExpression when referenceExpression.GetExtensionInvocationKind() is var kind
+                    && (kind == ExtensionMemberKind.CLASSIC_METHOD
+                        || kind == ExtensionMemberKind.INSTANCE_METHOD
+                        || kind == ExtensionMemberKind.INSTANCE_PROPERTY):
                 case IQueryFirstFrom or IQueryParameterPlatform:
                     return null;
             }
@@ -72,6 +75,9 @@ internal static class CSharpExpressionExtensions
 
     [Pure]
     public static long? TryGetInt64Constant(this ICSharpExpression? expression) => NumberInfo.Int64.TryGetConstant(expression, out _);
+
+    [Pure]
+    public static ulong? TryGetUInt64Constant(this ICSharpExpression? expression) => NumberInfo.UInt64.TryGetConstant(expression, out _);
 
     [Pure]
     public static bool? TryGetBooleanConstant(this ICSharpExpression? expression)

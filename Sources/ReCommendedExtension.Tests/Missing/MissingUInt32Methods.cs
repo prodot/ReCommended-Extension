@@ -55,10 +55,10 @@ internal static class MissingUInt32Methods
         => uint.Parse(s.ToString(), style, provider);
 
     [Pure]
-    public static uint RotateLeft(uint value, int offset) => value << offset | value >> (32 - offset);
+    public static uint RotateLeft(uint value, int rotateAmount) => value << rotateAmount | value >> (32 - rotateAmount);
 
     [Pure]
-    public static uint RotateRight(uint value, int offset) => value >> offset | value << (32 - offset);
+    public static uint RotateRight(uint value, int rotateAmount) => value >> rotateAmount | value << (32 - rotateAmount);
 
     [Pure]
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out uint result)

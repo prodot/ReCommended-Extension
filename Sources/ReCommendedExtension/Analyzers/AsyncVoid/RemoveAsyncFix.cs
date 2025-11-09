@@ -13,13 +13,13 @@ public sealed class RemoveAsyncFix(AsyncVoidFunctionExpressionWarning highlighti
 
     public override string Text => "Remove 'async' modifier";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
             highlighting.RemoveAsyncModifier();
         }
 
-        return _ => { };
+        return null;
     }
 }

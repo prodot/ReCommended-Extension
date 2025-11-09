@@ -1,0 +1,46 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(int? nullable)
+        {
+            var result1 = nullable.|GetValueOrDefault()|(0);
+            var result2 = nullable.|GetValueOrDefault(-1)|(1);
+        }
+
+        public void PropertyOfNullable(int? nullable)
+        {
+            var result1 = nullable.|HasValue|(2);
+
+            var result2 = nullable.|Value|(3);
+        }
+
+        public void NoDetection(int? nullable, (int, bool)? nullableTuple)
+        {
+            var result11 = nameof(nullable.HasValue);
+            var result12 = nameof(Nullable<int>.HasValue);
+
+            var result21 = nameof(nullable.Value);
+            var result22 = nameof(Nullable<int>.Value);
+            var result23 = nullableTuple.Value;
+
+            nullable.GetValueOrDefault();
+            nullable.GetValueOrDefault(-1);
+        }
+
+        public void NoDetectionWithErrors(int? nullable)
+        {
+            nullable.|HasValue|(4) = true;
+            nullable.|Value|(5) = 1;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '??' operator.
+(1): ReSharper Suggestion: Use the '??' operator.
+(2): ReSharper Suggestion: Use pattern or null check.
+(3): ReSharper Suggestion: Use type cast.
+(4): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.HasValue' has no setter
+(5): ReSharper Underlined Error Highlighting: The property 'System.Nullable<T>.Value' has no setter

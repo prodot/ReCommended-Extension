@@ -1,0 +1,62 @@
+﻿using System;
+using System.Threading;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void UnaryOperator(TimeSpan timeSpan, decimal d, int x)
+        {
+            var result11 = |timeSpan.Negate()|(0);
+
+            var result21 = |decimal.Negate(d)|(1);
+            var result22 = |decimal.Negate(1ul)|(2);
+            var result23 = |decimal.Negate(1u)|(3);
+            var result24 = |decimal.Negate(1L)|(4);
+            var result25 = |decimal.Negate(1)|(5);
+            var result26 = |decimal.Negate(-1)|(6);
+            var result27 = |decimal.Negate(-0x1)|(7);
+            var result28 = |decimal.Negate(0b1)|(8);
+            var result29 = |decimal.Negate('a')|(9);
+            var result2A = |decimal.Negate((byte)1)|(10);
+            var result2B = |decimal.Negate(x)|(11);
+        }
+    }
+}
+------------------------------------------------
+0: Use the '-' operator.
+QUICKFIXES:
+Replace with '-timeSpan'
+1: Use the '-' operator.
+QUICKFIXES:
+Replace with '-d'
+2: Use the '-' operator.
+QUICKFIXES:
+Replace with '-1m'
+3: Use the '-' operator.
+QUICKFIXES:
+Replace with '-1m'
+4: Use the '-' operator.
+QUICKFIXES:
+Replace with '-1m'
+5: Use the '-' operator.
+QUICKFIXES:
+Replace with '-1m'
+6: Use the '-' operator.
+QUICKFIXES:
+Replace with '-(decimal)-1'
+7: Use the '-' operator.
+QUICKFIXES:
+Replace with '-(decimal)-0x1'
+8: Use the '-' operator.
+QUICKFIXES:
+Replace with '-(decimal)0b1'
+9: Use the '-' operator.
+QUICKFIXES:
+Replace with '-(decimal)'a''
+10: Use the '-' operator.
+QUICKFIXES:
+Replace with '-(decimal)(byte)1'
+11: Use the '-' operator.
+QUICKFIXES:
+Replace with '-(decimal)x'

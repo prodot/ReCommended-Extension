@@ -1,0 +1,22 @@
+﻿namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(double number)
+        {
+            var result11 = |number.Equals(null)|(0);
+
+            var result21 = |number.GetTypeCode()|(1);
+        }
+
+        public void NoDetection(double number)
+        {
+            number.Equals(null);
+
+            number.GetTypeCode();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always false.
+(1): ReSharper Suggestion: The expression is always a TypeCode constant.

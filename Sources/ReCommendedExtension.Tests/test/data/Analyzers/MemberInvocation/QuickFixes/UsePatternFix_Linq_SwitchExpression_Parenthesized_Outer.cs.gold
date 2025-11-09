@@ -1,0 +1,17 @@
+﻿using System.Linq;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void SingleOrDefault(int[] array)
+        {
+            var result = (array switch
+            {
+              [] => -1,
+              [var item] => item,
+              _ => throw new InvalidOperationException("List contains more than one element.")
+            }{caret}).ToString();
+        }
+    }
+}

@@ -1,0 +1,72 @@
+﻿namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(short number)
+        {
+            (short quotient, short remainder) = |short.DivRem(0, 10)|(0);
+
+            var result11 = |short.DivRem(0, 10)|(1);
+
+            var result21 = |short.RotateLeft(number, 0)|(2);
+            var result22 = |short.RotateRight(number, 0)|(3);
+
+            var result31 = |number.Equals(null)|(4);
+
+            var result41 = |short.Clamp(number, 1, 1)|(5);
+            var result42 = |short.Clamp(number, short.MinValue, short.MaxValue)|(6);
+
+            var result51 = |number.GetTypeCode()|(7);
+
+            var result61 = |short.Max(1, 1)|(8);
+            var result62 = |short.Min(1, 1)|(9);
+
+            var result71 = |short.MaxMagnitude(1, 1)|(10);
+            var result72 = |short.MaxMagnitude(1, 1)|(11);
+        }
+
+        public void NoDetection(short number, short left, short right, int rotateAmount, short min, short max)
+        {
+            var result11 = short.DivRem(left, right);
+            var result12 = short.DivRem(left, 10);
+            var result13 = short.DivRem(0, right);
+            var result14 = short.DivRem(0, 0);
+
+            var result21 = short.RotateLeft(number, rotateAmount);
+            var result22 = short.RotateRight(number, rotateAmount);
+
+            var result31 = short.Clamp(number, min, max);
+
+            short.DivRem(0, 10);
+
+            short.RotateLeft(number, 0);
+            short.RotateRight(number, 0);
+
+            number.Equals(null);
+
+            short.Clamp(number, 1, 1);
+            short.Clamp(number, short.MinValue, short.MaxValue);
+
+            number.GetTypeCode();
+
+            short.Max(1, 1);
+            short.Min(1, 1);
+
+            short.MaxMagnitude(1, 1);
+            short.MaxMagnitude(1, 1);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always (0, 0).
+(1): ReSharper Suggestion: The expression is always (0, 0).
+(2): ReSharper Suggestion: The expression is always the same as the first argument.
+(3): ReSharper Suggestion: The expression is always the same as the first argument.
+(4): ReSharper Suggestion: The expression is always false.
+(5): ReSharper Suggestion: The expression is always the same as the second or third argument.
+(6): ReSharper Suggestion: The expression is always the same as the first argument.
+(7): ReSharper Suggestion: The expression is always a TypeCode constant.
+(8): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(9): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(10): ReSharper Suggestion: The expression is always the same as the first or second argument.
+(11): ReSharper Suggestion: The expression is always the same as the first or second argument.

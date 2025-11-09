@@ -9,14 +9,45 @@ namespace Test
             throw |new Exception()|(0);
         }
 
-        void Method2() => throw |new Exception()|(1);
+        void Method(Exception e)
+        {
+            throw |e|(1);
+        }
+
+        void Method2() => throw |new Exception()|(2);
 
         string x;
 
-        void Method3(string value) => x = value ?? throw |new Exception()|(2);
+        void Method3(string value) => x = value ?? throw |new Exception()|(3);
+
+        void Method4()
+        {
+            try
+            {
+                Method();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        void Method5()
+        {
+            try
+            {
+                Method();
+            }
+            catch (Exception e)
+            {
+                throw |e|(4);
+            }
+        }
     }
 }
 ---------------------------------------------------------
 (0): ReSharper Warning: A more specific exception should be used.
 (1): ReSharper Warning: A more specific exception should be used.
 (2): ReSharper Warning: A more specific exception should be used.
+(3): ReSharper Warning: A more specific exception should be used.
+(4): ReSharper Warning: A more specific exception should be used.

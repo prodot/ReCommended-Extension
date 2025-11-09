@@ -11,8 +11,8 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.MethodFinding;
-using MethodSignature = ReCommendedExtension.Extensions.MethodFinding.MethodSignature;
+using ReCommendedExtension.Extensions.MemberFinding;
+using MethodSignature = ReCommendedExtension.Extensions.MemberFinding.MethodSignature;
 
 namespace ReCommendedExtension.Analyzers.Collection;
 
@@ -52,9 +52,9 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
     [Pure]
     static bool ArrayEmptyMethodExists(IPsiModule psiModule)
-        => PredefinedType.ARRAY_FQN.HasMethod(
-            new MethodSignature { Name = nameof(Array.Empty), ParameterTypes = [], GenericParametersCount = 1, IsStatic = true },
-            psiModule);
+        => PredefinedType.ARRAY_FQN.TryGetTypeElement(psiModule) is { } typeElement
+            && typeElement.HasMethod(
+                new MethodSignature { Name = nameof(Array.Empty), Parameters = [], GenericParametersCount = 1, IsStatic = true });
 
     [Pure]
     static bool HasAccessibleAddMethod(IAccessContext accessContext, ITypeElement typeElement, bool checkBaseClasses = true)
@@ -501,8 +501,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         if (arrayCreationExpression.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp120)
         {
             if (arrayCreationExpression.DimInits is []
-                || arrayCreationExpression.DimInits is [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: var count } }]
-                && count == (arrayCreationExpression.ArrayInitializer?.InitializerElements.Count ?? 0))
+                || arrayCreationExpression.DimInits is [var e]
+                && e.TryGetInt32Constant() == (arrayCreationExpression.ArrayInitializer?.InitializerElements.Count ?? 0))
             {
                 var itemType = arrayCreationExpression.GetElementType();
 
@@ -515,8 +515,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     // new T[0]         ->  []
                     // new[] { ... }    ->  [...]
 
-                    var isEmptyArray = arrayCreationExpression is { DimInits: [{ ConstantValue: { Kind: ConstantValueKind.Int, IntValue: 0 } }] }
-                        or { DimInits: [], ArrayInitializer.InitializerElements: [] };
+                    var isEmptyArray = arrayCreationExpression is { DimInits: [var exp] } && exp.TryGetInt32Constant() == 0
+                        || arrayCreationExpression is { DimInits: [], ArrayInitializer.InitializerElements: [] };
 
                     var methodReferenceToSetInferredTypeArguments = isEmptyArray
                         ? TryGetMethodReferenceToSetInferredTypeArguments(arrayCreationExpression)
@@ -728,13 +728,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             && listCreationExpression.TryGetArgumentsInDeclarationOrder() is { } constructorArguments)
         {
             var parameterType = constructorArguments is [{ MatchingParameter.Type: var t }] ? t : null;
-            var arguments =
-                (parameterType.IsInt()
-                    && constructorArguments[0] is { Expression: { } arg }
-                    && arg.IsConstantValue()
-                    && arg.ConstantValue.IntValue > (listCreationExpression.Initializer?.InitializerElements.Count ?? 0)
-                        ? ListArguments.Capacity
-                        : 0)
+            var arguments = (parameterType.IsInt() ? ListArguments.Capacity : 0)
                 | (parameterType.IsGenericIEnumerable() ? ListArguments.Collection : 0);
 
             var isEmptyList = (arguments & ListArguments.Collection) == 0
@@ -823,20 +817,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 [{ MatchingParameter.Type: var t0 }, { MatchingParameter.Type: var t1 }] => [t0, t1],
                 _ => new IType?[2],
             };
-            var arguments =
-                (parameterTypes[0].IsInt()
-                    && constructorArguments[0] is { Expression: { } arg }
-                    && arg.IsConstantValue()
-                    && arg.ConstantValue.IntValue > (hashSetCreationExpression.Initializer?.InitializerElements.Count ?? 0)
-                        ? HashSetArguments.Capacity
-                        : 0)
+            var arguments = (parameterTypes[0].IsInt() ? HashSetArguments.Capacity : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? HashSetArguments.Collection : 0)
-                | (parameterTypes[0].IsGenericEqualityComparer()
-                    && constructorArguments[0] is { Expression: { } a0 }
-                    && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
-                    || parameterTypes[1].IsGenericEqualityComparer()
-                    && constructorArguments[1] is { Expression: { } a1 }
-                    && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
+                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value: { } a0 } && !a0.IsDefaultValue()
+                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value: { } a1 } && !a1.IsDefaultValue()
                         ? HashSetArguments.Comparer
                         : 0);
 
@@ -911,21 +895,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 [{ MatchingParameter.Type: var t0 }, { MatchingParameter.Type: var t1 }] => [t0, t1],
                 _ => new IType?[2],
             };
-            var arguments =
-                (parameterTypes[0].IsInt()
-                    && constructorArguments[0] is { Expression: { } arg }
-                    && arg.IsConstantValue()
-                    && arg.ConstantValue.IntValue > (dictionaryCreationExpression.Initializer?.InitializerElements.Count ?? 0)
-                        ? DictionaryArguments.Capacity
-                        : 0)
+            var arguments = (parameterTypes[0].IsInt() ? DictionaryArguments.Capacity : 0)
                 | (parameterTypes[0].IsIDictionary() ? DictionaryArguments.Dictionary : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? DictionaryArguments.Pairs : 0)
-                | (parameterTypes[0].IsGenericEqualityComparer()
-                    && constructorArguments[0] is { Expression: { } a0 }
-                    && !(a0.IsConstantValue() && a0.ConstantValue.IsNull())
-                    || parameterTypes[1].IsGenericEqualityComparer()
-                    && constructorArguments[1] is { Expression: { } a1 }
-                    && !(a1.IsConstantValue() && a1.ConstantValue.IsNull())
+                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value : { } a0 } && !a0.IsDefaultValue()
+                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value: { } a1 } && !a1.IsDefaultValue()
                         ? DictionaryArguments.Comparer
                         : 0);
 

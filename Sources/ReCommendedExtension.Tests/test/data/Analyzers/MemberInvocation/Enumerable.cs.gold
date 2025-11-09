@@ -1,0 +1,512 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Methods
+    {
+        public class CustomList<T> : IList<T>
+        {
+            public int IndexOf(T item) => throw new NotImplementedException();
+
+            public void Insert(int index, T item) => throw new NotImplementedException();
+
+            public void RemoveAt(int index) => throw new NotImplementedException();
+
+            public T this[int index]
+            {
+                get => throw new NotImplementedException();
+                set => throw new NotImplementedException();
+            }
+
+            public void Add(T item) => throw new NotImplementedException();
+
+            public void Clear() => throw new NotImplementedException();
+
+            public bool Contains(T item) => throw new NotImplementedException();
+
+            public void CopyTo(T[] array, int arrayIndex) => throw new NotImplementedException();
+
+            public bool Remove(T item) => throw new NotImplementedException();
+
+            public int Count => throw new NotImplementedException();
+
+            public bool IsReadOnly => throw new NotImplementedException();
+
+            public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        public class CustomListUniqueItems<T> : CustomList<T>, ISet<T>
+        {
+            public bool Add(T item) => throw new NotImplementedException();
+
+            public void UnionWith(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public void IntersectWith(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public void ExceptWith(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public void SymmetricExceptWith(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public bool IsSubsetOf(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public bool IsSupersetOf(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public bool IsProperSupersetOf(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public bool IsProperSubsetOf(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public bool Overlaps(IEnumerable<T> other) => throw new NotImplementedException();
+
+            public bool SetEquals(IEnumerable<T> other) => throw new NotImplementedException();
+        }
+
+        public void RangeIndexer(IList<int> list, List<int> list2, CustomList<int> list3, IReadOnlyList<int> list4, CustomListUniqueItems<int> list5, int[] array, int[][] arrays, object obj, string text, int i, Index index, int fallback)
+        {
+            var result11 = list.|ElementAt(i)|(0);            
+            var result12 = list.|ElementAt(index)|(1);            
+
+            var result21 = list.|First()|(2);
+            var result22 = list2.|First()|(3);
+            var result23 = list3.|First()|(4);
+            var result24 = list4.|First()|(5);
+            var result25 = list5.|First()|(6);
+            var result26 = array.|First()|(7);
+            var result27 = arrays.|First()|(8);
+            var result28 = ((IList<int>)obj).|First()|(9);
+            var result29 = text.|First()|(10);
+
+            var result31 = list.|FirstOrDefault()|(11);
+            var result32 = list.|FirstOrDefault(fallback)|(12);
+
+            var result41 = list.|Last()|(13);
+
+            var result51 = list.|LastOrDefault()|(14);
+            var result52 = list.|LastOrDefault(fallback)|(15);
+
+            var result61 = list.|LongCount()|(16);
+            var result62 = array.|LongCount()|(17);
+            var result63 = text.|LongCount()|(18);
+
+            var result71 = list.|Single()|(19);
+
+            var result81 = list.|SingleOrDefault()|(20);
+            var result82 = list.|SingleOrDefault(fallback)|(21);
+        }
+
+        public void RangeIndexer<T>(IList<T> list, List<T> list2, CustomList<T> list3, IReadOnlyList<T> list4, CustomListUniqueItems<T> list5, T[] array, T[][] arrays, object obj, int i, Index index, T fallback)
+        {
+            var result11 = list.|ElementAt(i)|(22);
+            var result12 = list.|ElementAt(index)|(23);
+
+            var result21 = list.|First()|(24);
+            var result22 = list2.|First()|(25);
+            var result23 = list3.|First()|(26);
+            var result24 = list4.|First()|(27);
+            var result25 = list5.|First()|(28);
+            var result26 = array.|First()|(29);
+            var result27 = arrays.|First()|(30);
+            var result28 = ((IList<T>)obj).|First()|(31);
+
+            var result31 = list.|FirstOrDefault()|(32);
+            var result32 = list.|FirstOrDefault(fallback)|(33);
+
+            var result41 = list.|Last()|(34);
+
+            var result51 = list.|LastOrDefault()|(35);
+            var result52 = list.|LastOrDefault(fallback)|(36);
+
+            var result61 = list.|LongCount()|(37);
+            var result62 = array.|LongCount()|(38);
+
+            var result71 = list.|Single()|(39);
+
+            var result81 = list.|SingleOrDefault()|(40);
+            var result82 = list.|SingleOrDefault(fallback)|(41);
+        }
+
+        public void RangeIndexer<L>(L list, object obj, int i, Index index, int fallback) where L : IList<int>
+        {
+            var result11 = list.|ElementAt(i)|(42);
+            var result12 = list.|ElementAt(index)|(43);
+
+            var result21 = list.|First()|(44);
+            var result22 = ((L)obj).|First()|(45);
+
+            var result31 = list.|FirstOrDefault()|(46);
+            var result32 = list.|FirstOrDefault(fallback)|(47);
+
+            var result41 = list.|Last()|(48);
+
+            var result51 = list.|LastOrDefault()|(49);
+            var result52 = list.|LastOrDefault(fallback)|(50);
+
+            var result61 = list.|LongCount()|(51);
+
+            var result71 = list.|Single()|(52);
+
+            var result81 = list.|SingleOrDefault()|(53);
+            var result82 = list.|SingleOrDefault(fallback)|(54);
+        }
+
+        public void SuspiciousElementAccess(ISet<int> collection, IReadOnlySet<int> collection2, Dictionary<int, string>.KeyCollection collection3, HashSet<int> collection4, int i, Index index, int fallback)
+        {
+            var result11 = collection.|ElementAt(i)|(55);
+            var result12 = collection.|ElementAt(index)|(56);
+            var result13 = Enumerable.|ElementAt(collection, i)|(57);
+            var result14 = Enumerable.|ElementAt(collection, index)|(58);
+
+            var result21 = collection.|ElementAtOrDefault(i)|(59);
+            var result22 = collection.|ElementAtOrDefault(index)|(60);
+            var result23 = Enumerable.|ElementAtOrDefault(collection, i)|(61);
+            var result24 = Enumerable.|ElementAtOrDefault(collection, index)|(62);
+
+            var result31 = collection.|First()|(63);
+            var result32 = collection2.|First()|(64);
+            var result33 = collection3.|First()|(65);
+            var result34 = collection4.|First()|(66);
+            var result35 = Enumerable.|First(collection)|(67);
+            var result36 = Enumerable.|First(collection2)|(68);
+            var result37 = Enumerable.|First(collection3)|(69);
+            var result38 = Enumerable.|First(collection4)|(70);
+
+            var result41 = collection.|FirstOrDefault()|(71);
+            var result42 = collection.|FirstOrDefault(fallback)|(72);
+            var result43 = Enumerable.|FirstOrDefault(collection)|(73);
+            var result44 = Enumerable.|FirstOrDefault(collection, -1)|(74);
+
+            var result51 = collection.|Last()|(75);
+            var result52 = Enumerable.|Last(collection)|(76);
+
+            var result61 = collection.|LastOrDefault()|(77);
+            var result62 = collection.|LastOrDefault(fallback)|(78);
+            var result63 = Enumerable.|LastOrDefault(collection)|(79);
+            var result64 = Enumerable.|LastOrDefault(collection, -1)|(80);
+
+            collection.|ElementAt(i)|(81);
+            collection.|ElementAt(index)|(82);
+
+            collection.|ElementAtOrDefault(i)|(83);
+            collection.|ElementAtOrDefault(index)|(84);
+
+            collection.|First()|(85);
+            collection2.|First()|(86);
+            collection3.|First()|(87);
+            collection4.|First()|(88);
+
+            collection.|FirstOrDefault()|(89);
+            collection.|FirstOrDefault(fallback)|(90);
+
+            collection.|Last()|(91);
+
+            collection.|LastOrDefault()|(92);
+            collection.|LastOrDefault(fallback)|(93);
+        }
+
+        public void SuspiciousElementAccess<T>(ISet<T> collection, IReadOnlySet<T> collection2, Dictionary<T, string>.KeyCollection collection3, HashSet<T> collection4, int i, Index index, T fallback)
+        {
+            var result11 = collection.|ElementAt(i)|(94);
+            var result12 = collection.|ElementAt(index)|(95);
+
+            var result21 = collection.|ElementAtOrDefault(i)|(96);
+            var result22 = collection.|ElementAtOrDefault(index)|(97);
+
+            var result31 = collection.|First()|(98);
+            var result32 = collection2.|First()|(99);
+            var result33 = collection3.|First()|(100);
+            var result34 = collection4.|First()|(101);
+
+            var result41 = collection.|FirstOrDefault()|(102);
+            var result42 = collection.|FirstOrDefault(fallback)|(103);
+
+            var result51 = collection.|Last()|(104);
+
+            var result61 = collection.|LastOrDefault()|(105);
+            var result62 = collection.|LastOrDefault(fallback)|(106);
+
+            collection.|ElementAt(i)|(107);
+            collection.|ElementAt(index)|(108);
+
+            collection.|ElementAtOrDefault(i)|(109);
+            collection.|ElementAtOrDefault(index)|(110);
+
+            collection.|First()|(111);
+            collection2.|First()|(112);
+            collection3.|First()|(113);
+            collection4.|First()|(114);
+
+            collection.|FirstOrDefault()|(115);
+            collection.|FirstOrDefault(fallback)|(116);
+
+            collection.|Last()|(117);
+
+            collection.|LastOrDefault()|(118);
+            collection.|LastOrDefault(fallback)|(119);
+        }
+
+        public void SuspiciousElementAccess<C>(C collection, int i, Index index, int fallback) where C : IReadOnlySet<int>
+        {
+            var result11 = collection.|ElementAt(i)|(120);
+            var result12 = collection.|ElementAt(index)|(121);
+
+            var result21 = collection.|ElementAtOrDefault(i)|(122);
+            var result22 = collection.|ElementAtOrDefault(index)|(123);
+
+            var result31 = collection.|First()|(124);
+
+            var result41 = collection.|FirstOrDefault()|(125);
+            var result42 = collection.|FirstOrDefault(fallback)|(126);
+
+            var result51 = collection.|Last()|(127);
+
+            var result61 = collection.|LastOrDefault()|(128);
+            var result62 = collection.|LastOrDefault(fallback)|(129);
+
+            collection.|ElementAt(i)|(130);
+            collection.|ElementAt(index)|(131);
+
+            collection.|ElementAtOrDefault(i)|(132);
+            collection.|ElementAtOrDefault(index)|(133);
+
+            collection.|First()|(134);
+
+            collection.|FirstOrDefault()|(135);
+            collection.|FirstOrDefault(fallback)|(136);
+
+            collection.|Last()|(137);
+
+            collection.|LastOrDefault()|(138);
+            collection.|LastOrDefault(fallback)|(139);
+        }
+
+        public class A { }
+        public class B : A { }
+        public class C : A { }
+
+        public void NoDetection(IList<int> list, IList<int>? listNullable, List<int> list2, CustomList<int> list3, IReadOnlyList<int> list4, CustomListUniqueItems<int> list5, IList<B> list6, int[] array, int[][] arrays, object obj, string text, OrderedDictionary<int, string> orderedDictionary, int i, Index index, int fallback)
+        {
+            var result11 = Enumerable.ElementAt(list, i);
+            var result12 = Enumerable.ElementAt(list, index);
+            var result13 = orderedDictionary.ElementAt(i);
+            var result14 = orderedDictionary.ElementAt(index);
+            var result15 = list6.ElementAt<A>(i);
+            var result16 = list6.ElementAt<A>(index);
+
+            var result21 = Enumerable.ElementAtOrDefault(list, i);
+            var result22 = Enumerable.ElementAtOrDefault(list, index);
+            var result23 = orderedDictionary.ElementAtOrDefault(i);
+            var result24 = orderedDictionary.ElementAtOrDefault(index);
+
+            var result31 = Enumerable.First(list);
+            var result32 = orderedDictionary.First();
+            var result33 = list6.First<A>();
+
+            var result41 = Enumerable.FirstOrDefault(list);
+            var result42 = Enumerable.FirstOrDefault(list, fallback);
+            var result43 = orderedDictionary.FirstOrDefault();
+            var result44 = listNullable?.FirstOrDefault();
+            var result45 = listNullable?.FirstOrDefault(fallback);
+            var result46 = list6.FirstOrDefault<A>(new C());
+
+            var result51 = Enumerable.Last(list);
+            var result52 = orderedDictionary.Last();
+            var result53 = list6.Last<A>();
+
+            var result61 = Enumerable.LastOrDefault(list);
+            var result62 = Enumerable.LastOrDefault(list, fallback);
+            var result63 = orderedDictionary.LastOrDefault();
+            var result64 = listNullable?.LastOrDefault();
+            var result65 = listNullable?.LastOrDefault(fallback);
+            var result66 = list6.LastOrDefault<A>(new C());
+
+            var result71 = Enumerable.LongCount(list);
+            var result72 = Enumerable.LongCount(array);
+            var result73 = Enumerable.LongCount(text);
+
+            var result81 = Enumerable.Single(list);
+            var result82 = listNullable?.Single();
+            var result83 = list6.Single<A>();
+
+            var result91 = Enumerable.SingleOrDefault(list);
+            var result92 = Enumerable.SingleOrDefault(list, fallback);
+            var result94 = listNullable?.SingleOrDefault();
+            var result95 = listNullable?.SingleOrDefault(fallback);
+            var result96 = list6.SingleOrDefault<A>(new C());
+
+            list.ElementAt(i);
+            list.ElementAt(index);
+
+            list.First();
+            list2.First();
+            list3.First();
+            list4.First();
+            list5.First();
+            array.First();
+            arrays.First();
+            ((IList<int>)obj).First();
+            text.First();
+
+            list.FirstOrDefault();
+            list.FirstOrDefault(fallback);
+
+            list.Last();
+
+            list.LastOrDefault();
+            list.LastOrDefault(fallback);
+
+            list.LongCount();
+            array.LongCount();
+            text.LongCount();
+
+            list.Single();
+
+            list.SingleOrDefault();
+            list.SingleOrDefault(fallback);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the indexer.
+(1): ReSharper Suggestion: Use the indexer.
+(2): ReSharper Suggestion: Use the indexer.
+(3): ReSharper Suggestion: Use the indexer.
+(4): ReSharper Suggestion: Use the indexer.
+(5): ReSharper Suggestion: Use the indexer.
+(6): ReSharper Suggestion: Use the indexer.
+(7): ReSharper Suggestion: Use the indexer.
+(8): ReSharper Suggestion: Use the indexer.
+(9): ReSharper Suggestion: Use the indexer.
+(10): ReSharper Suggestion: Use the indexer.
+(11): ReSharper Suggestion: Use list pattern.
+(12): ReSharper Suggestion: Use list pattern.
+(13): ReSharper Suggestion: Use the indexer.
+(14): ReSharper Suggestion: Use list pattern.
+(15): ReSharper Suggestion: Use list pattern.
+(16): ReSharper Suggestion: Use the 'Count' property.
+(17): ReSharper Suggestion: Use the 'Length' property.
+(18): ReSharper Suggestion: Use the 'Length' property.
+(19): ReSharper Suggestion: Use list pattern.
+(20): ReSharper Suggestion: Use switch expression.
+(21): ReSharper Suggestion: Use switch expression.
+(22): ReSharper Suggestion: Use the indexer.
+(23): ReSharper Suggestion: Use the indexer.
+(24): ReSharper Suggestion: Use the indexer.
+(25): ReSharper Suggestion: Use the indexer.
+(26): ReSharper Suggestion: Use the indexer.
+(27): ReSharper Suggestion: Use the indexer.
+(28): ReSharper Suggestion: Use the indexer.
+(29): ReSharper Suggestion: Use the indexer.
+(30): ReSharper Suggestion: Use the indexer.
+(31): ReSharper Suggestion: Use the indexer.
+(32): ReSharper Suggestion: Use list pattern.
+(33): ReSharper Suggestion: Use list pattern.
+(34): ReSharper Suggestion: Use the indexer.
+(35): ReSharper Suggestion: Use list pattern.
+(36): ReSharper Suggestion: Use list pattern.
+(37): ReSharper Suggestion: Use the 'Count' property.
+(38): ReSharper Suggestion: Use the 'Length' property.
+(39): ReSharper Suggestion: Use list pattern.
+(40): ReSharper Suggestion: Use switch expression.
+(41): ReSharper Suggestion: Use switch expression.
+(42): ReSharper Suggestion: Use the indexer.
+(43): ReSharper Suggestion: Use the indexer.
+(44): ReSharper Suggestion: Use the indexer.
+(45): ReSharper Suggestion: Use the indexer.
+(46): ReSharper Suggestion: Use list pattern.
+(47): ReSharper Suggestion: Use list pattern.
+(48): ReSharper Suggestion: Use the indexer.
+(49): ReSharper Suggestion: Use list pattern.
+(50): ReSharper Suggestion: Use list pattern.
+(51): ReSharper Suggestion: Use the 'Count' property.
+(52): ReSharper Suggestion: Use list pattern.
+(53): ReSharper Suggestion: Use switch expression.
+(54): ReSharper Suggestion: Use switch expression.
+(55): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(56): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(57): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(58): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(59): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(60): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(61): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(62): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(63): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(64): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(65): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(66): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(67): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(68): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(69): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(70): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(71): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(72): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(73): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(74): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(75): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(76): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(77): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(78): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(79): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(80): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(81): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(82): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(83): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(84): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(85): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(86): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(87): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(88): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(89): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(90): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(91): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(92): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(93): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(94): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(95): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(96): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(97): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(98): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(99): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(100): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(101): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(102): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(103): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(104): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(105): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(106): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(107): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(108): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(109): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(110): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(111): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(112): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(113): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(114): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(115): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(116): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(117): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(118): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(119): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(120): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(121): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(122): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(123): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(124): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(125): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(126): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(127): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(128): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(129): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(130): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(131): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(132): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(133): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the item by its index could result in unpredictable behavior.
+(134): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(135): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(136): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "first" item could result in unpredictable behavior.
+(137): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(138): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.
+(139): ReSharper Warning: The collection doesn't guarantee ordering, so retrieving the "last" item could result in unpredictable behavior.

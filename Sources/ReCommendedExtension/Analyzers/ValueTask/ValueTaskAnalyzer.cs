@@ -111,14 +111,15 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         || method.IsOverridesObjectToString()
                         || method.IsImplementsIEquatableEqualsMethod()
                         || method.ShortName == nameof(GetType) && method.ContainingType.IsObjectClass():
+
                         return false; // is well-known pure method or property
                 }
             }
 
             if (InvocationExpressionNavigator.GetByArgument(CSharpArgumentNavigator.GetByValue(parenthesizedExpression)) is { } byArgument)
             {
-                var method = byArgument.InvocationExpressionReference.Resolve(ResolveContext).DeclaredElement as IMethod;
-                if (method.IsObjectEqualsMethod() || method.IsObjectReferenceEqualsMethod() || method.IsImplementsIEquatableEqualsMethod())
+                if (byArgument.InvocationExpressionReference.Resolve(ResolveContext).DeclaredElement is IMethod method
+                    && (method.IsObjectEqualsMethod() || method.IsObjectReferenceEqualsMethod() || method.IsImplementsIEquatableEqualsMethod()))
                 {
                     return false; // is an argument of the well-known pure method
                 }

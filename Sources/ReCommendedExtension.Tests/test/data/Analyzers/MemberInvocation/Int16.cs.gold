@@ -1,0 +1,25 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(short number, short value)
+        {
+            var result11 = |number.Equals(value)|(0);
+
+            var result21 = |short.IsNegative(number)|(1);
+            var result22 = |short.IsPositive(number)|(2);
+        }
+
+        public void NoDetection(short number, short value)
+        {
+            number.Equals(value);
+
+            short.IsNegative(number);
+            short.IsPositive(number);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '==' operator.
+(1): ReSharper Suggestion: Use the '<' operator.
+(2): ReSharper Suggestion: Use the '>=' operator.

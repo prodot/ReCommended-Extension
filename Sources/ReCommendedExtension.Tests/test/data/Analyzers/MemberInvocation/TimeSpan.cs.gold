@@ -1,0 +1,53 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(TimeSpan timeSpan, TimeSpan ts, double factor)
+        {
+            var result11 = |timeSpan.Add(ts)|(0);
+
+            var result21 = |timeSpan.Subtract(ts)|(1);
+
+            var result31 = |timeSpan.Multiply(factor)|(2);
+
+            var result41 = |timeSpan.Divide(factor)|(3);
+            var result42 = |timeSpan.Divide(ts)|(4);
+
+            var result51 = |timeSpan.Equals(ts)|(5);
+            var result52 = |TimeSpan.Equals(timeSpan, ts)|(6);
+        }
+
+        public void UnaryOperator(TimeSpan timeSpan)
+        {
+            var result = |timeSpan.Negate()|(7);
+        }
+
+        public void NoDetection(TimeSpan timeSpan, TimeSpan ts, double factor)
+        {
+            timeSpan.Add(ts);
+
+            timeSpan.Subtract(ts);
+
+            timeSpan.Multiply(factor);
+
+            timeSpan.Divide(factor);
+            timeSpan.Divide(ts);
+
+            timeSpan.Equals(ts);
+            TimeSpan.Equals(timeSpan, ts);
+
+            timeSpan.Negate();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '+' operator.
+(1): ReSharper Suggestion: Use the '-' operator.
+(2): ReSharper Suggestion: Use the '*' operator.
+(3): ReSharper Suggestion: Use the '/' operator.
+(4): ReSharper Suggestion: Use the '/' operator.
+(5): ReSharper Suggestion: Use the '==' operator.
+(6): ReSharper Suggestion: Use the '==' operator.
+(7): ReSharper Suggestion: Use the '-' operator.

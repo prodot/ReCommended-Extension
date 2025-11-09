@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult()
+        {
+            var result = (Quotient: 0, Remainder:{caret} 0);
+        }
+    }
+}

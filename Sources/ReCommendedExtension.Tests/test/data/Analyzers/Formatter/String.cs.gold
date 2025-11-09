@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Test
+{
+    public class Formatters
+    {
+        public void RedundantProvider(string text, IFormatProvider provider)
+        {
+            var result1 = text.ToString(|provider|(0));
+            var result2 = text.ToString(|null|(1));
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing a format provider is redundant.
+(1): ReSharper Dead Code: Passing a format provider is redundant.

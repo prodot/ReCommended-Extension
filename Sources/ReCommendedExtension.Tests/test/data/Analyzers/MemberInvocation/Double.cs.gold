@@ -1,0 +1,17 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void Pattern(double n)
+        {
+            var result = |double.IsNaN(n)|(0);
+        }
+
+        public void NoDetection(double n)
+        {
+            double.IsNaN(n);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use pattern.

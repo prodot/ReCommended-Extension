@@ -1,0 +1,45 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void RedundantMethodInvocation(DateTimeOffset dateTimeOffset)
+        {
+            var result = dateTimeOffset.|AddTicks(0)|(0);
+        }
+
+        public void BinaryOperator(DateTimeOffset dateTimeOffset, TimeSpan timeSpan, DateTimeOffset dto)
+        {
+            var result11 = |dateTimeOffset.Add(timeSpan)|(1);
+
+            var result21 = |dateTimeOffset.Subtract(dto)|(2);
+            var result22 = |dateTimeOffset.Subtract(timeSpan)|(3);
+
+            var result31 = |dateTimeOffset.Equals(dto)|(4);
+            var result32 = |DateTimeOffset.Equals(dateTimeOffset, dto)|(5);
+        }
+
+        public void NoDetection(DateTimeOffset dateTimeOffset, long value, TimeSpan timeSpan, DateTimeOffset dto)
+        {
+            var result = dateTimeOffset.AddTicks(value);
+
+            dateTimeOffset.AddTicks(0);
+
+            dateTimeOffset.Add(timeSpan);
+
+            dateTimeOffset.Subtract(dto);
+            dateTimeOffset.Subtract(timeSpan);
+
+            dateTimeOffset.Equals(dto);
+            DateTimeOffset.Equals(dateTimeOffset, dto);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Calling 'AddTicks' with 0 is redundant.
+(1): ReSharper Suggestion: Use the '+' operator.
+(2): ReSharper Suggestion: Use the '-' operator.
+(3): ReSharper Suggestion: Use the '-' operator.
+(4): ReSharper Suggestion: Use the '==' operator.
+(5): ReSharper Suggestion: Use the '==' operator.

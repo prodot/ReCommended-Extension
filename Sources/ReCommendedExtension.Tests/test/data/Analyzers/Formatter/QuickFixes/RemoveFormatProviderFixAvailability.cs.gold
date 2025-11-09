@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Test
+{
+    public class Formatters
+    {
+        public void Availability(int number, IFormatProvider formatProvider)
+        {
+            var result = number.ToString("X", |formatProvider|(0));
+        }
+    }
+}
+------------------------------------------------
+0: Passing a provider with a hexadecimal format specifier is redundant.
+QUICKFIXES:
+Remove format provider

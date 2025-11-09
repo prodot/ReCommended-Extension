@@ -1,0 +1,51 @@
+﻿using System;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void OtherArgument(string s, string format, IFormatProvider provider, StringSplitOptions options)
+        {
+            var result11 = TimeSpan.ParseExact(s, |[format]|(0), provider);
+            var result12 = TimeSpan.ParseExact(s, |(string[])[format]|(1), provider);
+            var result13 = TimeSpan.ParseExact(s, |new[] { format }|(2), provider);
+            var result14 = TimeSpan.ParseExact(s, |new string[] { format }|(3), provider);
+
+            var result21 = s.IndexOf(|"c"|(4));
+            var result22 = s.IndexOf(|"\u200b"|(5));
+
+            var result31 = s.LastIndexOf(|"c"|(6), StringComparison.Ordinal);
+
+            var result32 = s.Split(|[";", ":"]|(7), options);
+            var result33 = s.Split(|new[] { ";", ":" }|(8), options);
+        }
+    }
+}
+------------------------------------------------
+0: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+1: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+2: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+3: The only collection element should be passed directly.
+QUICKFIXES:
+Replace with 'format'
+4: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''c'' (and add 'StringComparison.CurrentCulture')
+5: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''\u200B'' (and add 'StringComparison.CurrentCulture')
+6: The only character should be passed directly.
+QUICKFIXES:
+Replace with ''c'' (and remove 'StringComparison.Ordinal')
+7: The only characters should be passed directly.
+QUICKFIXES:
+Replace with '[';', ':']'
+8: The only characters should be passed directly.
+QUICKFIXES:
+Replace with 'new[] { ';', ':' }'

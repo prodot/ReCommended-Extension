@@ -1,0 +1,165 @@
+﻿using System;
+using System.Globalization;
+
+namespace Test
+{
+    public class Arguments
+    {
+        public void RedundantArgument(int days, int hours, int minutes, int seconds, int milliseconds, string s, ReadOnlySpan<char> s1, string format, ReadOnlySpan<char> format1, string[] formats, IFormatProvider provider, out TimeSpan result)
+        {
+            var result11 = new TimeSpan(|0|(0), hours, minutes, seconds);
+            var result12 = new TimeSpan(days, hours, minutes, seconds, |0|(1));
+            var result13 = new TimeSpan(days, hours, minutes, seconds, milliseconds, |0|(2));
+
+            TimeSpan result21 = new(|0|(3), hours, minutes, seconds);
+            TimeSpan result22 = new(days, hours, minutes, seconds, |0|(4));
+            TimeSpan result23 = new(days, hours, minutes, seconds, milliseconds, |0|(5));
+
+            var result31 = TimeSpan.Parse(s, |null|(6));
+
+            var result41 = TimeSpan.ParseExact(s, format, provider, |TimeSpanStyles.None|(7));
+            var result42 = TimeSpan.ParseExact(s, formats, provider, |TimeSpanStyles.None|(8));
+
+            var result51 = TimeSpan.TryParse(s, |null|(9), out result);
+            var result52 = TimeSpan.TryParse(s1, |null|(10), out result);
+
+            var result61 = TimeSpan.TryParseExact(s, format, provider, |TimeSpanStyles.None|(11), out result);
+            var result62 = TimeSpan.TryParseExact(s1, format1, provider, |TimeSpanStyles.None|(12), out result);
+            var result63 = TimeSpan.TryParseExact(s, formats, provider, |TimeSpanStyles.None|(13), out result);
+            var result64 = TimeSpan.TryParseExact(s1, formats, provider, |TimeSpanStyles.None|(14), out result);
+        }
+
+        public void RedundantCollectionElement(string s, ReadOnlySpan<char> s1, IFormatProvider provider, TimeSpanStyles style, out TimeSpan result)
+        {
+            var result11 = TimeSpan.ParseExact(s, ["c", |"t"|(15), |"T"|(16), "g", |"g"|(17), "G"], provider);
+            var result12 = TimeSpan.ParseExact(s, ["c", |"t"|(18), |"T"|(19), "g", |"g"|(20), "G"], provider, style);
+            var result13 = TimeSpan.ParseExact(s1, ["c", |"t"|(21), |"T"|(22), "g", |"g"|(23), "G"], provider, style);
+
+            var result21 = TimeSpan.TryParseExact(s, ["c", |"t"|(24), |"T"|(25), "g", |"g"|(26), "G"], provider, out result);
+            var result22 = TimeSpan.TryParseExact(s1, ["c", |"t"|(27), |"T"|(28), "g", |"g"|(29), "G"], provider, out result);
+            var result23 = TimeSpan.TryParseExact(s, ["c", |"t"|(30), |"T"|(31), "g", |"g"|(32), "G"], provider, style, out result);
+            var result24 = TimeSpan.TryParseExact(s1, ["c", |"t"|(33), |"T"|(34), "g", |"g"|(35), "G"], provider, style, out result);
+        }
+
+        public void OtherArgument(string s, string format, IFormatProvider provider, TimeSpanStyles style, out TimeSpan result)
+        {
+            var result11 = TimeSpan.ParseExact(s, "c", |provider|(36));
+            var result12 = TimeSpan.ParseExact(s, "t", |provider|(37));
+            var result13 = TimeSpan.ParseExact(s, "T", |provider|(38));
+            var result14 = TimeSpan.ParseExact(s, "c", |provider|(39), style);
+            var result15 = TimeSpan.ParseExact(s, "t", |provider|(40), style);
+            var result16 = TimeSpan.ParseExact(s, "T", |provider|(41), style);
+            var result17 = TimeSpan.ParseExact(s, |[format]|(42), provider);
+            var result18 = TimeSpan.ParseExact(s, |[format]|(43), provider, style);
+
+            var result21 = TimeSpan.TryParseExact(s, "c", |provider|(44), out result);
+            var result22 = TimeSpan.TryParseExact(s, "t", |provider|(45), out result);
+            var result23 = TimeSpan.TryParseExact(s, "T", |provider|(46), out result);
+            var result24 = TimeSpan.TryParseExact(s, "c", |provider|(47), style, out result);
+            var result25 = TimeSpan.TryParseExact(s, "t", |provider|(48), style, out result);
+            var result26 = TimeSpan.TryParseExact(s, "T", |provider|(49), style, out result);
+            var result27 = TimeSpan.TryParseExact(s, |[format]|(50), provider, out result);
+            var result28 = TimeSpan.TryParseExact(s, |[format]|(51), provider, style, out result);
+        }
+
+        public void NoDetection(int days, int hours, int minutes, int seconds, int milliseconds, int microseconds, string s, ReadOnlySpan<char> s1, IFormatProvider provider, string format, ReadOnlySpan<char> format1, string[] formats, TimeSpanStyles style, out TimeSpan result)
+        {
+            var result11 = new TimeSpan(days, hours, minutes, seconds);
+            var result12 = new TimeSpan(days, hours, minutes, seconds, milliseconds);
+            var result13 = new TimeSpan(days, hours, minutes, seconds, milliseconds, microseconds);
+
+            var result21 = TimeSpan.Parse(s, provider);
+
+            var result31 = TimeSpan.ParseExact(s, format, provider, style);
+            var result32 = TimeSpan.ParseExact(s, formats, provider, style);
+
+            var result41 = TimeSpan.TryParse(s, provider, out result);
+            var result42 = TimeSpan.TryParse(s1, provider, out result);
+
+            var result51 = TimeSpan.TryParseExact(s, format, provider, style, out result);
+            var result52 = TimeSpan.TryParseExact(s1, format1, provider, style, out result);
+            var result53 = TimeSpan.TryParseExact(s, formats, provider, style, out result);
+            var result54 = TimeSpan.TryParseExact(s1, formats, provider, style, out result);
+
+            var result61 = TimeSpan.ParseExact(s, ["c", "g"], provider);
+            var result62 = TimeSpan.ParseExact(s, ["c", "g"], provider, style);
+            var result63 = TimeSpan.ParseExact(s1, ["c", "g"], provider, style);
+
+            var result71 = TimeSpan.TryParseExact(s, ["c", "g"], provider, out result);
+            var result72 = TimeSpan.TryParseExact(s1, ["c", "g"], provider, out result);
+            var result73 = TimeSpan.TryParseExact(s, ["c", "g"], provider, style, out result);
+            var result74 = TimeSpan.TryParseExact(s1, ["c", "g"], provider, style, out result);
+
+            var result81 = TimeSpan.ParseExact(s, "c", null);
+            var result82 = TimeSpan.ParseExact(s, "t", null);
+            var result83 = TimeSpan.ParseExact(s, "T", null);
+            var result84 = TimeSpan.ParseExact(s, "c", null, style);
+            var result85 = TimeSpan.ParseExact(s, "t", null, style);
+            var result86 = TimeSpan.ParseExact(s, "T", null, style);
+            var result87 = TimeSpan.ParseExact(s, [format, format], provider);
+            var result88 = TimeSpan.ParseExact(s, [format, format], provider, style);
+
+            var result91 = TimeSpan.TryParseExact(s, "c", null, out result);
+            var result92 = TimeSpan.TryParseExact(s, "t", null, out result);
+            var result93 = TimeSpan.TryParseExact(s, "T", null, out result);
+            var result94 = TimeSpan.TryParseExact(s, "c", null, style, out result);
+            var result95 = TimeSpan.TryParseExact(s, "t", null, style, out result);
+            var result96 = TimeSpan.TryParseExact(s, "T", null, style, out result);
+            var result97 = TimeSpan.TryParseExact(s, [format, format], provider, out result);
+            var result98 = TimeSpan.TryParseExact(s, [format, format], provider, style, out result);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Passing 0 is redundant.
+(1): ReSharper Dead Code: Passing 0 is redundant.
+(2): ReSharper Dead Code: Passing 0 is redundant.
+(3): ReSharper Dead Code: Passing 0 is redundant.
+(4): ReSharper Dead Code: Passing 0 is redundant.
+(5): ReSharper Dead Code: Passing 0 is redundant.
+(6): ReSharper Dead Code: Passing null is redundant.
+(7): ReSharper Dead Code: Passing TimeSpanStyles.None is redundant.
+(8): ReSharper Dead Code: Passing TimeSpanStyles.None is redundant.
+(9): ReSharper Dead Code: Passing null is redundant.
+(10): ReSharper Dead Code: Passing null is redundant.
+(11): ReSharper Dead Code: Passing TimeSpanStyles.None is redundant.
+(12): ReSharper Dead Code: Passing TimeSpanStyles.None is redundant.
+(13): ReSharper Dead Code: Passing TimeSpanStyles.None is redundant.
+(14): ReSharper Dead Code: Passing TimeSpanStyles.None is redundant.
+(15): ReSharper Dead Code: The equivalent string is already passed.
+(16): ReSharper Dead Code: The equivalent string is already passed.
+(17): ReSharper Dead Code: The string is already passed.
+(18): ReSharper Dead Code: The equivalent string is already passed.
+(19): ReSharper Dead Code: The equivalent string is already passed.
+(20): ReSharper Dead Code: The string is already passed.
+(21): ReSharper Dead Code: The equivalent string is already passed.
+(22): ReSharper Dead Code: The equivalent string is already passed.
+(23): ReSharper Dead Code: The string is already passed.
+(24): ReSharper Dead Code: The equivalent string is already passed.
+(25): ReSharper Dead Code: The equivalent string is already passed.
+(26): ReSharper Dead Code: The string is already passed.
+(27): ReSharper Dead Code: The equivalent string is already passed.
+(28): ReSharper Dead Code: The equivalent string is already passed.
+(29): ReSharper Dead Code: The string is already passed.
+(30): ReSharper Dead Code: The equivalent string is already passed.
+(31): ReSharper Dead Code: The equivalent string is already passed.
+(32): ReSharper Dead Code: The string is already passed.
+(33): ReSharper Dead Code: The equivalent string is already passed.
+(34): ReSharper Dead Code: The equivalent string is already passed.
+(35): ReSharper Dead Code: The string is already passed.
+(36): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(37): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(38): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(39): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(40): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(41): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(42): ReSharper Suggestion: The only collection element should be passed directly.
+(43): ReSharper Suggestion: The only collection element should be passed directly.
+(44): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(45): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(46): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(47): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(48): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(49): ReSharper Suggestion: The format provider is ignored (pass null instead).
+(50): ReSharper Suggestion: The only collection element should be passed directly.
+(51): ReSharper Suggestion: The only collection element should be passed directly.

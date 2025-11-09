@@ -43,7 +43,7 @@ public sealed class ReplaceWithCollectionExpressionFix(UseTargetTypedCollectionE
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -72,6 +72,6 @@ public sealed class ReplaceWithCollectionExpressionFix(UseTargetTypedCollectionE
             ModificationUtil.ReplaceChild(highlighting.Expression, factory.CreateExpression($"[{string.Join(", ", items)}]"));
         }
 
-        return _ => { };
+        return null;
     }
 }

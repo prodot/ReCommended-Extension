@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Arguments
+    {
+        public void RedundantArgument(string s, int r)
+        {
+            var result = int.TryParse(s, nu{caret}ll, out r);
+        }
+    }
+}

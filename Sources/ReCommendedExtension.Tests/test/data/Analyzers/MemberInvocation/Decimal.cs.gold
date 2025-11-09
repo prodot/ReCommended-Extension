@@ -1,0 +1,42 @@
+﻿namespace Test
+{
+    public class Methods
+    {
+        public void BinaryOperator(decimal d1, decimal d2)
+        {
+            var result11 = |decimal.Add(d1, d2)|(0);
+            var result12 = |decimal.Subtract(d1, d2)|(1);
+            var result13 = |decimal.Multiply(d1, d2)|(2);
+            var result14 = |decimal.Divide(d1, d2)|(3);
+            var result15 = |decimal.Remainder(d1, d2)|(4);
+
+            var result21 = |d1.Equals(d2)|(5);
+        }
+
+        public void UnaryOperator(decimal d)
+        {
+            var result = |decimal.Negate(d)|(6);
+        }
+
+        public void NoDetection(decimal d1, decimal d2)
+        {
+            decimal.Add(d1, d2);
+            decimal.Subtract(d1, d2);
+            decimal.Multiply(d1, d2);
+            decimal.Divide(d1, d2);
+            decimal.Remainder(d1, d2);
+
+            d1.Equals(d2);
+
+            decimal.Negate(d1);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: Use the '+' operator.
+(1): ReSharper Suggestion: Use the '-' operator.
+(2): ReSharper Suggestion: Use the '*' operator.
+(3): ReSharper Suggestion: Use the '/' operator.
+(4): ReSharper Suggestion: Use the '%' operator.
+(5): ReSharper Suggestion: Use the '==' operator.
+(6): ReSharper Suggestion: Use the '-' operator.

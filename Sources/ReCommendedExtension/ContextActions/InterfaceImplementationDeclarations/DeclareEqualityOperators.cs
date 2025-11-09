@@ -67,7 +67,7 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         try
         {
@@ -80,7 +80,7 @@ public sealed class DeclareEqualityOperators(ICSharpContextActionDataProvider pr
                 TypeFactory.CreateType(equalityOperatorsInterface, [type, type, PredefinedType.BOOLEAN_FQN.GetType(PsiModule)]),
                 false);
 
-            return _ => { };
+            return null;
         }
         finally
         {

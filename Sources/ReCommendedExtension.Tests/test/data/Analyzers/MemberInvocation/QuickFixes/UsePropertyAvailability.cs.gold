@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void LastIndexOf(string text, StringComparison comparisonType, object someObject, int[] array, List<int> list)
+        {
+            var result11 = text.|LastIndexOf("")|(0);
+            var result12 = text.|LastIndexOf("", comparisonType)|(1);
+            var result13 = someObject.ToString().|LastIndexOf("", comparisonType)|(2);
+
+            var result21 = text.|LongCount()|(3);
+            var result22 = array.|LongCount()|(4);
+            var result23 = list.|LongCount()|(5);
+        }
+    }
+}
+------------------------------------------------
+0: Use the 'Length' property.
+QUICKFIXES:
+Replace with 'Length'
+1: Use the 'Length' property.
+QUICKFIXES:
+Replace with 'Length'
+2: Use the 'Length' property.
+QUICKFIXES:
+Replace with 'Length'
+3: Use the 'Length' property.
+QUICKFIXES:
+Replace with 'Length'
+4: Use the 'Length' property.
+QUICKFIXES:
+Replace with 'Length'
+5: Use the 'Count' property.
+QUICKFIXES:
+Replace with 'Count'

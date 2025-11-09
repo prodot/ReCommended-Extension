@@ -27,7 +27,7 @@ public sealed class ReplaceWithArrayEmptyFix(UseEmptyForArrayInitializationWarni
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -41,6 +41,6 @@ public sealed class ReplaceWithArrayEmptyFix(UseEmptyForArrayInitializationWarni
                     highlighting.ArrayItemType));
         }
 
-        return _ => { };
+        return null;
     }
 }

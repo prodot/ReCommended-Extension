@@ -1,0 +1,36 @@
+﻿using System;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(DateTime dateTime)
+        {
+            var result1 = |new DateTime(0)|(0);
+
+            DateTime result2 = |new(0)|(1);
+
+            var result3 = |dateTime.Equals(null)|(2);
+
+            var result4 = |dateTime.GetTypeCode()|(3);
+        }
+
+        public void NoDetection(DateTime dateTime, long ticks, object obj)
+        {
+            var result1 = new DateTime(ticks);
+
+            var result = dateTime.Equals(obj);
+
+            new DateTime(0);
+
+            dateTime.Equals(null);
+
+            dateTime.GetTypeCode();
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always DateTime.MinValue.
+(1): ReSharper Suggestion: The expression is always DateTime.MinValue.
+(2): ReSharper Suggestion: The expression is always false.
+(3): ReSharper Suggestion: The expression is always a TypeCode constant.

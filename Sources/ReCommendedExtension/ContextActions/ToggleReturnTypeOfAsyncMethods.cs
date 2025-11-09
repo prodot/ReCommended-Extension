@@ -97,7 +97,7 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
         }
     }
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         try
         {
@@ -117,7 +117,7 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
                     break;
             }
 
-            return _ => { };
+            return null;
         }
         finally
         {

@@ -1,0 +1,31 @@
+﻿using System;
+
+namespace Test
+{
+    public class Methods
+    {
+        public void PropertyOfNullable(int? nullable, ValueTuple<int>? nullableTupleLength1, (int, bool)? nullableTuple)
+        {
+            var result1 = nullable.|HasValue|(0);
+            var result2 = nullableTupleLength1.|HasValue|(1);
+            var result3 = nullableTuple.|HasValue|(2);
+        }
+    }
+}
+------------------------------------------------
+0: Use pattern or null check.
+QUICKFIXES:
+Replace with 'nullable != null'
+Replace with 'nullable is not null'
+Replace with 'nullable is { }'
+1: Use pattern or null check.
+QUICKFIXES:
+Replace with 'nullableTupleLength1 != null'
+Replace with 'nullableTupleLength1 is not null'
+Replace with 'nullableTupleLength1 is { }'
+2: Use pattern or null check.
+QUICKFIXES:
+Replace with 'nullableTuple != null'
+Replace with 'nullableTuple is not null'
+Replace with 'nullableTuple is { }'
+Replace with 'nullableTuple is (_, _)'

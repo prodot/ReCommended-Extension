@@ -1,0 +1,152 @@
+﻿using System;
+
+namespace Test
+{
+    public class ExpressionResults
+    {
+        public void ExpressionResult(TimeSpan timeSpan)
+        {
+            var result11 = |new TimeSpan(0)|(0);
+            var result12 = |new TimeSpan(long.MaxValue)|(1);
+            var result13 = |new TimeSpan(long.MinValue)|(2);
+            var result14 = |new TimeSpan(0, 0, 0)|(3);
+            var result15 = |new TimeSpan(0, 0, 0, 0)|(4);
+            var result16 = |new TimeSpan(0, 0, 0, 0, 0)|(5);
+            var result17 = |new TimeSpan(0, 0, 0, 0, 0, 0)|(6);
+
+            TimeSpan result21 = |new(0)|(7);
+            TimeSpan result22 = |new(9223372036854775807)|(8);
+            TimeSpan result23 = |new(-9223372036854775808)|(9);
+            TimeSpan result24 = |new(0, 0, 0)|(10);
+            TimeSpan result25 = |new(0, 0, 0, 0)|(11);
+            TimeSpan result26 = |new(0, 0, 0, 0, 0)|(12);
+            TimeSpan result27 = |new(0, 0, 0, 0, 0, 0)|(13);
+
+            var result31 = |timeSpan.Equals(null)|(14);
+
+            var result41 = |TimeSpan.FromDays(0)|(15);
+            var result42 = |TimeSpan.FromDays(0, 0)|(16);
+            var result43 = |TimeSpan.FromDays(seconds: 0, days: 0)|(17);
+
+            var result51 = |TimeSpan.FromHours(0)|(18);
+            var result52 = |TimeSpan.FromHours(0, 0)|(19);
+            var result53 = |TimeSpan.FromHours(seconds: 0, hours: 0)|(20);
+
+            var result61 = |TimeSpan.FromMicroseconds(0)|(21);
+
+            var result71 = |TimeSpan.FromMilliseconds(0)|(22);
+
+            var result81 = |TimeSpan.FromMinutes(0)|(23);
+            var result82 = |TimeSpan.FromMinutes(0, 0)|(24);
+            var result83 = |TimeSpan.FromMinutes(seconds: 0, minutes: 0)|(25);
+
+            var result91 = |TimeSpan.FromSeconds(0)|(26);
+            var result92 = |TimeSpan.FromSeconds(0, 0)|(27);
+            var result93 = |TimeSpan.FromSeconds(microseconds: 0, seconds: 0)|(28);
+
+            var resultA1 = |TimeSpan.FromTicks(0)|(29);
+            var resultA2 = |TimeSpan.FromTicks(long.MaxValue)|(30);
+            var resultA3 = |TimeSpan.FromTicks(long.MinValue)|(31);
+        }
+
+        public void NoDetection(TimeSpan timeSpan, long ticks, object obj)
+        {
+            var result11 = new TimeSpan(ticks);
+            var result14 = new TimeSpan(0, 0, 1);
+            var result15 = new TimeSpan(0, 0, 0, 1);
+            var result16 = new TimeSpan(0, 0, 0, 0, 1);
+            var result17 = new TimeSpan(0, 0, 0, 0, 0, 1);
+
+            var result21 = timeSpan.Equals(obj);
+
+            var result31 = TimeSpan.FromDays(1);
+            var result32 = TimeSpan.FromDays(0, 1);
+            var result33 = TimeSpan.FromDays(seconds: 1, days: 1);
+
+            var result41 = TimeSpan.FromHours(1);
+            var result42 = TimeSpan.FromHours(0, 1);
+            var result43 = TimeSpan.FromHours(seconds: 1, hours: 1);
+
+            var result51 = TimeSpan.FromMicroseconds(1);
+
+            var result61 = TimeSpan.FromMilliseconds(1);
+
+            var result71 = TimeSpan.FromMinutes(1);
+            var result72 = TimeSpan.FromMinutes(0, 1);
+            var result73 = TimeSpan.FromMinutes(seconds: 1, minutes: 1);
+
+            var result81 = TimeSpan.FromSeconds(1);
+            var result82 = TimeSpan.FromSeconds(0, 1);
+            var result83 = TimeSpan.FromSeconds(microseconds: 1, seconds: 1);
+
+            var resultA1 = TimeSpan.FromTicks(ticks);
+
+            new TimeSpan(0);
+            new TimeSpan(long.MaxValue);
+            new TimeSpan(long.MinValue);
+            new TimeSpan(0, 0, 0);
+            new TimeSpan(0, 0, 0, 0);
+            new TimeSpan(0, 0, 0, 0, 0);
+            new TimeSpan(0, 0, 0, 0, 0, 0);
+
+            timeSpan.Equals(null);
+
+            TimeSpan.FromDays(0);
+            TimeSpan.FromDays(0, 0);
+            TimeSpan.FromDays(seconds: 0, days: 0);
+
+            TimeSpan.FromHours(0);
+            TimeSpan.FromHours(0, 0);
+            TimeSpan.FromHours(seconds: 0, hours: 0);
+
+            TimeSpan.FromMicroseconds(0);
+
+            TimeSpan.FromMilliseconds(0);
+
+            TimeSpan.FromMinutes(0);
+            TimeSpan.FromMinutes(0, 0);
+            TimeSpan.FromMinutes(seconds: 0, minutes: 0);
+
+            TimeSpan.FromSeconds(0);
+            TimeSpan.FromSeconds(0, 0);
+            TimeSpan.FromSeconds(microseconds: 0, seconds: 0);
+
+            TimeSpan.FromTicks(0);
+            TimeSpan.FromTicks(long.MaxValue);
+            TimeSpan.FromTicks(long.MinValue);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(1): ReSharper Suggestion: The expression is always TimeSpan.MaxValue.
+(2): ReSharper Suggestion: The expression is always TimeSpan.MinValue.
+(3): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(4): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(5): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(6): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(7): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(8): ReSharper Suggestion: The expression is always TimeSpan.MaxValue.
+(9): ReSharper Suggestion: The expression is always TimeSpan.MinValue.
+(10): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(11): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(12): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(13): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(14): ReSharper Suggestion: The expression is always false.
+(15): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(16): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(17): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(18): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(19): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(20): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(21): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(22): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(23): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(24): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(25): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(26): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(27): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(28): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(29): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(30): ReSharper Suggestion: The expression is always TimeSpan.MaxValue.
+(31): ReSharper Suggestion: The expression is always TimeSpan.MinValue.

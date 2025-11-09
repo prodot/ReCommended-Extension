@@ -1,0 +1,94 @@
+﻿using System;
+
+namespace Test
+{
+    public class Formatters
+    {
+        public void RedundantFormatSpecifier(TimeSpan value)
+        {
+            var result11 = $"{value|:c|(0)}";
+            var result12 = $"{value|:t|(1)}";
+            var result13 = $"{value|:T|(2)}";
+
+            var result21 = string.Format("{0|:c|(3)}", value);
+            var result22 = string.Format("{0|:t|(4)}", value);
+            var result23 = string.Format("{0|:T|(5)}", value);
+        }
+
+        public void RedundantFormatSpecifier(TimeSpan? value)
+        {
+            var result11 = $"{value|:c|(6)}";
+            var result12 = $"{value|:t|(7)}";
+            var result13 = $"{value|:T|(8)}";
+
+            var result21 = string.Format("{0|:c|(9)}", value);
+            var result22 = string.Format("{0|:t|(10)}", value);
+            var result23 = string.Format("{0|:T|(11)}", value);
+        }
+
+        public void RedundantFormatSpecifierProvider(TimeSpan timeSpan, string format, IFormatProvider formatProvider)
+        {
+            var result11 = timeSpan.ToString(|null|(12));
+            var result12 = timeSpan.ToString(|""|(13));
+            var result13 = timeSpan.ToString(|"c"|(14));
+            var result14 = timeSpan.ToString(|"t"|(15));
+            var result15 = timeSpan.ToString(|"T"|(16));
+
+            var result21 = timeSpan.ToString(format, |null|(17));
+
+            var result31 = timeSpan.ToString(null, |formatProvider|(18));
+            var result32 = timeSpan.ToString("", |formatProvider|(19));
+            var result33 = timeSpan.ToString("c", |formatProvider|(20));
+            var result34 = timeSpan.ToString("t", |formatProvider|(21));
+            var result35 = timeSpan.ToString("T", |formatProvider|(22));
+        }
+
+        public void NoDetection(TimeSpan value)
+        {
+            var result11 = $"{value:g}";
+            var result12 = $"{value:G}";
+
+            var result21 = string.Format("{0:g}", value);
+            var result22 = string.Format("{0:G}", value);
+        }
+
+        public void NoDetection(TimeSpan? value)
+        {
+            var result11 = $"{value:g}";
+            var result12 = $"{value:G}";
+
+            var result21 = string.Format("{0:g}", value);
+            var result22 = string.Format("{0:G}", value);
+        }
+
+        public void NoDetection(TimeSpan timeSpan, string format, IFormatProvider formatProvider)
+        {
+            var result11 = timeSpan.ToString(format);
+            var result12 = timeSpan.ToString(format, formatProvider);
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: Specifying 'c' is redundant.
+(1): ReSharper Dead Code: Specifying 't' is redundant.
+(2): ReSharper Dead Code: Specifying 'T' is redundant.
+(3): ReSharper Dead Code: Specifying 'c' is redundant.
+(4): ReSharper Dead Code: Specifying 't' is redundant.
+(5): ReSharper Dead Code: Specifying 'T' is redundant.
+(6): ReSharper Dead Code: Specifying 'c' is redundant.
+(7): ReSharper Dead Code: Specifying 't' is redundant.
+(8): ReSharper Dead Code: Specifying 'T' is redundant.
+(9): ReSharper Dead Code: Specifying 'c' is redundant.
+(10): ReSharper Dead Code: Specifying 't' is redundant.
+(11): ReSharper Dead Code: Specifying 'T' is redundant.
+(12): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(13): ReSharper Dead Code: Specifying null or an empty string is redundant.
+(14): ReSharper Dead Code: Specifying 'c' is redundant.
+(15): ReSharper Dead Code: Specifying 't' is redundant.
+(16): ReSharper Dead Code: Specifying 'T' is redundant.
+(17): ReSharper Dead Code: Passing null is redundant.
+(18): ReSharper Dead Code: Passing a format provider is redundant.
+(19): ReSharper Dead Code: Passing a format provider is redundant.
+(20): ReSharper Dead Code: Passing a format provider is redundant.
+(21): ReSharper Dead Code: Passing a format provider is redundant.
+(22): ReSharper Dead Code: Passing a format provider is redundant.

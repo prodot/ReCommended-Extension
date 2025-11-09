@@ -1,0 +1,10 @@
+﻿namespace Test
+{
+    public class Arguments
+    {
+        public void OtherArgument(string text)
+        {
+            var result = text.Replace(newValue: {caret}"x", oldValue: "c");
+        }
+    }
+}

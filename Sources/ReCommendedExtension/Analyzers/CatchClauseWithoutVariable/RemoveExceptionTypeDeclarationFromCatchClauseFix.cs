@@ -14,13 +14,13 @@ public sealed class RemoveExceptionTypeDeclarationFromCatchClauseFix(CatchClause
 
     public override string Text => "Remove exception type";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
             ModificationUtil.DeleteChildRange(highlighting.CatchClause.LPar, highlighting.CatchClause.RPar);
         }
 
-        return _ => { };
+        return null;
     }
 }

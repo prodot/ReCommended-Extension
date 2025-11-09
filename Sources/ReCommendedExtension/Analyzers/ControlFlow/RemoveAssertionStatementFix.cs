@@ -16,7 +16,7 @@ public sealed class RemoveAssertionStatementFix(RedundantAssertionStatementSugge
 
     public override string Text => "Remove assertion";
 
-    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+    protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
         using (WriteLockCookie.Create())
         {
@@ -29,6 +29,6 @@ public sealed class RemoveAssertionStatementFix(RedundantAssertionStatementSugge
                     : statement);
         }
 
-        return _ => { };
+        return null;
     }
 }
