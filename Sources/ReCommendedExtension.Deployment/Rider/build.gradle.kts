@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream
 plugins {
     id("java")
     alias(libs.plugins.kotlinJvm)
-    id("org.jetbrains.intellij.platform") version "2.7.2"     // See https://github.com/JetBrains/intellij-platform-gradle-plugin/releases
+    id("org.jetbrains.intellij.platform") version "2.10.4"     // See https://github.com/JetBrains/intellij-platform-gradle-plugin/releases
     id("me.filippov.gradle.jvm.wrapper") version "0.14.0"
 }
 
@@ -35,7 +35,7 @@ repositories {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.8"
+    gradleVersion = "8.13"
     distributionType = Wrapper.DistributionType.ALL
     distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
@@ -54,9 +54,9 @@ sourceSets {
     }
 }
 
-tasks.compileKotlin {
-    kotlinOptions { jvmTarget = "17" }
-}
+//tasks.compileKotlin {
+//    kotlinOptions { jvmTarget = "17" }
+//}
 
 //val setBuildTool by tasks.registering {
 //    doLast {
@@ -141,7 +141,9 @@ tasks.compileKotlin {
 
 dependencies {
     intellijPlatform {
-        rider(ProductVersion, useInstaller = false)
+        rider(ProductVersion) {
+            useInstaller = false
+        }
         jetbrainsRuntime()
 
         // TODO: add plugins
