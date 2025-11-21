@@ -311,6 +311,7 @@ namespace Test
             var result44 = listNullable?.FirstOrDefault();
             var result45 = listNullable?.FirstOrDefault(fallback);
             var result46 = list6.FirstOrDefault<A>(new C());
+            var result47 = list.FirstOrDefault(i => i > 0);
 
             var result51 = Enumerable.Last(list);
             var result52 = orderedDictionary.Last();

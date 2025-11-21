@@ -7,4 +7,6 @@ internal sealed record ReplacementSignature
     public required IReadOnlyList<Parameter> Parameters { get; init; }
 
     public required int ParameterIndex { get; init; }
+
+    public int? GenericParametersCount { get; init; }
 }

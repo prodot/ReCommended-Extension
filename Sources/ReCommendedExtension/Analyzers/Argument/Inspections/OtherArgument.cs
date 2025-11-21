@@ -70,8 +70,8 @@ internal sealed record OtherArgument : Inspection
 
     public static OtherArgument SingleCollectionElement { get; } = new()
     {
-        TryGetReplacement = arg => CollectionCreation.TryFrom(arg.Value) is { Count: 1 } collectionCreation
-            ? collectionCreation.SingleElement.GetText()
+        TryGetReplacement = arg => CollectionCreation.TryFrom(arg.Value) is { SingleExpressionElement: { } singleExpressionElement }
+            ? singleExpressionElement.GetText()
             : null,
         Message = "The only collection element should be passed directly.",
     };

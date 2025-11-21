@@ -22,13 +22,6 @@ internal sealed class CollectionExpressionCollectionCreation(ICollectionExpressi
 
     public override int Count => collectionExpression.CollectionElements.Count;
 
-    public override IInitializerElement SingleElement
-    {
-        get
-        {
-            Debug.Assert(Count == 1);
-
-            return collectionExpression.CollectionElements[0];
-        }
-    }
+    public override ICSharpExpression? SingleExpressionElement
+        => collectionExpression.CollectionElements is [IExpressionElement element] ? element.Expression : null;
 }

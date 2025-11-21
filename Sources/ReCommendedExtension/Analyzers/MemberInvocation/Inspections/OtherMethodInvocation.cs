@@ -148,17 +148,17 @@ internal sealed record OtherMethodInvocation : Inspection
 
     public static OtherMethodInvocation SingleElementCollectionWithFurtherArguments { get; } = new()
     {
-        TryGetReplacement =
-            (invocationExpression, args)
-                => CollectionCreation.TryFrom(args[0]?.Value) is { Count: 1 } collectionCreation && args.Skip(1).All(a => a is { Value: { } })
-                    ? new InvocationReplacement
-                    {
-                        OriginalExpression = invocationExpression,
-                        Context = MethodInvocationContext.Standalone,
-                        Arguments = [collectionCreation.SingleElement.GetText(), ..from arg in args.Skip(1) select arg.Value!.GetText()],
-                        IsNegated = false,
-                    }
-                    : null,
+        TryGetReplacement = (invocationExpression, args)
+            => CollectionCreation.TryFrom(args[0]?.Value) is { SingleExpressionElement: { } singleExpressionElement }
+            && args.Skip(1).All(a => a is { Value: { } })
+                ? new InvocationReplacement
+                {
+                    OriginalExpression = invocationExpression,
+                    Context = MethodInvocationContext.Standalone,
+                    Arguments = [singleExpressionElement.GetText(), ..from arg in args.Skip(1) select arg.Value!.GetText()],
+                    IsNegated = false,
+                }
+                : null,
         Message = methodName => $"Use the '{methodName}' method.",
     };
 
@@ -174,13 +174,13 @@ internal sealed record OtherMethodInvocation : Inspection
             {
                 // passed as an explicit collection creation
 
-                if (collectionCreation.Count == 1)
+                if (collectionCreation.SingleExpressionElement is { } singleExpressionElement)
                 {
                     return new InvocationReplacement
                     {
                         OriginalExpression = invocationExpression,
                         Context = MethodInvocationContext.Standalone,
-                        Arguments = [collectionCreation.SingleElement.GetText()],
+                        Arguments = [singleExpressionElement.GetText()],
                         IsNegated = false,
                     };
                 }

@@ -28,14 +28,21 @@ namespace ReCommendedExtension.Analyzers.Argument;
     ])]
 public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationInfo>
 {
-    delegate bool HasMember(IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames);
+    delegate bool HasConstructor(IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames);
+
+    delegate bool HasMethod(
+        IReadOnlyList<Parameter> parameters,
+        [NonNegativeValue] int genericParametersCount,
+        bool returnParameterNames,
+        out string[] parameterNames);
 
     static void Analyze(
         IHighlightingConsumer consumer,
         Member member,
         IList<IParameter> resolvedParameters,
         TreeNodeCollection<ICSharpArgument?> arguments,
-        HasMember hasMember)
+        HasConstructor hasConstructor,
+        HasMethod hasMethod)
     {
         foreach (var inspection in member.Inspections)
         {
@@ -47,14 +54,28 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
                     if (arguments[redundantArgumentByPosition.ParameterIndex] is { } argument
                         && redundantArgumentByPosition.Condition(argument)
-                        && (redundantArgumentByPosition.FurtherCondition == null || redundantArgumentByPosition.FurtherCondition(arguments))
-                        && hasMember(
-                            redundantArgumentByPosition.ReplacementSignatureParameters
-                            ?? member.Signature.Parameters.WithoutElementAt(redundantArgumentByPosition.ParameterIndex),
-                            false,
-                            out _))
+                        && (redundantArgumentByPosition.FurtherCondition == null || redundantArgumentByPosition.FurtherCondition(arguments)))
                     {
-                        consumer.AddHighlighting(new RedundantArgumentHint(inspection.Message, argument));
+                        var replacementSignatureParameters = redundantArgumentByPosition.ReplacementSignatureParameters
+                            ?? member.Signature.Parameters.WithoutElementAt(redundantArgumentByPosition.ParameterIndex);
+
+                        var memberExists = member.Signature switch
+                        {
+                            Rules.ConstructorSignature => hasConstructor(replacementSignatureParameters, false, out _),
+
+                            Rules.MethodSignature methodSignature => hasMethod(
+                                replacementSignatureParameters,
+                                methodSignature.GenericParametersCount,
+                                false,
+                                out _),
+
+                            _ => throw new NotSupportedException(),
+                        };
+
+                        if (memberExists)
+                        {
+                            consumer.AddHighlighting(new RedundantArgumentHint(inspection.Message, argument));
+                        }
                     }
                     break;
                 }
@@ -72,14 +93,32 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 {
                     var redundantArguments = positionalArguments.GetSubrange(redundantArgumentRange.ParameterIndexRange);
 
-                    if (redundantArgumentRange.Condition(redundantArguments)
-                        && hasMember(member.Signature.Parameters.WithoutElementsAt(redundantArgumentRange.ParameterIndexRange), false, out _))
+                    if (redundantArgumentRange.Condition(redundantArguments))
                     {
-                        var highlighting = new RedundantArgumentRangeHint(inspection.Message, redundantArguments);
+                        var replacementSignatureParameters =
+                            member.Signature.Parameters.WithoutElementsAt(redundantArgumentRange.ParameterIndexRange);
 
-                        foreach (var argument in redundantArguments)
+                        var memberExists = member.Signature switch
                         {
-                            consumer.AddHighlighting(highlighting, argument.GetDocumentRange());
+                            Rules.ConstructorSignature => hasConstructor(replacementSignatureParameters, false, out _),
+
+                            Rules.MethodSignature methodSignature => hasMethod(
+                                replacementSignatureParameters,
+                                methodSignature.GenericParametersCount,
+                                false,
+                                out _),
+
+                            _ => throw new NotSupportedException(),
+                        };
+
+                        if (memberExists)
+                        {
+                            var highlighting = new RedundantArgumentRangeHint(inspection.Message, redundantArguments);
+
+                            foreach (var argument in redundantArguments)
+                            {
+                                consumer.AddHighlighting(highlighting, argument.GetDocumentRange());
+                            }
                         }
                     }
                     break;
@@ -128,7 +167,30 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     {
                         if (otherArgument.ReplacementSignature is { })
                         {
-                            if (hasMember(otherArgument.ReplacementSignature.Parameters, argument.NameIdentifier is { }, out var parameterNames))
+                            Debug.Assert(
+                                member.Signature is Rules.ConstructorSignature && otherArgument.ReplacementSignature.GenericParametersCount == null
+                                || member.Signature is Rules.MethodSignature
+                                && otherArgument.ReplacementSignature.GenericParametersCount is null or >= 0);
+
+                            string[] parameterNames;
+
+                            var memberExists = member.Signature switch
+                            {
+                                Rules.ConstructorSignature => hasConstructor(
+                                    otherArgument.ReplacementSignature.Parameters,
+                                    argument.NameIdentifier is { },
+                                    out parameterNames),
+
+                                Rules.MethodSignature methodSignature => hasMethod(
+                                    otherArgument.ReplacementSignature.Parameters,
+                                    otherArgument.ReplacementSignature.GenericParametersCount ?? methodSignature.GenericParametersCount,
+                                    argument.NameIdentifier is { },
+                                    out parameterNames),
+
+                                _ => throw new NotSupportedException(),
+                            };
+
+                            if (memberExists)
                             {
                                 consumer.AddHighlighting(
                                     new UseOtherArgumentSuggestion(
@@ -215,10 +277,25 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     {
                         if (otherArgumentRange.ReplacementSignature is { })
                         {
-                            if (hasMember(
-                                otherArgumentRange.ReplacementSignature.Parameters,
-                                otherArguments.Any(arg => arg.NameIdentifier is { }),
-                                out var parameterNames))
+                            string[] parameterNames;
+
+                            var memberExists = member.Signature switch
+                            {
+                                Rules.ConstructorSignature => hasConstructor(
+                                    otherArgumentRange.ReplacementSignature.Parameters,
+                                    otherArguments.Any(arg => arg.NameIdentifier is { }),
+                                    out parameterNames),
+
+                                Rules.MethodSignature methodSignature => hasMethod(
+                                    otherArgumentRange.ReplacementSignature.Parameters,
+                                    methodSignature.GenericParametersCount,
+                                    otherArguments.Any(arg => arg.NameIdentifier is { }),
+                                    out parameterNames),
+
+                                _ => throw new NotSupportedException(),
+                            };
+
+                            if (memberExists)
                             {
                                 var (offset, _) = parameterNames is [_, ..]
                                     ? otherArgumentRange.ReplacementSignature.ParameterIndexRange.GetOffsetAndLength(parameterNames.Length)
@@ -309,7 +386,8 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     (IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames) => containingType.HasConstructor(
                         new ConstructorSignature { Parameters = parameters },
                         returnParameterNames,
-                        out parameterNames));
+                        out parameterNames),
+                    (IReadOnlyList<Parameter> _, int _, bool _, out string[] _) => throw new NotSupportedException());
                 break;
             }
 
@@ -333,16 +411,18 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     method,
                     resolvedMethod.Parameters,
                     arguments,
-                    (IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames) => containingType.HasMethod(
-                        new MethodSignature
-                        {
-                            Name = resolvedMethod.ShortName,
-                            Parameters = parameters,
-                            IsStatic = signature.IsStatic,
-                            GenericParametersCount = signature.GenericParametersCount,
-                        },
-                        returnParameterNames,
-                        out parameterNames));
+                    (IReadOnlyList<Parameter> _, bool _, out string[] _) => throw new NotSupportedException(),
+                    (IReadOnlyList<Parameter> parameters, int genericParametersCount, bool returnParameterNames, out string[] parameterNames)
+                        => containingType.HasMethod(
+                            new MethodSignature
+                            {
+                                Name = resolvedMethod.ShortName,
+                                Parameters = parameters,
+                                IsStatic = signature.IsStatic,
+                                GenericParametersCount = genericParametersCount,
+                            },
+                            returnParameterNames,
+                            out parameterNames));
                 break;
             }
         }
