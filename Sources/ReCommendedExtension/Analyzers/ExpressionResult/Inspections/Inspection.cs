@@ -82,7 +82,7 @@ internal sealed record Inspection
     public static Inspection SingleElementCollectionInArg1OneInArg2ZeroInArg3ToEmptyString { get; } = new()
     {
         TryGetReplacements =
-            (_, args, _) => CollectionCreation.TryFrom(args[1]?.Value) is { Count: 1 }
+            (_, args, _) => CollectionCreation.TryFrom(args[1]?.Value) is { SingleExpressionElement: { } }
                 && args[2]?.Value.TryGetInt32Constant() == 1
                 && args[3]?.Value.TryGetInt32Constant() == 0
                     ? new ExpressionResultReplacements { Main = "\"\"" }
@@ -92,13 +92,12 @@ internal sealed record Inspection
 
     public static Inspection SingleElementCollectionInArg1ZeroInArg2OneInArg3ToElement { get; } = new()
     {
-        TryGetReplacements =
-            (_, args, _)
-                => CollectionCreation.TryFrom(args[1]?.Value) is { Count: 1 } collectionCreation
-                && args[2]?.Value.TryGetInt32Constant() == 0
-                && args[3]?.Value.TryGetInt32Constant() == 1
-                    ? new ExpressionResultReplacements { Main = collectionCreation.SingleElement.GetText() }
-                    : null,
+        TryGetReplacements = (_, args, _)
+            => CollectionCreation.TryFrom(args[1]?.Value) is { SingleExpressionElement: { } singleExpressionElement }
+            && args[2]?.Value.TryGetInt32Constant() == 0
+            && args[3]?.Value.TryGetInt32Constant() == 1
+                ? new ExpressionResultReplacements { Main = singleExpressionElement.GetText() }
+                : null,
         Message = "The expression is always the same as the passed collection element.",
     };
 
@@ -126,13 +125,13 @@ internal sealed record Inspection
             {
                 // passed as an explicit collection creation
 
-                if (collectionCreation.Count == 1)
+                if (collectionCreation.SingleExpressionElement is { } singleExpressionElement)
                 {
                     return new ExpressionResultReplacements
                     {
                         Main = convertToString
-                            ? CreateConversionToString(collectionCreation.SingleElement.GetText(), context.LanguageVersion)
-                            : collectionCreation.SingleElement.GetText(),
+                            ? CreateConversionToString(singleExpressionElement.GetText(), context.LanguageVersion)
+                            : singleExpressionElement.GetText(),
                     };
                 }
             }

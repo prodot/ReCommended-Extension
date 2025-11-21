@@ -26,6 +26,24 @@ internal static class TypeExtensions
     public static bool IsGenericArrayOfChar(this IType type) => type is IArrayType(var elementType, 1) && elementType.IsChar();
 
     [Pure]
+    public static bool IsIEnumerableOfString(this IType type)
+    {
+        if (type is IDeclaredType declaredType)
+        {
+            var (typeElement, substitution) = declaredType;
+
+            if (typeElement is { }
+                && typeElement.IsClrType(PredefinedType.GENERIC_IENUMERABLE_FQN)
+                && typeElement.TypeParameters is [{ } typeParameter])
+            {
+                return substitution[typeParameter].IsString();
+            }
+        }
+
+        return false;
+    }
+
+    [Pure]
     public static bool IsReadOnlySpanOfObject(this IType type) => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsObject();
 
     [Pure]

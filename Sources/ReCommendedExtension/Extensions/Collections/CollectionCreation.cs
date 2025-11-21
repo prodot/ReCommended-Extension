@@ -87,7 +87,7 @@ internal abstract class CollectionCreation
     [NonNegativeValue]
     public abstract int Count { get; }
 
-    public abstract IInitializerElement SingleElement { get; }
+    public abstract ICSharpExpression? SingleExpressionElement { get; }
 
     public IEnumerable<(IInitializerElement, char)> ElementsWithCharConstants
     {

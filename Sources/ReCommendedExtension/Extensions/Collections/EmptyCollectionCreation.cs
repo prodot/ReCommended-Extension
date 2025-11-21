@@ -16,5 +16,5 @@ internal sealed class EmptyCollectionCreation(ICSharpExpression expression) : Co
 
     public override int Count => 0;
 
-    public override IInitializerElement SingleElement => throw new NotSupportedException();
+    public override ICSharpExpression? SingleExpressionElement => null;
 }

@@ -10,7 +10,7 @@ internal sealed record Parameter
     ([CallerMemberName] string Name = "")
 #endif
 {
-    public static Parameter T { get; } = new() { IsType = _ => true };
+    public static Parameter T { get; } = new() { IsType = t => t is IDeclaredType declaredType && declaredType.GetTypeElement() is ITypeParameter };
 
     public static Parameter TArray { get; } = new() { IsType = t => t.IsGenericArray() };
 
@@ -87,6 +87,8 @@ internal sealed record Parameter
     public static Parameter ReadOnlySpanOfByte { get; } = new() { IsType = t => t.IsReadOnlySpanOfByte() };
 
     public static Parameter IEnumerableOfT { get; } = new() { IsType = t => t.IsGenericIEnumerable() };
+
+    public static Parameter IEnumerableOfString { get; } = new() { IsType = t => t.IsIEnumerableOfString() };
 
     public static Parameter NumberStyles { get; } = new() { IsType = t => t.IsNumberStyles() };
 

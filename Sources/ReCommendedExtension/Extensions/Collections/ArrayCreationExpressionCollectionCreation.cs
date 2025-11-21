@@ -31,13 +31,6 @@ internal sealed class ArrayCreationExpressionCollectionCreation : CollectionCrea
 
     public override int Count => arrayCreationExpression.ArrayInitializer.ElementInitializers.Count;
 
-    public override IInitializerElement SingleElement
-    {
-        get
-        {
-            Debug.Assert(Count == 1);
-
-            return arrayCreationExpression.ArrayInitializer.ElementInitializers[0];
-        }
-    }
+    public override ICSharpExpression? SingleExpressionElement
+        => arrayCreationExpression.ArrayInitializer.ElementInitializers is [IExpressionInitializer initializer] ? initializer.Value : null;
 }
