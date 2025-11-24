@@ -855,11 +855,14 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
-    [TestNet80]
+    [TestNet100]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void TestRandom()
     {
         // expression result
+
+        TestRandom(random => random.GetHexString(0), _ => "");
+        TestRandom(random => random.GetHexString(0, true), _ => "");
 
         TestRandom(random => random.GetItems((int[])[1, 2, 3], 0), _ => []);
         TestRandom(random => random.GetItems([1, 2, 3], 0), _ => []);

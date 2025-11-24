@@ -56,7 +56,7 @@ internal sealed record Inspection
 
     public static Inspection ZeroToEmptyString { get; } = new()
     {
-        TryGetReplacements = (_, args, _) => args is [{ Value.AsInt32Constant: 0 }] ? new ExpressionResultReplacements { Main = "\"\"" } : null,
+        TryGetReplacements = (_, args, _) => args is [{ Value.AsInt32Constant: 0 }, ..] ? new ExpressionResultReplacements { Main = "\"\"" } : null,
         Message = "The expression is always an empty string.",
     };
 

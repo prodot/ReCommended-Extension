@@ -867,6 +867,16 @@ internal static class RuleDefinitions
         => new(StringComparer.Ordinal)
         {
             {
+                "GetHexString", // todo: nameof(Random.GetHexString) when available
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Int32, Parameter.Boolean] },
+                        Inspections = [Inspection.ZeroToEmptyString with { EnsureQualifierNotNull = true }],
+                    },
+                ]
+            },
+            {
                 "GetItems", // todo: nameof(Random.GetItems) when available
                 [
                     new Member

@@ -4,10 +4,23 @@ internal static class MissingRandomMethods
 {
     extension(Random random)
     {
+        public string GetHexString([NonNegativeValue] int stringLength, bool lowercase = false)
+            => stringLength switch
+            {
+                < 0 => throw new ArgumentOutOfRangeException(nameof(stringLength)),
+                0 => "",
+                _ => new string(random.GetItems((lowercase ? "0123456789abcdef" : "0123456789ABCDEF").AsSpan(), stringLength)),
+            };
+
         public T[] GetItems<T>(T[] choices, [NonNegativeValue] int length) => random.GetItems(new ReadOnlySpan<T>(choices), length);
 
         public T[] GetItems<T>(ReadOnlySpan<T> choices, [NonNegativeValue] int length)
         {
+            if (choices.IsEmpty)
+            {
+                throw new ArgumentException("Span cannot be empty.", nameof(choices));
+            }
+
             var items = new T[length];
 
             for (var i = 0; i < items.Length; i++)
