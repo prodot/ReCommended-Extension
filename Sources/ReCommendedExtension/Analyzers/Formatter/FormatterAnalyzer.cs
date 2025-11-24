@@ -224,16 +224,10 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 QualifierType: var expressionType, FormatArgument: { Argument: var argument, CanBeRemoved: var canBeRemoved },
             }:
             {
-                if (argument.Value.IsDefaultValue())
+                switch (argument.Value)
                 {
-                    yield return new FormatElement(null, expressionType, argument, canBeRemoved);
-                }
-                else
-                {
-                    if (argument.Value.TryGetStringConstant() is { } format)
-                    {
-                        yield return new FormatElement(format, expressionType, argument, canBeRemoved);
-                    }
+                    case { IsDefaultValueOrNull: true }: yield return new FormatElement(null, expressionType, argument, canBeRemoved); break;
+                    case { AsStringConstant: { } format }: yield return new FormatElement(format, expressionType, argument, canBeRemoved); break;
                 }
 
                 break;
@@ -456,8 +450,7 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
             {
                 case var t
                     when (NumberInfo.TryGet(t) is { } || t.IsDateOnly() || t.IsTimeOnly() || t.IsTimeSpan() || t.IsDateTime() || t.IsDateTimeOffset())
-                    && toStringInvocation.ProviderArgument is { CanBeRemoved: true, Argument: var argument }
-                    && argument.Value.IsDefaultValue():
+                    && toStringInvocation.ProviderArgument is { CanBeRemoved: true, Argument: { Value.IsDefaultValueOrNull: true } argument }:
                 {
                     consumer.AddHighlighting(new RedundantFormatProviderHint("Passing null is redundant.", argument));
                     break;
@@ -474,9 +467,9 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                     && (numberInfo.FormatSpecifiers & FormatSpecifiers.Binary) != 0
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && formatArgument.Value.TryGetStringConstant() is ['B' or 'b', ..]:
+                        FormatArgument.Argument.Value.AsStringConstant: ['B' or 'b', ..],
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
                     consumer.AddHighlighting(
                         new RedundantFormatProviderHint("Passing a provider with a binary format specifier is redundant.", providerArgument));
@@ -487,9 +480,9 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                     && (numberInfo.FormatSpecifiers & FormatSpecifiers.Hexadecimal) != 0
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && formatArgument.Value.TryGetStringConstant() is ['X' or 'x', ..]:
+                        FormatArgument.Argument.Value.AsStringConstant: ['X' or 'x', ..],
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
                     consumer.AddHighlighting(
                         new RedundantFormatProviderHint("Passing a provider with a hexadecimal format specifier is redundant.", providerArgument));
@@ -499,9 +492,9 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 case var t when (t.IsDateOnly() || t.IsTimeOnly())
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && formatArgument.Value.TryGetStringConstant() is "o" or "O" or "r" or "R":
+                        FormatArgument.Argument.Value.AsStringConstant: "o" or "O" or "r" or "R",
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
                     consumer.AddHighlighting(new RedundantFormatProviderHint("Passing a format provider is redundant.", providerArgument));
                     break;
@@ -510,9 +503,9 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 case var t when t.IsTimeSpan()
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && (formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() is "" or "c" or "t" or "T"):
+                        FormatArgument.Argument.Value: { IsDefaultValueOrNull: true } or { AsStringConstant : "" or "c" or "t" or "T" },
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
                     consumer.AddHighlighting(new RedundantFormatProviderHint("Passing a format provider is redundant.", providerArgument));
                     break;
@@ -521,9 +514,9 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 case var t when (t.IsDateTime() || t.IsDateTimeOffset())
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && formatArgument.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" or "s" or "u":
+                        FormatArgument.Argument.Value.AsStringConstant: "o" or "O" or "r" or "R" or "s" or "u",
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
                     consumer.AddHighlighting(new RedundantFormatProviderHint("Passing a format provider is redundant.", providerArgument));
                     break;

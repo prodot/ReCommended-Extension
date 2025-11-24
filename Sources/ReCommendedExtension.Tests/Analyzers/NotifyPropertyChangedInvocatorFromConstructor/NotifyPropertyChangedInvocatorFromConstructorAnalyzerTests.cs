@@ -13,7 +13,7 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzerTests :
     protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructor";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning || highlighting.IsError();
+        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning or { IsError: true };
 
     [Test]
     public void TestNotifyPropertyChangedInvocatorFromConstructor() => DoNamedTest2();

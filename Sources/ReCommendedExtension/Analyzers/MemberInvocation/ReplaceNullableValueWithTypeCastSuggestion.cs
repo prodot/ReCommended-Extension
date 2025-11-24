@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Analyzers.MemberInvocation;
     SeverityId,
     null,
     HighlightingGroupIds.BestPractice,
-    $"Replace '{nameof(Nullable<int>)}<T>.{nameof(Nullable<int>.Value)}' with a type cast" + ZoneMarker.Suffix,
+    $"Replace '{nameof(Nullable<>)}<T>.{nameof(Nullable<>.Value)}' with a type cast" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]

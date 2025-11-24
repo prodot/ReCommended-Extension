@@ -53,7 +53,7 @@ public sealed class MemberInvocationAnalyzer(
             switch (inspection)
             {
                 case RedundantMethodInvocation redundantMethodInvocation when invocationExpression is { }
-                    && (!redundantMethodInvocation.IsPureMethod || !invocationExpression.IsUsedAsStatement())
+                    && (!redundantMethodInvocation.IsPureMethod || !invocationExpression.IsUsedAsStatement)
                     && redundantMethodInvocation.Condition(qualifier, arguments)
                     && (!redundantMethodInvocation.EnsureFirstArgumentNotNull
                         || arguments is [{ Value: { } firstArgValue }, ..]
@@ -137,7 +137,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case BinaryOperator binaryOperator when invocationExpression is { } && !invocationExpression.IsUsedAsStatement():
+                case BinaryOperator binaryOperator when invocationExpression is { IsUsedAsStatement: false }:
                 {
                     Debug.Assert(binaryOperator.Operator is { });
 
@@ -154,7 +154,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case UnaryOperator unaryOperator when invocationExpression is { } && !invocationExpression.IsUsedAsStatement():
+                case UnaryOperator unaryOperator when invocationExpression is { IsUsedAsStatement: false }:
                 {
                     Debug.Assert(unaryOperator.Operator is { });
 
@@ -170,7 +170,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case PatternByArgument pattern when invocationExpression is { } && !invocationExpression.IsUsedAsStatement():
+                case PatternByArgument pattern when invocationExpression is { IsUsedAsStatement: false }:
                 {
                     Debug.Assert(pattern is { MinimumLanguageVersion: { }, ParameterIndex: >= 0, Pattern: { } });
 
@@ -191,7 +191,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case PatternByArguments pattern when invocationExpression is { } && !invocationExpression.IsUsedAsStatement():
+                case PatternByArguments pattern when invocationExpression is { IsUsedAsStatement: false }:
                 {
                     Debug.Assert(pattern.MinimumLanguageVersion is { });
 
@@ -204,7 +204,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case PatternByQualifierArguments pattern when invocationExpression is { } && !invocationExpression.IsUsedAsStatement():
+                case PatternByQualifierArguments pattern when invocationExpression is { IsUsedAsStatement: false }:
                 {
                     Debug.Assert(pattern.MinimumLanguageVersion is { });
 
@@ -235,8 +235,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case PropertyOfNullable propertyOfNullable when !invokedExpression.IsPropertyAssignment()
-                    && !invokedExpression.IsWithinNameofExpression()
+                case PropertyOfNullable propertyOfNullable when invokedExpression is { IsPropertyAssignment: false, IsWithinNameofExpression: false }
                     && (!propertyOfNullable.EnsureQualifierNotValueTuple || !qualifier.Type().Unlift().IsValueTuple(out _)):
                 {
                     var highlighting = propertyOfNullable.Name switch
@@ -254,8 +253,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case PropertyOfString propertyOfString when invocationExpression is { }
-                    && !invocationExpression.IsUsedAsStatement()
+                case PropertyOfString propertyOfString when invocationExpression is { IsUsedAsStatement: false }
                     && (propertyOfString.MinimumFrameworkVersion == null
                         || invocationExpression.PsiModule.TargetFrameworkId.Version >= propertyOfString.MinimumFrameworkVersion)
                     && (!propertyOfString.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())
@@ -278,8 +276,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case PropertyOfArray propertyOfArray when invocationExpression is { }
-                    && !invocationExpression.IsUsedAsStatement()
+                case PropertyOfArray propertyOfArray when invocationExpression is { IsUsedAsStatement: false }
                     && (!propertyOfArray.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())
                     && propertyOfArray.Condition(arguments):
                 {
@@ -297,8 +294,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case PropertyOfCollection propertyOfCollection when invocationExpression is { }
-                    && !invocationExpression.IsUsedAsStatement()
+                case PropertyOfCollection propertyOfCollection when invocationExpression is { IsUsedAsStatement: false }
                     && (!propertyOfCollection.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())
                     && propertyOfCollection.Condition(arguments):
                 {
@@ -316,11 +312,11 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case PropertyOfDateTime propertyOfDateTime when !invokedExpression.IsPropertyAssignment()
-                    && !invokedExpression.IsWithinNameofExpression()
-                    && invokedExpression.QualifierExpression is IReferenceExpression
+                case PropertyOfDateTime propertyOfDateTime when invokedExpression is
                     {
-                        Reference: var reference, QualifierExpression: var qualifierExpression,
+                        IsPropertyAssignment: false,
+                        IsWithinNameofExpression: false,
+                        QualifierExpression: IReferenceExpression { Reference: var reference, QualifierExpression: var qualifierExpression },
                     }
                     && propertyOfDateTime.Condition(reference):
                 {
@@ -340,8 +336,7 @@ public sealed class MemberInvocationAnalyzer(
                     break;
                 }
 
-                case RangeIndexer rangeIndexer when invocationExpression is { }
-                    && !invocationExpression.IsUsedAsStatement()
+                case RangeIndexer rangeIndexer when invocationExpression is { IsUsedAsStatement: false }
                     && (rangeIndexer.MinimumLanguageVersion == null
                         || invocationExpression.GetLanguageVersion() >= rangeIndexer.MinimumLanguageVersion)
                     && (!rangeIndexer.EnsureExtensionInvokedAsExtension || !isExtension || invocationExpression.IsInvokedAsExtension())

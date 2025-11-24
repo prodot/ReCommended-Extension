@@ -66,14 +66,14 @@ public sealed class CollectionAllItemsNotNull(ICSharpContextActionDataProvider p
 
     protected override string GetContractTextForUI(string contractIdentifier)
         => isDictionary
-            ? $"{contractIdentifier}.{nameof(Enumerable.All)}(pair => pair.{nameof(KeyValuePair<int, int>.Value)} != null)"
+            ? $"{contractIdentifier}.{nameof(Enumerable.All)}(pair => pair.{nameof(KeyValuePair<,>.Value)} != null)"
             : $"{contractIdentifier}.{nameof(Enumerable.All)}(item => item != null)";
 
     protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
     {
         var expression = isDictionary
             ? factory.CreateExpression(
-                $"$0.{nameof(Enumerable.All)}(pair => pair.{nameof(KeyValuePair<int, int>.Value)} != null)",
+                $"$0.{nameof(Enumerable.All)}(pair => pair.{nameof(KeyValuePair<,>.Value)} != null)",
                 contractExpression)
             : factory.CreateExpression($"$0.{nameof(Enumerable.All)}(item => item != null)", contractExpression);
 

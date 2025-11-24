@@ -17,7 +17,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Linq\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantLinqQueryHint || highlighting.IsError();
+        => highlighting is RedundantLinqQueryHint or { IsError: true };
 
     [Test]
     public void TestRemoveLinqQueryFixAvailability() => DoNamedTest2();

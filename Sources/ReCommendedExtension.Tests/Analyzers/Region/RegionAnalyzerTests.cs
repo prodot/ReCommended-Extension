@@ -15,7 +15,7 @@ public sealed class RegionAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Region";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RegionHighlighting || highlighting.IsError();
+        => highlighting is RegionHighlighting or { IsError: true };
 
     [Test]
     public void TestRegionWithSingleElement() => DoNamedTest2();

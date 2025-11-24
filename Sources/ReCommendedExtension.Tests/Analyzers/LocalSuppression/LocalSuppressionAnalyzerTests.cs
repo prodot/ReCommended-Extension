@@ -13,7 +13,7 @@ public sealed class LocalSuppressionAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\LocalSuppression";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is LocalSuppressionWarning || highlighting.IsError();
+        => highlighting is LocalSuppressionWarning or { IsError: true };
 
     [Test]
     public void TestLocalSuppression() => DoNamedTest2();

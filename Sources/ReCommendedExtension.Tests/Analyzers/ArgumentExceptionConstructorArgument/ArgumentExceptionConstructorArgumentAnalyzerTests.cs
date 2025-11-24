@@ -13,7 +13,7 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzerTests : CSharpHi
     protected override string RelativeTestDataPath => @"Analyzers\ArgumentExceptionConstructorArgument";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ArgumentExceptionConstructorArgumentWarning || highlighting.IsError();
+        => highlighting is ArgumentExceptionConstructorArgumentWarning or { IsError: true };
 
     [Test]
     public void TestArgumentExceptionConstructorArgument() => DoNamedTest2();

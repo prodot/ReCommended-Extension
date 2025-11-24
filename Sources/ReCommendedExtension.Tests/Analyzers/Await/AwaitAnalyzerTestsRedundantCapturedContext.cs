@@ -18,8 +18,8 @@ public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpHighlight
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantCapturedContextSuggestion
-                or RedundantConfigureAwaitWarning // to figure out which cases are supported by R#
-            || highlighting.IsError();
+            or RedundantConfigureAwaitWarning // to figure out which cases are supported by R#
+            or { IsError: true };
 
     [Test]
     public void TestRedundantCapturedContext() => DoNamedTest2();

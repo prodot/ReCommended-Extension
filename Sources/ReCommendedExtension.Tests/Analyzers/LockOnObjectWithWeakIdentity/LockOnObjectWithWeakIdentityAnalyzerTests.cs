@@ -13,7 +13,7 @@ public sealed class LockOnObjectWithWeakIdentityAnalyzerTests : CSharpHighlighti
     protected override string RelativeTestDataPath => @"Analyzers\LockOnObjectWithWeakIdentity";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is LockOnObjectWithWeakIdentityWarning || highlighting.IsError();
+        => highlighting is LockOnObjectWithWeakIdentityWarning or { IsError: true };
 
     [Test]
     public void TestLockOnObjectWithWeakIdentity() => DoNamedTest2();

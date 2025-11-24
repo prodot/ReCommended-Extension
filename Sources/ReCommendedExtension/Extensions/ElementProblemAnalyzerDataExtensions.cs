@@ -5,7 +5,10 @@ namespace ReCommendedExtension.Extensions;
 
 internal static class ElementProblemAnalyzerDataExtensions
 {
-    [MustUseReturnValue]
-    public static ValueAnalysisMode GetValueAnalysisMode(this ElementProblemAnalyzerData data)
-        => data.SettingsStore.GetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode);
+    extension(ElementProblemAnalyzerData data)
+    {
+        [MustUseReturnValue]
+        public ValueAnalysisMode GetValueAnalysisMode()
+            => data.SettingsStore.GetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode);
+    }
 }

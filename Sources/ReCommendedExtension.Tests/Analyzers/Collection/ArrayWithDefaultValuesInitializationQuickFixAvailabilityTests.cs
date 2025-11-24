@@ -17,7 +17,7 @@ public sealed class ArrayWithDefaultValuesInitializationQuickFixAvailabilityTest
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ArrayWithDefaultValuesInitializationSuggestion || highlighting.IsError();
+        => highlighting is ArrayWithDefaultValuesInitializationSuggestion or { IsError: true };
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]

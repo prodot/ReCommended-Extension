@@ -13,7 +13,7 @@ public sealed class DelegateInvokeAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\DelegateInvoke";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantDelegateInvokeHint || highlighting.IsError();
+        => highlighting is RedundantDelegateInvokeHint or { IsError: true };
 
     [Test]
     public void TestDelegateInvoke() => DoNamedTest2();

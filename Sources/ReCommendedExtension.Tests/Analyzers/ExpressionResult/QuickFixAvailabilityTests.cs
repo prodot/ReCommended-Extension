@@ -18,7 +18,7 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
     protected override string RelativeTestDataPath => @"Analyzers\ExpressionResult\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or { IsError: true };
 
     [Test]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();

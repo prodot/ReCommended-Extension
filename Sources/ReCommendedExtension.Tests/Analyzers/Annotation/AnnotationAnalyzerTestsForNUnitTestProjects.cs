@@ -15,7 +15,7 @@ public sealed class AnnotationAnalyzerTestsForNUnitTestProjects : CSharpHighligh
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is MissingSuppressionJustificationWarning || highlighting.IsError();
+        => highlighting is MissingSuppressionJustificationWarning or { IsError: true };
 
     [Test]
     [TestPackages("nunit/3.13.3")]

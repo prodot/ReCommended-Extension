@@ -120,25 +120,25 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         }
 
         // excluding overridden members
-        if (declaration.OverridesInheritedMember())
+        if (declaration.OverridesInheritedMember)
         {
             return false;
         }
 
         // excluding local function (C# 8 or less)
-        if (declaration.IsOnLocalFunctionWithUnsupportedAttributes())
+        if (declaration.IsOnLocalFunctionWithUnsupportedAttributes)
         {
             return false;
         }
 
         // excluding lambda expressions (C# 9 or less)
-        if (declaration.IsOnLambdaExpressionWithUnsupportedAttributes())
+        if (declaration.IsOnLambdaExpressionWithUnsupportedAttributes)
         {
             return false;
         }
 
         // excluding anonymous methods
-        if (declaration.IsOnAnonymousMethodWithUnsupportedAttributes())
+        if (declaration.IsOnAnonymousMethodWithUnsupportedAttributes)
         {
             return false;
         }
@@ -176,7 +176,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             };
         }
 
-        if (declaration.OverridesInheritedMember())
+        if (declaration.OverridesInheritedMember)
         {
             return NullabilityAnnotationCase.Override;
         }
@@ -199,12 +199,12 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             var attributeType = attribute.GetAttributeType();
 
             if (attributeType.IsClrType(ClrTypeNames.SuppressMessageAttribute)
-                && attribute.TryGetArgumentsInDeclarationOrder() is [{ } categoryArg, { } checkIdArg]
-                && categoryArg.Value.TryGetStringConstant() is { } category
-                && checkIdArg.Value.TryGetStringConstant() is { } checkId
-                && (attribute
-                        .PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == nameof(SuppressMessageAttribute.Justification))
-                        ?.Source.TryGetStringConstant() is not { } suppressMessageJustification
+                && attribute.TryGetArgumentsInDeclarationOrder() is
+                [
+                    { Value.AsStringConstant: { } category }, { Value.AsStringConstant: { } checkId },
+                ]
+                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == nameof(SuppressMessageAttribute.Justification))
+                        is not { Source.AsStringConstant: { } suppressMessageJustification }
                     || string.IsNullOrWhiteSpace(suppressMessageJustification)))
             {
                 consumer.AddHighlighting(
@@ -216,8 +216,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             if (excludeFromCodeCoverageJustificationPropertyExists
                 && attributeType.IsClrType(ClrTypeNames.ExcludeFromCodeCoverageAttribute)
-                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == "Justification")?.Source.TryGetStringConstant() // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
-                        is not { } excludeFromCodeCoverageJustification
+                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == "Justification") is not // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
+                    {
+                        Source.AsStringConstant: { } excludeFromCodeCoverageJustification,
+                    }
                     || string.IsNullOrWhiteSpace(excludeFromCodeCoverageJustification)))
             {
                 consumer.AddHighlighting(
@@ -460,7 +462,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
                 and (IClassDeclaration or IRecordDeclaration { IsStruct: false }):
             {
-                if (type.IsDisposable())
+                if (type.IsDisposable)
                 {
                     if (!IsAnnotatedWithAnyOf(type, PurityOrDisposabilityKind.MustDisposeResource, PurityOrDisposabilityKind.MustDisposeResourceFalse)
                         && !IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
@@ -511,7 +513,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
                 and (IStructDeclaration { IsByRefLike: false } or IRecordDeclaration { IsStruct: true }):
             {
-                if (type.IsDisposable())
+                if (type.IsDisposable)
                 {
                     if (element.MustDisposeResourceAttributeSupportsStructs())
                     {
@@ -565,7 +567,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             case IStructDeclaration { IsByRefLike: true, DeclaredElement: { } type }:
             {
-                if (type.IsDisposable() || type.HasDisposeMethods())
+                if (type.IsDisposable || type.HasDisposeMethods)
                 {
                     if (element.MustDisposeResourceAttributeSupportsStructs())
                     {
@@ -621,7 +623,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
                         and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration):
                     {
-                        if (type.IsDisposable())
+                        if (type.IsDisposable)
                         {
                             if (!IsAnnotatedWithAnyOf(
                                     constructor,
@@ -708,7 +710,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                     case IStructDeclaration { IsByRefLike: true, DeclaredElement: { } type }:
                     {
-                        if (type.IsDisposable() || type.HasDisposeMethods())
+                        if (type.IsDisposable || type.HasDisposeMethods)
                         {
                             if (!IsAnnotatedWithAnyOf(
                                     constructor,
@@ -1085,26 +1087,26 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         HighlightNotAllowed("Annotation is not valid for private methods.");
                     }
 
-                    if (method.ContainingType.IsDisposable() || method.ContainingType is IStruct { IsByRefLike: true })
+                    if (method.ContainingType is { IsDisposable: true } or IStruct { IsByRefLike: true })
                     {
-                        if (method.IsDisposeMethod())
+                        if (method.IsDisposeMethod)
                         {
                             HighlightRedundant($"Annotation is redundant for '{nameof(IDisposable.Dispose)}' methods.");
                         }
 
-                        if (method.IsDisposeAsyncMethod())
+                        if (method.IsDisposeAsyncMethod)
                         {
                             HighlightRedundant("Annotation is redundant for 'DisposeAsync' methods."); // todo: use nameof(IAsyncDisposable.DisposeAsync)
                         }
 
                         if (method.ContainingType is IStruct { IsByRefLike: true })
                         {
-                            if (method.IsDisposeMethodByConvention())
+                            if (method.IsDisposeMethodByConvention)
                             {
                                 HighlightRedundant("Annotation is redundant for 'Dispose' methods.");
                             }
 
-                            if (method.IsDisposeAsyncMethodByConvention())
+                            if (method.IsDisposeAsyncMethodByConvention)
                             {
                                 HighlightRedundant("Annotation is redundant for 'DisposeAsync' methods.");
                             }
@@ -1252,16 +1254,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                         switch (attribute.TryGetArgumentsInDeclarationOrder())
                         {
-                            case [{ } arg] when arg.Value.TryGetInt64Constant() is { } value: from = to = value; break;
-                            case [{ } arg] when arg.Value.TryGetUInt64Constant() is { } value: from = to = value; break;
+                            case [{ Value.AsInt64Constant: { } value }]: from = to = value; break;
+                            case [{ Value.AsUInt64Constant: { } value }]: from = to = value; break;
 
-                            case [{ } arg0, { } arg1]
-                                when arg0.Value.TryGetInt64Constant() is { } fromValue && arg1.Value.TryGetInt64Constant() is { } toValue:
+                            case [{ Value.AsInt64Constant: { } fromValue }, { Value.AsInt64Constant: { } toValue }]:
                                 (from, to) = (fromValue, toValue);
                                 break;
 
-                            case [{ } arg0, { } arg1]
-                                when arg0.Value.TryGetUInt64Constant() is { } fromValue && arg1.Value.TryGetUInt64Constant() is { } toValue:
+                            case [{ Value.AsUInt64Constant: { } fromValue }, { Value.AsUInt64Constant: { } toValue }]:
                                 (from, to) = (fromValue, toValue);
                                 break;
 
@@ -1608,7 +1608,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             == CodeAnnotationNullableValue.NOT_NULL);
         if (itemNotNullAttribute is { })
         {
-            if (attributesOwnerDeclaration.OverridesInheritedMember())
+            if (attributesOwnerDeclaration.OverridesInheritedMember)
             {
                 consumer.AddHighlighting(
                     new NotAllowedAnnotationWarning(
@@ -1676,7 +1676,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                 consumer.AddHighlighting(
                     new NotAllowedAnnotationWarning(
-                        $"Annotation is not allowed because the declared element must be an {nameof(IEnumerable<int>)}<T> (or its descendant), or a generic task-like type, or a {nameof(Lazy<int>)}<T>.",
+                        $"Annotation is not allowed because the declared element must be an {nameof(IEnumerable<>)}<T> (or its descendant), or a generic task-like type, or a {nameof(Lazy<>)}<T>.",
                         attributesOwnerDeclaration,
                         itemNotNullAttribute));
             }

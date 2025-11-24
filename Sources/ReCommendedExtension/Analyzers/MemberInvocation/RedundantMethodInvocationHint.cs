@@ -34,7 +34,7 @@ public sealed class RedundantMethodInvocationHint(
 
     [Pure]
     internal bool RemoveEntireInvocationExpression()
-        => invocationExpression.IsUsedAsStatement() && invokedExpression.QualifierExpression is IReferenceExpression;
+        => invocationExpression.IsUsedAsStatement && invokedExpression.QualifierExpression is IReferenceExpression;
 
     public override DocumentRange CalculateRange()
     {

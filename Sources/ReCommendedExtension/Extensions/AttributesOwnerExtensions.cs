@@ -4,10 +4,13 @@ namespace ReCommendedExtension.Extensions;
 
 internal static class AttributesOwnerExtensions
 {
-    [Pure]
-    public static IEnumerable<T> WithoutObsolete<T>(this IEnumerable<T> attributesOwners) where T : class, IAttributesOwner
-        =>
-            from attributesOwner in attributesOwners
-            where !attributesOwner.HasAttributeInstance(PredefinedType.OBSOLETE_ATTRIBUTE_CLASS, false)
-            select attributesOwner;
+    extension<T>(IEnumerable<T> attributesOwners) where T : class, IAttributesOwner
+    {
+        [Pure]
+        public IEnumerable<T> WithoutObsolete()
+            =>
+                from attributesOwner in attributesOwners
+                where !attributesOwner.HasAttributeInstance(PredefinedType.OBSOLETE_ATTRIBUTE_CLASS, false)
+                select attributesOwner;
+    }
 }

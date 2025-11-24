@@ -1275,7 +1275,7 @@ internal static class RuleDefinitions
         => new(StringComparer.Ordinal)
         {
             {
-                nameof(Nullable<int>.GetValueOrDefault),
+                nameof(Nullable<>.GetValueOrDefault),
                 [
                     new Member
                     {
@@ -1289,8 +1289,8 @@ internal static class RuleDefinitions
                     },
                 ]
             },
-            { nameof(Nullable<int>.HasValue), [new Member { Signature = new PropertySignature(), Inspections = [PropertyOfNullable.HasValue] }] },
-            { nameof(Nullable<int>.Value), [new Member { Signature = new PropertySignature(), Inspections = [PropertyOfNullable.Value] }] },
+            { nameof(Nullable<>.HasValue), [new Member { Signature = new PropertySignature(), Inspections = [PropertyOfNullable.HasValue] }] },
+            { nameof(Nullable<>.Value), [new Member { Signature = new PropertySignature(), Inspections = [PropertyOfNullable.Value] }] },
         };
 
     [Pure]
@@ -1487,7 +1487,7 @@ internal static class RuleDefinitions
                             },
                             PropertyOfCollection.QualifierIsCollection with
                             {
-                                Name = nameof(ICollection<int>.Count),
+                                Name = nameof(ICollection<>.Count),
                                 EnsureExtensionInvokedAsExtension = true,
                                 EnsureTargetType = TargetType.Long,
                             },

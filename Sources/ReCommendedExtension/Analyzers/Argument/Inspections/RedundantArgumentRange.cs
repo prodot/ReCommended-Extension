@@ -8,14 +8,13 @@ internal sealed record RedundantArgumentRange : Inspection
 {
     public static RedundantArgumentRange TripleZero { get; } = new()
     {
-        Condition = args => (args[0].Value.TryGetInt32Constant(), args[1].Value.TryGetInt32Constant(), args[2].Value.TryGetInt32Constant())
-            == (0, 0, 0),
+        Condition = args => args is [{ Value.AsInt32Constant: 0 }, { Value.AsInt32Constant: 0 }, { Value.AsInt32Constant: 0 }],
         Message = "Passing '0, 0, 0' is redundant.",
     };
 
     public static RedundantArgumentRange NullDateTimeStylesNone { get; } = new()
     {
-        Condition = args => args[0].Value.IsDefaultValue() && args[1].Value.TryGetDateTimeStylesConstant() == DateTimeStyles.None,
+        Condition = args => args is [{ Value.IsDefaultValueOrNull: true }, { Value.AsDateTimeStylesConstant: DateTimeStyles.None }],
         Message = $"Passing 'null, {nameof(DateTimeStyles)}.{nameof(DateTimeStyles.None)}' is redundant.",
     };
 

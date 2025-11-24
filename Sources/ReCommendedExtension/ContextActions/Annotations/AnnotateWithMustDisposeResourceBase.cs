@@ -29,19 +29,19 @@ public abstract class AnnotateWithMustDisposeResourceBase(ICSharpContextActionDa
     protected sealed override bool CanBeAnnotated(IDeclaredElement? declaredElement, ITreeNode context)
         => declaredElement switch
         {
-            IClass type => type.IsDisposable() && !IsAnyBaseTypeAnnotated(type),
+            IClass type => type.IsDisposable && !IsAnyBaseTypeAnnotated(type),
 
-            IStruct { IsByRefLike: false } type when context.MustDisposeResourceAttributeSupportsStructs() => type.IsDisposable(),
+            IStruct { IsByRefLike: false } type when context.MustDisposeResourceAttributeSupportsStructs() => type.IsDisposable,
 
-            IStruct { IsByRefLike: true } type when context.MustDisposeResourceAttributeSupportsStructs() => type.IsDisposable()
-                || type.HasDisposeMethods(),
+            IStruct { IsByRefLike: true } type when context.MustDisposeResourceAttributeSupportsStructs() => type.IsDisposable
+                || type.HasDisposeMethods,
 
-            IConstructor { ContainingType: (IClass or IStruct { IsByRefLike: false }) and var type } => type.IsDisposable()
+            IConstructor { ContainingType: (IClass or IStruct { IsByRefLike: false }) and var type } => type.IsDisposable
                 && !IsTypeAnnotated(type)
                 && !IsAnyBaseTypeAnnotated(type),
 
-            IConstructor { ContainingType: IStruct { IsByRefLike: true } type } => type.IsDisposable()
-                || type.HasDisposeMethods() && !IsTypeAnnotated(type),
+            IConstructor { ContainingType: IStruct { IsByRefLike: true } type } => type.IsDisposable
+                || type.HasDisposeMethods && !IsTypeAnnotated(type),
 
             IMethod method => (method.ReturnType.IsDisposable() || method.ReturnType.IsTasklikeOfDisposable(context))
                 && !IsAnyBaseMethodAnnotated(method),

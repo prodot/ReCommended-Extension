@@ -1,9 +1,9 @@
 ﻿namespace ReCommendedExtension.Tests.Missing;
 
-[Flags]
-internal enum MissingStringSplitOptions
+internal static class MissingStringSplitOptions
 {
-    None = StringSplitOptions.None,
-    RemoveEmptyEntries = StringSplitOptions.RemoveEmptyEntries,
-    TrimEntries = 2,
+    extension(StringSplitOptions)
+    {
+        public static StringSplitOptions TrimEntries => (StringSplitOptions)2;
+    }
 }

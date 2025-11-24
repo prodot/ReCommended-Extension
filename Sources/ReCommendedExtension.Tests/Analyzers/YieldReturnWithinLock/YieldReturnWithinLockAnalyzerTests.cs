@@ -16,7 +16,7 @@ public sealed class YieldReturnWithinLockAnalyzerTests : CSharpHighlightingTestB
     protected override string RelativeTestDataPath => @"Analyzers\YieldReturnWithinLock";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is YieldReturnWithinLockWarning || highlighting.IsError() && highlighting is not ByRefTypeAndAwaitError;
+        => highlighting is YieldReturnWithinLockWarning or { IsError: true } and not ByRefTypeAndAwaitError;
 
     [Test]
     public void TestYieldReturnWithinLock() => DoNamedTest2();

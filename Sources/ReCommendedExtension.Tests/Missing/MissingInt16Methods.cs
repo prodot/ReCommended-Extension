@@ -5,151 +5,156 @@ namespace ReCommendedExtension.Tests.Missing;
 
 internal static class MissingInt16Methods
 {
-    [Pure]
-    public static short Clamp(short value, short min, short max)
+    extension(short)
     {
-        if (min > max)
+        [Pure]
+        public static short Clamp(short value, short min, short max)
         {
-            throw new ArgumentException($"'{min}' cannot be greater than {max}.");
+            if (min > max)
+            {
+                throw new ArgumentException($"'{min}' cannot be greater than {max}.");
+            }
+
+            if (value < min)
+            {
+                return min;
+            }
+
+            if (value > max)
+            {
+                return max;
+            }
+
+            return value;
         }
 
-        if (value < min)
+        [Pure]
+        public static (short Quotient, short Remainder) DivRem(
+            short left,
+            [ValueRange(short.MinValue, -1)][ValueRange(1, short.MaxValue)] short right)
         {
-            return min;
+            var quotient = unchecked((short)(left / right));
+            return (quotient, unchecked((short)(left - quotient * right)));
         }
 
-        if (value > max)
+        [Pure]
+        public static bool IsNegative(short value) => value < 0;
+
+        [Pure]
+        public static bool IsPositive(short value) => value >= 0;
+
+        [Pure]
+        public static short Max(short x, short y) => x >= y ? x : y;
+
+        [Pure]
+        public static short Min(short x, short y) => x <= y ? x : y;
+
+        [Pure]
+        public static short MaxMagnitude(short x, short y)
         {
-            return max;
+            if (x == short.MinValue)
+            {
+                return x;
+            }
+
+            if (y == short.MinValue)
+            {
+                return y;
+            }
+
+            var ax = Math.Abs(x);
+            var ay = Math.Abs(y);
+
+            if (ax > ay)
+            {
+                return x;
+            }
+
+            if (ax < ay)
+            {
+                return y;
+            }
+
+            return x < 0 ? y : x;
         }
 
-        return value;
+        [Pure]
+        public static short MinMagnitude(short x, short y)
+        {
+            if (x == short.MinValue)
+            {
+                return y;
+            }
+
+            if (y == short.MinValue)
+            {
+                return x;
+            }
+
+            var ax = Math.Abs(x);
+            var ay = Math.Abs(y);
+
+            if (ax < ay)
+            {
+                return x;
+            }
+
+            if (ax > ay)
+            {
+                return y;
+            }
+
+            return x < 0 ? x : y;
+        }
+
+        [Pure]
+        public static short Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
+            => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
+
+        [Pure]
+        public static short Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+            => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+
+        [Pure]
+        public static short Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => short.Parse(s.ToString(), provider);
+
+        [Pure]
+        public static short Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
+            => short.Parse(s.ToString(), style, provider);
+
+        [Pure]
+        public static short RotateLeft(short value, int rotateAmount)
+            => unchecked((short)(value << (rotateAmount & 15) | (ushort)value >> (16 - rotateAmount & 15)));
+
+        [Pure]
+        public static short RotateRight(short value, int rotateAmount)
+            => unchecked((short)((ushort)value >> (rotateAmount & 15) | value << (16 - rotateAmount & 15)));
+
+        [Pure]
+        public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out short result)
+            => short.TryParse(s, NumberStyles.Number, provider, out result);
+
+        [Pure]
+        public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out short result)
+            => short.TryParse(s.ToString(), style, provider, out result);
+
+        [Pure]
+        public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out short result)
+            => short.TryParse(s.ToString(), NumberStyles.Number, provider, out result);
+
+        [Pure]
+        public static bool TryParse(ReadOnlySpan<char> s, out short result) => short.TryParse(s.ToString(), out result);
+
+        [Pure]
+        public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out short result)
+            => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+
+        [Pure]
+        public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out short result)
+            => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+
+        [Pure]
+        public static bool TryParse(ReadOnlySpan<byte> utf8Text, out short result)
+            => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
     }
-
-    [Pure]
-    public static (short Quotient, short Remainder) DivRem(short left, [ValueRange(short.MinValue, -1)][ValueRange(1, short.MaxValue)] short right)
-    {
-        var quotient = unchecked((short)(left / right));
-        return (quotient, unchecked((short)(left - quotient * right)));
-    }
-
-    [Pure]
-    public static bool IsNegative(short value) => value < 0;
-
-    [Pure]
-    public static bool IsPositive(short value) => value >= 0;
-
-    [Pure]
-    public static short Max(short x, short y) => x >= y ? x : y;
-
-    [Pure]
-    public static short Min(short x, short y) => x <= y ? x : y;
-
-    [Pure]
-    public static short MaxMagnitude(short x, short y)
-    {
-        if (x == short.MinValue)
-        {
-            return x;
-        }
-
-        if (y == short.MinValue)
-        {
-            return y;
-        }
-
-        var ax = Math.Abs(x);
-        var ay = Math.Abs(y);
-
-        if (ax > ay)
-        {
-            return x;
-        }
-
-        if (ax < ay)
-        {
-            return y;
-        }
-
-        return x < 0 ? y : x;
-    }
-
-    [Pure]
-    public static short MinMagnitude(short x, short y)
-    {
-        if (x == short.MinValue)
-        {
-            return y;
-        }
-
-        if (y == short.MinValue)
-        {
-            return x;
-        }
-
-        var ax = Math.Abs(x);
-        var ay = Math.Abs(y);
-
-        if (ax < ay)
-        {
-            return x;
-        }
-
-        if (ax > ay)
-        {
-            return y;
-        }
-
-        return x < 0 ? x : y;
-    }
-
-    [Pure]
-    public static short Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-        => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
-
-    [Pure]
-    public static short Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-        => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
-
-    [Pure]
-    public static short Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => short.Parse(s.ToString(), provider);
-
-    [Pure]
-    public static short Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-        => short.Parse(s.ToString(), style, provider);
-
-    [Pure]
-    public static short RotateLeft(short value, int rotateAmount)
-        => unchecked((short)(value << (rotateAmount & 15) | (ushort)value >> (16 - rotateAmount & 15)));
-
-    [Pure]
-    public static short RotateRight(short value, int rotateAmount)
-        => unchecked((short)((ushort)value >> (rotateAmount & 15) | value << (16 - rotateAmount & 15)));
-
-    [Pure]
-    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out short result)
-        => short.TryParse(s, NumberStyles.Number, provider, out result);
-
-    [Pure]
-    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out short result)
-        => short.TryParse(s.ToString(), style, provider, out result);
-
-    [Pure]
-    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out short result)
-        => short.TryParse(s.ToString(), NumberStyles.Number, provider, out result);
-
-    [Pure]
-    public static bool TryParse(ReadOnlySpan<char> s, out short result) => short.TryParse(s.ToString(), out result);
-
-    [Pure]
-    public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out short result)
-        => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
-
-    [Pure]
-    public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out short result)
-        => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
-
-    [Pure]
-    public static bool TryParse(ReadOnlySpan<byte> utf8Text, out short result)
-        => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
 }

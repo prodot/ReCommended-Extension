@@ -13,7 +13,7 @@ public sealed class InternalConstructorAnalyzerTests : CSharpHighlightingTestBas
     protected override string RelativeTestDataPath => @"Analyzers\InternalConstructor";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is InternalConstructorVisibilitySuggestion || highlighting.IsError();
+        => highlighting is InternalConstructorVisibilitySuggestion or { IsError: true };
 
     [Test]
     public void TestInternalConstructor() => DoNamedTest2();

@@ -15,14 +15,12 @@ namespace ReCommendedExtension.ContextActions;
 
 [ContextAction(
     GroupType = typeof(CSharpContextActions),
-    Name = $"Converts '{nameof(IEnumerable<int>)}<T>' to a no-op LINQ query" + ZoneMarker.Suffix,
-    Description = $"Converts an '{nameof(IEnumerable<int>)}<T>' to a no-op LINQ query.")]
+    Name = $"Converts '{nameof(IEnumerable<>)}<T>' to a no-op LINQ query" + ZoneMarker.Suffix,
+    Description = $"Converts an '{nameof(IEnumerable<>)}<T>' to a no-op LINQ query.")]
 public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider) : ContextAction<ICSharpExpression>(provider)
 {
     class Replacement
     {
-        string? targetExpression;
-
         [Pure]
         protected virtual string CreateTargetExpression() => $"from item in {SourceExpression.GetText()} select item";
 
@@ -32,9 +30,9 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
         {
             get
             {
-                targetExpression ??= CreateTargetExpression();
+                field ??= CreateTargetExpression();
 
-                return targetExpression;
+                return field;
             }
         }
     }
@@ -105,7 +103,7 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
                     IsStatic: false,
                     TypeParameters: [],
                     Parameters: [],
-                    ShortName: nameof(List<int>.ToArray),
+                    ShortName: nameof(List<>.ToArray),
                 })
             {
                 replacement = new Replacement { SourceExpression = selectedElement };
@@ -144,7 +142,7 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
                 {
                     SourceExpression = selectedElement,
                     MethodName = nameof(Enumerable.ToHashSet),
-                    ExpressionPropertyAsMethodArgument = nameof(HashSet<int>.Comparer),
+                    ExpressionPropertyAsMethodArgument = nameof(HashSet<>.Comparer),
                 };
                 return true;
             }

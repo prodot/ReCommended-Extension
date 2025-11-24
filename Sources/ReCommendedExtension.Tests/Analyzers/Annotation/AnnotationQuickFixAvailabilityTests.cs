@@ -18,11 +18,11 @@ public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTe
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantNullableAnnotationHint
-                or NotAllowedAnnotationWarning
-                or ConflictingAnnotationWarning
-                or RedundantAnnotationSuggestion
-                or InvalidValueRangeBoundaryWarning
-            || highlighting.IsError();
+            or NotAllowedAnnotationWarning
+            or ConflictingAnnotationWarning
+            or RedundantAnnotationSuggestion
+            or InvalidValueRangeBoundaryWarning
+            or { IsError: true };
 
     [Test]
     public void TestAnnotationAvailability() => DoNamedTest2();

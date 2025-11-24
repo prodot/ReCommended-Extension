@@ -17,7 +17,7 @@ public sealed class AnnotationAnalyzerArgumentTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAnnotationArgumentSuggestion || highlighting.IsError();
+        => highlighting is RedundantAnnotationArgumentSuggestion or { IsError: true };
 
     [Test]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]

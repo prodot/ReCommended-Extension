@@ -17,7 +17,7 @@ public sealed class AnnotationArgumentQuickFixAvailabilityTests : QuickFixAvaila
     protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAnnotationArgumentSuggestion || highlighting.IsError();
+        => highlighting is RedundantAnnotationArgumentSuggestion or { IsError: true };
 
     [Test]
     public void TestRedundantAnnotationArgumentAvailability() => DoNamedTest2();

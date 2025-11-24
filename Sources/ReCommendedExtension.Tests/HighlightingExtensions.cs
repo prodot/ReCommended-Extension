@@ -5,7 +5,8 @@ namespace ReCommendedExtension.Tests;
 
 internal static class HighlightingExtensions
 {
-    [Pure]
-    public static bool IsError(this IHighlighting highlighting)
-        => highlighting.GetType().GetCustomAttribute<StaticSeverityHighlightingAttribute>() is { Severity: Severity.ERROR };
+    extension(IHighlighting highlighting)
+    {
+        public bool IsError => highlighting.GetType().GetCustomAttribute<StaticSeverityHighlightingAttribute>() is { Severity: Severity.ERROR };
+    }
 }

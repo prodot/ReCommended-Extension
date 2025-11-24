@@ -5,24 +5,29 @@ namespace ReCommendedExtension.Extensions;
 
 internal static class DeclaredTypeExtensions
 {
-    [Pure]
-    public static IType?[]? TryGetGenericParameterTypes(this IDeclaredType declaredType)
+    extension(IDeclaredType declaredType)
     {
-        if (declaredType.GetTypeElement() is { } typeElement)
+        public IType?[]? GenericParameterTypes
         {
-            var elementTypes = new IType?[typeElement.TypeParametersCount];
-
-            for (var i = 0; i < elementTypes.Length; i++)
+            get
             {
-                if (CollectionTypeUtil.GetElementTypesForGenericType(declaredType, typeElement, i) is [var elementType])
+                if (declaredType.GetTypeElement() is { } typeElement)
                 {
-                    elementTypes[i] = elementType;
+                    var elementTypes = new IType?[typeElement.TypeParametersCount];
+
+                    for (var i = 0; i < elementTypes.Length; i++)
+                    {
+                        if (CollectionTypeUtil.GetElementTypesForGenericType(declaredType, typeElement, i) is [var elementType])
+                        {
+                            elementTypes[i] = elementType;
+                        }
+                    }
+
+                    return elementTypes;
                 }
+
+                return null;
             }
-
-            return elementTypes;
         }
-
-        return null;
     }
 }

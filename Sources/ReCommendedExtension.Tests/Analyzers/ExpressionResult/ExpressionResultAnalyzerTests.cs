@@ -18,7 +18,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\ExpressionResult";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion || highlighting.IsError();
+        => highlighting is UseExpressionResultSuggestion or { IsError: true };
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
@@ -71,20 +71,20 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingByteMethods.DivRem(0, right), _ => (0, 0), [..values.Except(new byte[1])]);
+        Test(right => byte.DivRem(0, right), _ => (0, 0), [..values.Except(new byte[1])]);
 
-        Test(n => MissingByteMethods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingByteMethods.RotateRight(n, 0), n => n, values);
+        Test(n => byte.RotateLeft(n, 0), n => n, values);
+        Test(n => byte.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingByteMethods.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => MissingByteMethods.Clamp(n, 0, byte.MaxValue), n => n, values);
+        Test(n => byte.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => byte.Clamp(n, 0, byte.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.Byte, values);
 
-        Test(n => MissingByteMethods.Max(n, n), n => n, values);
-        Test(n => MissingByteMethods.Min(n, n), n => n, values);
+        Test(n => byte.Max(n, n), n => n, values);
+        Test(n => byte.Min(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -98,23 +98,23 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingSByteMethods.DivRem(0, right), _ => (0, 0), [..values.Except(new sbyte[1])]);
+        Test(right => sbyte.DivRem(0, right), _ => (0, 0), [..values.Except(new sbyte[1])]);
 
-        Test(n => MissingSByteMethods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingSByteMethods.RotateRight(n, 0), n => n, values);
+        Test(n => sbyte.RotateLeft(n, 0), n => n, values);
+        Test(n => sbyte.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingSByteMethods.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => MissingSByteMethods.Clamp(n, sbyte.MinValue, sbyte.MaxValue), n => n, values);
+        Test(n => sbyte.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => sbyte.Clamp(n, sbyte.MinValue, sbyte.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.SByte, values);
 
-        Test(n => MissingSByteMethods.Max(n, n), n => n, values);
-        Test(n => MissingSByteMethods.Min(n, n), n => n, values);
+        Test(n => sbyte.Max(n, n), n => n, values);
+        Test(n => sbyte.Min(n, n), n => n, values);
 
-        Test(n => MissingSByteMethods.MaxMagnitude(n, n), n => n, values);
-        Test(n => MissingSByteMethods.MinMagnitude(n, n), n => n, values);
+        Test(n => sbyte.MaxMagnitude(n, n), n => n, values);
+        Test(n => sbyte.MinMagnitude(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -128,23 +128,23 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingInt16Methods.DivRem(0, right), _ => (0, 0), [..values.Except(new short[1])]);
+        Test(right => short.DivRem(0, right), _ => (0, 0), [..values.Except(new short[1])]);
 
-        Test(n => MissingInt16Methods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingInt16Methods.RotateRight(n, 0), n => n, values);
+        Test(n => short.RotateLeft(n, 0), n => n, values);
+        Test(n => short.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingInt16Methods.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => MissingInt16Methods.Clamp(n, short.MinValue, short.MaxValue), n => n, values);
+        Test(n => short.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => short.Clamp(n, short.MinValue, short.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.Int16, values);
 
-        Test(n => MissingInt16Methods.Max(n, n), n => n, values);
-        Test(n => MissingInt16Methods.Min(n, n), n => n, values);
+        Test(n => short.Max(n, n), n => n, values);
+        Test(n => short.Min(n, n), n => n, values);
 
-        Test(n => MissingInt16Methods.MaxMagnitude(n, n), n => n, values);
-        Test(n => MissingInt16Methods.MinMagnitude(n, n), n => n, values);
+        Test(n => short.MaxMagnitude(n, n), n => n, values);
+        Test(n => short.MinMagnitude(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -158,20 +158,20 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingUInt16Methods.DivRem(0, right), _ => (0, 0), [..values.Except(new ushort[1])]);
+        Test(right => ushort.DivRem(0, right), _ => (0, 0), [..values.Except(new ushort[1])]);
 
-        Test(n => MissingUInt16Methods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingUInt16Methods.RotateRight(n, 0), n => n, values);
+        Test(n => ushort.RotateLeft(n, 0), n => n, values);
+        Test(n => ushort.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingUInt16Methods.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => MissingUInt16Methods.Clamp(n, 0, ushort.MaxValue), n => n, values);
+        Test(n => ushort.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => ushort.Clamp(n, 0, ushort.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.UInt16, values);
 
-        Test(n => MissingUInt16Methods.Max(n, n), n => n, values);
-        Test(n => MissingUInt16Methods.Min(n, n), n => n, values);
+        Test(n => ushort.Max(n, n), n => n, values);
+        Test(n => ushort.Min(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -185,23 +185,23 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingInt32Methods.DivRem(0, right), _ => (0, 0), [..values.Except(new int[1])]);
+        Test(right => int.DivRem(0, right), _ => (0, 0), [..values.Except(new int[1])]);
 
-        Test(n => MissingInt32Methods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingInt32Methods.RotateRight(n, 0), n => n, values);
+        Test(n => int.RotateLeft(n, 0), n => n, values);
+        Test(n => int.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingInt32Methods.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => MissingInt32Methods.Clamp(n, int.MinValue, int.MaxValue), n => n, values);
+        Test(n => int.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => int.Clamp(n, int.MinValue, int.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.Int32, values);
 
-        Test(n => MissingInt32Methods.Max(n, n), n => n, values);
-        Test(n => MissingInt32Methods.Min(n, n), n => n, values);
+        Test(n => int.Max(n, n), n => n, values);
+        Test(n => int.Min(n, n), n => n, values);
 
-        Test(n => MissingInt32Methods.MaxMagnitude(n, n), n => n, values);
-        Test(n => MissingInt32Methods.MinMagnitude(n, n), n => n, values);
+        Test(n => int.MaxMagnitude(n, n), n => n, values);
+        Test(n => int.MinMagnitude(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -215,20 +215,20 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingUInt32Methods.DivRem(0, right), _ => (0u, 0u), [..values.Except(new uint[1])]);
+        Test(right => uint.DivRem(0, right), _ => (0u, 0u), [..values.Except(new uint[1])]);
 
-        Test(n => MissingUInt32Methods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingUInt32Methods.RotateRight(n, 0), n => n, values);
+        Test(n => uint.RotateLeft(n, 0), n => n, values);
+        Test(n => uint.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingUInt32Methods.Clamp(n, 1, 1), _ => 1u, values);
-        Test(n => MissingUInt32Methods.Clamp(n, 0, uint.MaxValue), n => n, values);
+        Test(n => uint.Clamp(n, 1, 1), _ => 1u, values);
+        Test(n => uint.Clamp(n, 0, uint.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.UInt32, values);
 
-        Test(n => MissingUInt32Methods.Max(n, n), n => n, values);
-        Test(n => MissingUInt32Methods.Min(n, n), n => n, values);
+        Test(n => uint.Max(n, n), n => n, values);
+        Test(n => uint.Min(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -242,23 +242,23 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingInt64Methods.DivRem(0, right), _ => (0, 0), [..values.Except(new long[1])]);
+        Test(right => long.DivRem(0, right), _ => (0, 0), [..values.Except(new long[1])]);
 
-        Test(n => MissingInt64Methods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingInt64Methods.RotateRight(n, 0), n => n, values);
+        Test(n => long.RotateLeft(n, 0), n => n, values);
+        Test(n => long.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingInt64Methods.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => MissingInt64Methods.Clamp(n, long.MinValue, long.MaxValue), n => n, values);
+        Test(n => long.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => long.Clamp(n, long.MinValue, long.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.Int64, values);
 
-        Test(n => MissingInt64Methods.Max(n, n), n => n, values);
-        Test(n => MissingInt64Methods.Min(n, n), n => n, values);
+        Test(n => long.Max(n, n), n => n, values);
+        Test(n => long.Min(n, n), n => n, values);
 
-        Test(n => MissingInt64Methods.MaxMagnitude(n, n), n => n, values);
-        Test(n => MissingInt64Methods.MinMagnitude(n, n), n => n, values);
+        Test(n => long.MaxMagnitude(n, n), n => n, values);
+        Test(n => long.MinMagnitude(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -272,20 +272,20 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingUInt64Methods.DivRem(0, right), _ => (0ul, 0ul), [..values.Except(new ulong[1])]);
+        Test(right => ulong.DivRem(0, right), _ => (0ul, 0ul), [..values.Except(new ulong[1])]);
 
-        Test(n => MissingUInt64Methods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingUInt64Methods.RotateRight(n, 0), n => n, values);
+        Test(n => ulong.RotateLeft(n, 0), n => n, values);
+        Test(n => ulong.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingUInt64Methods.Clamp(n, 1, 1), _ => 1ul, values);
-        Test(n => MissingUInt64Methods.Clamp(n, 0, ulong.MaxValue), n => n, values);
+        Test(n => ulong.Clamp(n, 1, 1), _ => 1ul, values);
+        Test(n => ulong.Clamp(n, 0, ulong.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.UInt64, values);
 
-        Test(n => MissingUInt64Methods.Max(n, n), n => n, values);
-        Test(n => MissingUInt64Methods.Min(n, n), n => n, values);
+        Test(n => ulong.Max(n, n), n => n, values);
+        Test(n => ulong.Min(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -351,20 +351,20 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingIntPtrMethods.DivRem(0, right), _ => (0, 0), [..values.Except(new nint[1])]);
+        Test(right => nint.DivRem(0, right), _ => (0, 0), [..values.Except(new nint[1])]);
 
-        Test(n => MissingIntPtrMethods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingIntPtrMethods.RotateRight(n, 0), n => n, values);
+        Test(n => nint.RotateLeft(n, 0), n => n, values);
+        Test(n => nint.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingIntPtrMethods.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => nint.Clamp(n, 1, 1), _ => 1, values);
 
-        Test(n => MissingIntPtrMethods.Max(n, n), n => n, values);
-        Test(n => MissingIntPtrMethods.Min(n, n), n => n, values);
+        Test(n => nint.Max(n, n), n => n, values);
+        Test(n => nint.Min(n, n), n => n, values);
 
-        Test(n => MissingIntPtrMethods.MaxMagnitude(n, n), n => n, values);
-        Test(n => MissingIntPtrMethods.MinMagnitude(n, n), n => n, values);
+        Test(n => nint.MaxMagnitude(n, n), n => n, values);
+        Test(n => nint.MinMagnitude(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -379,17 +379,17 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingUIntPtrMethods.DivRem(0, right), _ => (0u, 0u), [..values.Except(new nuint[1])]);
+        Test(right => nuint.DivRem(0, right), _ => (0u, 0u), [..values.Except(new nuint[1])]);
 
-        Test(n => MissingUIntPtrMethods.RotateLeft(n, 0), n => n, values);
-        Test(n => MissingUIntPtrMethods.RotateRight(n, 0), n => n, values);
+        Test(n => nuint.RotateLeft(n, 0), n => n, values);
+        Test(n => nuint.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingUIntPtrMethods.Clamp(n, 1, 1), _ => 1u, values);
+        Test(n => nuint.Clamp(n, 1, 1), _ => 1u, values);
 
-        Test(n => MissingUIntPtrMethods.Max(n, n), n => n, values);
-        Test(n => MissingUIntPtrMethods.Min(n, n), n => n, values);
+        Test(n => nuint.Max(n, n), n => n, values);
+        Test(n => nuint.Min(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -405,13 +405,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => MissingDecimalMethods.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => MissingDecimalMethods.Clamp(n, decimal.MinValue, decimal.MaxValue), n => n, values);
+        Test(n => decimal.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => decimal.Clamp(n, decimal.MinValue, decimal.MaxValue), n => n, values);
 
         Test(n => n.GetTypeCode(), _ => TypeCode.Decimal, values);
 
-        Test(n => MissingDecimalMethods.Max(n, n), n => n, values);
-        Test(n => MissingDecimalMethods.Min(n, n), n => n, values);
+        Test(n => decimal.Max(n, n), n => n, values);
+        Test(n => decimal.Min(n, n), n => n, values);
 
         DoNamedTest2();
     }
@@ -526,38 +526,38 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         // expression result
 
-        Test(right => MissingMathMethods.DivRem((byte)0, right), _ => (0, 0), [..byteValues.Except(new byte[1])]);
-        Test(right => MissingMathMethods.DivRem((sbyte)0, right), _ => (0, 0), [..sbyteValues.Except(new sbyte[1])]);
-        Test(right => MissingMathMethods.DivRem((short)0, right), _ => (0, 0), [..int16Values.Except(new short[1])]);
-        Test(right => MissingMathMethods.DivRem((ushort)0, right), _ => (0, 0), [..uint16Values.Except(new ushort[1])]);
-        Test(right => MissingMathMethods.DivRem(0, right), _ => (0, 0), [..int32Values.Except(new int[1])]);
-        Test(right => MissingMathMethods.DivRem(0, right), _ => (0u, 0u), [..uint32Values.Except(new uint[1])]);
-        Test(right => MissingMathMethods.DivRem(0, right), _ => (0, 0), [..int64Values.Except(new long[1])]);
-        Test(right => MissingMathMethods.DivRem(0, right), _ => (0ul, 0ul), [..uint64Values.Except(new ulong[1])]);
-        Test(right => MissingMathMethods.DivRem(0, right), _ => (0, 0), [..intPtrValues.Except(new nint[1])]);
-        Test(right => MissingMathMethods.DivRem(0, right), _ => (0u, 0u), [..uintPtrValues.Except(new nuint[1])]);
+        Test(right => Math.DivRem((byte)0, right), _ => (0, 0), [..byteValues.Except(new byte[1])]);
+        Test(right => Math.DivRem((sbyte)0, right), _ => (0, 0), [..sbyteValues.Except(new sbyte[1])]);
+        Test(right => Math.DivRem((short)0, right), _ => (0, 0), [..int16Values.Except(new short[1])]);
+        Test(right => Math.DivRem((ushort)0, right), _ => (0, 0), [..uint16Values.Except(new ushort[1])]);
+        Test(right => Math.DivRem(0, right), _ => (0, 0), [..int32Values.Except(new int[1])]);
+        Test(right => Math.DivRem(0, right), _ => (0u, 0u), [..uint32Values.Except(new uint[1])]);
+        Test(right => Math.DivRem(0, right), _ => (0, 0), [..int64Values.Except(new long[1])]);
+        Test(right => Math.DivRem(0, right), _ => (0ul, 0ul), [..uint64Values.Except(new ulong[1])]);
+        Test(right => Math.DivRem(0, right), _ => (0, 0), [..intPtrValues.Except(new nint[1])]);
+        Test(right => Math.DivRem(0, right), _ => (0u, 0u), [..uintPtrValues.Except(new nuint[1])]);
 
-        Test(value => MissingMathMethods.Clamp(value, (byte)1, (byte)1), _ => 1, byteValues);
-        Test(value => MissingMathMethods.Clamp(value, (sbyte)1, (sbyte)1), _ => 1, sbyteValues);
-        Test(value => MissingMathMethods.Clamp(value, (short)1, (short)1), _ => 1, int16Values);
-        Test(value => MissingMathMethods.Clamp(value, (ushort)1, (ushort)1), _ => 1, uint16Values);
-        Test(value => MissingMathMethods.Clamp(value, 1, 1), _ => 1, int32Values);
-        Test(value => MissingMathMethods.Clamp(value, 1, 1), _ => 1u, uint32Values);
-        Test(value => MissingMathMethods.Clamp(value, 1, 1), _ => 1, int64Values);
-        Test(value => MissingMathMethods.Clamp(value, 1, 1), _ => 1ul, uint64Values);
-        Test(value => MissingMathMethods.Clamp(value, 1, 1), _ => 1, intPtrValues);
-        Test(value => MissingMathMethods.Clamp(value, 1, 1), _ => 1u, uintPtrValues);
-        Test(value => MissingMathMethods.Clamp(value, 1, 1), _ => 1, decimalValues);
+        Test(value => Math.Clamp(value, (byte)1, (byte)1), _ => 1, byteValues);
+        Test(value => Math.Clamp(value, (sbyte)1, (sbyte)1), _ => 1, sbyteValues);
+        Test(value => Math.Clamp(value, (short)1, (short)1), _ => 1, int16Values);
+        Test(value => Math.Clamp(value, (ushort)1, (ushort)1), _ => 1, uint16Values);
+        Test(value => Math.Clamp(value, 1, 1), _ => 1, int32Values);
+        Test(value => Math.Clamp(value, 1, 1), _ => 1u, uint32Values);
+        Test(value => Math.Clamp(value, 1, 1), _ => 1, int64Values);
+        Test(value => Math.Clamp(value, 1, 1), _ => 1ul, uint64Values);
+        Test(value => Math.Clamp(value, 1, 1), _ => 1, intPtrValues);
+        Test(value => Math.Clamp(value, 1, 1), _ => 1u, uintPtrValues);
+        Test(value => Math.Clamp(value, 1, 1), _ => 1, decimalValues);
 
-        Test(value => MissingMathMethods.Clamp(value, byte.MinValue, byte.MaxValue), value => value, byteValues);
-        Test(value => MissingMathMethods.Clamp(value, sbyte.MinValue, sbyte.MaxValue), value => value, sbyteValues);
-        Test(value => MissingMathMethods.Clamp(value, short.MinValue, short.MaxValue), value => value, int16Values);
-        Test(value => MissingMathMethods.Clamp(value, ushort.MinValue, ushort.MaxValue), value => value, uint16Values);
-        Test(value => MissingMathMethods.Clamp(value, int.MinValue, int.MaxValue), value => value, int32Values);
-        Test(value => MissingMathMethods.Clamp(value, uint.MinValue, uint.MaxValue), value => value, uint32Values);
-        Test(value => MissingMathMethods.Clamp(value, long.MinValue, long.MaxValue), value => value, int64Values);
-        Test(value => MissingMathMethods.Clamp(value, ulong.MinValue, ulong.MaxValue), value => value, uint64Values);
-        Test(value => MissingMathMethods.Clamp(value, decimal.MinValue, decimal.MaxValue), value => value, decimalValues);
+        Test(value => Math.Clamp(value, byte.MinValue, byte.MaxValue), value => value, byteValues);
+        Test(value => Math.Clamp(value, sbyte.MinValue, sbyte.MaxValue), value => value, sbyteValues);
+        Test(value => Math.Clamp(value, short.MinValue, short.MaxValue), value => value, int16Values);
+        Test(value => Math.Clamp(value, ushort.MinValue, ushort.MaxValue), value => value, uint16Values);
+        Test(value => Math.Clamp(value, int.MinValue, int.MaxValue), value => value, int32Values);
+        Test(value => Math.Clamp(value, uint.MinValue, uint.MaxValue), value => value, uint32Values);
+        Test(value => Math.Clamp(value, long.MinValue, long.MaxValue), value => value, int64Values);
+        Test(value => Math.Clamp(value, ulong.MinValue, ulong.MaxValue), value => value, uint64Values);
+        Test(value => Math.Clamp(value, decimal.MinValue, decimal.MaxValue), value => value, decimalValues);
 
         Test(n => Math.Max(n, n), n => n, byteValues);
         Test(n => Math.Max(n, n), n => n, sbyteValues);
@@ -660,25 +660,25 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
         Test(() => new TimeSpan(0, 0, 0), () => TimeSpan.Zero);
         Test(() => new TimeSpan(0, 0, 0, 0), () => TimeSpan.Zero);
         Test(() => new TimeSpan(0, 0, 0, 0, 0), () => TimeSpan.Zero);
-        Test(() => MissingTimeSpanMembers._Ctor(0, 0, 0, 0, 0, 0), () => TimeSpan.Zero);
+        Test(() => TimeSpan._Ctor(0, 0, 0, 0, 0, 0), () => TimeSpan.Zero);
 
         Test(timeSpan => timeSpan.Equals(null), _ => false, values);
 
         Test(() => MissingTimeSpanMembers.FromDays(0), () => TimeSpan.Zero);
-        Test(() => MissingTimeSpanMembers.FromDays(0, 0), () => TimeSpan.Zero);
+        Test(() => TimeSpan.FromDays(0, 0), () => TimeSpan.Zero);
 
         Test(() => MissingTimeSpanMembers.FromHours(0), () => TimeSpan.Zero);
-        Test(() => MissingTimeSpanMembers.FromHours(0, 0), () => TimeSpan.Zero);
+        Test(() => TimeSpan.FromHours(0, 0), () => TimeSpan.Zero);
 
-        Test(() => MissingTimeSpanMembers.FromMicroseconds(0), () => TimeSpan.Zero);
+        Test(() => TimeSpan.FromMicroseconds(0), () => TimeSpan.Zero);
 
         Test(() => MissingTimeSpanMembers.FromMilliseconds(0), () => TimeSpan.Zero);
 
         Test(() => MissingTimeSpanMembers.FromMinutes(0), () => TimeSpan.Zero);
-        Test(() => MissingTimeSpanMembers.FromMinutes(0, 0), () => TimeSpan.Zero);
+        Test(() => TimeSpan.FromMinutes(0, 0), () => TimeSpan.Zero);
 
         Test(() => MissingTimeSpanMembers.FromSeconds(0), () => TimeSpan.Zero);
-        Test(() => MissingTimeSpanMembers.FromSeconds(0, 0), () => TimeSpan.Zero);
+        Test(() => TimeSpan.FromSeconds(0, 0), () => TimeSpan.Zero);
 
         Test(() => TimeSpan.FromTicks(0), () => TimeSpan.Zero);
         Test(() => TimeSpan.FromTicks(long.MinValue), () => TimeSpan.MinValue);
@@ -766,10 +766,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
             StringComparison.CurrentCulture,
             StringComparison.CurrentCultureIgnoreCase,
         };
-        var stringSplitOptions = new[]
-        {
-            MissingStringSplitOptions.None, MissingStringSplitOptions.RemoveEmptyEntries, MissingStringSplitOptions.TrimEntries,
-        };
+        var stringSplitOptions = new[] { StringSplitOptions.None, StringSplitOptions.RemoveEmptyEntries, StringSplitOptions.TrimEntries };
 
         // expression result
 
@@ -786,29 +783,29 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         Test(text => text.IndexOfAny([]), _ => -1, values);
 
-        Test(() => MissingStringMethods.Join(';', (IEnumerable<int>)[]), () => "");
-        Test(() => MissingStringMethods.Join(';', (IEnumerable<int>)[100]), () => $"{100}");
-        Test(() => MissingStringMethods.Join(';', (string?[])[]), () => "");
-        Test(() => MissingStringMethods.Join(';', (string?[])["item"]), () => "item");
-        Test(() => MissingStringMethods.Join(';', (object?[])[]), () => "");
-        Test(() => MissingStringMethods.Join(';', (object?[])[true]), () => $"{true}");
-        Test(() => MissingStringMethods.Join(',', (ReadOnlySpan<string?>)[]), () => "");
-        Test(() => MissingStringMethods.Join(',', (ReadOnlySpan<string?>)["item"]), () => "item");
-        Test(() => MissingStringMethods.Join(',', (ReadOnlySpan<object?>)[]), () => "");
-        Test(() => MissingStringMethods.Join(',', (ReadOnlySpan<object?>)[true]), () => $"{true}");
+        Test(() => string.Join(';', (IEnumerable<int>)[]), () => "");
+        Test(() => string.Join(';', (IEnumerable<int>)[100]), () => $"{100}");
+        Test(() => string.Join(';', (string?[])[]), () => "");
+        Test(() => string.Join(';', (string?[])["item"]), () => "item");
+        Test(() => string.Join(';', (object?[])[]), () => "");
+        Test(() => string.Join(';', (object?[])[true]), () => $"{true}");
+        Test(() => string.Join(',', (ReadOnlySpan<string?>)[]), () => "");
+        Test(() => string.Join(',', (ReadOnlySpan<string?>)["item"]), () => "item");
+        Test(() => string.Join(',', (ReadOnlySpan<object?>)[]), () => "");
+        Test(() => string.Join(',', (ReadOnlySpan<object?>)[true]), () => $"{true}");
         Test(() => string.Join("; ", (IEnumerable<int>)[]), () => "");
         Test(() => string.Join("; ", (IEnumerable<int>)[100]), () => $"{100}");
         Test(() => string.Join("; ", (string?[])[]), () => "");
         Test(() => string.Join("; ", (string?[])["item"]), () => "item");
         Test(() => string.Join("; ", (object?[])[]), () => "");
         Test(() => string.Join("; ", (object?[])[true]), () => $"{true}");
-        Test(() => MissingStringMethods.Join("; ", (ReadOnlySpan<string?>)[]), () => "");
-        Test(() => MissingStringMethods.Join("; ", (ReadOnlySpan<string?>)["item"]), () => "item");
-        Test(() => MissingStringMethods.Join("; ", (ReadOnlySpan<object?>)[]), () => "");
-        Test(() => MissingStringMethods.Join("; ", (ReadOnlySpan<object?>)[true]), () => $"{true}");
-        Test(() => MissingStringMethods.Join(';', (string?[])["item1", "item2"], 0, 0), () => "");
-        Test(() => MissingStringMethods.Join(';', (string?[])["item"], 1, 0), () => "");
-        Test(() => MissingStringMethods.Join(';', (string?[])["item"], 0, 1), () => "item");
+        Test(() => string.Join("; ", (ReadOnlySpan<string?>)[]), () => "");
+        Test(() => string.Join("; ", (ReadOnlySpan<string?>)["item"]), () => "item");
+        Test(() => string.Join("; ", (ReadOnlySpan<object?>)[]), () => "");
+        Test(() => string.Join("; ", (ReadOnlySpan<object?>)[true]), () => $"{true}");
+        Test(() => string.Join(';', (string?[])["item1", "item2"], 0, 0), () => "");
+        Test(() => string.Join(';', (string?[])["item"], 1, 0), () => "");
+        Test(() => string.Join(';', (string?[])["item"], 0, 1), () => "item");
         Test(() => string.Join(", ", (string?[])["item1", "item2"], 0, 0), () => "");
         Test(() => string.Join(", ", (string?[])["item"], 1, 0), () => "");
         Test(() => string.Join(", ", (string?[])["item"], 0, 1), () => "item");
@@ -824,30 +821,30 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         Test(text => text.Split(null as string), text => [text], values);
         Test(text => text.Split(""), text => [text], values);
-        Test(text => text.Split(null as string, MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
-        Test(text => text.Split("", MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test(text => text.Split(null as string, StringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test(text => text.Split("", StringSplitOptions.TrimEntries), text => [text.Trim()], values);
         Test(text => text.Split([';'], 0), _ => [], values);
         Test(text => text.Split([';'], 1), text => [text], values);
-        Test(text => text.Split([""], MissingStringSplitOptions.None), text => [text], values);
-        Test(text => text.Split([""], MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test(text => text.Split([""], StringSplitOptions.None), text => [text], values);
+        Test(text => text.Split_([""], StringSplitOptions.TrimEntries), text => [text.Trim()], values);
         Test((text, options) => text.Split(';', 0, options), (_, _) => [], values, stringSplitOptions);
         Test(text => text.Split(';', 1), text => [text], values);
-        Test(text => text.Split(';', 1, MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test(text => text.Split(';', 1, StringSplitOptions.TrimEntries), text => [text.Trim()], values);
         Test((text, options) => text.Split("; ", 0, options), (_, _) => [], values, stringSplitOptions);
         Test(text => text.Split("; ", 1), text => [text], values);
         Test(text => text.Split(null as string, 10), text => [text], values);
         Test(text => text.Split("", 10), text => [text], values);
-        Test(text => text.Split("; ", 1, MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
-        Test(text => text.Split(null as string, 10, MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
-        Test(text => text.Split("", 10, MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
-        Test((text, options) => text.Split([';'], 0, options), (_, _) => [], values, stringSplitOptions);
-        Test(text => text.Split([';'], 1, MissingStringSplitOptions.None), text => [text], values);
-        Test(text => text.Split([';'], 1, MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
-        Test((text, options) => text.Split(["; "], 0, options), (_, _) => [], values, stringSplitOptions);
-        Test(text => text.Split(["; "], 1, MissingStringSplitOptions.None), text => [text], values);
-        Test(text => text.Split([""], 10, MissingStringSplitOptions.None), text => [text], values);
-        Test(text => text.Split(["; "], 1, MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
-        Test(text => text.Split([""], 10, MissingStringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test(text => text.Split("; ", 1, StringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test(text => text.Split(null as string, 10, StringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test(text => text.Split("", 10, StringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test((text, options) => text.Split_([';'], 0, options), (_, _) => [], values, stringSplitOptions);
+        Test(text => text.Split([';'], 1, StringSplitOptions.None), text => [text], values);
+        Test(text => text.Split_([';'], 1, StringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test((text, options) => text.Split_(["; "], 0, options), (_, _) => [], values, stringSplitOptions);
+        Test(text => text.Split(["; "], 1, StringSplitOptions.None), text => [text], values);
+        Test(text => text.Split([""], 10, StringSplitOptions.None), text => [text], values);
+        Test(text => text.Split_(["; "], 1, StringSplitOptions.TrimEntries), text => [text.Trim()], values);
+        Test(text => text.Split_([""], 10, StringSplitOptions.TrimEntries), text => [text.Trim()], values);
 
         Test(text => text.StartsWith(""), _ => true, values);
         Test((text, comparisonType) => text.StartsWith("", comparisonType), (_, _) => true, values, comparisons);

@@ -16,7 +16,7 @@ public sealed class LinqQueryAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\Linq";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantLinqQueryHint || highlighting.IsError();
+        => highlighting is RedundantLinqQueryHint or { IsError: true };
 
     [Test]
     public void TestNoOpQuery() => DoNamedTest2();

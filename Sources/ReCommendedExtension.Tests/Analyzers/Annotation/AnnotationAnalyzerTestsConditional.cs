@@ -13,7 +13,7 @@ public sealed class AnnotationAnalyzerTestsConditional : CSharpHighlightingTestB
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ConditionalAnnotationHint || highlighting.IsError();
+        => highlighting is ConditionalAnnotationHint or { IsError: true };
 
     [Test]
     public void TestConditional() => DoNamedTest2();

@@ -17,7 +17,7 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpHighlightingTes
     protected override string RelativeTestDataPath => @"Analyzers\InterfaceImplementation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ImplementOperatorsHighlighting || highlighting.IsError();
+        => highlighting is ImplementOperatorsHighlighting or { IsError: true };
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]

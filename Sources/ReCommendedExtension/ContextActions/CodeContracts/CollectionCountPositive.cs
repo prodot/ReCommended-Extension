@@ -38,10 +38,10 @@ public sealed class CollectionCountPositive(ICSharpContextActionDataProvider pro
     }
 
     protected override string GetContractTextForUI(string contractIdentifier)
-        => isArray ? $"{contractIdentifier}.{nameof(Array.Length)} > 0" : $"{contractIdentifier}.{nameof(ICollection<int>.Count)} > 0";
+        => isArray ? $"{contractIdentifier}.{nameof(Array.Length)} > 0" : $"{contractIdentifier}.{nameof(ICollection<>.Count)} > 0";
 
     protected override IExpression GetExpression(CSharpElementFactory factory, IExpression contractExpression)
         => isArray
             ? factory.CreateExpression($"$0.{nameof(Array.Length)} > 0", contractExpression)
-            : factory.CreateExpression($"$0.{nameof(ICollection<int>.Count)} > 0", contractExpression);
+            : factory.CreateExpression($"$0.{nameof(ICollection<>.Count)} > 0", contractExpression);
 }

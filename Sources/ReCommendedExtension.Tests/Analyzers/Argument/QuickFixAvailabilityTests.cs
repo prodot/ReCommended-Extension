@@ -16,11 +16,11 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantArgumentHint
-                or RedundantArgumentRangeHint
-                or RedundantElementHint
-                or UseOtherArgumentSuggestion
-                or UseOtherArgumentRangeSuggestion
-            || highlighting.IsError();
+            or RedundantArgumentRangeHint
+            or RedundantElementHint
+            or UseOtherArgumentSuggestion
+            or UseOtherArgumentRangeSuggestion
+            or { IsError: true };
 
     [Test]
     public void TestRemoveArgumentFixAvailability() => DoNamedTest2();

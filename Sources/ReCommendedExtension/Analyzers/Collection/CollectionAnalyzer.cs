@@ -502,7 +502,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         {
             if (arrayCreationExpression.DimInits is []
                 || arrayCreationExpression.DimInits is [var e]
-                && e.TryGetInt32Constant() == (arrayCreationExpression.ArrayInitializer?.InitializerElements.Count ?? 0))
+                && e.AsInt32Constant == (arrayCreationExpression.ArrayInitializer?.InitializerElements.Count ?? 0))
             {
                 var itemType = arrayCreationExpression.GetElementType();
 
@@ -515,8 +515,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     // new T[0]         ->  []
                     // new[] { ... }    ->  [...]
 
-                    var isEmptyArray = arrayCreationExpression is { DimInits: [var exp] } && exp.TryGetInt32Constant() == 0
-                        || arrayCreationExpression is { DimInits: [], ArrayInitializer.InitializerElements: [] };
+                    var isEmptyArray = arrayCreationExpression is { DimInits: [{ AsInt32Constant: 0 }] }
+                        or { DimInits: [], ArrayInitializer.InitializerElements: [] };
 
                     var methodReferenceToSetInferredTypeArguments = isEmptyArray
                         ? TryGetMethodReferenceToSetInferredTypeArguments(arrayCreationExpression)
@@ -819,8 +819,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             };
             var arguments = (parameterTypes[0].IsInt() ? HashSetArguments.Capacity : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? HashSetArguments.Collection : 0)
-                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value: { } a0 } && !a0.IsDefaultValue()
-                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value: { } a1 } && !a1.IsDefaultValue()
+                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value.IsDefaultValueOrNull: false }
+                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value.IsDefaultValueOrNull: false }
                         ? HashSetArguments.Comparer
                         : 0);
 
@@ -898,8 +898,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             var arguments = (parameterTypes[0].IsInt() ? DictionaryArguments.Capacity : 0)
                 | (parameterTypes[0].IsIDictionary() ? DictionaryArguments.Dictionary : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? DictionaryArguments.Pairs : 0)
-                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value : { } a0 } && !a0.IsDefaultValue()
-                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value: { } a1 } && !a1.IsDefaultValue()
+                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value.IsDefaultValueOrNull : false }
+                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value.IsDefaultValueOrNull: false }
                         ? DictionaryArguments.Comparer
                         : 0);
 

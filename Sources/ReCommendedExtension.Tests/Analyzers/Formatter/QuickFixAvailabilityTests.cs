@@ -17,12 +17,12 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantFormatSpecifierHint
-                or RedundantFormatProviderHint
-                or RedundantFormatPrecisionSpecifierHint
-                or PassOtherFormatSpecifierSuggestion
-                or SuspiciousFormatSpecifierWarning
-                or ReplaceTypeCastWithFormatSpecifierSuggestion
-            || highlighting.IsError();
+            or RedundantFormatProviderHint
+            or RedundantFormatPrecisionSpecifierHint
+            or PassOtherFormatSpecifierSuggestion
+            or SuspiciousFormatSpecifierWarning
+            or ReplaceTypeCastWithFormatSpecifierSuggestion
+            or { IsError: true };
 
     [Test]
     public void TestRemoveFormatSpecifierAvailability() => DoNamedTest2();

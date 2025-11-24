@@ -4,30 +4,34 @@ namespace ReCommendedExtension.Extensions;
 
 internal static class ReferenceExpressionExtensions
 {
-    [Pure]
-    public static bool IsPropertyAssignment(this IReferenceExpression referenceExpression)
-        => referenceExpression.Parent switch
-        {
-            // direct property assignment
-            IAssignmentExpression assignmentExpression when assignmentExpression.Dest == referenceExpression => true,
-
-            // tuple component assignment
-            ITupleComponent
+    extension(IReferenceExpression referenceExpression)
+    {
+        public bool IsPropertyAssignment
+            => referenceExpression.Parent switch
             {
-                Parent: ITupleComponentList { Parent: ITupleExpression { Parent: IAssignmentExpression assignmentExpression } tupleExpression },
-            } when assignmentExpression.Dest == tupleExpression => true,
+                // direct property assignment
+                IAssignmentExpression assignmentExpression when assignmentExpression.Dest == referenceExpression => true,
 
-            _ => false,
-        };
-
-    [Pure]
-    public static bool IsWithinNameofExpression(this IReferenceExpression referenceExpression)
-        => referenceExpression.Parent is ICSharpArgument
-            {
-                Invocation: IInvocationExpression
+                // tuple component assignment
+                ITupleComponent
                 {
-                    InvokedExpression: IReferenceExpression { Reference: var reference }, TypeArguments: [], Arguments: [_],
-                },
-            }
-            && reference.GetName() == "nameof";
+                    Parent: ITupleComponentList
+                    {
+                        Parent: ITupleExpression { Parent: IAssignmentExpression assignmentExpression } tupleExpression,
+                    },
+                } when assignmentExpression.Dest == tupleExpression => true,
+
+                _ => false,
+            };
+
+        public bool IsWithinNameofExpression
+            => referenceExpression.Parent is ICSharpArgument
+                {
+                    Invocation: IInvocationExpression
+                    {
+                        InvokedExpression: IReferenceExpression { Reference: var reference }, TypeArguments: [], Arguments: [_],
+                    },
+                }
+                && reference.GetName() == "nameof";
+    }
 }

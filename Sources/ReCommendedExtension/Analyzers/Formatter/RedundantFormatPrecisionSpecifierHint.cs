@@ -50,7 +50,7 @@ public sealed class RedundantFormatPrecisionSpecifierHint(string message, Format
                     var expression = argument.Value.GetText();
                     Debug.Assert(expression.Length >= 4);
 
-                    var format = argument.Value.TryGetStringConstant();
+                    var format = argument.Value.AsStringConstant;
                     Debug.Assert(format is { Length: >= 2 });
 
                     var formatSpecifier = 0;

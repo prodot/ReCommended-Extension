@@ -18,7 +18,7 @@ public sealed class ValueTaskQuickFixAvailabilityTests : QuickFixAvailabilityTes
         IHighlighting highlighting,
         IPsiSourceFile psiSourceFile,
         IContextBoundSettingsStore boundSettingsStore)
-        => highlighting is IntentionalBlockingAttemptWarning || highlighting.IsError();
+        => highlighting is IntentionalBlockingAttemptWarning or { IsError: true };
 
     [Test]
     public void TestIntentionalBlockingAttemptsAvailability() => DoNamedTest2();

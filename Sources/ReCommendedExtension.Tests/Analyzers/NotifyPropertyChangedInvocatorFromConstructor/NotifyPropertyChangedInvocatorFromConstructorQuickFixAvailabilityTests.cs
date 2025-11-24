@@ -15,7 +15,7 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailab
     protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructor\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning || highlighting.IsError();
+        => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning or { IsError: true };
 
     [Test]
     public void TestNotifyPropertyChangedInvocatorFromConstructorAvailability() => DoNamedTest2();

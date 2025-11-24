@@ -8,7 +8,7 @@ internal sealed record SuspiciousElementAccess : Inspection
     public static SuspiciousElementAccess ByIndexWhenArg0IsDistinctCollection { get; } = new()
     {
         Condition =
-            args => args[0] is { Value: { } qualifier }
+            args => args is [{ Value: { } qualifier }, ..]
                 && qualifier.Type() is var type
                 && !IsIndexableCollectionOrString(type, qualifier)
                 && IsDistinctCollection(type, qualifier),
@@ -18,7 +18,7 @@ internal sealed record SuspiciousElementAccess : Inspection
     public static SuspiciousElementAccess FirstWhenArg0IsDistinctCollection { get; } = new()
     {
         Condition =
-            args => args[0] is { Value: { } qualifier }
+            args => args is [{ Value: { } qualifier }, ..]
                 && qualifier.Type() is var type
                 && !IsIndexableCollectionOrString(type, qualifier)
                 && IsDistinctCollection(type, qualifier),
@@ -28,7 +28,7 @@ internal sealed record SuspiciousElementAccess : Inspection
     public static SuspiciousElementAccess LastWhenArg0IsDistinctCollection { get; } = new()
     {
         Condition =
-            args => args[0] is { Value: { } qualifier }
+            args => args is [{ Value: { } qualifier }, ..]
                 && qualifier.Type() is var type
                 && !IsIndexableCollectionOrString(type, qualifier)
                 && IsDistinctCollection(type, qualifier),

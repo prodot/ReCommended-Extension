@@ -201,7 +201,7 @@ public readonly record struct TimeOnly : IFormattable
         [ValueRange(0, 59)] int minute,
         [ValueRange(0, 59)] int second,
         [ValueRange(0, 999)] int millisecond,
-        [ValueRange(0, 999)] int microsecond) : this(MissingTimeSpanMembers._Ctor(0, hour, minute, second, millisecond, microsecond)) { }
+        [ValueRange(0, 999)] int microsecond) : this(TimeSpan._Ctor(0, hour, minute, second, millisecond, microsecond)) { }
 
     [Pure]
     public TimeOnly Add(TimeSpan value, out int wrappedDays)

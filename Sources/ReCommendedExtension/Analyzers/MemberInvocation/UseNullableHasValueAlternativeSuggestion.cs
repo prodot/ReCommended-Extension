@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Analyzers.MemberInvocation;
     SeverityId,
     null,
     HighlightingGroupIds.BestPractice,
-    $"Replace '{nameof(Nullable<int>)}<T>.{nameof(Nullable<int>.HasValue)}' with a pattern or a null check" + ZoneMarker.Suffix,
+    $"Replace '{nameof(Nullable<>)}<T>.{nameof(Nullable<>.HasValue)}' with a pattern or a null check" + ZoneMarker.Suffix,
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]

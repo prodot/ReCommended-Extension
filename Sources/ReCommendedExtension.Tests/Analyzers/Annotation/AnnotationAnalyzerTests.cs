@@ -20,14 +20,14 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantNullableAnnotationHint
-                or RedundantAnnotationSuggestion
-                or NotAllowedAnnotationWarning
-                or MissingAnnotationWarning
-                or MissingSuppressionJustificationWarning
-                or ConflictingAnnotationWarning
-                or InParameterWithMustDisposeResourceAttributeWarning // to figure out which cases are supported by R#
-                or ReturnTypeCanBeNotNullableWarning // to figure out which cases are supported by R#
-            || highlighting.IsError();
+            or RedundantAnnotationSuggestion
+            or NotAllowedAnnotationWarning
+            or MissingAnnotationWarning
+            or MissingSuppressionJustificationWarning
+            or ConflictingAnnotationWarning
+            or InParameterWithMustDisposeResourceAttributeWarning // to figure out which cases are supported by R#
+            or ReturnTypeCanBeNotNullableWarning // to figure out which cases are supported by R#
+            or { IsError: true };
 
     [Test]
     [TestNetFramework45]

@@ -13,7 +13,7 @@ public sealed class UnthrowableExceptionAnalyzerTests : CSharpHighlightingTestBa
     protected override string RelativeTestDataPath => @"Analyzers\UnthrowableException";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UnthrowableExceptionWarning || highlighting.IsError();
+        => highlighting is UnthrowableExceptionWarning or { IsError: true };
 
     [Test]
     public void TestUnthrowableException() => DoNamedTest2();

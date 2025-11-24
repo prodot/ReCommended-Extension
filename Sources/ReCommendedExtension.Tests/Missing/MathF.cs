@@ -1,6 +1,6 @@
 ﻿namespace ReCommendedExtension.Tests.Missing;
 
-internal static class MissingMathFMethods
+internal static class MathF
 {
     [Pure]
     public static float Round(float x) => (float)Math.Round(x);

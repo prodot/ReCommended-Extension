@@ -14,8 +14,7 @@ public sealed class XamlBindingWithoutMode : XamlHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\XamlBindingWithoutMode";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is XamlBindingWithoutModeWarning
-            || highlighting.IsError() && highlighting is not XamlBindingWithoutContextNotResolvedHighlighting;
+        => highlighting is XamlBindingWithoutModeWarning or { IsError: true } and not XamlBindingWithoutContextNotResolvedHighlighting;
 
     [Test]
     public void TestXamlBindingWithoutMode() => DoNamedTest2();

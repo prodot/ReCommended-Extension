@@ -27,7 +27,7 @@ internal sealed record BinaryOperator : Inspection
     public static BinaryOperator QualifierArgumentNonBooleanConstants { get; } = new()
     {
         TryGetOperands = (qualifier, args)
-            => args is [{ Value: { } value }] && qualifier.TryGetBooleanConstant() == null && value.TryGetBooleanConstant() == null
+            => qualifier.AsBooleanConstant == null && args is [{ Value: { AsBooleanConstant: null } value }]
                 ? new BinaryOperatorOperands { Left = qualifier.GetText(), Right = value.GetText() }
                 : null,
         Message = op => $"Use the '{op}' operator.",
@@ -38,7 +38,7 @@ internal sealed record BinaryOperator : Inspection
         TryGetOperands = (qualifier, _)
             => new BinaryOperatorOperands
             {
-                Left = qualifier.GetText(), Right = qualifier.Type().Unlift().TryGetDefaultValue(qualifier) ?? "default",
+                Left = qualifier.GetText(), Right = qualifier.Type().Unlift().TryGetDefaultValueLiteral(qualifier) ?? "default",
             },
         Message = op => $"Use the '{op}' operator.",
     };

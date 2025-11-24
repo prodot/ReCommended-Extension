@@ -15,62 +15,68 @@ internal static class AttributesOwnerDeclarationExtensions
         "MSTest.TestFramework", "Microsoft.VisualStudio.TestPlatform.TestFramework", "nunit.framework", "xunit.core",
     };
 
-    [Pure]
-    public static bool IsDeclaredInTestProject(this IAttributesOwnerDeclaration attributesOwnerDeclaration)
+    extension(IAttributesOwnerDeclaration attributesOwnerDeclaration)
     {
-        if (attributesOwnerDeclaration.GetProject() is { } project)
+        [Pure]
+        public bool IsDeclaredInTestProject()
         {
-            if (project.HasFlavour<MsTestProjectFlavor>())
+            if (attributesOwnerDeclaration.GetProject() is { } project)
             {
-                return true;
+                if (project.HasFlavour<MsTestProjectFlavor>())
+                {
+                    return true;
+                }
+
+                if (project
+                    .GetAssemblyReferences(project.GetCurrentTargetFrameworkId())
+                    .Any(assemblyReference => assemblyReference is { } && wellKnownUnitTestingAssemblyNames.Contains(assemblyReference.Name)))
+                {
+                    return true;
+                }
             }
 
-            if (project
-                .GetAssemblyReferences(project.GetCurrentTargetFrameworkId())
-                .Any(assemblyReference => assemblyReference is { } && wellKnownUnitTestingAssemblyNames.Contains(assemblyReference.Name)))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    [Pure]
-    public static bool IsOnLocalFunctionWithUnsupportedAttributes(this IAttributesOwnerDeclaration attributesOwnerDeclaration)
-    {
-        if (attributesOwnerDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90)
-        {
             return false;
         }
 
-        return attributesOwnerDeclaration.DeclaredElement is IParameter parameter && parameter.ContainingParametersOwner.IsLocalFunction()
-            || attributesOwnerDeclaration.DeclaredElement is ILocalFunctionDeclaration;
-    }
-
-    [Pure]
-    public static bool IsOnLambdaExpressionWithUnsupportedAttributes(this IAttributesOwnerDeclaration attributesOwnerDeclaration)
-    {
-        if (attributesOwnerDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp100)
+        public bool IsOnLocalFunctionWithUnsupportedAttributes
         {
-            return false;
+            get
+            {
+                if (attributesOwnerDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp90)
+                {
+                    return false;
+                }
+
+                return attributesOwnerDeclaration.DeclaredElement is IParameter parameter && parameter.ContainingParametersOwner.IsLocalFunction()
+                    || attributesOwnerDeclaration.DeclaredElement is ILocalFunctionDeclaration;
+            }
         }
 
-        return attributesOwnerDeclaration.DeclaredElement is IParameter { ContainingParametersOwner: ILambdaExpression } or ILambdaExpression;
+        public bool IsOnLambdaExpressionWithUnsupportedAttributes
+        {
+            get
+            {
+                if (attributesOwnerDeclaration.GetCSharpLanguageLevel() >= CSharpLanguageLevel.CSharp100)
+                {
+                    return false;
+                }
+
+                return attributesOwnerDeclaration.DeclaredElement is IParameter { ContainingParametersOwner: ILambdaExpression } or ILambdaExpression;
+            }
+        }
+
+        public bool IsOnAnonymousMethodWithUnsupportedAttributes
+            => attributesOwnerDeclaration.DeclaredElement is IParameter { ContainingParametersOwner: IAnonymousMethodExpression }
+                or IAnonymousMethodExpression;
+
+        [Pure]
+        public ITypeElement? TryGetAnnotationAttributeType(string attributeShortName)
+            => attributesOwnerDeclaration
+                .GetPsiServices()
+                .CodeAnnotationsConfiguration.GetAttributeTypeForElement(attributesOwnerDeclaration, attributeShortName);
+
+        [Pure]
+        public bool IsAnnotationProvided(string attributeShortName)
+            => attributesOwnerDeclaration.TryGetAnnotationAttributeType(attributeShortName) is { };
     }
-
-    [Pure]
-    public static bool IsOnAnonymousMethodWithUnsupportedAttributes(this IAttributesOwnerDeclaration attributesOwnerDeclaration)
-        => attributesOwnerDeclaration.DeclaredElement is IParameter { ContainingParametersOwner: IAnonymousMethodExpression }
-            or IAnonymousMethodExpression;
-
-    [Pure]
-    public static ITypeElement? TryGetAnnotationAttributeType(this IAttributesOwnerDeclaration attributesOwnerDeclaration, string attributeShortName)
-        => attributesOwnerDeclaration
-            .GetPsiServices()
-            .CodeAnnotationsConfiguration.GetAttributeTypeForElement(attributesOwnerDeclaration, attributeShortName);
-
-    [Pure]
-    public static bool IsAnnotationProvided(this IAttributesOwnerDeclaration attributesOwnerDeclaration, string attributeShortName)
-        => attributesOwnerDeclaration.TryGetAnnotationAttributeType(attributeShortName) is { };
 }

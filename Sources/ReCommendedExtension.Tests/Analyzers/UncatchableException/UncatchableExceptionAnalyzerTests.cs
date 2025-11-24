@@ -13,7 +13,7 @@ public sealed class UncatchableExceptionAnalyzerTests : CSharpHighlightingTestBa
     protected override string RelativeTestDataPath => @"Analyzers\UncatchableException";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UncatchableExceptionWarning || highlighting.IsError();
+        => highlighting is UncatchableExceptionWarning or { IsError: true };
 
     [Test]
     public void TestUncatchableException() => DoNamedTest2();

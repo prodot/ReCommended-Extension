@@ -9,8 +9,8 @@ internal sealed record OtherArgumentRange : Inspection
     public static OtherArgumentRange Chars { get; } = new()
     {
         TryGetReplacements = args
-            => args[0].Value.TryGetStringConstant() is [var c0] && args[1].Value.TryGetStringConstant() is [var c1]
-                ? [c0.ToLiteralString(args[0].GetCSharpLanguageLevel()), c1.ToLiteralString(args[1].GetCSharpLanguageLevel())]
+            => args is [{ Value.AsStringConstant: [var c0] } arg0, { Value.AsStringConstant: [var c1] } arg1, ..]
+                ? [c0.ToLiteralString(arg0.GetCSharpLanguageLevel()), c1.ToLiteralString(arg1.GetCSharpLanguageLevel())]
                 : null,
         Message = "The only character should be passed directly.",
     };
@@ -18,13 +18,10 @@ internal sealed record OtherArgumentRange : Inspection
     public static OtherArgumentRange CharsForStringComparisonOrdinal { get; } = new()
     {
         TryGetReplacements =
-            args => args[0].Value.TryGetStringConstant() is [var c0] && args[1].Value.TryGetStringConstant() is [var c1]
-                ? [c0.ToLiteralString(args[0].GetCSharpLanguageLevel()), c1.ToLiteralString(args[1].GetCSharpLanguageLevel())]
+            args => args is [{ Value.AsStringConstant: [var c0] } arg0, { Value.AsStringConstant: [var c1] } arg1, ..]
+                ? [c0.ToLiteralString(arg0.GetCSharpLanguageLevel()), c1.ToLiteralString(arg1.GetCSharpLanguageLevel())]
                 : null,
-        FurtherArgumentCondition = new ArgumentCondition
-        {
-            Condition = arg => arg.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal,
-        },
+        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.AsStringComparisonConstant == StringComparison.Ordinal },
         Message = "The only character should be passed directly.",
     };
 

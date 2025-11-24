@@ -17,7 +17,7 @@ public sealed class ReplaceWithCollectionExpressionQuickFixAvailabilityTests : Q
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseTargetTypedCollectionExpressionSuggestion || highlighting.IsError();
+        => highlighting is UseTargetTypedCollectionExpressionSuggestion or { IsError: true };
 
     [Test]
     public void TestCollectionInitialization_Array_Target_Array_Availability() => DoNamedTest2();

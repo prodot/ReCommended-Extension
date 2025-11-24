@@ -14,7 +14,7 @@ public sealed class ControlFlowQuickFixAvailabilityTests : QuickFixAvailabilityT
     protected override string RelativeTestDataPath => @"Analyzers\ControlFlow\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAssertionStatementSuggestion || highlighting.IsError();
+        => highlighting is RedundantAssertionStatementSuggestion or { IsError: true };
 
     [Test]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]

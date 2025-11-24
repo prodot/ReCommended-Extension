@@ -28,29 +28,32 @@ internal static class LinqExtensions
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    [Pure]
-    public static IReadOnlyList<T> WithoutElementAt<T>(this IReadOnlyList<T> list, [NonNegativeValue] int ignoreIndex)
+    extension<T>(IReadOnlyList<T> list)
     {
-        if (ignoreIndex == 0 && list.Count == 1)
+        [Pure]
+        public IReadOnlyList<T> WithoutElementAt([NonNegativeValue] int ignoreIndex)
         {
-            return [];
+            if (ignoreIndex == 0 && list.Count == 1)
+            {
+                return [];
+            }
+
+            Debug.Assert(ignoreIndex < list.Count);
+
+            return new ReadOnlyListView<T>(list, ignoreIndex);
         }
 
-        Debug.Assert(ignoreIndex < list.Count);
-
-        return new ReadOnlyListView<T>(list, ignoreIndex);
-    }
-
-    [Pure]
-    public static IReadOnlyList<T> WithoutElementsAt<T>(this IReadOnlyList<T> list, Range ignoreRange)
-    {
-        var (ignoreIndexOffset, ignoreLength) = ignoreRange.GetOffsetAndLength(list.Count);
-
-        if (ignoreLength == list.Count)
+        [Pure]
+        public IReadOnlyList<T> WithoutElementsAt(Range ignoreRange)
         {
-            return [];
-        }
+            var (ignoreIndexOffset, ignoreLength) = ignoreRange.GetOffsetAndLength(list.Count);
 
-        return new ReadOnlyListView<T>(list, ignoreIndexOffset, ignoreLength);
+            if (ignoreLength == list.Count)
+            {
+                return [];
+            }
+
+            return new ReadOnlyListView<T>(list, ignoreIndexOffset, ignoreLength);
+        }
     }
 }

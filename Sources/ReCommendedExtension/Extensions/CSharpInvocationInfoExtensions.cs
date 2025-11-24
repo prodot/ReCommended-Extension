@@ -5,7 +5,8 @@ namespace ReCommendedExtension.Extensions;
 
 internal static class CSharpInvocationInfoExtensions
 {
-    [Pure]
-    public static bool IsUsedAsStatement(this ICSharpInvocationInfo invocationInfo)
-        => invocationInfo is ICSharpTreeNode { Parent: IExpressionStatement or IForInitializer or IForIterator };
+    extension(ICSharpInvocationInfo invocationInfo)
+    {
+        public bool IsUsedAsStatement => invocationInfo is ICSharpTreeNode { Parent: IExpressionStatement or IForInitializer or IForIterator };
+    }
 }

@@ -15,7 +15,7 @@ public sealed class AsyncVoidQuickFixAvailabilityTests : QuickFixAvailabilityTes
     protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning || highlighting.IsError();
+        => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning or { IsError: true };
 
     [Test]
     public void TestAnonymousMethodAvailability() => DoNamedTest2();

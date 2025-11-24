@@ -15,7 +15,7 @@ public sealed class DelegateInvokeQuickFixAvailabilityTests : QuickFixAvailabili
     protected override string RelativeTestDataPath => @"Analyzers\DelegateInvoke\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantDelegateInvokeHint || highlighting.IsError();
+        => highlighting is RedundantDelegateInvokeHint or { IsError: true };
 
     [Test]
     public void TestDelegateInvokeAvailability() => DoNamedTest2();

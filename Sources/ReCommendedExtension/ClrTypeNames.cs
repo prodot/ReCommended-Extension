@@ -129,21 +129,28 @@ internal static class ClrTypeNames
 
     public static readonly IClrTypeName TextWriter = GetClrTypeName<TextWriter>();
 
-    [JetBrains.Annotations.Pure]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsClrType([NotNullWhen(true)] this ITypeElement? typeElement, IClrTypeName clrName)
-        => typeElement is { } && typeElement.GetClrName().Equals(clrName);
+    extension([NotNullWhen(true)] ITypeElement? typeElement)
+    {
+        [JetBrains.Annotations.Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsClrType(IClrTypeName clrName) => typeElement is { } && typeElement.GetClrName().Equals(clrName);
+    }
 
-    [JetBrains.Annotations.Pure]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsClrType([NotNullWhen(true)] this IType? type, IClrTypeName clrName) => type.GetTypeElement().IsClrType(clrName);
+    extension([NotNullWhen(true)] IType? type)
+    {
+        [JetBrains.Annotations.Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsClrType(IClrTypeName clrName) => type.GetTypeElement().IsClrType(clrName);
+    }
 
-    [JetBrains.Annotations.Pure]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ITypeElement? TryGetTypeElement(this IClrTypeName clrName, IPsiModule psiModule)
-        => TypeElementUtil.GetTypeElementByClrName(clrName, psiModule);
+    extension(IClrTypeName clrName)
+    {
+        [JetBrains.Annotations.Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ITypeElement? TryGetTypeElement(IPsiModule psiModule) => TypeElementUtil.GetTypeElementByClrName(clrName, psiModule);
 
-    [JetBrains.Annotations.Pure]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IType GetType(this IClrTypeName clrName, IPsiModule psiModule) => TypeFactory.CreateTypeByCLRName(clrName, psiModule);
+        [JetBrains.Annotations.Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IType GetType(IPsiModule psiModule) => TypeFactory.CreateTypeByCLRName(clrName, psiModule);
+    }
 }

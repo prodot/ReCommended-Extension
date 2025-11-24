@@ -140,7 +140,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
 
                 if (PredefinedType.GENERIC_IEQUATABLE_FQN.TryGetTypeElement(psiModule) is { } equatableGenericInterface)
                 {
-                    if (TryGetMethod(equatableGenericInterface, nameof(IEquatable<int>.Equals)) is { } equalsMethod
+                    if (TryGetMethod(equatableGenericInterface, nameof(IEquatable<>.Equals)) is { } equalsMethod
                         && methodDeclaration.DeclaredElement.OverridesOrImplements(equalsMethod))
                     {
                         return Location.EqualsMethod;
@@ -149,13 +149,13 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
 
                 if (ClrTypeNames.IEqualityComparerGeneric.TryGetTypeElement(psiModule) is { } equalityComparerGenericInterface)
                 {
-                    if (TryGetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<int>.Equals)) is { } equalsMethod
+                    if (TryGetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<>.Equals)) is { } equalsMethod
                         && methodDeclaration.DeclaredElement.OverridesOrImplements(equalsMethod))
                     {
                         return Location.EqualsMethodWithParameters;
                     }
 
-                    if (TryGetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<int>.GetHashCode)) is { } getHashCodeMethod
+                    if (TryGetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<>.GetHashCode)) is { } getHashCodeMethod
                         && methodDeclaration.DeclaredElement.OverridesOrImplements(getHashCodeMethod))
                     {
                         return Location.GetHashCodeMethodWithParameter;
@@ -177,12 +177,12 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     }
                 }
 
-                if (methodDeclaration.DeclaredElement.IsDisposeMethod())
+                if (methodDeclaration.DeclaredElement.IsDisposeMethod)
                 {
                     return Location.DisposeMethod;
                 }
 
-                if (methodDeclaration.DeclaredElement.IsDisposeAsyncMethod())
+                if (methodDeclaration.DeclaredElement.IsDisposeAsyncMethod)
                 {
                     return Location.DisposeAsyncMethod;
                 }
@@ -301,9 +301,9 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
             Location.PropertyGetter or Location.IndexerGetter => "property getters",
             Location.EventAccessor => "event accessors",
             Location.EqualsMethod => $"'{nameof(Equals)}' methods",
-            Location.EqualsMethodWithParameters => $"'{nameof(IEquatable<int>.Equals)}' methods",
+            Location.EqualsMethodWithParameters => $"'{nameof(IEquatable<>.Equals)}' methods",
             Location.GetHashCodeMethod => $"'{nameof(GetHashCode)}' methods",
-            Location.GetHashCodeMethodWithParameter => $"'{nameof(IEqualityComparer<int>.GetHashCode)}' methods",
+            Location.GetHashCodeMethodWithParameter => $"'{nameof(IEqualityComparer<>.GetHashCode)}' methods",
             Location.ToStringMethod => $"'{nameof(ToString)}' methods",
             Location.StaticConstructor => "static constructors",
             Location.StaticFieldInitializationExpression => "static field initialization expressions",

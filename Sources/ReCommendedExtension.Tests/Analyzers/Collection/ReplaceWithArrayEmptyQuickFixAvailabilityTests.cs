@@ -17,7 +17,7 @@ public sealed class ReplaceWithArrayEmptyQuickFixAvailabilityTests : QuickFixAva
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseEmptyForArrayInitializationWarning || highlighting.IsError();
+        => highlighting is UseEmptyForArrayInitializationWarning or { IsError: true };
 
     [Test]
     public void TestEmptyArrayInitializationAvailability() => DoNamedTest2();

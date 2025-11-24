@@ -12,18 +12,14 @@ internal sealed record RangeIndexer : Inspection
     public static RangeIndexer FromStartToArg { get; } = new()
     {
         TryGetReplacement =
-            args => args[0] is { Value: { } value } && value.TryGetInt32Constant() is null or > 0
-                ? new RangeIndexerReplacement("", value.GetText())
-                : null,
+            args => args is [{ Value: { AsInt32Constant: null or > 0 } value }] ? new RangeIndexerReplacement("", value.GetText()) : null,
         Message = _ => "Use the range indexer.",
     };
 
     public static RangeIndexer FromArg1ToEndWhenArg0Zero { get; } = new()
     {
         TryGetReplacement =
-            args => args[0]?.Value.TryGetInt32Constant() == 0 && args[1] is { Value: { } value }
-                ? new RangeIndexerReplacement(value.GetText(), "")
-                : null,
+            args => args is [{ Value.AsInt32Constant: 0 }, { Value: { } value }] ? new RangeIndexerReplacement(value.GetText(), "") : null,
         Message = _ => "Use the range indexer.",
     };
 

@@ -17,16 +17,16 @@ public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         => highlighting is RedundantMethodInvocationHint
-                or UseOtherMethodSuggestion
-                or UseBinaryOperatorSuggestion
-                or UseUnaryOperatorSuggestion
-                or UsePatternSuggestion
-                or UseNullableHasValueAlternativeSuggestion
-                or ReplaceNullableValueWithTypeCastSuggestion
-                or UseRangeIndexerSuggestion
-                or UsePropertySuggestion
-                or UseStaticPropertySuggestion
-            || highlighting.IsError();
+            or UseOtherMethodSuggestion
+            or UseBinaryOperatorSuggestion
+            or UseUnaryOperatorSuggestion
+            or UsePatternSuggestion
+            or UseNullableHasValueAlternativeSuggestion
+            or ReplaceNullableValueWithTypeCastSuggestion
+            or UseRangeIndexerSuggestion
+            or UsePropertySuggestion
+            or UseStaticPropertySuggestion
+            or { IsError: true };
 
     [Test]
     [TestNetCore21]

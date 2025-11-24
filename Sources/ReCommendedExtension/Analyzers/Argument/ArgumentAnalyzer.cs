@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.Argument.Inspections;
 using ReCommendedExtension.Analyzers.Argument.Rules;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.Collections;
 using ReCommendedExtension.Extensions.MemberFinding;
 using ConstructorSignature = ReCommendedExtension.Extensions.MemberFinding.ConstructorSignature;
 using MethodSignature = ReCommendedExtension.Extensions.MemberFinding.MethodSignature;
@@ -128,9 +127,8 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 {
                     Debug.Assert(redundantCollectionElement.ParameterIndex >= 0);
 
-                    if (arguments[redundantCollectionElement.ParameterIndex] is { } argument
-                        && (!resolvedParameters[^1].IsParams || resolvedParameters.Count == arguments.Count)
-                        && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
+                    if (arguments[redundantCollectionElement.ParameterIndex] is { Value.AsCollectionCreation: { Count: > 1 } collectionCreation }
+                        && (!resolvedParameters[^1].IsParams || resolvedParameters.Count == arguments.Count))
                     {
                         switch (redundantCollectionElement)
                         {
@@ -383,11 +381,11 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     constructor,
                     resolvedConstructor.Parameters,
                     arguments,
-                    (IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames) => containingType.HasConstructor(
+                    (parameters, returnParameterNames, out parameterNames) => containingType.HasConstructor(
                         new ConstructorSignature { Parameters = parameters },
                         returnParameterNames,
                         out parameterNames),
-                    (IReadOnlyList<Parameter> _, int _, bool _, out string[] _) => throw new NotSupportedException());
+                    (_, _, _, out _) => throw new NotSupportedException());
                 break;
             }
 
@@ -411,18 +409,17 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     method,
                     resolvedMethod.Parameters,
                     arguments,
-                    (IReadOnlyList<Parameter> _, bool _, out string[] _) => throw new NotSupportedException(),
-                    (IReadOnlyList<Parameter> parameters, int genericParametersCount, bool returnParameterNames, out string[] parameterNames)
-                        => containingType.HasMethod(
-                            new MethodSignature
-                            {
-                                Name = resolvedMethod.ShortName,
-                                Parameters = parameters,
-                                IsStatic = signature.IsStatic,
-                                GenericParametersCount = genericParametersCount,
-                            },
-                            returnParameterNames,
-                            out parameterNames));
+                    (_, _, out _) => throw new NotSupportedException(),
+                    (parameters, genericParametersCount, returnParameterNames, out parameterNames) => containingType.HasMethod(
+                        new MethodSignature
+                        {
+                            Name = resolvedMethod.ShortName,
+                            Parameters = parameters,
+                            IsStatic = signature.IsStatic,
+                            GenericParametersCount = genericParametersCount,
+                        },
+                        returnParameterNames,
+                        out parameterNames));
                 break;
             }
         }

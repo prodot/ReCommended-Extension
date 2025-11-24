@@ -13,7 +13,7 @@ public sealed class ConditionalInvocationAnalyzerTests : CSharpHighlightingTestB
     protected override string RelativeTestDataPath => @"Analyzers\ConditionalInvocation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ConditionalInvocationHint || highlighting.IsError();
+        => highlighting is ConditionalInvocationHint or { IsError: true };
 
     [Test]
     public void TestConditional() => DoNamedTest2();

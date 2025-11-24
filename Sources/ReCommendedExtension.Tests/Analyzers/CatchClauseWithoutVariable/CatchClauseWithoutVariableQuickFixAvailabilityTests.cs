@@ -13,7 +13,7 @@ public sealed class CatchClauseWithoutVariableQuickFixAvailabilityTests : QuickF
     protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariable\QuickFixes";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is CatchClauseWithoutVariableHint || highlighting.IsError();
+        => highlighting is CatchClauseWithoutVariableHint or { IsError: true };
 
     [Test]
     public void TestCatchClauseWithoutVariableAvailability() => DoNamedTest2();

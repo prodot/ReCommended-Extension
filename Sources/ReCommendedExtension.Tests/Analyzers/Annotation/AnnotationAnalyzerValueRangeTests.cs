@@ -17,7 +17,7 @@ public sealed class AnnotationAnalyzerValueRangeTests : CSharpHighlightingTestBa
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAnnotationSuggestion or NotAllowedAnnotationWarning or InvalidValueRangeBoundaryWarning || highlighting.IsError();
+        => highlighting is RedundantAnnotationSuggestion or NotAllowedAnnotationWarning or InvalidValueRangeBoundaryWarning or { IsError: true };
 
     [Test]
     public void TestValueRange() => DoNamedTest2();

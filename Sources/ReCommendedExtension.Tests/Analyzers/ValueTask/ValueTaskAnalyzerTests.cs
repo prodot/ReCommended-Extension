@@ -15,7 +15,7 @@ public sealed class ValueTaskAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\ValueTask";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is PossibleMultipleConsumptionWarning or IntentionalBlockingAttemptWarning || highlighting.IsError();
+        => highlighting is PossibleMultipleConsumptionWarning or IntentionalBlockingAttemptWarning or { IsError: true };
 
     [Test]
     public void TestCodePaths() => DoNamedTest2();

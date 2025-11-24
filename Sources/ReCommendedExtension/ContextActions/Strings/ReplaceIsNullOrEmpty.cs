@@ -21,8 +21,13 @@ public abstract class ReplaceIsNullOrEmpty(ICSharpContextActionDataProvider prov
     [MemberNotNullWhen(true, nameof(valueArgument))]
     protected override bool IsAvailable(IInvocationExpression selectedElement)
     {
-        this.valueArgument = !selectedElement.IsUsedAsStatement()
-            && selectedElement is { InvokedExpression: IReferenceExpression { Reference: var reference }, Arguments: [{ Value: { } valueArgument }] }
+        this.valueArgument =
+            selectedElement is
+            {
+                IsUsedAsStatement: false,
+                InvokedExpression: IReferenceExpression { Reference: var reference },
+                Arguments: [{ Value: { } valueArgument }],
+            }
             && reference.Resolve().DeclaredElement is IMethod
             {
                 IsStatic: true,

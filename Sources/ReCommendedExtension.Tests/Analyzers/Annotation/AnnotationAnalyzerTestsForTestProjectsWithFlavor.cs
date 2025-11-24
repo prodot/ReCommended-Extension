@@ -18,7 +18,7 @@ public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpHig
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is MissingSuppressionJustificationWarning || highlighting.IsError();
+        => highlighting is MissingSuppressionJustificationWarning or { IsError: true };
 
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     protected override void DoTest(Lifetime lifetime, IProject project)

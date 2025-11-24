@@ -17,7 +17,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpHigh
     protected override string RelativeTestDataPath => @"Analyzers\ThrowExceptionInUnexpectedLocation";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ThrowExceptionInUnexpectedLocationWarning || highlighting.IsError();
+        => highlighting is ThrowExceptionInUnexpectedLocationWarning or { IsError: true };
 
     [Test]
     public void TestThrowExceptionInUnexpectedLocation() => DoNamedTest2();

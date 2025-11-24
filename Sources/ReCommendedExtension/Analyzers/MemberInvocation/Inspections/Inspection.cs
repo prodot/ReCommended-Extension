@@ -53,7 +53,7 @@ internal abstract record Inspection
                 if (binaryOperator is { } op)
                 {
                     if (binaryExpression.LeftOperand == invocationExpression
-                        && binaryExpression.RightOperand.TryGetInt32Constant() is { } rightOperandValue)
+                        && binaryExpression.RightOperand.AsInt32Constant is { } rightOperandValue)
                     {
                         return new BinaryOperatorExpression(InvocationExpression.Default, op, Number.From(rightOperandValue))
                         {
@@ -61,7 +61,7 @@ internal abstract record Inspection
                         };
                     }
 
-                    if (binaryExpression.LeftOperand.TryGetInt32Constant() is { } leftOperandValue
+                    if (binaryExpression.LeftOperand.AsInt32Constant is { } leftOperandValue
                         && binaryExpression.RightOperand == invocationExpression)
                     {
                         return new BinaryOperatorExpression(Number.From(leftOperandValue), op, InvocationExpression.Default)

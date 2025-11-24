@@ -3,7 +3,6 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.MemberInvocation.Rules;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.Collections;
 
 namespace ReCommendedExtension.Analyzers.MemberInvocation.Inspections;
 
@@ -82,7 +81,7 @@ internal sealed record OtherMethodInvocation : Inspection
 
                 _ => null,
             },
-            () => args[0] is { Value: { } argValue }
+            () => args is [{ Value: { } argValue }]
                 ? [argValue.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"]
                 : null,
             false),
@@ -104,7 +103,7 @@ internal sealed record OtherMethodInvocation : Inspection
 
                 _ => null,
             },
-            () => args[0] is { Value: { } argValue }
+            () => args is [{ Value: { } argValue }]
                 ? [argValue.GetText(), $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}"]
                 : null,
             true),
@@ -149,7 +148,7 @@ internal sealed record OtherMethodInvocation : Inspection
     public static OtherMethodInvocation SingleElementCollectionWithFurtherArguments { get; } = new()
     {
         TryGetReplacement = (invocationExpression, args)
-            => CollectionCreation.TryFrom(args[0]?.Value) is { SingleExpressionElement: { } singleExpressionElement }
+            => args is [{ Value.AsCollectionCreation.SingleExpressionElement: { } singleExpressionElement }, ..]
             && args.Skip(1).All(a => a is { Value: { } })
                 ? new InvocationReplacement
                 {
@@ -170,7 +169,7 @@ internal sealed record OtherMethodInvocation : Inspection
     {
         if (arguments is [_, var arg])
         {
-            if (CollectionCreation.TryFrom(arg?.Value) is { } collectionCreation)
+            if (arg?.Value.AsCollectionCreation is { } collectionCreation)
             {
                 // passed as an explicit collection creation
 

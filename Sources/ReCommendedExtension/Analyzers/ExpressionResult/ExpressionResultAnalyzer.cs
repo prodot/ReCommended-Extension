@@ -45,7 +45,7 @@ public sealed class ExpressionResultAnalyzer(
 
     protected override void Run(ICSharpInvocationInfo element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (element.IsUsedAsStatement())
+        if (element.IsUsedAsStatement)
         {
             return;
         }

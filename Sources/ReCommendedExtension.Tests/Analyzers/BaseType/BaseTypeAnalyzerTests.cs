@@ -17,7 +17,7 @@ public sealed class BaseTypeAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\BaseType";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RemoveRedundantBaseTypeDeclarationHint || highlighting.IsError();
+        => highlighting is RemoveRedundantBaseTypeDeclarationHint or { IsError: true };
 
     [Test]
     public void TestBaseTypes() => DoNamedTest2();
