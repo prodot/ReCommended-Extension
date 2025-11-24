@@ -2239,6 +2239,14 @@ internal static class RuleDefinitions
                         },
                         Inspections = [RedundantArgument.FormatProvider with { ParameterIndex = 1 }],
                     },
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters = [Parameter.ReadOnlySpanOfByte, Parameter.IFormatProvider], IsStatic = true,
+                        },
+                        Inspections = [RedundantArgument.FormatProvider with { ParameterIndex = 1 }],
+                    },
                 ]
             },
             {
@@ -2260,6 +2268,20 @@ internal static class RuleDefinitions
                             Parameters =
                             [
                                 Parameter.ReadOnlySpanOfChar,
+                                Parameter.IFormatProvider,
+                                Parameter.Guid with { Kind = ParameterKind.OUTPUT },
+                            ],
+                            IsStatic = true,
+                        },
+                        Inspections = [RedundantArgument.FormatProvider with { ParameterIndex = 1 }],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters =
+                            [
+                                Parameter.ReadOnlySpanOfByte,
                                 Parameter.IFormatProvider,
                                 Parameter.Guid with { Kind = ParameterKind.OUTPUT },
                             ],

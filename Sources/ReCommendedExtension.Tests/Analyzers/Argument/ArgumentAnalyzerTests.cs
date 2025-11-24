@@ -1180,7 +1180,7 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
     }
 
     [Test]
-    [TestNet70]
+    [TestNet100]
     public void TestGuid()
     {
         var values = new[] { Guid.Empty, new Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
@@ -1193,6 +1193,11 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
             (guid, _) => Guid.Parse(guid.ToString().AsSpan()),
             values,
             formatProviders);
+        Test(
+            (guid, provider) => Guid.Parse(guid.ToString().AsUtf8Bytes(), provider),
+            (guid, _) => Guid.Parse(guid.ToString().AsUtf8Bytes()),
+            values,
+            formatProviders);
 
         Test<Guid, IFormatProvider?, Guid, bool>(
             (value, provider, out result) => Guid.TryParse($"{value}", provider, out result),
@@ -1202,6 +1207,11 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
         Test<Guid, IFormatProvider?, Guid, bool>(
             (value, provider, out result) => Guid.TryParse($"{value}".AsSpan(), provider, out result),
             (value, _, out result) => Guid.TryParse($"{value}".AsSpan(), out result),
+            values,
+            formatProviders);
+        Test<Guid, IFormatProvider?, Guid, bool>(
+            (value, provider, out result) => Guid.TryParse($"{value}".AsUtf8Bytes(), provider, out result),
+            (value, _, out result) => Guid.TryParse($"{value}".AsUtf8Bytes(), out result),
             values,
             formatProviders);
 
