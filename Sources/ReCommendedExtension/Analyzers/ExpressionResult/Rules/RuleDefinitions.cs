@@ -378,6 +378,11 @@ internal static class RuleDefinitions
                 [
                     new Member
                     {
+                        Signature = new MethodSignature { Parameters = [Parameter.Int64], IsStatic = true },
+                        Inspections = [Inspection.Int64ZerosOptionalToTimeSpanZero],
+                    },
+                    new Member
+                    {
                         Signature = new MethodSignature { Parameters = [Parameter.Int64, Parameter.Int64], IsStatic = true },
                         Inspections = [Inspection.Int64ZerosOptionalToTimeSpanZero],
                     },

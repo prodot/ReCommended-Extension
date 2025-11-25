@@ -35,6 +35,7 @@ namespace Test
             var result61 = TimeSpan.FromMicroseconds(0);
 
             var result71 = TimeSpan.FromMilliseconds(0);
+            var result72 = TimeSpan.FromMilliseconds(0, 0);
 
             var result81 = TimeSpan.FromMinutes(0);
             var result82 = TimeSpan.FromMinutes(0, 0);
@@ -70,6 +71,8 @@ namespace Test
             var result51 = TimeSpan.FromMicroseconds(1);
 
             var result61 = TimeSpan.FromMilliseconds(1);
+            var result62 = TimeSpan.FromMilliseconds(0, 1);
+            var result63 = TimeSpan.FromMilliseconds(microseconds: 1, milliseconds: 0);
 
             var result71 = TimeSpan.FromMinutes(1);
             var result72 = TimeSpan.FromMinutes(0, 1);
@@ -102,6 +105,7 @@ namespace Test
             TimeSpan.FromMicroseconds(0);
 
             TimeSpan.FromMilliseconds(0);
+            TimeSpan.FromMilliseconds(0, 0);
 
             TimeSpan.FromMinutes(0);
             TimeSpan.FromMinutes(0, 0);

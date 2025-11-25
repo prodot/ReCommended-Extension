@@ -633,7 +633,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    [TestNet90]
+    [TestNet100]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TestTimeSpan()
@@ -673,6 +673,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
         Test(() => TimeSpan.FromMicroseconds(0), () => TimeSpan.Zero);
 
         Test(() => MissingTimeSpanMembers.FromMilliseconds(0), () => TimeSpan.Zero);
+        Test(() => TimeSpan.FromMilliseconds(0, 0), () => TimeSpan.Zero);
 
         Test(() => MissingTimeSpanMembers.FromMinutes(0), () => TimeSpan.Zero);
         Test(() => TimeSpan.FromMinutes(0, 0), () => TimeSpan.Zero);
@@ -686,6 +687,10 @@ public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
 
         DoNamedTest2();
     }
+
+    [Test]
+    [TestNet90]
+    public void TestTimeSpan_Net9() => DoNamedTest2();
 
     [Test]
     [TestNet60]

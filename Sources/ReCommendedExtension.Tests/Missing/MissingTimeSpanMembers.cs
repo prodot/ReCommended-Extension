@@ -106,7 +106,20 @@ internal static class MissingTimeSpanMembers
         }
 
         [Pure]
-        public static TimeSpan FromMilliseconds(long milliseconds, long microseconds = 0)
+        public static TimeSpan FromMilliseconds(long milliseconds)
+        {
+            var ticks = (BigInteger)milliseconds * TimeSpan.TicksPerMillisecond;
+
+            if (ticks < long.MinValue || ticks > long.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            return TimeSpan.FromTicks((long)ticks);
+        }
+
+        [Pure]
+        public static TimeSpan FromMilliseconds(long milliseconds, long microseconds)
         {
             var ticks = (BigInteger)milliseconds * TimeSpan.TicksPerMillisecond + (BigInteger)microseconds * (TimeSpan.TicksPerMillisecond / 1_000);
 

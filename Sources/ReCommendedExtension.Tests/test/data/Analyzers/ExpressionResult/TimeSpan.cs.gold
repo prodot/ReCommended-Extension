@@ -35,18 +35,19 @@ namespace Test
             var result61 = |TimeSpan.FromMicroseconds(0)|(21);
 
             var result71 = |TimeSpan.FromMilliseconds(0)|(22);
+            var result72 = |TimeSpan.FromMilliseconds(0, 0)|(23);
 
-            var result81 = |TimeSpan.FromMinutes(0)|(23);
-            var result82 = |TimeSpan.FromMinutes(0, 0)|(24);
-            var result83 = |TimeSpan.FromMinutes(seconds: 0, minutes: 0)|(25);
+            var result81 = |TimeSpan.FromMinutes(0)|(24);
+            var result82 = |TimeSpan.FromMinutes(0, 0)|(25);
+            var result83 = |TimeSpan.FromMinutes(seconds: 0, minutes: 0)|(26);
 
-            var result91 = |TimeSpan.FromSeconds(0)|(26);
-            var result92 = |TimeSpan.FromSeconds(0, 0)|(27);
-            var result93 = |TimeSpan.FromSeconds(microseconds: 0, seconds: 0)|(28);
+            var result91 = |TimeSpan.FromSeconds(0)|(27);
+            var result92 = |TimeSpan.FromSeconds(0, 0)|(28);
+            var result93 = |TimeSpan.FromSeconds(microseconds: 0, seconds: 0)|(29);
 
-            var resultA1 = |TimeSpan.FromTicks(0)|(29);
-            var resultA2 = |TimeSpan.FromTicks(long.MaxValue)|(30);
-            var resultA3 = |TimeSpan.FromTicks(long.MinValue)|(31);
+            var resultA1 = |TimeSpan.FromTicks(0)|(30);
+            var resultA2 = |TimeSpan.FromTicks(long.MaxValue)|(31);
+            var resultA3 = |TimeSpan.FromTicks(long.MinValue)|(32);
         }
 
         public void NoDetection(TimeSpan timeSpan, long ticks, object obj)
@@ -70,6 +71,8 @@ namespace Test
             var result51 = TimeSpan.FromMicroseconds(1);
 
             var result61 = TimeSpan.FromMilliseconds(1);
+            var result62 = TimeSpan.FromMilliseconds(0, 1);
+            var result63 = TimeSpan.FromMilliseconds(microseconds: 1, milliseconds: 0);
 
             var result71 = TimeSpan.FromMinutes(1);
             var result72 = TimeSpan.FromMinutes(0, 1);
@@ -102,6 +105,7 @@ namespace Test
             TimeSpan.FromMicroseconds(0);
 
             TimeSpan.FromMilliseconds(0);
+            TimeSpan.FromMilliseconds(0, 0);
 
             TimeSpan.FromMinutes(0);
             TimeSpan.FromMinutes(0, 0);
@@ -148,5 +152,6 @@ namespace Test
 (27): ReSharper Suggestion: The expression is always TimeSpan.Zero.
 (28): ReSharper Suggestion: The expression is always TimeSpan.Zero.
 (29): ReSharper Suggestion: The expression is always TimeSpan.Zero.
-(30): ReSharper Suggestion: The expression is always TimeSpan.MaxValue.
-(31): ReSharper Suggestion: The expression is always TimeSpan.MinValue.
+(30): ReSharper Suggestion: The expression is always TimeSpan.Zero.
+(31): ReSharper Suggestion: The expression is always TimeSpan.MaxValue.
+(32): ReSharper Suggestion: The expression is always TimeSpan.MinValue.
