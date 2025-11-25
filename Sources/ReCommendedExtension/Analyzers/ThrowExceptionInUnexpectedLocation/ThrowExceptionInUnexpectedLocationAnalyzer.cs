@@ -147,7 +147,7 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzer : ElementProblemA
                     }
                 }
 
-                if (ClrTypeNames.IEqualityComparerGeneric.TryGetTypeElement(psiModule) is { } equalityComparerGenericInterface)
+                if (PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN.TryGetTypeElement(psiModule) is { } equalityComparerGenericInterface)
                 {
                     if (TryGetMethod(equalityComparerGenericInterface, nameof(IEqualityComparer<>.Equals)) is { } equalsMethod
                         && methodDeclaration.DeclaredElement.OverridesOrImplements(equalsMethod))

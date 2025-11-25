@@ -2,8 +2,12 @@
 
 namespace ReCommendedExtension;
 
-internal sealed class ClrTypeNameEqualityComparer : IEqualityComparer<IClrTypeName>
+public sealed class ClrTypeNameEqualityComparer : IEqualityComparer<IClrTypeName>
 {
+    public static ClrTypeNameEqualityComparer Default { get; } = new();
+
+    ClrTypeNameEqualityComparer() { }
+
     public bool Equals(IClrTypeName? x, IClrTypeName? y)
     {
         if (ReferenceEquals(x, y))

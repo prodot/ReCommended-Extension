@@ -267,7 +267,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             } qualifier)
         {
             var qualifierType = qualifier.Type();
-            if ((qualifierType.IsClrType(ClrTypeNames.ValueTaskAwaiter) || qualifierType.IsClrType(ClrTypeNames.GenericValueTaskAwaiter))
+            if ((qualifierType.IsClrType(ClrTypeNames.ValueTaskAwaiter) || qualifierType.IsClrType(PredefinedType.GENERIC_VALUE_TASK_AWAITER_FQN))
                 && qualifier.Reference.Resolve().DeclaredElement is IMethod { ShortName: "GetAwaiter", TypeParameters: [], Parameters: [] })
             {
                 var valueTaskExpression = qualifier.GetInvokedReferenceExpressionQualifier();

@@ -134,7 +134,7 @@ internal abstract record Inspection
             var psiModule = context.GetPsiModule();
 
             return typeElement.IsDescendantOf(PredefinedType.GENERIC_ILIST_FQN.TryGetTypeElement(psiModule))
-                || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlyList.TryGetTypeElement(psiModule));
+                || typeElement.IsDescendantOf(PredefinedType.GENERIC_IREADONLYLIST_FQN.TryGetTypeElement(psiModule));
         }
 
         return false;
@@ -158,7 +158,7 @@ internal abstract record Inspection
                 : null;
 
             var implementedReadOnlyListTypeElement =
-                ClrTypeNames.IReadOnlyList.TryGetTypeElement(psiModule) is { } t2 && typeElement.IsDescendantOf(t2) ? t2 : null;
+                PredefinedType.GENERIC_IREADONLYLIST_FQN.TryGetTypeElement(psiModule) is { } t2 && typeElement.IsDescendantOf(t2) ? t2 : null;
 
             if (implementedListTypeElement is { } || implementedReadOnlyListTypeElement is { })
             {
@@ -197,7 +197,7 @@ internal abstract record Inspection
     protected static bool IsDistinctCollection(IType type, ITreeNode context)
     {
         if (type.IsClrType(PredefinedType.ISET_FQN)
-            || type.IsClrType(ClrTypeNames.IReadOnlySet)
+            || type.IsClrType(PredefinedType.GENERIC_IREADONLYSET_FQN)
             || type.IsClrType(ClrTypeNames.DictionaryKeyCollection))
         {
             return true;
@@ -208,7 +208,7 @@ internal abstract record Inspection
             var psiModule = context.GetPsiModule();
 
             return typeElement.IsDescendantOf(PredefinedType.ISET_FQN.TryGetTypeElement(psiModule))
-                || typeElement.IsDescendantOf(ClrTypeNames.IReadOnlySet.TryGetTypeElement(psiModule));
+                || typeElement.IsDescendantOf(PredefinedType.GENERIC_IREADONLYSET_FQN.TryGetTypeElement(psiModule));
         }
 
         return false;

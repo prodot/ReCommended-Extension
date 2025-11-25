@@ -13,7 +13,8 @@ public sealed class YieldReturnWithinLockAnalyzer : ElementProblemAnalyzer<IYiel
         {
             switch (treeNode)
             {
-                case ILockStatement lockStatement when ClrTypeNames.Lock.TryGetTypeElement(element.GetPsiModule()) is not { } typeElement
+                case ILockStatement lockStatement
+                    when PredefinedType.SYSTEM_THREADING_LOCK_FQN.TryGetTypeElement(element.GetPsiModule()) is not { } typeElement
                     || !TypeEqualityComparer.Default.Equals(lockStatement.Monitor.Type(), TypeFactory.CreateType(typeElement)):
 
                     consumer.AddHighlighting(new YieldReturnWithinLockWarning("'yield return' used inside the 'lock' block.", element));

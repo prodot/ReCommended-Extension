@@ -12,7 +12,7 @@ internal static class RuleDefinitions
     /// <remarks>
     /// type → (member name → member overloads)
     /// </remarks>
-    static readonly Dictionary<IClrTypeName, Dictionary<string, IReadOnlyCollection<Member>>> typeMembers = new(new ClrTypeNameEqualityComparer())
+    static readonly Dictionary<IClrTypeName, Dictionary<string, IReadOnlyCollection<Member>>> typeMembers = new(ClrTypeNameEqualityComparer.Default)
     {
         { PredefinedType.BOOLEAN_FQN, CreateBooleanMembers() },
         { PredefinedType.BYTE_FQN, CreateNumberMembers(Parameter.Byte) },
