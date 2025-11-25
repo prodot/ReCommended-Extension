@@ -10,7 +10,6 @@ using ReCommendedExtension.Analyzers.Linq;
 namespace ReCommendedExtension.Tests.Analyzers.Linq;
 
 [TestFixture]
-[CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 public sealed class LinqQueryAnalyzerTests : CSharpHighlightingTestBase
 {
     protected override string RelativeTestDataPath => @"Analyzers\Linq";
@@ -19,5 +18,10 @@ public sealed class LinqQueryAnalyzerTests : CSharpHighlightingTestBase
         => highlighting is RedundantLinqQueryHint or { IsError: true };
 
     [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     public void TestNoOpQuery() => DoNamedTest2();
+
+    [Test]
+    [TestNet100]
+    public void TestNoOpAsyncQuery() => DoNamedTest2();
 }
