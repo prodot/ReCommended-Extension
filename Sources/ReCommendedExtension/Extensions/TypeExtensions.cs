@@ -103,6 +103,9 @@ internal static class TypeExtensions
         public bool IsGenericEqualityComparer() => type.IsClrType(PredefinedType.GENERIC_IEQUALITY_COMPARER_FQN);
 
         [Pure]
+        public bool IsFuncOfTResult() => type.IsClrType(PredefinedType.FUNC2_FQN);
+
+        [Pure]
         public bool IsEnumType([NotNullWhen(true)] out IType? enumBaseType)
         {
             if (type is IDeclaredType declaredType)
@@ -129,6 +132,23 @@ internal static class TypeExtensions
 
             if (type.GetTypeElement<ITypeElement>() is { } typeElement
                 && typeElement.IsDescendantOf(typeElement.Module.GetPredefinedType().GenericIEnumerable.GetTypeElement()))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        [Pure]
+        public bool IsIAsyncEnumerableOrDescendant()
+        {
+            if (type.IsIAsyncEnumerable())
+            {
+                return true;
+            }
+
+            if (type.GetTypeElement<ITypeElement>() is { } typeElement
+                && typeElement.IsDescendantOf(typeElement.Module.GetPredefinedType().IAsyncEnumerable.GetTypeElement()))
             {
                 return true;
             }
