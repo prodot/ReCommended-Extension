@@ -14,12 +14,12 @@
     <ItemGroup>
         <PackageReference Include="JetBrains.Lifetimes" Version="2025.3.1" />
         <PackageReference Condition="'$(Configuration)'=='DebugReSharper' OR '$(Configuration)'=='ReleaseReSharper'"
-                          Include="JetBrains.ReSharper.SDK.Tests" Version="2025.3.0.1">
+                          Include="JetBrains.ReSharper.SDK.Tests" Version="2025.3.0.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Condition="'$(Configuration)'=='DebugRider' OR '$(Configuration)'=='ReleaseRider'"
-                          Include="JetBrains.Rider.SDK.Tests" Version="2025.3.0.1">
+                          Include="JetBrains.Rider.SDK.Tests" Version="2025.3.0.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
