@@ -1,9 +1,14 @@
-﻿using JetBrains.DocumentModel;
+﻿using JetBrains.Application.Progress;
+using JetBrains.DocumentModel;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.TextControl;
 using JetBrains.Util;
 using ReCommendedExtension.Extensions;
 
@@ -21,11 +26,11 @@ namespace ReCommendedExtension.Analyzers.Formatter;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantFormatPrecisionSpecifierHint(string message, FormatElement formatElement) : Highlighting(message)
+public sealed class RedundantFormatPrecisionSpecifierHint(string message) : Highlighting(message)
 {
     const string SeverityId = "RedundantFormatPrecisionSpecifier";
 
-    internal FormatElement FormatElement => formatElement;
+    public required FormatElement FormatElement { get; init; }
 
     public override DocumentRange CalculateRange()
     {
@@ -89,5 +94,27 @@ public sealed class RedundantFormatPrecisionSpecifierHint(string message, Format
         }
 
         throw new NotSupportedException();
+    }
+
+    [QuickFix]
+    public sealed class Fix(RedundantFormatPrecisionSpecifierHint highlighting) : QuickFixBase
+    {
+        public override bool IsAvailable(IUserDataHolder cache)
+            => highlighting.FormatElement is { Insert: { } }
+                or { FormatStringExpression: { }, FormatItem: { } }
+                or { Argument.Value: ICSharpLiteralExpression or IInterpolatedStringExpression };
+
+        public override string Text => "Remove format precision specifier";
+
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+            => _ =>
+            {
+                using (WriteLockCookie.Create())
+                {
+                    var documentRange = highlighting.CalculateRange();
+
+                    documentRange.Document.DeleteText(documentRange.TextRange);
+                }
+            };
     }
 }

@@ -3,6 +3,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
@@ -17,7 +18,7 @@ public sealed class RemoveAttributeFix : QuickFixBase
 
     public RemoveAttributeFix(RedundantAnnotationSuggestion highlighting) => this.highlighting = highlighting;
 
-    public override bool IsAvailable(JetBrains.Util.IUserDataHolder cache) => true;
+    public override bool IsAvailable(IUserDataHolder cache) => true;
 
     public override string Text => "Remove attribute";
 

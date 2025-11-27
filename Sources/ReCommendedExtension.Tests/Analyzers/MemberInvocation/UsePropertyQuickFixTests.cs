@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
 [TestNet50]
-public sealed class UsePropertyQuickFixTests : QuickFixTestBase<UsePropertyFix>
+public sealed class UsePropertyQuickFixTests : QuickFixTestBase<UsePropertySuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

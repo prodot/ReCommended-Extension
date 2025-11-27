@@ -6,7 +6,7 @@ using ReCommendedExtension.Analyzers.ExpressionResult;
 namespace ReCommendedExtension.Tests.Analyzers.ExpressionResult;
 
 [TestFixture]
-public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultFix>
+public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpressionResultSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\ExpressionResult\QuickFixes";
 

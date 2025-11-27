@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.ValueTask;
 
 [TestFixture]
 [TestNetCore30]
-public sealed class ValueTaskQuickFixTests : QuickFixTestBase<InsertAsTaskFix>
+public sealed class ValueTaskQuickFixTests : QuickFixTestBase<IntentionalBlockingAttemptWarning.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\ValueTask\QuickFixes";
 

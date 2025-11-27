@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 [TestNet80]
-public sealed class ReplaceWithCollectionExpressionQuickFixTests : QuickFixTestBase<ReplaceWithCollectionExpressionFix>
+public sealed class ReplaceWithCollectionExpressionQuickFixTests : QuickFixTestBase<UseTargetTypedCollectionExpressionSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 

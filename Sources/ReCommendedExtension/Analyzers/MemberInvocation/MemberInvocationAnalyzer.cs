@@ -60,7 +60,10 @@ public sealed class MemberInvocationAnalyzer(
                         && firstArgValue.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)):
                 {
                     consumer.AddHighlighting(
-                        new RedundantMethodInvocationHint(inspection.Message(memberName), invocationExpression, invokedExpression));
+                        new RedundantMethodInvocationHint(inspection.Message(memberName))
+                        {
+                            InvocationExpression = invocationExpression, InvokedExpression = invokedExpression,
+                        });
 
                     break;
                 }
@@ -81,10 +84,14 @@ public sealed class MemberInvocationAnalyzer(
                                 GenericParametersCount = otherMethodInvocation.ReplacementMethod.GenericParametersCount,
                             }))
                     {
-                        var highlighting = new UseOtherMethodSuggestion(
-                            inspection.Message(otherMethodInvocation.ReplacementMethod.Name),
-                            qualifier,
-                            new ReplacedMethodInvocation { Name = otherMethodInvocation.ReplacementMethod.Name, Replacement = replacement });
+                        var highlighting = new UseOtherMethodSuggestion(inspection.Message(otherMethodInvocation.ReplacementMethod.Name))
+                        {
+                            Qualifier = qualifier,
+                            ReplacedMethodInvocation = new ReplacedMethodInvocation
+                            {
+                                Name = otherMethodInvocation.ReplacementMethod.Name, Replacement = replacement,
+                            },
+                        };
 
                         switch (replacement.Context)
                         {
@@ -146,10 +153,10 @@ public sealed class MemberInvocationAnalyzer(
                         consumer.AddHighlighting(
                             new UseBinaryOperatorSuggestion(
                                 inspection.Message(binaryOperator.Operator),
-                                invocationExpression,
-                                operands,
-                                binaryOperator.Operator,
-                                binaryOperator.HighlightInvokedMethodOnly ? invokedExpression : null));
+                                binaryOperator.HighlightInvokedMethodOnly ? invokedExpression : null)
+                            {
+                                InvocationExpression = invocationExpression, Operands = operands, Operator = binaryOperator.Operator,
+                            });
                     }
                     break;
                 }
@@ -161,11 +168,10 @@ public sealed class MemberInvocationAnalyzer(
                     if (unaryOperator.TryGetOperand(qualifier, arguments) is { } operand)
                     {
                         consumer.AddHighlighting(
-                            new UseUnaryOperatorSuggestion(
-                                inspection.Message(unaryOperator.Operator),
-                                invocationExpression,
-                                operand,
-                                unaryOperator.Operator));
+                            new UseUnaryOperatorSuggestion(inspection.Message(unaryOperator.Operator))
+                            {
+                                InvocationExpression = invocationExpression, Operand = operand, Operator = unaryOperator.Operator,
+                            });
                     }
                     break;
                 }
@@ -181,11 +187,11 @@ public sealed class MemberInvocationAnalyzer(
                         if (argument is { Value: { } value })
                         {
                             consumer.AddHighlighting(
-                                new UsePatternSuggestion(
-                                    inspection.Message(""),
-                                    invocationExpression,
-                                    invokedExpression,
-                                    new PatternReplacement { Expression = value, Pattern = $"is {pattern.Pattern}" }));
+                                new UsePatternSuggestion(inspection.Message(""), invokedExpression)
+                                {
+                                    Expression = invocationExpression,
+                                    Replacement = new PatternReplacement { Expression = value, Pattern = $"is {pattern.Pattern}" },
+                                });
                         }
                     }
                     break;
@@ -199,7 +205,10 @@ public sealed class MemberInvocationAnalyzer(
                         && pattern.TryGetReplacement(arguments) is { } replacement)
                     {
                         consumer.AddHighlighting(
-                            new UsePatternSuggestion(inspection.Message(""), invocationExpression, invokedExpression, replacement));
+                            new UsePatternSuggestion(inspection.Message(""), invokedExpression)
+                            {
+                                Expression = invocationExpression, Replacement = replacement,
+                            });
                     }
                     break;
                 }
@@ -215,7 +224,10 @@ public sealed class MemberInvocationAnalyzer(
                         && (!pattern.EnsureQualifierNotNull || qualifier.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)))
                     {
                         consumer.AddHighlighting(
-                            new UsePatternSuggestion(inspection.Message(""), invocationExpression, invokedExpression, replacement));
+                            new UsePatternSuggestion(inspection.Message(""), invokedExpression)
+                            {
+                                Expression = invocationExpression, Replacement = replacement,
+                            });
                     }
 
                     break;
@@ -229,7 +241,10 @@ public sealed class MemberInvocationAnalyzer(
                         && pattern.TryGetReplacement(invocationExpression, qualifier, arguments) is { } replacement)
                     {
                         consumer.AddHighlighting(
-                            new UsePatternSuggestion(inspection.Message(""), binaryExpression, invokedExpression, replacement));
+                            new UsePatternSuggestion(inspection.Message(""), invokedExpression)
+                            {
+                                Expression = binaryExpression, Replacement = replacement,
+                            });
                     }
 
                     break;
@@ -240,8 +255,14 @@ public sealed class MemberInvocationAnalyzer(
                 {
                     var highlighting = propertyOfNullable.Name switch
                     {
-                        PropertyNameOfNullable.HasValue => new UseNullableHasValueAlternativeSuggestion(inspection.Message(""), invokedExpression),
-                        PropertyNameOfNullable.Value => new ReplaceNullableValueWithTypeCastSuggestion(inspection.Message(""), invokedExpression),
+                        PropertyNameOfNullable.HasValue => new UseNullableHasValueAlternativeSuggestion(inspection.Message(""))
+                        {
+                            ReferenceExpression = invokedExpression,
+                        },
+                        PropertyNameOfNullable.Value => new ReplaceNullableValueWithTypeCastSuggestion(inspection.Message(""))
+                        {
+                            ReferenceExpression = invokedExpression,
+                        },
 
                         _ => null as Highlighting,
                     };
@@ -266,12 +287,13 @@ public sealed class MemberInvocationAnalyzer(
                     if (propertyTypeElement is { } && propertyTypeElement.HasProperty(new PropertySignature { Name = propertyOfString.Name }))
                     {
                         consumer.AddHighlighting(
-                            new UsePropertySuggestion(
-                                inspection.Message(propertyOfString.Name),
-                                invocationExpression,
-                                invokedExpression,
-                                propertyOfString.Name,
-                                propertyOfString.EnsureTargetType));
+                            new UsePropertySuggestion(inspection.Message(propertyOfString.Name))
+                            {
+                                InvocationExpression = invocationExpression,
+                                InvokedExpression = invokedExpression,
+                                PropertyName = propertyOfString.Name,
+                                EnsureTargetType = propertyOfString.EnsureTargetType,
+                            });
                     }
                     break;
                 }
@@ -285,12 +307,13 @@ public sealed class MemberInvocationAnalyzer(
                     // intentionally skipping the check if the property exists
 
                     consumer.AddHighlighting(
-                        new UsePropertySuggestion(
-                            inspection.Message(propertyOfArray.Name),
-                            invocationExpression,
-                            invokedExpression,
-                            propertyOfArray.Name,
-                            propertyOfArray.EnsureTargetType));
+                        new UsePropertySuggestion(inspection.Message(propertyOfArray.Name))
+                        {
+                            InvocationExpression = invocationExpression,
+                            InvokedExpression = invokedExpression,
+                            PropertyName = propertyOfArray.Name,
+                            EnsureTargetType = propertyOfArray.EnsureTargetType,
+                        });
                     break;
                 }
 
@@ -303,12 +326,13 @@ public sealed class MemberInvocationAnalyzer(
                     // intentionally skipping the check if the property exists
 
                     consumer.AddHighlighting(
-                        new UsePropertySuggestion(
-                            inspection.Message(propertyOfCollection.Name),
-                            invocationExpression,
-                            invokedExpression,
-                            propertyOfCollection.Name,
-                            propertyOfCollection.EnsureTargetType));
+                        new UsePropertySuggestion(inspection.Message(propertyOfCollection.Name))
+                        {
+                            InvocationExpression = invocationExpression,
+                            InvokedExpression = invokedExpression,
+                            PropertyName = propertyOfCollection.Name,
+                            EnsureTargetType = propertyOfCollection.EnsureTargetType,
+                        });
                     break;
                 }
 
@@ -325,12 +349,12 @@ public sealed class MemberInvocationAnalyzer(
                     if (containingType.HasProperty(new PropertySignature { Name = propertyOfDateTime.Name, IsStatic = true }))
                     {
                         consumer.AddHighlighting(
-                            new UseStaticPropertySuggestion(
-                                inspection.Message(propertyOfDateTime.Name),
-                                reference,
-                                qualifierExpression,
-                                invokedExpression,
-                                propertyOfDateTime.Name));
+                            new UseStaticPropertySuggestion(inspection.Message(propertyOfDateTime.Name), reference)
+                            {
+                                QualifierExpression = qualifierExpression,
+                                ReferenceExpression = invokedExpression,
+                                PropertyName = propertyOfDateTime.Name,
+                            });
                     }
 
                     break;
@@ -344,7 +368,10 @@ public sealed class MemberInvocationAnalyzer(
                     && rangeIndexer.TryGetReplacement(arguments) is { } replacement:
                 {
                     consumer.AddHighlighting(
-                        new UseRangeIndexerSuggestion(inspection.Message(""), invocationExpression, invokedExpression, replacement));
+                        new UseRangeIndexerSuggestion(inspection.Message(""))
+                        {
+                            InvocationExpression = invocationExpression, InvokedExpression = invokedExpression, Replacement = replacement,
+                        });
                     break;
                 }
 

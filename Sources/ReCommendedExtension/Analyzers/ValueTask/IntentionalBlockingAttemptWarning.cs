@@ -1,8 +1,15 @@
-﻿using JetBrains.DocumentModel;
+﻿using JetBrains.Application.Progress;
+using JetBrains.DocumentModel;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.TextControl;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.ValueTask;
 
@@ -16,16 +23,14 @@ namespace ReCommendedExtension.Analyzers.ValueTask;
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
 public sealed class IntentionalBlockingAttemptWarning(
     string message,
-    ICSharpExpression expression,
-    ICSharpExpression valueTaskExpression,
     IReferenceExpression getAwaiterReferenceExpression,
     IReferenceExpression getResultReferenceExpression) : Highlighting(message)
 {
     const string SeverityId = "IntentionalBlockingAttempt";
 
-    internal ICSharpExpression Expression => expression;
+    public required ICSharpExpression Expression { get; init; }
 
-    internal ICSharpExpression ValueTaskExpression => valueTaskExpression;
+    public required ICSharpExpression ValueTaskExpression { get; init; }
 
     public override DocumentRange CalculateRange()
     {
@@ -42,5 +47,27 @@ public sealed class IntentionalBlockingAttemptWarning(
         }
 
         return documentRange.JoinRight(getResultReferenceExpression.NameIdentifier.GetDocumentRange());
+    }
+
+    [QuickFix]
+    public sealed class Fix(IntentionalBlockingAttemptWarning highlighting) : QuickFixBase
+    {
+        public override bool IsAvailable(IUserDataHolder cache) => true;
+
+        public override string Text => "Insert '.AsTask()'";
+
+        protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        {
+            using (WriteLockCookie.Create())
+            {
+                var factory = CSharpElementFactory.GetInstance(highlighting.Expression);
+
+                ModificationUtil.ReplaceChild(
+                    highlighting.Expression,
+                    factory.CreateExpression("$0.AsTask().GetAwaiter().GetResult", highlighting.ValueTaskExpression));
+            }
+
+            return null;
+        }
     }
 }

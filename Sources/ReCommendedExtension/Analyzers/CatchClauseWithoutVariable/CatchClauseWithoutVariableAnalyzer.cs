@@ -11,7 +11,8 @@ public sealed class CatchClauseWithoutVariableAnalyzer : ElementProblemAnalyzer<
     {
         if (element.ExceptionType.IsSystemException() && element.ExceptionDeclaration == null)
         {
-            consumer.AddHighlighting(new CatchClauseWithoutVariableHint("Redundant declaration without an exception variable.", element));
+            consumer.AddHighlighting(
+                new CatchClauseWithoutVariableHint("Redundant declaration without an exception variable.") { CatchClause = element });
         }
     }
 }

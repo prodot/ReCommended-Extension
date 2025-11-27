@@ -7,7 +7,7 @@ using ReCommendedExtension.Analyzers.MemberInvocation;
 namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
-public sealed class UseDateTimePropertyQuickFixTests : QuickFixTestBase<UseStaticPropertyFix>
+public sealed class UseDateTimePropertyQuickFixTests : QuickFixTestBase<UseStaticPropertySuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

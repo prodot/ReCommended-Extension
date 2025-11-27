@@ -5,7 +5,7 @@ using ReCommendedExtension.Analyzers.DelegateInvoke;
 namespace ReCommendedExtension.Tests.Analyzers.DelegateInvoke;
 
 [TestFixture]
-public sealed class DelegateInvokeQuickFixTests : QuickFixTestBase<RemoveDelegateInvokeFix>
+public sealed class DelegateInvokeQuickFixTests : QuickFixTestBase<RedundantDelegateInvokeHint.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\DelegateInvoke\QuickFixes";
 

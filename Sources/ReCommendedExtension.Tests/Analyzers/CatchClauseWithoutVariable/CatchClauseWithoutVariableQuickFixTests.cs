@@ -5,7 +5,7 @@ using ReCommendedExtension.Analyzers.CatchClauseWithoutVariable;
 namespace ReCommendedExtension.Tests.Analyzers.CatchClauseWithoutVariable;
 
 [TestFixture]
-public sealed class CatchClauseWithoutVariableQuickFixTests : QuickFixTestBase<RemoveExceptionTypeDeclarationFromCatchClauseFix>
+public sealed class CatchClauseWithoutVariableQuickFixTests : QuickFixTestBase<CatchClauseWithoutVariableHint.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariable\QuickFixes";
 

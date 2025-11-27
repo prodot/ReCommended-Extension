@@ -1,9 +1,16 @@
-﻿using JetBrains.DocumentModel;
+﻿using JetBrains.Application.Progress;
+using JetBrains.DocumentModel;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.TextControl;
+using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.DelegateInvoke;
 
@@ -19,16 +26,37 @@ namespace ReCommendedExtension.Analyzers.DelegateInvoke;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantDelegateInvokeHint(string message, IReferenceExpression referenceExpression) : Highlighting(message)
+public sealed class RedundantDelegateInvokeHint(string message) : Highlighting(message)
 {
     const string SeverityId = "RedundantDelegateInvoke";
 
-    internal IReferenceExpression ReferenceExpression { get; } = referenceExpression;
+    public required IReferenceExpression ReferenceExpression { get; init; }
 
     public override DocumentRange CalculateRange()
     {
         var dotToken = ReferenceExpression.NameIdentifier.GetPreviousMeaningfulToken();
 
         return ReferenceExpression.NameIdentifier.GetDocumentRange().JoinLeft(dotToken.GetDocumentRange());
+    }
+
+    [QuickFix]
+    public sealed class Fix(RedundantDelegateInvokeHint highlighting) : QuickFixBase
+    {
+        public override bool IsAvailable(IUserDataHolder cache) => true;
+
+        public override string Text => $"Remove '{nameof(Action.Invoke)}'";
+
+        protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        {
+            using (WriteLockCookie.Create())
+            {
+                if (highlighting.ReferenceExpression.NameIdentifier.GetPreviousMeaningfulToken() is { } dotToken)
+                {
+                    ModificationUtil.DeleteChildRange(dotToken, highlighting.ReferenceExpression.NameIdentifier);
+                }
+            }
+
+            return null;
+        }
     }
 }

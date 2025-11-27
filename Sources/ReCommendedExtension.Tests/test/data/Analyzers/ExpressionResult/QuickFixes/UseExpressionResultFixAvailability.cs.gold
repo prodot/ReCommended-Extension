@@ -128,5 +128,5 @@ QUICKFIXES:
 Replace with '(uint)byteValue'
 28: The expression is always the same as the second or third argument.
 QUICKFIXES:
-Replace with '0x01'
 Replace with '1'
+Replace with '0x01'

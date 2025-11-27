@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
 [TestNetFramework46]
 [TestFixture]
-public sealed class ReplaceWithArrayEmptyQuickFixTests : QuickFixTestBase<ReplaceWithArrayEmptyFix>
+public sealed class ReplaceWithArrayEmptyQuickFixTests : QuickFixTestBase<UseEmptyForArrayInitializationWarning.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 

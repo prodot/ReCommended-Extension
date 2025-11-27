@@ -15,17 +15,17 @@ namespace Test
 ------------------------------------------------
 0: Use pattern or null check.
 QUICKFIXES:
+Replace with 'nullable is { }'
 Replace with 'nullable != null'
 Replace with 'nullable is not null'
-Replace with 'nullable is { }'
 1: Use pattern or null check.
 QUICKFIXES:
+Replace with 'nullableTupleLength1 is { }'
 Replace with 'nullableTupleLength1 != null'
 Replace with 'nullableTupleLength1 is not null'
-Replace with 'nullableTupleLength1 is { }'
 2: Use pattern or null check.
 QUICKFIXES:
+Replace with 'nullableTuple is { }'
 Replace with 'nullableTuple != null'
 Replace with 'nullableTuple is not null'
-Replace with 'nullableTuple is { }'
 Replace with 'nullableTuple is (_, _)'

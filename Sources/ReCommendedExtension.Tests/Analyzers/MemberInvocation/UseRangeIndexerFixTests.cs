@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
 [TestNetCore30]
-public sealed class UseRangeIndexerFixTests : QuickFixTestBase<UseRangeIndexerFix>
+public sealed class UseRangeIndexerFixTests : QuickFixTestBase<UseRangeIndexerSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

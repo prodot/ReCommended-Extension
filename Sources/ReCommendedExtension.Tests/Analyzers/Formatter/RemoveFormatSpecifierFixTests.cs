@@ -7,7 +7,7 @@ using ReCommendedExtension.Analyzers.Formatter;
 namespace ReCommendedExtension.Tests.Analyzers.Formatter;
 
 [TestFixture]
-public sealed class RemoveFormatSpecifierFixTests : QuickFixTestBase<RemoveFormatSpecifierFix>
+public sealed class RemoveFormatSpecifierFixTests : QuickFixTestBase<RedundantFormatSpecifierHint.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Formatter\QuickFixes";
 

@@ -14,11 +14,9 @@ namespace ReCommendedExtension.Analyzers.ControlFlow;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class RedundantInlineAssertionSuggestion(string message, InlineAssertion assertion) : RedundantAssertionSuggestion(message)
+public sealed class RedundantInlineAssertionSuggestion(string message, InlineAssertion assertion) : Highlighting(message)
 {
     const string SeverityId = "RedundantInlineAssertion";
-
-    internal override Assertion Assertion => assertion;
 
     public override DocumentRange CalculateRange()
         => ((IReferenceExpression)assertion.InvocationExpression.InvokedExpression).NameIdentifier.GetDocumentRange();

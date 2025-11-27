@@ -20,7 +20,7 @@ public sealed class LinqQueryAnalyzer : ElementProblemAnalyzer<IQueryExpression>
             && element.Clauses is [IQuerySelectClause { Expression.Value: IReferenceExpression referenceExpression } selectClause]
             && referenceExpression.Reference.Resolve().DeclaredElement?.GetSingleDeclaration() == declaration)
         {
-            var highlighting = new RedundantLinqQueryHint("No-op LINQ query is redundant.", element, expression);
+            var highlighting = new RedundantLinqQueryHint("No-op LINQ query is redundant.") { QueryExpression = element, Expression = expression };
 
             var documentRange = element.GetDocumentRange();
 

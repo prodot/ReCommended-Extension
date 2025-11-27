@@ -10,7 +10,7 @@ namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
 [TestNet70]
-public sealed class UsePatternFixTests : QuickFixTestBase<UsePatternFix>
+public sealed class UsePatternFixTests : QuickFixTestBase<UsePatternSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

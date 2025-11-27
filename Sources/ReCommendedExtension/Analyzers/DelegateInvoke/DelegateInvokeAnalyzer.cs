@@ -17,7 +17,8 @@ public sealed class DelegateInvokeAnalyzer : ElementProblemAnalyzer<IReferenceEx
             && element.GetNextMeaningfulSibling() is CSharpTokenBase token
             && token.GetTokenType() == CSharpTokenType.LPARENTH)
         {
-            consumer.AddHighlighting(new RedundantDelegateInvokeHint($"Redundant '{nameof(Action.Invoke)}' expression.", element));
+            consumer.AddHighlighting(
+                new RedundantDelegateInvokeHint($"Redundant '{nameof(Action.Invoke)}' expression.") { ReferenceExpression = element });
         }
     }
 }

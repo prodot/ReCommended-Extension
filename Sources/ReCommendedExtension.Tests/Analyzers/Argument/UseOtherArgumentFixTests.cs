@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Argument;
 
 [TestFixture]
 [TestNetCore21]
-public sealed class UseOtherArgumentFixTests : QuickFixTestBase<UseOtherArgumentFix>
+public sealed class UseOtherArgumentFixTests : QuickFixTestBase<UseOtherArgumentSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Argument\QuickFixes";
 

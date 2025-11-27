@@ -38,7 +38,11 @@ public sealed class ExpressionResultAnalyzer(
                     || arguments is [{ Value: { } firstArgValue }, ..]
                     && firstArgValue.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)))
             {
-                consumer.AddHighlighting(new UseExpressionResultSuggestion(inspection.Message, invocationInfo, replacements));
+                consumer.AddHighlighting(
+                    new UseExpressionResultSuggestion(inspection.Message)
+                    {
+                        Expression = (ICSharpTreeNode)invocationInfo, Replacements = replacements,
+                    });
             }
         }
     }

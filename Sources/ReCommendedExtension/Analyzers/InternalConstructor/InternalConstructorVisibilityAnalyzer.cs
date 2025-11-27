@@ -31,20 +31,18 @@ public sealed class InternalConstructorVisibilityAnalyzer : ElementProblemAnalyz
             if (IsPublicSurfaceArea(containingTypeDeclaration))
             {
                 consumer.AddHighlighting(
-                    new InternalConstructorVisibilitySuggestion(
-                        "Make internal constructor in public abstract class 'private protected'.",
-                        tokenNode,
-                        element,
-                        AccessRights.PROTECTED_AND_INTERNAL));
+                    new InternalConstructorVisibilitySuggestion("Make internal constructor in public abstract class 'private protected'.", tokenNode)
+                    {
+                        ConstructorDeclaration = element, Visibility = AccessRights.PROTECTED_AND_INTERNAL,
+                    });
             }
             else
             {
                 consumer.AddHighlighting(
-                    new InternalConstructorVisibilitySuggestion(
-                        "Make internal constructor in non-public abstract class 'protected'.",
-                        tokenNode,
-                        element,
-                        AccessRights.PROTECTED));
+                    new InternalConstructorVisibilitySuggestion("Make internal constructor in non-public abstract class 'protected'.", tokenNode)
+                    {
+                        ConstructorDeclaration = element, Visibility = AccessRights.PROTECTED,
+                    });
             }
         }
     }

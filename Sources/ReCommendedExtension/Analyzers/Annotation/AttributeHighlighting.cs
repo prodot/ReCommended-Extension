@@ -6,22 +6,18 @@ using JetBrains.Util;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
-public abstract class AttributeHighlighting(
-    string message,
-    IAttributesOwnerDeclaration attributesOwnerDeclaration,
-    IAttribute attribute,
-    bool includeAttributeBracketsInRange) : Highlighting(message)
+public abstract class AttributeHighlighting(string message, bool includeAttributeBracketsInRange) : Highlighting(message)
 {
-    internal IAttributesOwnerDeclaration AttributesOwnerDeclaration => attributesOwnerDeclaration;
+    public required IAttributesOwnerDeclaration AttributesOwnerDeclaration { get; init; }
 
-    internal IAttribute Attribute => attribute;
+    public required IAttribute Attribute { get; init; }
 
     public override DocumentRange CalculateRange()
     {
         var range = Attribute.GetDocumentRange();
 
         if (includeAttributeBracketsInRange
-            && attribute.GetPreviousNonWhitespaceToken() is { } previousToken
+            && Attribute.GetPreviousNonWhitespaceToken() is { } previousToken
             && Attribute.GetNextNonWhitespaceToken() is { } nextToken
             && previousToken.GetTokenType() == CSharpTokenType.LBRACKET
             && nextToken.GetTokenType() == CSharpTokenType.RBRACKET)

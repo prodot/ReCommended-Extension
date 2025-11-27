@@ -15,7 +15,7 @@ public sealed class ControlFlowAnalyzerTests : CSharpHighlightingTestBase
     protected override string RelativeTestDataPath => @"Analyzers\ControlFlow";
 
     protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAssertionSuggestion or { IsError: true };
+        => highlighting is RedundantAssertionStatementSuggestion or RedundantInlineAssertionSuggestion or { IsError: true };
 
     [Test]
     public void TestControlFlow() => DoNamedTest2();

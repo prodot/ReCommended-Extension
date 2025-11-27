@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
 [TestFixture]
 [TestNetCore30(ANNOTATIONS_PACKAGE)]
-public sealed class CoerceValueRangeBoundaryQuickFixTests : QuickFixTestBase<CoerceValueRangeBoundary>
+public sealed class CoerceValueRangeBoundaryQuickFixTests : QuickFixTestBase<InvalidValueRangeBoundaryWarning.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 

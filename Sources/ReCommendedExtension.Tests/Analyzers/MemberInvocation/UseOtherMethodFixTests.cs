@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
 [TestNetCore21]
-public sealed class UseOtherMethodFixTests : QuickFixTestBase<UseOtherMethodFix>
+public sealed class UseOtherMethodFixTests : QuickFixTestBase<UseOtherMethodSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

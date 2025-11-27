@@ -1,9 +1,16 @@
-﻿using JetBrains.DocumentModel;
+﻿using JetBrains.Application.Progress;
+using JetBrains.DocumentModel;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.TextControl;
 using JetBrains.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.Formatter;
 
@@ -19,15 +26,15 @@ namespace ReCommendedExtension.Analyzers.Formatter;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantFormatSpecifierHint(string message, FormatElement formatElement) : Highlighting(message)
+public sealed class RedundantFormatSpecifierHint(string message) : Highlighting(message)
 {
     const string SeverityId = "RedundantFormatSpecifier";
 
-    internal FormatElement FormatElement => formatElement;
+    public required FormatElement FormatElement { get; init; }
 
     public override DocumentRange CalculateRange()
     {
-        switch (formatElement)
+        switch (FormatElement)
         {
             case { Insert: { } insert }: return insert.FormatSpecifier.GetDocumentRange(); // the ':' character already included
 
@@ -44,5 +51,46 @@ public sealed class RedundantFormatSpecifierHint(string message, FormatElement f
         }
 
         throw new NotSupportedException();
+    }
+
+    [QuickFix]
+    public sealed class Fix(RedundantFormatSpecifierHint highlighting) : QuickFixBase
+    {
+        public override bool IsAvailable(IUserDataHolder cache) => true;
+
+        public override string Text => "Remove format specifier";
+
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        {
+            switch (highlighting.FormatElement)
+            {
+                case { Insert: { } insert }:
+                    using (WriteLockCookie.Create())
+                    {
+                        ModificationUtil.DeleteChild(insert.FormatSpecifier);
+                    }
+                    break;
+
+                case { Argument: { } argument }:
+                    using (WriteLockCookie.Create())
+                    {
+                        argument.Remove();
+                    }
+                    break;
+            }
+
+            return _ =>
+            {
+                if (highlighting.FormatElement is { FormatStringExpression: { }, FormatItem: { } })
+                {
+                    using (WriteLockCookie.Create())
+                    {
+                        var documentRange = highlighting.CalculateRange();
+
+                        documentRange.Document.DeleteText(documentRange.TextRange);
+                    }
+                }
+            };
+        }
     }
 }
