@@ -1,7 +1,4 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -12,12 +9,11 @@ namespace ReCommendedExtension.Tests.Analyzers.Linq;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
 [TestNet50]
-public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analyzers.QuickFixAvailabilityTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\Linq\QuickFixes";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantLinqQueryHint or { IsError: true };
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RedundantLinqQueryHint;
 
     [Test]
     public void TestRemoveLinqQueryFixAvailability() => DoNamedTest2();

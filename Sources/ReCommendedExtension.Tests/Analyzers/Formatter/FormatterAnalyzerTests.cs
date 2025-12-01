@@ -1,9 +1,6 @@
 ﻿using System.Globalization;
-using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -15,20 +12,19 @@ namespace ReCommendedExtension.Tests.Analyzers.Formatter;
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-public sealed class FormatterAnalyzerTests : CSharpHighlightingTestBase
+public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 {
     readonly IFormatProvider?[] formatProviders = [null, CultureInfo.InvariantCulture, new CultureInfo("en-US"), new CultureInfo("de-DE")];
 
     protected override string RelativeTestDataPath => @"Analyzers\Formatter";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+    protected override bool UseHighlighting(IHighlighting highlighting)
         => highlighting is RedundantFormatSpecifierHint
             or RedundantFormatProviderHint
             or RedundantFormatPrecisionSpecifierHint
             or PassOtherFormatSpecifierSuggestion
             or SuspiciousFormatSpecifierWarning
-            or ReplaceTypeCastWithFormatSpecifierSuggestion
-            or { IsError: true };
+            or ReplaceTypeCastWithFormatSpecifierSuggestion;
 
     static void Test<T>(Func<T, string?> expected, Func<T, string?> actual, T[] values)
     {

@@ -1,19 +1,15 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.UncatchableException;
 
 namespace ReCommendedExtension.Tests.Analyzers.UncatchableException;
 
 [TestFixture]
-public sealed class UncatchableExceptionAnalyzerTests : CSharpHighlightingTestBase
+public sealed class UncatchableExceptionAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\UncatchableException";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UncatchableExceptionWarning or { IsError: true };
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UncatchableExceptionWarning;
 
     [Test]
     public void TestUncatchableException() => DoNamedTest2();

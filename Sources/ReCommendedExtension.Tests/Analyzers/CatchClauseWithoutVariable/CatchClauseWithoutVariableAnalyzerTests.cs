@@ -1,19 +1,15 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.CatchClauseWithoutVariable;
 
 namespace ReCommendedExtension.Tests.Analyzers.CatchClauseWithoutVariable;
 
 [TestFixture]
-public sealed class CatchClauseWithoutVariableAnalyzerTests : CSharpHighlightingTestBase
+public sealed class CatchClauseWithoutVariableAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariable";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is CatchClauseWithoutVariableHint or { IsError: true };
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is CatchClauseWithoutVariableHint;
 
     [Test]
     public void TestCatchClauseWithoutVariable() => DoNamedTest2();

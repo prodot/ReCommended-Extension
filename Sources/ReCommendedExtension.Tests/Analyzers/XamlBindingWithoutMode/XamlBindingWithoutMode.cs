@@ -1,20 +1,15 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.Xaml.Highlightings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.XamlBindingWithoutMode;
 
 namespace ReCommendedExtension.Tests.Analyzers.XamlBindingWithoutMode;
 
 [TestFixture]
-public sealed class XamlBindingWithoutMode : XamlHighlightingTestBase
+public sealed class XamlBindingWithoutMode : XamlAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\XamlBindingWithoutMode";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is XamlBindingWithoutModeWarning or { IsError: true } and not XamlBindingWithoutContextNotResolvedHighlighting;
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is XamlBindingWithoutModeWarning;
 
     [Test]
     public void TestXamlBindingWithoutMode() => DoNamedTest2();

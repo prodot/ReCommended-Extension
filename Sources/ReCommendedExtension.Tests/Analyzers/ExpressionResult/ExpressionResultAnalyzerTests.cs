@@ -1,8 +1,5 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ProjectModel.Properties.CSharp;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -13,12 +10,11 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.ExpressionResult;
 
 [TestFixture]
-public sealed class ExpressionResultAnalyzerTests : CSharpHighlightingTestBase
+public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\ExpressionResult";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or { IsError: true };
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UseExpressionResultSuggestion;
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 

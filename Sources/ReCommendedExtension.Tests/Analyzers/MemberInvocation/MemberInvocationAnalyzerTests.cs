@@ -1,10 +1,7 @@
 ﻿using System.Text;
-using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -15,11 +12,11 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
-public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
+public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+    protected override bool UseHighlighting(IHighlighting highlighting)
         => highlighting is RedundantMethodInvocationHint
             or UseOtherMethodSuggestion
             or UseBinaryOperatorSuggestion
@@ -33,8 +30,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
             or SuspiciousElementAccessWarning
             or RedundantToStringCallWarning // to figure out which cases are supported by R#
             or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
-            or UseCollectionCountPropertyWarning // to figure out which cases are supported by R#
-            or { IsError: true };
+            or UseCollectionCountPropertyWarning; // to figure out which cases are supported by R#
 
     static void Test<T, R>(Func<T, R> expected, Func<T, R> actual, T[] args)
     {

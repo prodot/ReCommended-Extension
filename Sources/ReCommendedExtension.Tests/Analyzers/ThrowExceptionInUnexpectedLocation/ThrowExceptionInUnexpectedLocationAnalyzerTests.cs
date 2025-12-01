@@ -1,8 +1,5 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ProjectModel.Properties.CSharp;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -12,12 +9,11 @@ namespace ReCommendedExtension.Tests.Analyzers.ThrowExceptionInUnexpectedLocatio
 
 [TestFixture]
 [TestNet50]
-public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpHighlightingTestBase
+public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\ThrowExceptionInUnexpectedLocation";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ThrowExceptionInUnexpectedLocationWarning or { IsError: true };
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is ThrowExceptionInUnexpectedLocationWarning;
 
     [Test]
     public void TestThrowExceptionInUnexpectedLocation() => DoNamedTest2();

@@ -1,7 +1,4 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -10,17 +7,16 @@ using ReCommendedExtension.Analyzers.Argument;
 namespace ReCommendedExtension.Tests.Analyzers.Argument;
 
 [TestFixture]
-public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analyzers.QuickFixAvailabilityTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\Argument\QuickFixes";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+    protected override bool UseHighlighting(IHighlighting highlighting)
         => highlighting is RedundantArgumentHint
             or RedundantArgumentRangeHint
             or RedundantElementHint
             or UseOtherArgumentSuggestion
-            or UseOtherArgumentRangeSuggestion
-            or { IsError: true };
+            or UseOtherArgumentRangeSuggestion;
 
     [Test]
     public void TestRemoveArgumentFixAvailability() => DoNamedTest2();

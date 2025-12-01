@@ -1,8 +1,5 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ProjectModel.Properties.CSharp;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -12,12 +9,11 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
-public sealed class ArrayWithDefaultValuesInitializationQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class ArrayWithDefaultValuesInitializationQuickFixAvailabilityTests : QuickFixAvailabilityTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ArrayWithDefaultValuesInitializationSuggestion or { IsError: true };
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is ArrayWithDefaultValuesInitializationSuggestion;
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]

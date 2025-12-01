@@ -5,28 +5,28 @@
 
     <StackPanel>
 
-        <TextBlock Text="{|Binding|(0) Caption}" />
-        <TextBlock Text="{Binding Caption, Mode=OneTime}" />
+        <TextBlock Text="{|Binding|(0) |Caption|(1)}" />
+        <TextBlock Text="{Binding |Caption|(2), Mode=OneTime}" />
 
         <TextBlock>
             <TextBlock.Text>
-                <|Binding|(1) Path="Caption" />
+                <|Binding|(3) Path="|Caption|(4)" />
             </TextBlock.Text>
         </TextBlock>
 
         <TextBlock>
             <TextBlock.Text>
-                <|MultiBinding|(2) StringFormat="{}{0:d} - {1:d}" ConverterCulture="{x:Static g:CultureInfo.CurrentCulture}">
-                    <Binding Path="FirstDate" Mode="OneTime" />
-                    <Binding Path="LastDate" Mode="OneTime" />
+                <|MultiBinding|(5) StringFormat="{}{0:d} - {1:d}" ConverterCulture="{x:Static g:CultureInfo.CurrentCulture}">
+                    <Binding Path="|FirstDate|(6)" Mode="OneTime" />
+                    <Binding Path="|LastDate|(7)" Mode="OneTime" />
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
         <TextBlock>
             <TextBlock.Text>
                 <MultiBinding Mode="OneTime" StringFormat="{}{0:d} - {1:d}" ConverterCulture="{x:Static g:CultureInfo.CurrentCulture}">
-                    <Binding Path="FirstDate" Mode="OneTime" />
-                    <Binding Path="LastDate" Mode="OneTime" />
+                    <Binding Path="|FirstDate|(8)" Mode="OneTime" />
+                    <Binding Path="|LastDate|(9)" Mode="OneTime" />
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
@@ -34,8 +34,8 @@
         <TextBlock>
             <TextBlock.Text>
                 <PriorityBinding>
-                    <Binding Path="Name1" Mode="OneWay" />
-                    <Binding Path="Name2" Mode="OneWay" />
+                    <Binding Path="|Name1|(10)" Mode="OneWay" />
+                    <Binding Path="|Name2|(11)" Mode="OneWay" />
                 </PriorityBinding>
             </TextBlock.Text>
         </TextBlock>
@@ -44,5 +44,14 @@
 </Page>
 ---------------------------------------------------------
 (0): ReSharper Warning: Binding mode is not set explicitly.
-(1): ReSharper Warning: Binding mode is not set explicitly.
-(2): ReSharper Warning: Binding mode is not set explicitly.
+(1): ReSharper Hint: Unable to resolve symbol 'Caption' because of unknown DataContext
+(2): ReSharper Hint: Unable to resolve symbol 'Caption' because of unknown DataContext
+(3): ReSharper Warning: Binding mode is not set explicitly.
+(4): ReSharper Hint: Unable to resolve symbol 'Caption' because of unknown DataContext
+(5): ReSharper Warning: Binding mode is not set explicitly.
+(6): ReSharper Hint: Unable to resolve symbol 'FirstDate' because of unknown DataContext
+(7): ReSharper Hint: Unable to resolve symbol 'LastDate' because of unknown DataContext
+(8): ReSharper Hint: Unable to resolve symbol 'FirstDate' because of unknown DataContext
+(9): ReSharper Hint: Unable to resolve symbol 'LastDate' because of unknown DataContext
+(10): ReSharper Hint: Unable to resolve symbol 'Name1' because of unknown DataContext
+(11): ReSharper Hint: Unable to resolve symbol 'Name2' because of unknown DataContext

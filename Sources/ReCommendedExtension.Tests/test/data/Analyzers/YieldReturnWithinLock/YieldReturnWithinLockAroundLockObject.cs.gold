@@ -11,7 +11,7 @@ namespace Test
         {
             yield return 0;
 
-            lock (sync)
+            lock (|sync|(0))
             {
                 yield return 1;
                 yield return 2;
@@ -32,10 +32,11 @@ namespace Test
 
             lock ((object)sync)
             {
-                |yield return|(0) 5;
+                |yield return|(1) 5;
             }
         }
     }
 }
 ---------------------------------------------------------
-(0): ReSharper Warning: 'yield return' used inside the 'lock' block.
+(0): ReSharper Underlined Error Highlighting: Instance of type 'System.Threading.Lock.Scope' cannot be preserved across 'await' or 'yield' boundary
+(1): ReSharper Warning: 'yield return' used inside the 'lock' block.

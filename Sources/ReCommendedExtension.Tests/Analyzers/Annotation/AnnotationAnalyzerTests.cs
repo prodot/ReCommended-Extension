@@ -2,8 +2,6 @@
 using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ControlFlow;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
@@ -14,11 +12,11 @@ using ReCommendedExtension.Analyzers.Annotation;
 namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
 [TestFixture]
-public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
+public sealed class AnnotationAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+    protected override bool UseHighlighting(IHighlighting highlighting)
         => highlighting is RedundantNullableAnnotationHint
             or RedundantAnnotationSuggestion
             or NotAllowedAnnotationWarning
@@ -26,8 +24,7 @@ public sealed class AnnotationAnalyzerTests : CSharpHighlightingTestBase
             or MissingSuppressionJustificationWarning
             or ConflictingAnnotationWarning
             or InParameterWithMustDisposeResourceAttributeWarning // to figure out which cases are supported by R#
-            or ReturnTypeCanBeNotNullableWarning // to figure out which cases are supported by R#
-            or { IsError: true };
+            or ReturnTypeCanBeNotNullableWarning; // to figure out which cases are supported by R#
 
     [Test]
     [TestNetFramework45]

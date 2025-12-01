@@ -1,8 +1,5 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ProjectModel.Properties.CSharp;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -13,12 +10,11 @@ namespace ReCommendedExtension.Tests.Analyzers.ExpressionResult;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
 [TestNet70]
-public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analyzers.QuickFixAvailabilityTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\ExpressionResult\QuickFixes";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseExpressionResultSuggestion or { IsError: true };
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UseExpressionResultSuggestion;
 
     [Test]
     public void TestUseExpressionResultFixAvailability() => DoNamedTest2();

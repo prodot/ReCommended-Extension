@@ -1,9 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
-using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -14,7 +11,7 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.Argument;
 
 [TestFixture]
-public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
+public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
 {
     readonly IFormatProvider?[] formatProviders = [null, CultureInfo.InvariantCulture, new CultureInfo("en-US"), new CultureInfo("de-DE")];
 
@@ -45,13 +42,12 @@ public sealed class ArgumentAnalyzerTests : CSharpHighlightingTestBase
 
     protected override string RelativeTestDataPath => @"Analyzers\Argument";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+    protected override bool UseHighlighting(IHighlighting highlighting)
         => highlighting is RedundantArgumentHint
             or RedundantArgumentRangeHint
             or RedundantElementHint
             or UseOtherArgumentSuggestion
-            or UseOtherArgumentRangeSuggestion
-            or { IsError: true };
+            or UseOtherArgumentRangeSuggestion;
 
     static void Test<R>(Func<R> expected, Func<R> actual) => Assert.AreEqual(expected(), actual());
 
