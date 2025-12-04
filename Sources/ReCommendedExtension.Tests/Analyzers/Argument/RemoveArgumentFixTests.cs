@@ -6,7 +6,7 @@ using ReCommendedExtension.Analyzers.Argument;
 namespace ReCommendedExtension.Tests.Analyzers.Argument;
 
 [TestFixture]
-public sealed class RemoveArgumentFixTests : QuickFixTestBase<RemoveArgumentFix>
+public sealed class RemoveArgumentFixTests : QuickFixTestBase<RedundantArgumentHint.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Argument\QuickFixes";
 

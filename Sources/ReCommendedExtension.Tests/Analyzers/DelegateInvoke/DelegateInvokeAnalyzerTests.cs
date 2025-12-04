@@ -1,19 +1,15 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.DelegateInvoke;
 
 namespace ReCommendedExtension.Tests.Analyzers.DelegateInvoke;
 
 [TestFixture]
-public sealed class DelegateInvokeAnalyzerTests : CSharpHighlightingTestBase
+public sealed class DelegateInvokeAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\DelegateInvoke";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantDelegateInvokeHint || highlighting.IsError();
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RedundantDelegateInvokeHint;
 
     [Test]
     public void TestDelegateInvoke() => DoNamedTest2();

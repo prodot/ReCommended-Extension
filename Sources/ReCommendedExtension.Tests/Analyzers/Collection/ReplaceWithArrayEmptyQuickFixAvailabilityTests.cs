@@ -1,7 +1,4 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -12,12 +9,11 @@ namespace ReCommendedExtension.Tests.Analyzers.Collection;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
 [TestNetFramework46]
-public sealed class ReplaceWithArrayEmptyQuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class ReplaceWithArrayEmptyQuickFixAvailabilityTests : QuickFixAvailabilityTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is UseEmptyForArrayInitializationWarning || highlighting.IsError();
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UseEmptyForArrayInitializationWarning;
 
     [Test]
     public void TestEmptyArrayInitializationAvailability() => DoNamedTest2();

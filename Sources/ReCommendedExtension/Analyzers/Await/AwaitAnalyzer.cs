@@ -30,7 +30,7 @@ public sealed class AwaitAnalyzer : ElementProblemAnalyzer<IAwaitExpression>
                         continue;
                     }
 
-                    if (parameter.Type.IsClrType(ClrTypeNames.ConfigureAwaitOptions))
+                    if (parameter.Type.IsClrType(PredefinedType.CONFIGURE_AWAIT_OPTIONS_FQN))
                     {
                         configureAwaitOptions = true;
                     }

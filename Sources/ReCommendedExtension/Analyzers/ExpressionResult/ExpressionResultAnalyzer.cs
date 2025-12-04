@@ -38,14 +38,18 @@ public sealed class ExpressionResultAnalyzer(
                     || arguments is [{ Value: { } firstArgValue }, ..]
                     && firstArgValue.IsNotNullHere(nullableReferenceTypesDataFlowAnalysisRunSynchronizer)))
             {
-                consumer.AddHighlighting(new UseExpressionResultSuggestion(inspection.Message, invocationInfo, replacements));
+                consumer.AddHighlighting(
+                    new UseExpressionResultSuggestion(inspection.Message)
+                    {
+                        Expression = (ICSharpTreeNode)invocationInfo, Replacements = replacements,
+                    });
             }
         }
     }
 
     protected override void Run(ICSharpInvocationInfo element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
     {
-        if (element.IsUsedAsStatement())
+        if (element.IsUsedAsStatement)
         {
             return;
         }

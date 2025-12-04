@@ -1,7 +1,4 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -12,12 +9,11 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseType;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 [TestNet80]
-public sealed class BaseTypeAnalyzerTests : CSharpHighlightingTestBase
+public sealed class BaseTypeAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseType";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RemoveRedundantBaseTypeDeclarationHint || highlighting.IsError();
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RemoveRedundantBaseTypeDeclarationHint;
 
     [Test]
     public void TestBaseTypes() => DoNamedTest2();

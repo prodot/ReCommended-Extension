@@ -11,219 +11,218 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util.Literals;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReCommendedExtension.Extensions.Collections;
 using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Extensions;
 
 internal static class CSharpExpressionExtensions
 {
-    [Pure]
-    public static IType? TryGetTargetType(this ICSharpExpression expression, bool forCollectionExpressions)
+    extension(ICSharpExpression expression)
     {
-        var targetType = expression.GetImplicitlyConvertedTo();
-
-        if (targetType.IsUnknown)
+        [Pure]
+        public IType? TryGetTargetType(bool forCollectionExpressions)
         {
-            return null;
-        }
+            var targetType = expression.GetImplicitlyConvertedTo();
 
-        if (forCollectionExpressions)
-        {
-            switch (expression.Parent)
+            if (targetType.IsUnknown)
             {
-                case IReferenceExpression referenceExpression when referenceExpression.GetExtensionInvocationKind() is var kind
-                    && (kind == ExtensionMemberKind.CLASSIC_METHOD
-                        || kind == ExtensionMemberKind.INSTANCE_METHOD
-                        || kind == ExtensionMemberKind.INSTANCE_PROPERTY):
-                case IQueryFirstFrom or IQueryParameterPlatform:
-                    return null;
+                return null;
             }
-        }
 
-        return targetType;
-    }
-
-    [Pure]
-    public static bool IsDefaultValue([NotNullWhen(true)] this ICSharpExpression? expression)
-        => expression is { } && expression.IsDefaultValueOf(expression.Type());
-
-    [Pure]
-    public static string? TryGetStringConstant(this ICSharpExpression? expression)
-        => expression switch
-        {
-            IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } when
-                expression is not ICSharpLiteralExpression literalExpression || !literalExpression.IsUtf8StringLiteral() => value,
-
-            IReferenceExpression { Reference: var reference } when reference.Resolve().DeclaredElement is IField
+            if (forCollectionExpressions)
+            {
+                switch (expression.Parent)
                 {
-                    ShortName: nameof(string.Empty),
-                    IsStatic: true,
-                    IsReadonly: true,
-                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                } field
-                && field.ContainingType.IsSystemString() => "",
-
-            _ => null,
-        };
-
-    [Pure]
-    public static char? TryGetCharConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Char, CharValue: var value } } ? value : null;
-
-    [Pure]
-    public static int? TryGetInt32Constant(this ICSharpExpression? expression) => NumberInfo.Int32.TryGetConstant(expression, out _);
-
-    [Pure]
-    public static long? TryGetInt64Constant(this ICSharpExpression? expression) => NumberInfo.Int64.TryGetConstant(expression, out _);
-
-    [Pure]
-    public static ulong? TryGetUInt64Constant(this ICSharpExpression? expression) => NumberInfo.UInt64.TryGetConstant(expression, out _);
-
-    [Pure]
-    public static bool? TryGetBooleanConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: var value } } ? value : null;
-
-    [Pure]
-    public static StringComparison? TryGetStringComparisonConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsStringComparison()
-                ? (StringComparison)constantValue.IntValue
-                : null;
-
-    [Pure]
-    public static StringSplitOptions? TryGetStringSplitOptionsConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsStringSplitOptions()
-                ? (StringSplitOptions)constantValue.IntValue
-                : null;
-
-    [Pure]
-    public static NumberStyles? TryGetNumberStylesConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsNumberStyles()
-                ? (NumberStyles)constantValue.IntValue
-                : null;
-
-    [Pure]
-    public static MidpointRounding? TryGetMidpointRoundingConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsMidpointRounding()
-                ? (MidpointRounding)constantValue.IntValue
-                : null;
-
-    [Pure]
-    public static TimeSpanStyles? TryGetTimeSpanStylesConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsTimeSpanStyles()
-                ? (TimeSpanStyles)constantValue.IntValue
-                : null;
-
-    [Pure]
-    public static DateTimeKind? TryGetDateTimeKindConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsDateTimeKind()
-                ? (DateTimeKind)constantValue.IntValue
-                : null;
-
-    [Pure]
-    public static DateTimeStyles? TryGetDateTimeStylesConstant(this ICSharpExpression? expression)
-        => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
-            && enumType.IsDateTimeStyles()
-                ? (DateTimeStyles)constantValue.IntValue
-                : null;
-
-    [Pure]
-    public static bool AreParenthesesRedundant(this IParenthesizedExpression parenthesizedExpression)
-        => CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(parenthesizedExpression, LanguageManager.Instance, null) is
-        {
-            NeedsToRemove: true,
-        };
-
-    /// <returns>The inner expression (regardless if parentheses have been removed).</returns>
-    public static ICSharpExpression TryRemoveParentheses(this ICSharpExpression expression, CSharpElementFactory factory)
-    {
-        if (expression is IParenthesizedExpression parenthesizedExpression)
-        {
-            if (parenthesizedExpression.AreParenthesesRedundant())
-            {
-                return ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+                    case IReferenceExpression referenceExpression when referenceExpression.GetExtensionInvocationKind() is var kind
+                        && (kind == ExtensionMemberKind.CLASSIC_METHOD
+                            || kind == ExtensionMemberKind.INSTANCE_METHOD
+                            || kind == ExtensionMemberKind.INSTANCE_PROPERTY):
+                    case IQueryFirstFrom or IQueryParameterPlatform:
+                        return null;
+                }
             }
 
-            return parenthesizedExpression.Expression;
+            return targetType;
         }
-
-        return expression;
     }
 
-    [Pure]
-    public static ICSharpExpression Cast(this ICSharpExpression expression, string typeName)
+    extension([NotNullWhen(true)] ICSharpExpression? expression)
     {
-        var factory = CSharpElementFactory.GetInstance(expression);
-
-        var newExpression = factory.CreateExpression($"({typeName})($0)", expression);
-
-        if (newExpression is ICastExpression { Op: IParenthesizedExpression parenthesizedExpression } castExpression
-            && parenthesizedExpression.AreParenthesesRedundant())
-        {
-            castExpression.SetOp(factory.CreateExpression("$0", expression));
-        }
-
-        return newExpression;
+        public bool IsDefaultValueOrNull => expression is { } && expression.IsDefaultValueOf(expression.Type());
     }
 
-    [Pure]
-    public static CSharpControlFlowNullReferenceState GetNullReferenceStateByNullableContext(
-        this ICSharpExpression expression,
-        CSharpCompilerNullableInspector? nullabilityInspector)
+    extension(ICSharpExpression? expression)
     {
-        var type = expression.Type();
-        if (expression.IsDefaultValueOf(type))
-        {
-            switch (type.Classify)
+        public string? AsStringConstant
+            => expression switch
             {
-                case TypeClassification.VALUE_TYPE:
-                    return type.IsNullable() ? CSharpControlFlowNullReferenceState.NULL : CSharpControlFlowNullReferenceState.NOT_NULL;
+                IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.String, StringValue: var value } } when
+                    expression is not ICSharpLiteralExpression literalExpression || !literalExpression.IsUtf8StringLiteral() => value,
 
-                case TypeClassification.REFERENCE_TYPE: return CSharpControlFlowNullReferenceState.NULL;
+                IReferenceExpression { Reference: var reference } when reference.Resolve().DeclaredElement is IField
+                    {
+                        ShortName: nameof(string.Empty),
+                        IsStatic: true,
+                        IsReadonly: true,
+                        AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                    } @field
+                    && @field.ContainingType.IsSystemString() => "",
 
-                case TypeClassification.UNKNOWN: return CSharpControlFlowNullReferenceState.UNKNOWN; // unconstrained generic type
-
-                default: goto case TypeClassification.UNKNOWN;
-            }
-        }
-
-        if (expression.GetContainingNode<ICSharpClosure>() is { } closure)
-        {
-            nullabilityInspector = nullabilityInspector?.GetClosureAnalysisResult(closure) as CSharpCompilerNullableInspector;
-        }
-
-        if (nullabilityInspector?.ControlFlowGraph.GetLeafElementsFor(expression).LastOrDefault()?.Exits.FirstOrDefault() is { } edge)
-        {
-            var nullableContext = nullabilityInspector.GetContext(edge);
-
-            return nullableContext?.ExpressionAnnotation switch
-            {
-                NullableAnnotation.NotAnnotated or NullableAnnotation.NotNullable => CSharpControlFlowNullReferenceState.NOT_NULL,
-
-                // the nullability detection doesn't work well for extension method invocations
-                NullableAnnotation.RuntimeNotNullable when expression.Parent is not IReferenceExpression referenceExpression
-                    || referenceExpression.ConditionalAccessSign == null => CSharpControlFlowNullReferenceState.NOT_NULL,
-
-                NullableAnnotation.Annotated or NullableAnnotation.Nullable =>
-                    CSharpControlFlowNullReferenceState.MAY_BE_NULL, // todo: distinguish if the expression is "null" or just "may be null" here
-
-                _ => CSharpControlFlowNullReferenceState.UNKNOWN,
+                _ => null,
             };
-        }
 
-        return CSharpControlFlowNullReferenceState.UNKNOWN;
+        public char? AsCharConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Char, CharValue: var value } } ? value : null;
+
+        public int? AsInt32Constant => NumberInfo.Int32.TryGetConstant(expression, out _);
+
+        public long? AsInt64Constant => NumberInfo.Int64.TryGetConstant(expression, out _);
+
+        public ulong? AsUInt64Constant => NumberInfo.UInt64.TryGetConstant(expression, out _);
+
+        public bool? AsBooleanConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Bool, BoolValue: var value } } ? value : null;
+
+        public StringComparison? AsStringComparisonConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+                && enumType.IsStringComparison()
+                    ? (StringComparison)constantValue.IntValue
+                    : null;
+
+        public StringSplitOptions? AsStringSplitOptionsConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+                && enumType.IsStringSplitOptions()
+                    ? (StringSplitOptions)constantValue.IntValue
+                    : null;
+
+        public NumberStyles? AsNumberStylesConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+                && enumType.IsNumberStyles()
+                    ? (NumberStyles)constantValue.IntValue
+                    : null;
+
+        public MidpointRounding? AsMidpointRoundingConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+                && enumType.IsMidpointRounding()
+                    ? (MidpointRounding)constantValue.IntValue
+                    : null;
+
+        public TimeSpanStyles? AsTimeSpanStylesConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+                && enumType.IsTimeSpanStyles()
+                    ? (TimeSpanStyles)constantValue.IntValue
+                    : null;
+
+        public DateTimeKind? AsDateTimeKindConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+                && enumType.IsDateTimeKind()
+                    ? (DateTimeKind)constantValue.IntValue
+                    : null;
+
+        public DateTimeStyles? AsDateTimeStylesConstant
+            => expression is IConstantValueOwner { ConstantValue: { Kind: ConstantValueKind.Enum, Type: var enumType } constantValue }
+                && enumType.IsDateTimeStyles()
+                    ? (DateTimeStyles)constantValue.IntValue
+                    : null;
+
+        public CollectionCreation? AsCollectionCreation => CollectionCreation.TryFrom(expression);
     }
 
-    [Pure]
-    public static bool IsNotNullHere(
-        this ICSharpExpression expression,
-        NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
-        => expression.IsNullableWarningsContextEnabled()
-            && expression.TryGetNullableInspector(nullableReferenceTypesDataFlowAnalysisRunSynchronizer) is { } inspector
-            && expression.GetNullReferenceStateByNullableContext(inspector) == CSharpControlFlowNullReferenceState.NOT_NULL;
+    extension(IParenthesizedExpression parenthesizedExpression)
+    {
+        [Pure]
+        public bool AreParenthesesRedundant()
+            => CodeStyleUtil.SuggestStyle<IRedundantParenthesesCodeStyleSuggestion>(parenthesizedExpression, LanguageManager.Instance, null) is
+            {
+                NeedsToRemove: true,
+            };
+    }
+
+    extension(ICSharpExpression expression)
+    {
+        /// <returns>The inner expression (regardless if parentheses have been removed).</returns>
+        public ICSharpExpression TryRemoveParentheses(CSharpElementFactory factory)
+        {
+            if (expression is IParenthesizedExpression parenthesizedExpression)
+            {
+                if (parenthesizedExpression.AreParenthesesRedundant())
+                {
+                    return ModificationUtil.ReplaceChild(expression, factory.CreateExpression("$0", parenthesizedExpression.Expression));
+                }
+
+                return parenthesizedExpression.Expression;
+            }
+
+            return expression;
+        }
+
+        [Pure]
+        public ICSharpExpression Cast(string typeName)
+        {
+            var factory = CSharpElementFactory.GetInstance(expression);
+
+            var newExpression = factory.CreateExpression($"({typeName})($0)", expression);
+
+            if (newExpression is ICastExpression { Op: IParenthesizedExpression parenthesizedExpression } castExpression
+                && parenthesizedExpression.AreParenthesesRedundant())
+            {
+                castExpression.SetOp(factory.CreateExpression("$0", expression));
+            }
+
+            return newExpression;
+        }
+
+        [Pure]
+        public CSharpControlFlowNullReferenceState GetNullReferenceStateByNullableContext(CSharpCompilerNullableInspector? nullabilityInspector)
+        {
+            var type = expression.Type();
+            if (expression.IsDefaultValueOf(type))
+            {
+                switch (type.Classify)
+                {
+                    case TypeClassification.VALUE_TYPE:
+                        return type.IsNullable() ? CSharpControlFlowNullReferenceState.NULL : CSharpControlFlowNullReferenceState.NOT_NULL;
+
+                    case TypeClassification.REFERENCE_TYPE: return CSharpControlFlowNullReferenceState.NULL;
+
+                    case TypeClassification.UNKNOWN: return CSharpControlFlowNullReferenceState.UNKNOWN; // unconstrained generic type
+
+                    default: goto case TypeClassification.UNKNOWN;
+                }
+            }
+
+            if (expression.GetContainingNode<ICSharpClosure>() is { } closure)
+            {
+                nullabilityInspector = nullabilityInspector?.GetClosureAnalysisResult(closure) as CSharpCompilerNullableInspector;
+            }
+
+            if (nullabilityInspector?.ControlFlowGraph.GetLeafElementsFor(expression).LastOrDefault()?.Exits.FirstOrDefault() is { } edge)
+            {
+                var nullableContext = nullabilityInspector.GetContext(edge);
+
+                return nullableContext?.ExpressionAnnotation switch
+                {
+                    NullableAnnotation.NotAnnotated or NullableAnnotation.NotNullable => CSharpControlFlowNullReferenceState.NOT_NULL,
+
+                    // the nullability detection doesn't work well for extension method invocations
+                    NullableAnnotation.RuntimeNotNullable when expression.Parent is not IReferenceExpression referenceExpression
+                        || referenceExpression.ConditionalAccessSign == null => CSharpControlFlowNullReferenceState.NOT_NULL,
+
+                    NullableAnnotation.Annotated or NullableAnnotation.Nullable =>
+                        CSharpControlFlowNullReferenceState.MAY_BE_NULL, // todo: distinguish if the expression is "null" or just "may be null" here
+
+                    _ => CSharpControlFlowNullReferenceState.UNKNOWN,
+                };
+            }
+
+            return CSharpControlFlowNullReferenceState.UNKNOWN;
+        }
+
+        [Pure]
+        public bool IsNotNullHere(NullableReferenceTypesDataFlowAnalysisRunSynchronizer nullableReferenceTypesDataFlowAnalysisRunSynchronizer)
+            => expression.IsNullableWarningsContextEnabled()
+                && expression.TryGetNullableInspector(nullableReferenceTypesDataFlowAnalysisRunSynchronizer) is { } inspector
+                && expression.GetNullReferenceStateByNullableContext(inspector) == CSharpControlFlowNullReferenceState.NOT_NULL;
+    }
 }

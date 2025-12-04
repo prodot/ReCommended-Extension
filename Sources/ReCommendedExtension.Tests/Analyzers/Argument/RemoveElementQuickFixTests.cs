@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Argument;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 [TestNetCore21]
-public sealed class RemoveElementQuickFixTests : QuickFixTestBase<RemoveElementFix>
+public sealed class RemoveElementQuickFixTests : QuickFixTestBase<RedundantElementHint.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Argument\QuickFixes";
 

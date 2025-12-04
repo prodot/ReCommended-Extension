@@ -1,8 +1,15 @@
-﻿using JetBrains.DocumentModel;
+﻿using JetBrains.Application.Progress;
+using JetBrains.DocumentModel;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon.Attributes;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.TextControl;
+using JetBrains.Util;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.Analyzers.Argument;
 
@@ -18,11 +25,29 @@ namespace ReCommendedExtension.Analyzers.Argument;
     CSharpLanguage.Name,
     AttributeId = AnalysisHighlightingAttributeIds.DEADCODE,
     OverlapResolve = OverlapResolveKind.DEADCODE)]
-public sealed class RedundantArgumentHint(string message, ICSharpArgument argument) : Highlighting(message)
+public sealed class RedundantArgumentHint(string message) : Highlighting(message)
 {
     const string SeverityId = "RedundantArgument";
 
-    internal ICSharpArgument Argument => argument;
+    public required ICSharpArgument Argument { get; init; }
 
-    public override DocumentRange CalculateRange() => argument.GetDocumentRange();
+    public override DocumentRange CalculateRange() => Argument.GetDocumentRange();
+
+    [QuickFix]
+    public sealed class Fix(RedundantArgumentHint highlighting) : QuickFixBase
+    {
+        public override bool IsAvailable(IUserDataHolder cache) => true;
+
+        public override string Text => "Remove argument";
+
+        protected override Action<ITextControl>? ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        {
+            using (WriteLockCookie.Create())
+            {
+                highlighting.Argument.Remove();
+            }
+
+            return null;
+        }
+    }
 }

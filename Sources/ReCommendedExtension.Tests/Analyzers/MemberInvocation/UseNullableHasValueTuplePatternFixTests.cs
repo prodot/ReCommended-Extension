@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
 [TestNetCore20]
-public sealed class UseNullableHasValueTuplePatternFixTests : QuickFixTestBase<UseNullableHasValueTuplePatternFix>
+public sealed class UseNullableHasValueTuplePatternFixTests : QuickFixTestBase<UseNullableHasValueAlternativeSuggestion.TuplePatternFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

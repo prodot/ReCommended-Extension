@@ -10,19 +10,18 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.MemberFinding;
 
 namespace ReCommendedExtension.ContextActions;
 
 [ContextAction(
     GroupType = typeof(CSharpContextActions),
-    Name = $"Converts '{nameof(IEnumerable<int>)}<T>' to a no-op LINQ query" + ZoneMarker.Suffix,
-    Description = $"Converts an '{nameof(IEnumerable<int>)}<T>' to a no-op LINQ query.")]
+    Name = $"Converts '{nameof(IEnumerable<>)}<T>' or 'IAsyncEnumerable<T>' to a no-op LINQ query" + ZoneMarker.Suffix, // todo: nameof(IAsyncEnumerable<>) when available
+    Description = $"Converts an '{nameof(IEnumerable<>)}<T>' or an 'IAsyncEnumerable<T>' to a no-op LINQ query.")] // todo: nameof(IAsyncEnumerable<>) when available
 public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider) : ContextAction<ICSharpExpression>(provider)
 {
     class Replacement
     {
-        string? targetExpression;
-
         [Pure]
         protected virtual string CreateTargetExpression() => $"from item in {SourceExpression.GetText()} select item";
 
@@ -32,9 +31,9 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
         {
             get
             {
-                targetExpression ??= CreateTargetExpression();
+                field ??= CreateTargetExpression();
 
-                return targetExpression;
+                return field;
             }
         }
     }
@@ -79,6 +78,30 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
 
     Replacement? replacement;
 
+    [Pure]
+    bool EnumerableSelectMethodExists()
+        => PredefinedType.ENUMERABLE_CLASS.TryGetTypeElement(PsiModule) is { } typeElement
+            && typeElement.HasMethod(
+                new MethodSignature
+                {
+                    Name = nameof(Enumerable.Select),
+                    Parameters = [Parameter.IEnumerableOfT, Parameter.FuncOfTR],
+                    IsStatic = true,
+                    GenericParametersCount = 2,
+                });
+
+    [Pure]
+    bool AsyncEnumerableSelectMethodExists()
+        => PredefinedType.ASYNC_ENUMERABLE_CLASS.TryGetTypeElement(PsiModule) is { } typeElement
+            && typeElement.HasMethod(
+                new MethodSignature
+                {
+                    Name = "Select", // todo: nameof(AsyncEnumerable.Select) when available
+                    Parameters = [Parameter.IAsyncEnumerableOfT, Parameter.FuncOfTR],
+                    IsStatic = true,
+                    GenericParametersCount = 2,
+                });
+
     [MemberNotNullWhen(true, nameof(replacement))]
     protected override bool IsAvailable(ICSharpExpression selectedElement)
     {
@@ -91,22 +114,26 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
         {
             var type = selectedElement.Type();
 
-            if (type.IsGenericIEnumerable()
-                || selectedElement.Parent is ISpreadElement
-                || selectedElement.TryGetTargetType(false) is { } targetType
-                && targetType.IsGenericIEnumerable()
-                && (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArray())
-                || type.IsGenericListOrDescendant()
-                && selectedElement.Parent is IReferenceExpression referenceExpression
-                && referenceExpression.QualifierExpression == selectedElement
-                && referenceExpression.Reference.Resolve().DeclaredElement is IMethod
-                {
-                    AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
-                    IsStatic: false,
-                    TypeParameters: [],
-                    Parameters: [],
-                    ShortName: nameof(List<int>.ToArray),
-                })
+            if ((type.IsGenericIEnumerable()
+                    || selectedElement.Parent is ISpreadElement
+                    || selectedElement.TryGetTargetType(false) is { } targetType
+                    && targetType.IsGenericIEnumerable()
+                    && (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArray())
+                    || type.IsGenericListOrDescendant()
+                    && selectedElement.Parent is IReferenceExpression referenceExpression
+                    && referenceExpression.QualifierExpression == selectedElement
+                    && referenceExpression.Reference.Resolve().DeclaredElement is IMethod
+                    {
+                        AccessibilityDomain.DomainType: AccessibilityDomain.AccessibilityDomainType.PUBLIC,
+                        IsStatic: false,
+                        TypeParameters: [],
+                        Parameters: [],
+                        ShortName: nameof(List<>.ToArray),
+                    })
+                && EnumerableSelectMethodExists()
+                || (type.IsIAsyncEnumerable()
+                    || selectedElement.TryGetTargetType(false) is { } tt && tt.IsIAsyncEnumerable() && type.IsIAsyncEnumerableOrDescendant())
+                && AsyncEnumerableSelectMethodExists())
             {
                 replacement = new Replacement { SourceExpression = selectedElement };
                 return true;
@@ -120,31 +147,32 @@ public sealed class ConvertToLinqQuery(ICSharpContextActionDataProvider provider
                     || targetTypeForCollectionExpressions.IsGenericIList()
                     || targetTypeForCollectionExpressions.IsGenericList()
                     || targetTypeForCollectionExpressions.IsGenericArray())
-                && (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArray()))
+                && (type.IsGenericIEnumerableOrDescendant() || type.IsGenericArray())
+                && EnumerableSelectMethodExists())
             {
                 replacement = new CollectionExpressionReplacement { SourceExpression = selectedElement };
                 return true;
             }
 
-            if (type.IsGenericList())
+            if (type.IsGenericList() && EnumerableSelectMethodExists())
             {
                 replacement = new LinqMethodCallReplacement { SourceExpression = selectedElement, MethodName = nameof(Enumerable.ToList) };
                 return true;
             }
 
-            if (type.IsGenericArray())
+            if (type.IsGenericArray() && EnumerableSelectMethodExists())
             {
                 replacement = new LinqMethodCallReplacement { SourceExpression = selectedElement, MethodName = nameof(Enumerable.ToArray) };
                 return true;
             }
 
-            if (type.IsGenericHashSet())
+            if (type.IsGenericHashSet() && EnumerableSelectMethodExists())
             {
                 replacement = new LinqMethodCallReplacement
                 {
                     SourceExpression = selectedElement,
                     MethodName = nameof(Enumerable.ToHashSet),
-                    ExpressionPropertyAsMethodArgument = nameof(HashSet<int>.Comparer),
+                    ExpressionPropertyAsMethodArgument = nameof(HashSet<>.Comparer),
                 };
                 return true;
             }

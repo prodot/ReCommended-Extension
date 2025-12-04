@@ -224,16 +224,10 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 QualifierType: var expressionType, FormatArgument: { Argument: var argument, CanBeRemoved: var canBeRemoved },
             }:
             {
-                if (argument.Value.IsDefaultValue())
+                switch (argument.Value)
                 {
-                    yield return new FormatElement(null, expressionType, argument, canBeRemoved);
-                }
-                else
-                {
-                    if (argument.Value.TryGetStringConstant() is { } format)
-                    {
-                        yield return new FormatElement(format, expressionType, argument, canBeRemoved);
-                    }
+                    case { IsDefaultValueOrNull: true }: yield return new FormatElement(null, expressionType, argument, canBeRemoved); break;
+                    case { AsStringConstant: { } format }: yield return new FormatElement(format, expressionType, argument, canBeRemoved); break;
                 }
 
                 break;
@@ -257,7 +251,8 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                         || formatElement.ExpressionType.IsDateTimeOffset())
                     && formatElement is { Argument: { }, CanBeRemoved: true }:
                 {
-                    consumer.AddHighlighting(new RedundantFormatSpecifierHint("Specifying null or an empty string is redundant.", formatElement));
+                    consumer.AddHighlighting(
+                        new RedundantFormatSpecifierHint("Specifying null or an empty string is redundant.") { FormatElement = formatElement });
                     break;
                 }
 
@@ -268,7 +263,8 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                             || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
                     && formatElement.CanBeRemoved:
                 {
-                    consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying 'G{precisionSpecifier}' is redundant.", formatElement));
+                    consumer.AddHighlighting(
+                        new RedundantFormatSpecifierHint($"Specifying 'G{precisionSpecifier}' is redundant.") { FormatElement = formatElement });
                     break;
                 }
 
@@ -280,42 +276,43 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                             || numberInfo.MaxValueStringLength is { } maxValueStringLength && precision >= maxValueStringLength))
                     && formatElement.CanBeRemoved:
                 {
-                    consumer.AddHighlighting(new RedundantFormatSpecifierHint($"Specifying 'g{precisionSpecifier}' is redundant.", formatElement));
+                    consumer.AddHighlighting(
+                        new RedundantFormatSpecifierHint($"Specifying 'g{precisionSpecifier}' is redundant.") { FormatElement = formatElement });
                     break;
                 }
 
                 case [('G' or 'g') and var replacement] when formatElement.ExpressionType.IsEnumType() && formatElement.CanBeRemoved:
                 {
                     consumer.AddHighlighting(
-                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.", formatElement));
+                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.") { FormatElement = formatElement });
                     break;
                 }
 
                 case [('D' or 'd') and var replacement] when formatElement.ExpressionType.IsGuid() && formatElement.CanBeRemoved:
                 {
                     consumer.AddHighlighting(
-                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.", formatElement));
+                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.") { FormatElement = formatElement });
                     break;
                 }
 
                 case ['d' and var replacement] when formatElement.ExpressionType.IsDateOnly() && formatElement.CanBeRemoved:
                 {
                     consumer.AddHighlighting(
-                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.", formatElement));
+                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.") { FormatElement = formatElement });
                     break;
                 }
 
                 case ['t' and var replacement] when formatElement.ExpressionType.IsTimeOnly() && formatElement.CanBeRemoved:
                 {
                     consumer.AddHighlighting(
-                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.", formatElement));
+                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.") { FormatElement = formatElement });
                     break;
                 }
 
                 case [('c' or 't' or 'T') and var replacement] when formatElement.ExpressionType.IsTimeSpan() && formatElement.CanBeRemoved:
                 {
                     consumer.AddHighlighting(
-                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.", formatElement));
+                        new RedundantFormatSpecifierHint($"Specifying '{replacement.ToString()}' is redundant.") { FormatElement = formatElement });
                     break;
                 }
 
@@ -326,8 +323,10 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 {
                     consumer.AddHighlighting(
                         new RedundantFormatPrecisionSpecifierHint(
-                            $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.",
-                            formatElement));
+                            $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.")
+                        {
+                            FormatElement = formatElement,
+                        });
                     break;
                 }
 
@@ -340,8 +339,10 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 {
                     consumer.AddHighlighting(
                         new RedundantFormatPrecisionSpecifierHint(
-                            $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.",
-                            formatElement));
+                            $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.")
+                        {
+                            FormatElement = formatElement,
+                        });
                     break;
                 }
 
@@ -354,8 +355,10 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 {
                     consumer.AddHighlighting(
                         new RedundantFormatPrecisionSpecifierHint(
-                            $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.",
-                            formatElement));
+                            $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.")
+                        {
+                            FormatElement = formatElement,
+                        });
                     break;
                 }
 
@@ -368,8 +371,10 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                 {
                     consumer.AddHighlighting(
                         new RedundantFormatPrecisionSpecifierHint(
-                            $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.",
-                            formatElement));
+                            $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.")
+                        {
+                            FormatElement = formatElement,
+                        });
                     break;
                 }
 
@@ -386,17 +391,20 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
 
                         consumer.AddHighlighting(
                             new PassOtherFormatSpecifierSuggestion(
-                                $"Pass the '{numberInfo.RoundTripFormatSpecifierReplacement}' format specifier (string length may vary).",
-                                formatElement,
-                                numberInfo.RoundTripFormatSpecifierReplacement));
+                                $"Pass the '{numberInfo.RoundTripFormatSpecifierReplacement}' format specifier (string length may vary).")
+                            {
+                                FormatElement = formatElement, Replacement = numberInfo.RoundTripFormatSpecifierReplacement,
+                            });
                     }
 
                     if ((numberInfo.FormatSpecifiers & FormatSpecifiers.RoundtripPrecisionRedundant) != 0 && precisionSpecifier != "")
                     {
                         consumer.AddHighlighting(
                             new RedundantFormatPrecisionSpecifierHint(
-                                $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.",
-                                formatElement));
+                                $"The format precision specifier is redundant, '{replacement.ToString()}' has the same effect.")
+                            {
+                                FormatElement = formatElement,
+                            });
                     }
 
                     if ((numberInfo.FormatSpecifiers & (FormatSpecifiers.RoundtripToBeReplaced | FormatSpecifiers.RoundtripPrecisionRedundant)) == 0)
@@ -425,9 +433,7 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                         consumer.AddHighlighting(
                             new ReplaceTypeCastWithFormatSpecifierSuggestion(
                                 $"Use the '{formatSpecifier}' format specifier instead of the type cast.",
-                                insert,
-                                castExpression.Op,
-                                formatSpecifier));
+                                insert) { Expression = castExpression.Op, FormatSpecifier = formatSpecifier });
                     }
 
                     if (type.IsNullable()
@@ -441,9 +447,7 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                         consumer.AddHighlighting(
                             new ReplaceTypeCastWithFormatSpecifierSuggestion(
                                 $"Use the '{formatSpecifier}' format specifier instead of the type cast.",
-                                insert,
-                                castExpression.Op,
-                                formatSpecifier));
+                                insert) { Expression = castExpression.Op, FormatSpecifier = formatSpecifier });
                     }
                     break;
                 }
@@ -456,17 +460,17 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
             {
                 case var t
                     when (NumberInfo.TryGet(t) is { } || t.IsDateOnly() || t.IsTimeOnly() || t.IsTimeSpan() || t.IsDateTime() || t.IsDateTimeOffset())
-                    && toStringInvocation.ProviderArgument is { CanBeRemoved: true, Argument: var argument }
-                    && argument.Value.IsDefaultValue():
+                    && toStringInvocation.ProviderArgument is { CanBeRemoved: true, Argument: { Value.IsDefaultValueOrNull: true } argument }:
                 {
-                    consumer.AddHighlighting(new RedundantFormatProviderHint("Passing null is redundant.", argument));
+                    consumer.AddHighlighting(new RedundantFormatProviderHint("Passing null is redundant.") { ProviderArgument = argument });
                     break;
                 }
 
                 case var t when (t.IsBool() || t.IsGuid() || t.IsChar() || t.IsString())
                     && toStringInvocation.ProviderArgument is { CanBeRemoved: true, Argument: var argument }:
                 {
-                    consumer.AddHighlighting(new RedundantFormatProviderHint("Passing a format provider is redundant.", argument));
+                    consumer.AddHighlighting(
+                        new RedundantFormatProviderHint("Passing a format provider is redundant.") { ProviderArgument = argument });
                     break;
                 }
 
@@ -474,12 +478,15 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                     && (numberInfo.FormatSpecifiers & FormatSpecifiers.Binary) != 0
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && formatArgument.Value.TryGetStringConstant() is ['B' or 'b', ..]:
+                        FormatArgument.Argument.Value.AsStringConstant: ['B' or 'b', ..],
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
                     consumer.AddHighlighting(
-                        new RedundantFormatProviderHint("Passing a provider with a binary format specifier is redundant.", providerArgument));
+                        new RedundantFormatProviderHint("Passing a provider with a binary format specifier is redundant.")
+                        {
+                            ProviderArgument = providerArgument,
+                        });
                     break;
                 }
 
@@ -487,45 +494,51 @@ public sealed class FormatterAnalyzer(FormattingFunctionInvocationInfoProvider f
                     && (numberInfo.FormatSpecifiers & FormatSpecifiers.Hexadecimal) != 0
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && formatArgument.Value.TryGetStringConstant() is ['X' or 'x', ..]:
+                        FormatArgument.Argument.Value.AsStringConstant: ['X' or 'x', ..],
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
                     consumer.AddHighlighting(
-                        new RedundantFormatProviderHint("Passing a provider with a hexadecimal format specifier is redundant.", providerArgument));
+                        new RedundantFormatProviderHint("Passing a provider with a hexadecimal format specifier is redundant.")
+                        {
+                            ProviderArgument = providerArgument,
+                        });
                     break;
                 }
 
                 case var t when (t.IsDateOnly() || t.IsTimeOnly())
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && formatArgument.Value.TryGetStringConstant() is "o" or "O" or "r" or "R":
+                        FormatArgument.Argument.Value.AsStringConstant: "o" or "O" or "r" or "R",
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
-                    consumer.AddHighlighting(new RedundantFormatProviderHint("Passing a format provider is redundant.", providerArgument));
+                    consumer.AddHighlighting(
+                        new RedundantFormatProviderHint("Passing a format provider is redundant.") { ProviderArgument = providerArgument });
                     break;
                 }
 
                 case var t when t.IsTimeSpan()
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && (formatArgument.Value.IsDefaultValue() || formatArgument.Value.TryGetStringConstant() is "" or "c" or "t" or "T"):
+                        FormatArgument.Argument.Value: { IsDefaultValueOrNull: true } or { AsStringConstant : "" or "c" or "t" or "T" },
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
-                    consumer.AddHighlighting(new RedundantFormatProviderHint("Passing a format provider is redundant.", providerArgument));
+                    consumer.AddHighlighting(
+                        new RedundantFormatProviderHint("Passing a format provider is redundant.") { ProviderArgument = providerArgument });
                     break;
                 }
 
                 case var t when (t.IsDateTime() || t.IsDateTimeOffset())
                     && toStringInvocation is
                     {
-                        FormatArgument.Argument: var formatArgument, ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
-                    }
-                    && formatArgument.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" or "s" or "u":
+                        FormatArgument.Argument.Value.AsStringConstant: "o" or "O" or "r" or "R" or "s" or "u",
+                        ProviderArgument: { CanBeRemoved: true, Argument: var providerArgument },
+                    }:
                 {
-                    consumer.AddHighlighting(new RedundantFormatProviderHint("Passing a format provider is redundant.", providerArgument));
+                    consumer.AddHighlighting(
+                        new RedundantFormatProviderHint("Passing a format provider is redundant.") { ProviderArgument = providerArgument });
                     break;
                 }
             }

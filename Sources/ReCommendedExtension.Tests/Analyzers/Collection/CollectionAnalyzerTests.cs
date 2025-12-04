@@ -1,9 +1,6 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ProjectModel.Properties.CSharp;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -12,21 +9,20 @@ using ReCommendedExtension.Analyzers.Collection;
 namespace ReCommendedExtension.Tests.Analyzers.Collection;
 
 [TestFixture]
-public sealed class CollectionAnalyzerTests : CSharpHighlightingTestBase
+public sealed class CollectionAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\Collection";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+    protected override bool UseHighlighting(IHighlighting highlighting)
         => highlighting is UseEmptyForArrayInitializationWarning
-                or UseTargetTypedCollectionExpressionSuggestion
-                or ArrayWithDefaultValuesInitializationSuggestion
-                or UseArrayEmptyMethodWarning // to figure out which cases are supported by R#
-                or UseCollectionExpressionWarning // to figure out which cases are supported by R#
-                or UseCollectionExpressionForArrayInitializerWarning // to figure out which cases are supported by R#
-                or ReplaceInvocationWithCollectionExpressionWarning // to figure out which cases are supported by R#
-                or ReplaceInvocationWithSingleSpreadCollectionExpressionWarning // to figure out which cases are supported by R#
-                or ReplaceWithEmptyCollectionExpressionWarning // to figure out which cases are supported by R#
-            || highlighting.IsError();
+            or UseTargetTypedCollectionExpressionSuggestion
+            or ArrayWithDefaultValuesInitializationSuggestion
+            or UseArrayEmptyMethodWarning // to figure out which cases are supported by R#
+            or UseCollectionExpressionWarning // to figure out which cases are supported by R#
+            or UseCollectionExpressionForArrayInitializerWarning // to figure out which cases are supported by R#
+            or ReplaceInvocationWithCollectionExpressionWarning // to figure out which cases are supported by R#
+            or ReplaceInvocationWithSingleSpreadCollectionExpressionWarning // to figure out which cases are supported by R#
+            or ReplaceWithEmptyCollectionExpressionWarning; // to figure out which cases are supported by R#
 
     [Test]
     [TestNet60]

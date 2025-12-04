@@ -32,7 +32,7 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
             return TypeFactory.CreateType(valueTaskType);
         }
 
-        if (returnType.IsGenericTask() && genericValueTaskType is { } && returnType.TryGetGenericParameterTypes() is [{ } taskResultType])
+        if (returnType.IsGenericTask() && genericValueTaskType is { } && returnType.GenericParameterTypes is [{ } taskResultType])
         {
             return TypeFactory.CreateType(genericValueTaskType, [taskResultType]);
         }
@@ -42,7 +42,7 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
             return TypeFactory.CreateType(taskType);
         }
 
-        if (returnType.IsGenericValueTask() && genericTaskType is { } && returnType.TryGetGenericParameterTypes() is [{ } valueTaskResultType])
+        if (returnType.IsGenericValueTask() && genericTaskType is { } && returnType.GenericParameterTypes is [{ } valueTaskResultType])
         {
             return TypeFactory.CreateType(genericTaskType, [valueTaskResultType]);
         }
@@ -61,9 +61,13 @@ public sealed class ToggleReturnTypeOfAsyncMethods(ICSharpContextActionDataProvi
 
         switch (selectedElement)
         {
-            case { Parent: IMethodDeclaration { DeclaredElement: { IsAsync: true, ReturnType: IDeclaredType returnType } } methodDeclaration }
-                when !methodDeclaration.OverridesInheritedMember()
-                && TryGetReplacementType(returnType, taskType, genericTaskType, valueTaskType, genericValueTaskType) is { } replacementType:
+            case
+            {
+                Parent: IMethodDeclaration
+                {
+                    DeclaredElement: { IsAsync: true, ReturnType: IDeclaredType returnType }, OverridesInheritedMember: false,
+                } methodDeclaration,
+            } when TryGetReplacementType(returnType, taskType, genericTaskType, valueTaskType, genericValueTaskType) is { } replacementType:
 
                 declaration = methodDeclaration;
                 replacementReturnType = replacementType;

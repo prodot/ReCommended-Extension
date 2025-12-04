@@ -7,7 +7,7 @@ namespace ReCommendedExtension.Tests.Analyzers.ExpressionResult;
 
 [TestFixture]
 [TestNet70]
-public sealed class UseExpressionResultAlternativeQuickFixTests : QuickFixTestBase<UseExpressionResultAlternativeFix>
+public sealed class UseExpressionResultAlternativeQuickFixTests : QuickFixTestBase<UseExpressionResultSuggestion.AlternativeFix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\ExpressionResult\QuickFixes";
 

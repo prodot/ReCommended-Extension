@@ -5,7 +5,7 @@ using ReCommendedExtension.Analyzers.MemberInvocation;
 namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
-public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperatorFix>
+public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperatorSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

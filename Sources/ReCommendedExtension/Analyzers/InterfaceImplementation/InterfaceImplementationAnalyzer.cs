@@ -249,10 +249,10 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
         {
             var (declaresEquatable, _, _, _) = GetInterfaces(element.DeclaredElement, type, null, null, null);
 
-            var overridesEquals = element.DeclaredElement.Methods.Any(
-                method => method is { ShortName: nameof(IEquatable<int>.Equals), IsOverride: true, TypeParameters: [], Parameters: [{ } parameter] }
-                    && method.ReturnType.IsBool()
-                    && parameter.Type.IsObject());
+            var overridesEquals = element.DeclaredElement.Methods.Any(method
+                => method is { ShortName: nameof(IEquatable<>.Equals), IsOverride: true, TypeParameters: [], Parameters: [{ } parameter] }
+                && method.ReturnType.IsBool()
+                && parameter.Type.IsObject());
 
             if (!declaresEquatable && overridesEquals && element is IStructDeclaration structDeclaration)
             {
@@ -298,7 +298,7 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
             if (!declaresEquatable
                 && baseType.IsIEquatable()
-                && baseType.TryGetGenericParameterTypes() is [{ } equatableType]
+                && baseType.GenericParameterTypes is [{ } equatableType]
                 && TypeEqualityComparer.Default.Equals(equatableType, type))
             {
                 declaresEquatable = true;
@@ -307,7 +307,7 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
             if (!declaresEqualityOperators
                 && DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), equalityOperatorsInterface)
-                && baseType.TryGetGenericParameterTypes() is [{ } leftEqualityOperandType, { } rightEqualityOperandType, { } equalityResultType]
+                && baseType.GenericParameterTypes is [{ } leftEqualityOperandType, { } rightEqualityOperandType, { } equalityResultType]
                 && TypeEqualityComparer.Default.Equals(leftEqualityOperandType, type)
                 && TypeEqualityComparer.Default.Equals(rightEqualityOperandType, type)
                 && equalityResultType.IsBool())
@@ -318,7 +318,7 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
             if (!declaresComparable
                 && DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparableInterface)
-                && baseType.TryGetGenericParameterTypes() is [{ } comparableType]
+                && baseType.GenericParameterTypes is [{ } comparableType]
                 && TypeEqualityComparer.Default.Equals(comparableType, type))
             {
                 declaresComparable = true;
@@ -327,7 +327,7 @@ public sealed class InterfaceImplementationAnalyzer : ElementProblemAnalyzer<ICl
 
             if (!declaresComparisonOperators
                 && DeclaredElementEqualityComparer.TypeElementComparer.Equals(baseType.GetTypeElement(), comparisonOperatorsInterface)
-                && baseType.TryGetGenericParameterTypes() is [{ } leftComparisonOperandType, { } rightComparisonOperandType, { } comparisonResultType]
+                && baseType.GenericParameterTypes is [{ } leftComparisonOperandType, { } rightComparisonOperandType, { } comparisonResultType]
                 && TypeEqualityComparer.Default.Equals(leftComparisonOperandType, type)
                 && TypeEqualityComparer.Default.Equals(rightComparisonOperandType, type)
                 && comparisonResultType.IsBool())

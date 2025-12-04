@@ -90,6 +90,8 @@ internal sealed record Parameter
 
     public static Parameter IEnumerableOfString { get; } = new() { IsType = t => t.IsIEnumerableOfString() };
 
+    public static Parameter IAsyncEnumerableOfT { get; } = new() { IsType = t => t.IsIAsyncEnumerable() };
+
     public static Parameter NumberStyles { get; } = new() { IsType = t => t.IsNumberStyles() };
 
     public static Parameter IFormatProvider { get; } = new() { IsType = t => t.IsIFormatProvider() };
@@ -109,6 +111,8 @@ internal sealed record Parameter
     public static Parameter Calendar { get; } = new() { IsType = t => t.IsCalendar() };
 
     public static Parameter StringBuilder { get; } = new() { IsType = t => t.IsStringBuilder() };
+
+    public static Parameter FuncOfTR { get; } = new() { IsType = t => t.IsFuncOfTResult() };
 
     public required Func<IType, bool> IsType { get; init; }
 

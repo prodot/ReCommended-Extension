@@ -14,17 +14,17 @@ internal abstract record Pattern : Inspection
     {
         if (collectionType.IsString() && PredefinedType.CHAR_FQN.TryGetTypeElement(context.GetPsiModule()) is { } charTypeElement)
         {
-            return TypeFactory.CreateType(charTypeElement).TryGetDefaultValue(context);
+            return TypeFactory.CreateType(charTypeElement).TryGetDefaultValueLiteral(context);
         }
 
         if (collectionType is IArrayType(var elementType, 1))
         {
-            return elementType.TryGetDefaultValue(context);
+            return elementType.TryGetDefaultValueLiteral(context);
         }
 
-        if (collectionType is IDeclaredType declaredType && declaredType.TryGetGenericParameterTypes() is [{ } itemType])
+        if (collectionType is IDeclaredType { GenericParameterTypes: [{ } itemType] })
         {
-            return itemType.TryGetDefaultValue(context);
+            return itemType.TryGetDefaultValueLiteral(context);
         }
 
         return null;
@@ -35,9 +35,7 @@ internal abstract record Pattern : Inspection
     public static PatternByArguments Arg0BetweenArg1Arg2 { get; } = new()
     {
         TryGetReplacement = args
-            => args is [{ Value: { } arg0Value }, { Value: { } arg1Value }, { Value: { } arg2Value }]
-            && arg1Value.TryGetCharConstant() is { }
-            && arg2Value.TryGetCharConstant() is { }
+            => args is [{ Value: { } arg0Value }, { Value: { AsCharConstant: { } } arg1Value }, { Value: { AsCharConstant: { } } arg2Value }]
                 ? new PatternReplacement { Expression = arg0Value, Pattern = $"is >= {arg1Value.GetText()} and <= {arg2Value.GetText()}" }
                 : null,
         Message = _ => "Use pattern.",
@@ -49,8 +47,7 @@ internal abstract record Pattern : Inspection
         ICSharpExpression qualifier,
         Func<BinaryOperatorExpression, string?> tryGetPattern,
         Func<BinaryOperatorExpression, string?>? tryGetPatternDisplayText = null)
-        => BinaryOperatorExpression.TryFrom(invocationExpression) is { } binaryExpression
-            && !binaryExpression.Expression.IsUsedAsStatement()
+        => BinaryOperatorExpression.TryFrom(invocationExpression) is { Expression.IsUsedAsStatement: false } binaryExpression
             && tryGetPattern(binaryExpression) is { } pattern
                 ? new PatternReplacement
                 {
@@ -60,7 +57,7 @@ internal abstract record Pattern : Inspection
 
     public static PatternByBinaryExpression IsFirstConstantCharacterWhenComparingToZero { get; } = new()
     {
-        TryGetReplacement = (invocationExpression, qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() is { }
+        TryGetReplacement = (invocationExpression, qualifier, args) => args is [{ Value: { AsCharConstant: { } } value }]
             ? TryGetReplacementForBinaryExpression(
                 invocationExpression,
                 qualifier,
@@ -80,7 +77,7 @@ internal abstract record Pattern : Inspection
 
     public static PatternByBinaryExpression IsFirstConstantNonCharacterWhenComparingToZero { get; } = new()
     {
-        TryGetReplacement = (invocationExpression, qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() == null
+        TryGetReplacement = (invocationExpression, qualifier, args) => args is [{ Value: { AsCharConstant: null } value }]
             ? TryGetReplacementForBinaryExpression(
                 invocationExpression,
                 qualifier,
@@ -115,7 +112,7 @@ internal abstract record Pattern : Inspection
     public static PatternByQualifierArguments IsFirstConstantCharacter { get; } = new()
     {
         TryGetReplacement =
-            (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() is { }
+            (qualifier, args) => args is [{ Value: { AsCharConstant: { } } value }]
                 ? new PatternReplacement { Expression = qualifier, Pattern = $"is [{value.GetText()}, ..]" }
                 : null,
         Message = _ => "Use list pattern.",
@@ -123,7 +120,7 @@ internal abstract record Pattern : Inspection
 
     public static PatternByQualifierArguments IsFirstNonConstantCharacter { get; } = new()
     {
-        TryGetReplacement = (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() == null
+        TryGetReplacement = (qualifier, args) => args is [{ Value: { AsCharConstant: null } value }]
             ? new PatternReplacement
             {
                 Expression = qualifier,
@@ -137,13 +134,10 @@ internal abstract record Pattern : Inspection
     public static PatternByQualifierArguments IsFirstCharacterByCaseSensitiveString { get; } = new()
     {
         TryGetReplacement = (qualifier, args)
-            => args[0] is { Value: { } value }
-            && value.TryGetStringConstant() is [var character]
-            && args[1]?.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal
+            => args is [{ Value: { AsStringConstant: [var character] } value }, { Value.AsStringComparisonConstant: StringComparison.Ordinal }]
                 ? new PatternReplacement
                 {
-                    Expression = qualifier,
-                    Pattern = $"is [{character.ToLiteralString(value.GetCSharpLanguageLevel())}, ..]",
+                    Expression = qualifier, Pattern = $"is [{character.ToLiteralString(value.GetCSharpLanguageLevel())}, ..]",
                 }
                 : null,
         Message = _ => "Use list pattern.",
@@ -153,9 +147,10 @@ internal abstract record Pattern : Inspection
     {
         TryGetReplacement = (qualifier, args) =>
         {
-            if (args[0] is { Value: { } value }
-                && value.TryGetStringConstant() is [var character]
-                && args[1]?.Value.TryGetStringComparisonConstant() == StringComparison.OrdinalIgnoreCase)
+            if (args is
+                [
+                    { Value: { AsStringConstant: [var character] } value }, { Value.AsStringComparisonConstant: StringComparison.OrdinalIgnoreCase },
+                ])
             {
                 var lowerCaseCharacter = char.ToLowerInvariant(character);
                 var upperCaseCharacter = char.ToUpperInvariant(character);
@@ -170,6 +165,7 @@ internal abstract record Pattern : Inspection
                         : $"is [{lowerCaseCharacter.ToLiteralString(languageLevel)} or {upperCaseCharacter.ToLiteralString(languageLevel)}, ..]",
                 };
             }
+
             return null;
         },
         Message = _ => "Use list pattern.",
@@ -178,7 +174,7 @@ internal abstract record Pattern : Inspection
     public static PatternByQualifierArguments IsLastConstantCharacter { get; } = new()
     {
         TryGetReplacement =
-            (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() is { }
+            (qualifier, args) => args is [{ Value: { AsCharConstant: { } } value }]
                 ? new PatternReplacement { Expression = qualifier, Pattern = $"is [.., {value.GetText()}]" }
                 : null,
         Message = _ => "Use list pattern.",
@@ -186,7 +182,7 @@ internal abstract record Pattern : Inspection
 
     public static PatternByQualifierArguments IsLastNonConstantCharacter { get; } = new()
     {
-        TryGetReplacement = (qualifier, args) => args[0] is { Value: { } value } && value.TryGetCharConstant() == null
+        TryGetReplacement = (qualifier, args) => args is [{ Value: { AsCharConstant: null } value }]
             ? new PatternReplacement
             {
                 Expression = qualifier,
@@ -200,9 +196,7 @@ internal abstract record Pattern : Inspection
     public static PatternByQualifierArguments IsLastCharacterByCaseSensitiveString { get; } = new()
     {
         TryGetReplacement = (qualifier, args)
-            => args[0] is { Value: { } value }
-            && value.TryGetStringConstant() is [var character]
-            && args[1]?.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal
+            => args is [{ Value: { AsStringConstant: [var character] } value }, { Value.AsStringComparisonConstant: StringComparison.Ordinal }]
                 ? new PatternReplacement
                 {
                     Expression = qualifier, Pattern = $"is [.., {character.ToLiteralString(value.GetCSharpLanguageLevel())}]",
@@ -215,9 +209,10 @@ internal abstract record Pattern : Inspection
     {
         TryGetReplacement = (qualifier, args) =>
         {
-            if (args[0] is { Value: { } value }
-                && value.TryGetStringConstant() is [var character]
-                && args[1]?.Value.TryGetStringComparisonConstant() == StringComparison.OrdinalIgnoreCase)
+            if (args is
+                [
+                    { Value: { AsStringConstant: [var character] } value }, { Value.AsStringComparisonConstant: StringComparison.OrdinalIgnoreCase },
+                ])
             {
                 var lowerCaseCharacter = char.ToLowerInvariant(character);
                 var upperCaseCharacter = char.ToUpperInvariant(character);
@@ -232,6 +227,7 @@ internal abstract record Pattern : Inspection
                         : $"is [.., {lowerCaseCharacter.ToLiteralString(languageLevel)} or {upperCaseCharacter.ToLiteralString(languageLevel)}]",
                 };
             }
+
             return null;
         },
         Message = _ => "Use list pattern.",

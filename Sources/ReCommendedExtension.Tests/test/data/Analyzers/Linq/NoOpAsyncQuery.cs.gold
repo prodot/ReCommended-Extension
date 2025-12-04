@@ -1,0 +1,61 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Test
+{
+    public class LinqQueries
+    {
+        public void RedundantLinqQuery(IAsyncEnumerable<int> items)
+        {
+            var result11 = |from item in|(0) items |select item|(1);
+            var result12 = (|from item in|(2) items |select item|(3)).ToListAsync();
+
+            var result31 = |from item in|(4) items.Where(i => i > 0) |select item|(5);
+            IAsyncEnumerable<int> result32 = |from item in|(6) items.Order() |select item|(7);
+        }
+
+        public void RedundantLinqQuery<T>(IAsyncEnumerable<T> items)
+        {
+            var result11 = |from item in|(8) items |select item|(9);
+            var result12 = (|from item in|(10) items |select item|(11)).ToListAsync();
+
+            var result31 = |from item in|(12) items.Where(i => i.ToString() != "") |select item|(13);
+            IAsyncEnumerable<T> result32 = |from item in|(14) items.Order() |select item|(15);
+        }
+
+        public void NoDetection(IAsyncEnumerable<int> items)
+        {
+            var result11 = from int item in items select item;
+            var result12 = from item in items where item > 0 select item;
+            var result13 = from item in items select item.ToString();
+
+            var result21 = from item in items.Order() select item;
+        }
+
+        public void NoDetection<T>(IAsyncEnumerable<T> items)
+        {
+            var result11 = from T item in items select item;
+            var result12 = from item in items where item.ToString()?.Length > 0 select item;
+            var result13 = from item in items select item.ToString();
+
+            var result21 = from item in items.Order() select item;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Dead Code: No-op LINQ query is redundant.
+(1): ReSharper Dead Code: No-op LINQ query is redundant.
+(2): ReSharper Dead Code: No-op LINQ query is redundant.
+(3): ReSharper Dead Code: No-op LINQ query is redundant.
+(4): ReSharper Dead Code: No-op LINQ query is redundant.
+(5): ReSharper Dead Code: No-op LINQ query is redundant.
+(6): ReSharper Dead Code: No-op LINQ query is redundant.
+(7): ReSharper Dead Code: No-op LINQ query is redundant.
+(8): ReSharper Dead Code: No-op LINQ query is redundant.
+(9): ReSharper Dead Code: No-op LINQ query is redundant.
+(10): ReSharper Dead Code: No-op LINQ query is redundant.
+(11): ReSharper Dead Code: No-op LINQ query is redundant.
+(12): ReSharper Dead Code: No-op LINQ query is redundant.
+(13): ReSharper Dead Code: No-op LINQ query is redundant.
+(14): ReSharper Dead Code: No-op LINQ query is redundant.
+(15): ReSharper Dead Code: No-op LINQ query is redundant.

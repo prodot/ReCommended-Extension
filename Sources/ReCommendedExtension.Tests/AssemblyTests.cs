@@ -1,6 +1,9 @@
 ﻿using System.Reflection;
 using JetBrains.Application.UI.Extensions;
+using JetBrains.Collections;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 
 namespace ReCommendedExtension.Tests;
@@ -50,5 +53,49 @@ public sealed class AssemblyTests
         var duplicateTitle = attributes.FirstOrDefault();
 
         Assert.IsNull(duplicateTitle, $"Duplicate {nameof(RegisterConfigurableSeverityAttribute.Title)} \"{duplicateTitle}\" detected.");
+    }
+
+    [Test]
+    public void TestClrTypeNames()
+    {
+        var predefinedTypes =
+        (
+            from field in typeof(PredefinedType).GetFields()
+            where field.IsStatic && typeof(IClrTypeName).IsAssignableFrom(field.FieldType)
+            select new { ClrTypeName = (IClrTypeName)field.GetValue(null), FieldName = field.Name }).ToDictionary(
+            item => item.ClrTypeName,
+            item => item.FieldName,
+            ClrTypeNameEqualityComparer.Default);
+
+        var fields =
+            from field in typeof(ClrTypeNames).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            where typeof(IClrTypeName).IsAssignableFrom(field.FieldType)
+            select new { ClrTypeName = (IClrTypeName)field.GetValue(null), FieldName = field.Name };
+
+        var types = new Dictionary<IClrTypeName, string>(ClrTypeNameEqualityComparer.Default);
+
+        foreach (var field in fields)
+        {
+            Assert.True(types.TryAdd(field.ClrTypeName, field.FieldName), $"Duplicate type '{field.ClrTypeName.FullName}' detected.");
+        }
+
+        var redundantFields = new List<(string fieldName, string predefinedTypeFieldName)>();
+
+        foreach (var (clrTypeName, fieldName) in types)
+        {
+            if (predefinedTypes.TryGetValue(clrTypeName, out var predefinedTypeFieldName))
+            {
+                redundantFields.Add((fieldName, predefinedTypeFieldName));
+            }
+        }
+
+        Assert.IsEmpty(
+            redundantFields,
+            $"Redundant fields detected:{
+                string.Join(
+                    "",
+                    from t in redundantFields
+                    select $"{Environment.NewLine}    {t.fieldName}: use {nameof(PredefinedType)}.{t.predefinedTypeFieldName}")
+            }");
     }
 }

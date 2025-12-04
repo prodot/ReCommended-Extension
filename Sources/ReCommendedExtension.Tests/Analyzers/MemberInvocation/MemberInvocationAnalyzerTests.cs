@@ -1,10 +1,7 @@
 ﻿using System.Text;
-using JetBrains.Application.Settings;
 using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -15,26 +12,25 @@ using ReCommendedExtension.Tests.Missing;
 namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
-public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
+public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+    protected override bool UseHighlighting(IHighlighting highlighting)
         => highlighting is RedundantMethodInvocationHint
-                or UseOtherMethodSuggestion
-                or UseBinaryOperatorSuggestion
-                or UseUnaryOperatorSuggestion
-                or UsePatternSuggestion
-                or UseNullableHasValueAlternativeSuggestion
-                or ReplaceNullableValueWithTypeCastSuggestion
-                or UseRangeIndexerSuggestion
-                or UsePropertySuggestion
-                or UseStaticPropertySuggestion
-                or SuspiciousElementAccessWarning
-                or RedundantToStringCallWarning // to figure out which cases are supported by R#
-                or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
-                or UseCollectionCountPropertyWarning // to figure out which cases are supported by R#
-            || highlighting.IsError();
+            or UseOtherMethodSuggestion
+            or UseBinaryOperatorSuggestion
+            or UseUnaryOperatorSuggestion
+            or UsePatternSuggestion
+            or UseNullableHasValueAlternativeSuggestion
+            or ReplaceNullableValueWithTypeCastSuggestion
+            or UseRangeIndexerSuggestion
+            or UsePropertySuggestion
+            or UseStaticPropertySuggestion
+            or SuspiciousElementAccessWarning
+            or RedundantToStringCallWarning // to figure out which cases are supported by R#
+            or ReplaceSubstringWithRangeIndexerWarning // to figure out which cases are supported by R#
+            or UseCollectionCountPropertyWarning; // to figure out which cases are supported by R#
 
     static void Test<T, R>(Func<T, R> expected, Func<T, R> actual, T[] args)
     {
@@ -115,8 +111,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
 
         Test((number, value) => number.Equals(value), (number, value) => number == value, values, values);
 
-        Test(number => MissingSByteMethods.IsNegative(number), number => number < 0, values);
-        Test(number => MissingSByteMethods.IsPositive(number), number => number >= 0, values);
+        Test(number => sbyte.IsNegative(number), number => number < 0, values);
+        Test(number => sbyte.IsPositive(number), number => number >= 0, values);
 
         DoNamedTest2();
     }
@@ -133,8 +129,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
 
         Test((number, value) => number.Equals(value), (number, value) => number == value, values, values);
 
-        Test(number => MissingInt16Methods.IsNegative(number), number => number < 0, values);
-        Test(number => MissingInt16Methods.IsPositive(number), number => number >= 0, values);
+        Test(number => short.IsNegative(number), number => number < 0, values);
+        Test(number => short.IsPositive(number), number => number >= 0, values);
 
         DoNamedTest2();
     }
@@ -164,8 +160,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
 
         Test((number, value) => number.Equals(value), (number, value) => number == value, values, values);
 
-        Test(number => MissingInt32Methods.IsNegative(number), number => number < 0, values);
-        Test(number => MissingInt32Methods.IsPositive(number), number => number >= 0, values);
+        Test(number => int.IsNegative(number), number => number < 0, values);
+        Test(number => int.IsPositive(number), number => number >= 0, values);
 
         DoNamedTest2();
     }
@@ -195,8 +191,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
 
         Test((number, value) => number.Equals(value), (number, value) => number == value, values, values);
 
-        Test(number => MissingInt64Methods.IsNegative(number), number => number < 0, values);
-        Test(number => MissingInt64Methods.IsPositive(number), number => number >= 0, values);
+        Test(number => long.IsNegative(number), number => number < 0, values);
+        Test(number => long.IsPositive(number), number => number >= 0, values);
 
         DoNamedTest2();
     }
@@ -257,8 +253,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
 
         Test((number, value) => number.Equals(value), (number, value) => number == value, values, values);
 
-        Test(number => MissingIntPtrMethods.IsNegative(number), number => number < 0, values);
-        Test(number => MissingIntPtrMethods.IsPositive(number), number => number >= 0, values);
+        Test(number => nint.IsNegative(number), number => number < 0, values);
+        Test(number => nint.IsPositive(number), number => number >= 0, values);
 
         DoNamedTest2();
     }
@@ -504,16 +500,16 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
 
         Test(
             (timeSpan, factor) => timeSpan.Multiply(factor),
-            (timeSpan, factor) => MissingTimeSpanMembers.op_Multiply(timeSpan, factor),
+            (timeSpan, factor) => timeSpan * factor,
             [..values.Except([TimeSpan.MinValue, TimeSpan.MaxValue])],
             [0d, -0d, 1d, 2d, double.Epsilon]);
 
         Test(
             (timeSpan, divisor) => timeSpan.Divide(divisor),
-            (timeSpan, divisor) => MissingTimeSpanMembers.op_Division(timeSpan, divisor),
+            (timeSpan, divisor) => timeSpan / divisor,
             [..values.Except([TimeSpan.MinValue, TimeSpan.MaxValue])],
             [1d, 2d, -1d, double.MaxValue, double.MinValue, double.PositiveInfinity, double.NegativeInfinity]);
-        Test((timeSpan, ts) => timeSpan.Divide(ts), (timeSpan, ts) => MissingTimeSpanMembers.op_Division(timeSpan, ts), values, values);
+        Test((timeSpan, ts) => timeSpan.Divide(ts), (timeSpan, ts) => timeSpan / ts, values, values);
 
         Test((timeSpan, obj) => timeSpan.Equals(obj), (timeSpan, obj) => timeSpan == obj, values, values);
         Test((t1, t2) => TimeSpan.Equals(t1, t2), (t1, t2) => t1 == t2, values, values);
@@ -583,15 +579,15 @@ public sealed class MemberInvocationAnalyzerTests : CSharpHighlightingTestBase
 
         // pattern
 
-        Test(c => MissingCharMethods.IsAsciiDigit(c), c => c is >= '0' and <= '9', values);
-        Test(c => MissingCharMethods.IsAsciiHexDigit(c), c => c is >= '0' and <= '9' or >= 'A' and <= 'F' or >= 'a' and <= 'f', values);
-        Test(c => MissingCharMethods.IsAsciiHexDigitLower(c), c => c is >= '0' and <= '9' or >= 'a' and <= 'f', values);
-        Test(c => MissingCharMethods.IsAsciiHexDigitUpper(c), c => c is >= '0' and <= '9' or >= 'A' and <= 'F', values);
-        Test(c => MissingCharMethods.IsAsciiLetter(c), c => c is >= 'A' and <= 'Z' or >= 'a' and <= 'z', values);
-        Test(c => MissingCharMethods.IsAsciiLetterLower(c), c => c is >= 'a' and <= 'z', values);
-        Test(c => MissingCharMethods.IsAsciiLetterOrDigit(c), c => c is >= 'A' and <= 'Z' or >= 'a' and <= 'z' or >= '0' and <= '9', values);
-        Test(c => MissingCharMethods.IsAsciiLetterUpper(c), c => c is >= 'A' and <= 'Z', values);
-        Test(c => MissingCharMethods.IsBetween(c, 'a', 'c'), c => c is >= 'a' and <= 'c', values);
+        Test(c => char.IsAsciiDigit(c), c => c is >= '0' and <= '9', values);
+        Test(c => char.IsAsciiHexDigit(c), c => c is >= '0' and <= '9' or >= 'A' and <= 'F' or >= 'a' and <= 'f', values);
+        Test(c => char.IsAsciiHexDigitLower(c), c => c is >= '0' and <= '9' or >= 'a' and <= 'f', values);
+        Test(c => char.IsAsciiHexDigitUpper(c), c => c is >= '0' and <= '9' or >= 'A' and <= 'F', values);
+        Test(c => char.IsAsciiLetter(c), c => c is >= 'A' and <= 'Z' or >= 'a' and <= 'z', values);
+        Test(c => char.IsAsciiLetterLower(c), c => c is >= 'a' and <= 'z', values);
+        Test(c => char.IsAsciiLetterOrDigit(c), c => c is >= 'A' and <= 'Z' or >= 'a' and <= 'z' or >= '0' and <= '9', values);
+        Test(c => char.IsAsciiLetterUpper(c), c => c is >= 'A' and <= 'Z', values);
+        Test(c => char.IsBetween(c, 'a', 'c'), c => c is >= 'a' and <= 'c', values);
 
         DoNamedTest2();
     }

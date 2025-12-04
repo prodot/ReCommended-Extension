@@ -5,7 +5,7 @@ using ReCommendedExtension.Analyzers.ControlFlow;
 namespace ReCommendedExtension.Tests.Analyzers.ControlFlow;
 
 [TestFixture]
-public sealed class ControlFlowQuickFixTestsForAssertionStatement : QuickFixTestBase<RemoveAssertionStatementFix>
+public sealed class ControlFlowQuickFixTestsForAssertionStatement : QuickFixTestBase<RedundantAssertionStatementSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\ControlFlow\QuickFixes";
 

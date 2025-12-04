@@ -69,4 +69,16 @@ public sealed class ConvertToLinqQueryExecuteTests : CSharpContextActionExecuteT
 
     [Test]
     public void TestExecute_HashSet() => DoNamedTest2();
+
+    [Test]
+    [TestNet100]
+    public void TestExecute_IAsyncEnumerable() => DoNamedTest2();
+
+    [Test]
+    [TestNet100]
+    public void TestExecute_IAsyncEnumerable_Generic() => DoNamedTest2();
+
+    [Test]
+    [TestNet100]
+    public void TestExecute_IAsyncEnumerable_Fluent() => DoNamedTest2();
 }

@@ -50,10 +50,13 @@ public abstract class AnnotateWith(ICSharpContextActionDataProvider provider) : 
     {
         if (CSharpLanguage.Instance is { }
             && selectedElement.GetNameRange().Contains(SelectedTreeRange)
-            && (AllowsInheritedMethods || !selectedElement.OverridesInheritedMember())
-            && !selectedElement.IsOnLocalFunctionWithUnsupportedAttributes()
-            && !selectedElement.IsOnLambdaExpressionWithUnsupportedAttributes()
-            && !selectedElement.IsOnAnonymousMethodWithUnsupportedAttributes())
+            && (AllowsInheritedMethods || !selectedElement.OverridesInheritedMember)
+            && selectedElement is
+            {
+                IsOnLocalFunctionWithUnsupportedAttributes: false,
+                IsOnLambdaExpressionWithUnsupportedAttributes: false,
+                IsOnAnonymousMethodWithUnsupportedAttributes: false,
+            })
         {
             IAttributesOwnerDeclaration? selectedElementToBeAnnotated;
             switch (selectedElement)

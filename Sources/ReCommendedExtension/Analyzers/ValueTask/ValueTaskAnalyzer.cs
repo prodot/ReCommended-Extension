@@ -267,7 +267,7 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             } qualifier)
         {
             var qualifierType = qualifier.Type();
-            if ((qualifierType.IsClrType(ClrTypeNames.ValueTaskAwaiter) || qualifierType.IsClrType(ClrTypeNames.GenericValueTaskAwaiter))
+            if ((qualifierType.IsClrType(ClrTypeNames.ValueTaskAwaiter) || qualifierType.IsClrType(PredefinedType.GENERIC_VALUE_TASK_AWAITER_FQN))
                 && qualifier.Reference.Resolve().DeclaredElement is IMethod { ShortName: "GetAwaiter", TypeParameters: [], Parameters: [] })
             {
                 var valueTaskExpression = qualifier.GetInvokedReferenceExpressionQualifier();
@@ -279,11 +279,14 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                     consumer.AddHighlighting(
                         new IntentionalBlockingAttemptWarning(
-                            $"Blocking on {valueTaskType.GetPresentableName(CSharpLanguage.Instance)} with 'GetAwaiter().GetResult()' might not block.", // todo: use nameof(...)
-                            invocationExpression.InvokedExpression,
-                            valueTaskExpression,
+                            $"Blocking on {
+                                valueTaskType.GetPresentableName(CSharpLanguage.Instance)
+                            } with 'GetAwaiter().GetResult()' might not block.", // todo: use nameof(...)
                             qualifierInvokedExpression,
-                            invocationExpressionInvokedExpression));
+                            invocationExpressionInvokedExpression)
+                        {
+                            Expression = invocationExpression.InvokedExpression, ValueTaskExpression = valueTaskExpression,
+                        });
                 }
             }
         }

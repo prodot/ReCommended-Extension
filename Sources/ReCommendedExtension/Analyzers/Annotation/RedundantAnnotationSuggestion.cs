@@ -1,6 +1,5 @@
 ﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
@@ -12,8 +11,7 @@ namespace ReCommendedExtension.Analyzers.Annotation;
     "",
     Severity.SUGGESTION)]
 [ConfigurableSeverityHighlighting(SeverityId, CSharpLanguage.Name)]
-public sealed class RedundantAnnotationSuggestion(string message, IAttributesOwnerDeclaration attributesOwnerDeclaration, IAttribute attribute)
-    : AttributeHighlighting(message, attributesOwnerDeclaration, attribute, false)
+public sealed class RedundantAnnotationSuggestion(string message) : AttributeHighlighting(message, false)
 {
     const string SeverityId = "RedundantAnnotation";
 }

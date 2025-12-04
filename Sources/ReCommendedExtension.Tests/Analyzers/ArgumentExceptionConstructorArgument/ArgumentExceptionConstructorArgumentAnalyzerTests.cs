@@ -1,19 +1,15 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ArgumentExceptionConstructorArgument;
 
 namespace ReCommendedExtension.Tests.Analyzers.ArgumentExceptionConstructorArgument;
 
 [TestFixture]
-public sealed class ArgumentExceptionConstructorArgumentAnalyzerTests : CSharpHighlightingTestBase
+public sealed class ArgumentExceptionConstructorArgumentAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\ArgumentExceptionConstructorArgument";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is ArgumentExceptionConstructorArgumentWarning || highlighting.IsError();
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is ArgumentExceptionConstructorArgumentWarning;
 
     [Test]
     public void TestArgumentExceptionConstructorArgument() => DoNamedTest2();

@@ -11,7 +11,7 @@ internal static class RuleDefinitions
     /// <remarks>
     /// type → (member name (or "" for constructors) → member overloads)
     /// </remarks>
-    static readonly Dictionary<IClrTypeName, Dictionary<string, IReadOnlyCollection<Member>>> typeMembers = new(new ClrTypeNameEqualityComparer())
+    static readonly Dictionary<IClrTypeName, Dictionary<string, IReadOnlyCollection<Member>>> typeMembers = new(ClrTypeNameEqualityComparer.Default)
     {
         { PredefinedType.BYTE_FQN, CreateIntegerMembers(Parameter.Byte) },
         { PredefinedType.SBYTE_FQN, CreateIntegerMembers(Parameter.SByte) },
@@ -2239,6 +2239,14 @@ internal static class RuleDefinitions
                         },
                         Inspections = [RedundantArgument.FormatProvider with { ParameterIndex = 1 }],
                     },
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters = [Parameter.ReadOnlySpanOfByte, Parameter.IFormatProvider], IsStatic = true,
+                        },
+                        Inspections = [RedundantArgument.FormatProvider with { ParameterIndex = 1 }],
+                    },
                 ]
             },
             {
@@ -2260,6 +2268,20 @@ internal static class RuleDefinitions
                             Parameters =
                             [
                                 Parameter.ReadOnlySpanOfChar,
+                                Parameter.IFormatProvider,
+                                Parameter.Guid with { Kind = ParameterKind.OUTPUT },
+                            ],
+                            IsStatic = true,
+                        },
+                        Inspections = [RedundantArgument.FormatProvider with { ParameterIndex = 1 }],
+                    },
+                    new Member
+                    {
+                        Signature = new MethodSignature
+                        {
+                            Parameters =
+                            [
+                                Parameter.ReadOnlySpanOfByte,
                                 Parameter.IFormatProvider,
                                 Parameter.Guid with { Kind = ParameterKind.OUTPUT },
                             ],

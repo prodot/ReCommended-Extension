@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Psi.Tree;
 using ReCommendedExtension.Analyzers.Argument.Inspections;
 using ReCommendedExtension.Analyzers.Argument.Rules;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.Collections;
 using ReCommendedExtension.Extensions.MemberFinding;
 using ConstructorSignature = ReCommendedExtension.Extensions.MemberFinding.ConstructorSignature;
 using MethodSignature = ReCommendedExtension.Extensions.MemberFinding.MethodSignature;
@@ -74,7 +73,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
                         if (memberExists)
                         {
-                            consumer.AddHighlighting(new RedundantArgumentHint(inspection.Message, argument));
+                            consumer.AddHighlighting(new RedundantArgumentHint(inspection.Message) { Argument = argument });
                         }
                     }
                     break;
@@ -84,7 +83,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 {
                     foreach (var argument in duplicateArgument.Selector(arguments))
                     {
-                        consumer.AddHighlighting(new RedundantArgumentHint(inspection.Message, argument));
+                        consumer.AddHighlighting(new RedundantArgumentHint(inspection.Message) { Argument = argument });
                     }
                     break;
                 }
@@ -113,7 +112,7 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
                         if (memberExists)
                         {
-                            var highlighting = new RedundantArgumentRangeHint(inspection.Message, redundantArguments);
+                            var highlighting = new RedundantArgumentRangeHint(inspection.Message) { Arguments = redundantArguments };
 
                             foreach (var argument in redundantArguments)
                             {
@@ -128,16 +127,15 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                 {
                     Debug.Assert(redundantCollectionElement.ParameterIndex >= 0);
 
-                    if (arguments[redundantCollectionElement.ParameterIndex] is { } argument
-                        && (!resolvedParameters[^1].IsParams || resolvedParameters.Count == arguments.Count)
-                        && CollectionCreation.TryFrom(argument.Value) is { Count: > 1 } collectionCreation)
+                    if (arguments[redundantCollectionElement.ParameterIndex] is { Value.AsCollectionCreation: { Count: > 1 } collectionCreation }
+                        && (!resolvedParameters[^1].IsParams || resolvedParameters.Count == arguments.Count))
                     {
                         switch (redundantCollectionElement)
                         {
                             case DuplicateCollectionElement duplicateCollectionElement:
                                 foreach (var initializerElement in duplicateCollectionElement.Selector(collectionCreation))
                                 {
-                                    consumer.AddHighlighting(new RedundantElementHint(inspection.Message, initializerElement));
+                                    consumer.AddHighlighting(new RedundantElementHint(inspection.Message) { Element = initializerElement });
                                 }
                                 break;
 
@@ -146,8 +144,10 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                 {
                                     consumer.AddHighlighting(
                                         new RedundantElementHint(
-                                            isEquivalent ? duplicateEquivalentCollectionElement.MessageEquivalentElement : inspection.Message,
-                                            initializerElement));
+                                            isEquivalent ? duplicateEquivalentCollectionElement.MessageEquivalentElement : inspection.Message)
+                                        {
+                                            Element = initializerElement,
+                                        });
                                 }
                                 break;
                         }
@@ -193,24 +193,26 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                             if (memberExists)
                             {
                                 consumer.AddHighlighting(
-                                    new UseOtherArgumentSuggestion(
-                                        inspection.Message,
-                                        new ArgumentReplacement
-                                        {
-                                            Argument = argument,
-                                            Replacement = new UpcomingArgument
+                                    new UseOtherArgumentSuggestion(inspection.Message)
+                                    {
+                                        ArgumentReplacement =
+                                            new ArgumentReplacement
                                             {
-                                                ParameterKind =
-                                                    otherArgument.ReplacementSignature
-                                                        .Parameters[otherArgument.ReplacementSignature.ParameterIndex].Kind,
-                                                ParameterName =
-                                                    argument.NameIdentifier is { }
-                                                        ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex]
-                                                        : null,
-                                                Value = replacement,
+                                                Argument = argument,
+                                                Replacement =
+                                                    new UpcomingArgument
+                                                    {
+                                                        ParameterKind =
+                                                            otherArgument.ReplacementSignature
+                                                                .Parameters[otherArgument.ReplacementSignature.ParameterIndex].Kind,
+                                                        ParameterName =
+                                                            argument.NameIdentifier is { }
+                                                                ? parameterNames[otherArgument.ReplacementSignature.ParameterIndex]
+                                                                : null,
+                                                        Value = replacement,
+                                                    },
                                             },
-                                        },
-                                        otherArgument.AdditionalArgument is { }
+                                        AdditionalArgument = otherArgument.AdditionalArgument is { }
                                             ? new UpcomingArgument
                                             {
                                                 ParameterKind =
@@ -223,28 +225,30 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                                 Value = otherArgument.AdditionalArgument,
                                             }
                                             : null,
-                                        otherArgument.RedundantArgumentIndex is { } redundantArgumentIndex
+                                        RedundantArgument = otherArgument.RedundantArgumentIndex is { } redundantArgumentIndex
                                             ? arguments[redundantArgumentIndex]
-                                            : null));
+                                            : null,
+                                    });
                             }
                         }
                         else
                         {
                             consumer.AddHighlighting(
-                                new UseOtherArgumentSuggestion(
-                                    inspection.Message,
-                                    new ArgumentReplacement
-                                    {
-                                        Argument = argument,
-                                        Replacement =
-                                            new UpcomingArgument
-                                            {
-                                                ParameterKind = member.Signature.Parameters[otherArgument.ParameterIndex].Kind,
-                                                ParameterName = argument.NameIdentifier?.Name,
-                                                Value = replacement,
-                                            },
-                                    },
-                                    otherArgument.AdditionalArgument is { }
+                                new UseOtherArgumentSuggestion(inspection.Message)
+                                {
+                                    ArgumentReplacement =
+                                        new ArgumentReplacement
+                                        {
+                                            Argument = argument,
+                                            Replacement =
+                                                new UpcomingArgument
+                                                {
+                                                    ParameterKind = member.Signature.Parameters[otherArgument.ParameterIndex].Kind,
+                                                    ParameterName = argument.NameIdentifier?.Name,
+                                                    Value = replacement,
+                                                },
+                                        },
+                                    AdditionalArgument = otherArgument.AdditionalArgument is { }
                                         ? new UpcomingArgument
                                         {
                                             ParameterKind = member.Signature.Parameters[otherArgument.ParameterIndex + 1].Kind,
@@ -255,7 +259,10 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             Value = otherArgument.AdditionalArgument,
                                         }
                                         : null,
-                                    otherArgument.RedundantArgumentIndex is { } redundantArgumentIndex ? arguments[redundantArgumentIndex] : null));
+                                    RedundantArgument = otherArgument.RedundantArgumentIndex is { } redundantArgumentIndex
+                                        ? arguments[redundantArgumentIndex]
+                                        : null,
+                                });
                         }
                     }
 
@@ -303,8 +310,9 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
 
                                 Debug.Assert(otherArguments.All(arg => arg.NameIdentifier == null) || offset is { });
 
-                                highlighting = new UseOtherArgumentRangeSuggestion(
-                                    inspection.Message,
+                                highlighting = new UseOtherArgumentRangeSuggestion(inspection.Message)
+                                {
+                                    ArgumentReplacements =
                                     [
                                         ..
                                         from i in Enumerable.Range(0, replacements.Count)
@@ -314,22 +322,25 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                             Replacement = new UpcomingArgument
                                             {
                                                 ParameterKind = otherArgumentRange.ReplacementSignature.Parameters[i].Kind,
-                                                ParameterName = otherArguments[i].NameIdentifier is { } ? parameterNames[i + (int)offset!] : null,
+                                                ParameterName =
+                                                    otherArguments[i].NameIdentifier is { } ? parameterNames[i + (int)offset!] : null,
                                                 Value = replacements[i],
                                             },
                                         },
                                     ],
-                                    otherArgumentRange.RedundantArgumentIndex is { } redundantArgumentIndex
+                                    RedundantArgument = otherArgumentRange.RedundantArgumentIndex is { } redundantArgumentIndex
                                         ? positionalArguments[redundantArgumentIndex]
-                                        : null);
+                                        : null,
+                                };
                             }
                         }
                         else
                         {
                             var (offset, _) = otherArgumentRange.ParameterIndexRange.GetOffsetAndLength(member.Signature.Parameters.Count);
 
-                            highlighting = new UseOtherArgumentRangeSuggestion(
-                                inspection.Message,
+                            highlighting = new UseOtherArgumentRangeSuggestion(inspection.Message)
+                            {
+                                ArgumentReplacements =
                                 [
                                     ..
                                     from i in Enumerable.Range(0, replacements.Count)
@@ -344,9 +355,10 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                                         },
                                     },
                                 ],
-                                otherArgumentRange.RedundantArgumentIndex is { } redundantArgumentIndex
+                                RedundantArgument = otherArgumentRange.RedundantArgumentIndex is { } redundantArgumentIndex
                                     ? positionalArguments[redundantArgumentIndex]
-                                    : null);
+                                    : null,
+                            };
                         }
                     }
 
@@ -383,11 +395,11 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     constructor,
                     resolvedConstructor.Parameters,
                     arguments,
-                    (IReadOnlyList<Parameter> parameters, bool returnParameterNames, out string[] parameterNames) => containingType.HasConstructor(
+                    (parameters, returnParameterNames, out parameterNames) => containingType.HasConstructor(
                         new ConstructorSignature { Parameters = parameters },
                         returnParameterNames,
                         out parameterNames),
-                    (IReadOnlyList<Parameter> _, int _, bool _, out string[] _) => throw new NotSupportedException());
+                    (_, _, _, out _) => throw new NotSupportedException());
                 break;
             }
 
@@ -411,18 +423,17 @@ public sealed class ArgumentAnalyzer : ElementProblemAnalyzer<ICSharpInvocationI
                     method,
                     resolvedMethod.Parameters,
                     arguments,
-                    (IReadOnlyList<Parameter> _, bool _, out string[] _) => throw new NotSupportedException(),
-                    (IReadOnlyList<Parameter> parameters, int genericParametersCount, bool returnParameterNames, out string[] parameterNames)
-                        => containingType.HasMethod(
-                            new MethodSignature
-                            {
-                                Name = resolvedMethod.ShortName,
-                                Parameters = parameters,
-                                IsStatic = signature.IsStatic,
-                                GenericParametersCount = genericParametersCount,
-                            },
-                            returnParameterNames,
-                            out parameterNames));
+                    (_, _, out _) => throw new NotSupportedException(),
+                    (parameters, genericParametersCount, returnParameterNames, out parameterNames) => containingType.HasMethod(
+                        new MethodSignature
+                        {
+                            Name = resolvedMethod.ShortName,
+                            Parameters = parameters,
+                            IsStatic = signature.IsStatic,
+                            GenericParametersCount = genericParametersCount,
+                        },
+                        returnParameterNames,
+                        out parameterNames));
                 break;
             }
         }

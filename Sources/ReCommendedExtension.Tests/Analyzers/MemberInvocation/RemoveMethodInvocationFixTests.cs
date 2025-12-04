@@ -6,7 +6,7 @@ using ReCommendedExtension.Analyzers.MemberInvocation;
 namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
-public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RemoveMethodInvocationFix>
+public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RedundantMethodInvocationHint.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

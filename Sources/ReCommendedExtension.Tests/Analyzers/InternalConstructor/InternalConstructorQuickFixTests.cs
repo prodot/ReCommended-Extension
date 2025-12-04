@@ -5,7 +5,7 @@ using ReCommendedExtension.Analyzers.InternalConstructor;
 namespace ReCommendedExtension.Tests.Analyzers.InternalConstructor;
 
 [TestFixture]
-public sealed class InternalConstructorQuickFixTests : QuickFixTestBase<ChangeConstructorVisibilityFix>
+public sealed class InternalConstructorQuickFixTests : QuickFixTestBase<InternalConstructorVisibilitySuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\InternalConstructor\QuickFixes";
 

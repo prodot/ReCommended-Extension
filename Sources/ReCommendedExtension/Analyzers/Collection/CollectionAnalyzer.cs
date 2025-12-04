@@ -464,10 +464,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     arrayInitializer.IsNullableAnnotationsContextEnabled());
 
                 consumer.AddHighlighting(
-                    new ArrayWithDefaultValuesInitializationSuggestion(
-                        $"Use '{arrayCreationExpressionCode}'.",
-                        arrayCreationExpressionCode,
-                        arrayInitializer));
+                    new ArrayWithDefaultValuesInitializationSuggestion($"Use '{arrayCreationExpressionCode}'.")
+                    {
+                        SuggestedCode = arrayCreationExpressionCode, TreeNode = arrayInitializer,
+                    });
                 break;
             }
 
@@ -484,9 +484,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                 consumer.AddHighlighting(
                     new UseEmptyForArrayInitializationWarning(
-                        $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayItemType.GetPresentableName(CSharpLanguage.Instance)}>()'.",
-                        arrayInitializer,
-                        arrayItemType));
+                        $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayItemType.GetPresentableName(CSharpLanguage.Instance)}>()'.")
+                    {
+                        TreeNode = arrayInitializer, ArrayItemType = arrayItemType,
+                    });
                 break;
             }
         }
@@ -502,7 +503,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
         {
             if (arrayCreationExpression.DimInits is []
                 || arrayCreationExpression.DimInits is [var e]
-                && e.TryGetInt32Constant() == (arrayCreationExpression.ArrayInitializer?.InitializerElements.Count ?? 0))
+                && e.AsInt32Constant == (arrayCreationExpression.ArrayInitializer?.InitializerElements.Count ?? 0))
             {
                 var itemType = arrayCreationExpression.GetElementType();
 
@@ -515,8 +516,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     // new T[0]         ->  []
                     // new[] { ... }    ->  [...]
 
-                    var isEmptyArray = arrayCreationExpression is { DimInits: [var exp] } && exp.TryGetInt32Constant() == 0
-                        || arrayCreationExpression is { DimInits: [], ArrayInitializer.InitializerElements: [] };
+                    var isEmptyArray = arrayCreationExpression is { DimInits: [{ AsInt32Constant: 0 }] }
+                        or { DimInits: [], ArrayInitializer.InitializerElements: [] };
 
                     var methodReferenceToSetInferredTypeArguments = isEmptyArray
                         ? TryGetMethodReferenceToSetInferredTypeArguments(arrayCreationExpression)
@@ -565,14 +566,16 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                                         ? covariantTypeName is { }
                                             ? $"Use collection expression ('{covariantTypeName}' will be used)."
                                             : "Use collection expression."
-                                        : "Use collection expression (a compiler-synthesized read-only collection will be used).",
-                                    isEmptyArray
-                                        ? covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null
-                                        : "a compiler-synthesized read-only collection will be used",
-                                    arrayCreationExpression,
-                                    null,
-                                    arrayCreationExpression.ArrayInitializer?.InitializerElements,
-                                    methodReferenceToSetInferredTypeArguments));
+                                        : "Use collection expression (a compiler-synthesized read-only collection will be used).")
+                                {
+                                    OtherTypeNameHint =
+                                        isEmptyArray
+                                            ? covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null
+                                            : "a compiler-synthesized read-only collection will be used",
+                                    Expression = arrayCreationExpression,
+                                    Items = arrayCreationExpression.ArrayInitializer?.InitializerElements,
+                                    MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                                });
                         }
                     }
 
@@ -596,13 +599,13 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                                     ?.GetPresentableName(CSharpLanguage.Instance) is { } typeName)
                             {
                                 consumer.AddHighlighting(
-                                    new UseTargetTypedCollectionExpressionSuggestion(
-                                        $"Use collection expression ('{typeName}' will be used).",
-                                        $"'{typeName}' will be used",
-                                        arrayCreationExpression,
-                                        null,
-                                        arrayCreationExpression.ArrayInitializer?.InitializerElements,
-                                        methodReferenceToSetInferredTypeArguments));
+                                    new UseTargetTypedCollectionExpressionSuggestion($"Use collection expression ('{typeName}' will be used).")
+                                    {
+                                        OtherTypeNameHint = $"'{typeName}' will be used",
+                                        Expression = arrayCreationExpression,
+                                        Items = arrayCreationExpression.ArrayInitializer?.InitializerElements,
+                                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                                    });
                             }
                         }
                     }
@@ -635,12 +638,13 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                             new UseTargetTypedCollectionExpressionSuggestion(
                                 covariantTypeName is { }
                                     ? $"Use collection expression ('{covariantTypeName}' will be used)."
-                                    : "Use collection expression.",
-                                covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null,
-                                arrayCreationExpression,
-                                null,
-                                arrayCreationExpression.ArrayInitializer?.InitializerElements,
-                                methodReferenceToSetInferredTypeArguments));
+                                    : "Use collection expression.")
+                            {
+                                OtherTypeNameHint = covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null,
+                                Expression = arrayCreationExpression,
+                                Items = arrayCreationExpression.ArrayInitializer?.InitializerElements,
+                                MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                            });
                     }
                 }
                 else
@@ -655,9 +659,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                         consumer.AddHighlighting(
                             new UseEmptyForArrayInitializationWarning(
-                                $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{itemType.GetPresentableName(CSharpLanguage.Instance)}>()'.",
-                                arrayCreationExpression,
-                                itemType));
+                                $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{itemType.GetPresentableName(CSharpLanguage.Instance)}>()'.")
+                            {
+                                TreeNode = arrayCreationExpression, ArrayItemType = itemType,
+                            });
                     }
                 }
             }
@@ -676,9 +681,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                 consumer.AddHighlighting(
                     new UseEmptyForArrayInitializationWarning(
-                        $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayItemType.GetPresentableName(CSharpLanguage.Instance)}>()'.",
-                        arrayCreationExpression,
-                        arrayItemType));
+                        $"Use '{nameof(Array)}.{nameof(Array.Empty)}<{arrayItemType.GetPresentableName(CSharpLanguage.Instance)}>()'.")
+                    {
+                        TreeNode = arrayCreationExpression, ArrayItemType = arrayItemType,
+                    });
             }
         }
     }
@@ -756,12 +762,14 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                     new UseTargetTypedCollectionExpressionSuggestion(
                         isEmptyList
                             ? $"Use collection expression ('{typeName}' will be used)."
-                            : "Use collection expression (a compiler-synthesized read-only collection will be used).",
-                        isEmptyList ? $"'{typeName}' will be used" : "a compiler-synthesized read-only collection will be used",
-                        listCreationExpression,
-                        parameterType.IsGenericIEnumerable() ? constructorArguments[0]?.Value : null,
-                        listCreationExpression.Initializer?.InitializerElements,
-                        methodReferenceToSetInferredTypeArguments));
+                            : "Use collection expression (a compiler-synthesized read-only collection will be used).")
+                    {
+                        OtherTypeNameHint = isEmptyList ? $"'{typeName}' will be used" : "a compiler-synthesized read-only collection will be used",
+                        Expression = listCreationExpression,
+                        SpreadItem = parameterType.IsGenericIEnumerable() ? constructorArguments[0]?.Value : null,
+                        Items = listCreationExpression.Initializer?.InitializerElements,
+                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                    });
             }
 
             // target-typed to ICollection<T> or IList<T>
@@ -771,13 +779,13 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 && CanBeReplacedWithCollectionExpression(listCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
-                    new UseTargetTypedCollectionExpressionSuggestion(
-                        "Use collection expression.",
-                        null,
-                        listCreationExpression,
-                        parameterType.IsGenericIEnumerable() ? constructorArguments[0]?.Value : null,
-                        listCreationExpression.Initializer?.InitializerElements,
-                        methodReferenceToSetInferredTypeArguments));
+                    new UseTargetTypedCollectionExpressionSuggestion("Use collection expression.")
+                    {
+                        Expression = listCreationExpression,
+                        SpreadItem = parameterType.IsGenericIEnumerable() ? constructorArguments[0]?.Value : null,
+                        Items = listCreationExpression.Initializer?.InitializerElements,
+                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                    });
             }
 
             // target-typed to List<T>: cases not covered by R#
@@ -789,13 +797,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 && CanBeReplacedWithCollectionExpression(listCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
-                    new UseTargetTypedCollectionExpressionSuggestion(
-                        "Use collection expression.",
-                        null,
-                        listCreationExpression,
-                        null,
-                        null,
-                        methodReferenceToSetInferredTypeArguments));
+                    new UseTargetTypedCollectionExpressionSuggestion("Use collection expression.")
+                    {
+                        Expression = listCreationExpression,
+                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                    });
             }
         }
     }
@@ -819,8 +825,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             };
             var arguments = (parameterTypes[0].IsInt() ? HashSetArguments.Capacity : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? HashSetArguments.Collection : 0)
-                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value: { } a0 } && !a0.IsDefaultValue()
-                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value: { } a1 } && !a1.IsDefaultValue()
+                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value.IsDefaultValueOrNull: false }
+                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value.IsDefaultValueOrNull: false }
                         ? HashSetArguments.Comparer
                         : 0);
 
@@ -846,13 +852,12 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 var typeName = TypeFactory.CreateArrayType(collectionItemType, 1).GetPresentableName(CSharpLanguage.Instance);
 
                 consumer.AddHighlighting(
-                    new UseTargetTypedCollectionExpressionSuggestion(
-                        $"Use collection expression ('{typeName}' will be used).",
-                        $"'{typeName}' will be used",
-                        hashSetCreationExpression,
-                        null,
-                        null,
-                        methodReferenceToSetInferredTypeArguments));
+                    new UseTargetTypedCollectionExpressionSuggestion($"Use collection expression ('{typeName}' will be used).")
+                    {
+                        OtherTypeNameHint = $"'{typeName}' will be used",
+                        Expression = hashSetCreationExpression,
+                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                    });
             }
 
             // target-typed to HashSet<T>: cases not covered by R#
@@ -864,13 +869,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 && CanBeReplacedWithCollectionExpression(hashSetCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
-                    new UseTargetTypedCollectionExpressionSuggestion(
-                        "Use collection expression.",
-                        null,
-                        hashSetCreationExpression,
-                        null,
-                        null,
-                        methodReferenceToSetInferredTypeArguments));
+                    new UseTargetTypedCollectionExpressionSuggestion("Use collection expression.")
+                    {
+                        Expression = hashSetCreationExpression,
+                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                    });
             }
         }
     }
@@ -898,8 +901,8 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             var arguments = (parameterTypes[0].IsInt() ? DictionaryArguments.Capacity : 0)
                 | (parameterTypes[0].IsIDictionary() ? DictionaryArguments.Dictionary : 0)
                 | (parameterTypes[0].IsGenericIEnumerable() ? DictionaryArguments.Pairs : 0)
-                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value : { } a0 } && !a0.IsDefaultValue()
-                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value: { } a1 } && !a1.IsDefaultValue()
+                | (parameterTypes[0].IsGenericEqualityComparer() && constructorArguments[0] is { Value.IsDefaultValueOrNull : false }
+                    || parameterTypes[1].IsGenericEqualityComparer() && constructorArguments[1] is { Value.IsDefaultValueOrNull: false }
                         ? DictionaryArguments.Comparer
                         : 0);
 
@@ -923,13 +926,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 && CanBeReplacedWithCollectionExpression(dictionaryCreationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
-                    new UseTargetTypedCollectionExpressionSuggestion(
-                        "Use collection expression.",
-                        null,
-                        dictionaryCreationExpression,
-                        null,
-                        null,
-                        methodReferenceToSetInferredTypeArguments));
+                    new UseTargetTypedCollectionExpressionSuggestion("Use collection expression.")
+                    {
+                        Expression = dictionaryCreationExpression,
+                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                    });
             }
         }
     }
@@ -957,13 +958,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             && CanBeReplacedWithCollectionExpression(collectionCreationExpression, methodReferenceToSetInferredTypeArguments))
         {
             consumer.AddHighlighting(
-                new UseTargetTypedCollectionExpressionSuggestion(
-                    "Use collection expression.",
-                    null,
-                    collectionCreationExpression,
-                    null,
-                    null,
-                    methodReferenceToSetInferredTypeArguments));
+                new UseTargetTypedCollectionExpressionSuggestion("Use collection expression.")
+                {
+                    Expression = collectionCreationExpression,
+                    MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                });
         }
     }
 
@@ -1000,10 +999,10 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         collectionExpression.IsNullableAnnotationsContextEnabled());
 
                     consumer.AddHighlighting(
-                        new ArrayWithDefaultValuesInitializationSuggestion(
-                            $"Use '{arrayCreationExpressionCode}'.",
-                            arrayCreationExpressionCode,
-                            collectionExpression));
+                        new ArrayWithDefaultValuesInitializationSuggestion($"Use '{arrayCreationExpressionCode}'.")
+                        {
+                            SuggestedCode = arrayCreationExpressionCode, TreeNode = collectionExpression,
+                        });
                 }
             }
         }
@@ -1055,12 +1054,12 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
 
                 consumer.AddHighlighting(
                     new UseTargetTypedCollectionExpressionSuggestion(
-                        covariantTypeName is { } ? $"Use collection expression ('{covariantTypeName}' will be used)." : "Use collection expression.",
-                        covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null,
-                        arrayEmptyInvocationExpression,
-                        null,
-                        null,
-                        methodReferenceToSetInferredTypeArguments));
+                        covariantTypeName is { } ? $"Use collection expression ('{covariantTypeName}' will be used)." : "Use collection expression.")
+                    {
+                        OtherTypeNameHint = covariantTypeName is { } ? $"'{covariantTypeName}' will be used" : null,
+                        Expression = arrayEmptyInvocationExpression,
+                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                    });
             }
 
             // target-typed to ICollection<T> or IList<T>
@@ -1075,13 +1074,12 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                         ?.GetPresentableName(CSharpLanguage.Instance) is { } typeName)
                 {
                     consumer.AddHighlighting(
-                        new UseTargetTypedCollectionExpressionSuggestion(
-                            $"Use collection expression ('{typeName}' will be used).",
-                            $"'{typeName}' will be used",
-                            arrayEmptyInvocationExpression,
-                            null,
-                            null,
-                            methodReferenceToSetInferredTypeArguments));
+                        new UseTargetTypedCollectionExpressionSuggestion($"Use collection expression ('{typeName}' will be used).")
+                        {
+                            OtherTypeNameHint = $"'{typeName}' will be used",
+                            Expression = arrayEmptyInvocationExpression,
+                            MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                        });
                 }
             }
 
@@ -1092,13 +1090,11 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 && CanBeReplacedWithCollectionExpression(arrayEmptyInvocationExpression, methodReferenceToSetInferredTypeArguments))
             {
                 consumer.AddHighlighting(
-                    new UseTargetTypedCollectionExpressionSuggestion(
-                        "Use collection expression.",
-                        null,
-                        arrayEmptyInvocationExpression,
-                        null,
-                        null,
-                        methodReferenceToSetInferredTypeArguments));
+                    new UseTargetTypedCollectionExpressionSuggestion("Use collection expression.")
+                    {
+                        Expression = arrayEmptyInvocationExpression,
+                        MethodReferenceToSetInferredTypeArguments = methodReferenceToSetInferredTypeArguments,
+                    });
             }
         }
     }

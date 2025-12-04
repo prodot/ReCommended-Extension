@@ -878,6 +878,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
         MaxValueStringLength = byte.MaxValue.ToString().Length,
+        IntegralMinMaxValues = (byte.MinValue, byte.MaxValue),
         TryGetConstant = TryGetByteConstant,
         CastConstant = CastConstantToByte,
         Cast = expression => expression.Cast("byte").GetText(),
@@ -899,6 +900,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
         MaxValueStringLength = sbyte.MaxValue.ToString().Length,
+        IntegralMinMaxValues = (sbyte.MinValue, sbyte.MaxValue),
         TryGetConstant = TryGetSByteConstant,
         CastConstant = CastConstantToSByte,
         Cast = expression => expression.Cast("sbyte").GetText(),
@@ -920,6 +922,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
         MaxValueStringLength = short.MaxValue.ToString().Length,
+        IntegralMinMaxValues = (short.MinValue, short.MaxValue),
         TryGetConstant = TryGetInt16Constant,
         CastConstant = CastConstantToInt16,
         Cast = expression => expression.Cast("short").GetText(),
@@ -941,6 +944,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
         MaxValueStringLength = ushort.MaxValue.ToString().Length,
+        IntegralMinMaxValues = (ushort.MinValue, ushort.MaxValue),
         TryGetConstant = TryGetUInt16Constant,
         CastConstant = CastConstantToUInt16,
         Cast = expression => expression.Cast("ushort").GetText(),
@@ -962,6 +966,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
         MaxValueStringLength = int.MaxValue.ToString().Length,
+        IntegralMinMaxValues = (int.MinValue, int.MaxValue),
         TryGetConstant = TryGetInt32Constant,
         CastConstant = CastConstantToInt32,
         Cast = expression => expression.Cast("int").GetText(),
@@ -983,6 +988,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
         MaxValueStringLength = uint.MaxValue.ToString().Length,
+        IntegralMinMaxValues = (uint.MinValue, uint.MaxValue),
         TryGetConstant = TryGetUInt32Constant,
         CastConstant = CastConstantToUInt32,
         Cast = expression => expression.Cast("uint").GetText(),
@@ -1004,6 +1010,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
         MaxValueStringLength = long.MaxValue.ToString().Length,
+        IntegralMinMaxValues = (long.MinValue, long.MaxValue),
         TryGetConstant = TryGetInt64Constant,
         CastConstant = CastConstantToInt64,
         Cast = expression => expression.Cast("long").GetText(),
@@ -1025,6 +1032,7 @@ public abstract record NumberInfo
             | FormatSpecifiers.Hexadecimal
             | FormatSpecifiers.Decimal,
         MaxValueStringLength = ulong.MaxValue.ToString().Length,
+        IntegralMinMaxValues = (ulong.MinValue, ulong.MaxValue),
         TryGetConstant = TryGetUInt64Constant,
         CastConstant = CastConstantToUInt64,
         Cast = expression => expression.Cast("ulong").GetText(),
@@ -1187,6 +1195,8 @@ public abstract record NumberInfo
     internal string? RoundTripFormatSpecifierReplacement { get; private init; }
 
     internal int? MaxValueStringLength { get; private init; }
+
+    internal (decimal minValue, decimal maxValue)? IntegralMinMaxValues { get; private init; }
 
     internal Func<ICSharpExpression, bool, string>? CastConstant { get; private init; }
 

@@ -13,7 +13,7 @@ public sealed class BaseTypeAnalyzer : ElementProblemAnalyzer<IClassLikeDeclarat
             && element.SuperTypes.FirstOrDefault().IsObject()
             && element.ExtendsList is { ExtendedTypes: [_, ..] } baseTypes)
         {
-            consumer.AddHighlighting(new RemoveRedundantBaseTypeDeclarationHint("'object' is the default base type.", baseTypes));
+            consumer.AddHighlighting(new RemoveRedundantBaseTypeDeclarationHint("'object' is the default base type.") { BaseTypes = baseTypes });
         }
     }
 }

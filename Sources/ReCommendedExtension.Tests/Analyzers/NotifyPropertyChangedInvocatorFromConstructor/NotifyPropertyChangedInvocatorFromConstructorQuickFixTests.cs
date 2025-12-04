@@ -5,7 +5,8 @@ using ReCommendedExtension.Analyzers.NotifyPropertyChangedInvocatorFromConstruct
 namespace ReCommendedExtension.Tests.Analyzers.NotifyPropertyChangedInvocatorFromConstructor;
 
 [TestFixture]
-public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixTests : QuickFixTestBase<RemoveNotifyPropertyChangedInvocatorFix>
+public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixTests
+    : QuickFixTestBase<NotifyPropertyChangedInvocatorFromConstructorWarning.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructor\QuickFixes";
 

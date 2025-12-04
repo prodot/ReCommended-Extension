@@ -1,7 +1,4 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TestFramework.Projects;
@@ -12,12 +9,11 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-public sealed class AnnotationAnalyzerArgumentTests : CSharpHighlightingTestBase
+public sealed class AnnotationAnalyzerArgumentTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAnnotationArgumentSuggestion || highlighting.IsError();
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RedundantAnnotationArgumentSuggestion;
 
     [Test]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]

@@ -36,21 +36,26 @@ internal static class TreeNodeCollectionExtensions
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    /// <returns>The <paramref name="arguments"/> if it doesn't contain any optional argument.</returns>
-    [Pure]
-    public static TreeNodeCollection<ICSharpArgument>? AsAllNonOptionalOrNull(this TreeNodeCollection<ICSharpArgument?> arguments)
-        => arguments.Contains(null) ? null : arguments!;
-
-    [Pure]
-    public static IReadOnlyList<T> GetSubrange<T>(this TreeNodeCollection<T> treeNodeCollection, Range range) where T : ITreeNode
+    extension(TreeNodeCollection<ICSharpArgument?> arguments)
     {
-        var (indexOffset, length) = range.GetOffsetAndLength(treeNodeCollection.Count);
+        /// <returns>The <paramref name="arguments"/> if it doesn't contain any optional argument.</returns>
+        [Pure]
+        public TreeNodeCollection<ICSharpArgument>? AsAllNonOptionalOrNull() => arguments.Contains(null) ? null : arguments!;
+    }
 
-        if (length == 0)
+    extension<T>(TreeNodeCollection<T> treeNodeCollection) where T : ITreeNode
+    {
+        [Pure]
+        public IReadOnlyList<T> GetSubrange(Range range)
         {
-            return [];
-        }
+            var (indexOffset, length) = range.GetOffsetAndLength(treeNodeCollection.Count);
 
-        return new ReadOnlyListView<T>(treeNodeCollection, indexOffset, length);
+            if (length == 0)
+            {
+                return [];
+            }
+
+            return new ReadOnlyListView<T>(treeNodeCollection, indexOffset, length);
+        }
     }
 }

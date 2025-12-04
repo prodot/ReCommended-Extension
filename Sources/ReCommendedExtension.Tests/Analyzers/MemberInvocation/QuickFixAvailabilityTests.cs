@@ -1,8 +1,5 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ProjectModel.Properties.CSharp;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
@@ -11,22 +8,21 @@ using ReCommendedExtension.Analyzers.MemberInvocation;
 namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
-public sealed class QuickFixAvailabilityTests : QuickFixAvailabilityTestBase
+public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analyzers.QuickFixAvailabilityTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
+    protected override bool UseHighlighting(IHighlighting highlighting)
         => highlighting is RedundantMethodInvocationHint
-                or UseOtherMethodSuggestion
-                or UseBinaryOperatorSuggestion
-                or UseUnaryOperatorSuggestion
-                or UsePatternSuggestion
-                or UseNullableHasValueAlternativeSuggestion
-                or ReplaceNullableValueWithTypeCastSuggestion
-                or UseRangeIndexerSuggestion
-                or UsePropertySuggestion
-                or UseStaticPropertySuggestion
-            || highlighting.IsError();
+            or UseOtherMethodSuggestion
+            or UseBinaryOperatorSuggestion
+            or UseUnaryOperatorSuggestion
+            or UsePatternSuggestion
+            or UseNullableHasValueAlternativeSuggestion
+            or ReplaceNullableValueWithTypeCastSuggestion
+            or UseRangeIndexerSuggestion
+            or UsePropertySuggestion
+            or UseStaticPropertySuggestion;
 
     [Test]
     [TestNetCore21]

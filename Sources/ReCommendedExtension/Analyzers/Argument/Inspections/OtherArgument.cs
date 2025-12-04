@@ -1,7 +1,6 @@
 ﻿using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReCommendedExtension.Extensions;
-using ReCommendedExtension.Extensions.Collections;
 
 namespace ReCommendedExtension.Analyzers.Argument.Inspections;
 
@@ -10,7 +9,7 @@ internal sealed record OtherArgument : Inspection
     [Pure]
     static bool IsCollectionCreationWithOnlyInvariantConstants(ICSharpArgument arg, Func<string, bool> isInvariantConstant)
     {
-        if (CollectionCreation.TryFrom(arg.Value) is { Count: > 0 } collectionCreation)
+        if (arg.Value.AsCollectionCreation is { Count: > 0 } collectionCreation)
         {
             foreach (var s in collectionCreation.AllElementsAsStringConstants)
             {
@@ -28,14 +27,14 @@ internal sealed record OtherArgument : Inspection
 
     public static OtherArgument NullFormatProviderForInvariantDateTimeOnlyFormat { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
-        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" },
+        TryGetReplacement = arg => arg.Value is { IsDefaultValueOrNull: false } ? "null" : null,
+        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.AsStringConstant is "o" or "O" or "r" or "R" },
         Message = "The format provider is ignored (pass null instead).",
     };
 
     public static OtherArgument NullFormatProviderForInvariantDateTimeOnlyFormatCollection { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
+        TryGetReplacement = arg => arg.Value is { IsDefaultValueOrNull: false } ? "null" : null,
         FurtherArgumentCondition = new ArgumentCondition
         {
             Condition = arg => IsCollectionCreationWithOnlyInvariantConstants(arg, s => s is "o" or "O" or "r" or "R"),
@@ -45,15 +44,15 @@ internal sealed record OtherArgument : Inspection
 
     public static OtherArgument NullFormatProviderForInvariantDateTimeFormat { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
+        TryGetReplacement = arg => arg.Value is { IsDefaultValueOrNull: false } ? "null" : null,
         FurtherArgumentCondition =
-            new ArgumentCondition { Condition = arg => arg.Value.TryGetStringConstant() is "o" or "O" or "r" or "R" or "s" or "u" },
+            new ArgumentCondition { Condition = arg => arg.Value.AsStringConstant is "o" or "O" or "r" or "R" or "s" or "u" },
         Message = "The format provider is ignored (pass null instead).",
     };
 
     public static OtherArgument NullFormatProviderForInvariantDateTimeFormatCollection { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
+        TryGetReplacement = arg => arg.Value is { IsDefaultValueOrNull: false } ? "null" : null,
         FurtherArgumentCondition = new ArgumentCondition
         {
             Condition = arg => IsCollectionCreationWithOnlyInvariantConstants(arg, s => s is "o" or "O" or "r" or "R" or "s" or "u"),
@@ -63,14 +62,14 @@ internal sealed record OtherArgument : Inspection
 
     public static OtherArgument NullFormatProviderForInvariantTimeSpanFormat { get; } = new()
     {
-        TryGetReplacement = arg => arg.Value is { } && !arg.Value.IsDefaultValue() ? "null" : null,
-        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.TryGetStringConstant() is "c" or "t" or "T" },
+        TryGetReplacement = arg => arg.Value is { IsDefaultValueOrNull: false } ? "null" : null,
+        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.AsStringConstant is "c" or "t" or "T" },
         Message = "The format provider is ignored (pass null instead).",
     };
 
     public static OtherArgument SingleCollectionElement { get; } = new()
     {
-        TryGetReplacement = arg => CollectionCreation.TryFrom(arg.Value) is { SingleExpressionElement: { } singleExpressionElement }
+        TryGetReplacement = arg => arg.Value.AsCollectionCreation is { SingleExpressionElement: { } singleExpressionElement }
             ? singleExpressionElement.GetText()
             : null,
         Message = "The only collection element should be passed directly.",
@@ -78,35 +77,28 @@ internal sealed record OtherArgument : Inspection
 
     public static OtherArgument Char { get; } = new()
     {
-        TryGetReplacement =
-            arg => arg.Value.TryGetStringConstant() is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
+        TryGetReplacement = arg => arg.Value.AsStringConstant is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
         Message = "The only character should be passed directly.",
     };
 
     public static OtherArgument CharWithCurrentCulture { get; } = new()
     {
-        TryGetReplacement =
-            arg => arg.Value.TryGetStringConstant() is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
+        TryGetReplacement = arg => arg.Value.AsStringConstant is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
         Message = "The only character should be passed directly.",
         AdditionalArgument = $"{nameof(StringComparison)}.{nameof(StringComparison.CurrentCulture)}",
     };
 
     public static OtherArgument CharForStringComparisonOrdinal { get; } = new()
     {
-        TryGetReplacement =
-            arg => arg.Value.TryGetStringConstant() is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
-        FurtherArgumentCondition = new ArgumentCondition
-        {
-            Condition = arg => arg.Value.TryGetStringComparisonConstant() == StringComparison.Ordinal,
-        },
+        TryGetReplacement = arg => arg.Value.AsStringConstant is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
+        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.AsStringComparisonConstant == StringComparison.Ordinal },
         Message = "The only character should be passed directly.",
     };
 
     public static OtherArgument CharForOne { get; } = new()
     {
-        TryGetReplacement =
-            arg => arg.Value.TryGetStringConstant() is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
-        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.TryGetInt32Constant() == 1 },
+        TryGetReplacement = arg => arg.Value.AsStringConstant is [var character] ? character.ToLiteralString(arg.GetCSharpLanguageLevel()) : null,
+        FurtherArgumentCondition = new ArgumentCondition { Condition = arg => arg.Value.AsInt32Constant == 1 },
         Message = "The only character should be passed directly.",
     };
 
@@ -114,10 +106,7 @@ internal sealed record OtherArgument : Inspection
     {
         TryGetReplacement = arg =>
         {
-            if (CollectionCreation.TryFrom(arg.Value) is
-                {
-                    Count: > 0, Expression: ICollectionExpression or IArrayCreationExpression,
-                } collectionCreation)
+            if (arg.Value.AsCollectionCreation is { Count: > 0, Expression: ICollectionExpression or IArrayCreationExpression } collectionCreation)
             {
                 var characters = new List<char>(collectionCreation.Count);
 

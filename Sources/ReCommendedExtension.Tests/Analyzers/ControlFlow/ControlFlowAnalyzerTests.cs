@@ -1,8 +1,5 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ProjectModel.Properties.CSharp;
+﻿using JetBrains.ProjectModel.Properties.CSharp;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ControlFlow;
@@ -10,12 +7,12 @@ using ReCommendedExtension.Analyzers.ControlFlow;
 namespace ReCommendedExtension.Tests.Analyzers.ControlFlow;
 
 [TestFixture]
-public sealed class ControlFlowAnalyzerTests : CSharpHighlightingTestBase
+public sealed class ControlFlowAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\ControlFlow";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is RedundantAssertionSuggestion || highlighting.IsError();
+    protected override bool UseHighlighting(IHighlighting highlighting)
+        => highlighting is RedundantAssertionStatementSuggestion or RedundantInlineAssertionSuggestion;
 
     [Test]
     public void TestControlFlow() => DoNamedTest2();

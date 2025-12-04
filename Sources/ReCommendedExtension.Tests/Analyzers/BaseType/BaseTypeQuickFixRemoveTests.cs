@@ -9,7 +9,7 @@ namespace ReCommendedExtension.Tests.Analyzers.BaseType;
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
 [TestNet80]
-public sealed class BaseTypeQuickFixRemoveTests : QuickFixTestBase<RemoveBaseTypeDeclarationFix>
+public sealed class BaseTypeQuickFixRemoveTests : QuickFixTestBase<RemoveRedundantBaseTypeDeclarationHint.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\BaseType\QuickFixes";
 

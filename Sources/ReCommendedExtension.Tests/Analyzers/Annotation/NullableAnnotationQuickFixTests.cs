@@ -11,7 +11,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
 [NullableContext(NullableContextKind.Enable)]
 [TestNetCore30]
-public sealed class NullableAnnotationQuickFixTests : QuickFixTestBase<RemoveNullableAnnotationFix>
+public sealed class NullableAnnotationQuickFixTests : QuickFixTestBase<RedundantNullableAnnotationHint.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 

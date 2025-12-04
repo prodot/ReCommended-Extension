@@ -5,7 +5,7 @@ using ReCommendedExtension.Analyzers.MemberInvocation;
 namespace ReCommendedExtension.Tests.Analyzers.MemberInvocation;
 
 [TestFixture]
-public sealed class ReplaceNullableValueWithTypeCastFixTests : QuickFixTestBase<ReplaceNullableValueWithTypeCastFix>
+public sealed class ReplaceNullableValueWithTypeCastFixTests : QuickFixTestBase<ReplaceNullableValueWithTypeCastSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 

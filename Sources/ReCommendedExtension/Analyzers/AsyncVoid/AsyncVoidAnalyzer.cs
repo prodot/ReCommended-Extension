@@ -93,7 +93,11 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
 
         if (method.GetImmediateSuperMembers().Any())
         {
-            consumer.AddHighlighting(new AvoidAsyncVoidWarning("'void' method overridden or implemented as 'async void'.", methodDeclaration));
+            consumer.AddHighlighting(
+                new AvoidAsyncVoidWarning("'void' method overridden or implemented as 'async void'.", methodDeclaration.TypeUsage)
+                {
+                    Declaration = methodDeclaration,
+                });
             return;
         }
 
@@ -113,13 +117,19 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
                 {
                     // [UsedImplicitly] annotation not applied
                     consumer.AddHighlighting(
-                        new AvoidAsyncVoidWarning("'async void' public surface area method without detected usages.", methodDeclaration));
+                        new AvoidAsyncVoidWarning("'async void' public surface area method without detected usages.", methodDeclaration.TypeUsage)
+                        {
+                            Declaration = methodDeclaration,
+                        });
                 }
             }
             else
             {
                 consumer.AddHighlighting(
-                    new AvoidAsyncVoidWarning("'async void' public surface area method with detected usages.", methodDeclaration));
+                    new AvoidAsyncVoidWarning("'async void' public surface area method with detected usages.", methodDeclaration.TypeUsage)
+                    {
+                        Declaration = methodDeclaration,
+                    });
             }
         }
         else
@@ -130,7 +140,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
                 consumer.AddHighlighting(
                     new AvoidAsyncVoidWarning(
                         $"'async void' method used {count.ToString()} time{(count == 1 ? "" : "s")} not as a direct event handler.",
-                        methodDeclaration));
+                        methodDeclaration.TypeUsage) { Declaration = methodDeclaration });
             }
         }
     }
@@ -155,7 +165,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
             consumer.AddHighlighting(
                 new AvoidAsyncVoidWarning(
                     $"'async void' local function used {count.ToString()} time{(count == 1 ? "" : "s")} not as a direct event handler.",
-                    localFunctionDeclaration));
+                    localFunctionDeclaration.TypeUsage) { Declaration = localFunctionDeclaration });
         }
     }
 
@@ -176,8 +186,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
             consumer.AddHighlighting(
                 new AsyncVoidFunctionExpressionWarning(
                     "'async void' lambda expression not used as a direct event handler.",
-                    lambdaExpression.AsyncKeyword,
-                    () => lambdaExpression.SetAsync(false)));
+                    lambdaExpression.AsyncKeyword) { AnonymousFunctionExpression = lambdaExpression });
         }
     }
 
@@ -197,8 +206,7 @@ public sealed class AsyncVoidAnalyzer : ElementProblemAnalyzer<ICSharpDeclaratio
         consumer.AddHighlighting(
             new AsyncVoidFunctionExpressionWarning(
                 "'async void' anonymous method expression not used as a direct event handler.",
-                anonymousMethodExpression.AsyncKeyword,
-                () => anonymousMethodExpression.SetAsync(false)));
+                anonymousMethodExpression.AsyncKeyword) { AnonymousFunctionExpression = anonymousMethodExpression });
     }
 
     protected override void Run(ICSharpDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)

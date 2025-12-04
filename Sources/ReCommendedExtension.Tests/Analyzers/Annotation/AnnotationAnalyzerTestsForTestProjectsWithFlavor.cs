@@ -1,11 +1,8 @@
 ﻿using System.Reflection;
-using JetBrains.Application.Settings;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.Flavours;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Annotation;
@@ -13,12 +10,11 @@ using ReCommendedExtension.Analyzers.Annotation;
 namespace ReCommendedExtension.Tests.Analyzers.Annotation;
 
 [TestFixture]
-public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpHighlightingTestBase
+public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\Annotation";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is MissingSuppressionJustificationWarning || highlighting.IsError();
+    protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is MissingSuppressionJustificationWarning;
 
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     protected override void DoTest(Lifetime lifetime, IProject project)

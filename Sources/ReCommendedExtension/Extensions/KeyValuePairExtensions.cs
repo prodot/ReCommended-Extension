@@ -4,11 +4,14 @@ namespace ReCommendedExtension.Extensions;
 
 internal static class KeyValuePairExtensions
 {
-    [Pure]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Deconstruct<K, V>(this KeyValuePair<K, V> pair, out K key, out V value)
+    extension<K, V>(KeyValuePair<K, V> pair)
     {
-        key = pair.Key;
-        value = pair.Value;
+        [Pure]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void Deconstruct(out K key, out V value)
+        {
+            key = pair.Key;
+            value = pair.Value;
+        }
     }
 }

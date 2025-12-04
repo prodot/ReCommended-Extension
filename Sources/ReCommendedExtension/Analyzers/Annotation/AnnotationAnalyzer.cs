@@ -13,6 +13,7 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReCommendedExtension.Extensions;
+using ReCommendedExtension.Extensions.NumberInfos;
 
 namespace ReCommendedExtension.Analyzers.Annotation;
 
@@ -47,55 +48,6 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         public required IAttribute Attribute { get; init; }
     }
 
-    sealed record NumericRange
-    {
-        static readonly NumericRange int32 = new(int.MinValue, int.MaxValue);
-
-        static readonly NumericRange int64 = new(long.MinValue, long.MaxValue);
-
-        static readonly NumericRange @byte = new(byte.MinValue, byte.MaxValue);
-
-        static readonly NumericRange int16 = new(short.MinValue, short.MaxValue);
-
-        static readonly NumericRange uint32 = new(uint.MinValue, uint.MaxValue);
-
-        static readonly NumericRange uint64 = new(ulong.MinValue, ulong.MaxValue);
-
-        static readonly NumericRange uint16 = new(ushort.MinValue, ushort.MaxValue);
-
-        static readonly NumericRange @sbyte = new(sbyte.MinValue, sbyte.MaxValue);
-
-        [Pure]
-        public static NumericRange? TryGetFor(IType type)
-            => type switch
-            {
-                var t when t.IsInt() => int32,
-                var t when t.IsLong() => int64,
-                var t when t.IsByte() => @byte,
-                var t when t.IsShort() => int16,
-                var t when t.IsUint() => uint32,
-                var t when t.IsUlong() => uint64,
-                var t when t.IsUshort() => uint16,
-                var t when t.IsSbyte() => @sbyte,
-
-                _ => null,
-            };
-
-        NumericRange(decimal minValue, decimal maxValue)
-        {
-            Debug.Assert(minValue < maxValue);
-
-            MinValue = minValue;
-            MaxValue = maxValue;
-        }
-
-        public bool IsSigned => MinValue < 0;
-
-        public decimal MinValue { get; }
-
-        public decimal MaxValue { get; }
-    }
-
     enum PurityOrDisposabilityKind
     {
         Pure,
@@ -120,25 +72,25 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         }
 
         // excluding overridden members
-        if (declaration.OverridesInheritedMember())
+        if (declaration.OverridesInheritedMember)
         {
             return false;
         }
 
         // excluding local function (C# 8 or less)
-        if (declaration.IsOnLocalFunctionWithUnsupportedAttributes())
+        if (declaration.IsOnLocalFunctionWithUnsupportedAttributes)
         {
             return false;
         }
 
         // excluding lambda expressions (C# 9 or less)
-        if (declaration.IsOnLambdaExpressionWithUnsupportedAttributes())
+        if (declaration.IsOnLambdaExpressionWithUnsupportedAttributes)
         {
             return false;
         }
 
         // excluding anonymous methods
-        if (declaration.IsOnAnonymousMethodWithUnsupportedAttributes())
+        if (declaration.IsOnAnonymousMethodWithUnsupportedAttributes)
         {
             return false;
         }
@@ -176,7 +128,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             };
         }
 
-        if (declaration.OverridesInheritedMember())
+        if (declaration.OverridesInheritedMember)
         {
             return NullabilityAnnotationCase.Override;
         }
@@ -199,32 +151,34 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             var attributeType = attribute.GetAttributeType();
 
             if (attributeType.IsClrType(ClrTypeNames.SuppressMessageAttribute)
-                && attribute.TryGetArgumentsInDeclarationOrder() is [{ } categoryArg, { } checkIdArg]
-                && categoryArg.Value.TryGetStringConstant() is { } category
-                && checkIdArg.Value.TryGetStringConstant() is { } checkId
-                && (attribute
-                        .PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == nameof(SuppressMessageAttribute.Justification))
-                        ?.Source.TryGetStringConstant() is not { } suppressMessageJustification
+                && attribute.TryGetArgumentsInDeclarationOrder() is
+                [
+                    { Value.AsStringConstant: { } category }, { Value.AsStringConstant: { } checkId },
+                ]
+                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == nameof(SuppressMessageAttribute.Justification))
+                        is not { Source.AsStringConstant: { } suppressMessageJustification }
                     || string.IsNullOrWhiteSpace(suppressMessageJustification)))
             {
                 consumer.AddHighlighting(
-                    new MissingSuppressionJustificationWarning(
-                        $"Suppression justification is missing for {category}:{checkId}.",
-                        attributesOwnerDeclaration,
-                        attribute));
+                    new MissingSuppressionJustificationWarning($"Suppression justification is missing for {category}:{checkId}.")
+                    {
+                        AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                    });
             }
 
             if (excludeFromCodeCoverageJustificationPropertyExists
                 && attributeType.IsClrType(ClrTypeNames.ExcludeFromCodeCoverageAttribute)
-                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == "Justification")?.Source.TryGetStringConstant() // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
-                        is not { } excludeFromCodeCoverageJustification
+                && (attribute.PropertyAssignments.FirstOrDefault(p => p.PropertyNameIdentifier.Name == "Justification") is not // todo: use nameof(ExcludeFromCodeCoverageAttribute.Justification)
+                    {
+                        Source.AsStringConstant: { } excludeFromCodeCoverageJustification,
+                    }
                     || string.IsNullOrWhiteSpace(excludeFromCodeCoverageJustification)))
             {
                 consumer.AddHighlighting(
-                    new MissingSuppressionJustificationWarning(
-                        "Justification is missing for the exclusion from code coverage.",
-                        attributesOwnerDeclaration,
-                        attribute));
+                    new MissingSuppressionJustificationWarning("Justification is missing for the exclusion from code coverage.")
+                    {
+                        AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                    });
             }
         }
     }
@@ -250,7 +204,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 // R# doesn't seem to cover multi-line async methods that return "Task?"
 
                 consumer.AddHighlighting(
-                    new RedundantNullableAnnotationHint($"Return type of '{methodName}' can be made non-nullable.", nullableTypeUsage));
+                    new RedundantNullableAnnotationHint($"Return type of '{methodName}' can be made non-nullable.")
+                    {
+                        NullableTypeUsage = nullableTypeUsage,
+                    });
                 break;
 
             case ILocalFunctionDeclaration
@@ -261,7 +218,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             } localFunction when localFunction.IsIterator || localFunction.IsAsync:
 
                 consumer.AddHighlighting(
-                    new RedundantNullableAnnotationHint($"Return type of '{localFunctionName}' can be made non-nullable.", nullableTypeUsage));
+                    new RedundantNullableAnnotationHint($"Return type of '{localFunctionName}' can be made non-nullable.")
+                    {
+                        NullableTypeUsage = nullableTypeUsage,
+                    });
                 break;
         }
     }
@@ -420,7 +380,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             if (TryGetAttributeNameIfAnnotationProvided(kind) is { } attributeName
                 && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute)
             {
-                consumer.AddHighlighting(new RedundantAnnotationSuggestion(message, element, attribute));
+                consumer.AddHighlighting(new RedundantAnnotationSuggestion(message) { AttributesOwnerDeclaration = element, Attribute = attribute });
             }
         }
 
@@ -429,7 +389,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             if (TryGetAttributeNameIfAnnotationProvided(kind) is { } attributeName
                 && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute)
             {
-                consumer.AddHighlighting(new NotAllowedAnnotationWarning(message, element, attribute));
+                consumer.AddHighlighting(new NotAllowedAnnotationWarning(message) { AttributesOwnerDeclaration = element, Attribute = attribute });
             }
         }
 
@@ -441,7 +401,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 && TryGetAttributeNameIfAnnotationProvided(otherKind) is { }
                 && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute)
             {
-                consumer.AddHighlighting(new ConflictingAnnotationWarning(message, element, attribute));
+                consumer.AddHighlighting(new ConflictingAnnotationWarning(message) { AttributesOwnerDeclaration = element, Attribute = attribute });
             }
         }
 
@@ -451,7 +411,8 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 && element.Attributes.FirstOrDefault(a => a.GetAttributeInstance().GetAttributeShortName() == attributeName) is { } attribute
                 && attribute.TryGetArgumentsInDeclarationOrder() is [{ } argument])
             {
-                consumer.AddHighlighting(new RedundantAnnotationArgumentSuggestion(message, element, attribute, argument));
+                consumer.AddHighlighting(
+                    new RedundantAnnotationArgumentSuggestion(message, argument) { AttributesOwnerDeclaration = element, Attribute = attribute });
             }
         }
 
@@ -460,7 +421,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
                 and (IClassDeclaration or IRecordDeclaration { IsStruct: false }):
             {
-                if (type.IsDisposable())
+                if (type.IsDisposable)
                 {
                     if (!IsAnnotatedWithAnyOf(type, PurityOrDisposabilityKind.MustDisposeResource, PurityOrDisposabilityKind.MustDisposeResourceFalse)
                         && !IsAnyBaseTypeAnnotated(type, PurityOrDisposabilityKind.MustDisposeResource))
@@ -511,7 +472,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
                 and (IStructDeclaration { IsByRefLike: false } or IRecordDeclaration { IsStruct: true }):
             {
-                if (type.IsDisposable())
+                if (type.IsDisposable)
                 {
                     if (element.MustDisposeResourceAttributeSupportsStructs())
                     {
@@ -565,7 +526,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
             case IStructDeclaration { IsByRefLike: true, DeclaredElement: { } type }:
             {
-                if (type.IsDisposable() || type.HasDisposeMethods())
+                if (type.IsDisposable || type.HasDisposeMethods)
                 {
                     if (element.MustDisposeResourceAttributeSupportsStructs())
                     {
@@ -621,7 +582,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     case IClassLikeDeclaration { DeclaredElement: { } type } typeDeclaration
                         and (IClassDeclaration or IStructDeclaration { IsByRefLike: false } or IRecordDeclaration):
                     {
-                        if (type.IsDisposable())
+                        if (type.IsDisposable)
                         {
                             if (!IsAnnotatedWithAnyOf(
                                     constructor,
@@ -708,7 +669,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                     case IStructDeclaration { IsByRefLike: true, DeclaredElement: { } type }:
                     {
-                        if (type.IsDisposable() || type.HasDisposeMethods())
+                        if (type.IsDisposable || type.HasDisposeMethods)
                         {
                             if (!IsAnnotatedWithAnyOf(
                                     constructor,
@@ -1058,7 +1019,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         {
             if (TryGetAttributeIfAnnotationProvided() is { } attribute)
             {
-                consumer.AddHighlighting(new NotAllowedAnnotationWarning(message, element, attribute));
+                consumer.AddHighlighting(new NotAllowedAnnotationWarning(message) { AttributesOwnerDeclaration = element, Attribute = attribute });
             }
         }
 
@@ -1066,7 +1027,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         {
             if (TryGetAttributeIfAnnotationProvided() is { } attribute)
             {
-                consumer.AddHighlighting(new NotAllowedAnnotationWarning(message, element, attribute));
+                consumer.AddHighlighting(new NotAllowedAnnotationWarning(message) { AttributesOwnerDeclaration = element, Attribute = attribute });
             }
         }
 
@@ -1085,26 +1046,26 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         HighlightNotAllowed("Annotation is not valid for private methods.");
                     }
 
-                    if (method.ContainingType.IsDisposable() || method.ContainingType is IStruct { IsByRefLike: true })
+                    if (method.ContainingType is { IsDisposable: true } or IStruct { IsByRefLike: true })
                     {
-                        if (method.IsDisposeMethod())
+                        if (method.IsDisposeMethod)
                         {
                             HighlightRedundant($"Annotation is redundant for '{nameof(IDisposable.Dispose)}' methods.");
                         }
 
-                        if (method.IsDisposeAsyncMethod())
+                        if (method.IsDisposeAsyncMethod)
                         {
                             HighlightRedundant("Annotation is redundant for 'DisposeAsync' methods."); // todo: use nameof(IAsyncDisposable.DisposeAsync)
                         }
 
                         if (method.ContainingType is IStruct { IsByRefLike: true })
                         {
-                            if (method.IsDisposeMethodByConvention())
+                            if (method.IsDisposeMethodByConvention)
                             {
                                 HighlightRedundant("Annotation is redundant for 'Dispose' methods.");
                             }
 
-                            if (method.IsDisposeAsyncMethodByConvention())
+                            if (method.IsDisposeAsyncMethodByConvention)
                             {
                                 HighlightRedundant("Annotation is redundant for 'DisposeAsync' methods.");
                             }
@@ -1188,7 +1149,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
         }
 
         var type = null as IType;
-        var numericRange = null as NumericRange;
+        var numberInfo = null as NumberInfo;
 
         foreach (var attribute in attributesOwnerDeclaration.Attributes)
         {
@@ -1199,10 +1160,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 if (attributesOwnerDeclaration is IConstantDeclaration)
                 {
                     consumer.AddHighlighting(
-                        new RedundantAnnotationSuggestion(
-                            "Annotation is redundant because the declared element is a constant.",
-                            attributesOwnerDeclaration,
-                            attribute));
+                        new RedundantAnnotationSuggestion("Annotation is redundant because the declared element is a constant.")
+                        {
+                            AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                        });
                     continue;
                 }
 
@@ -1222,28 +1183,30 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     continue;
                 }
 
-                numericRange ??= NumericRange.TryGetFor(type);
+                numberInfo ??= NumberInfo.TryGet(type);
 
-                if (numericRange == null)
+                if (numberInfo is not { IntegralMinMaxValues: var (minValue, maxValue) })
                 {
                     consumer.AddHighlighting(
                         new NotAllowedAnnotationWarning(
-                            "Annotation is not valid because the type of the declared element is not an integral numeric type.",
-                            attributesOwnerDeclaration,
-                            attribute));
+                            "Annotation is not valid because the type of the declared element is not an integral numeric type.")
+                        {
+                            AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                        });
                     continue;
                 }
 
                 switch (name)
                 {
                     case nameof(NonNegativeValueAttribute):
-                        if (!numericRange.IsSigned)
+                        if (minValue >= 0)
                         {
                             consumer.AddHighlighting(
                                 new RedundantAnnotationSuggestion(
-                                    "Annotation is redundant because the declared element can never be negative by default.",
-                                    attributesOwnerDeclaration,
-                                    attribute));
+                                    "Annotation is redundant because the declared element can never be negative by default.")
+                                {
+                                    AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                                });
                         }
                         break;
 
@@ -1252,16 +1215,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                         switch (attribute.TryGetArgumentsInDeclarationOrder())
                         {
-                            case [{ } arg] when arg.Value.TryGetInt64Constant() is { } value: from = to = value; break;
-                            case [{ } arg] when arg.Value.TryGetUInt64Constant() is { } value: from = to = value; break;
+                            case [{ Value.AsInt64Constant: { } value }]: from = to = value; break;
+                            case [{ Value.AsUInt64Constant: { } value }]: from = to = value; break;
 
-                            case [{ } arg0, { } arg1]
-                                when arg0.Value.TryGetInt64Constant() is { } fromValue && arg1.Value.TryGetInt64Constant() is { } toValue:
+                            case [{ Value.AsInt64Constant: { } fromValue }, { Value.AsInt64Constant: { } toValue }]:
                                 (from, to) = (fromValue, toValue);
                                 break;
 
-                            case [{ } arg0, { } arg1]
-                                when arg0.Value.TryGetUInt64Constant() is { } fromValue && arg1.Value.TryGetUInt64Constant() is { } toValue:
+                            case [{ Value.AsUInt64Constant: { } fromValue }, { Value.AsUInt64Constant: { } toValue }]:
                                 (from, to) = (fromValue, toValue);
                                 break;
 
@@ -1271,62 +1232,67 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         if (from > to)
                         {
                             consumer.AddHighlighting(
-                                new NotAllowedAnnotationWarning(
-                                    "Annotation is not valid because the 'from' value is greater than the 'to' value.",
-                                    attributesOwnerDeclaration,
-                                    attribute));
+                                new NotAllowedAnnotationWarning("Annotation is not valid because the 'from' value is greater than the 'to' value.")
+                                {
+                                    AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                                });
                             continue;
                         }
 
-                        if (to < numericRange.MinValue || from > numericRange.MaxValue)
+                        if (to < minValue || from > maxValue)
                         {
                             consumer.AddHighlighting(
-                                new NotAllowedAnnotationWarning(
-                                    "Annotation is not valid because the declared element can never be in the range.",
-                                    attributesOwnerDeclaration,
-                                    attribute));
+                                new NotAllowedAnnotationWarning("Annotation is not valid because the declared element can never be in the range.")
+                                {
+                                    AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                                });
                             continue;
                         }
 
-                        if (from < numericRange.MinValue && to < numericRange.MaxValue)
+                        if (from < minValue && to < maxValue)
                         {
                             Debug.Assert(from < to);
                             Debug.Assert(CSharpLanguage.Instance is { });
 
                             consumer.AddHighlighting(
                                 new InvalidValueRangeBoundaryWarning(
-                                    numericRange.IsSigned
+                                    minValue < 0
                                         ? $"The 'from' value is less than the '{type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MinValue)}'."
-                                        : "The 'from' value is negative.",
-                                    attribute.ConstructorArgumentExpressions[0],
-                                    ValueRangeBoundary.Lower,
-                                    type,
-                                    numericRange.IsSigned));
+                                        : "The 'from' value is negative.")
+                                {
+                                    PositionParameter = attribute.ConstructorArgumentExpressions[0],
+                                    Boundary = ValueRangeBoundary.Lower,
+                                    Type = type,
+                                    TypeIsSigned = minValue < 0,
+                                });
                             continue;
                         }
 
-                        if (from > numericRange.MinValue && to > numericRange.MaxValue)
+                        if (from > minValue && to > maxValue)
                         {
                             Debug.Assert(from < to);
                             Debug.Assert(CSharpLanguage.Instance is { });
 
                             consumer.AddHighlighting(
                                 new InvalidValueRangeBoundaryWarning(
-                                    $"The 'to' value is greater than the '{type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}'.",
-                                    attribute.ConstructorArgumentExpressions[1],
-                                    ValueRangeBoundary.Higher,
-                                    type,
-                                    numericRange.IsSigned));
+                                    $"The 'to' value is greater than the '{type.GetPresentableName(CSharpLanguage.Instance)}.{nameof(int.MaxValue)}'.")
+                                {
+                                    PositionParameter = attribute.ConstructorArgumentExpressions[1],
+                                    Boundary = ValueRangeBoundary.Higher,
+                                    Type = type,
+                                    TypeIsSigned = minValue < 0,
+                                });
                             continue;
                         }
 
-                        if (from <= numericRange.MinValue && to >= numericRange.MaxValue)
+                        if (from <= minValue && to >= maxValue)
                         {
                             consumer.AddHighlighting(
                                 new RedundantAnnotationSuggestion(
-                                    "Annotation is redundant because the declared element is always in the range by default.",
-                                    attributesOwnerDeclaration,
-                                    attribute));
+                                    "Annotation is redundant because the declared element is always in the range by default.")
+                                {
+                                    AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                                });
                         }
 
                         break;
@@ -1416,10 +1382,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                 {
                     case [var singleCondition]:
                         consumer.AddHighlighting(
-                            new ConditionalAnnotationHint(
-                                $"Attribute will be ignored if the '{singleCondition}' condition is not defined.",
-                                attributesOwnerDeclaration,
-                                attribute));
+                            new ConditionalAnnotationHint($"Attribute will be ignored if the '{singleCondition}' condition is not defined.")
+                            {
+                                AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute,
+                            });
                         conditions.Clear();
                         break;
 
@@ -1428,9 +1394,7 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                             new ConditionalAnnotationHint(
                                 $"Attribute will be ignored if none of the following conditions is defined: {
                                     string.Join(", ", from c in conditions orderby c select $"'{c}'")
-                                }.",
-                                attributesOwnerDeclaration,
-                                attribute));
+                                }.") { AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attribute });
                         conditions.Clear();
                         break;
                 }
@@ -1476,20 +1440,20 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     when attributesOwnerDeclaration.IsAnnotationProvided(nameof(NotNullAttribute)):
 
                     consumer.AddHighlighting(
-                        new RedundantAnnotationSuggestion(
-                            "Annotation is redundant because the declared element can never be null by default.",
-                            attributesOwnerDeclaration,
-                            attributeMark.Attribute));
+                        new RedundantAnnotationSuggestion("Annotation is redundant because the declared element can never be null by default.")
+                        {
+                            AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attributeMark.Attribute,
+                        });
                     break;
 
                 case { AnnotationNullableValue: CodeAnnotationNullableValue.CAN_BE_NULL }
                     when attributesOwnerDeclaration.IsAnnotationProvided(nameof(CanBeNullAttribute)):
 
                     consumer.AddHighlighting(
-                        new NotAllowedAnnotationWarning(
-                            "Annotation is not valid because the declared element can never be null by default.",
-                            attributesOwnerDeclaration,
-                            attributeMark.Attribute));
+                        new NotAllowedAnnotationWarning("Annotation is not valid because the declared element can never be null by default.")
+                        {
+                            AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attributeMark.Attribute,
+                        });
                     break;
             }
         }
@@ -1507,10 +1471,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     && attributesOwnerDeclaration.IsAnnotationProvided(nameof(CanBeNullAttribute)))
                 {
                     consumer.AddHighlighting(
-                        new NotAllowedAnnotationWarning(
-                            "Annotation is not valid because the declared element can never be null by default.",
-                            attributesOwnerDeclaration,
-                            attributeMark.Attribute));
+                        new NotAllowedAnnotationWarning("Annotation is not valid because the declared element can never be null by default.")
+                        {
+                            AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attributeMark.Attribute,
+                        });
                 }
             }
             else
@@ -1561,10 +1525,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                         && attributesOwnerDeclaration.IsAnnotationProvided(nameof(CanBeNullAttribute)))
                     {
                         consumer.AddHighlighting(
-                            new RedundantAnnotationSuggestion(
-                                "Annotation is redundant because the declared element can be null by default.",
-                                attributesOwnerDeclaration,
-                                attributeMark.Attribute));
+                            new RedundantAnnotationSuggestion("Annotation is redundant because the declared element can be null by default.")
+                            {
+                                AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attributeMark.Attribute,
+                            });
                     }
                 }
                 break;
@@ -1587,9 +1551,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             {
                 consumer.AddHighlighting(
                     new NotAllowedAnnotationWarning(
-                        "Annotation is not allowed because the declared element overrides or implements the inherited member.",
-                        attributesOwnerDeclaration,
-                        attributeMark.Attribute));
+                        "Annotation is not allowed because the declared element overrides or implements the inherited member.")
+                    {
+                        AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = attributeMark.Attribute,
+                    });
             }
         }
     }
@@ -1608,13 +1573,14 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
             == CodeAnnotationNullableValue.NOT_NULL);
         if (itemNotNullAttribute is { })
         {
-            if (attributesOwnerDeclaration.OverridesInheritedMember())
+            if (attributesOwnerDeclaration.OverridesInheritedMember)
             {
                 consumer.AddHighlighting(
                     new NotAllowedAnnotationWarning(
-                        "Annotation is not allowed because the declared element overrides or implements the inherited member.",
-                        attributesOwnerDeclaration,
-                        itemNotNullAttribute));
+                        "Annotation is not allowed because the declared element overrides or implements the inherited member.")
+                    {
+                        AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = itemNotNullAttribute,
+                    });
                 return;
             }
 
@@ -1637,10 +1603,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     if (elementType is { Classify: not TypeClassification.REFERENCE_TYPE })
                     {
                         consumer.AddHighlighting(
-                            new NotAllowedAnnotationWarning(
-                                "Annotation is not allowed because the declared element type is not a reference type.",
-                                attributesOwnerDeclaration,
-                                itemNotNullAttribute));
+                            new NotAllowedAnnotationWarning("Annotation is not allowed because the declared element type is not a reference type.")
+                            {
+                                AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = itemNotNullAttribute,
+                            });
                     }
 
                     return;
@@ -1652,9 +1618,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     {
                         consumer.AddHighlighting(
                             new NotAllowedAnnotationWarning(
-                                "Annotation is not allowed because the declared task result type is not a reference type.",
-                                attributesOwnerDeclaration,
-                                itemNotNullAttribute));
+                                "Annotation is not allowed because the declared task result type is not a reference type.")
+                            {
+                                AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = itemNotNullAttribute,
+                            });
                     }
 
                     return;
@@ -1665,10 +1632,10 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
                     if (TypesUtil.GetTypeArgumentValue(type, 0) is { Classify: not TypeClassification.REFERENCE_TYPE })
                     {
                         consumer.AddHighlighting(
-                            new NotAllowedAnnotationWarning(
-                                "Annotation is not allowed because the declared lazy value type is not a reference type.",
-                                attributesOwnerDeclaration,
-                                itemNotNullAttribute));
+                            new NotAllowedAnnotationWarning("Annotation is not allowed because the declared lazy value type is not a reference type.")
+                            {
+                                AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = itemNotNullAttribute,
+                            });
                     }
 
                     return;
@@ -1676,9 +1643,11 @@ public sealed class AnnotationAnalyzer(CodeAnnotationsCache codeAnnotationsCache
 
                 consumer.AddHighlighting(
                     new NotAllowedAnnotationWarning(
-                        $"Annotation is not allowed because the declared element must be an {nameof(IEnumerable<int>)}<T> (or its descendant), or a generic task-like type, or a {nameof(Lazy<int>)}<T>.",
-                        attributesOwnerDeclaration,
-                        itemNotNullAttribute));
+                        $"Annotation is not allowed because the declared element must be an {
+                            nameof(IEnumerable<>)
+                        }<T> (or its descendant), or a generic task-like type, or a {
+                            nameof(Lazy<>)
+                        }<T>.") { AttributesOwnerDeclaration = attributesOwnerDeclaration, Attribute = itemNotNullAttribute });
             }
         }
     }

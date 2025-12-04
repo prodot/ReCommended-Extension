@@ -8,7 +8,7 @@ namespace ReCommendedExtension.Tests.Analyzers.Formatter;
 
 [TestFixture]
 [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-public sealed class ReplaceTypeCastWithFormatSpecifierFixTests : QuickFixTestBase<ReplaceTypeCastWithFormatSpecifierFix>
+public sealed class ReplaceTypeCastWithFormatSpecifierFixTests : QuickFixTestBase<ReplaceTypeCastWithFormatSpecifierSuggestion.Fix>
 {
     protected override string RelativeTestDataPath => @"Analyzers\Formatter\QuickFixes";
 

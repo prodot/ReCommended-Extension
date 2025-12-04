@@ -70,4 +70,8 @@ public sealed class ConvertToLinqQueryAvailabilityTests : CSharpContextActionAva
 
     [Test]
     public void TestAvailability_Array_NoCollectionExpressions() => DoNamedTest2();
+
+    [Test]
+    [TestNet100]
+    public void TestAvailability_IAsyncEnumerable() => DoNamedTest2();
 }

@@ -25,7 +25,7 @@ internal abstract class CollectionCreation
                 arrayCreationExpression),
 
             // new T[0]
-            IArrayCreationExpression { DimInits: [var e], ArrayInitializer: null } arrayCreationExpression when e.TryGetInt32Constant() == 0 =>
+            IArrayCreationExpression { DimInits: [{ AsInt32Constant: 0 }], ArrayInitializer: null } arrayCreationExpression =>
                 new EmptyCollectionCreation(arrayCreationExpression),
 
             // default(ReadOnlySpan<T>)
@@ -95,7 +95,7 @@ internal abstract class CollectionCreation
         {
             foreach (var (element, expression) in ElementsWithExpressions)
             {
-                if (expression.TryGetCharConstant() is { } charConstant)
+                if (expression.AsCharConstant is { } charConstant)
                 {
                     yield return (element, charConstant);
                 }
@@ -109,7 +109,7 @@ internal abstract class CollectionCreation
         {
             foreach (var (element, expression) in ElementsWithExpressions)
             {
-                if (expression.TryGetStringConstant() is { } stringConstant)
+                if (expression.AsStringConstant is { } stringConstant)
                 {
                     yield return (element, stringConstant);
                 }
@@ -118,7 +118,7 @@ internal abstract class CollectionCreation
     }
 
     /// <remarks>
-    /// Returns <c>null</c> items if some elements are not non-null string constants.
+    /// Returns <c>null</c> items if some elements are not non-<c>null</c> string constants.
     /// </remarks>
     public IEnumerable<string?> AllElementsAsStringConstants
     {
@@ -126,7 +126,7 @@ internal abstract class CollectionCreation
         {
             foreach (var (_, expression) in ElementsWithExpressions)
             {
-                yield return expression.TryGetStringConstant();
+                yield return expression.AsStringConstant;
             }
         }
     }

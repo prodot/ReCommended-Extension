@@ -10,7 +10,7 @@ internal static class RuleDefinitions
     /// <remarks>
     /// type → (member name (or "" for constructors) → member overloads)
     /// </remarks>
-    static readonly Dictionary<IClrTypeName, Dictionary<string, IReadOnlyCollection<Member>>> typeMembers = new(new ClrTypeNameEqualityComparer())
+    static readonly Dictionary<IClrTypeName, Dictionary<string, IReadOnlyCollection<Member>>> typeMembers = new(ClrTypeNameEqualityComparer.Default)
     {
         { PredefinedType.BOOLEAN_FQN, CreateBooleanMembers() },
         { PredefinedType.BYTE_FQN, CreateIntegerMembers(Parameter.Byte) },
@@ -376,6 +376,11 @@ internal static class RuleDefinitions
             {
                 nameof(TimeSpan.FromMilliseconds),
                 [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Int64], IsStatic = true },
+                        Inspections = [Inspection.Int64ZerosOptionalToTimeSpanZero],
+                    },
                     new Member
                     {
                         Signature = new MethodSignature { Parameters = [Parameter.Int64, Parameter.Int64], IsStatic = true },
@@ -866,6 +871,16 @@ internal static class RuleDefinitions
     static Dictionary<string, IReadOnlyCollection<Member>> CreateRandomMembers()
         => new(StringComparer.Ordinal)
         {
+            {
+                "GetHexString", // todo: nameof(Random.GetHexString) when available
+                [
+                    new Member
+                    {
+                        Signature = new MethodSignature { Parameters = [Parameter.Int32, Parameter.Boolean] },
+                        Inspections = [Inspection.ZeroToEmptyString with { EnsureQualifierNotNull = true }],
+                    },
+                ]
+            },
             {
                 "GetItems", // todo: nameof(Random.GetItems) when available
                 [

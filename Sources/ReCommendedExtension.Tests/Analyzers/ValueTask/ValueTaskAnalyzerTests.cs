@@ -1,7 +1,4 @@
-﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ValueTask;
@@ -10,12 +7,12 @@ namespace ReCommendedExtension.Tests.Analyzers.ValueTask;
 
 [TestFixture]
 [TestNetCore30]
-public sealed class ValueTaskAnalyzerTests : CSharpHighlightingTestBase
+public sealed class ValueTaskAnalyzerTests : CSharpAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\ValueTask";
 
-    protected override bool HighlightingPredicate(IHighlighting highlighting, IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
-        => highlighting is PossibleMultipleConsumptionWarning or IntentionalBlockingAttemptWarning || highlighting.IsError();
+    protected override bool UseHighlighting(IHighlighting highlighting)
+        => highlighting is PossibleMultipleConsumptionWarning or IntentionalBlockingAttemptWarning;
 
     [Test]
     public void TestCodePaths() => DoNamedTest2();

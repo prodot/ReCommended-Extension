@@ -9,7 +9,7 @@ internal sealed record PropertyOfString : Inspection
 {
     public static PropertyOfString Arg0Empty { get; } = new()
     {
-        Condition = args => args[0]?.Value.TryGetStringConstant() == "", Message = propertyName => $"Use the '{propertyName}' property.",
+        Condition = args => args is [{ Value.AsStringConstant: "" }, ..], Message = propertyName => $"Use the '{propertyName}' property.",
     };
 
     public static PropertyOfString QualifierIsString { get; } = new()

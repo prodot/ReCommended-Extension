@@ -153,16 +153,18 @@ public sealed class ControlFlowAnalyzer(
                 {
                     case ConstantExpressionValue.TRUE when isKnownToBeTrue:
                         context.AddHighlighting(
-                            new RedundantAssertionStatementSuggestion(
-                                "Assertion is redundant because the expression is true here.",
-                                assertionStatement));
+                            new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is true here.")
+                            {
+                                Assertion = assertionStatement,
+                            });
                         return;
 
                     case ConstantExpressionValue.FALSE when !isKnownToBeTrue:
                         context.AddHighlighting(
-                            new RedundantAssertionStatementSuggestion(
-                                "Assertion is redundant because the expression is false here.",
-                                assertionStatement));
+                            new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is false here.")
+                            {
+                                Assertion = assertionStatement,
+                            });
                         return;
                 }
             }
@@ -172,8 +174,10 @@ public sealed class ControlFlowAnalyzer(
             {
                 context.AddHighlighting(
                     new RedundantAssertionStatementSuggestion(
-                        $"Assertion is redundant because the expression is {(isKnownToBeTrue ? "true" : "false")} here.",
-                        assertionStatement));
+                        $"Assertion is redundant because the expression is {(isKnownToBeTrue ? "true" : "false")} here.")
+                    {
+                        Assertion = assertionStatement,
+                    });
             }
 
             if (assertionStatement.Expression is IEqualityExpression equalityExpression)
@@ -185,16 +189,18 @@ public sealed class ControlFlowAnalyzer(
                     {
                         case CSharpControlFlowNullReferenceState.NOT_NULL when isKnownToBeTrue:
                             context.AddHighlighting(
-                                new RedundantAssertionStatementSuggestion(
-                                    "Assertion is redundant because the expression is true here.",
-                                    assertionStatement));
+                                new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is true here.")
+                                {
+                                    Assertion = assertionStatement,
+                                });
                             break;
 
                         case CSharpControlFlowNullReferenceState.NULL when !isKnownToBeTrue:
                             context.AddHighlighting(
-                                new RedundantAssertionStatementSuggestion(
-                                    "Assertion is redundant because the expression is false here.",
-                                    assertionStatement));
+                                new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is false here.")
+                                {
+                                    Assertion = assertionStatement,
+                                });
                             break;
                     }
                 }
@@ -207,16 +213,18 @@ public sealed class ControlFlowAnalyzer(
                     {
                         case CSharpControlFlowNullReferenceState.NOT_NULL when !isKnownToBeTrue:
                             context.AddHighlighting(
-                                new RedundantAssertionStatementSuggestion(
-                                    "Assertion is redundant because the expression is false here.",
-                                    assertionStatement));
+                                new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is false here.")
+                                {
+                                    Assertion = assertionStatement,
+                                });
                             break;
 
                         case CSharpControlFlowNullReferenceState.NULL when isKnownToBeTrue:
                             context.AddHighlighting(
-                                new RedundantAssertionStatementSuggestion(
-                                    "Assertion is redundant because the expression is true here.",
-                                    assertionStatement));
+                                new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is true here.")
+                                {
+                                    Assertion = assertionStatement,
+                                });
                             break;
                     }
                 }
@@ -238,7 +246,10 @@ public sealed class ControlFlowAnalyzer(
             if (isKnownToBeNull && IsLiteral(assertionStatement.Expression, CSharpTokenType.NULL_KEYWORD))
             {
                 context.AddHighlighting(
-                    new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is null here.", assertionStatement));
+                    new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is null here.")
+                    {
+                        Assertion = assertionStatement,
+                    });
             }
 
             // pattern: Assert(x); when x is known to be null or not null
@@ -250,16 +261,18 @@ public sealed class ControlFlowAnalyzer(
             {
                 case CSharpControlFlowNullReferenceState.NOT_NULL when !isKnownToBeNull:
                     context.AddHighlighting(
-                        new RedundantAssertionStatementSuggestion(
-                            "Assertion is redundant because the expression is not null here.",
-                            assertionStatement));
+                        new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is not null here.")
+                        {
+                            Assertion = assertionStatement,
+                        });
                     break;
 
                 case CSharpControlFlowNullReferenceState.NULL when isKnownToBeNull:
                     context.AddHighlighting(
-                        new RedundantAssertionStatementSuggestion(
-                            "Assertion is redundant because the expression is null here.",
-                            assertionStatement));
+                        new RedundantAssertionStatementSuggestion("Assertion is redundant because the expression is null here.")
+                        {
+                            Assertion = assertionStatement,
+                        });
                     break;
             }
         }
