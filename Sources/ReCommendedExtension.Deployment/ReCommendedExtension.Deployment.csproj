@@ -22,7 +22,7 @@
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.2" />
     </ItemGroup>
 
     <ItemGroup>
