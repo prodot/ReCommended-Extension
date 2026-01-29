@@ -8,7 +8,7 @@
         <Product>ReCommendedExtension</Product>
         <Description>Code analysis improvements and context actions.</Description>
         <Company>prodot GmbH</Company>
-        <Copyright>© 2012-2025 $(Company)</Copyright>
+        <Copyright>© 2012-2026 $(Company)</Copyright>
 
         <FileVersion>8.3.2</FileVersion>
         <Version>$(FileVersion).0</Version>
