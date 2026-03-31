@@ -7,6 +7,7 @@ namespace ReCommendedExtension.Tests.ContextActions.CodeContracts.Types;
 
 [TestFixture]
 [TestNetFramework4]
+[TestReferences("System.Core.dll")]
 public sealed class CollectionAllItemsNotNullExecuteTests : CSharpContextActionExecuteTestBase<CollectionAllItemsNotNull>
 {
     protected override string ExtraPath => "";

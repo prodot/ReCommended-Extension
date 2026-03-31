@@ -9,6 +9,8 @@ public sealed class RemoveLinqQueryQuickFixTests : QuickFixTestBase<RedundantLin
 {
     protected override string RelativeTestDataPath => @"Analyzers\Linq\QuickFixes";
 
+    protected override bool AllowHighlightingOverlap => true;
+
     [Test]
     public void TestNoOpQuery() => DoNamedTest2();
 
