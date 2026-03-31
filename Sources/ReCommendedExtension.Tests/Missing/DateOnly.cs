@@ -45,10 +45,7 @@ public readonly record struct DateOnly : IFormattable
     [Pure]
     public static DateOnly ParseExact(string s, string[] formats, IFormatProvider? provider, DateTimeStyles style = DateTimeStyles.None)
     {
-        if (s == null)
-        {
-            throw new ArgumentNullException(nameof(s));
-        }
+        ArgumentNullException.ThrowIfNull(s);
 
         if (TryParseExact(s, formats, provider, style, out var result))
         {
