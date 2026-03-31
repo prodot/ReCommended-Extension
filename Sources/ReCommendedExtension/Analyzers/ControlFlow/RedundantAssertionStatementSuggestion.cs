@@ -40,7 +40,7 @@ public sealed class RedundantAssertionStatementSuggestion(string message) : High
         {
             using (WriteLockCookie.Create())
             {
-                var statement = ((AssertionStatement)highlighting.Assertion).Statement;
+                var statement = highlighting.Assertion.Statement;
 
                 ModificationUtil.DeleteChildRange(
                     statement,
