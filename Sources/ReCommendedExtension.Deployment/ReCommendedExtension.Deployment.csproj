@@ -31,4 +31,8 @@
         <None Update="ReCommendedExtension.nuspec" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Rider\protocol\" /> <!-- required for Rider builds -->
+    </ItemGroup>
+
 </Project>

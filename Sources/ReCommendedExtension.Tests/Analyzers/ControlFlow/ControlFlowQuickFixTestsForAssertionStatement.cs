@@ -1,4 +1,5 @@
 ﻿using JetBrains.ReSharper.FeaturesTestFramework.Intentions;
+using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ControlFlow;
 
@@ -10,5 +11,6 @@ public sealed class ControlFlowQuickFixTestsForAssertionStatement : QuickFixTest
     protected override string RelativeTestDataPath => @"Analyzers\ControlFlow\QuickFixes";
 
     [Test]
+    [TestNetCore30(ANNOTATIONS_PACKAGE)]
     public void TestRemoveAssertionStatement() => DoNamedTest2();
 }
