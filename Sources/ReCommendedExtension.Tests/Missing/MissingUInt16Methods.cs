@@ -43,11 +43,11 @@ internal static class MissingUInt16Methods
 
         [Pure]
         public static ushort Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => ushort.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
+            => ushort.Parse(Encoding.UTF8.GetString([..utf8Text]), provider);
 
         [Pure]
         public static ushort Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-            => ushort.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+            => ushort.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
         public static ushort Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => ushort.Parse(s.ToString(), provider);
@@ -81,14 +81,14 @@ internal static class MissingUInt16Methods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out ushort result)
-            => ushort.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+            => ushort.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out ushort result)
-            => ushort.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+            => ushort.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Number, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, out ushort result)
-            => ushort.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
+            => ushort.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }

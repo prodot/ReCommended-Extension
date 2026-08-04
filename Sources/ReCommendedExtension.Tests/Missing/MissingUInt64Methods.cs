@@ -43,11 +43,11 @@ internal static class MissingUInt64Methods
 
         [Pure]
         public static ulong Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => ulong.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
+            => ulong.Parse(Encoding.UTF8.GetString([..utf8Text]), provider);
 
         [Pure]
         public static ulong Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-            => ulong.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+            => ulong.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
         public static ulong Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => ulong.Parse(s.ToString(), provider);
@@ -79,14 +79,14 @@ internal static class MissingUInt64Methods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out ulong result)
-            => ulong.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+            => ulong.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out ulong result)
-            => ulong.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+            => ulong.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Number, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, out ulong result)
-            => ulong.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
+            => ulong.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }

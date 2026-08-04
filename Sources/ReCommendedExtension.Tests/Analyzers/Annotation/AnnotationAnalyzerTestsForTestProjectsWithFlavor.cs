@@ -21,7 +21,7 @@ public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpAna
     {
         // patch the project type guids (applying [TestFlavours("3AC096D0-A1C2-E12C-1390-A8335801FDAB")] doesn't work)
 
-        var projectTypeGuids = project.ProjectProperties.ProjectTypeGuids.ToHashSet();
+        HashSet<Guid> projectTypeGuids = [..project.ProjectProperties.ProjectTypeGuids];
         if (projectTypeGuids.Add(MsTestProjectFlavor.MsTestProjectFlavorGuid))
         {
             var field = project

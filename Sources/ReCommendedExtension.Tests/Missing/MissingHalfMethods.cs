@@ -10,14 +10,14 @@ internal static class MissingHalfMethods
     {
         [Pure]
         public static Half Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => Half.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Float | NumberStyles.AllowThousands, provider);
+            => Half.Parse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Float | NumberStyles.AllowThousands, provider);
 
         [Pure]
         public static Half Parse(
             ReadOnlySpan<byte> utf8Text,
             NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands,
             IFormatProvider? provider = null)
-            => Half.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+            => Half.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
         public static Half Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
@@ -55,14 +55,14 @@ internal static class MissingHalfMethods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out Half result)
-            => Half.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+            => Half.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out Half result)
-            => Half.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
+            => Half.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, out Half result)
-            => Half.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
+            => Half.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }

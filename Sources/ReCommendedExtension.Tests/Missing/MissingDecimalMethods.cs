@@ -36,11 +36,11 @@ internal static class MissingDecimalMethods
 
         [Pure]
         public static decimal Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => decimal.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
+            => decimal.Parse(Encoding.UTF8.GetString([..utf8Text]), provider);
 
         [Pure]
         public static decimal Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Number, IFormatProvider? provider = null)
-            => decimal.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+            => decimal.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
         public static decimal Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => decimal.Parse(s.ToString(), provider);
@@ -66,14 +66,14 @@ internal static class MissingDecimalMethods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out decimal result)
-            => decimal.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+            => decimal.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out decimal result)
-            => decimal.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+            => decimal.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Number, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, out decimal result)
-            => decimal.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
+            => decimal.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }

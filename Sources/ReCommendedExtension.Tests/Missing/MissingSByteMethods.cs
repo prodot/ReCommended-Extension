@@ -109,11 +109,11 @@ internal static class MissingSByteMethods
 
         [Pure]
         public static sbyte Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => sbyte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
+            => sbyte.Parse(Encoding.UTF8.GetString([..utf8Text]), provider);
 
         [Pure]
         public static sbyte Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-            => sbyte.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+            => sbyte.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
         public static sbyte Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => sbyte.Parse(s.ToString(), provider);
@@ -147,14 +147,14 @@ internal static class MissingSByteMethods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out sbyte result)
-            => sbyte.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+            => sbyte.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out sbyte result)
-            => sbyte.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+            => sbyte.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Number, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, out sbyte result)
-            => sbyte.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
+            => sbyte.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }

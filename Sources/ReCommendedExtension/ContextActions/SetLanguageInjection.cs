@@ -133,7 +133,9 @@ public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provid
 
         var languageType = provider.PsiFile.Language;
 
-        var actionItems = (
+        List<InjectLanguageActionItem> actionItems =
+        [
+            ..
             from injectorProvider in viewer.Providers
             where injectorProvider.SupportsInjectionComment
             let node =
@@ -143,7 +145,8 @@ public sealed class SetLanguageInjection(ICSharpContextActionDataProvider provid
             where (languageInjectorProviderInLiterals == null || !languageType.IsLanguage(languageInjectorProviderInLiterals.ProvidedLanguage))
                 && languageType.IsLanguage(injectorProvider.SupportedOriginalLanguage)
             orderby injectorProvider.Priority
-            select new InjectLanguageActionItem(injectorProvider, node)).ToList();
+            select new InjectLanguageActionItem(injectorProvider, node),
+        ];
 
         var languageEqualsCommentTexts = new HashSet<string>(
             from actionItem in actionItems select actionItem.InjectorProvider.LanguageEqualsCommentTexts[0],

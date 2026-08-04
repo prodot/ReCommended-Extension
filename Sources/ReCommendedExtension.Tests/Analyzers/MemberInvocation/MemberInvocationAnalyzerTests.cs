@@ -77,7 +77,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void Boolean()
     {
-        var values = new[] { true, false };
+        bool[] values = [true, false];
 
         // redundant method invocation
 
@@ -94,7 +94,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void Byte()
     {
-        var values = new byte[] { 0, 1, 2, byte.MaxValue };
+        byte[] values = [0, 1, 2, byte.MaxValue];
 
         // binary operator
 
@@ -109,7 +109,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void SByte()
     {
-        var values = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
+        sbyte[] values = [0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue];
 
         // binary operator
 
@@ -127,7 +127,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void Int16()
     {
-        var values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
+        short[] values = [0, 1, 2, -1, -2, short.MaxValue, short.MinValue];
 
         // binary operator
 
@@ -143,7 +143,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void UInt16()
     {
-        var values = new ushort[] { 0, 1, 2, ushort.MaxValue };
+        ushort[] values = [0, 1, 2, ushort.MaxValue];
 
         // binary operator
 
@@ -158,7 +158,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void Int32()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
+        int[] values = [0, 1, 2, -1, -2, int.MaxValue, int.MinValue];
 
         // binary operator
 
@@ -174,7 +174,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void UInt32()
     {
-        var values = new uint[] { 0, 1, 2, uint.MaxValue };
+        uint[] values = [0, 1, 2, uint.MaxValue];
 
         // binary operator
 
@@ -189,7 +189,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void Int64()
     {
-        var values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
+        long[] values = [0, 1, 2, -1, -2, long.MaxValue, long.MinValue];
 
         // binary operator
 
@@ -205,7 +205,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void UInt64()
     {
-        var values = new ulong[] { 0, 1, 2, ulong.MaxValue };
+        ulong[] values = [0, 1, 2, ulong.MaxValue];
 
         // binary operator
 
@@ -219,7 +219,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void Int128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue };
+        int128[] values = [0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue];
 
         // binary operator
 
@@ -236,7 +236,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void UInt128()
     {
-        var values = new[] { 0, 1, 2, uint128.MaxValue };
+        uint128[] values = [0, 1, 2, uint128.MaxValue];
 
         // binary operator
 
@@ -251,7 +251,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void IntPtr()
     {
-        var values = new[] { (nint)0, 1, 2, -1, -2 };
+        nint[] values = [0, 1, 2, -1, -2];
 
         // binary operator
 
@@ -268,7 +268,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [TestNet50]
     public void UIntPtr()
     {
-        var values = new nuint[] { 0, 1, 2 };
+        nuint[] values = [0, 1, 2];
 
         // binary operator
 
@@ -283,7 +283,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseUnaryOperator")]
     public void Decimal()
     {
-        var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
+        decimal[] values = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue];
 
         // binary operator
 
@@ -320,8 +320,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void Double()
     {
-        var values = new[]
-        {
+        double[] values =
+        [
             0,
             -0d,
             1,
@@ -336,7 +336,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
             double.NaN,
             double.PositiveInfinity,
             double.NegativeInfinity,
-        };
+        ];
 
         // pattern
 
@@ -351,8 +351,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void Single()
     {
-        var values = new[]
-        {
+        float[] values =
+        [
             0,
             -0f,
             1,
@@ -367,7 +367,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
             float.NaN,
             float.PositiveInfinity,
             float.NegativeInfinity,
-        };
+        ];
 
         // pattern
 
@@ -383,15 +383,15 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void DateTime()
     {
-        var values = new[]
-        {
+        DateTime[] values =
+        [
             System.DateTime.MinValue,
             System.DateTime.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Local),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Utc),
-        };
-        var timeSpans = new[] { System.TimeSpan.Zero, new TimeSpan(1, 2, 3, 4, 5), -new TimeSpan(1, 2, 3, 4, 5) };
+        ];
+        TimeSpan[] timeSpans = [System.TimeSpan.Zero, new(1, 2, 3, 4, 5), -new TimeSpan(1, 2, 3, 4, 5)];
         var dateTimeValue = new DateTime(2021, 7, 21);
 
         // redundant method invocation
@@ -428,15 +428,15 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void DateTimeOffset()
     {
-        var values = new[]
-        {
+        DateTimeOffset[] values =
+        [
             System.DateTimeOffset.MinValue,
             System.DateTimeOffset.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.Zero),
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(2)),
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(-6)),
-        };
-        var timeSpans = new[] { System.TimeSpan.Zero, new TimeSpan(1, 2, 3, 4, 5), -new TimeSpan(1, 2, 3, 4, 5) };
+        ];
+        TimeSpan[] timeSpans = [System.TimeSpan.Zero, new(1, 2, 3, 4, 5), -new TimeSpan(1, 2, 3, 4, 5)];
         var dateTimeOffsetValue = new DateTimeOffset(2021, 7, 21, 13, 08, 52, System.TimeSpan.FromHours(2));
 
         // redundant method invocation
@@ -474,8 +474,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseUnaryOperator")]
     public void TimeSpan()
     {
-        var values = new[]
-        {
+        TimeSpan[] values =
+        [
             System.TimeSpan.Zero,
             System.TimeSpan.MinValue,
             System.TimeSpan.MaxValue,
@@ -486,7 +486,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
             new(0, 0, 0, 0, 1),
             new(1, 2, 3, 4),
             new(-1, 2, 3, 4),
-        };
+        ];
 
         // binary operator
 
@@ -529,7 +529,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [TestNet60]
     public void DateOnly()
     {
-        var values = new[] { dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15) };
+        dateOnly[] values = [dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15)];
 
         // redundant method invocation
 
@@ -546,7 +546,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [TestNet60]
     public void TimeOnly()
     {
-        var values = new[] { timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
+        timeOnly[] values = [timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5)];
 
         // binary operator
 
@@ -559,7 +559,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseBinaryOperator")]
     public void Guid()
     {
-        var values = new[] { System.Guid.Empty, new Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
+        Guid[] values = [System.Guid.Empty, new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])];
 
         // binary operator
 
@@ -575,7 +575,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     public void Char()
     {
-        var values = new[] { 'a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue };
+        char[] values = ['a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue];
 
         // binary operator
 
@@ -610,17 +610,17 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UsePattern")]
     public void String()
     {
-        var values = new[] { null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.." };
-        var chars = new[] { 'c', 'x' };
-        var comparisons = new[]
-        {
+        string?[] values = [null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.."];
+        char[] chars = ['c', 'x'];
+        StringComparison[] comparisons =
+        [
             StringComparison.Ordinal,
             StringComparison.OrdinalIgnoreCase,
             StringComparison.CurrentCulture,
             StringComparison.CurrentCultureIgnoreCase,
-        };
+        ];
 
-        var valuesNonNull = (from item in values where item is { } select item).ToArray();
+        string[] valuesNonNull = [..from item in values where item is { } select item];
 
         // redundant method invocation
 
@@ -866,7 +866,7 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantCast")]
     public void StringBuilder()
     {
-        var values = new[] { "", "abcde" };
+        string[] values = ["", "abcde"];
 
         // redundant method invocation
 
@@ -926,8 +926,8 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "ReplaceNullableValueWithTypeCast")]
     public void Nullable()
     {
-        var values = new[] { 1, null as int? };
-        var tupleValues = new[] { (1, true), null as (int, bool)? };
+        int?[] values = [1, null];
+        (int, bool)?[] tupleValues = [(1, true), null];
 
         // binary operator
 
@@ -954,17 +954,17 @@ public sealed class MemberInvocationAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseProperty")]
     public void Enumerable()
     {
-        var strings = new[] { null, "", "one", "two", "three" };
-        var arrays = new[] { null, [], new[] { 1, 2, 3 } };
-        var lists = new[] { null, [], new List<int> { 1, 2, 3 } };
+        string?[] strings = [null, "", "one", "two", "three"];
+        int[]?[] arrays = [null, [], [1, 2, 3]];
+        List<int>?[] lists = [null, [], [1, 2, 3]];
 
-        var stringsNonNull = (from item in strings where item is { } select item).ToArray();
-        var arraysNonNull = (from item in arrays where item is { } select item).ToArray();
-        var listsNonNull = (from item in lists where item is { } select item).ToArray();
+        string[] stringsNonNull = [..from item in strings where item is { } select item];
+        int[][] arraysNonNull = [..from item in arrays where item is { } select item];
+        List<int>[] listsNonNull = [..from item in lists where item is { } select item];
 
-        var stringsNonEmpty = strings.Except([""]).ToArray();
-        var arraysNonEmpty = arrays.Except([[]]).ToArray();
-        var listsNonEmpty = (from list in lists where list is [_, ..] select list).ToArray();
+        string?[] stringsNonEmpty = [..strings.Except([""])];
+        int[]?[] arraysNonEmpty = [..arrays.Except([[]])];
+        List<int>[] listsNonEmpty = [..from list in lists where list is [_, ..] select list];
 
         // range indexer
 

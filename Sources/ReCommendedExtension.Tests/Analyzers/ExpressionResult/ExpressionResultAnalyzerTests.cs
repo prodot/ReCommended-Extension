@@ -48,7 +48,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Boolean()
     {
-        var values = new[] { true, false };
+        bool[] values = [true, false];
 
         // expression result
 
@@ -68,7 +68,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Byte()
     {
-        var values = new byte[] { 0, 1, 2, byte.MaxValue };
+        byte[] values = [0, 1, 2, byte.MaxValue];
 
         // expression result
 
@@ -95,7 +95,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void SByte()
     {
-        var values = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
+        sbyte[] values = [0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue];
 
         // expression result
 
@@ -125,7 +125,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Int16()
     {
-        var values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
+        short[] values = [0, 1, 2, -1, -2, short.MaxValue, short.MinValue];
 
         // expression result
 
@@ -155,7 +155,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void UInt16()
     {
-        var values = new ushort[] { 0, 1, 2, ushort.MaxValue };
+        ushort[] values = [0, 1, 2, ushort.MaxValue];
 
         // expression result
 
@@ -182,7 +182,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Int32()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
+        int[] values = [0, 1, 2, -1, -2, int.MaxValue, int.MinValue];
 
         // expression result
 
@@ -212,7 +212,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void UInt32()
     {
-        var values = new uint[] { 0, 1, 2, uint.MaxValue };
+        uint[] values = [0, 1, 2, uint.MaxValue];
 
         // expression result
 
@@ -239,7 +239,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Int64()
     {
-        var values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
+        long[] values = [0, 1, 2, -1, -2, long.MaxValue, long.MinValue];
 
         // expression result
 
@@ -269,7 +269,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void UInt64()
     {
-        var values = new ulong[] { 0, 1, 2, ulong.MaxValue };
+        ulong[] values = [0, 1, 2, ulong.MaxValue];
 
         // expression result
 
@@ -295,7 +295,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [TestNet70]
     public void Int128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue };
+        int128[] values = [0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue];
 
         // expression result
 
@@ -322,7 +322,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [TestNet70]
     public void UInt128()
     {
-        var values = new[] { 0, 1, 2, uint128.MaxValue };
+        uint128[] values = [0, 1, 2, uint128.MaxValue];
 
         // expression result
 
@@ -348,7 +348,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void IntPtr()
     {
-        var values = new[] { (nint)0, 1, 2, -1, -2 };
+        nint[] values = [0, 1, 2, -1, -2];
 
         // expression result
 
@@ -376,7 +376,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void UIntPtr()
     {
-        var values = new nuint[] { 0, 1, 2 };
+        nuint[] values = [0, 1, 2];
 
         // expression result
 
@@ -400,7 +400,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Decimal()
     {
-        var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
+        decimal[] values = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue];
 
         // expression result
 
@@ -421,8 +421,8 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Double()
     {
-        var values = new[]
-        {
+        double[] values =
+        [
             0,
             -0d,
             1,
@@ -437,7 +437,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
             double.NaN,
             double.PositiveInfinity,
             double.NegativeInfinity,
-        };
+        ];
 
         // expression result
 
@@ -452,8 +452,8 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Single()
     {
-        var values = new[]
-        {
+        float[] values =
+        [
             0,
             -0f,
             1,
@@ -468,7 +468,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
             float.NaN,
             float.PositiveInfinity,
             float.NegativeInfinity,
-        };
+        ];
 
         // expression result
 
@@ -483,13 +483,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [TestNet50]
     public void Half()
     {
-        var values = new[]
-        {
+        half[] values =
+        [
             (sbyte)0,
             (sbyte)1,
             (sbyte)2,
-            (sbyte)-1,
-            (sbyte)-2,
+            -1,
+            -2,
             (half)(-0f),
             (half)1.2f,
             (half)(-1.2f),
@@ -499,7 +499,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
             half.NaN,
             half.PositiveInfinity,
             half.NegativeInfinity,
-        };
+        ];
 
         // expression result
 
@@ -513,17 +513,17 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [TestNet60]
     public void Math()
     {
-        var byteValues = new byte[] { 0, 1, 2, byte.MaxValue };
-        var sbyteValues = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
-        var int16Values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
-        var uint16Values = new ushort[] { 0, 1, 2, ushort.MaxValue };
-        var int32Values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
-        var uint32Values = new uint[] { 0, 1, 2, uint.MaxValue };
-        var int64Values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
-        var uint64Values = new ulong[] { 0, 1, 2, ulong.MaxValue };
-        var intPtrValues = new[] { (nint)0, 1, 2, -1, -2 };
-        var uintPtrValues = new nuint[] { 0, 1, 2 };
-        var decimalValues = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
+        byte[] byteValues = [0, 1, 2, byte.MaxValue];
+        sbyte[] sbyteValues = [0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue];
+        short[] int16Values = [0, 1, 2, -1, -2, short.MaxValue, short.MinValue];
+        ushort[] uint16Values = [0, 1, 2, ushort.MaxValue];
+        int[] int32Values = [0, 1, 2, -1, -2, int.MaxValue, int.MinValue];
+        uint[] uint32Values = [0, 1, 2, uint.MaxValue];
+        long[] int64Values = [0, 1, 2, -1, -2, long.MaxValue, long.MinValue];
+        ulong[] uint64Values = [0, 1, 2, ulong.MaxValue];
+        nint[] intPtrValues = [0, 1, 2, -1, -2];
+        nuint[] uintPtrValues = [0, 1, 2];
+        decimal[] decimalValues = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue];
 
         // expression result
 
@@ -592,14 +592,14 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void DateTime()
     {
-        var values = new[]
-        {
+        DateTime[] values =
+        [
             System.DateTime.MinValue,
             System.DateTime.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Local),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Utc),
-        };
+        ];
 
         // expression result
 
@@ -616,14 +616,14 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void DateTimeOffset()
     {
-        var values = new[]
-        {
+        DateTimeOffset[] values =
+        [
             System.DateTimeOffset.MinValue,
             System.DateTimeOffset.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.Zero),
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(2)),
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(-6)),
-        };
+        ];
 
         // expression result
 
@@ -639,8 +639,8 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void TimeSpan()
     {
-        var values = new[]
-        {
+        TimeSpan[] values =
+        [
             System.TimeSpan.Zero,
             System.TimeSpan.MinValue,
             System.TimeSpan.MaxValue,
@@ -651,7 +651,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
             new(0, 0, 0, 0, 1),
             new(1, 2, 3, 4),
             new(-1, 2, 3, 4),
-        };
+        ];
 
         // expression result
 
@@ -697,7 +697,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [TestNet60]
     public void DateOnly()
     {
-        var values = new[] { dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15) };
+        dateOnly[] values = [dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15)];
 
         // expression result
 
@@ -710,7 +710,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [TestNet70]
     public void TimeOnly()
     {
-        var values = new[] { timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
+        timeOnly[] values = [timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5)];
 
         // expression result
 
@@ -729,7 +729,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Guid()
     {
-        var values = new[] { System.Guid.Empty, new Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
+        Guid[] values = [System.Guid.Empty, new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])];
 
         // expression result
 
@@ -742,7 +742,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     public void Char()
     {
-        var values = new[] { 'a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue };
+        char[] values = ['a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue];
 
         // expression result
 
@@ -764,15 +764,15 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "StringStartsWithIsCultureSpecific")]
     public void String()
     {
-        var values = new[] { "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.." };
-        var comparisons = new[]
-        {
+        string[] values = ["", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.."];
+        StringComparison[] comparisons =
+        [
             StringComparison.Ordinal,
             StringComparison.OrdinalIgnoreCase,
             StringComparison.CurrentCulture,
             StringComparison.CurrentCultureIgnoreCase,
-        };
-        var stringSplitOptions = new[] { StringSplitOptions.None, StringSplitOptions.RemoveEmptyEntries, StringSplitOptions.TrimEntries };
+        ];
+        StringSplitOptions[] stringSplitOptions = [StringSplitOptions.None, StringSplitOptions.RemoveEmptyEntries, StringSplitOptions.TrimEntries];
 
         // expression result
 

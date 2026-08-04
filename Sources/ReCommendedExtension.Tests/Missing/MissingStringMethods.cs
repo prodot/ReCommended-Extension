@@ -24,7 +24,7 @@ internal static class MissingStringMethods
         public int IndexOf(char value, StringComparison comparisonType) => source.IndexOf($"{value}", comparisonType);
 
         [Pure]
-        public static string Join(string? separator, params ReadOnlySpan<object?> values) => string.Join(separator, values.ToArray());
+        public static string Join(string? separator, params ReadOnlySpan<object?> values) => string.Join(separator, [..values]);
 
         [Pure]
         public static string Join(char separator, params object?[] values) => string.Join($"{separator}", values);
@@ -34,19 +34,19 @@ internal static class MissingStringMethods
 
         [Pure]
         public static string Join(char separator, string?[] values, [NonNegativeValue] int startIndex, [NonNegativeValue] int count)
-            => string.Join($"{separator}", values.AsSpan(startIndex, count).ToArray());
+            => string.Join($"{separator}", [..values.AsSpan(startIndex, count)]);
 
         [Pure]
-        public static string Join(string? separator, params ReadOnlySpan<string?> values) => string.Join(separator, values.ToArray());
+        public static string Join(string? separator, params ReadOnlySpan<string?> values) => string.Join(separator, [..values]);
 
         [Pure]
         public static string Join<T>(char separator, [InstantHandle] IEnumerable<T> values) => string.Join($"{separator}", values);
 
         [Pure]
-        public static string Join(char separator, params ReadOnlySpan<object?> values) => string.Join($"{separator}", values.ToArray());
+        public static string Join(char separator, params ReadOnlySpan<object?> values) => string.Join($"{separator}", [..values]);
 
         [Pure]
-        public static string Join(char separator, params ReadOnlySpan<string?> values) => string.Join($"{separator}", values.ToArray());
+        public static string Join(char separator, params ReadOnlySpan<string?> values) => string.Join($"{separator}", [..values]);
 
         [Pure]
         public string Replace(string oldValue, string? newValue, StringComparison comparisonType)

@@ -148,7 +148,7 @@ internal sealed record ParameterContractInfo : ContractInfo
                 if (body is { })
                 {
                     AddContract(provider, getContractExpression, parameter, body, out var firstNonContractStatement);
-                    firstNonContractStatements = firstNonContractStatement is { } ? new[] { firstNonContractStatement } : null;
+                    firstNonContractStatements = firstNonContractStatement is { } ? [firstNonContractStatement] : null;
                 }
                 else
                 {

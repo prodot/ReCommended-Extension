@@ -20,7 +20,7 @@ public abstract record Assertion
     {
         var forTypeLevelInitializersOnly = rootNode is IClassLikeDeclaration;
 
-        var assertions = new HashSet<Assertion>();
+        HashSet<Assertion> assertions = [];
 
         foreach (var expression in rootNode.Descendants<ICSharpExpression>())
         {

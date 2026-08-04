@@ -1049,7 +1049,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                 foreach (var tagInfo in topLevelTags)
                 {
-                    var relevantTags = (from tag in tags where tag.GetFullTagName() == tagInfo.Name select tag).ToList();
+                    List<IXmlTag> relevantTags = [..from tag in tags where tag.GetFullTagName() == tagInfo.Name select tag];
                     if (relevantTags is [_, ..])
                     {
                         if (tagInfo.Attribute == TopLevelTagAttribute.Name

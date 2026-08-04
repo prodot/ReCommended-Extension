@@ -79,7 +79,7 @@ public sealed class AssemblyTests
             Assert.True(types.TryAdd(field.ClrTypeName, field.FieldName), $"Duplicate type '{field.ClrTypeName.FullName}' detected.");
         }
 
-        var redundantFields = new List<(string fieldName, string predefinedTypeFieldName)>();
+        List<(string fieldName, string predefinedTypeFieldName)> redundantFields = [];
 
         foreach (var (clrTypeName, fieldName) in types)
         {

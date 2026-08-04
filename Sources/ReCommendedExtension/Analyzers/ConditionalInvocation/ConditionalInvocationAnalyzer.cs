@@ -40,8 +40,7 @@ public sealed class ConditionalInvocationAnalyzer : ElementProblemAnalyzer<IInvo
         }
 
         // initialize with assembly-level conditions
-        var currentConditions = new HashSet<string>(
-            from preProcessingDirective in sourceFile.Properties.GetDefines() select preProcessingDirective.Name);
+        HashSet<string> currentConditions = [..from preProcessingDirective in sourceFile.Properties.GetDefines() select preProcessingDirective.Name];
 
         // process file-level conditions
         if (invocationExpression.GetContainingFile() is ICSharpFile file)

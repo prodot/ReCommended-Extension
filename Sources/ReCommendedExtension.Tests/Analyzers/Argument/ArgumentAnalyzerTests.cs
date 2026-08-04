@@ -188,7 +188,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Byte()
     {
-        var values = new byte[] { 0, 1, 2, byte.MaxValue };
+        byte[] values = [0, 1, 2, byte.MaxValue];
 
         // redundant argument
 
@@ -239,7 +239,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void SByte()
     {
-        var values = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
+        sbyte[] values = [0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue];
 
         // redundant argument
 
@@ -290,7 +290,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Int16()
     {
-        var values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
+        short[] values = [0, 1, 2, -1, -2, short.MaxValue, short.MinValue];
 
         // redundant argument
 
@@ -341,7 +341,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void UInt16()
     {
-        var values = new ushort[] { 0, 1, 2, ushort.MaxValue };
+        ushort[] values = [0, 1, 2, ushort.MaxValue];
 
         // redundant argument
 
@@ -392,7 +392,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Int32()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
+        int[] values = [0, 1, 2, -1, -2, int.MaxValue, int.MinValue];
 
         // redundant argument
 
@@ -440,7 +440,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void UInt32()
     {
-        var values = new uint[] { 0, 1, 2, uint.MaxValue };
+        uint[] values = [0, 1, 2, uint.MaxValue];
 
         // redundant argument
 
@@ -491,7 +491,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Int64()
     {
-        var values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
+        long[] values = [0, 1, 2, -1, -2, long.MaxValue, long.MinValue];
 
         // redundant argument
 
@@ -542,7 +542,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void UInt64()
     {
-        var values = new ulong[] { 0, 1, 2, ulong.MaxValue };
+        ulong[] values = [0, 1, 2, ulong.MaxValue];
 
         // redundant argument
 
@@ -593,7 +593,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Int128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue };
+        int128[] values = [0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue];
 
         // redundant argument
 
@@ -644,7 +644,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void UInt128()
     {
-        var values = new[] { 0, 1, 2, uint128.MaxValue };
+        uint128[] values = [0, 1, 2, uint128.MaxValue];
 
         // redundant argument
 
@@ -695,7 +695,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void IntPtr()
     {
-        var values = new[] { (nint)0, 1, 2, -1, -2 };
+        nint[] values = [0, 1, 2, -1, -2];
 
         // redundant argument
 
@@ -746,7 +746,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void UIntPtr()
     {
-        var values = new nuint[] { 0, 1, 2 };
+        nuint[] values = [0, 1, 2];
 
         // redundant argument
 
@@ -802,8 +802,8 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Decimal()
     {
-        var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
-        var styles = new[] { NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, NumberStyles.Number };
+        decimal[] values = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue];
+        NumberStyles[] styles = [NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, NumberStyles.Number];
 
         // redundant argument
 
@@ -860,8 +860,8 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Double()
     {
-        var values = new[]
-        {
+        double[] values =
+        [
             0,
             -0d,
             1,
@@ -876,7 +876,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             double.NaN,
             double.PositiveInfinity,
             double.NegativeInfinity,
-        };
+        ];
         double[] valuesForParsing = [..values.Except([double.MinValue, double.MaxValue]), float.MinValue, float.MaxValue];
 
         // redundant argument
@@ -946,8 +946,8 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Single()
     {
-        var values = new[]
-        {
+        float[] values =
+        [
             0,
             -0f,
             1,
@@ -962,8 +962,8 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             float.NaN,
             float.PositiveInfinity,
             float.NegativeInfinity,
-        };
-        float[] valuesForParsing = [.. values.Except([float.MinValue, float.MaxValue])];
+        ];
+        float[] valuesForParsing = [..values.Except([float.MinValue, float.MaxValue])];
 
         // redundant argument
 
@@ -1028,13 +1028,13 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Half()
     {
-        var values = new[]
-        {
+        half[] values =
+        [
             (sbyte)0,
             (sbyte)1,
             (sbyte)2,
-            (sbyte)-1,
-            (sbyte)-2,
+            -1,
+            -2,
             (half)(-0f),
             (half)1.2f,
             (half)(-1.2f),
@@ -1044,7 +1044,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             half.NaN,
             half.PositiveInfinity,
             half.NegativeInfinity,
-        };
+        ];
 
         // redundant argument
 
@@ -1125,8 +1125,8 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Enum()
     {
-        var enumValues = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
-        var flagValues = new[] { SampleFlags.Red, SampleFlags.Red | SampleFlags.Blue, (SampleFlags)3, (SampleFlags)0, (SampleFlags)9 };
+        SampleEnum[] enumValues = [SampleEnum.Red, (SampleEnum)1, (SampleEnum)10];
+        SampleFlags[] flagValues = [SampleFlags.Red, SampleFlags.Red | SampleFlags.Blue, (SampleFlags)3, 0, (SampleFlags)9];
 
         // redundant argument
 
@@ -1188,7 +1188,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [TestNet100]
     public void Guid()
     {
-        var values = new[] { System.Guid.Empty, new Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
+        Guid[] values = [System.Guid.Empty, new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])];
 
         // redundant argument
 
@@ -1236,8 +1236,8 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatProvider")]
     public void TimeSpan()
     {
-        var values = new[]
-        {
+        TimeSpan[] values =
+        [
             System.TimeSpan.Zero,
             System.TimeSpan.MinValue,
             System.TimeSpan.MaxValue,
@@ -1248,10 +1248,10 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             new(0, 0, 0, 0, 1),
             new(1, 2, 3, 4),
             new(-1, 2, 3, 4),
-        };
-        var formats = new[] { "c", "t", "T", "g", "G" };
-        var formatsInvariant = new[] { "c", "t", "T" };
-        var styles = new[] { TimeSpanStyles.None, TimeSpanStyles.AssumeNegative };
+        ];
+        string[] formats = ["c", "t", "T", "g", "G"];
+        string[] formatsInvariant = ["c", "t", "T"];
+        TimeSpanStyles[] styles = [TimeSpanStyles.None, TimeSpanStyles.AssumeNegative];
 
         // redundant argument
 
@@ -1497,16 +1497,16 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseOtherArgument")]
     public void DateTime()
     {
-        var values = new[]
-        {
+        DateTime[] values =
+        [
             System.DateTime.MinValue,
             System.DateTime.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Local),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Utc),
-        };
-        var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y" };
-        var formatsInvariant = new[] { "o", "O", "r", "R", "s", "u" };
+        ];
+        string[] formats = ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"];
+        string[] formatsInvariant = ["o", "O", "r", "R", "s", "u"];
 
         // redundant argument
 
@@ -1973,16 +1973,16 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseOtherArgument")]
     public void DateTimeOffset()
     {
-        var values = new[]
-        {
+        DateTimeOffset[] values =
+        [
             System.DateTimeOffset.MinValue,
             System.DateTimeOffset.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.Zero),
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(2)),
             new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(-6)),
-        };
-        var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y" };
-        var formatsInvariant = new[] { "o", "O", "r", "R", "s", "u" };
+        ];
+        string[] formats = ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"];
+        string[] formatsInvariant = ["o", "O", "r", "R", "s", "u"];
 
         // redundant argument
 
@@ -2309,9 +2309,9 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [TestNet70]
     public void DateOnly()
     {
-        var values = new[] { dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15) };
-        var formats = new[] { "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y" };
-        var formatsInvariant = new[] { "o", "O", "r", "R" };
+        dateOnly[] values = [dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15)];
+        string[] formats = ["d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"];
+        string[] formatsInvariant = ["o", "O", "r", "R"];
 
         // redundant argument
 
@@ -2594,9 +2594,9 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [TestNet70]
     public void TimeOnly()
     {
-        var values = new[] { timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
-        var formats = new[] { "t", "T", "o", "O", "r", "R" };
-        var formatsInvariant = new[] { "o", "O", "r", "R" };
+        timeOnly[] values = [timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5)];
+        string[] formats = ["t", "T", "o", "O", "r", "R"];
+        string[] formatsInvariant = ["o", "O", "r", "R"];
 
         // redundant argument
 
@@ -2893,15 +2893,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseOtherArgumentRange")]
     public void String()
     {
-        var values = new[] { null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.." };
-        var comparisons = new[]
-        {
+        string?[] values = [null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.."];
+        StringComparison[] comparisons =
+        [
             StringComparison.Ordinal,
             StringComparison.OrdinalIgnoreCase,
             StringComparison.CurrentCulture,
             StringComparison.CurrentCultureIgnoreCase,
-        };
-        var stringSplitOptions = new[] { StringSplitOptions.None, StringSplitOptions.RemoveEmptyEntries, StringSplitOptions.TrimEntries };
+        ];
+        StringSplitOptions[] stringSplitOptions = [StringSplitOptions.None, StringSplitOptions.RemoveEmptyEntries, StringSplitOptions.TrimEntries];
 
         // redundant argument
 
@@ -2998,7 +2998,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantCast")]
     public void StringBuilder()
     {
-        var values = new[] { "", "abcde" };
+        string[] values = ["", "abcde"];
 
         // redundant argument
 
@@ -3047,9 +3047,9 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void Math()
     {
-        var decimalValues = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
-        var doubleValues = new[]
-        {
+        decimal[] decimalValues = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue];
+        double[] doubleValues =
+        [
             0,
             -0d,
             1,
@@ -3064,7 +3064,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             double.NaN,
             double.PositiveInfinity,
             double.NegativeInfinity,
-        };
+        ];
 
         // redundant argument
 
@@ -3095,8 +3095,8 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     public void MathF()
     {
-        var values = new[]
-        {
+        float[] values =
+        [
             0,
             -0f,
             1,
@@ -3111,7 +3111,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             float.NaN,
             float.PositiveInfinity,
             float.NegativeInfinity,
-        };
+        ];
 
         // redundant argument
 

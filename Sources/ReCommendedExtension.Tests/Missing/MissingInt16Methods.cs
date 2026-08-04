@@ -109,11 +109,11 @@ internal static class MissingInt16Methods
 
         [Pure]
         public static short Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
+            => short.Parse(Encoding.UTF8.GetString([..utf8Text]), provider);
 
         [Pure]
         public static short Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-            => short.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+            => short.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
         public static short Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => short.Parse(s.ToString(), provider);
@@ -147,14 +147,14 @@ internal static class MissingInt16Methods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out short result)
-            => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+            => short.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out short result)
-            => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+            => short.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Number, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, out short result)
-            => short.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
+            => short.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }
