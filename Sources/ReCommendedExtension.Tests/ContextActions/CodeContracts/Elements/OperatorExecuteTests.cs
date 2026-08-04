@@ -16,5 +16,5 @@ public sealed class OperatorExecuteTests : CSharpContextActionExecuteTestBase<No
     [TestCase("ExecuteConversion.cs")]
     [TestCase("ExecuteOverload.cs")]
     [TestCase("ExecuteOverloadNonEmpty.cs")]
-    public void TestFile(string file) => DoTestSolution(file);
+    public void File(string file) => DoTestSolution(file);
 }

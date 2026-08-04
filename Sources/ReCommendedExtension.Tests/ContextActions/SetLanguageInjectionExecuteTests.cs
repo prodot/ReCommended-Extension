@@ -12,38 +12,38 @@ public sealed class SetLanguageInjectionExecuteTests : CSharpContextActionExecut
     protected override string RelativeTestDataPath => @"ContextActions\SetLanguageInjection";
 
     [Test]
-    public void TestExecuteFieldAdd() => DoNamedTest2();
+    public void ExecuteFieldAdd() => DoNamedTest();
 
     [Test]
-    public void TestExecuteFieldUpdate() => DoNamedTest2();
+    public void ExecuteFieldUpdate() => DoNamedTest();
 
     [Test]
-    public void TestExecuteConstantAdd() => DoNamedTest2();
+    public void ExecuteConstantAdd() => DoNamedTest();
 
     [Test]
-    public void TestExecuteConstantUpdate() => DoNamedTest2();
+    public void ExecuteConstantUpdate() => DoNamedTest();
 
     [Test]
-    public void TestExecuteVariableAdd() => DoNamedTest2();
+    public void ExecuteVariableAdd() => DoNamedTest();
 
     [Test]
-    public void TestExecuteVariableUpdate() => DoNamedTest2();
+    public void ExecuteVariableUpdate() => DoNamedTest();
 
     [Test]
-    public void TestExecuteLocalConstantAdd() => DoNamedTest2();
+    public void ExecuteLocalConstantAdd() => DoNamedTest();
 
     [Test]
-    public void TestExecuteLocalConstantUpdate() => DoNamedTest2();
+    public void ExecuteLocalConstantUpdate() => DoNamedTest();
 
     [Test]
-    public void TestExecuteAssignmentAdd() => DoNamedTest2();
+    public void ExecuteAssignmentAdd() => DoNamedTest();
 
     [Test]
-    public void TestExecuteAssignmentUpdate() => DoNamedTest2();
+    public void ExecuteAssignmentUpdate() => DoNamedTest();
 
     [Test]
-    public void TestExecuteObjectInitializationAdd() => DoNamedTest2();
+    public void ExecuteObjectInitializationAdd() => DoNamedTest();
 
     [Test]
-    public void TestExecuteObjectInitializationUpdate() => DoNamedTest2();
+    public void ExecuteObjectInitializationUpdate() => DoNamedTest();
 }

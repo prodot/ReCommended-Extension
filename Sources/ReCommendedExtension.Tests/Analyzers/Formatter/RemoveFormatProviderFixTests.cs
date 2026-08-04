@@ -10,5 +10,5 @@ public sealed class RemoveFormatProviderFixTests : QuickFixTestBase<RedundantFor
     protected override string RelativeTestDataPath => @"Analyzers\Formatter\QuickFixes";
 
     [Test]
-    public void TestRemoveFormatProvider() => DoNamedTest2();
+    public void RemoveFormatProvider() => DoNamedTest();
 }

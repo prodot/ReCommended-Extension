@@ -10,11 +10,11 @@ public sealed class UseBinaryOperatorFixTests : QuickFixTestBase<UseBinaryOperat
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestUseBinaryOperatorFix() => DoNamedTest2();
+    public void UseBinaryOperatorFix() => DoNamedTest();
 
     [Test]
-    public void TestUseBinaryOperatorFix_Parenthesized() => DoNamedTest2();
+    public void UseBinaryOperatorFix_Parenthesized() => DoNamedTest();
 
     [Test]
-    public void TestUseBinaryOperatorFix_OperandParenthesized() => DoNamedTest2();
+    public void UseBinaryOperatorFix_OperandParenthesized() => DoNamedTest();
 }

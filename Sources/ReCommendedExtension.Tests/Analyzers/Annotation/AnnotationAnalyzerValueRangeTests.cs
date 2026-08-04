@@ -17,5 +17,5 @@ public sealed class AnnotationAnalyzerValueRangeTests : CSharpAnalyzerTests
         => highlighting is RedundantAnnotationSuggestion or NotAllowedAnnotationWarning or InvalidValueRangeBoundaryWarning;
 
     [Test]
-    public void TestValueRange() => DoNamedTest2();
+    public void ValueRange() => DoNamedTest();
 }

@@ -12,5 +12,5 @@ public sealed class AnnotateWithEditorBrowsableNeverAvailabilityTests : CSharpCo
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithEditorBrowsableNever";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

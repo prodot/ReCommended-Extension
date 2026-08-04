@@ -12,8 +12,8 @@ public sealed class RemoveLinqQueryQuickFixTests : QuickFixTestBase<RedundantLin
     protected override bool AllowHighlightingOverlap => true;
 
     [Test]
-    public void TestNoOpQuery() => DoNamedTest2();
+    public void NoOpQuery() => DoNamedTest();
 
     [Test]
-    public void TestNoOpQuery_Parenthesized() => DoNamedTest2();
+    public void NoOpQuery_Parenthesized() => DoNamedTest();
 }

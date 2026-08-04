@@ -14,5 +14,5 @@ public sealed class NumericZeroAvailabilityTests : CSharpContextActionAvailabili
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\NumericZero";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

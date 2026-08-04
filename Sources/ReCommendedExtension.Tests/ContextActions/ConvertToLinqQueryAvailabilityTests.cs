@@ -17,61 +17,61 @@ public sealed class ConvertToLinqQueryAvailabilityTests : CSharpContextActionAva
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_IEnumerable() => DoNamedTest2();
+    public void Availability_IEnumerable() => DoNamedTest();
 
     [Test]
-    public void TestAvailability_IEnumerable_NoCollectionExpressions() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_IReadOnlyCollection() => DoNamedTest2();
-
-    [Test]
-    public void TestAvailability_IReadOnlyCollection_NoCollectionExpressions() => DoNamedTest2();
+    public void Availability_IEnumerable_NoCollectionExpressions() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_IReadOnlyList() => DoNamedTest2();
+    public void Availability_IReadOnlyCollection() => DoNamedTest();
 
     [Test]
-    public void TestAvailability_IReadOnlyList_NoCollectionExpressions() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_ICollection() => DoNamedTest2();
-
-    [Test]
-    public void TestAvailability_ICollection_NoCollectionExpressions() => DoNamedTest2();
+    public void Availability_IReadOnlyCollection_NoCollectionExpressions() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_IList() => DoNamedTest2();
+    public void Availability_IReadOnlyList() => DoNamedTest();
 
     [Test]
-    public void TestAvailability_IList_NoCollectionExpressions() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_List() => DoNamedTest2();
-
-    [Test]
-    public void TestAvailability_List_NoCollectionExpressions() => DoNamedTest2();
+    public void Availability_IReadOnlyList_NoCollectionExpressions() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_HashSet() => DoNamedTest2();
+    public void Availability_ICollection() => DoNamedTest();
 
     [Test]
-    public void TestAvailability_HashSet_NoCollectionExpressions() => DoNamedTest2();
+    public void Availability_ICollection_NoCollectionExpressions() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_Array() => DoNamedTest2();
+    public void Availability_IList() => DoNamedTest();
 
     [Test]
-    public void TestAvailability_Array_NoCollectionExpressions() => DoNamedTest2();
+    public void Availability_IList_NoCollectionExpressions() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    public void Availability_List() => DoNamedTest();
+
+    [Test]
+    public void Availability_List_NoCollectionExpressions() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    public void Availability_HashSet() => DoNamedTest();
+
+    [Test]
+    public void Availability_HashSet_NoCollectionExpressions() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    public void Availability_Array() => DoNamedTest();
+
+    [Test]
+    public void Availability_Array_NoCollectionExpressions() => DoNamedTest();
 
     [Test]
     [TestNet100]
-    public void TestAvailability_IAsyncEnumerable() => DoNamedTest2();
+    public void Availability_IAsyncEnumerable() => DoNamedTest();
 }

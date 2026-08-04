@@ -5,12 +5,12 @@ using ReCommendedExtension.Analyzers.XamlBindingWithoutMode;
 namespace ReCommendedExtension.Tests.Analyzers.XamlBindingWithoutMode;
 
 [TestFixture]
-public sealed class XamlBindingWithoutMode : XamlAnalyzerTests
+public sealed class XamlBindingWithoutModeTests : XamlAnalyzerTests
 {
     protected override string RelativeTestDataPath => @"Analyzers\XamlBindingWithoutMode";
 
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is XamlBindingWithoutModeWarning;
 
     [Test]
-    public void TestXamlBindingWithoutMode() => DoNamedTest2();
+    public void XamlBindingWithoutMode() => DoNamedTest();
 }

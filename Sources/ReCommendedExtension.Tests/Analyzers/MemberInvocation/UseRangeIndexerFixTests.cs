@@ -15,30 +15,30 @@ public sealed class UseRangeIndexerFixTests : QuickFixTestBase<UseRangeIndexerSu
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestUseRangeIndexerFix() => DoNamedTest2();
+    public void UseRangeIndexerFix() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUseRangeIndexerFix_Nullable() => DoNamedTest2();
+    public void UseRangeIndexerFix_Nullable() => DoNamedTest();
 
     [Test]
-    public void TestUseRangeIndexerFix_Parenthesized_LeftOperand() => DoNamedTest2();
-
-    [Test]
-    [NullableContext(NullableContextKind.Enable)]
-    public void TestUseRangeIndexerFix_Parenthesized_LeftOperand_Nullable() => DoNamedTest2();
-
-    [Test]
-    public void TestUseRangeIndexerFix_Parenthesized_RightOperand() => DoNamedTest2();
+    public void UseRangeIndexerFix_Parenthesized_LeftOperand() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUseRangeIndexerFix_Parenthesized_RightOperand_Nullable() => DoNamedTest2();
+    public void UseRangeIndexerFix_Parenthesized_LeftOperand_Nullable() => DoNamedTest();
 
     [Test]
-    public void TestUseRangeIndexerFix_Linq() => DoNamedTest2();
+    public void UseRangeIndexerFix_Parenthesized_RightOperand() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUseRangeIndexerFix_Linq_Nullable() => DoNamedTest2();
+    public void UseRangeIndexerFix_Parenthesized_RightOperand_Nullable() => DoNamedTest();
+
+    [Test]
+    public void UseRangeIndexerFix_Linq() => DoNamedTest();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    public void UseRangeIndexerFix_Linq_Nullable() => DoNamedTest();
 }

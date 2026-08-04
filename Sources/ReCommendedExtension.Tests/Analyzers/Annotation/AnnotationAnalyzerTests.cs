@@ -28,24 +28,24 @@ public sealed class AnnotationAnalyzerTests : CSharpAnalyzerTests
 
     [Test]
     [TestNetFramework45]
-    public void TestAsyncMethod() => DoNamedTest2();
+    public void AsyncMethod() => DoNamedTest();
 
     [Test]
     [TestNetFramework45]
-    public void TestIteratorMethod() => DoNamedTest2();
+    public void IteratorMethod() => DoNamedTest();
 
     [Test]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
     [NullableContext(NullableContextKind.Disable)]
-    public void TestAsyncIteratorMethod() => DoNamedTest2();
+    public void AsyncIteratorMethod() => DoNamedTest();
 
     [Test]
     [TestNetFramework45]
-    public void TestSuppressMessage() => DoNamedTest2();
+    public void SuppressMessage() => DoNamedTest();
 
     [Test]
     [TestNet50]
-    public void TestSuppressMessage_NET_5() => DoNamedTest2();
+    public void SuppressMessage_NET_5() => DoNamedTest();
 
     [TestCase("Other_Pessimistic.cs", ValueAnalysisMode.PESSIMISTIC)]
     [TestCase("Other_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
@@ -53,7 +53,7 @@ public sealed class AnnotationAnalyzerTests : CSharpAnalyzerTests
     [TestCase("ItemNotNull.cs", ValueAnalysisMode.PESSIMISTIC)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetFramework45]
-    public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
+    public void FileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
         => ExecuteWithinSettingsTransaction(store =>
         {
             RunGuarded(() => store.SetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode, valueAnalysisMode));
@@ -64,110 +64,110 @@ public sealed class AnnotationAnalyzerTests : CSharpAnalyzerTests
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestNullableAnnotationContext() => DoNamedTest2();
+    public void NullableAnnotationContext() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestNonNegativeValue() => DoNamedTest2();
+    public void NonNegativeValue() => DoNamedTest();
 
     [Test]
-    public void TestAttributeUsage() => DoNamedTest2();
+    public void AttributeUsage() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestEditorBrowsable() => DoNamedTest2();
+    public void EditorBrowsable() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]
     [ReuseSolution(false)] // prevents reusing cached packages
-    public void TestPurityAndDisposability_Types_Legacy() => DoNamedTest2();
+    public void PurityAndDisposability_Types_Legacy() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestPurityAndDisposability_Types() => DoNamedTest2();
+    public void PurityAndDisposability_Types() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]
     [ReuseSolution(false)] // prevents reusing cached packages
-    public void TestPurityAndDisposability_Constructors_Legacy() => DoNamedTest2();
+    public void PurityAndDisposability_Constructors_Legacy() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestPurityAndDisposability_Constructors() => DoNamedTest2();
+    public void PurityAndDisposability_Constructors() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]
     [ReuseSolution(false)] // prevents reusing cached packages
-    public void TestPurityAndDisposability_PrimaryConstructors_Legacy() => DoNamedTest2();
+    public void PurityAndDisposability_PrimaryConstructors_Legacy() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestPurityAndDisposability_PrimaryConstructors() => DoNamedTest2();
+    public void PurityAndDisposability_PrimaryConstructors() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestPurityAndDisposability_Methods() => DoNamedTest2();
+    public void PurityAndDisposability_Methods() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestPurityAndDisposability_LocalFunctions() => DoNamedTest2();
+    public void PurityAndDisposability_LocalFunctions() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestPurityAndDisposability_Parameters() => DoNamedTest2();
+    public void PurityAndDisposability_Parameters() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestPurityAndDisposability_DisposableOverride() => DoNamedTest2();
+    public void PurityAndDisposability_DisposableOverride() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestDisposalHandling_Methods() => DoNamedTest2();
+    public void DisposalHandling_Methods() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestDisposalHandling_Parameters() => DoNamedTest2();
+    public void DisposalHandling_Parameters() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestDisposalHandling_Properties() => DoNamedTest2();
+    public void DisposalHandling_Properties() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestDisposalHandling_Fields() => DoNamedTest2();
+    public void DisposalHandling_Fields() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestRedundantNullableAnnotations() => DoNamedTest2();
+    public void RedundantNullableAnnotations() => DoNamedTest();
 }

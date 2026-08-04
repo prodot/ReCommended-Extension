@@ -17,17 +17,17 @@ public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analy
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UseExpressionResultSuggestion;
 
     [Test]
-    public void TestUseExpressionResultFixAvailability() => DoNamedTest2();
+    public void UseExpressionResultFixAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestUseExpressionResultFixAvailability_CS12() => DoNamedTest2();
+    public void UseExpressionResultFixAvailability_CS12() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestUseExpressionResultFixAvailability_CS11() => DoNamedTest2();
+    public void UseExpressionResultFixAvailability_CS11() => DoNamedTest();
 }

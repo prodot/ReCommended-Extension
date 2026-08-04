@@ -15,9 +15,9 @@ public sealed class LinqQueryAnalyzerTests : CSharpAnalyzerTests
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestNoOpQuery() => DoNamedTest2();
+    public void NoOpQuery() => DoNamedTest();
 
     [Test]
     [TestNet100]
-    public void TestNoOpAsyncQuery() => DoNamedTest2();
+    public void NoOpAsyncQuery() => DoNamedTest();
 }

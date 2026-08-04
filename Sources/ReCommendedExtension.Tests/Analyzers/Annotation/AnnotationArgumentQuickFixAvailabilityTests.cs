@@ -16,5 +16,5 @@ public sealed class AnnotationArgumentQuickFixAvailabilityTests : QuickFixAvaila
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RedundantAnnotationArgumentSuggestion;
 
     [Test]
-    public void TestRedundantAnnotationArgumentAvailability() => DoNamedTest2();
+    public void RedundantAnnotationArgumentAvailability() => DoNamedTest();
 }

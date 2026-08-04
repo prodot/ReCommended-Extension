@@ -14,5 +14,5 @@ public sealed class NotNullExecuteTests : CSharpContextActionExecuteTestBase<Not
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\NotNull";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 }

@@ -15,9 +15,9 @@ public sealed class AnnotationAnalyzerTestsForNUnitTestProjects : CSharpAnalyzer
 
     [Test]
     [TestPackages("nunit/3.13.3")]
-    public void TestSuppressMessage_TestProject() => DoNamedTest2();
+    public void SuppressMessage_TestProject() => DoNamedTest();
 
     [Test]
     [TestNet50("nunit/3.13.3")]
-    public void TestSuppressMessage_TestProject_NET_5() => DoNamedTest2();
+    public void SuppressMessage_TestProject_NET_5() => DoNamedTest();
 }

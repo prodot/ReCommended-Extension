@@ -10,8 +10,8 @@ public sealed class UseNullableHasValueNotNullFixTests : QuickFixTestBase<UseNul
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestUseNullableHasValueNotNullFix() => DoNamedTest2();
+    public void UseNullableHasValueNotNullFix() => DoNamedTest();
 
     [Test]
-    public void TestUseNullableHasValueNotNullFix_Parenthesized() => DoNamedTest2();
+    public void UseNullableHasValueNotNullFix_Parenthesized() => DoNamedTest();
 }

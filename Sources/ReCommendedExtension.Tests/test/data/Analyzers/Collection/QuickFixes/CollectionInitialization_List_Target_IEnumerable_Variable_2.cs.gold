@@ -7,7 +7,7 @@ namespace TargetEnumerable
     {
         void Method(int a, int b, int c, IEnumerable<int> seq)
         {
-            IEnumerable<int> var06 = [..{caret}seq, a, b, c];
+            IEnumerable<int> var06 = [..{caret} seq, a, b, c];
         }
     }
 }

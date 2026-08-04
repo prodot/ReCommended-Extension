@@ -13,11 +13,11 @@ public sealed class RemoveFormatSpecifierFixTests : QuickFixTestBase<RedundantFo
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    public void TestRemoveFormatSpecifier_StringInterpolation() => DoNamedTest2();
+    public void RemoveFormatSpecifier_StringInterpolation() => DoNamedTest();
 
     [Test]
-    public void TestRemoveFormatSpecifier_StringFormat() => DoNamedTest2();
+    public void RemoveFormatSpecifier_StringFormat() => DoNamedTest();
 
     [Test]
-    public void TestRemoveFormatSpecifier_ToString() => DoNamedTest2();
+    public void RemoveFormatSpecifier_ToString() => DoNamedTest();
 }

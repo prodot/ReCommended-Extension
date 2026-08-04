@@ -14,26 +14,26 @@ public sealed class MethodExecuteTests : CSharpContextActionExecuteTestBase<NotN
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Elements\Method";
 
     [Test]
-    public void TestExecuteWithEmptyMethod() => DoNamedTest2();
+    public void ExecuteWithEmptyMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithNonEmptyMethod() => DoNamedTest2();
+    public void ExecuteWithNonEmptyMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithNonEmptyMethod2() => DoNamedTest2();
+    public void ExecuteWithNonEmptyMethod2() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithNonEmptyMethod3() => DoNamedTest2();
+    public void ExecuteWithNonEmptyMethod3() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractMethod() => DoNamedTest2();
+    public void ExecuteWithAbstractMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractMethod2() => DoNamedTest2();
+    public void ExecuteWithAbstractMethod2() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractMethod3() => DoNamedTest2();
+    public void ExecuteWithAbstractMethod3() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithInterfaceMethod() => DoNamedTest2();
+    public void ExecuteWithInterfaceMethod() => DoNamedTest();
 }

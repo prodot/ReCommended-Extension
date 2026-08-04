@@ -4,8 +4,13 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.ExpressionResult;
-using ReCommendedExtension.Extensions.NumberInfos;
 using ReCommendedExtension.Tests.Missing;
+
+using int128 = ReCommendedExtension.Extensions.NumberInfos.Int128;
+using uint128 = ReCommendedExtension.Extensions.NumberInfos.UInt128;
+using half = ReCommendedExtension.Extensions.NumberInfos.Half;
+using dateOnly = ReCommendedExtension.Tests.Missing.DateOnly;
+using timeOnly = ReCommendedExtension.Tests.Missing.TimeOnly;
 
 namespace ReCommendedExtension.Tests.Analyzers.ExpressionResult;
 
@@ -41,7 +46,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 
     [Test]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestBoolean()
+    public void Boolean()
     {
         var values = new[] { true, false };
 
@@ -54,14 +59,14 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 
         Test(flag => flag.GetTypeCode(), _ => TypeCode.Boolean, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestByte()
+    public void Byte()
     {
         var values = new byte[] { 0, 1, 2, byte.MaxValue };
 
@@ -82,13 +87,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => byte.Max(n, n), n => n, values);
         Test(n => byte.Min(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestSByte()
+    public void SByte()
     {
         var values = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
 
@@ -112,13 +117,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => sbyte.MaxMagnitude(n, n), n => n, values);
         Test(n => sbyte.MinMagnitude(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestInt16()
+    public void Int16()
     {
         var values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
 
@@ -142,13 +147,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => short.MaxMagnitude(n, n), n => n, values);
         Test(n => short.MinMagnitude(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestUInt16()
+    public void UInt16()
     {
         var values = new ushort[] { 0, 1, 2, ushort.MaxValue };
 
@@ -169,13 +174,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => ushort.Max(n, n), n => n, values);
         Test(n => ushort.Min(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestInt32()
+    public void Int32()
     {
         var values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
 
@@ -199,13 +204,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => int.MaxMagnitude(n, n), n => n, values);
         Test(n => int.MinMagnitude(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestUInt32()
+    public void UInt32()
     {
         var values = new uint[] { 0, 1, 2, uint.MaxValue };
 
@@ -226,13 +231,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => uint.Max(n, n), n => n, values);
         Test(n => uint.Min(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestInt64()
+    public void Int64()
     {
         var values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
 
@@ -256,13 +261,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => long.MaxMagnitude(n, n), n => n, values);
         Test(n => long.MinMagnitude(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestUInt64()
+    public void UInt64()
     {
         var values = new ulong[] { 0, 1, 2, ulong.MaxValue };
 
@@ -283,65 +288,65 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => ulong.Max(n, n), n => n, values);
         Test(n => ulong.Min(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
-    public void TestInt128()
+    public void Int128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, Int128.MaxValue, Int128.MinValue };
+        var values = new[] { 0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue };
 
         // expression result
 
-        Test(right => Int128.DivRem(0, right), _ => (0, 0), [..values.Except(new Int128[1])]);
+        Test(right => int128.DivRem(0, right), _ => (0, 0), [..values.Except(new int128[1])]);
 
-        Test(n => Int128.RotateLeft(n, 0), n => n, values);
-        Test(n => Int128.RotateRight(n, 0), n => n, values);
+        Test(n => int128.RotateLeft(n, 0), n => n, values);
+        Test(n => int128.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => Int128.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => Int128.Clamp(n, Int128.MinValue, Int128.MaxValue), n => n, values);
+        Test(n => int128.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => int128.Clamp(n, int128.MinValue, int128.MaxValue), n => n, values);
 
-        Test(n => Int128.Max(n, n), n => n, values);
-        Test(n => Int128.Min(n, n), n => n, values);
+        Test(n => int128.Max(n, n), n => n, values);
+        Test(n => int128.Min(n, n), n => n, values);
 
-        Test(n => Int128.MaxMagnitude(n, n), n => n, values);
-        Test(n => Int128.MinMagnitude(n, n), n => n, values);
+        Test(n => int128.MaxMagnitude(n, n), n => n, values);
+        Test(n => int128.MinMagnitude(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
-    public void TestUInt128()
+    public void UInt128()
     {
-        var values = new[] { 0, 1, 2, UInt128.MaxValue };
+        var values = new[] { 0, 1, 2, uint128.MaxValue };
 
         // expression result
 
-        Test(right => UInt128.DivRem(0, right), _ => (0, 0), [..values.Except(new UInt128[1])]);
+        Test(right => uint128.DivRem(0, right), _ => (0, 0), [..values.Except(new uint128[1])]);
 
-        Test(n => UInt128.RotateLeft(n, 0), n => n, values);
-        Test(n => UInt128.RotateRight(n, 0), n => n, values);
+        Test(n => uint128.RotateLeft(n, 0), n => n, values);
+        Test(n => uint128.RotateRight(n, 0), n => n, values);
 
         Test(n => n.Equals(null), _ => false, values);
 
-        Test(n => UInt128.Clamp(n, 1, 1), _ => 1, values);
-        Test(n => UInt128.Clamp(n, 0, UInt128.MaxValue), n => n, values);
+        Test(n => uint128.Clamp(n, 1, 1), _ => 1, values);
+        Test(n => uint128.Clamp(n, 0, uint128.MaxValue), n => n, values);
 
-        Test(n => UInt128.Max(n, n), n => n, values);
-        Test(n => UInt128.Min(n, n), n => n, values);
+        Test(n => uint128.Max(n, n), n => n, values);
+        Test(n => uint128.Min(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestIntPtr()
+    public void IntPtr()
     {
         var values = new[] { (nint)0, 1, 2, -1, -2 };
 
@@ -362,14 +367,14 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => nint.MaxMagnitude(n, n), n => n, values);
         Test(n => nint.MinMagnitude(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestUIntPtr()
+    public void UIntPtr()
     {
         var values = new nuint[] { 0, 1, 2 };
 
@@ -387,13 +392,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => nuint.Max(n, n), n => n, values);
         Test(n => nuint.Min(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestDecimal()
+    public void Decimal()
     {
         var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
 
@@ -409,12 +414,12 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(n => decimal.Max(n, n), n => n, values);
         Test(n => decimal.Min(n, n), n => n, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestDouble()
+    public void Double()
     {
         var values = new[]
         {
@@ -440,12 +445,12 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 
         Test(n => n.GetTypeCode(), _ => TypeCode.Double, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestSingle()
+    public void Single()
     {
         var values = new[]
         {
@@ -471,12 +476,12 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 
         Test(n => n.GetTypeCode(), _ => TypeCode.Single, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet50]
-    public void TestHalf()
+    public void Half()
     {
         var values = new[]
         {
@@ -485,28 +490,28 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
             (sbyte)2,
             (sbyte)-1,
             (sbyte)-2,
-            (Half)(-0f),
-            (Half)1.2f,
-            (Half)(-1.2f),
-            Half.MaxValue,
-            Half.MinValue,
-            Half.Epsilon,
-            Half.NaN,
-            Half.PositiveInfinity,
-            Half.NegativeInfinity,
+            (half)(-0f),
+            (half)1.2f,
+            (half)(-1.2f),
+            half.MaxValue,
+            half.MinValue,
+            half.Epsilon,
+            half.NaN,
+            half.PositiveInfinity,
+            half.NegativeInfinity,
         };
 
         // expression result
 
         Test(n => n.Equals(null), _ => false, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet60]
-    public void TestMath()
+    public void Math()
     {
         var byteValues = new byte[] { 0, 1, 2, byte.MaxValue };
         var sbyteValues = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
@@ -522,75 +527,75 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 
         // expression result
 
-        Test(right => Math.DivRem((byte)0, right), _ => (0, 0), [..byteValues.Except(new byte[1])]);
-        Test(right => Math.DivRem((sbyte)0, right), _ => (0, 0), [..sbyteValues.Except(new sbyte[1])]);
-        Test(right => Math.DivRem((short)0, right), _ => (0, 0), [..int16Values.Except(new short[1])]);
-        Test(right => Math.DivRem((ushort)0, right), _ => (0, 0), [..uint16Values.Except(new ushort[1])]);
-        Test(right => Math.DivRem(0, right), _ => (0, 0), [..int32Values.Except(new int[1])]);
-        Test(right => Math.DivRem(0, right), _ => (0u, 0u), [..uint32Values.Except(new uint[1])]);
-        Test(right => Math.DivRem(0, right), _ => (0, 0), [..int64Values.Except(new long[1])]);
-        Test(right => Math.DivRem(0, right), _ => (0ul, 0ul), [..uint64Values.Except(new ulong[1])]);
-        Test(right => Math.DivRem(0, right), _ => (0, 0), [..intPtrValues.Except(new nint[1])]);
-        Test(right => Math.DivRem(0, right), _ => (0u, 0u), [..uintPtrValues.Except(new nuint[1])]);
+        Test(right => System.Math.DivRem((byte)0, right), _ => (0, 0), [..byteValues.Except(new byte[1])]);
+        Test(right => System.Math.DivRem((sbyte)0, right), _ => (0, 0), [..sbyteValues.Except(new sbyte[1])]);
+        Test(right => System.Math.DivRem((short)0, right), _ => (0, 0), [..int16Values.Except(new short[1])]);
+        Test(right => System.Math.DivRem((ushort)0, right), _ => (0, 0), [..uint16Values.Except(new ushort[1])]);
+        Test(right => System.Math.DivRem(0, right), _ => (0, 0), [..int32Values.Except(new int[1])]);
+        Test(right => System.Math.DivRem(0, right), _ => (0u, 0u), [..uint32Values.Except(new uint[1])]);
+        Test(right => System.Math.DivRem(0, right), _ => (0, 0), [..int64Values.Except(new long[1])]);
+        Test(right => System.Math.DivRem(0, right), _ => (0ul, 0ul), [..uint64Values.Except(new ulong[1])]);
+        Test(right => System.Math.DivRem(0, right), _ => (0, 0), [..intPtrValues.Except(new nint[1])]);
+        Test(right => System.Math.DivRem(0, right), _ => (0u, 0u), [..uintPtrValues.Except(new nuint[1])]);
 
-        Test(value => Math.Clamp(value, (byte)1, (byte)1), _ => 1, byteValues);
-        Test(value => Math.Clamp(value, (sbyte)1, (sbyte)1), _ => 1, sbyteValues);
-        Test(value => Math.Clamp(value, (short)1, (short)1), _ => 1, int16Values);
-        Test(value => Math.Clamp(value, (ushort)1, (ushort)1), _ => 1, uint16Values);
-        Test(value => Math.Clamp(value, 1, 1), _ => 1, int32Values);
-        Test(value => Math.Clamp(value, 1, 1), _ => 1u, uint32Values);
-        Test(value => Math.Clamp(value, 1, 1), _ => 1, int64Values);
-        Test(value => Math.Clamp(value, 1, 1), _ => 1ul, uint64Values);
-        Test(value => Math.Clamp(value, 1, 1), _ => 1, intPtrValues);
-        Test(value => Math.Clamp(value, 1, 1), _ => 1u, uintPtrValues);
-        Test(value => Math.Clamp(value, 1, 1), _ => 1, decimalValues);
+        Test(value => System.Math.Clamp(value, (byte)1, (byte)1), _ => 1, byteValues);
+        Test(value => System.Math.Clamp(value, (sbyte)1, (sbyte)1), _ => 1, sbyteValues);
+        Test(value => System.Math.Clamp(value, (short)1, (short)1), _ => 1, int16Values);
+        Test(value => System.Math.Clamp(value, (ushort)1, (ushort)1), _ => 1, uint16Values);
+        Test(value => System.Math.Clamp(value, 1, 1), _ => 1, int32Values);
+        Test(value => System.Math.Clamp(value, 1, 1), _ => 1u, uint32Values);
+        Test(value => System.Math.Clamp(value, 1, 1), _ => 1, int64Values);
+        Test(value => System.Math.Clamp(value, 1, 1), _ => 1ul, uint64Values);
+        Test(value => System.Math.Clamp(value, 1, 1), _ => 1, intPtrValues);
+        Test(value => System.Math.Clamp(value, 1, 1), _ => 1u, uintPtrValues);
+        Test(value => System.Math.Clamp(value, 1, 1), _ => 1, decimalValues);
 
-        Test(value => Math.Clamp(value, byte.MinValue, byte.MaxValue), value => value, byteValues);
-        Test(value => Math.Clamp(value, sbyte.MinValue, sbyte.MaxValue), value => value, sbyteValues);
-        Test(value => Math.Clamp(value, short.MinValue, short.MaxValue), value => value, int16Values);
-        Test(value => Math.Clamp(value, ushort.MinValue, ushort.MaxValue), value => value, uint16Values);
-        Test(value => Math.Clamp(value, int.MinValue, int.MaxValue), value => value, int32Values);
-        Test(value => Math.Clamp(value, uint.MinValue, uint.MaxValue), value => value, uint32Values);
-        Test(value => Math.Clamp(value, long.MinValue, long.MaxValue), value => value, int64Values);
-        Test(value => Math.Clamp(value, ulong.MinValue, ulong.MaxValue), value => value, uint64Values);
-        Test(value => Math.Clamp(value, decimal.MinValue, decimal.MaxValue), value => value, decimalValues);
+        Test(value => System.Math.Clamp(value, byte.MinValue, byte.MaxValue), value => value, byteValues);
+        Test(value => System.Math.Clamp(value, sbyte.MinValue, sbyte.MaxValue), value => value, sbyteValues);
+        Test(value => System.Math.Clamp(value, short.MinValue, short.MaxValue), value => value, int16Values);
+        Test(value => System.Math.Clamp(value, ushort.MinValue, ushort.MaxValue), value => value, uint16Values);
+        Test(value => System.Math.Clamp(value, int.MinValue, int.MaxValue), value => value, int32Values);
+        Test(value => System.Math.Clamp(value, uint.MinValue, uint.MaxValue), value => value, uint32Values);
+        Test(value => System.Math.Clamp(value, long.MinValue, long.MaxValue), value => value, int64Values);
+        Test(value => System.Math.Clamp(value, ulong.MinValue, ulong.MaxValue), value => value, uint64Values);
+        Test(value => System.Math.Clamp(value, decimal.MinValue, decimal.MaxValue), value => value, decimalValues);
 
-        Test(n => Math.Max(n, n), n => n, byteValues);
-        Test(n => Math.Max(n, n), n => n, sbyteValues);
-        Test(n => Math.Max(n, n), n => n, int16Values);
-        Test(n => Math.Max(n, n), n => n, uint16Values);
-        Test(n => Math.Max(n, n), n => n, int32Values);
-        Test(n => Math.Max(n, n), n => n, uint32Values);
-        Test(n => Math.Max(n, n), n => n, int64Values);
-        Test(n => Math.Max(n, n), n => n, uint64Values);
+        Test(n => System.Math.Max(n, n), n => n, byteValues);
+        Test(n => System.Math.Max(n, n), n => n, sbyteValues);
+        Test(n => System.Math.Max(n, n), n => n, int16Values);
+        Test(n => System.Math.Max(n, n), n => n, uint16Values);
+        Test(n => System.Math.Max(n, n), n => n, int32Values);
+        Test(n => System.Math.Max(n, n), n => n, uint32Values);
+        Test(n => System.Math.Max(n, n), n => n, int64Values);
+        Test(n => System.Math.Max(n, n), n => n, uint64Values);
         Test(n => MissingMathMethods.Max(n, n), n => n, intPtrValues);
         Test(n => MissingMathMethods.Max(n, n), n => n, uintPtrValues);
-        Test(n => Math.Max(n, n), n => n, decimalValues);
+        Test(n => System.Math.Max(n, n), n => n, decimalValues);
 
-        Test(n => Math.Min(n, n), n => n, byteValues);
-        Test(n => Math.Min(n, n), n => n, sbyteValues);
-        Test(n => Math.Min(n, n), n => n, int16Values);
-        Test(n => Math.Min(n, n), n => n, uint16Values);
-        Test(n => Math.Min(n, n), n => n, int32Values);
-        Test(n => Math.Min(n, n), n => n, uint32Values);
-        Test(n => Math.Min(n, n), n => n, int64Values);
-        Test(n => Math.Min(n, n), n => n, uint64Values);
+        Test(n => System.Math.Min(n, n), n => n, byteValues);
+        Test(n => System.Math.Min(n, n), n => n, sbyteValues);
+        Test(n => System.Math.Min(n, n), n => n, int16Values);
+        Test(n => System.Math.Min(n, n), n => n, uint16Values);
+        Test(n => System.Math.Min(n, n), n => n, int32Values);
+        Test(n => System.Math.Min(n, n), n => n, uint32Values);
+        Test(n => System.Math.Min(n, n), n => n, int64Values);
+        Test(n => System.Math.Min(n, n), n => n, uint64Values);
         Test(n => MissingMathMethods.Min(n, n), n => n, intPtrValues);
         Test(n => MissingMathMethods.Min(n, n), n => n, uintPtrValues);
-        Test(n => Math.Min(n, n), n => n, decimalValues);
+        Test(n => System.Math.Min(n, n), n => n, decimalValues);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestDateTime()
+    public void DateTime()
     {
         var values = new[]
         {
-            DateTime.MinValue,
-            DateTime.MaxValue,
+            System.DateTime.MinValue,
+            System.DateTime.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Local),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Utc),
@@ -598,33 +603,33 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 
         // expression result
 
-        Test(() => new DateTime(0), () => DateTime.MinValue);
+        Test(() => new DateTime(0), () => System.DateTime.MinValue);
 
         Test(dateTime => dateTime.Equals(null), _ => false, values);
 
         Test(dateTime => dateTime.GetTypeCode(), _ => TypeCode.DateTime, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestDateTimeOffset()
+    public void DateTimeOffset()
     {
         var values = new[]
         {
-            DateTimeOffset.MinValue,
-            DateTimeOffset.MaxValue,
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.Zero),
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.FromHours(2)),
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.FromHours(-6)),
+            System.DateTimeOffset.MinValue,
+            System.DateTimeOffset.MaxValue,
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.Zero),
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(2)),
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(-6)),
         };
 
         // expression result
 
         Test(dateTimeOffset => dateTimeOffset.Equals(null), _ => false, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -632,13 +637,13 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [TestNet100]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestTimeSpan()
+    public void TimeSpan()
     {
         var values = new[]
         {
-            TimeSpan.Zero,
-            TimeSpan.MinValue,
-            TimeSpan.MaxValue,
+            System.TimeSpan.Zero,
+            System.TimeSpan.MinValue,
+            System.TimeSpan.MaxValue,
             new(0, 0, 1),
             new(0, 1, 0),
             new(1, 0, 0),
@@ -650,92 +655,92 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 
         // expression result
 
-        Test(() => new TimeSpan(0), () => TimeSpan.Zero);
-        Test(() => new TimeSpan(long.MinValue), () => TimeSpan.MinValue);
-        Test(() => new TimeSpan(long.MaxValue), () => TimeSpan.MaxValue);
-        Test(() => new TimeSpan(0, 0, 0), () => TimeSpan.Zero);
-        Test(() => new TimeSpan(0, 0, 0, 0), () => TimeSpan.Zero);
-        Test(() => new TimeSpan(0, 0, 0, 0, 0), () => TimeSpan.Zero);
-        Test(() => TimeSpan._Ctor(0, 0, 0, 0, 0, 0), () => TimeSpan.Zero);
+        Test(() => new TimeSpan(0), () => System.TimeSpan.Zero);
+        Test(() => new TimeSpan(long.MinValue), () => System.TimeSpan.MinValue);
+        Test(() => new TimeSpan(long.MaxValue), () => System.TimeSpan.MaxValue);
+        Test(() => new TimeSpan(0, 0, 0), () => System.TimeSpan.Zero);
+        Test(() => new TimeSpan(0, 0, 0, 0), () => System.TimeSpan.Zero);
+        Test(() => new TimeSpan(0, 0, 0, 0, 0), () => System.TimeSpan.Zero);
+        Test(() => System.TimeSpan._Ctor(0, 0, 0, 0, 0, 0), () => System.TimeSpan.Zero);
 
         Test(timeSpan => timeSpan.Equals(null), _ => false, values);
 
-        Test(() => MissingTimeSpanMembers.FromDays(0), () => TimeSpan.Zero);
-        Test(() => TimeSpan.FromDays(0, 0), () => TimeSpan.Zero);
+        Test(() => MissingTimeSpanMembers.FromDays(0), () => System.TimeSpan.Zero);
+        Test(() => System.TimeSpan.FromDays(0, 0), () => System.TimeSpan.Zero);
 
-        Test(() => MissingTimeSpanMembers.FromHours(0), () => TimeSpan.Zero);
-        Test(() => TimeSpan.FromHours(0, 0), () => TimeSpan.Zero);
+        Test(() => MissingTimeSpanMembers.FromHours(0), () => System.TimeSpan.Zero);
+        Test(() => System.TimeSpan.FromHours(0, 0), () => System.TimeSpan.Zero);
 
-        Test(() => TimeSpan.FromMicroseconds(0), () => TimeSpan.Zero);
+        Test(() => System.TimeSpan.FromMicroseconds(0), () => System.TimeSpan.Zero);
 
-        Test(() => MissingTimeSpanMembers.FromMilliseconds(0), () => TimeSpan.Zero);
-        Test(() => TimeSpan.FromMilliseconds(0, 0), () => TimeSpan.Zero);
+        Test(() => MissingTimeSpanMembers.FromMilliseconds(0), () => System.TimeSpan.Zero);
+        Test(() => System.TimeSpan.FromMilliseconds(0, 0), () => System.TimeSpan.Zero);
 
-        Test(() => MissingTimeSpanMembers.FromMinutes(0), () => TimeSpan.Zero);
-        Test(() => TimeSpan.FromMinutes(0, 0), () => TimeSpan.Zero);
+        Test(() => MissingTimeSpanMembers.FromMinutes(0), () => System.TimeSpan.Zero);
+        Test(() => System.TimeSpan.FromMinutes(0, 0), () => System.TimeSpan.Zero);
 
-        Test(() => MissingTimeSpanMembers.FromSeconds(0), () => TimeSpan.Zero);
-        Test(() => TimeSpan.FromSeconds(0, 0), () => TimeSpan.Zero);
+        Test(() => MissingTimeSpanMembers.FromSeconds(0), () => System.TimeSpan.Zero);
+        Test(() => System.TimeSpan.FromSeconds(0, 0), () => System.TimeSpan.Zero);
 
-        Test(() => TimeSpan.FromTicks(0), () => TimeSpan.Zero);
-        Test(() => TimeSpan.FromTicks(long.MinValue), () => TimeSpan.MinValue);
-        Test(() => TimeSpan.FromTicks(long.MaxValue), () => TimeSpan.MaxValue);
+        Test(() => System.TimeSpan.FromTicks(0), () => System.TimeSpan.Zero);
+        Test(() => System.TimeSpan.FromTicks(long.MinValue), () => System.TimeSpan.MinValue);
+        Test(() => System.TimeSpan.FromTicks(long.MaxValue), () => System.TimeSpan.MaxValue);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet90]
-    public void TestTimeSpan_Net9() => DoNamedTest2();
+    public void TimeSpan_Net9() => DoNamedTest();
 
     [Test]
     [TestNet60]
-    public void TestDateOnly()
+    public void DateOnly()
     {
-        var values = new[] { DateOnly.MinValue, DateOnly.MaxValue, new(2025, 7, 15) };
+        var values = new[] { dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15) };
 
         // expression result
 
         Test(dateOnly => dateOnly.Equals(null), _ => false, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet70]
-    public void TestTimeOnly()
+    public void TimeOnly()
     {
-        var values = new[] { TimeOnly.MinValue, TimeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
+        var values = new[] { timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
 
         // expression result
 
-        Test(() => new TimeOnly(0), () => TimeOnly.MinValue);
-        Test(() => new TimeOnly(0, 0), () => TimeOnly.MinValue);
-        Test(() => new TimeOnly(0, 0, 0), () => TimeOnly.MinValue);
-        Test(() => new TimeOnly(0, 0, 0, 0), () => TimeOnly.MinValue);
-        Test(() => new TimeOnly(0, 0, 0, 0, 0), () => TimeOnly.MinValue);
+        Test(() => new timeOnly(0), () => timeOnly.MinValue);
+        Test(() => new timeOnly(0, 0), () => timeOnly.MinValue);
+        Test(() => new timeOnly(0, 0, 0), () => timeOnly.MinValue);
+        Test(() => new timeOnly(0, 0, 0, 0), () => timeOnly.MinValue);
+        Test(() => new timeOnly(0, 0, 0, 0, 0), () => timeOnly.MinValue);
 
         Test(timeOnly => timeOnly.Equals(null), _ => false, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestGuid()
+    public void Guid()
     {
-        var values = new[] { Guid.Empty, new Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
+        var values = new[] { System.Guid.Empty, new Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
 
         // expression result
 
         Test(guid => guid.Equals(null), _ => false, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestChar()
+    public void Char()
     {
         var values = new[] { 'a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue };
 
@@ -745,7 +750,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
 
         Test(c => c.GetTypeCode(), _ => TypeCode.Char, values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -757,7 +762,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseExpressionResult")]
     [SuppressMessage("ReSharper", "RedundantCast")]
     [SuppressMessage("ReSharper", "StringStartsWithIsCultureSpecific")]
-    public void TestString()
+    public void String()
     {
         var values = new[] { "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.." };
         var comparisons = new[]
@@ -850,7 +855,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         Test(text => text.StartsWith(""), _ => true, values);
         Test((text, comparisonType) => text.StartsWith("", comparisonType), (_, _) => true, values, comparisons);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -858,7 +863,7 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
     [NullableContext(NullableContextKind.Enable)]
     [TestNet100]
     [SuppressMessage("ReSharper", "UseExpressionResult")]
-    public void TestRandom()
+    public void Random()
     {
         // expression result
 
@@ -878,6 +883,6 @@ public sealed class ExpressionResultAnalyzerTests : CSharpAnalyzerTests
         TestRandom(random => random.NextInt64(10, 10), _ => 10);
         TestRandom(random => random.NextInt64(10, 11), _ => 10);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 }

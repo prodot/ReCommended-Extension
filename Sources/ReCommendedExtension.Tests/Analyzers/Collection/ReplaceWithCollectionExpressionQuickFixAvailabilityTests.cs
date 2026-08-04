@@ -16,8 +16,8 @@ public sealed class ReplaceWithCollectionExpressionQuickFixAvailabilityTests : Q
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UseTargetTypedCollectionExpressionSuggestion;
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_Array_Availability() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_Array_Availability() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_IEnumerable_Availability() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_IEnumerable_Availability() => DoNamedTest();
 }

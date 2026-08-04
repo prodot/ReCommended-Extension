@@ -16,10 +16,10 @@ public sealed class AnnotateWithValueRangeAvailabilityTests : CSharpContextActio
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithValueRange";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [TestNet60(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityLambda() => DoNamedTest2();
+    public void AvailabilityLambda() => DoNamedTest();
 }

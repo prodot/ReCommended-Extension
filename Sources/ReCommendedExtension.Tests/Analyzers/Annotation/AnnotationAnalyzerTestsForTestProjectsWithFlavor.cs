@@ -36,9 +36,9 @@ public sealed class AnnotationAnalyzerTestsForTestProjectsWithFlavor : CSharpAna
     }
 
     [Test]
-    public void TestSuppressMessage_TestProject() => DoNamedTest2();
+    public void SuppressMessage_TestProject() => DoNamedTest();
 
     [Test]
     [TestNet50]
-    public void TestSuppressMessage_TestProject_NET_5() => DoNamedTest2();
+    public void SuppressMessage_TestProject_NET_5() => DoNamedTest();
 }

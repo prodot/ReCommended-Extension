@@ -12,5 +12,5 @@ public sealed class LocalSuppressionAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is LocalSuppressionWarning;
 
     [Test]
-    public void TestLocalSuppression() => DoNamedTest2();
+    public void LocalSuppression() => DoNamedTest();
 }

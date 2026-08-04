@@ -12,5 +12,5 @@ public sealed class ValueTaskQuickFixTests : QuickFixTestBase<IntentionalBlockin
     protected override string RelativeTestDataPath => @"Analyzers\ValueTask\QuickFixes";
 
     [Test]
-    public void TestInsertAsTask() => DoNamedTest2();
+    public void InsertAsTask() => DoNamedTest();
 }

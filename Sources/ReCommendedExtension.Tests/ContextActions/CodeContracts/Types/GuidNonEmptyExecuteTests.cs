@@ -14,5 +14,5 @@ public sealed class GuidNonEmptyExecuteTests : CSharpContextActionExecuteTestBas
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\GuidNonEmpty";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 }

@@ -10,8 +10,8 @@ public sealed class DelegateInvokeQuickFixTests : QuickFixTestBase<RedundantDele
     protected override string RelativeTestDataPath => @"Analyzers\DelegateInvoke\QuickFixes";
 
     [Test]
-    public void TestDelegateInvoke() => DoNamedTest2();
+    public void DelegateInvoke() => DoNamedTest();
 
     [Test]
-    public void TestDelegateInvoke2() => DoNamedTest2();
+    public void DelegateInvoke2() => DoNamedTest();
 }

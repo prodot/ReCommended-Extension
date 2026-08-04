@@ -18,41 +18,41 @@ public sealed class InterfaceImplementationAnalyzerTests : CSharpAnalyzerTests
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet60]
-    public void TestEquatableTypes_NET_6() => DoNamedTest2();
+    public void EquatableTypes_NET_6() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [TestNet70]
-    public void TestEquatableTypes_CS10() => DoNamedTest2();
+    public void EquatableTypes_CS10() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet70]
-    public void TestEquatableTypes() => DoNamedTest2();
+    public void EquatableTypes() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet70]
-    public void TestComparableTypes() => DoNamedTest2();
+    public void ComparableTypes() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [TestNet70]
-    public void TestComparableTypes_CS10() => DoNamedTest2();
+    public void ComparableTypes_CS10() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet60]
-    public void TestComparableTypes_NET_6() => DoNamedTest2();
+    public void ComparableTypes_NET_6() => DoNamedTest();
 
     [Test]
-    public void TestOverriddenEquals() => DoNamedTest2();
+    public void OverriddenEquals() => DoNamedTest();
 
     [Test]
-    public void TestImplementedEquals() => DoNamedTest2();
+    public void ImplementedEquals() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet70]
-    public void TestPartialTypes() => DoNamedTest2();
+    public void PartialTypes() => DoNamedTest();
 }

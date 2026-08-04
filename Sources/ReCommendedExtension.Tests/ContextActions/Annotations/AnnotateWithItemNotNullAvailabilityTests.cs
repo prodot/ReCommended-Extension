@@ -17,10 +17,10 @@ public sealed class AnnotateWithItemNotNullAvailabilityTests : CSharpContextActi
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp73)]
     [TestNetCore20(ANNOTATIONS_PACKAGE, VALUE_TASKS_PACKAGE)]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityNullableAnnotationContext() => DoNamedTest2();
+    public void AvailabilityNullableAnnotationContext() => DoNamedTest();
 }

@@ -15,33 +15,33 @@ public sealed class AnnotateWithItemNotNullExecuteTests : CSharpContextActionExe
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithItemNotNull";
 
     [Test]
-    public void TestExecuteJaggedArrayOnField() => DoNamedTest2();
+    public void ExecuteJaggedArrayOnField() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMultiDimensionalArrayOnField() => DoNamedTest2();
+    public void ExecuteMultiDimensionalArrayOnField() => DoNamedTest();
 
     [Test]
-    public void TestExecuteArrayOnMethod() => DoNamedTest2();
+    public void ExecuteArrayOnMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteGenericCollectionOnParameter() => DoNamedTest2();
+    public void ExecuteGenericCollectionOnParameter() => DoNamedTest();
 
     [Test]
-    public void TestExecuteGenericListOnProperty() => DoNamedTest2();
+    public void ExecuteGenericListOnProperty() => DoNamedTest();
 
     [Test]
-    public void TestExecuteGenericListOnIndexer() => DoNamedTest2();
+    public void ExecuteGenericListOnIndexer() => DoNamedTest();
 
     [Test]
-    public void TestExecuteGenericListOnParameter() => DoNamedTest2();
+    public void ExecuteGenericListOnParameter() => DoNamedTest();
 
     [Test]
-    public void TestExecuteGenericTaskOnMethod() => DoNamedTest2();
+    public void ExecuteGenericTaskOnMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteLazyOnDelegate() => DoNamedTest2();
+    public void ExecuteLazyOnDelegate() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestExecuteGenericValueTaskOnMethod() => DoNamedTest2();
+    public void ExecuteGenericValueTaskOnMethod() => DoNamedTest();
 }

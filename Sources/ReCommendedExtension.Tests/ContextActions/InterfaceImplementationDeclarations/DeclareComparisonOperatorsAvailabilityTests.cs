@@ -20,13 +20,13 @@ public sealed class DeclareComparisonOperatorsAvailabilityTests : CSharpContextA
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNet70]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 
     [Test]
     [TestNet70]
-    public void TestAvailability_CS10() => DoNamedTest2();
+    public void Availability_CS10() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    public void TestAvailability_NET_6() => DoNamedTest2();
+    public void Availability_NET_6() => DoNamedTest();
 }

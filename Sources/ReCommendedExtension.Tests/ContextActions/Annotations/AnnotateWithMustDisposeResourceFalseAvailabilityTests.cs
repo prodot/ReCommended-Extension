@@ -19,39 +19,39 @@ public sealed class AnnotateWithMustDisposeResourceFalseAvailabilityTests
     [Test]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]
     [ReuseSolution(false)] // prevents reusing cached packages
-    public void TestAvailabilityTypes_Legacy() => DoNamedTest2();
+    public void AvailabilityTypes_Legacy() => DoNamedTest();
 
     [Test]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityTypes() => DoNamedTest2();
+    public void AvailabilityTypes() => DoNamedTest();
 
     [Test]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]
     [ReuseSolution(false)] // prevents reusing cached packages
-    public void TestAvailabilityConstructors_Legacy() => DoNamedTest2();
+    public void AvailabilityConstructors_Legacy() => DoNamedTest();
 
     [Test]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityConstructors() => DoNamedTest2();
+    public void AvailabilityConstructors() => DoNamedTest();
 
     [Test]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]
     [ReuseSolution(false)] // prevents reusing cached packages
-    public void TestAvailabilityPrimaryConstructors_Legacy() => DoNamedTest2();
+    public void AvailabilityPrimaryConstructors_Legacy() => DoNamedTest();
 
     [Test]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityPrimaryConstructors() => DoNamedTest2();
+    public void AvailabilityPrimaryConstructors() => DoNamedTest();
 
     [Test]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityMethods() => DoNamedTest2();
+    public void AvailabilityMethods() => DoNamedTest();
 
     [Test]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityLocalFunctions() => DoNamedTest2();
+    public void AvailabilityLocalFunctions() => DoNamedTest();
 
     [Test]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityParameters() => DoNamedTest2();
+    public void AvailabilityParameters() => DoNamedTest();
 }

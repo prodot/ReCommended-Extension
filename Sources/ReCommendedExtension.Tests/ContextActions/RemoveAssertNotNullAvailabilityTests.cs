@@ -12,5 +12,5 @@ public sealed class RemoveAssertNotNullAvailabilityTests : CSharpContextActionAv
     protected override string RelativeTestDataPath => @"ContextActions\RemoveAssertNotNull";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

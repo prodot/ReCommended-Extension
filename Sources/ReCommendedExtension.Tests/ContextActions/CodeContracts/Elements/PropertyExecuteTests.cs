@@ -14,53 +14,53 @@ public sealed class PropertyExecuteTests : CSharpContextActionExecuteTestBase<No
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Elements\Property";
 
     [Test]
-    public void TestExecuteWithAbstractProperty() => DoNamedTest2();
+    public void ExecuteWithAbstractProperty() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractProperty2() => DoNamedTest2();
+    public void ExecuteWithAbstractProperty2() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractProperty3() => DoNamedTest2();
+    public void ExecuteWithAbstractProperty3() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractProperty4() => DoNamedTest2();
+    public void ExecuteWithAbstractProperty4() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractIndexer() => DoNamedTest2();
+    public void ExecuteWithAbstractIndexer() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractIndexer2() => DoNamedTest2();
+    public void ExecuteWithAbstractIndexer2() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractIndexer3() => DoNamedTest2();
+    public void ExecuteWithAbstractIndexer3() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractIndexer4() => DoNamedTest2();
+    public void ExecuteWithAbstractIndexer4() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithInterfaceProperty() => DoNamedTest2();
+    public void ExecuteWithInterfaceProperty() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithInterfaceIndexer() => DoNamedTest2();
+    public void ExecuteWithInterfaceIndexer() => DoNamedTest();
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 
     [Test]
-    public void TestExecuteReadOnlyProperty() => DoNamedTest2();
+    public void ExecuteReadOnlyProperty() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWriteOnlyProperty() => DoNamedTest2();
+    public void ExecuteWriteOnlyProperty() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithIndexer() => DoNamedTest2();
+    public void ExecuteWithIndexer() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithReadOnlyIndexer() => DoNamedTest2();
+    public void ExecuteWithReadOnlyIndexer() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithWriteOnlyIndexer() => DoNamedTest2();
+    public void ExecuteWithWriteOnlyIndexer() => DoNamedTest();
 
     [Test]
-    public void TestExecuteAutoProperty() => DoNamedTest2();
+    public void ExecuteAutoProperty() => DoNamedTest();
 }

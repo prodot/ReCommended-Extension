@@ -14,20 +14,20 @@ public sealed class BaseTypeQuickFixRemoveTests : QuickFixTestBase<RemoveRedunda
     protected override string RelativeTestDataPath => @"Analyzers\BaseType\QuickFixes";
 
     [Test]
-    public void TestClass() => DoNamedTest2();
+    public void Class() => DoNamedTest();
 
     [Test]
-    public void TestClass_Interface() => DoNamedTest2();
+    public void Class_Interface() => DoNamedTest();
 
     [Test]
-    public void TestClass_Empty() => DoNamedTest2();
+    public void Class_Empty() => DoNamedTest();
 
     [Test]
-    public void TestClass_NonEmpty() => DoNamedTest2();
+    public void Class_NonEmpty() => DoNamedTest();
 
     [Test]
-    public void TestClass_PrimaryConstructor() => DoNamedTest2();
+    public void Class_PrimaryConstructor() => DoNamedTest();
 
     [Test]
-    public void TestRecord_Interface() => DoNamedTest2();
+    public void Record_Interface() => DoNamedTest();
 }

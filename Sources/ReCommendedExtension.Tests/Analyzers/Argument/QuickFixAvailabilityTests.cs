@@ -19,22 +19,22 @@ public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analy
             or UseOtherArgumentRangeSuggestion;
 
     [Test]
-    public void TestRemoveArgumentFixAvailability() => DoNamedTest2();
+    public void RemoveArgumentFixAvailability() => DoNamedTest();
 
     [Test]
-    public void TestRemoveArgumentRangeFixAvailability() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNetCore21]
-    public void TestRemoveElementFixAvailability() => DoNamedTest2();
+    public void RemoveArgumentRangeFixAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore21]
-    public void TestUseOtherArgumentFixAvailability() => DoNamedTest2();
+    public void RemoveElementFixAvailability() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNetCore21]
+    public void UseOtherArgumentFixAvailability() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestUseOtherArgumentRangeFixAvailability() => DoNamedTest2();
+    public void UseOtherArgumentRangeFixAvailability() => DoNamedTest();
 }

@@ -15,11 +15,11 @@ public sealed class ControlFlowAnalyzerTests : CSharpAnalyzerTests
         => highlighting is RedundantAssertionStatementSuggestion or RedundantInlineAssertionSuggestion;
 
     [Test]
-    public void TestControlFlow() => DoNamedTest2();
+    public void ControlFlow() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
     [TestCompilationSymbols("DEBUG")]
-    public void TestControlFlow_NullableContext() => DoNamedTest2();
+    public void ControlFlow_NullableContext() => DoNamedTest();
 }

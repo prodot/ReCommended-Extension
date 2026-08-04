@@ -33,19 +33,14 @@ public sealed class ValueTaskAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             var declaration = controlFlowGraph.Declaration;
             Debug.Assert(declaration is { });
 
-            var containingFile = (ICSharpFile?)declaration.GetContainingFile();
-
             var forceClosuresCollection = false;
-            if (analysisMode != ValueAnalysisMode.OFF && shouldDisableValueAnalysisIfNullableWarningsEnabled)
+            if (analysisMode != ValueAnalysisMode.OFF
+                && shouldDisableValueAnalysisIfNullableWarningsEnabled
+                && declaration.GetContainingFile() is ICSharpFile containingFile
+                && NullableContextUtil.AreWarningsEnabledAnywhereIn(containingFile, declaration.GetTreeTextRange()))
             {
-                var file = containingFile;
-                var treeTextRange = declaration.GetTreeTextRange();
-                ref var local = ref treeTextRange;
-                if (file.IsNullableWarningsEnabledEverywhereIn(in local))
-                {
-                    analysisMode = ValueAnalysisMode.OFF;
-                    forceClosuresCollection = true;
-                }
+                analysisMode = ValueAnalysisMode.OFF;
+                forceClosuresCollection = true;
             }
 
             var universalContext = new UniversalContext(declaration);

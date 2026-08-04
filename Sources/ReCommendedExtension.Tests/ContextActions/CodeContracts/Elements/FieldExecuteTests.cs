@@ -14,8 +14,8 @@ public sealed class FieldExecuteTests : CSharpContextActionExecuteTestBase<NotNu
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Elements\Field";
 
     [Test]
-    public void TestExecuteWithoutContractInvariantMethod() => DoNamedTest2();
+    public void ExecuteWithoutContractInvariantMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithContractInvariantMethod() => DoNamedTest2();
+    public void ExecuteWithContractInvariantMethod() => DoNamedTest();
 }

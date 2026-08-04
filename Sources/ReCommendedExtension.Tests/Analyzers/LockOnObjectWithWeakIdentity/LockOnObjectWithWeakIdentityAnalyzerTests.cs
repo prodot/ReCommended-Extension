@@ -12,5 +12,5 @@ public sealed class LockOnObjectWithWeakIdentityAnalyzerTests : CSharpAnalyzerTe
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is LockOnObjectWithWeakIdentityWarning;
 
     [Test]
-    public void TestLockOnObjectWithWeakIdentity() => DoNamedTest2();
+    public void LockOnObjectWithWeakIdentity() => DoNamedTest();
 }

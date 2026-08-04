@@ -14,12 +14,12 @@ public sealed class RegionAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RegionHighlighting;
 
     [Test]
-    public void TestRegionWithSingleElement() => DoNamedTest2();
+    public void RegionWithSingleElement() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-    public void TestRegionWithSingleElement_FileScopedNamespace() => DoNamedTest2();
+    public void RegionWithSingleElement_FileScopedNamespace() => DoNamedTest();
 
     [Test]
-    public void TestRegionWithinTypeMemberBody() => DoNamedTest2();
+    public void RegionWithinTypeMemberBody() => DoNamedTest();
 }

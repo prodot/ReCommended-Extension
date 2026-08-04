@@ -10,11 +10,11 @@ public sealed class UseUnaryOperatorFixTests : QuickFixTestBase<UseUnaryOperator
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestUseUnaryOperatorFix() => DoNamedTest2();
+    public void UseUnaryOperatorFix() => DoNamedTest();
 
     [Test]
-    public void TestUseUnaryOperatorFix_Parenthesized() => DoNamedTest2();
+    public void UseUnaryOperatorFix_Parenthesized() => DoNamedTest();
 
     [Test]
-    public void TestUseUnaryOperatorFix_OperandParenthesized() => DoNamedTest2();
+    public void UseUnaryOperatorFix_OperandParenthesized() => DoNamedTest();
 }

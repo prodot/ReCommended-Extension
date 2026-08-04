@@ -18,5 +18,5 @@ public sealed class ReplaceIsNullOrEmptyWithNegatedListPatternExecuteTests
     protected override string RelativeTestDataPath => @"ContextActions\ReplaceIsNullOrEmpty";
 
     [Test]
-    public void TestReplaceWithNegatedListPattern() => DoNamedTest2();
+    public void ReplaceWithNegatedListPattern() => DoNamedTest();
 }

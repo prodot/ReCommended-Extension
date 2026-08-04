@@ -14,5 +14,5 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixAvailab
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning;
 
     [Test]
-    public void TestNotifyPropertyChangedInvocatorFromConstructorAvailability() => DoNamedTest2();
+    public void NotifyPropertyChangedInvocatorFromConstructorAvailability() => DoNamedTest();
 }

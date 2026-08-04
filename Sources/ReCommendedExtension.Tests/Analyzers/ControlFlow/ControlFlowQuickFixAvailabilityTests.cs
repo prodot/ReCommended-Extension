@@ -14,5 +14,5 @@ public sealed class ControlFlowQuickFixAvailabilityTests : QuickFixAvailabilityT
 
     [Test]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestControlFlowAvailability() => DoNamedTest2();
+    public void ControlFlowAvailability() => DoNamedTest();
 }

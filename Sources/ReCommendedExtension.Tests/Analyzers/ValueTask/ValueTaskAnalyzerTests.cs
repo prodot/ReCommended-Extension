@@ -15,14 +15,14 @@ public sealed class ValueTaskAnalyzerTests : CSharpAnalyzerTests
         => highlighting is PossibleMultipleConsumptionWarning or IntentionalBlockingAttemptWarning;
 
     [Test]
-    public void TestCodePaths() => DoNamedTest2();
+    public void CodePaths() => DoNamedTest();
 
     [Test]
-    public void TestSingleConsumption() => DoNamedTest2();
+    public void SingleConsumption() => DoNamedTest();
 
     [Test]
-    public void TestMultipleConsumption() => DoNamedTest2();
+    public void MultipleConsumption() => DoNamedTest();
 
     [Test]
-    public void TestIntentionalBlockingAttempts() => DoNamedTest2();
+    public void IntentionalBlockingAttempts() => DoNamedTest();
 }

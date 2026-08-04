@@ -12,8 +12,8 @@ public sealed class AsyncVoidQuickFixChangeTypeTests : QuickFixTestBase<AvoidAsy
     protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid\QuickFixes";
 
     [Test]
-    public void TestAsyncVoidMethod() => DoNamedTest2();
+    public void AsyncVoidMethod() => DoNamedTest();
 
     [Test]
-    public void TestAsyncVoidLocalFunction() => DoNamedTest2();
+    public void AsyncVoidLocalFunction() => DoNamedTest();
 }

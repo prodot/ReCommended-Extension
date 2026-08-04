@@ -6,7 +6,7 @@ namespace Test
     {
         public void Method(HashSet<int> source)
         {
-            ICollection<int> result = [..from item in sour{caret}ce select item];
+            ICollection<int> result = [.. from item in sour{caret}ce select item];
         }
     }
 }

@@ -15,8 +15,8 @@ public sealed class RemoveElementQuickFixTests : QuickFixTestBase<RedundantEleme
 
     [Test]
     [TestNet70]
-    public void TestRemoveElement_Middle() => DoNamedTest2();
+    public void RemoveElement_Middle() => DoNamedTest();
 
     [Test]
-    public void TestRemoveElement_Last() => DoNamedTest2();
+    public void RemoveElement_Last() => DoNamedTest();
 }

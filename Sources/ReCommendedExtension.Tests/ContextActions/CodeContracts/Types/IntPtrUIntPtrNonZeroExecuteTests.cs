@@ -14,8 +14,8 @@ public sealed class IntPtrUIntPtrNonZeroExecuteTests : CSharpContextActionExecut
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\IntPtrUIntPtrNonZero";
 
     [Test]
-    public void TestExecuteIntPtr() => DoNamedTest2();
+    public void ExecuteIntPtr() => DoNamedTest();
 
     [Test]
-    public void TestExecuteUIntPtr() => DoNamedTest2();
+    public void ExecuteUIntPtr() => DoNamedTest();
 }

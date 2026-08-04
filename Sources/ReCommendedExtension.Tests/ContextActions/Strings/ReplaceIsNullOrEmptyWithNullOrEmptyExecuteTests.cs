@@ -17,5 +17,5 @@ public sealed class ReplaceIsNullOrEmptyWithNullOrEmptyExecuteTests : CSharpCont
     protected override string RelativeTestDataPath => @"ContextActions\ReplaceIsNullOrEmpty";
 
     [Test]
-    public void TestReplaceWithNullOrEmpty() => DoNamedTest2();
+    public void ReplaceWithNullOrEmpty() => DoNamedTest();
 }

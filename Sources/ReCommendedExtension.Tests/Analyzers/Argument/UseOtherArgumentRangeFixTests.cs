@@ -11,23 +11,23 @@ public sealed class UseOtherArgumentRangeFixTests : QuickFixTestBase<UseOtherArg
     protected override string RelativeTestDataPath => @"Analyzers\Argument\QuickFixes";
 
     [Test]
-    public void TestUseOtherArgumentRange() => DoNamedTest2();
+    public void UseOtherArgumentRange() => DoNamedTest();
 
     [Test]
-    public void TestUseOtherArgumentRange_Named() => DoNamedTest2();
+    public void UseOtherArgumentRange_Named() => DoNamedTest();
 
     [Test]
-    public void TestUseOtherArgumentRange_OutOfOrder() => DoNamedTest2();
-
-    [Test]
-    [TestNetCore21]
-    public void TestUseOtherArgumentRange_RedundantArgument() => DoNamedTest2();
+    public void UseOtherArgumentRange_OutOfOrder() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestUseOtherArgumentRange_RedundantArgument_Named() => DoNamedTest2();
+    public void UseOtherArgumentRange_RedundantArgument() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestUseOtherArgumentRange_RedundantArgument_OutOfOrder() => DoNamedTest2();
+    public void UseOtherArgumentRange_RedundantArgument_Named() => DoNamedTest();
+
+    [Test]
+    [TestNetCore21]
+    public void UseOtherArgumentRange_RedundantArgument_OutOfOrder() => DoNamedTest();
 }

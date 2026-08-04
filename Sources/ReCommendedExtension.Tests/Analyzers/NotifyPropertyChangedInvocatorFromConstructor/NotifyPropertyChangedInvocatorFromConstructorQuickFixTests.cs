@@ -13,5 +13,5 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorQuickFixTests
     protected override string RelativeTestDataPath => @"Analyzers\NotifyPropertyChangedInvocatorFromConstructor\QuickFixes";
 
     [Test]
-    public void TestNotifyPropertyChangedInvocatorFromConstructor() => DoNamedTest2();
+    public void NotifyPropertyChangedInvocatorFromConstructor() => DoNamedTest();
 }

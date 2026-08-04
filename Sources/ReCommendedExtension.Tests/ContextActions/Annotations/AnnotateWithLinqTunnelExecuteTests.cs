@@ -13,9 +13,9 @@ public sealed class AnnotateWithLinqTunnelExecuteTests : CSharpContextActionExec
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithLinqTunnel";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 
     [Test]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestExecuteAsyncEnumerable() => DoNamedTest2();
+    public void ExecuteAsyncEnumerable() => DoNamedTest();
 }

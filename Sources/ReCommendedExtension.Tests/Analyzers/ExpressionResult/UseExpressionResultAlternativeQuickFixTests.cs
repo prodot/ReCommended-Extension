@@ -12,8 +12,8 @@ public sealed class UseExpressionResultAlternativeQuickFixTests : QuickFixTestBa
     protected override string RelativeTestDataPath => @"Analyzers\ExpressionResult\QuickFixes";
 
     [Test]
-    public void TestUseExpressionResultAlternativeFix() => DoNamedTest2();
+    public void UseExpressionResultAlternativeFix() => DoNamedTest();
 
     [Test]
-    public void TestUseExpressionResultAlternativeFix_Parenthesized() => DoNamedTest2();
+    public void UseExpressionResultAlternativeFix_Parenthesized() => DoNamedTest();
 }

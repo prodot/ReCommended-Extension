@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Psi.Xaml;
 using ReCommendedExtension;
 
 #if RESHARPER
-using JetBrains.Platform.VisualStudio.Protocol.BuildScript;
+using JetBrains.Platform.VisualStudio.AnyEnd.BuildScript;
 using JetBrains.VsIntegration.Env;
 using JetBrains.VsIntegration.Zones;
 #endif

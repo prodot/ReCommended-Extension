@@ -12,8 +12,8 @@ public sealed class EmbedIntoTypeparamrefNameExecuteTests : DocCommentsExecuteTe
     protected override string RelativeTestDataPath => @"ContextActions\EmbedIntoTypeparamrefName";
 
     [Test]
-    public void TestExecuteWord() => DoNamedTestWithSettings();
+    public void ExecuteWord() => DoNamedTestWithSettings();
 
     [Test]
-    public void TestExecuteSelection() => DoNamedTestWithSettings();
+    public void ExecuteSelection() => DoNamedTestWithSettings();
 }

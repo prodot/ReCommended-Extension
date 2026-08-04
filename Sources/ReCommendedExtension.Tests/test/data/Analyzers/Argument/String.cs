@@ -29,7 +29,7 @@ namespace Test
 
             var result81 = text.TrimStart(null);
             var result82 = text.TrimStart(Array.Empty<char>());
-            var result82 = text.TrimStart('.', '.', '.');
+            var result83 = text.TrimStart('.', '.', '.');
         }
 
         public void RedundantCollectionElement(string text, int startIndex, int count, StringSplitOptions options)

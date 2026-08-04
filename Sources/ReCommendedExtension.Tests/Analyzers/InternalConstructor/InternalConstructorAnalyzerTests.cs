@@ -12,5 +12,5 @@ public sealed class InternalConstructorAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is InternalConstructorVisibilitySuggestion;
 
     [Test]
-    public void TestInternalConstructor() => DoNamedTest2();
+    public void InternalConstructor() => DoNamedTest();
 }

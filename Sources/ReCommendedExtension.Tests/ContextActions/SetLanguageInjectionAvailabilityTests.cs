@@ -12,5 +12,5 @@ public sealed class SetLanguageInjectionAvailabilityTests : CSharpContextActionA
     protected override string RelativeTestDataPath => @"ContextActions\SetLanguageInjection";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

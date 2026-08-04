@@ -14,5 +14,5 @@ public sealed class NotNullAvailabilityTests : CSharpContextActionAvailabilityTe
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\NotNull";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

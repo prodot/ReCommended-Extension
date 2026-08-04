@@ -14,14 +14,14 @@ public sealed class ReplaceWithArrayEmptyQuickFixTests : QuickFixTestBase<UseEmp
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     [Test]
-    public void TestEmptyArrayInitialization() => DoNamedTest2();
+    public void EmptyArrayInitialization() => DoNamedTest();
 
     [Test]
-    public void TestEmptyArrayInitialization2() => DoNamedTest2();
+    public void EmptyArrayInitialization2() => DoNamedTest();
 
     [Test]
-    public void TestEmptyArrayInitialization3() => DoNamedTest2();
+    public void EmptyArrayInitialization3() => DoNamedTest();
 
     [Test]
-    public void TestEmptyArrayInitialization4() => DoNamedTest2();
+    public void EmptyArrayInitialization4() => DoNamedTest();
 }

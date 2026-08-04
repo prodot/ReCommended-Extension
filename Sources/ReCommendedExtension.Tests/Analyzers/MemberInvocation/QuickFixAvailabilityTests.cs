@@ -26,50 +26,50 @@ public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analy
 
     [Test]
     [TestNetCore21]
-    public void TestRemoveMethodInvocationFixAvailability() => DoNamedTest2();
+    public void RemoveMethodInvocationFixAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore21]
-    public void TestUseOtherMethodFixAvailability() => DoNamedTest2();
+    public void UseOtherMethodFixAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [TestNet70]
-    public void TestUseBinaryOperatorFixAvailability() => DoNamedTest2();
+    public void UseBinaryOperatorFixAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [TestNetCore21]
-    public void TestUseUnaryOperatorFixAvailability() => DoNamedTest2();
+    public void UseUnaryOperatorFixAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet70]
-    public void TestUsePatternFixAvailability() => DoNamedTest2();
+    public void UsePatternFixAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNetCore20]
-    public void TestUseNullableHasValueAlternativeFixAvailability() => DoNamedTest2();
+    public void UseNullableHasValueAlternativeFixAvailability() => DoNamedTest();
 
     [Test]
-    public void TestReplaceNullableValueWithTypeCastFixAvailability() => DoNamedTest2();
+    public void ReplaceNullableValueWithTypeCastFixAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNetCore30]
-    public void TestUseRangeIndexerAvailability() => DoNamedTest2();
+    public void UseRangeIndexerAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet50]
-    public void TestUsePropertyAvailability() => DoNamedTest2();
+    public void UsePropertyAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
-    public void TestUseStaticPropertyAvailability() => DoNamedTest2();
+    public void UseStaticPropertyAvailability() => DoNamedTest();
 }

@@ -14,5 +14,5 @@ public sealed class AnnotateWithDefaultEqualityUsageAvailabilityTests : CSharpCo
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithDefaultEqualityUsage";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

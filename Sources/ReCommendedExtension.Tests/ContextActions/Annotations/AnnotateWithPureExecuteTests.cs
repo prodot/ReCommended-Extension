@@ -16,11 +16,11 @@ public sealed class AnnotateWithPureExecuteTests : CSharpContextActionExecuteTes
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithPure";
 
     [Test]
-    public void TestExecuteMethod() => DoNamedTest2();
+    public void ExecuteMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethod_MustUseReturnValue() => DoNamedTest2();
+    public void ExecuteMethod_MustUseReturnValue() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethod_MustDisposeResource() => DoNamedTest2();
+    public void ExecuteMethod_MustDisposeResource() => DoNamedTest();
 }

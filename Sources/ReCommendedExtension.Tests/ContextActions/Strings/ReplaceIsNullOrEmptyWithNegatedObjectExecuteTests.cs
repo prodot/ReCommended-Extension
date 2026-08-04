@@ -17,5 +17,5 @@ public sealed class ReplaceIsNullOrEmptyWithNegatedObjectExecuteTests : CSharpCo
     protected override string RelativeTestDataPath => @"ContextActions\ReplaceIsNullOrEmpty";
 
     [Test]
-    public void TestReplaceWithNegatedObject() => DoNamedTest2();
+    public void ReplaceWithNegatedObject() => DoNamedTest();
 }

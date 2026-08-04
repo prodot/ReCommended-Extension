@@ -13,11 +13,11 @@ public sealed class AnnotationQuickFixTests : QuickFixTestBase<RemoveAttributeFi
     protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     [Test]
-    public void TestNotAllowed() => DoNamedTest2();
+    public void NotAllowed() => DoNamedTest();
 
     [Test]
-    public void TestConflicting() => DoNamedTest2();
+    public void Conflicting() => DoNamedTest();
 
     [Test]
-    public void TestRedundant() => DoNamedTest2();
+    public void Redundant() => DoNamedTest();
 }

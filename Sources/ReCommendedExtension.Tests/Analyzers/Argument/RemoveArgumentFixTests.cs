@@ -11,18 +11,18 @@ public sealed class RemoveArgumentFixTests : QuickFixTestBase<RedundantArgumentH
     protected override string RelativeTestDataPath => @"Analyzers\Argument\QuickFixes";
 
     [Test]
-    public void TestRemoveArgument_First() => DoNamedTest2();
+    public void RemoveArgument_First() => DoNamedTest();
 
     [Test]
     [TestNet70]
-    public void TestRemoveArgument_Middle() => DoNamedTest2();
+    public void RemoveArgument_Middle() => DoNamedTest();
 
     [Test]
-    public void TestRemoveArgument_Last() => DoNamedTest2();
+    public void RemoveArgument_Last() => DoNamedTest();
 
     [Test]
-    public void TestRemoveArgument_Single() => DoNamedTest2();
+    public void RemoveArgument_Single() => DoNamedTest();
 
     [Test]
-    public void TestRemoveArgument_OutOfOrder() => DoNamedTest2();
+    public void RemoveArgument_OutOfOrder() => DoNamedTest();
 }

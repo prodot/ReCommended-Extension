@@ -16,20 +16,20 @@ public sealed class ToggleReturnTypeOfAsyncMethodsExecuteTests : CSharpContextAc
     protected override string RelativeTestDataPath => @"ContextActions\ToggleReturnTypeOfAsyncMethods";
 
     [Test]
-    public void TestTaskToValueTask() => DoNamedTest2();
+    public void TaskToValueTask() => DoNamedTest();
 
     [Test]
-    public void TestValueTaskToTask() => DoNamedTest2();
+    public void ValueTaskToTask() => DoNamedTest();
 
     [Test]
-    public void TestGenericTaskToGenericValueTask_Int32() => DoNamedTest2();
+    public void GenericTaskToGenericValueTask_Int32() => DoNamedTest();
 
     [Test]
-    public void TestGenericTaskToGenericValueTask_T() => DoNamedTest2();
+    public void GenericTaskToGenericValueTask_T() => DoNamedTest();
 
     [Test]
-    public void TestGenericValueTaskToGenericTask_Int32() => DoNamedTest2();
+    public void GenericValueTaskToGenericTask_Int32() => DoNamedTest();
 
     [Test]
-    public void TestGenericValueTaskToGenericTask_T() => DoNamedTest2();
+    public void GenericValueTaskToGenericTask_T() => DoNamedTest();
 }

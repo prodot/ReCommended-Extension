@@ -17,18 +17,18 @@ public sealed class ArrayWithDefaultValuesInitializationQuickFixAvailabilityTest
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    public void TestArrayWithDefaultValuesInitializationAvailability() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitializationAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestArrayWithDefaultValuesInitializationAvailability_CS12() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitializationAvailability_CS12() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestArrayWithDefaultValuesInitializationAvailabilityWithNullableAnnotations() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitializationAvailabilityWithNullableAnnotations() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestArrayWithDefaultValuesInitializationAvailabilityWithNullableAnnotations_CS12() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitializationAvailabilityWithNullableAnnotations_CS12() => DoNamedTest();
 }

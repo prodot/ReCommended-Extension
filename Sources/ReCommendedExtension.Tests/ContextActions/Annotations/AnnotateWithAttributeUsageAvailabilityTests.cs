@@ -12,5 +12,5 @@ public sealed class AnnotateWithAttributeUsageAvailabilityTests : CSharpContextA
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithAttributeUsage";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

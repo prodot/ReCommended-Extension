@@ -15,59 +15,59 @@ public sealed class UsePatternFixTests : QuickFixTestBase<UsePatternSuggestion.F
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestUsePatternFix() => DoNamedTest2();
+    public void UsePatternFix() => DoNamedTest();
 
     [Test]
-    public void TestUsePatternFix_Parenthesized_Inner() => DoNamedTest2();
+    public void UsePatternFix_Parenthesized_Inner() => DoNamedTest();
 
     [Test]
-    public void TestUsePatternFix_Parenthesized_Outer() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    public void TestUsePatternFix_Parenthesized_Inner_RightMost() => DoNamedTest2();
+    public void UsePatternFix_Parenthesized_Outer() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    public void TestUsePatternFix_Parenthesized_Inner_RightMost_Negated() => DoNamedTest2();
+    public void UsePatternFix_Parenthesized_Inner_RightMost() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePatternFix_Linq() => DoNamedTest2();
+    public void UsePatternFix_Parenthesized_Inner_RightMost_Negated() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePatternFix_Linq_Parenthesized_Inner() => DoNamedTest2();
+    public void UsePatternFix_Linq() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePatternFix_Linq_Parenthesized_Outer() => DoNamedTest2();
+    public void UsePatternFix_Linq_Parenthesized_Inner() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePatternFix_Linq_Exception() => DoNamedTest2();
+    public void UsePatternFix_Linq_Parenthesized_Outer() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePatternFix_Linq_SwitchExpression_String() => DoNamedTest2();
+    public void UsePatternFix_Linq_Exception() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePatternFix_Linq_SwitchExpression_List() => DoNamedTest2();
+    public void UsePatternFix_Linq_SwitchExpression_String() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePatternFix_Linq_SwitchExpression_Parenthesized_Outer() => DoNamedTest2();
+    public void UsePatternFix_Linq_SwitchExpression_List() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePatternFix_Linq_SwitchExpression_Parenthesized_Inner() => DoNamedTest2();
+    public void UsePatternFix_Linq_SwitchExpression_Parenthesized_Outer() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
+    [NullableContext(NullableContextKind.Enable)]
+    public void UsePatternFix_Linq_SwitchExpression_Parenthesized_Inner() => DoNamedTest();
 }

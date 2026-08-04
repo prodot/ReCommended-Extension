@@ -16,5 +16,5 @@ public sealed class BaseTypeAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RemoveRedundantBaseTypeDeclarationHint;
 
     [Test]
-    public void TestBaseTypes() => DoNamedTest2();
+    public void BaseTypes() => DoNamedTest();
 }

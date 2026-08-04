@@ -12,8 +12,8 @@ public sealed class EmbraceWithCTagsExecuteTests : DocCommentsExecuteTests<Embra
     protected override string RelativeTestDataPath => @"ContextActions\EmbraceWithCTags";
 
     [Test]
-    public void TestExecuteWord() => DoNamedTestWithSettings();
+    public void ExecuteWord() => DoNamedTestWithSettings();
 
     [Test]
-    public void TestExecuteSelection() => DoNamedTestWithSettings();
+    public void ExecuteSelection() => DoNamedTestWithSettings();
 }

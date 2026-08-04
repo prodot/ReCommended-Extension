@@ -10,8 +10,8 @@ public sealed class InternalConstructorQuickFixTests : QuickFixTestBase<Internal
     protected override string RelativeTestDataPath => @"Analyzers\InternalConstructor\QuickFixes";
 
     [Test]
-    public void TestInternalConstructorToProtected() => DoNamedTest2();
+    public void InternalConstructorToProtected() => DoNamedTest();
 
     [Test]
-    public void TestInternalConstructorToPrivateProtected() => DoNamedTest2();
+    public void InternalConstructorToPrivateProtected() => DoNamedTest();
 }
