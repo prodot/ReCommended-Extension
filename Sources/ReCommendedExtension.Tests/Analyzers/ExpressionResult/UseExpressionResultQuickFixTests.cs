@@ -12,19 +12,19 @@ public sealed class UseExpressionResultQuickFixTests : QuickFixTestBase<UseExpre
 
     [Test]
     [TestNet70]
-    public void TestUseExpressionResultFix() => DoNamedTest2();
+    public void UseExpressionResultFix() => DoNamedTest();
 
     [Test]
     [TestNet70]
-    public void TestUseExpressionResultFix_NonParenthesized() => DoNamedTest2();
+    public void UseExpressionResultFix_NonParenthesized() => DoNamedTest();
 
     [Test]
     [TestNet70]
-    public void TestUseExpressionResultFix_Parenthesized() => DoNamedTest2();
+    public void UseExpressionResultFix_Parenthesized() => DoNamedTest();
 
     [Test]
-    public void TestUseExpressionResultFix_Parenthesized_Unary() => DoNamedTest2();
+    public void UseExpressionResultFix_Parenthesized_Unary() => DoNamedTest();
 
     [Test]
-    public void TestUseExpressionResultFix_NonParenthesized_Unary() => DoNamedTest2();
+    public void UseExpressionResultFix_NonParenthesized_Unary() => DoNamedTest();
 }

@@ -14,5 +14,5 @@ public sealed class TimeSpanPositiveAvailabilityTests : CSharpContextActionAvail
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\TimeSpanPositive";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

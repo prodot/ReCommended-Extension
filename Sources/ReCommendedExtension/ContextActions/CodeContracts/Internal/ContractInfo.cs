@@ -34,7 +34,7 @@ internal abstract record ContractInfo
         [JetBrains.Annotations.Pure]
         public static List<ContractStatementInfo> CreateContractStatementInfos(IBlock body)
         {
-            var list = new List<ContractStatementInfo>();
+            List<ContractStatementInfo> list = [];
 
             foreach (var statement in body.Statements)
             {
@@ -121,6 +121,7 @@ internal abstract record ContractInfo
             var originalTypeParameter = source[i].DeclaredElement;
 
             Debug.Assert(typeParameterDeclaration.DeclaredElement is { });
+            Debug.Assert(originalTypeParameter is { });
 
             typeParameterMap.Add(originalTypeParameter, TypeFactory.CreateType(typeParameterDeclaration.DeclaredElement));
         }

@@ -14,5 +14,5 @@ public sealed class TimeSpanZeroExecuteTests : CSharpContextActionExecuteTestBas
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\TimeSpanZero";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 }

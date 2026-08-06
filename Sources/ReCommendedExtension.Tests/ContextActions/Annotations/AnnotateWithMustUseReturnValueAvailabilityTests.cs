@@ -16,8 +16,8 @@ public sealed class AnnotateWithMustUseReturnValueAvailabilityTests : CSharpCont
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithMustUseReturnValue";
 
     [Test]
-    public void TestAvailabilityMethods() => DoNamedTest2();
+    public void AvailabilityMethods() => DoNamedTest();
 
     [Test]
-    public void TestAvailabilityLocalFunctions() => DoNamedTest2();
+    public void AvailabilityLocalFunctions() => DoNamedTest();
 }

@@ -14,5 +14,5 @@ public sealed class AnnotationArgumentQuickFixTests : QuickFixTestBase<Redundant
     protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     [Test]
-    public void TestRedundantAnnotationArgument() => DoNamedTest2();
+    public void RedundantAnnotationArgument() => DoNamedTest();
 }

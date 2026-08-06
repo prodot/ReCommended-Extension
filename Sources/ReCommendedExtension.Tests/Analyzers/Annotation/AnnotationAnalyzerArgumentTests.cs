@@ -18,9 +18,9 @@ public sealed class AnnotationAnalyzerArgumentTests : CSharpAnalyzerTests
     [Test]
     [TestNet80("JetBrains.Annotations/2023.3.0")] // structs cannot be annotated with [MustDisposeResource]
     [ReuseSolution(false)] // prevents reusing cached packages
-    public void TestRedundantAnnotationArgument_Legacy() => DoNamedTest2();
+    public void RedundantAnnotationArgument_Legacy() => DoNamedTest();
 
     [Test]
     [TestNet80(ANNOTATIONS_PACKAGE)]
-    public void TestRedundantAnnotationArgument() => DoNamedTest2();
+    public void RedundantAnnotationArgument() => DoNamedTest();
 }

@@ -56,7 +56,7 @@ internal sealed record OperatorContractInfo : ContractInfo
                 provider.PsiModule,
                 () => getContractExpression(expression),
                 out var firstNonContractStatement);
-            firstNonContractStatements = firstNonContractStatement is { } ? new[] { firstNonContractStatement } : null;
+            firstNonContractStatements = firstNonContractStatement is { } ? [firstNonContractStatement] : null;
         }
         else
         {

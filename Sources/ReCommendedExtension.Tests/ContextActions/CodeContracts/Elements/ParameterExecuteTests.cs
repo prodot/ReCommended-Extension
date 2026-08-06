@@ -14,35 +14,35 @@ public sealed class ParameterExecuteTests : CSharpContextActionExecuteTestBase<N
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Elements\Parameter";
 
     [Test]
-    public void TestExecuteWithAbstractMethod() => DoNamedTest2();
+    public void ExecuteWithAbstractMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithInterfaceMethod() => DoNamedTest2();
+    public void ExecuteWithInterfaceMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithEmptyMethod() => DoNamedTest2();
+    public void ExecuteWithEmptyMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithNonEmptyMethod() => DoNamedTest2();
+    public void ExecuteWithNonEmptyMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithNonEmptyMethod2() => DoNamedTest2();
+    public void ExecuteWithNonEmptyMethod2() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithNonEmptyMethod3() => DoNamedTest2();
+    public void ExecuteWithNonEmptyMethod3() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithRefParameter() => DoNamedTest2();
+    public void ExecuteWithRefParameter() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithOutParameter() => DoNamedTest2();
+    public void ExecuteWithOutParameter() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithAbstractIndexer() => DoNamedTest2();
+    public void ExecuteWithAbstractIndexer() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithInterfaceIndexer() => DoNamedTest2();
+    public void ExecuteWithInterfaceIndexer() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithIndexer() => DoNamedTest2();
+    public void ExecuteWithIndexer() => DoNamedTest();
 }

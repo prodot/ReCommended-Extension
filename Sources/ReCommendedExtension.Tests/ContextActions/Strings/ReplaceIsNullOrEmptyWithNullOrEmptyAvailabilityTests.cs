@@ -18,5 +18,5 @@ public sealed class ReplaceIsNullOrEmptyWithNullOrEmptyAvailabilityTests
     protected override string RelativeTestDataPath => @"ContextActions\ReplaceIsNullOrEmpty";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2(); // same file used by multiple tests
+    public void Availability() => DoNamedTest(); // same file used by multiple tests
 }

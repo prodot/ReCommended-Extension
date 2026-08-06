@@ -14,10 +14,10 @@ public sealed class YieldReturnWithinLockAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is YieldReturnWithinLockWarning;
 
     [Test]
-    public void TestYieldReturnWithinLock() => DoNamedTest2();
+    public void YieldReturnWithinLock() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp130)]
     [TestNet90]
-    public void TestYieldReturnWithinLockAroundLockObject() => DoNamedTest2();
+    public void YieldReturnWithinLockAroundLockObject() => DoNamedTest();
 }

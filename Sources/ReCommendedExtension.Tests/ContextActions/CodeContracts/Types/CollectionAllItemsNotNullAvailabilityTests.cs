@@ -14,5 +14,5 @@ public sealed class CollectionAllItemsNotNullAvailabilityTests : CSharpContextAc
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\CollectionAllItemsNotNull";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

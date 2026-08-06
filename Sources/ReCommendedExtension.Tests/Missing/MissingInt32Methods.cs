@@ -107,11 +107,11 @@ internal static class MissingInt32Methods
 
         [Pure]
         public static int Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => int.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
+            => int.Parse(Encoding.UTF8.GetString([..utf8Text]), provider);
 
         [Pure]
         public static int Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-            => int.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+            => int.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
         public static int Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => int.Parse(s.ToString(), provider);
@@ -143,14 +143,14 @@ internal static class MissingInt32Methods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out int result)
-            => int.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+            => int.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out int result)
-            => int.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Number, provider, out result);
+            => int.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Number, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, out int result)
-            => int.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
+            => int.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }

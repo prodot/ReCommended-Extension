@@ -13,6 +13,8 @@
 @rem See the License for the specific language governing permissions and
 @rem limitations under the License.
 @rem
+@rem SPDX-License-Identifier: Apache-2.0
+@rem
 
 @if "%DEBUG%"=="" @echo off
 @rem ##########################################################################
@@ -40,9 +42,21 @@ set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
 
 setlocal
 set BUILD_DIR=%LOCALAPPDATA%\gradle-jvm
-set JVM_TARGET_DIR=%BUILD_DIR%\jdk-17.0.3.1_windows-x64_bin-d6ede5\
 
-set JVM_URL=https://download.oracle.com/java/17/archive/jdk-17.0.3.1_windows-x64_bin.zip
+@rem download path (AMD64): https://www.oracle.com/java/technologies/downloads/
+@rem download path (ARM64): https://learn.microsoft.com/en-us/java/openjdk/download
+
+for /f "tokens=3 delims= " %%A in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v "PROCESSOR_ARCHITECTURE"') do set WIN_ARCH=%%A
+if "%WIN_ARCH%" equ "AMD64" (
+    set JVM_TARGET_DIR=%BUILD_DIR%\jdk-25_windows-x64\
+    set JVM_URL=https://download.oracle.com/java/25/latest/jdk-25_windows-x64_bin.zip
+) else if "%WIN_ARCH%" equ "ARM64" (
+    set JVM_TARGET_DIR=%BUILD_DIR%\microsoft-jdk-25.0.4-windows-aarch64\
+    set JVM_URL=https://aka.ms/download-jdk/microsoft-jdk-25.0.4-windows-aarch64.zip
+) else (
+    echo Unknown architecture %WIN_ARCH%
+    goto fail
+)
 
 set IS_TAR_GZ=0
 set JVM_TEMP_FILE=gradle-jvm.zip
@@ -144,11 +158,10 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
 
 
 @rem Execute Gradle
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -jar "%APP_HOME%\gradle\wrapper\gradle-wrapper.jar" %*
 
 :end
 @rem End local scope for the variables with windows NT shell

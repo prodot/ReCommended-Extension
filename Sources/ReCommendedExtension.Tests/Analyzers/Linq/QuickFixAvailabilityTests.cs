@@ -16,5 +16,5 @@ public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analy
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RedundantLinqQueryHint;
 
     [Test]
-    public void TestRemoveLinqQueryFixAvailability() => DoNamedTest2();
+    public void RemoveLinqQueryFixAvailability() => DoNamedTest();
 }

@@ -16,5 +16,5 @@ public sealed class ReplaceWithArrayEmptyQuickFixAvailabilityTests : QuickFixAva
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UseEmptyForArrayInitializationWarning;
 
     [Test]
-    public void TestEmptyArrayInitializationAvailability() => DoNamedTest2();
+    public void EmptyArrayInitializationAvailability() => DoNamedTest();
 }

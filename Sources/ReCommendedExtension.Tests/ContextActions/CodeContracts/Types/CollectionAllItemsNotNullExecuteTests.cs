@@ -15,14 +15,14 @@ public sealed class CollectionAllItemsNotNullExecuteTests : CSharpContextActionE
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\CollectionAllItemsNotNull";
 
     [Test]
-    public void TestExecuteGenericCollection() => DoNamedTest2();
+    public void ExecuteGenericCollection() => DoNamedTest();
 
     [Test]
-    public void TestExecuteArray() => DoNamedTest2();
+    public void ExecuteArray() => DoNamedTest();
 
     [Test]
-    public void TestExecuteDictionary() => DoNamedTest2();
+    public void ExecuteDictionary() => DoNamedTest();
 
     [Test]
-    public void TestExecuteCollection() => DoNamedTest2();
+    public void ExecuteCollection() => DoNamedTest();
 }

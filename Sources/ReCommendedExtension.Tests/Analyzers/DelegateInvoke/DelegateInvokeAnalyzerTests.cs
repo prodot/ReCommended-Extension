@@ -12,5 +12,5 @@ public sealed class DelegateInvokeAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RedundantDelegateInvokeHint;
 
     [Test]
-    public void TestDelegateInvoke() => DoNamedTest2();
+    public void DelegateInvoke() => DoNamedTest();
 }

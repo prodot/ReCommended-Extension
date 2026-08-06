@@ -12,8 +12,8 @@ public sealed class EmbedIntoSeeCRefExecuteTests : DocCommentsExecuteTests<Embed
     protected override string RelativeTestDataPath => @"ContextActions\EmbedIntoSeeCRef";
 
     [Test]
-    public void TestExecuteWord() => DoNamedTestWithSettings();
+    public void ExecuteWord() => DoNamedTestWithSettings();
 
     [Test]
-    public void TestExecuteSelection() => DoNamedTestWithSettings();
+    public void ExecuteSelection() => DoNamedTestWithSettings();
 }

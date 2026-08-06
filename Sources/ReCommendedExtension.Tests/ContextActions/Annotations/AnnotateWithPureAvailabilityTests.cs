@@ -16,8 +16,8 @@ public sealed class AnnotateWithPureAvailabilityTests : CSharpContextActionAvail
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithPure";
 
     [Test]
-    public void TestAvailabilityMethods() => DoNamedTest2();
+    public void AvailabilityMethods() => DoNamedTest();
 
     [Test]
-    public void TestAvailabilityLocalFunctions() => DoNamedTest2();
+    public void AvailabilityLocalFunctions() => DoNamedTest();
 }

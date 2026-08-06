@@ -16,29 +16,29 @@ public sealed class AnnotateWithMustDisposeResourceFalseExecuteTests : CSharpCon
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithMustDisposeResourceFalse";
 
     [Test]
-    public void TestExecuteType() => DoNamedTest2();
+    public void ExecuteType() => DoNamedTest();
 
     [Test]
-    public void TestExecuteConstructor() => DoNamedTest2();
+    public void ExecuteConstructor() => DoNamedTest();
 
     [Test]
-    public void TestExecutePrimaryConstructor() => DoNamedTest2();
+    public void ExecutePrimaryConstructor() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethod() => DoNamedTest2();
+    public void ExecuteMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethod_MustUseReturnValue() => DoNamedTest2();
+    public void ExecuteMethod_MustUseReturnValue() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethod_Pure() => DoNamedTest2();
+    public void ExecuteMethod_Pure() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethod_MustDisposeResource() => DoNamedTest2();
+    public void ExecuteMethod_MustDisposeResource() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethod_Multiple() => DoNamedTest2();
+    public void ExecuteMethod_Multiple() => DoNamedTest();
 
     [Test]
-    public void TestExecuteParameter() => DoNamedTest2();
+    public void ExecuteParameter() => DoNamedTest();
 }

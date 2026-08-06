@@ -15,19 +15,17 @@ public abstract class DocCommentsExecuteTests<A, N> : CSharpContextActionExecute
         => store.SetValue(lambdaExpression, value);
 
     protected void DoNamedTestWithSettings()
-        => ExecuteWithinSettingsTransaction(
-            store =>
+        => ExecuteWithinSettingsTransaction(store =>
+        {
+            RunGuarded(() =>
             {
-                RunGuarded(
-                    () =>
-                    {
-                        SetValue(store, s => s.INDENT_SIZE, 4);
-                        SetValue(store, s => s.WRAP_LIMIT, 150);
-                        SetValue(store, s => s.TagSpacesAroundAttributeEq, false);
-                        SetValue(store, s => s.TagSpaceAfterLastAttr, false);
-                        SetValue(store, s => s.TagSpaceBeforeHeaderEnd1, false);
-                    });
-
-                DoNamedTest2();
+                SetValue(store, s => s.INDENT_SIZE, 4);
+                SetValue(store, s => s.WRAP_LIMIT, 150);
+                SetValue(store, s => s.TagSpacesAroundAttributeEq, false);
+                SetValue(store, s => s.TagSpaceAfterLastAttr, false);
+                SetValue(store, s => s.TagSpaceBeforeHeaderEnd1, false);
             });
+
+            DoNamedTest();
+        });
 }

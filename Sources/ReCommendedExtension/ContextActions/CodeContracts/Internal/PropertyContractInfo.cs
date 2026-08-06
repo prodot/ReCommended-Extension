@@ -109,7 +109,7 @@ internal sealed record PropertyContractInfo : ContractInfo
                     provider.PsiModule,
                     () => getContractExpression(expression),
                     out var firstNonContractStatement);
-                firstNonContractStatements = firstNonContractStatement is { } ? new[] { firstNonContractStatement } : null;
+                firstNonContractStatements = firstNonContractStatement is { } ? [firstNonContractStatement] : null;
             }
             else
             {

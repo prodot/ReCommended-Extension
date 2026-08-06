@@ -14,24 +14,24 @@ public sealed class UseOtherArgumentFixTests : QuickFixTestBase<UseOtherArgument
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestUseOtherArgument() => DoNamedTest2();
+    public void UseOtherArgument() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestUseOtherArgument_Named() => DoNamedTest2();
+    public void UseOtherArgument_Named() => DoNamedTest();
 
     [Test]
-    public void TestUseOtherArgument_AdditionalArgument() => DoNamedTest2();
+    public void UseOtherArgument_AdditionalArgument() => DoNamedTest();
 
     [Test]
-    public void TestUseOtherArgument_AdditionalArgument_Named() => DoNamedTest2();
+    public void UseOtherArgument_AdditionalArgument_Named() => DoNamedTest();
 
     [Test]
-    public void TestUseOtherArgument_RedundantArgument() => DoNamedTest2();
+    public void UseOtherArgument_RedundantArgument() => DoNamedTest();
 
     [Test]
-    public void TestUseOtherArgument_RedundantArgument_Named() => DoNamedTest2();
+    public void UseOtherArgument_RedundantArgument_Named() => DoNamedTest();
 
     [Test]
-    public void TestUseOtherArgument_RedundantArgument_OutOfOrder() => DoNamedTest2();
+    public void UseOtherArgument_RedundantArgument_OutOfOrder() => DoNamedTest();
 }

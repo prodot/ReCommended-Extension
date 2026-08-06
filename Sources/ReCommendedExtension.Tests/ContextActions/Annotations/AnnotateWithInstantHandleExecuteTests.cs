@@ -14,20 +14,20 @@ public sealed class AnnotateWithInstantHandleExecuteTests : CSharpContextActionE
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithInstantHandle";
 
     [Test]
-    public void TestExecuteGenericEnumerable() => DoNamedTest2();
+    public void ExecuteGenericEnumerable() => DoNamedTest();
 
     [Test]
-    public void TestExecuteDelegate() => DoNamedTest2();
+    public void ExecuteDelegate() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
-    public void TestExecuteAsyncEnumerable() => DoNamedTest2();
+    public void ExecuteAsyncEnumerable() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-    public void TestExecuteLambda() => DoNamedTest2();
+    public void ExecuteLambda() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-    public void TestExecuteLambda2() => DoNamedTest2();
+    public void ExecuteLambda2() => DoNamedTest();
 }

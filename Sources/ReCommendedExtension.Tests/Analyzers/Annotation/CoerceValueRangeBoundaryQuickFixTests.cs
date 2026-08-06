@@ -12,11 +12,11 @@ public sealed class CoerceValueRangeBoundaryQuickFixTests : QuickFixTestBase<Inv
     protected override string RelativeTestDataPath => @"Analyzers\Annotation\QuickFixes";
 
     [Test]
-    public void TestCoerceLowerBoundaryForSignedType() => DoNamedTest2();
+    public void CoerceLowerBoundaryForSignedType() => DoNamedTest();
 
     [Test]
-    public void TestCoerceLowerBoundaryForUnsignedType() => DoNamedTest2();
+    public void CoerceLowerBoundaryForUnsignedType() => DoNamedTest();
 
     [Test]
-    public void TestCoerceHigherBoundary() => DoNamedTest2();
+    public void CoerceHigherBoundary() => DoNamedTest();
 }

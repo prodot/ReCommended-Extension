@@ -5,8 +5,13 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Formatter;
-using ReCommendedExtension.Extensions.NumberInfos;
 using ReCommendedExtension.Tests.Missing;
+
+using int128 = ReCommendedExtension.Extensions.NumberInfos.Int128;
+using uint128 = ReCommendedExtension.Extensions.NumberInfos.UInt128;
+using half = ReCommendedExtension.Extensions.NumberInfos.Half;
+using dateOnly = ReCommendedExtension.Tests.Missing.DateOnly;
+using timeOnly = ReCommendedExtension.Tests.Missing.TimeOnly;
 
 namespace ReCommendedExtension.Tests.Analyzers.Formatter;
 
@@ -136,9 +141,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestByte()
+    public void Byte()
     {
-        var values = new byte[] { 0, 1, 2, byte.MaxValue };
+        byte[] values = [0, 1, 2, byte.MaxValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -186,7 +191,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -194,9 +199,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestSByte()
+    public void SByte()
     {
-        var values = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
+        sbyte[] values = [0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -244,7 +249,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -252,9 +257,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestInt16()
+    public void Int16()
     {
-        var values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
+        short[] values = [0, 1, 2, -1, -2, short.MaxValue, short.MinValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -302,7 +307,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -310,9 +315,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestUInt16()
+    public void UInt16()
     {
-        var values = new ushort[] { 0, 1, 2, ushort.MaxValue };
+        ushort[] values = [0, 1, 2, ushort.MaxValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -360,7 +365,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -368,9 +373,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestInt32()
+    public void Int32()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
+        int[] values = [0, 1, 2, -1, -2, int.MaxValue, int.MinValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -418,7 +423,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -426,9 +431,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestUInt32()
+    public void UInt32()
     {
-        var values = new uint[] { 0, 1, 2, uint.MaxValue };
+        uint[] values = [0, 1, 2, uint.MaxValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -476,7 +481,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -484,9 +489,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestInt64()
+    public void Int64()
     {
-        var values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
+        long[] values = [0, 1, 2, -1, -2, long.MaxValue, long.MinValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -534,7 +539,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -542,9 +547,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestUInt64()
+    public void UInt64()
     {
-        var values = new ulong[] { 0, 1, 2, ulong.MaxValue };
+        ulong[] values = [0, 1, 2, ulong.MaxValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -592,15 +597,15 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestInt128()
+    public void Int128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, Int128.MaxValue, Int128.MinValue };
+        int128[] values = [0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -648,15 +653,15 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestUInt128()
+    public void UInt128()
     {
-        var values = new[] { 0, 1, 2, UInt128.MaxValue };
+        uint128[] values = [0, 1, 2, uint128.MaxValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -704,7 +709,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             ["X2", "x2"],
             ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -714,9 +719,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
     [SuppressMessage("ReSharper", "FormatStringProblem")] // todo: remove when IntPtr implements IFormattable
-    public void TestIntPtr()
+    public void IntPtr()
     {
-        var values = new[] { (nint)0, 1, 2, -1, -2 };
+        nint[] values = [0, 1, 2, -1, -2];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -750,7 +755,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "G", "G0", "g", "g0"], ["E6", "e6", "D0", "D1", "d0", "d1"], ["X2", "x2"], ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -760,9 +765,9 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
     [SuppressMessage("ReSharper", "FormatStringProblem")] // todo: remove when UIntPtr implements IFormattable
-    public void TestUIntPtr()
+    public void UIntPtr()
     {
-        var values = new nuint[] { 0, 1, 2 };
+        nuint[] values = [0, 1, 2];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -796,16 +801,16 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "G", "G0", "g", "g0"], ["E6", "e6", "D0", "D1", "d0", "d1"], ["X2", "x2"], ["X0", "X1", "x0", "x1"]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestDecimal()
+    public void Decimal()
     {
-        var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
+        decimal[] values = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:g}", n => $"{n}", values);
@@ -819,17 +824,17 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "G", "g"], ["E6", "e6"], [], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestDouble()
+    public void Double()
     {
-        var values = new[]
-        {
+        double[] values =
+        [
             0,
             -0d,
             1,
@@ -844,7 +849,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             double.NaN,
             double.PositiveInfinity,
             double.NegativeInfinity,
-        };
+        ];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -858,17 +863,17 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "G", "G0"], ["E6", "e6"], [], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "RedundantFormatPrecisionSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestSingle()
+    public void Single()
     {
-        var values = new[]
-        {
+        float[] values =
+        [
             0,
             -0f,
             1,
@@ -883,7 +888,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             float.NaN,
             float.PositiveInfinity,
             float.NegativeInfinity,
-        };
+        ];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -897,31 +902,31 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "G", "G0"], ["E6", "e6"], [], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet50]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestHalf()
+    public void Half()
     {
-        var values = new[]
-        {
+        half[] values =
+        [
             (sbyte)0,
             (sbyte)1,
             (sbyte)2,
-            (sbyte)-1,
-            (sbyte)-2,
-            (Half)(-0f),
-            (Half)1.2f,
-            (Half)(-1.2f),
-            Half.MaxValue,
-            Half.MinValue,
-            Half.Epsilon,
-            Half.NaN,
-            Half.PositiveInfinity,
-            Half.NegativeInfinity,
-        };
+            -1,
+            -2,
+            (half)(-0f),
+            (half)1.2f,
+            (half)(-1.2f),
+            half.MaxValue,
+            half.MinValue,
+            half.Epsilon,
+            half.NaN,
+            half.PositiveInfinity,
+            half.NegativeInfinity,
+        ];
 
         Test(n => $"{n:G}", n => $"{n}", values);
         Test(n => $"{n:G0}", n => $"{n}", values);
@@ -935,27 +940,27 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "G", "G0"], ["E6", "e6"], [], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
-    public void TestBoolean()
+    public void Boolean()
     {
-        var values = new[] { true, false };
+        bool[] values = [true, false];
 
         Test(values, true);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
-    public void TestChar()
+    public void Char()
     {
-        var values = new[] { 'a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue };
+        char[] values = ['a', 'A', '1', ' ', 'ä', 'ß', '€', char.MinValue, char.MaxValue];
 
         Test(values, true);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
@@ -978,10 +983,10 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
     [Test]
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestEnum()
+    public void Enum()
     {
-        var enumValues = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
-        var flagValues = new[] { SampleFlags.Red, SampleFlags.Red | SampleFlags.Blue, (SampleFlags)3, (SampleFlags)0, (SampleFlags)9 };
+        SampleEnum[] enumValues = [SampleEnum.Red, (SampleEnum)1, (SampleEnum)10];
+        SampleFlags[] flagValues = [SampleFlags.Red, SampleFlags.Red | SampleFlags.Blue, (SampleFlags)3, 0, (SampleFlags)9];
 
         Test(e => $"{e:G}", e => $"{e}", enumValues);
         Test(e => $"{e:g}", e => $"{e}", enumValues);
@@ -997,15 +1002,15 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(enumValues, true, [null, "", "G", "g"], [], [], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestGuid()
+    public void Guid()
     {
-        var values = new[] { Guid.Empty, new Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
+        Guid[] values = [System.Guid.Empty, new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])];
 
         Test(guid => $"{guid:D}", guid => $"{guid}", values);
         Test(guid => $"{guid:d}", guid => $"{guid}", values);
@@ -1015,19 +1020,19 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, true, [null, "", "D", "d"], [], ["N", "B", "P", "X"], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "RedundantFormatSpecifier")]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestTimeSpan()
+    public void TimeSpan()
     {
-        var values = new[]
-        {
-            TimeSpan.Zero,
-            TimeSpan.MinValue,
-            TimeSpan.MaxValue,
+        TimeSpan[] values =
+        [
+            System.TimeSpan.Zero,
+            System.TimeSpan.MinValue,
+            System.TimeSpan.MaxValue,
             new(0, 0, 1),
             new(0, 1, 0),
             new(1, 0, 0),
@@ -1035,7 +1040,7 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
             new(0, 0, 0, 0, 1),
             new(1, 2, 3, 4),
             new(-1, 2, 3, 4),
-        };
+        ];
 
         Test(timeSpan => $"{timeSpan:c}", timeSpan => $"{timeSpan}", values);
         Test(timeSpan => $"{timeSpan:t}", timeSpan => $"{timeSpan}", values);
@@ -1047,49 +1052,49 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "c", "t", "T"], [], ["c", "t", "T"], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
-    public void TestDateTime()
+    public void DateTime()
     {
-        var values = new[]
-        {
-            DateTime.MinValue,
-            DateTime.MaxValue,
+        DateTime[] values =
+        [
+            System.DateTime.MinValue,
+            System.DateTime.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Local),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Utc),
-        };
+        ];
 
         Test(values, false, [null, ""], [], ["o", "O", "r", "R", "s", "u"], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
-    public void TestDateTimeOffset()
+    public void DateTimeOffset()
     {
-        var values = new[]
-        {
-            DateTimeOffset.MinValue,
-            DateTimeOffset.MaxValue,
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.Zero),
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.FromHours(2)),
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.FromHours(-6)),
-        };
+        DateTimeOffset[] values =
+        [
+            System.DateTimeOffset.MinValue,
+            System.DateTimeOffset.MaxValue,
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.Zero),
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(2)),
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(-6)),
+        ];
 
         Test(values, false, [null, ""], [], ["o", "O", "r", "R", "s", "u"], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet60]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestDateOnly()
+    public void DateOnly()
     {
-        var values = new[] { DateOnly.MinValue, DateOnly.MaxValue, new(2025, 7, 15) };
+        dateOnly[] values = [dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15)];
 
         Test(dateOnly => $"{dateOnly:d}", dateOnly => $"{dateOnly}", values);
 
@@ -1097,15 +1102,15 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "d"], [], ["o", "O", "r", "R"], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet60]
     [SuppressMessage("ReSharper", "UseStringInterpolation")]
-    public void TestTimeOnly()
+    public void TimeOnly()
     {
-        var values = new[] { TimeOnly.MinValue, TimeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
+        timeOnly[] values = [timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5)];
 
         Test(timeOnly => $"{timeOnly:t}", timeOnly => $"{timeOnly}", values);
 
@@ -1113,38 +1118,38 @@ public sealed class FormatterAnalyzerTests : CSharpAnalyzerTests
 
         Test(values, false, [null, "", "t"], [], ["o", "O", "r", "R"], []);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
-    public void TestString()
+    public void String()
     {
-        var values = new[] { null, "", "abcde" };
+        string?[] values = [null, "", "abcde"];
 
         Test(values, true);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "ReplaceTypeCastWithFormatSpecifier")]
-    public void TestCastEnum()
+    public void CastEnum()
     {
-        var values = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
+        SampleEnum[] values = [SampleEnum.Red, (SampleEnum)1, (SampleEnum)10];
 
         Test(e => $"{(int)e}", e => $"{e:D}", values);
         Test(e => $"{(int?)e}", e => $"{e:D}", values);
         Test<SampleEnum?>(e => $"{(int?)e}", e => $"{e:D}", [..values, null]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestInterpolatedStringHandler() => DoNamedTest2();
+    public void InterpolatedStringHandler() => DoNamedTest();
 
     [Test]
     [TestNet70]
-    public void TestStringFormatters() => DoNamedTest2();
+    public void StringFormatters() => DoNamedTest();
 }

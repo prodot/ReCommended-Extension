@@ -12,14 +12,14 @@ public sealed class RemoveArgumentRangeFixTests : QuickFixTestBase<RedundantArgu
 
     [Test]
     [TestNet60]
-    public void TestRemoveArgumentRange_Middle() => DoNamedTest2();
+    public void RemoveArgumentRange_Middle() => DoNamedTest();
 
     [Test]
-    public void TestRemoveArgumentRange_Last() => DoNamedTest2();
+    public void RemoveArgumentRange_Last() => DoNamedTest();
 
     [Test]
-    public void TestRemoveArgumentRange_Last_Named() => DoNamedTest2();
+    public void RemoveArgumentRange_Last_Named() => DoNamedTest();
 
     [Test]
-    public void TestRemoveArgumentRange_OutOfOrder() => DoNamedTest2();
+    public void RemoveArgumentRange_OutOfOrder() => DoNamedTest();
 }

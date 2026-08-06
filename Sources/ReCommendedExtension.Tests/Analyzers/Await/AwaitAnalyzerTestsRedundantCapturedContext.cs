@@ -18,43 +18,41 @@ public sealed class AwaitAnalyzerTestsRedundantCapturedContext : CSharpAnalyzerT
         => highlighting is RedundantCapturedContextSuggestion or RedundantConfigureAwaitWarning; // to figure out which cases are supported by R#
 
     [Test]
-    public void TestRedundantCapturedContext() => DoNamedTest2();
+    public void RedundantCapturedContext() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestRedundantCapturedContext_ValueTask() => DoNamedTest2();
+    public void RedundantCapturedContext_ValueTask() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestRedundantCapturedContext_ReturnValueTask() => DoNamedTest2();
+    public void RedundantCapturedContext_ReturnValueTask() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestRedundantCapturedContext_ValueTask_ReturnTask() => DoNamedTest2();
+    public void RedundantCapturedContext_ValueTask_ReturnTask() => DoNamedTest();
 
     [Test]
     [TestNetCore30]
-    public void TestRedundantCapturedContext_IAsyncTypes() => DoNamedTest2();
+    public void RedundantCapturedContext_IAsyncTypes() => DoNamedTest();
 
     [Test]
     [TestNetCore30]
-    public void TestRedundantCapturedContext_LibraryMode()
-        => ExecuteWithinSettingsTransaction(
-            store =>
-            {
-                RunGuarded(
-                    () => store.SetValue<DaemonProjectSettings, ConfigureAwaitAnalysisMode>(
-                        s => s.ConfigureAwaitAnalysisMode,
-                        ConfigureAwaitAnalysisMode.Library));
+    public void RedundantCapturedContext_LibraryMode()
+        => ExecuteWithinSettingsTransaction(store =>
+        {
+            RunGuarded(() => store.SetValue<DaemonProjectSettings, ConfigureAwaitAnalysisMode>(
+                s => s.ConfigureAwaitAnalysisMode,
+                ConfigureAwaitAnalysisMode.Library));
 
-                DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
-            });
+            DoTestSolution("RedundantCapturedContext_LibraryMode.cs");
+        });
 
     [Test]
     [TestNet80]
-    public void TestRedundantCapturedContext_NET_8() => DoNamedTest2();
+    public void RedundantCapturedContext_NET_8() => DoNamedTest();
 
     [Test]
     [TestNet80]
-    public void TestRedundantCapturedContext_ValueTask_NET_8() => DoNamedTest2();
+    public void RedundantCapturedContext_ValueTask_NET_8() => DoNamedTest();
 }

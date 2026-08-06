@@ -12,5 +12,5 @@ public sealed class ControlFlowQuickFixTestsForAssertionStatement : QuickFixTest
 
     [Test]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestRemoveAssertionStatement() => DoNamedTest2();
+    public void RemoveAssertionStatement() => DoNamedTest();
 }

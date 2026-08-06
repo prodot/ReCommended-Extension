@@ -15,9 +15,9 @@ public sealed class AnnotateWithLinqTunnelAvailabilityTests : CSharpContextActio
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithLinqTunnel";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 
     [Test]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityAsyncEnumerable() => DoNamedTest2();
+    public void AvailabilityAsyncEnumerable() => DoNamedTest();
 }

@@ -13,5 +13,5 @@ public sealed class ReplaceTypeCastWithFormatSpecifierFixTests : QuickFixTestBas
     protected override string RelativeTestDataPath => @"Analyzers\Formatter\QuickFixes";
 
     [Test]
-    public void TestReplaceTypeCastWithFormatSpecifier() => DoNamedTest2();
+    public void ReplaceTypeCastWithFormatSpecifier() => DoNamedTest();
 }

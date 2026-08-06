@@ -14,5 +14,5 @@ public sealed class EnumBetweenFirstAndLastAvailabilityTests : CSharpContextActi
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\EnumBetweenFirstAndLast";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

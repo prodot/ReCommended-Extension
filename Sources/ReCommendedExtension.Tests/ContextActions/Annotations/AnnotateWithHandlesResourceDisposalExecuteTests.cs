@@ -16,16 +16,16 @@ public sealed class AnnotateWithHandlesResourceDisposalExecuteTests : CSharpCont
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithHandlesResourceDisposal";
 
     [Test]
-    public void TestExecuteMethod() => DoNamedTest2();
+    public void ExecuteMethod() => DoNamedTest();
 
     [Test]
-    public void TestExecuteParameter() => DoNamedTest2();
+    public void ExecuteParameter() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
-    public void TestExecuteProperty() => DoNamedTest2();
+    public void ExecuteProperty() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-    public void TestExecuteField() => DoNamedTest2();
+    public void ExecuteField() => DoNamedTest();
 }

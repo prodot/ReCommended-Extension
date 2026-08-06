@@ -15,15 +15,15 @@ public sealed class AnnotateWithNonNegativeValueExecuteTests : CSharpContextActi
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithNonNegativeValue";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [TestNet60(ANNOTATIONS_PACKAGE)]
-    public void TestExecuteLambda() => DoNamedTest2();
+    public void ExecuteLambda() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [TestNet60(ANNOTATIONS_PACKAGE)]
-    public void TestExecuteLambda2() => DoNamedTest2();
+    public void ExecuteLambda2() => DoNamedTest();
 }

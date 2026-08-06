@@ -12,5 +12,5 @@ public sealed class CatchClauseWithoutVariableAnalyzerTests : CSharpAnalyzerTest
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is CatchClauseWithoutVariableHint;
 
     [Test]
-    public void TestCatchClauseWithoutVariable() => DoNamedTest2();
+    public void CatchClauseWithoutVariable() => DoNamedTest();
 }

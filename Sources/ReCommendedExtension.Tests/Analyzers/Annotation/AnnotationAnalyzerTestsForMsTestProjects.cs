@@ -14,9 +14,9 @@ public sealed class AnnotationAnalyzerTestsForMsTestProjects : CSharpAnalyzerTes
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is MissingSuppressionJustificationWarning;
 
     [Test]
-    public void TestSuppressMessage_TestProject() => DoNamedTest2();
+    public void SuppressMessage_TestProject() => DoNamedTest();
 
     [Test]
     [TestNet50("MSTest.TestFramework")]
-    public void TestSuppressMessage_TestProject_NET_5() => DoNamedTest2();
+    public void SuppressMessage_TestProject_NET_5() => DoNamedTest();
 }

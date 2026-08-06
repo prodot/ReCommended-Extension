@@ -15,15 +15,15 @@ public sealed class AsyncVoidAnalyzerTests : CSharpAnalyzerTests
         => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning;
 
     [Test]
-    public void TestAnonymousMethod() => DoNamedTest2();
+    public void AnonymousMethod() => DoNamedTest();
 
     [Test]
-    public void TestLambdaExpression() => DoNamedTest2();
+    public void LambdaExpression() => DoNamedTest();
 
     [Test]
-    public void TestAsyncVoidMethod() => DoNamedTest2();
+    public void AsyncVoidMethod() => DoNamedTest();
 
     // [Test]
     // [TestNet60("Microsoft.WindowsAppSDK/1.1.4")]
-    // public void TestAsyncVoidMethodXBind() => DoNamedTest2();
+    // public void AsyncVoidMethodXBind() => DoNamedTest();
 }

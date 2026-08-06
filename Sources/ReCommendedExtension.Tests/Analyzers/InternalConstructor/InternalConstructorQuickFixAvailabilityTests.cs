@@ -12,5 +12,5 @@ public sealed class InternalConstructorQuickFixAvailabilityTests : QuickFixAvail
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is InternalConstructorVisibilitySuggestion;
 
     [Test]
-    public void TestInternalConstructorAvailability() => DoNamedTest2();
+    public void InternalConstructorAvailability() => DoNamedTest();
 }

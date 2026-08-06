@@ -14,5 +14,5 @@ public sealed class DelegateInvokeQuickFixAvailabilityTests : QuickFixAvailabili
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RedundantDelegateInvokeHint;
 
     [Test]
-    public void TestDelegateInvokeAvailability() => DoNamedTest2();
+    public void DelegateInvokeAvailability() => DoNamedTest();
 }

@@ -14,7 +14,7 @@ public sealed class AssemblyTests
     [Test]
     [SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.1")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-    public void TestCopyrightYear()
+    public void CopyrightYear()
     {
         var assembly = typeof(IReCommendedExtensionZone).Assembly;
         var attribute = assembly.GetAttribute<AssemblyCopyrightAttribute>();
@@ -24,7 +24,7 @@ public sealed class AssemblyTests
 
     [Test]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-    public void TestVersions()
+    public void Versions()
     {
         var assembly = typeof(IReCommendedExtensionZone).Assembly;
 
@@ -39,7 +39,7 @@ public sealed class AssemblyTests
     }
 
     [Test]
-    public void TestDuplicateTexts()
+    public void DuplicateTexts()
     {
         var assembly = typeof(IReCommendedExtensionZone).Assembly;
 
@@ -56,7 +56,7 @@ public sealed class AssemblyTests
     }
 
     [Test]
-    public void TestClrTypeNames()
+    public void ClrTypeNames()
     {
         var predefinedTypes =
         (
@@ -79,7 +79,7 @@ public sealed class AssemblyTests
             Assert.True(types.TryAdd(field.ClrTypeName, field.FieldName), $"Duplicate type '{field.ClrTypeName.FullName}' detected.");
         }
 
-        var redundantFields = new List<(string fieldName, string predefinedTypeFieldName)>();
+        List<(string fieldName, string predefinedTypeFieldName)> redundantFields = [];
 
         foreach (var (clrTypeName, fieldName) in types)
         {

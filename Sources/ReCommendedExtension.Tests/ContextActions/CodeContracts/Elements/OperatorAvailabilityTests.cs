@@ -14,5 +14,5 @@ public sealed class OperatorAvailabilityTests : CSharpContextActionAvailabilityT
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Elements\Operator";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

@@ -99,12 +99,14 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 _ => -1,
             };
 
-        var constructors =
-        (
+        List<IConstructor> constructors =
+        [
+            ..
             from c in listType.Constructors
             where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
             orderby c.Parameters.Count, GetOrder(c.Parameters is [var parameter, ..] ? parameter.Type : null)
-            select c).ToList();
+            select c,
+        ];
 
         Debug.Assert(
             constructors is [{ Parameters: [] }, { Parameters: [{ Type: var intParameter }] }, { Parameters: [{ Type: var enumerableParameter }] }]
@@ -129,12 +131,14 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 _ => -1,
             };
 
-        var constructors =
-        (
+        List<IConstructor> constructors =
+        [
+            ..
             from c in hashSetType.Constructors
             where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
             orderby c.Parameters.Count, GetOrder(c.Parameters is [var parameter, ..] ? parameter.Type : null)
-            select c).ToList();
+            select c,
+        ];
 
         Debug.Assert(
             constructors is
@@ -174,12 +178,14 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
                 _ => -1,
             };
 
-        var constructors =
-        (
+        List<IConstructor> constructors =
+        [
+            ..
             from c in dictionaryType.Constructors
             where c.AccessibilityDomain.DomainType == AccessibilityDomain.AccessibilityDomainType.PUBLIC
             orderby c.Parameters.Count, GetOrder(c.Parameters is [var parameter, ..] ? parameter.Type : null)
-            select c).ToList();
+            select c,
+        ];
 
         Debug.Assert(
             constructors is
@@ -912,7 +918,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             var methodReferenceToSetInferredTypeArguments =
                 isEmptyDictionary ? TryGetMethodReferenceToSetInferredTypeArguments(dictionaryCreationExpression) : null;
 
-            var typeArguments = new[] { keyType, valueType };
+            IType[] typeArguments = [keyType, valueType];
 
             [Pure]
             bool IsTargetTypedTo(IClrTypeName clrTypeName)
@@ -976,7 +982,7 @@ public sealed class CollectionAnalyzer : ElementProblemAnalyzer<ICSharpTreeNode>
             {
                 var psiModule = collectionExpression.GetPsiModule();
 
-                var typeArguments = new[] { collectionItemType };
+                IType[] typeArguments = [collectionItemType];
 
                 [Pure]
                 bool IsTargetTypedToArray()

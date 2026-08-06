@@ -17,8 +17,8 @@ public sealed class ToggleReturnTypeOfAsyncMethodsAvailabilityTests : CSharpCont
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet50]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 
     [Test]
-    public void TestUnavailability() => DoNamedTest2();
+    public void Unavailability() => DoNamedTest();
 }

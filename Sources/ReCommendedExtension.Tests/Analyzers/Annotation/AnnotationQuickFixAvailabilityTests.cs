@@ -21,13 +21,13 @@ public sealed class AnnotationQuickFixAvailabilityTests : QuickFixAvailabilityTe
             or InvalidValueRangeBoundaryWarning;
 
     [Test]
-    public void TestAnnotationAvailability() => DoNamedTest2();
+    public void AnnotationAvailability() => DoNamedTest();
 
     [Test]
-    public void TestCoerceValueRangeBoundaryAvailability() => DoNamedTest2();
+    public void CoerceValueRangeBoundaryAvailability() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestRedundantNullableAnnotationAvailability() => DoNamedTest2();
+    public void RedundantNullableAnnotationAvailability() => DoNamedTest();
 }

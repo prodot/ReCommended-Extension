@@ -20,7 +20,7 @@ public sealed class AnnotationAnalyzerTestsWithoutAnnotations : CSharpAnalyzerTe
     [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.PESSIMISTIC)]
     [TestCase("WithoutAnnotations_Optimistic.cs", ValueAnalysisMode.OPTIMISTIC)]
     [TestCase("WithoutAnnotations_Pessimistic.cs", ValueAnalysisMode.OFF)]
-    public void TestFileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
+    public void FileWithValueAnalysisMode(string file, ValueAnalysisMode valueAnalysisMode)
         => ExecuteWithinSettingsTransaction(store =>
         {
             RunGuarded(() => store.SetValue<HighlightingSettings, ValueAnalysisMode>(s => s.ValueAnalysisMode, valueAnalysisMode));

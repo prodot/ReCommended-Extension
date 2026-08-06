@@ -17,14 +17,14 @@ public sealed class AnnotateWithHandlesResourceDisposalAvailabilityTests
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithHandlesResourceDisposal";
 
     [Test]
-    public void TestAvailabilityMethods() => DoNamedTest2();
+    public void AvailabilityMethods() => DoNamedTest();
 
     [Test]
-    public void TestAvailabilityParameters() => DoNamedTest2();
+    public void AvailabilityParameters() => DoNamedTest();
 
     [Test]
-    public void TestAvailabilityProperties() => DoNamedTest2();
+    public void AvailabilityProperties() => DoNamedTest();
 
     [Test]
-    public void TestAvailabilityFields() => DoNamedTest2();
+    public void AvailabilityFields() => DoNamedTest();
 }

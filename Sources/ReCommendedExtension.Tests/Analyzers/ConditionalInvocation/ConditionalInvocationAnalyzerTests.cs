@@ -12,5 +12,5 @@ public sealed class ConditionalInvocationAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is ConditionalInvocationHint;
 
     [Test]
-    public void TestConditional() => DoNamedTest2();
+    public void Conditional() => DoNamedTest();
 }

@@ -14,8 +14,8 @@ public sealed class EnumKnownValuesExecuteTests : CSharpContextActionExecuteTest
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\EnumKnownValues";
 
     [Test]
-    public void TestExecuteTwoMembers() => DoNamedTest2();
+    public void ExecuteTwoMembers() => DoNamedTest();
 
     [Test]
-    public void TestExecuteFourMembers() => DoNamedTest2();
+    public void ExecuteFourMembers() => DoNamedTest();
 }

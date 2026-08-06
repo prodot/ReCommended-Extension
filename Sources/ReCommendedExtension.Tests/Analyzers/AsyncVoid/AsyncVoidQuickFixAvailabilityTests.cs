@@ -15,14 +15,14 @@ public sealed class AsyncVoidQuickFixAvailabilityTests : QuickFixAvailabilityTes
         => highlighting is AsyncVoidFunctionExpressionWarning or AvoidAsyncVoidWarning;
 
     [Test]
-    public void TestAnonymousMethodAvailability() => DoNamedTest2();
+    public void AnonymousMethodAvailability() => DoNamedTest();
 
     [Test]
-    public void TestLambdaExpressionAvailability() => DoNamedTest2();
+    public void LambdaExpressionAvailability() => DoNamedTest();
 
     [Test]
-    public void TestAsyncVoidMethodAvailability() => DoNamedTest2();
+    public void AsyncVoidMethodAvailability() => DoNamedTest();
 
     [Test]
-    public void TestAsyncVoidLocalFunctionAvailability() => DoNamedTest2();
+    public void AsyncVoidLocalFunctionAvailability() => DoNamedTest();
 }

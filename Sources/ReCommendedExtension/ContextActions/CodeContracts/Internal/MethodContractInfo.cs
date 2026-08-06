@@ -72,7 +72,7 @@ internal sealed record MethodContractInfo : ContractInfo
                 () => getContractExpression(expression),
                 out var firstNonContractStatement);
 
-            firstNonContractStatements = firstNonContractStatement is { } ? new[] { firstNonContractStatement } : null;
+            firstNonContractStatements = firstNonContractStatement is { } ? [firstNonContractStatement] : null;
         }
         else
         {

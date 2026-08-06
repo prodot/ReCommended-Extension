@@ -15,8 +15,8 @@ public sealed class ReflowDocCommentsAvailabilityTests : CSharpContextActionAvai
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestAvailability_TopLevelTags() => DoNamedTest2();
+    public void Availability_TopLevelTags() => DoNamedTest();
 
     [Test]
-    public void TestAvailability_NestedTags() => DoNamedTest2();
+    public void Availability_NestedTags() => DoNamedTest();
 }

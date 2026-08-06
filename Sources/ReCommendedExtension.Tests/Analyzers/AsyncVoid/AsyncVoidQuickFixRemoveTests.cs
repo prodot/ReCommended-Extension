@@ -12,8 +12,8 @@ public sealed class AsyncVoidQuickFixRemoveTests : QuickFixTestBase<AsyncVoidFun
     protected override string RelativeTestDataPath => @"Analyzers\AsyncVoid\QuickFixes";
 
     [Test]
-    public void TestAnonymousMethod() => DoNamedTest2();
+    public void AnonymousMethod() => DoNamedTest();
 
     [Test]
-    public void TestLambdaExpression() => DoNamedTest2();
+    public void LambdaExpression() => DoNamedTest();
 }

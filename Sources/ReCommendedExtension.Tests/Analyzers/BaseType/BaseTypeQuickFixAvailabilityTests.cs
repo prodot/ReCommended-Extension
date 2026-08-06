@@ -16,5 +16,5 @@ public sealed class BaseTypeQuickFixAvailabilityTests : QuickFixAvailabilityTest
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is RemoveRedundantBaseTypeDeclarationHint;
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

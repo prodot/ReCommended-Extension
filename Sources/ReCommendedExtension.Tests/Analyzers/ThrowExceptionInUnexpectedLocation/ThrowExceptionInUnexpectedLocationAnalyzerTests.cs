@@ -16,17 +16,17 @@ public sealed class ThrowExceptionInUnexpectedLocationAnalyzerTests : CSharpAnal
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is ThrowExceptionInUnexpectedLocationWarning;
 
     [Test]
-    public void TestThrowExceptionInUnexpectedLocation() => DoNamedTest2();
+    public void ThrowExceptionInUnexpectedLocation() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestThrowExceptionInUnexpectedLocation_NullableAnnotationContext() => DoNamedTest2();
+    public void ThrowExceptionInUnexpectedLocation_NullableAnnotationContext() => DoNamedTest();
 
     [Test]
     [TestNet70]
-    public void TestThrowExceptionInUnexpectedLocation_UnreachableException() => DoNamedTest2();
+    public void ThrowExceptionInUnexpectedLocation_UnreachableException() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp70)]
-    public void TestThrowExceptionInUnexpectedLocation_ExceptionHandling() => DoNamedTest2();
+    public void ThrowExceptionInUnexpectedLocation_ExceptionHandling() => DoNamedTest();
 }

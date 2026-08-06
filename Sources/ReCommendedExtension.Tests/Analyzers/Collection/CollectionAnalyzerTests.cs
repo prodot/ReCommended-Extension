@@ -52,174 +52,174 @@ public sealed class CollectionAnalyzerTests : CSharpAnalyzerTests
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
     [TestNetFramework46]
-    public void TestEmptyArrayInitialization() => DoNamedTest2();
+    public void EmptyArrayInitialization() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestEmptyArrayInitialization_CS12() => DoNamedTest2();
+    public void EmptyArrayInitialization_CS12() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_NonTargetTyped() => DoNamedTest2();
+    public void CollectionInitialization_Array_NonTargetTyped() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_Target_Array() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_Array() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_Target_IEnumerable() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_IEnumerable() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_Target_IReadOnlyCollection() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_IReadOnlyCollection() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_Target_IReadOnlyList() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet80]
-    public void TestCollectionInitialization_Array_Target_ICollection() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_IReadOnlyList() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionInitialization_Array_Target_IList() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_ICollection() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionInitialization_List_NonTargetTyped() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_IList() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionInitialization_List_Target_List() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    public void TestCollectionInitialization_List_Target_IEnumerable() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    public void TestCollectionInitialization_List_Target_IReadOnlyCollection() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    public void TestCollectionInitialization_List_Target_IReadOnlyList() => DoNamedTest2();
+    public void CollectionInitialization_List_NonTargetTyped() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionInitialization_List_Target_ICollection() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_List() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void CollectionInitialization_List_Target_IEnumerable() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void CollectionInitialization_List_Target_IReadOnlyCollection() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void CollectionInitialization_List_Target_IReadOnlyList() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionInitialization_List_Target_IList() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_ICollection() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionInitialization_HashSet_NonTargetTyped() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IList() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionInitialization_HashSet_Target_HashSet() => DoNamedTest2();
-
-    [Test]
-    [NullableContext(NullableContextKind.Enable)]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    public void TestCollectionInitialization_HashSet_Target_IEnumerable() => DoNamedTest2();
+    public void CollectionInitialization_HashSet_NonTargetTyped() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionInitialization_HashSet_Target_IReadOnlyCollection() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet80]
-    public void TestCollectionInitialization_Dictionary_NonTargetTyped() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [NullableContext(NullableContextKind.Enable)]
-    [TestNet80]
-    public void TestCollectionInitialization_Dictionary_Target_Dictionary() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    public void TestCollectionInitialization_Other_NonTargetTyped() => DoNamedTest2();
-
-    [Test]
-    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    [TestNet80]
-    public void TestCollectionInitialization_Other_Target_Other() => DoNamedTest2();
+    public void CollectionInitialization_HashSet_Target_HashSet() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet80]
-    public void TestCollectionInitialization_ItemTypes() => DoNamedTest2();
+    public void CollectionInitialization_HashSet_Target_IEnumerable() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80]
+    public void CollectionInitialization_HashSet_Target_IReadOnlyCollection() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80]
+    public void CollectionInitialization_Dictionary_NonTargetTyped() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [NullableContext(NullableContextKind.Enable)]
+    [TestNet80]
+    public void CollectionInitialization_Dictionary_Target_Dictionary() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void CollectionInitialization_Other_NonTargetTyped() => DoNamedTest();
+
+    [Test]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void CollectionInitialization_Other_Target_Other() => DoNamedTest();
+
+    [Test]
+    [NullableContext(NullableContextKind.Enable)]
+    [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
+    [TestNet80]
+    public void CollectionInitialization_ItemTypes() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    public void TestArrayWithDefaultValuesInitialization() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestArrayWithDefaultValuesInitialization_CS12() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization_CS12() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
-    public void TestArrayWithDefaultValuesInitializationWithNullableAnnotations() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitializationWithNullableAnnotations() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    public void TestArrayWithDefaultValuesInitialization_TargetTyped() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization_TargetTyped() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
-    public void TestArrayWithDefaultValuesInitialization_ParameterlessCtor() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization_ParameterlessCtor() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
     [TestNet80]
-    public void TestCollectionExpressionWithDefaultValuesInitialization() => DoNamedTest2();
+    public void CollectionExpressionWithDefaultValuesInitialization() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestCausingExpression() => DoNamedTest2();
+    public void CausingExpression() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNetCore20]
-    public void TestParameterizedCollectionCreationWithInferredTypeArgument() => DoNamedTest2();
+    public void ParameterizedCollectionCreationWithInferredTypeArgument() => DoNamedTest();
 }

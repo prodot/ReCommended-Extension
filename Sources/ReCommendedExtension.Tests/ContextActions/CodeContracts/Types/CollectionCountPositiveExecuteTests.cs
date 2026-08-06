@@ -14,17 +14,17 @@ public sealed class CollectionCountPositiveExecuteTests : CSharpContextActionExe
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\CollectionCountPositive";
 
     [Test]
-    public void TestExecuteGenericCollection() => DoNamedTest2();
+    public void ExecuteGenericCollection() => DoNamedTest();
 
     [Test]
-    public void TestExecuteArray() => DoNamedTest2();
+    public void ExecuteArray() => DoNamedTest();
 
     [Test]
-    public void TestExecuteArrayType() => DoNamedTest2();
+    public void ExecuteArrayType() => DoNamedTest();
 
     [Test]
-    public void TestExecuteDictionary() => DoNamedTest2();
+    public void ExecuteDictionary() => DoNamedTest();
 
     [Test]
-    public void TestExecuteCollection() => DoNamedTest2();
+    public void ExecuteCollection() => DoNamedTest();
 }

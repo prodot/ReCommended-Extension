@@ -17,5 +17,5 @@ public sealed class AnnotateWithIgnoreSpellingAndGrammarErrorsExecuteTests
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithIgnoreSpellingAndGrammarErrors";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 }

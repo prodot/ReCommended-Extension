@@ -13,11 +13,11 @@ public sealed class PassOtherFormatSpecifierFixTests : QuickFixTestBase<PassOthe
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp110)]
-    public void TestPassOtherFormatSpecifier_StringInterpolation() => DoNamedTest2();
+    public void PassOtherFormatSpecifier_StringInterpolation() => DoNamedTest();
 
     [Test]
-    public void TestPassOtherFormatSpecifier_StringFormat() => DoNamedTest2();
+    public void PassOtherFormatSpecifier_StringFormat() => DoNamedTest();
 
     [Test]
-    public void TestPassOtherFormatSpecifier_ToString() => DoNamedTest2();
+    public void PassOtherFormatSpecifier_ToString() => DoNamedTest();
 }

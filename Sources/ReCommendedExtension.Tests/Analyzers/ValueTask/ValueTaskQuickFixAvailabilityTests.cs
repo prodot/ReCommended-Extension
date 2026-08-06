@@ -14,5 +14,5 @@ public sealed class ValueTaskQuickFixAvailabilityTests : QuickFixAvailabilityTes
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is IntentionalBlockingAttemptWarning;
 
     [Test]
-    public void TestIntentionalBlockingAttemptsAvailability() => DoNamedTest2();
+    public void IntentionalBlockingAttemptsAvailability() => DoNamedTest();
 }

@@ -6,7 +6,7 @@ namespace Test
     {
         public void Method<T>(T[] source)
         {
-            T[] result = [..from item in sour{caret}ce select item];
+            T[] result = [.. from item in sour{caret}ce select item];
         }
     }
 }

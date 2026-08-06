@@ -12,5 +12,5 @@ public sealed class UncatchableExceptionAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UncatchableExceptionWarning;
 
     [Test]
-    public void TestUncatchableException() => DoNamedTest2();
+    public void UncatchableException() => DoNamedTest();
 }

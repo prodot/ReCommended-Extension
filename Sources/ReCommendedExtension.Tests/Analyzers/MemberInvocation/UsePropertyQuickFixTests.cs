@@ -13,29 +13,29 @@ public sealed class UsePropertyQuickFixTests : QuickFixTestBase<UsePropertySugge
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestUsePropertyFix() => DoNamedTest2();
+    public void UsePropertyFix() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePropertyFix_Nullable() => DoNamedTest2();
+    public void UsePropertyFix_Nullable() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePropertyFix_Extension_NoCast() => DoNamedTest2();
+    public void UsePropertyFix_Extension_NoCast() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePropertyFix_Extension_NoCast_Nullable() => DoNamedTest2();
+    public void UsePropertyFix_Extension_NoCast_Nullable() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePropertyFix_Extension_NoCast_NonNullable() => DoNamedTest2();
+    public void UsePropertyFix_Extension_NoCast_NonNullable() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePropertyFix_Extension_Cast() => DoNamedTest2();
+    public void UsePropertyFix_Extension_Cast() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUsePropertyFix_Extension_Cast_Nullable() => DoNamedTest2();
+    public void UsePropertyFix_Extension_Cast_Nullable() => DoNamedTest();
 }

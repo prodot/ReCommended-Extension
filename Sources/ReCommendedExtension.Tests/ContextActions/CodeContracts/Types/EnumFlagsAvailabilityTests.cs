@@ -14,5 +14,5 @@ public sealed class EnumFlagsAvailabilityTests : CSharpContextActionAvailability
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\EnumFlags";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

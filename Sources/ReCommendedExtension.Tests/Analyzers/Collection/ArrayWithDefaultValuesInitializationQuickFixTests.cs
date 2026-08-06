@@ -13,27 +13,27 @@ public sealed class ArrayWithDefaultValuesInitializationQuickFixTests : QuickFix
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     [Test]
-    public void TestArrayWithDefaultValuesInitialization() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization() => DoNamedTest();
 
     [Test]
-    public void TestArrayWithDefaultValuesInitialization2() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization2() => DoNamedTest();
 
     [Test]
-    public void TestArrayWithDefaultValuesInitialization3() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization3() => DoNamedTest();
 
     [Test]
-    public void TestArrayWithDefaultValuesInitialization4() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization4() => DoNamedTest();
 
     [Test]
-    public void TestArrayWithDefaultValuesInitialization5() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization5() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp80)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestArrayWithDefaultValuesInitialization6() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization6() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestArrayWithDefaultValuesInitialization7() => DoNamedTest2();
+    public void ArrayWithDefaultValuesInitialization7() => DoNamedTest();
 }

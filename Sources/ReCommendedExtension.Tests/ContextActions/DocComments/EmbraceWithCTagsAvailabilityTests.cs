@@ -12,5 +12,5 @@ public sealed class EmbraceWithCTagsAvailabilityTests : CSharpContextActionAvail
     protected override string RelativeTestDataPath => @"ContextActions\EmbraceWithCTags";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

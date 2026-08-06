@@ -14,5 +14,5 @@ public sealed class DateTimeTimeOfDayZeroExecuteTests : CSharpContextActionExecu
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\DateTimeTimeOfDayZero";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 }

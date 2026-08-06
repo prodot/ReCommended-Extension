@@ -12,5 +12,5 @@ public sealed class EmbedIntoParamrefNameAvailabilityTests : CSharpContextAction
     protected override string RelativeTestDataPath => @"ContextActions\EmbedIntoParamrefName";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }

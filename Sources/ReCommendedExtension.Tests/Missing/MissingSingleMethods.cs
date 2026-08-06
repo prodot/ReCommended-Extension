@@ -9,14 +9,14 @@ internal static class MissingSingleMethods
     {
         [Pure]
         public static float Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => float.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), provider);
+            => float.Parse(Encoding.UTF8.GetString([..utf8Text]), provider);
 
         [Pure]
         public static float Parse(
             ReadOnlySpan<byte> utf8Text,
             NumberStyles style = NumberStyles.Float | NumberStyles.AllowThousands,
             IFormatProvider? provider = null)
-            => float.Parse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider);
+            => float.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
         public static float Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => float.Parse(s.ToString(), provider);
@@ -57,14 +57,14 @@ internal static class MissingSingleMethods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out float result)
-            => float.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), style, provider, out result);
+            => float.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out float result)
-            => float.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
+            => float.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, out float result)
-            => float.TryParse(Encoding.UTF8.GetString(utf8Text.ToArray()), out result);
+            => float.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }

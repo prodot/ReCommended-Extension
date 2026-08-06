@@ -16,19 +16,19 @@ internal static class MissingStringBuilderMethods
         public StringBuilder AppendJoin(string? separator, params object?[] values) => source.Append(string.Join(separator, values));
 
         public StringBuilder AppendJoin(string? separator, params ReadOnlySpan<object?> values)
-            => source.Append(string.Join(separator, values.ToArray()));
+            => source.Append(string.Join(separator, [..values]));
 
         public StringBuilder AppendJoin<T>(string? separator, [InstantHandle] IEnumerable<T> values) => source.Append(string.Join(separator, values));
 
         public StringBuilder AppendJoin(string? separator, params string?[] values) => source.Append(string.Join(separator, values));
 
         public StringBuilder AppendJoin(string? separator, params ReadOnlySpan<string?> values)
-            => source.Append(string.Join(separator, values.ToArray()));
+            => source.Append(string.Join(separator, [..values]));
 
         public StringBuilder AppendJoin(char separator, params object?[] values) => source.Append(string.Join($"{separator}", values));
 
         public StringBuilder AppendJoin(char separator, params ReadOnlySpan<object?> values)
-            => source.Append(string.Join($"{separator}", values.ToArray()));
+            => source.Append(string.Join($"{separator}", [..values]));
 
         public StringBuilder AppendJoin<T>(char separator, [InstantHandle] IEnumerable<T> values)
             => source.Append(string.Join($"{separator}", values));
@@ -36,6 +36,6 @@ internal static class MissingStringBuilderMethods
         public StringBuilder AppendJoin(char separator, params string?[] values) => source.Append(string.Join($"{separator}", values));
 
         public StringBuilder AppendJoin(char separator, params ReadOnlySpan<string?> values)
-            => source.Append(string.Join($"{separator}", values.ToArray()));
+            => source.Append(string.Join($"{separator}", [..values]));
     }
 }

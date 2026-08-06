@@ -12,9 +12,9 @@ public sealed class UseDateTimePropertyQuickFixTests : QuickFixTestBase<UseStati
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestUseStaticPropertyFix() => DoNamedTest2();
+    public void UseStaticPropertyFix() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp60)]
-    public void TestUseStaticPropertyFix_StaticImport() => DoNamedTest2();
+    public void UseStaticPropertyFix_StaticImport() => DoNamedTest();
 }

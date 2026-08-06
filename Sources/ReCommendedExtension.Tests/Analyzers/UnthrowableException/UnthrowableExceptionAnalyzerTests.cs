@@ -12,5 +12,5 @@ public sealed class UnthrowableExceptionAnalyzerTests : CSharpAnalyzerTests
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is UnthrowableExceptionWarning;
 
     [Test]
-    public void TestUnthrowableException() => DoNamedTest2();
+    public void UnthrowableException() => DoNamedTest();
 }

@@ -15,21 +15,21 @@ public sealed class UseOtherMethodFixTests : QuickFixTestBase<UseOtherMethodSugg
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUseOtherMethodFix_LeftOperand() => DoNamedTest2();
+    public void UseOtherMethodFix_LeftOperand() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUseOtherMethodFix_LeftOperand_Negated() => DoNamedTest2();
+    public void UseOtherMethodFix_LeftOperand_Negated() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUseOtherMethodFix_RightOperand() => DoNamedTest2();
+    public void UseOtherMethodFix_RightOperand() => DoNamedTest();
 
     [Test]
     [NullableContext(NullableContextKind.Enable)]
-    public void TestUseOtherMethodFix_RightOperand_Negated() => DoNamedTest2();
+    public void UseOtherMethodFix_RightOperand_Negated() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestUseOtherMethodFix_Standalone() => DoNamedTest2();
+    public void UseOtherMethodFix_Standalone() => DoNamedTest();
 }

@@ -12,5 +12,5 @@ public sealed class ArgumentExceptionConstructorArgumentAnalyzerTests : CSharpAn
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is ArgumentExceptionConstructorArgumentWarning;
 
     [Test]
-    public void TestArgumentExceptionConstructorArgument() => DoNamedTest2();
+    public void ArgumentExceptionConstructorArgument() => DoNamedTest();
 }

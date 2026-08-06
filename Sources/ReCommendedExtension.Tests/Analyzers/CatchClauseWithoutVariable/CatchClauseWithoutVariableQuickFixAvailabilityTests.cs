@@ -12,5 +12,5 @@ public sealed class CatchClauseWithoutVariableQuickFixAvailabilityTests : QuickF
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is CatchClauseWithoutVariableHint;
 
     [Test]
-    public void TestCatchClauseWithoutVariableAvailability() => DoNamedTest2();
+    public void CatchClauseWithoutVariableAvailability() => DoNamedTest();
 }

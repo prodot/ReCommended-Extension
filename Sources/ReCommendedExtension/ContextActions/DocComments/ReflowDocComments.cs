@@ -13,6 +13,7 @@ using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.ReSharper.Psi.Xml.XmlDocComments;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
+using ReCommendedExtension.Extensions;
 
 namespace ReCommendedExtension.ContextActions.DocComments;
 
@@ -894,7 +895,10 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
                 case TextToken { Kind: var kind, Text: var text, HasSpaceBefore: var hasSpaceBefore }:
                     if (pendingLineBreak || kind == TextTokenKind.Code || length + text.Length >= maxLength)
                     {
-                        builder.AppendLine();
+                        if (!builder.EndsWith(Environment.NewLine))
+                        {
+                            builder.AppendLine();
+                        }
 
                         builder.Append(' ', indentation);
                         builder.Append(text);
@@ -990,8 +994,16 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
         AppendTag(builder, tagInfo.Name, attribute, TagOption.HeaderOnly, settings);
         builder.AppendLine();
+
+        var builderLength = builder.Length;
+
         ReflowTokens(Tokenize(tag, settings), builder, maxLength, tagInfo.Flow == TopLevelTagFlow.Multiline ? 0 : settings.IndentSize, settings);
-        builder.AppendLine();
+
+        if (builder.Length > builderLength)
+        {
+            builder.AppendLine();
+        }
+
         AppendTag(builder, tagInfo.Name, TagOption.FooterOnly, settings);
         builder.AppendLine();
     }
@@ -1037,7 +1049,7 @@ public sealed class ReflowDocComments(ICSharpContextActionDataProvider provider)
 
                 foreach (var tagInfo in topLevelTags)
                 {
-                    var relevantTags = (from tag in tags where tag.GetFullTagName() == tagInfo.Name select tag).ToList();
+                    List<IXmlTag> relevantTags = [..from tag in tags where tag.GetFullTagName() == tagInfo.Name select tag];
                     if (relevantTags is [_, ..])
                     {
                         if (tagInfo.Attribute == TopLevelTagAttribute.Name

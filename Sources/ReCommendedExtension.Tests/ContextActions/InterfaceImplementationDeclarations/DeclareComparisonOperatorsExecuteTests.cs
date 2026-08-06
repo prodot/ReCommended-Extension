@@ -18,11 +18,11 @@ public sealed class DeclareComparisonOperatorsExecuteTests : CSharpContextAction
     protected override string RelativeTestDataPath => @"ContextActions\DeclareComparisonOperators";
 
     [Test]
-    public void TestExecute_Class() => DoNamedTest2();
+    public void Execute_Class() => DoNamedTest();
 
     [Test]
-    public void TestExecute_Struct() => DoNamedTest2();
+    public void Execute_Struct() => DoNamedTest();
 
     [Test]
-    public void TestExecute_Record() => DoNamedTest2();
+    public void Execute_Record() => DoNamedTest();
 }

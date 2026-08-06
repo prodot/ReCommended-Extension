@@ -21,17 +21,17 @@ public sealed class QuickFixAvailabilityTests : ReCommendedExtension.Tests.Analy
             or ReplaceTypeCastWithFormatSpecifierSuggestion;
 
     [Test]
-    public void TestRemoveFormatSpecifierAvailability() => DoNamedTest2();
+    public void RemoveFormatSpecifierAvailability() => DoNamedTest();
 
     [Test]
-    public void TestRemoveFormatPrecisionSpecifierAvailability() => DoNamedTest2();
+    public void RemoveFormatPrecisionSpecifierAvailability() => DoNamedTest();
 
     [Test]
-    public void TestPassOtherFormatSpecifierAvailability() => DoNamedTest2();
+    public void PassOtherFormatSpecifierAvailability() => DoNamedTest();
 
     [Test]
-    public void TestReplaceTypeCastWithFormatSpecifierAvailability() => DoNamedTest2();
+    public void ReplaceTypeCastWithFormatSpecifierAvailability() => DoNamedTest();
 
     [Test]
-    public void TestRemoveFormatProviderFixAvailability() => DoNamedTest2();
+    public void RemoveFormatProviderFixAvailability() => DoNamedTest();
 }

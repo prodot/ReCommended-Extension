@@ -15,22 +15,22 @@ public sealed class AnnotateWithDefaultEqualityUsageExecuteTests : CSharpContext
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithDefaultEqualityUsage";
 
     [Test]
-    public void TestExecuteClassTypeParameter() => DoNamedTest2();
+    public void ExecuteClassTypeParameter() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethodParameter() => DoNamedTest2();
+    public void ExecuteMethodParameter() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethodReturnValue() => DoNamedTest2();
+    public void ExecuteMethodReturnValue() => DoNamedTest();
 
     [Test]
-    public void TestExecuteMethodTypeParameter() => DoNamedTest2();
+    public void ExecuteMethodTypeParameter() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    public void TestExecutePositionalRecordParameter() => DoNamedTest2();
+    public void ExecutePositionalRecordParameter() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
-    public void TestExecutePrimaryConstructorParameter() => DoNamedTest2();
+    public void ExecutePrimaryConstructorParameter() => DoNamedTest();
 }

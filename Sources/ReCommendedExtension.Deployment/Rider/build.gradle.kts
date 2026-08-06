@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream
 plugins {
     id("java")
     alias(libs.plugins.kotlinJvm)
-    id("org.jetbrains.intellij.platform") version "2.13.1"     // See https://github.com/JetBrains/intellij-platform-gradle-plugin/releases
+    id("org.jetbrains.intellij.platform") version "2.16.0"     // See https://github.com/JetBrains/intellij-platform-gradle-plugin/releases
     id("me.filippov.gradle.jvm.wrapper") version "0.15.0"
 }
 
@@ -34,12 +34,6 @@ repositories {
     }
 }
 
-tasks.wrapper {
-    gradleVersion = "8.13"
-    distributionType = Wrapper.DistributionType.ALL
-    distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
-}
-
 version = extra["PluginVersion"] as String
 
 tasks.processResources {
@@ -53,10 +47,6 @@ sourceSets {
         resources.srcDir("src/rider/main/resources")
     }
 }
-
-//tasks.compileKotlin {
-//    kotlinOptions { jvmTarget = "17" }
-//}
 
 //val setBuildTool by tasks.registering {
 //    doLast {
@@ -167,7 +157,14 @@ tasks.patchPluginXml {
     //}.take(1).joinToString())
 
     val sinceBuildValue = sinceBuild.get()
-    val majorVersion = Regex("""^(\d+)\.""").find(sinceBuildValue)?.groupValues?.get(1)
+
+    val normalizedSinceBuild =
+        if (sinceBuildValue.contains('.')) sinceBuildValue
+        else "$sinceBuildValue.0"
+
+    sinceBuild.set(normalizedSinceBuild)
+
+    val majorVersion = normalizedSinceBuild.substringBefore('.')
     untilBuild.set("$majorVersion.*")
 }
 

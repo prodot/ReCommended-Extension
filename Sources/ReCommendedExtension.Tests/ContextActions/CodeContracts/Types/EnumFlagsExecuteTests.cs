@@ -14,11 +14,11 @@ public sealed class EnumFlagsExecuteTests : CSharpContextActionExecuteTestBase<E
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\EnumFlags";
 
     [Test]
-    public void TestExecuteWithZero() => DoNamedTest2();
+    public void ExecuteWithZero() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithoutZero() => DoNamedTest2();
+    public void ExecuteWithoutZero() => DoNamedTest();
 
     [Test]
-    public void TestExecuteWithZeroSingleMember() => DoNamedTest2();
+    public void ExecuteWithZeroSingleMember() => DoNamedTest();
 }

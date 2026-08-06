@@ -11,17 +11,17 @@ public sealed class RemoveMethodInvocationFixTests : QuickFixTestBase<RedundantM
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestRemoveMethodInvocation_Expression() => DoNamedTest2();
+    public void RemoveMethodInvocation_Expression() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestRemoveMethodInvocation_Expression_Chained() => DoNamedTest2();
+    public void RemoveMethodInvocation_Expression_Chained() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestRemoveMethodInvocation_Statement() => DoNamedTest2();
+    public void RemoveMethodInvocation_Statement() => DoNamedTest();
 
     [Test]
     [TestNetCore21]
-    public void TestRemoveMethodInvocation_Statement_Chained() => DoNamedTest2();
+    public void RemoveMethodInvocation_Statement_Chained() => DoNamedTest();
 }

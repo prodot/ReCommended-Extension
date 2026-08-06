@@ -10,8 +10,8 @@ public sealed class ReplaceNullableValueWithTypeCastFixTests : QuickFixTestBase<
     protected override string RelativeTestDataPath => @"Analyzers\MemberInvocation\QuickFixes";
 
     [Test]
-    public void TestReplaceNullableValueWithTypeCastFix() => DoNamedTest2();
+    public void ReplaceNullableValueWithTypeCastFix() => DoNamedTest();
 
     [Test]
-    public void TestReplaceNullableValueWithTypeCastFix_Parenthesized() => DoNamedTest2();
+    public void ReplaceNullableValueWithTypeCastFix_Parenthesized() => DoNamedTest();
 }

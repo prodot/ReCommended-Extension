@@ -18,26 +18,26 @@ public sealed class DeclareEqualityOperatorsExecuteTests : CSharpContextActionEx
     protected override string RelativeTestDataPath => @"ContextActions\DeclareEqualityOperators";
 
     [Test]
-    public void TestExecute_Class() => DoNamedTest2();
+    public void Execute_Class() => DoNamedTest();
 
     [Test]
-    public void TestExecute_Struct() => DoNamedTest2();
+    public void Execute_Struct() => DoNamedTest();
 
     [Test]
-    public void TestExecute_Record() => DoNamedTest2();
+    public void Execute_Record() => DoNamedTest();
 
     [Test]
-    public void TestExecute_Record2() => DoNamedTest2();
+    public void Execute_Record2() => DoNamedTest();
 
     [Test]
-    public void TestExecute_Record3() => DoNamedTest2();
+    public void Execute_Record3() => DoNamedTest();
 
     [Test]
-    public void TestExecute_Record4() => DoNamedTest2();
+    public void Execute_Record4() => DoNamedTest();
 
     [Test]
-    public void TestExecute_Record5() => DoNamedTest2();
+    public void Execute_Record5() => DoNamedTest();
 
     [Test]
-    public void TestExecute_RecordStruct() => DoNamedTest2();
+    public void Execute_RecordStruct() => DoNamedTest();
 }

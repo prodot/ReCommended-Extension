@@ -12,5 +12,5 @@ public sealed class AnnotateWithAttributeUsageExecuteTests : CSharpContextAction
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithAttributeUsage";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 }

@@ -5,8 +5,14 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 using ReCommendedExtension.Analyzers.Argument;
-using ReCommendedExtension.Extensions.NumberInfos;
 using ReCommendedExtension.Tests.Missing;
+
+using int128 = ReCommendedExtension.Extensions.NumberInfos.Int128;
+using uint128 = ReCommendedExtension.Extensions.NumberInfos.UInt128;
+using half = ReCommendedExtension.Extensions.NumberInfos.Half;
+using dateOnly = ReCommendedExtension.Tests.Missing.DateOnly;
+using timeOnly = ReCommendedExtension.Tests.Missing.TimeOnly;
+using mathF = ReCommendedExtension.Tests.Missing.MathF;
 
 namespace ReCommendedExtension.Tests.Analyzers.Argument;
 
@@ -180,9 +186,9 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestByte()
+    public void Byte()
     {
-        var values = new byte[] { 0, 1, 2, byte.MaxValue };
+        byte[] values = [0, 1, 2, byte.MaxValue];
 
         // redundant argument
 
@@ -225,15 +231,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestSByte()
+    public void SByte()
     {
-        var values = new sbyte[] { 0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue };
+        sbyte[] values = [0, 1, 2, -1, -2, sbyte.MaxValue, sbyte.MinValue];
 
         // redundant argument
 
@@ -276,15 +282,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestInt16()
+    public void Int16()
     {
-        var values = new short[] { 0, 1, 2, -1, -2, short.MaxValue, short.MinValue };
+        short[] values = [0, 1, 2, -1, -2, short.MaxValue, short.MinValue];
 
         // redundant argument
 
@@ -327,15 +333,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestUInt16()
+    public void UInt16()
     {
-        var values = new ushort[] { 0, 1, 2, ushort.MaxValue };
+        ushort[] values = [0, 1, 2, ushort.MaxValue];
 
         // redundant argument
 
@@ -378,15 +384,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestInt32()
+    public void Int32()
     {
-        var values = new[] { 0, 1, 2, -1, -2, int.MaxValue, int.MinValue };
+        int[] values = [0, 1, 2, -1, -2, int.MaxValue, int.MinValue];
 
         // redundant argument
 
@@ -426,15 +432,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestUInt32()
+    public void UInt32()
     {
-        var values = new uint[] { 0, 1, 2, uint.MaxValue };
+        uint[] values = [0, 1, 2, uint.MaxValue];
 
         // redundant argument
 
@@ -477,15 +483,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestInt64()
+    public void Int64()
     {
-        var values = new[] { 0, 1, 2, -1, -2, long.MaxValue, long.MinValue };
+        long[] values = [0, 1, 2, -1, -2, long.MaxValue, long.MinValue];
 
         // redundant argument
 
@@ -528,15 +534,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestUInt64()
+    public void UInt64()
     {
-        var values = new ulong[] { 0, 1, 2, ulong.MaxValue };
+        ulong[] values = [0, 1, 2, ulong.MaxValue];
 
         // redundant argument
 
@@ -579,117 +585,117 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestInt128()
+    public void Int128()
     {
-        var values = new[] { 0, 1, 2, -1, -2, Int128.MaxValue, Int128.MinValue };
+        int128[] values = [0, 1, 2, -1, -2, int128.MaxValue, int128.MinValue];
 
         // redundant argument
 
-        Test(n => Int128.Parse($"{n}", NumberStyles.Integer), n => Int128.Parse($"{n}"), values);
-        Test(n => Int128.Parse($"{n}", null), n => Int128.Parse($"{n}"), values);
+        Test(n => int128.Parse($"{n}", NumberStyles.Integer), n => int128.Parse($"{n}"), values);
+        Test(n => int128.Parse($"{n}", null), n => int128.Parse($"{n}"), values);
         Test(
-            (n, provider) => Int128.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => Int128.Parse($"{n}", provider),
+            (n, provider) => int128.Parse($"{n}", NumberStyles.Integer, provider),
+            (n, provider) => int128.Parse($"{n}", provider),
             values,
             formatProviders);
-        Test((n, style) => Int128.Parse($"{n}", style, null), (n, style) => Int128.Parse($"{n}", style), values, signedIntegerStyles);
-        Test(n => Int128.Parse($"{n}".AsSpan(), null), n => Int128.Parse($"{n}".AsSpan()), values);
-        Test(n => Int128.Parse($"{n}".AsUtf8Bytes(), null), n => Int128.Parse($"{n}".AsUtf8Bytes()), values);
+        Test((n, style) => int128.Parse($"{n}", style, null), (n, style) => int128.Parse($"{n}", style), values, signedIntegerStyles);
+        Test(n => int128.Parse($"{n}".AsSpan(), null), n => int128.Parse($"{n}".AsSpan()), values);
+        Test(n => int128.Parse($"{n}".AsUtf8Bytes(), null), n => int128.Parse($"{n}".AsUtf8Bytes()), values);
 
-        Test<Int128, Int128, bool>(
-            (n, out result) => Int128.TryParse($"{n}", null, out result),
-            (n, out result) => Int128.TryParse($"{n}", out result),
+        Test<int128, int128, bool>(
+            (n, out result) => int128.TryParse($"{n}", null, out result),
+            (n, out result) => int128.TryParse($"{n}", out result),
             values);
-        Test<Int128, Int128, bool>(
-            (n, out result) => Int128.TryParse($"{n}".AsSpan(), null, out result),
-            (n, out result) => Int128.TryParse($"{n}".AsSpan(), out result),
+        Test<int128, int128, bool>(
+            (n, out result) => int128.TryParse($"{n}".AsSpan(), null, out result),
+            (n, out result) => int128.TryParse($"{n}".AsSpan(), out result),
             values);
-        Test<Int128, Int128, bool>(
-            (n, out result) => Int128.TryParse($"{n}".AsUtf8Bytes(), null, out result),
-            (n, out result) => Int128.TryParse($"{n}".AsUtf8Bytes(), out result),
+        Test<int128, int128, bool>(
+            (n, out result) => int128.TryParse($"{n}".AsUtf8Bytes(), null, out result),
+            (n, out result) => int128.TryParse($"{n}".AsUtf8Bytes(), out result),
             values);
-        Test<Int128, IFormatProvider?, Int128, bool>(
-            (n, provider, out result) => Int128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (n, provider, out result) => Int128.TryParse($"{n}", provider, out result),
+        Test<int128, IFormatProvider?, int128, bool>(
+            (n, provider, out result) => int128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
+            (n, provider, out result) => int128.TryParse($"{n}", provider, out result),
             values,
             formatProviders);
-        Test<Int128, IFormatProvider?, Int128, bool>(
-            (n, provider, out result) => Int128.TryParse($"{n}".AsSpan(), NumberStyles.Integer, provider, out result),
-            (n, provider, out result) => Int128.TryParse($"{n}".AsSpan(), provider, out result),
+        Test<int128, IFormatProvider?, int128, bool>(
+            (n, provider, out result) => int128.TryParse($"{n}".AsSpan(), NumberStyles.Integer, provider, out result),
+            (n, provider, out result) => int128.TryParse($"{n}".AsSpan(), provider, out result),
             values,
             formatProviders);
-        Test<Int128, IFormatProvider?, Int128, bool>(
-            (n, provider, out result) => Int128.TryParse($"{n}".AsUtf8Bytes(), NumberStyles.Integer, provider, out result),
-            (n, provider, out result) => Int128.TryParse($"{n}".AsUtf8Bytes(), provider, out result),
+        Test<int128, IFormatProvider?, int128, bool>(
+            (n, provider, out result) => int128.TryParse($"{n}".AsUtf8Bytes(), NumberStyles.Integer, provider, out result),
+            (n, provider, out result) => int128.TryParse($"{n}".AsUtf8Bytes(), provider, out result),
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestUInt128()
+    public void UInt128()
     {
-        var values = new[] { 0, 1, 2, UInt128.MaxValue };
+        uint128[] values = [0, 1, 2, uint128.MaxValue];
 
         // redundant argument
 
-        Test(n => UInt128.Parse($"{n}", NumberStyles.Integer), n => UInt128.Parse($"{n}"), values);
-        Test(n => UInt128.Parse($"{n}", null), n => UInt128.Parse($"{n}"), values);
+        Test(n => uint128.Parse($"{n}", NumberStyles.Integer), n => uint128.Parse($"{n}"), values);
+        Test(n => uint128.Parse($"{n}", null), n => uint128.Parse($"{n}"), values);
         Test(
-            (n, provider) => UInt128.Parse($"{n}", NumberStyles.Integer, provider),
-            (n, provider) => UInt128.Parse($"{n}", provider),
+            (n, provider) => uint128.Parse($"{n}", NumberStyles.Integer, provider),
+            (n, provider) => uint128.Parse($"{n}", provider),
             values,
             formatProviders);
-        Test((n, style) => UInt128.Parse($"{n}", style, null), (n, style) => UInt128.Parse($"{n}", style), values, unsignedIntegerStyles);
-        Test(n => UInt128.Parse($"{n}".AsSpan(), null), n => UInt128.Parse($"{n}".AsSpan()), values);
-        Test(n => UInt128.Parse($"{n}".AsUtf8Bytes(), null), n => UInt128.Parse($"{n}".AsUtf8Bytes()), values);
+        Test((n, style) => uint128.Parse($"{n}", style, null), (n, style) => uint128.Parse($"{n}", style), values, unsignedIntegerStyles);
+        Test(n => uint128.Parse($"{n}".AsSpan(), null), n => uint128.Parse($"{n}".AsSpan()), values);
+        Test(n => uint128.Parse($"{n}".AsUtf8Bytes(), null), n => uint128.Parse($"{n}".AsUtf8Bytes()), values);
 
-        Test<UInt128, UInt128, bool>(
-            (n, out result) => UInt128.TryParse($"{n}", null, out result),
-            (n, out result) => UInt128.TryParse($"{n}", out result),
+        Test<uint128, uint128, bool>(
+            (n, out result) => uint128.TryParse($"{n}", null, out result),
+            (n, out result) => uint128.TryParse($"{n}", out result),
             values);
-        Test<UInt128, UInt128, bool>(
-            (n, out result) => UInt128.TryParse($"{n}".AsSpan(), null, out result),
-            (n, out result) => UInt128.TryParse($"{n}".AsSpan(), out result),
+        Test<uint128, uint128, bool>(
+            (n, out result) => uint128.TryParse($"{n}".AsSpan(), null, out result),
+            (n, out result) => uint128.TryParse($"{n}".AsSpan(), out result),
             values);
-        Test<UInt128, UInt128, bool>(
-            (n, out result) => UInt128.TryParse($"{n}".AsUtf8Bytes(), null, out result),
-            (n, out result) => UInt128.TryParse($"{n}".AsUtf8Bytes(), out result),
+        Test<uint128, uint128, bool>(
+            (n, out result) => uint128.TryParse($"{n}".AsUtf8Bytes(), null, out result),
+            (n, out result) => uint128.TryParse($"{n}".AsUtf8Bytes(), out result),
             values);
-        Test<UInt128, IFormatProvider?, UInt128, bool>(
-            (n, provider, out result) => UInt128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
-            (n, provider, out result) => UInt128.TryParse($"{n}", provider, out result),
+        Test<uint128, IFormatProvider?, uint128, bool>(
+            (n, provider, out result) => uint128.TryParse($"{n}", NumberStyles.Integer, provider, out result),
+            (n, provider, out result) => uint128.TryParse($"{n}", provider, out result),
             values,
             formatProviders);
-        Test<UInt128, IFormatProvider?, UInt128, bool>(
-            (n, provider, out result) => UInt128.TryParse($"{n}".AsSpan(), NumberStyles.Integer, provider, out result),
-            (n, provider, out result) => UInt128.TryParse($"{n}".AsSpan(), provider, out result),
+        Test<uint128, IFormatProvider?, uint128, bool>(
+            (n, provider, out result) => uint128.TryParse($"{n}".AsSpan(), NumberStyles.Integer, provider, out result),
+            (n, provider, out result) => uint128.TryParse($"{n}".AsSpan(), provider, out result),
             values,
             formatProviders);
-        Test<UInt128, IFormatProvider?, UInt128, bool>(
-            (n, provider, out result) => UInt128.TryParse($"{n}".AsUtf8Bytes(), NumberStyles.Integer, provider, out result),
-            (n, provider, out result) => UInt128.TryParse($"{n}".AsUtf8Bytes(), provider, out result),
+        Test<uint128, IFormatProvider?, uint128, bool>(
+            (n, provider, out result) => uint128.TryParse($"{n}".AsUtf8Bytes(), NumberStyles.Integer, provider, out result),
+            (n, provider, out result) => uint128.TryParse($"{n}".AsUtf8Bytes(), provider, out result),
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestIntPtr()
+    public void IntPtr()
     {
-        var values = new[] { (nint)0, 1, 2, -1, -2 };
+        nint[] values = [0, 1, 2, -1, -2];
 
         // redundant argument
 
@@ -732,15 +738,15 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestUIntPtr()
+    public void UIntPtr()
     {
-        var values = new nuint[] { 0, 1, 2 };
+        nuint[] values = [0, 1, 2];
 
         // redundant argument
 
@@ -787,17 +793,17 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestDecimal()
+    public void Decimal()
     {
-        var values = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
-        var styles = new[] { NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, NumberStyles.Number };
+        decimal[] values = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue];
+        NumberStyles[] styles = [NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, NumberStyles.Number];
 
         // redundant argument
 
@@ -845,17 +851,17 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         Test((n, mode) => decimal.Round(n, 0, mode), (n, mode) => decimal.Round(n, mode), values, roundings);
         Test((n, decimals) => decimal.Round(n, decimals, MidpointRounding.ToEven), (n, decimals) => decimal.Round(n, decimals), values, digitsValues);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestDouble()
+    public void Double()
     {
-        var values = new[]
-        {
+        double[] values =
+        [
             0,
             -0d,
             1,
@@ -870,7 +876,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             double.NaN,
             double.PositiveInfinity,
             double.NegativeInfinity,
-        };
+        ];
         double[] valuesForParsing = [..values.Except([double.MinValue, double.MaxValue]), float.MinValue, float.MaxValue];
 
         // redundant argument
@@ -931,17 +937,17 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         Test((n, mode) => double.Round(n, 0, mode), (n, mode) => double.Round(n, mode), values, roundings);
         Test((n, digits) => double.Round(n, digits, MidpointRounding.ToEven), (n, digits) => double.Round(n, digits), values, digitsValues);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestSingle()
+    public void Single()
     {
-        var values = new[]
-        {
+        float[] values =
+        [
             0,
             -0f,
             1,
@@ -956,8 +962,8 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             float.NaN,
             float.PositiveInfinity,
             float.NegativeInfinity,
-        };
-        float[] valuesForParsing = [.. values.Except([float.MinValue, float.MaxValue])];
+        ];
+        float[] valuesForParsing = [..values.Except([float.MinValue, float.MaxValue])];
 
         // redundant argument
 
@@ -1013,88 +1019,88 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         Test((n, mode) => float.Round(n, 0, mode), (n, mode) => float.Round(n, mode), values, roundings);
         Test((n, digits) => float.Round(n, digits, MidpointRounding.ToEven), (n, digits) => float.Round(n, digits), values, digitsValues);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet80]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestHalf()
+    public void Half()
     {
-        var values = new[]
-        {
+        half[] values =
+        [
             (sbyte)0,
             (sbyte)1,
             (sbyte)2,
-            (sbyte)-1,
-            (sbyte)-2,
-            (Half)(-0f),
-            (Half)1.2f,
-            (Half)(-1.2f),
-            Half.MaxValue,
-            Half.MinValue,
-            Half.Epsilon,
-            Half.NaN,
-            Half.PositiveInfinity,
-            Half.NegativeInfinity,
-        };
+            -1,
+            -2,
+            (half)(-0f),
+            (half)1.2f,
+            (half)(-1.2f),
+            half.MaxValue,
+            half.MinValue,
+            half.Epsilon,
+            half.NaN,
+            half.PositiveInfinity,
+            half.NegativeInfinity,
+        ];
 
         // redundant argument
 
-        Test(n => Half.Parse($"{n}", NumberStyles.Float | NumberStyles.AllowThousands), n => Half.Parse($"{n}"), values);
-        Test(n => Half.Parse($"{n}", null), n => Half.Parse($"{n}"), values);
+        Test(n => half.Parse($"{n}", NumberStyles.Float | NumberStyles.AllowThousands), n => half.Parse($"{n}"), values);
+        Test(n => half.Parse($"{n}", null), n => half.Parse($"{n}"), values);
         Test(
-            (n, provider) => Half.Parse(n.ToString(provider), NumberStyles.Float | NumberStyles.AllowThousands, provider),
-            (n, provider) => Half.Parse(n.ToString(provider), provider),
+            (n, provider) => half.Parse(n.ToString(provider), NumberStyles.Float | NumberStyles.AllowThousands, provider),
+            (n, provider) => half.Parse(n.ToString(provider), provider),
             values,
             formatProviders);
-        Test((n, style) => Half.Parse($"{n}", style, null), (n, style) => Half.Parse($"{n}", style), values, floatingPointStyles);
-        Test(n => Half.Parse($"{n}".AsSpan(), null), n => Half.Parse($"{n}".AsSpan()), values);
-        Test(n => Half.Parse($"{n}".AsUtf8Bytes(), null), n => Half.Parse($"{n}".AsUtf8Bytes()), values);
+        Test((n, style) => half.Parse($"{n}", style, null), (n, style) => half.Parse($"{n}", style), values, floatingPointStyles);
+        Test(n => half.Parse($"{n}".AsSpan(), null), n => half.Parse($"{n}".AsSpan()), values);
+        Test(n => half.Parse($"{n}".AsUtf8Bytes(), null), n => half.Parse($"{n}".AsUtf8Bytes()), values);
 
-        Test<Half, Half, bool>(
-            (n, out result) => Half.TryParse($"{n}", null, out result),
-            (n, out result) => Half.TryParse($"{n}", out result),
+        Test<half, half, bool>(
+            (n, out result) => half.TryParse($"{n}", null, out result),
+            (n, out result) => half.TryParse($"{n}", out result),
             values);
-        Test<Half, Half, bool>(
-            (n, out result) => Half.TryParse($"{n}".AsSpan(), null, out result),
-            (n, out result) => Half.TryParse($"{n}".AsSpan(), out result),
+        Test<half, half, bool>(
+            (n, out result) => half.TryParse($"{n}".AsSpan(), null, out result),
+            (n, out result) => half.TryParse($"{n}".AsSpan(), out result),
             values);
-        Test<Half, Half, bool>(
-            (n, out result) => Half.TryParse($"{n}".AsUtf8Bytes(), null, out result),
-            (n, out result) => Half.TryParse($"{n}".AsUtf8Bytes(), out result),
+        Test<half, half, bool>(
+            (n, out result) => half.TryParse($"{n}".AsUtf8Bytes(), null, out result),
+            (n, out result) => half.TryParse($"{n}".AsUtf8Bytes(), out result),
             values);
-        Test<Half, IFormatProvider?, Half, bool>(
-            (n, provider, out result) => Half.TryParse(n.ToString(provider), NumberStyles.Float | NumberStyles.AllowThousands, provider, out result),
-            (n, provider, out result) => Half.TryParse(n.ToString(provider), provider, out result),
+        Test<half, IFormatProvider?, half, bool>(
+            (n, provider, out result) => half.TryParse(n.ToString(provider), NumberStyles.Float | NumberStyles.AllowThousands, provider, out result),
+            (n, provider, out result) => half.TryParse(n.ToString(provider), provider, out result),
             values,
             formatProviders);
-        Test<Half, IFormatProvider?, Half, bool>(
-            (n, provider, out result) => Half.TryParse(
+        Test<half, IFormatProvider?, half, bool>(
+            (n, provider, out result) => half.TryParse(
                 n.ToString(provider).AsSpan(),
                 NumberStyles.Float | NumberStyles.AllowThousands,
                 provider,
                 out result),
-            (n, provider, out result) => Half.TryParse(n.ToString(provider).AsSpan(), provider, out result),
+            (n, provider, out result) => half.TryParse(n.ToString(provider).AsSpan(), provider, out result),
             values,
             formatProviders);
-        Test<Half, IFormatProvider?, Half, bool>(
-            (n, provider, out result) => Half.TryParse(
+        Test<half, IFormatProvider?, half, bool>(
+            (n, provider, out result) => half.TryParse(
                 n.ToString(provider).AsUtf8Bytes(),
                 NumberStyles.Float | NumberStyles.AllowThousands,
                 provider,
                 out result),
-            (n, provider, out result) => Half.TryParse(n.ToString(provider).AsUtf8Bytes(), provider, out result),
+            (n, provider, out result) => half.TryParse(n.ToString(provider).AsUtf8Bytes(), provider, out result),
             values,
             formatProviders);
 
-        Test(n => Half.Round(n, 0), n => Half.Round(n), values);
-        Test(n => Half.Round(n, MidpointRounding.ToEven), n => Half.Round(n), values);
-        Test((n, mode) => Half.Round(n, 0, mode), (n, mode) => Half.Round(n, mode), values, roundings);
-        Test((n, digits) => Half.Round(n, digits, MidpointRounding.ToEven), (n, digits) => Half.Round(n, digits), values, digitsValues);
+        Test(n => half.Round(n, 0), n => half.Round(n), values);
+        Test(n => half.Round(n, MidpointRounding.ToEven), n => half.Round(n), values);
+        Test((n, mode) => half.Round(n, 0, mode), (n, mode) => half.Round(n, mode), values, roundings);
+        Test((n, digits) => half.Round(n, digits, MidpointRounding.ToEven), (n, digits) => half.Round(n, digits), values, digitsValues);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
@@ -1117,101 +1123,108 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [Test]
     [TestNet60]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestEnum()
+    public void Enum()
     {
-        var enumValues = new[] { SampleEnum.Red, (SampleEnum)1, (SampleEnum)10 };
-        var flagValues = new[] { SampleFlags.Red, SampleFlags.Red | SampleFlags.Blue, (SampleFlags)3, (SampleFlags)0, (SampleFlags)9 };
+        SampleEnum[] enumValues = [SampleEnum.Red, (SampleEnum)1, (SampleEnum)10];
+        SampleFlags[] flagValues = [SampleFlags.Red, SampleFlags.Red | SampleFlags.Blue, (SampleFlags)3, 0, (SampleFlags)9];
 
         // redundant argument
 
-        Test(e => Enum.Parse<SampleEnum>(e.ToString(), false), e => Enum.Parse<SampleEnum>(e.ToString()), enumValues);
-        Test(e => Enum.Parse<SampleEnum>(e.ToString().AsSpan(), false), e => Enum.Parse<SampleEnum>(e.ToString().AsSpan()), enumValues);
-        Test(e => Enum.Parse(typeof(SampleEnum), e.ToString(), false), e => Enum.Parse(typeof(SampleEnum), e.ToString()), enumValues);
+        Test(e => System.Enum.Parse<SampleEnum>(e.ToString(), false), e => System.Enum.Parse<SampleEnum>(e.ToString()), enumValues);
+        Test(e => System.Enum.Parse<SampleEnum>(e.ToString().AsSpan(), false), e => System.Enum.Parse<SampleEnum>(e.ToString().AsSpan()), enumValues);
+        Test(e => System.Enum.Parse(typeof(SampleEnum), e.ToString(), false), e => System.Enum.Parse(typeof(SampleEnum), e.ToString()), enumValues);
         Test(
-            e => Enum.Parse(typeof(SampleEnum), e.ToString().AsSpan(), false),
-            e => Enum.Parse(typeof(SampleEnum), e.ToString().AsSpan()),
+            e => System.Enum.Parse(typeof(SampleEnum), e.ToString().AsSpan(), false),
+            e => System.Enum.Parse(typeof(SampleEnum), e.ToString().AsSpan()),
             enumValues);
-        Test(e => Enum.Parse<SampleFlags>(e.ToString(), false), e => Enum.Parse<SampleFlags>(e.ToString()), flagValues);
-        Test(e => Enum.Parse<SampleFlags>(e.ToString().AsSpan(), false), e => Enum.Parse<SampleFlags>(e.ToString().AsSpan()), flagValues);
-        Test(e => Enum.Parse(typeof(SampleFlags), e.ToString(), false), e => Enum.Parse(typeof(SampleFlags), e.ToString()), flagValues);
+        Test(e => System.Enum.Parse<SampleFlags>(e.ToString(), false), e => System.Enum.Parse<SampleFlags>(e.ToString()), flagValues);
         Test(
-            e => Enum.Parse(typeof(SampleFlags), e.ToString().AsSpan(), false),
-            e => Enum.Parse(typeof(SampleFlags), e.ToString().AsSpan()),
+            e => System.Enum.Parse<SampleFlags>(e.ToString().AsSpan(), false),
+            e => System.Enum.Parse<SampleFlags>(e.ToString().AsSpan()),
+            flagValues);
+        Test(e => System.Enum.Parse(typeof(SampleFlags), e.ToString(), false), e => System.Enum.Parse(typeof(SampleFlags), e.ToString()), flagValues);
+        Test(
+            e => System.Enum.Parse(typeof(SampleFlags), e.ToString().AsSpan(), false),
+            e => System.Enum.Parse(typeof(SampleFlags), e.ToString().AsSpan()),
             flagValues);
 
         Test<SampleEnum, SampleEnum, bool>(
-            (value, out result) => Enum.TryParse($"{value}", false, out result),
-            (value, out result) => Enum.TryParse($"{value}", out result),
+            (value, out result) => System.Enum.TryParse($"{value}", false, out result),
+            (value, out result) => System.Enum.TryParse($"{value}", out result),
             enumValues);
         Test<SampleEnum, SampleEnum, bool>(
-            (value, out result) => Enum.TryParse($"{value}".AsSpan(), false, out result),
-            (value, out result) => Enum.TryParse($"{value}".AsSpan(), out result),
+            (value, out result) => System.Enum.TryParse($"{value}".AsSpan(), false, out result),
+            (value, out result) => System.Enum.TryParse($"{value}".AsSpan(), out result),
             enumValues);
         Test<SampleEnum, object?, bool>(
-            (value, out result) => Enum.TryParse(typeof(SampleEnum), $"{value}", false, out result),
-            (value, out result) => Enum.TryParse(typeof(SampleEnum), $"{value}", out result),
+            (value, out result) => System.Enum.TryParse(typeof(SampleEnum), $"{value}", false, out result),
+            (value, out result) => System.Enum.TryParse(typeof(SampleEnum), $"{value}", out result),
             enumValues);
         Test<SampleEnum, object?, bool>(
-            (value, out result) => Enum.TryParse(typeof(SampleEnum), $"{value}".AsSpan(), false, out result),
-            (value, out result) => Enum.TryParse(typeof(SampleEnum), $"{value}".AsSpan(), out result),
+            (value, out result) => System.Enum.TryParse(typeof(SampleEnum), $"{value}".AsSpan(), false, out result),
+            (value, out result) => System.Enum.TryParse(typeof(SampleEnum), $"{value}".AsSpan(), out result),
             enumValues);
         Test<SampleFlags, SampleFlags, bool>(
-            (value, out result) => Enum.TryParse($"{value}", false, out result),
-            (value, out result) => Enum.TryParse($"{value}", out result),
+            (value, out result) => System.Enum.TryParse($"{value}", false, out result),
+            (value, out result) => System.Enum.TryParse($"{value}", out result),
             flagValues);
         Test<SampleFlags, SampleFlags, bool>(
-            (value, out result) => Enum.TryParse($"{value}".AsSpan(), false, out result),
-            (value, out result) => Enum.TryParse($"{value}".AsSpan(), out result),
+            (value, out result) => System.Enum.TryParse($"{value}".AsSpan(), false, out result),
+            (value, out result) => System.Enum.TryParse($"{value}".AsSpan(), out result),
             flagValues);
         Test<SampleFlags, object?, bool>(
-            (value, out result) => Enum.TryParse(typeof(SampleFlags), $"{value}", false, out result),
-            (value, out result) => Enum.TryParse(typeof(SampleFlags), $"{value}", out result),
+            (value, out result) => System.Enum.TryParse(typeof(SampleFlags), $"{value}", false, out result),
+            (value, out result) => System.Enum.TryParse(typeof(SampleFlags), $"{value}", out result),
             flagValues);
         Test<SampleFlags, object?, bool>(
-            (value, out result) => Enum.TryParse(typeof(SampleFlags), $"{value}".AsSpan(), false, out result),
-            (value, out result) => Enum.TryParse(typeof(SampleFlags), $"{value}".AsSpan(), out result),
+            (value, out result) => System.Enum.TryParse(typeof(SampleFlags), $"{value}".AsSpan(), false, out result),
+            (value, out result) => System.Enum.TryParse(typeof(SampleFlags), $"{value}".AsSpan(), out result),
             flagValues);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet100]
-    public void TestGuid()
+    public void Guid()
     {
-        var values = new[] { Guid.Empty, new Guid([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) };
+        Guid[] values = [System.Guid.Empty, new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])];
 
         // redundant argument
 
-        Test((guid, provider) => Guid.Parse(guid.ToString(), provider), (guid, _) => Guid.Parse(guid.ToString()), values, formatProviders);
         Test(
-            (guid, provider) => Guid.Parse(guid.ToString().AsSpan(), provider),
-            (guid, _) => Guid.Parse(guid.ToString().AsSpan()),
+            (guid, provider) => System.Guid.Parse(guid.ToString(), provider),
+            (guid, _) => System.Guid.Parse(guid.ToString()),
             values,
             formatProviders);
         Test(
-            (guid, provider) => Guid.Parse(guid.ToString().AsUtf8Bytes(), provider),
-            (guid, _) => Guid.Parse(guid.ToString().AsUtf8Bytes()),
+            (guid, provider) => System.Guid.Parse(guid.ToString().AsSpan(), provider),
+            (guid, _) => System.Guid.Parse(guid.ToString().AsSpan()),
+            values,
+            formatProviders);
+        Test(
+            (guid, provider) => System.Guid.Parse(guid.ToString().AsUtf8Bytes(), provider),
+            (guid, _) => System.Guid.Parse(guid.ToString().AsUtf8Bytes()),
             values,
             formatProviders);
 
         Test<Guid, IFormatProvider?, Guid, bool>(
-            (value, provider, out result) => Guid.TryParse($"{value}", provider, out result),
-            (value, _, out result) => Guid.TryParse($"{value}", out result),
+            (value, provider, out result) => System.Guid.TryParse($"{value}", provider, out result),
+            (value, _, out result) => System.Guid.TryParse($"{value}", out result),
             values,
             formatProviders);
         Test<Guid, IFormatProvider?, Guid, bool>(
-            (value, provider, out result) => Guid.TryParse($"{value}".AsSpan(), provider, out result),
-            (value, _, out result) => Guid.TryParse($"{value}".AsSpan(), out result),
+            (value, provider, out result) => System.Guid.TryParse($"{value}".AsSpan(), provider, out result),
+            (value, _, out result) => System.Guid.TryParse($"{value}".AsSpan(), out result),
             values,
             formatProviders);
         Test<Guid, IFormatProvider?, Guid, bool>(
-            (value, provider, out result) => Guid.TryParse($"{value}".AsUtf8Bytes(), provider, out result),
-            (value, _, out result) => Guid.TryParse($"{value}".AsUtf8Bytes(), out result),
+            (value, provider, out result) => System.Guid.TryParse($"{value}".AsUtf8Bytes(), provider, out result),
+            (value, _, out result) => System.Guid.TryParse($"{value}".AsUtf8Bytes(), out result),
             values,
             formatProviders);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -1221,13 +1234,13 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantElement")]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
     [SuppressMessage("ReSharper", "RedundantFormatProvider")]
-    public void TestTimeSpan()
+    public void TimeSpan()
     {
-        var values = new[]
-        {
-            TimeSpan.Zero,
-            TimeSpan.MinValue,
-            TimeSpan.MaxValue,
+        TimeSpan[] values =
+        [
+            System.TimeSpan.Zero,
+            System.TimeSpan.MinValue,
+            System.TimeSpan.MaxValue,
             new(0, 0, 1),
             new(0, 1, 0),
             new(1, 0, 0),
@@ -1235,59 +1248,60 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             new(0, 0, 0, 0, 1),
             new(1, 2, 3, 4),
             new(-1, 2, 3, 4),
-        };
-        var formats = new[] { "c", "t", "T", "g", "G" };
-        var formatsInvariant = new[] { "c", "t", "T" };
-        var styles = new[] { TimeSpanStyles.None, TimeSpanStyles.AssumeNegative };
+        ];
+        string[] formats = ["c", "t", "T", "g", "G"];
+        string[] formatsInvariant = ["c", "t", "T"];
+        TimeSpanStyles[] styles = [TimeSpanStyles.None, TimeSpanStyles.AssumeNegative];
 
         // redundant argument
 
         Test(() => new TimeSpan(0, 1, 2, 3), () => new TimeSpan(1, 2, 3));
         Test(() => new TimeSpan(1, 2, 3, 4, 0), () => new TimeSpan(1, 2, 3, 4));
-        Test(() => TimeSpan._Ctor(1, 2, 3, 4, 5, 0), () => new TimeSpan(1, 2, 3, 4, 5));
+        Test(() => System.TimeSpan._Ctor(1, 2, 3, 4, 5, 0), () => new TimeSpan(1, 2, 3, 4, 5));
 
-        Test(timeSpan => TimeSpan.Parse($"{timeSpan}", null), timeSpan => TimeSpan.Parse($"{timeSpan}"), values);
+        Test(timeSpan => System.TimeSpan.Parse($"{timeSpan}", null), timeSpan => System.TimeSpan.Parse($"{timeSpan}"), values);
 
         Test(
-            (timeSpan, format, provider) => TimeSpan.ParseExact(timeSpan.ToString(format, provider), format, provider, TimeSpanStyles.None),
-            (timeSpan, format, provider) => TimeSpan.ParseExact(timeSpan.ToString(format, provider), format, provider),
+            (timeSpan, format, provider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, provider), format, provider, TimeSpanStyles.None),
+            (timeSpan, format, provider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, provider), format, provider),
             values,
             formats,
             formatProviders);
         Test(
-            (timeSpan, provider) => TimeSpan.ParseExact($"{timeSpan}", formats, provider, TimeSpanStyles.None),
-            (timeSpan, provider) => TimeSpan.ParseExact($"{timeSpan}", formats, provider),
+            (timeSpan, provider) => System.TimeSpan.ParseExact($"{timeSpan}", formats, provider, TimeSpanStyles.None),
+            (timeSpan, provider) => System.TimeSpan.ParseExact($"{timeSpan}", formats, provider),
             values,
             formatProviders);
 
         Test<TimeSpan, TimeSpan, bool>(
-            (timeSpan, out result) => TimeSpan.TryParse($"{timeSpan}", null, out result),
-            (timeSpan, out result) => TimeSpan.TryParse($"{timeSpan}", out result),
+            (timeSpan, out result) => System.TimeSpan.TryParse($"{timeSpan}", null, out result),
+            (timeSpan, out result) => System.TimeSpan.TryParse($"{timeSpan}", out result),
             values);
         Test<TimeSpan, TimeSpan, bool>(
-            (timeSpan, out result) => TimeSpan.TryParse($"{timeSpan}".AsSpan(), null, out result),
-            (timeSpan, out result) => TimeSpan.TryParse($"{timeSpan}".AsSpan(), out result),
+            (timeSpan, out result) => System.TimeSpan.TryParse($"{timeSpan}".AsSpan(), null, out result),
+            (timeSpan, out result) => System.TimeSpan.TryParse($"{timeSpan}".AsSpan(), out result),
             values);
 
         Test<TimeSpan, string, IFormatProvider?, TimeSpan, bool>(
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString(format, provider),
                 format,
                 provider,
                 TimeSpanStyles.None,
                 out result),
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact(timeSpan.ToString(format, provider), format, provider, out result),
+            (timeSpan, format, provider, out result)
+                => System.TimeSpan.TryParseExact(timeSpan.ToString(format, provider), format, provider, out result),
             values,
             formats,
             formatProviders);
         Test<TimeSpan, string, IFormatProvider?, TimeSpan, bool>(
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString(format, provider).AsSpan(),
                 format.AsSpan(),
                 provider,
                 TimeSpanStyles.None,
                 out result),
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString(format, provider).AsSpan(),
                 format.AsSpan(),
                 provider,
@@ -1296,24 +1310,28 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formats,
             formatProviders);
         Test<TimeSpan, string, IFormatProvider?, TimeSpan, bool>(
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString(format, provider),
                 formats,
                 provider,
                 TimeSpanStyles.None,
                 out result),
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact(timeSpan.ToString(format, provider), formats, provider, out result),
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact(
+                timeSpan.ToString(format, provider),
+                formats,
+                provider,
+                out result),
             values,
             formats,
             formatProviders);
         Test<TimeSpan, string, IFormatProvider?, TimeSpan, bool>(
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString(format, provider).AsSpan(),
                 formats,
                 provider,
                 TimeSpanStyles.None,
                 out result),
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString(format, provider).AsSpan(),
                 formats,
                 provider,
@@ -1325,39 +1343,43 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         // redundant collection element
 
         Test(
-            (timeSpan, provider) => TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "g", "G"], provider),
-            (timeSpan, provider) => TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], provider),
+            (timeSpan, provider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "g", "G"], provider),
+            (timeSpan, provider) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], provider),
             values,
             formatProviders);
         Test(
-            (timeSpan, provider, style) => TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "g", "G"], provider, style),
-            (timeSpan, provider, style) => TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], provider, style),
+            (timeSpan, provider, style) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "t", "T", "g", "g", "G"], provider, style),
+            (timeSpan, provider, style) => System.TimeSpan.ParseExact($"{timeSpan}", ["c", "g", "G"], provider, style),
             values,
             formatProviders,
             styles);
         Test(
-            (timeSpan, provider, style) => TimeSpan.ParseExact($"{timeSpan}".AsSpan(), ["c", "t", "T", "g", "g", "G"], provider, style),
-            (timeSpan, provider, style) => TimeSpan.ParseExact($"{timeSpan}".AsSpan(), ["c", "g", "G"], provider, style),
+            (timeSpan, provider, style) => System.TimeSpan.ParseExact($"{timeSpan}".AsSpan(), ["c", "t", "T", "g", "g", "G"], provider, style),
+            (timeSpan, provider, style) => System.TimeSpan.ParseExact($"{timeSpan}".AsSpan(), ["c", "g", "G"], provider, style),
             values,
             formatProviders,
             styles);
 
         Test<TimeSpan, IFormatProvider?, TimeSpan, bool>(
-            (timeSpan, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString("c", provider),
                 ["c", "t", "T", "g", "g", "G"],
                 provider,
                 out result),
-            (timeSpan, provider, out result) => TimeSpan.TryParseExact(timeSpan.ToString("c", provider), ["c", "g", "G"], provider, out result),
+            (timeSpan, provider, out result) => System.TimeSpan.TryParseExact(
+                timeSpan.ToString("c", provider),
+                ["c", "g", "G"],
+                provider,
+                out result),
             values,
             formatProviders);
         Test<TimeSpan, IFormatProvider?, TimeSpan, bool>(
-            (timeSpan, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString("c", provider).AsSpan(),
                 ["c", "t", "T", "g", "g", "G"],
                 provider,
                 out result),
-            (timeSpan, provider, out result) => TimeSpan.TryParseExact(
+            (timeSpan, provider, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString("c", provider).AsSpan(),
                 ["c", "g", "G"],
                 provider,
@@ -1365,13 +1387,13 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             formatProviders);
         Test<TimeSpan, IFormatProvider?, TimeSpanStyles, TimeSpan, bool>(
-            (timeSpan, provider, style, out result) => TimeSpan.TryParseExact(
+            (timeSpan, provider, style, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString("c", provider),
                 ["c", "t", "T", "g", "g", "G"],
                 provider,
                 style,
                 out result),
-            (timeSpan, provider, style, out result) => TimeSpan.TryParseExact(
+            (timeSpan, provider, style, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString("c", provider),
                 ["c", "g", "G"],
                 provider,
@@ -1381,13 +1403,13 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatProviders,
             styles);
         Test<TimeSpan, IFormatProvider?, TimeSpanStyles, TimeSpan, bool>(
-            (timeSpan, provider, style, out result) => TimeSpan.TryParseExact(
+            (timeSpan, provider, style, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString("c", provider).AsSpan(),
                 ["c", "t", "T", "g", "g", "G"],
                 provider,
                 style,
                 out result),
-            (timeSpan, provider, style, out result) => TimeSpan.TryParseExact(
+            (timeSpan, provider, style, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString("c", provider).AsSpan(),
                 ["c", "g", "G"],
                 provider,
@@ -1400,59 +1422,59 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         // other argument
 
         Test(
-            (timeSpan, format, provider) => TimeSpan.ParseExact(timeSpan.ToString(format), format, provider),
-            (timeSpan, format, _) => TimeSpan.ParseExact(timeSpan.ToString(format), format, null),
+            (timeSpan, format, provider) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, provider),
+            (timeSpan, format, _) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null),
             values,
             formatsInvariant,
             formatProviders);
         Test(
-            (timeSpan, format, provider, style) => TimeSpan.ParseExact(timeSpan.ToString(format), format, provider, style),
-            (timeSpan, format, _, style) => TimeSpan.ParseExact(timeSpan.ToString(format), format, null, style),
+            (timeSpan, format, provider, style) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, provider, style),
+            (timeSpan, format, _, style) => System.TimeSpan.ParseExact(timeSpan.ToString(format), format, null, style),
             values,
             formatsInvariant,
             formatProviders,
             styles);
         Test(
-            (timeSpan, format, provider) => TimeSpan.ParseExact(timeSpan.ToString(format, provider), [format], provider),
-            (timeSpan, format, provider) => TimeSpan.ParseExact(timeSpan.ToString(format, provider), format, provider),
+            (timeSpan, format, provider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, provider), [format], provider),
+            (timeSpan, format, provider) => System.TimeSpan.ParseExact(timeSpan.ToString(format, provider), format, provider),
             values,
             formats,
             formatProviders);
         Test(
-            (timeSpan, format, provider, style) => TimeSpan.ParseExact(timeSpan.ToString(format, provider), [format], provider, style),
-            (timeSpan, format, provider, style) => TimeSpan.ParseExact(timeSpan.ToString(format, provider), format, provider, style),
+            (timeSpan, format, provider, style) => System.TimeSpan.ParseExact(timeSpan.ToString(format, provider), [format], provider, style),
+            (timeSpan, format, provider, style) => System.TimeSpan.ParseExact(timeSpan.ToString(format, provider), format, provider, style),
             values,
             formats,
             formatProviders,
             styles);
 
         Test<TimeSpan, string, IFormatProvider?, TimeSpan, bool>(
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact($"{timeSpan}", format, provider, out result),
-            (timeSpan, format, _, out result) => TimeSpan.TryParseExact($"{timeSpan}", format, null, out result),
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact($"{timeSpan}", format, provider, out result),
+            (timeSpan, format, _, out result) => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, out result),
             values,
             formatsInvariant,
             formatProviders);
         Test<TimeSpan, string, IFormatProvider?, TimeSpanStyles, TimeSpan, bool>(
-            (timeSpan, format, provider, style, out result) => TimeSpan.TryParseExact($"{timeSpan}", format, provider, style, out result),
-            (timeSpan, format, _, style, out result) => TimeSpan.TryParseExact($"{timeSpan}", format, null, style, out result),
+            (timeSpan, format, provider, style, out result) => System.TimeSpan.TryParseExact($"{timeSpan}", format, provider, style, out result),
+            (timeSpan, format, _, style, out result) => System.TimeSpan.TryParseExact($"{timeSpan}", format, null, style, out result),
             values,
             formatsInvariant,
             formatProviders,
             styles);
         Test<TimeSpan, string, IFormatProvider?, TimeSpan, bool>(
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact($"{timeSpan}", [format], provider, out result),
-            (timeSpan, format, provider, out result) => TimeSpan.TryParseExact($"{timeSpan}", format, provider, out result),
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact($"{timeSpan}", [format], provider, out result),
+            (timeSpan, format, provider, out result) => System.TimeSpan.TryParseExact($"{timeSpan}", format, provider, out result),
             values,
             formats,
             formatProviders);
         Test<TimeSpan, string, IFormatProvider?, TimeSpanStyles, TimeSpan, bool>(
-            (timeSpan, format, provider, style, out result) => TimeSpan.TryParseExact(
+            (timeSpan, format, provider, style, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString(format, provider),
                 [format],
                 provider,
                 style,
                 out result),
-            (timeSpan, format, provider, style, out result) => TimeSpan.TryParseExact(
+            (timeSpan, format, provider, style, out result) => System.TimeSpan.TryParseExact(
                 timeSpan.ToString(format, provider),
                 format,
                 provider,
@@ -1463,7 +1485,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatProviders,
             styles);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -1473,25 +1495,25 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgumentRange")]
     [SuppressMessage("ReSharper", "RedundantElement")]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
-    public void TestDateTime()
+    public void DateTime()
     {
-        var values = new[]
-        {
-            DateTime.MinValue,
-            DateTime.MaxValue,
+        DateTime[] values =
+        [
+            System.DateTime.MinValue,
+            System.DateTime.MaxValue,
             new(2025, 7, 15, 21, 33, 0, 123),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Local),
             new(2025, 7, 15, 21, 33, 0, 123, DateTimeKind.Utc),
-        };
-        var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y" };
-        var formatsInvariant = new[] { "o", "O", "r", "R", "s", "u" };
+        ];
+        string[] formats = ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"];
+        string[] formatsInvariant = ["o", "O", "r", "R", "s", "u"];
 
         // redundant argument
 
         Test(ticks => new DateTime(ticks, DateTimeKind.Unspecified), ticks => new DateTime(ticks), [0, 1, 638_882_119_800_000_000]);
         Test(
-            dateTime => DateTime._Ctor(DateOnly.FromDateTime(dateTime), TimeOnly.FromDateTime(dateTime), DateTimeKind.Unspecified),
-            dateTime => DateTime._Ctor(DateOnly.FromDateTime(dateTime), TimeOnly.FromDateTime(dateTime)),
+            dateTime => System.DateTime._Ctor(dateOnly.FromDateTime(dateTime), timeOnly.FromDateTime(dateTime), DateTimeKind.Unspecified),
+            dateTime => System.DateTime._Ctor(dateOnly.FromDateTime(dateTime), timeOnly.FromDateTime(dateTime)),
             values);
         Test(
             dateTime => new DateTime(
@@ -1549,7 +1571,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Minute,
                 dateTime.Second,
                 calendar),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             calendars);
         Test(
             (dateTime, calendar) => new DateTime(
@@ -1571,10 +1593,10 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Second,
                 dateTime.Millisecond,
                 calendar),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             calendars);
         Test(
-            dateTime => DateTime._Ctor(
+            dateTime => System.DateTime._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -1591,9 +1613,9 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Minute,
                 dateTime.Second,
                 dateTime.Millisecond),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])]);
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])]);
         Test(
-            (dateTime, calendar) => DateTime._Ctor(
+            (dateTime, calendar) => System.DateTime._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -1612,10 +1634,10 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Second,
                 dateTime.Millisecond,
                 calendar),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             calendars);
         Test(
-            dateTime => DateTime._Ctor(
+            dateTime => System.DateTime._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -1636,7 +1658,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Kind),
             values);
         Test(
-            dateTime => DateTime._Ctor(
+            dateTime => System.DateTime._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -1646,7 +1668,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Millisecond,
                 dateTime.Microsecond,
                 DateTimeKind.Unspecified),
-            dateTime => DateTime._Ctor(
+            dateTime => System.DateTime._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -1657,7 +1679,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Microsecond),
             values);
         Test(
-            (dateTime, calendar) => DateTime._Ctor(
+            (dateTime, calendar) => System.DateTime._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -1678,10 +1700,10 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Millisecond,
                 calendar,
                 dateTime.Kind),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             calendars);
         Test(
-            (dateTime, calendar) => DateTime._Ctor(
+            (dateTime, calendar) => System.DateTime._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -1692,7 +1714,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Microsecond,
                 calendar,
                 DateTimeKind.Unspecified),
-            (dateTime, calendar) => DateTime._Ctor(
+            (dateTime, calendar) => System.DateTime._Ctor(
                 dateTime.Year,
                 dateTime.Month,
                 dateTime.Day,
@@ -1702,7 +1724,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTime.Millisecond,
                 dateTime.Microsecond,
                 calendar),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             calendars);
 
         Test(dateTime => dateTime.GetDateTimeFormats(null), dateTime => dateTime.GetDateTimeFormats(), values);
@@ -1712,37 +1734,37 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             [..from f in formats select f[0]]);
 
-        Test(dateTime => DateTime.Parse($"{dateTime}", null), dateTime => DateTime.Parse($"{dateTime}"), values);
-        Test(dateTime => DateTime.Parse($"{dateTime}".AsSpan(), null), dateTime => DateTime.Parse($"{dateTime}".AsSpan()), values);
+        Test(dateTime => System.DateTime.Parse($"{dateTime}", null), dateTime => System.DateTime.Parse($"{dateTime}"), values);
+        Test(dateTime => System.DateTime.Parse($"{dateTime}".AsSpan(), null), dateTime => System.DateTime.Parse($"{dateTime}".AsSpan()), values);
         Test(
-            (dateTime, provider) => DateTime.Parse(dateTime.ToString(provider), provider, DateTimeStyles.None),
-            (dateTime, provider) => DateTime.Parse(dateTime.ToString(provider), provider),
+            (dateTime, provider) => System.DateTime.Parse(dateTime.ToString(provider), provider, DateTimeStyles.None),
+            (dateTime, provider) => System.DateTime.Parse(dateTime.ToString(provider), provider),
             values,
             formatProviders);
 
         Test(
-            (dateTime, format, provider) => DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, DateTimeStyles.None),
-            (dateTime, format, provider) => DateTime.ParseExact(dateTime.ToString(format, provider), format, provider),
+            (dateTime, format, provider) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, DateTimeStyles.None),
+            (dateTime, format, provider) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider),
             values,
             formats,
             formatProviders);
 
         Test<DateTime, DateTime, bool>(
-            (dateTime, out result) => DateTime.TryParse($"{dateTime}", null, out result),
-            (dateTime, out result) => DateTime.TryParse($"{dateTime}", out result),
+            (dateTime, out result) => System.DateTime.TryParse($"{dateTime}", null, out result),
+            (dateTime, out result) => System.DateTime.TryParse($"{dateTime}", out result),
             values);
         Test<DateTime, DateTime, bool>(
-            (dateTime, out result) => DateTime.TryParse($"{dateTime}".AsSpan(), null, out result),
-            (dateTime, out result) => DateTime.TryParse($"{dateTime}".AsSpan(), out result),
+            (dateTime, out result) => System.DateTime.TryParse($"{dateTime}".AsSpan(), null, out result),
+            (dateTime, out result) => System.DateTime.TryParse($"{dateTime}".AsSpan(), out result),
             values);
         Test<DateTime, IFormatProvider?, DateTime, bool>(
-            (dateTime, provider, out result) => DateTime.TryParse($"{dateTime}", provider, DateTimeStyles.None, out result),
-            (dateTime, provider, out result) => DateTime.TryParse($"{dateTime}", provider, out result),
+            (dateTime, provider, out result) => System.DateTime.TryParse($"{dateTime}", provider, DateTimeStyles.None, out result),
+            (dateTime, provider, out result) => System.DateTime.TryParse($"{dateTime}", provider, out result),
             values,
             formatProviders);
         Test<DateTime, IFormatProvider?, DateTime, bool>(
-            (dateTime, provider, out result) => DateTime.TryParse($"{dateTime}".AsSpan(), provider, DateTimeStyles.None, out result),
-            (dateTime, provider, out result) => DateTime.TryParse($"{dateTime}".AsSpan(), provider, out result),
+            (dateTime, provider, out result) => System.DateTime.TryParse($"{dateTime}".AsSpan(), provider, DateTimeStyles.None, out result),
+            (dateTime, provider, out result) => System.DateTime.TryParse($"{dateTime}".AsSpan(), provider, out result),
             values,
             formatProviders);
 
@@ -1755,73 +1777,73 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         Test(
             (dateTime, calendar) => new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, calendar),
             (dateTime, calendar) => new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, calendar),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             calendars);
 
         // redundant collection element
 
         Test(
-            (dateTime, format, provider, style) => DateTime.ParseExact(
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(
                 dateTime.ToString(format, provider),
                 ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"],
                 provider,
                 style),
-            (dateTime, format, provider, style) => DateTime.ParseExact(
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(
                 dateTime.ToString(format, provider),
                 ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"],
                 provider,
                 style),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateTime, format, provider, style) => DateTime.ParseExact(
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(
                 dateTime.ToString(format, provider).AsSpan(),
                 ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"],
                 provider,
                 style),
-            (dateTime, format, provider, style) => DateTime.ParseExact(
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(
                 dateTime.ToString(format, provider).AsSpan(),
                 ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"],
                 provider,
                 style),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
 
         Test<DateTime, string, IFormatProvider?, DateTimeStyles, DateTime, bool>(
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider),
                 ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"],
                 provider,
                 style,
                 out result),
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider),
                 ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"],
                 provider,
                 style,
                 out result),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
         Test<DateTime, string, IFormatProvider?, DateTimeStyles, DateTime, bool>(
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider).AsSpan(),
                 ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "U", "y", "Y"],
                 provider,
                 style,
                 out result),
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider).AsSpan(),
                 ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "U", "y"],
                 provider,
                 style,
                 out result),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
@@ -1829,114 +1851,118 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         // other argument
 
         Test(
-            (dateTime, format, provider) => DateTime.ParseExact(dateTime.ToString(format, provider), format, provider),
-            (dateTime, format, provider) => DateTime.ParseExact(dateTime.ToString(format, provider), format, null),
+            (dateTime, format, provider) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider),
+            (dateTime, format, provider) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, null),
             values,
             formatsInvariant,
             formatProviders);
         Test(
-            (dateTime, format, provider, style) => DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, style),
-            (dateTime, format, provider, style) => DateTime.ParseExact(dateTime.ToString(format, provider), format, null, style),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, style),
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, null, style),
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateTime, format, provider, style) => DateTime.ParseExact(dateTime.ToString(format, provider), [format], provider, style),
-            (dateTime, format, provider, style) => DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, style),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), [format], provider, style),
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), format, provider, style),
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateTime, format, provider, style) => DateTime.ParseExact(dateTime.ToString(format, provider), formatsInvariant, provider, style),
-            (dateTime, format, provider, style) => DateTime.ParseExact(dateTime.ToString(format, provider), formatsInvariant, null, style),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), formatsInvariant, provider, style),
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(dateTime.ToString(format, provider), formatsInvariant, null, style),
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateTime, format, provider, style) => DateTime.ParseExact(
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(
                 dateTime.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 provider,
                 style),
-            (dateTime, format, provider, style) => DateTime.ParseExact(dateTime.ToString(format, provider).AsSpan(), formatsInvariant, null, style),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            (dateTime, format, provider, style) => System.DateTime.ParseExact(
+                dateTime.ToString(format, provider).AsSpan(),
+                formatsInvariant,
+                null,
+                style),
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
 
         Test<DateTime, string, IFormatProvider?, DateTimeStyles, DateTime, bool>(
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider),
                 format,
                 provider,
                 style,
                 out result),
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider),
                 format,
                 null,
                 style,
                 out result),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test<DateTime, string, IFormatProvider?, DateTimeStyles, DateTime, bool>(
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider),
                 [format],
                 provider,
                 style,
                 out result),
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider),
                 format,
                 provider,
                 style,
                 out result),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
         Test<DateTime, string, IFormatProvider?, DateTimeStyles, DateTime, bool>(
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider),
                 formatsInvariant,
                 provider,
                 style,
                 out result),
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider),
                 formatsInvariant,
                 null,
                 style,
                 out result),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test<DateTime, string, IFormatProvider?, DateTimeStyles, DateTime, bool>(
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 provider,
                 style,
                 out result),
-            (dateTime, format, provider, style, out result) => DateTime.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTime.TryParseExact(
                 dateTime.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 null,
                 style,
                 out result),
-            [..values.Except([DateTime.MinValue, DateTime.MaxValue])],
+            [..values.Except([System.DateTime.MinValue, System.DateTime.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -1945,18 +1971,18 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantArgument")]
     [SuppressMessage("ReSharper", "RedundantElement")]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
-    public void TestDateTimeOffset()
+    public void DateTimeOffset()
     {
-        var values = new[]
-        {
-            DateTimeOffset.MinValue,
-            DateTimeOffset.MaxValue,
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.Zero),
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.FromHours(2)),
-            new(2025, 7, 15, 21, 33, 0, 123, TimeSpan.FromHours(-6)),
-        };
-        var formats = new[] { "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y" };
-        var formatsInvariant = new[] { "o", "O", "r", "R", "s", "u" };
+        DateTimeOffset[] values =
+        [
+            System.DateTimeOffset.MinValue,
+            System.DateTimeOffset.MaxValue,
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.Zero),
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(2)),
+            new(2025, 7, 15, 21, 33, 0, 123, System.TimeSpan.FromHours(-6)),
+        ];
+        string[] formats = ["d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"];
+        string[] formatsInvariant = ["o", "O", "r", "R", "s", "u"];
 
         // redundant argument
 
@@ -1980,7 +2006,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTimeOffset.Offset),
             values);
         Test(
-            dateTimeOffset => DateTimeOffset._Ctor(
+            dateTimeOffset => System.DateTimeOffset._Ctor(
                 dateTimeOffset.Year,
                 dateTimeOffset.Month,
                 dateTimeOffset.Day,
@@ -2001,7 +2027,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTimeOffset.Offset),
             values);
         Test(
-            (dateTimeOffset, calendar) => DateTimeOffset._Ctor(
+            (dateTimeOffset, calendar) => System.DateTimeOffset._Ctor(
                 dateTimeOffset.Year,
                 dateTimeOffset.Month,
                 dateTimeOffset.Day,
@@ -2022,118 +2048,121 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
                 dateTimeOffset.Millisecond,
                 calendar,
                 dateTimeOffset.Offset),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             calendars);
 
-        Test(dateTimeOffset => DateTimeOffset.Parse($"{dateTimeOffset}", null), dateTimeOffset => DateTimeOffset.Parse($"{dateTimeOffset}"), values);
         Test(
-            dateTimeOffset => DateTimeOffset.Parse($"{dateTimeOffset}".AsSpan(), null),
-            dateTimeOffset => DateTimeOffset.Parse($"{dateTimeOffset}".AsSpan()),
+            dateTimeOffset => System.DateTimeOffset.Parse($"{dateTimeOffset}", null),
+            dateTimeOffset => System.DateTimeOffset.Parse($"{dateTimeOffset}"),
             values);
         Test(
-            (dateTimeOffset, provider) => DateTimeOffset.Parse(dateTimeOffset.ToString(provider), provider, DateTimeStyles.None),
-            (dateTimeOffset, provider) => DateTimeOffset.Parse(dateTimeOffset.ToString(provider), provider),
+            dateTimeOffset => System.DateTimeOffset.Parse($"{dateTimeOffset}".AsSpan(), null),
+            dateTimeOffset => System.DateTimeOffset.Parse($"{dateTimeOffset}".AsSpan()),
+            values);
+        Test(
+            (dateTimeOffset, provider) => System.DateTimeOffset.Parse(dateTimeOffset.ToString(provider), provider, DateTimeStyles.None),
+            (dateTimeOffset, provider) => System.DateTimeOffset.Parse(dateTimeOffset.ToString(provider), provider),
             values,
             formatProviders);
 
         Test<DateTimeOffset, DateTimeOffset, bool>(
-            (dateTimeOffset, out result) => DateTimeOffset.TryParse($"{dateTimeOffset}", null, out result),
-            (dateTimeOffset, out result) => DateTimeOffset.TryParse($"{dateTimeOffset}", out result),
+            (dateTimeOffset, out result) => System.DateTimeOffset.TryParse($"{dateTimeOffset}", null, out result),
+            (dateTimeOffset, out result) => System.DateTimeOffset.TryParse($"{dateTimeOffset}", out result),
             values);
         Test<DateTimeOffset, DateTimeOffset, bool>(
-            (dateTimeOffset, out result) => DateTimeOffset.TryParse($"{dateTimeOffset}".AsSpan(), null, out result),
-            (dateTimeOffset, out result) => DateTimeOffset.TryParse($"{dateTimeOffset}".AsSpan(), out result),
+            (dateTimeOffset, out result) => System.DateTimeOffset.TryParse($"{dateTimeOffset}".AsSpan(), null, out result),
+            (dateTimeOffset, out result) => System.DateTimeOffset.TryParse($"{dateTimeOffset}".AsSpan(), out result),
             values);
         Test<DateTimeOffset, IFormatProvider?, DateTimeOffset, bool>(
-            (dateTimeOffset, provider, out result) => DateTimeOffset.TryParse($"{dateTimeOffset}", provider, DateTimeStyles.None, out result),
-            (dateTimeOffset, provider, out result) => DateTimeOffset.TryParse($"{dateTimeOffset}", provider, out result),
+            (dateTimeOffset, provider, out result) => System.DateTimeOffset.TryParse($"{dateTimeOffset}", provider, DateTimeStyles.None, out result),
+            (dateTimeOffset, provider, out result) => System.DateTimeOffset.TryParse($"{dateTimeOffset}", provider, out result),
             values,
             formatProviders);
         Test<DateTimeOffset, IFormatProvider?, DateTimeOffset, bool>(
-            (dateTimeOffset, provider, out result) => DateTimeOffset.TryParse(
+            (dateTimeOffset, provider, out result) => System.DateTimeOffset.TryParse(
                 $"{dateTimeOffset}".AsSpan(),
                 provider,
                 DateTimeStyles.None,
                 out result),
-            (dateTimeOffset, provider, out result) => DateTimeOffset.TryParse($"{dateTimeOffset}".AsSpan(), provider, out result),
+            (dateTimeOffset, provider, out result) => System.DateTimeOffset.TryParse($"{dateTimeOffset}".AsSpan(), provider, out result),
             values,
             formatProviders);
 
         Test(
-            (dateTimeOffset, format, provider) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider),
                 format,
                 provider,
                 DateTimeStyles.None),
-            (dateTimeOffset, format, provider) => DateTimeOffset.ParseExact(dateTimeOffset.ToString(format, provider), format, provider),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            (dateTimeOffset, format, provider) => System.DateTimeOffset.ParseExact(dateTimeOffset.ToString(format, provider), format, provider),
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formats,
             formatProviders);
 
         // redundant collection element
 
         Test(
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider),
                 ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"],
                 provider,
                 style),
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider),
                 ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"],
                 provider,
                 style),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider).AsSpan(),
                 ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"],
                 provider,
                 style),
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider).AsSpan(),
                 ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"],
                 provider,
                 style),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
 
         Test<DateTimeOffset, string, IFormatProvider?, DateTimeStyles, DateTimeOffset, bool>(
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider),
                 ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"],
                 provider,
                 style,
                 out result),
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider),
                 ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"],
                 provider,
                 style,
                 out result),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
         Test<DateTimeOffset, string, IFormatProvider?, DateTimeStyles, DateTimeOffset, bool>(
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider).AsSpan(),
                 ["d", "d", "D", "f", "F", "g", "G", "m", "M", "o", "O", "r", "R", "s", "t", "T", "u", "y", "Y"],
                 provider,
                 style,
                 out result),
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider).AsSpan(),
                 ["d", "D", "f", "F", "g", "G", "m", "o", "r", "s", "t", "T", "u", "y"],
                 provider,
                 style,
                 out result),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
@@ -2141,243 +2170,243 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         // other argument
 
         Test(
-            (dateTimeOffset, format, provider) => DateTimeOffset.ParseExact(dateTimeOffset.ToString(format, provider), format, provider),
-            (dateTimeOffset, format, provider) => DateTimeOffset.ParseExact(dateTimeOffset.ToString(format, provider), format, null),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            (dateTimeOffset, format, provider) => System.DateTimeOffset.ParseExact(dateTimeOffset.ToString(format, provider), format, provider),
+            (dateTimeOffset, format, provider) => System.DateTimeOffset.ParseExact(dateTimeOffset.ToString(format, provider), format, null),
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formatsInvariant,
             formatProviders);
         Test(
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider),
                 format,
                 provider,
                 style),
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(dateTimeOffset.ToString(format, provider), format, null, style),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(dateTimeOffset.ToString(format, provider), format, null, style),
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider),
                 [format],
                 provider,
                 style),
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider),
                 format,
                 provider,
                 style),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider),
                 formatsInvariant,
                 provider,
                 style),
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider),
                 formatsInvariant,
                 null,
                 style),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 provider,
                 style),
-            (dateTimeOffset, format, provider, style) => DateTimeOffset.ParseExact(
+            (dateTimeOffset, format, provider, style) => System.DateTimeOffset.ParseExact(
                 dateTimeOffset.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 null,
                 style),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
 
         Test<DateTimeOffset, string, IFormatProvider?, DateTimeStyles, DateTimeOffset, bool>(
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider),
                 format,
                 provider,
                 style,
                 out result),
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider),
                 format,
                 null,
                 style,
                 out result),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test<DateTimeOffset, string, IFormatProvider?, DateTimeStyles, DateTimeOffset, bool>(
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider),
                 [format],
                 provider,
                 style,
                 out result),
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider),
                 format,
                 provider,
                 style,
                 out result),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formats,
             formatProviders,
             dateTimeStyles);
         Test<DateTimeOffset, string, IFormatProvider?, DateTimeStyles, DateTimeOffset, bool>(
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider),
                 formatsInvariant,
                 provider,
                 style,
                 out result),
-            (dateTime, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTime, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTime.ToString(format, provider),
                 formatsInvariant,
                 null,
                 style,
                 out result),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test<DateTimeOffset, string, IFormatProvider?, DateTimeStyles, DateTimeOffset, bool>(
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 provider,
                 style,
                 out result),
-            (dateTimeOffset, format, provider, style, out result) => DateTimeOffset.TryParseExact(
+            (dateTimeOffset, format, provider, style, out result) => System.DateTimeOffset.TryParseExact(
                 dateTimeOffset.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 null,
                 style,
                 out result),
-            [..values.Except([DateTimeOffset.MinValue, DateTimeOffset.MaxValue])],
+            [..values.Except([System.DateTimeOffset.MinValue, System.DateTimeOffset.MaxValue])],
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet70]
-    public void TestDateOnly()
+    public void DateOnly()
     {
-        var values = new[] { DateOnly.MinValue, DateOnly.MaxValue, new(2025, 7, 15) };
-        var formats = new[] { "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y" };
-        var formatsInvariant = new[] { "o", "O", "r", "R" };
+        dateOnly[] values = [dateOnly.MinValue, dateOnly.MaxValue, new(2025, 7, 15)];
+        string[] formats = ["d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"];
+        string[] formatsInvariant = ["o", "O", "r", "R"];
 
         // redundant argument
 
-        Test(dateOnly => DateOnly.Parse(dateOnly.ToString(), null), dateOnly => DateOnly.Parse(dateOnly.ToString()), values);
-        Test(dateOnly => DateOnly.Parse(dateOnly.ToString().AsSpan(), null), dateOnly => DateOnly.Parse(dateOnly.ToString().AsSpan()), values);
+        Test(dateOnly => dateOnly.Parse(dateOnly.ToString(), null), dateOnly => dateOnly.Parse(dateOnly.ToString()), values);
+        Test(dateOnly => dateOnly.Parse(dateOnly.ToString().AsSpan(), null), dateOnly => dateOnly.Parse(dateOnly.ToString().AsSpan()), values);
 
-        Test<DateOnly, DateOnly, bool>(
-            (dateOnly, out result) => DateOnly.TryParse(dateOnly.ToString(), null, out result),
-            (dateOnly, out result) => DateOnly.TryParse(dateOnly.ToString(), out result),
+        Test<dateOnly, dateOnly, bool>(
+            (dateOnly, out result) => dateOnly.TryParse(dateOnly.ToString(), null, out result),
+            (dateOnly, out result) => dateOnly.TryParse(dateOnly.ToString(), out result),
             values);
-        Test<DateOnly, DateOnly, bool>(
-            (dateOnly, out result) => DateOnly.TryParse(dateOnly.ToString().AsSpan(), null, out result),
-            (dateOnly, out result) => DateOnly.TryParse(dateOnly.ToString().AsSpan(), out result),
+        Test<dateOnly, dateOnly, bool>(
+            (dateOnly, out result) => dateOnly.TryParse(dateOnly.ToString().AsSpan(), null, out result),
+            (dateOnly, out result) => dateOnly.TryParse(dateOnly.ToString().AsSpan(), out result),
             values);
-        Test<DateOnly, IFormatProvider?, DateOnly, bool>(
-            (dateOnly, provider, out result) => DateOnly.TryParse(dateOnly.ToString(), provider, DateTimeStyles.None, out result),
-            (dateOnly, provider, out result) => DateOnly.TryParse(dateOnly.ToString(), provider, out result),
+        Test<dateOnly, IFormatProvider?, dateOnly, bool>(
+            (dateOnly, provider, out result) => dateOnly.TryParse(dateOnly.ToString(), provider, DateTimeStyles.None, out result),
+            (dateOnly, provider, out result) => dateOnly.TryParse(dateOnly.ToString(), provider, out result),
             values,
             formatProviders);
-        Test<DateOnly, IFormatProvider?, DateOnly, bool>(
-            (dateOnly, provider, out result) => DateOnly.TryParse(dateOnly.ToString().AsSpan(), provider, DateTimeStyles.None, out result),
-            (dateOnly, provider, out result) => DateOnly.TryParse(dateOnly.ToString().AsSpan(), provider, out result),
+        Test<dateOnly, IFormatProvider?, dateOnly, bool>(
+            (dateOnly, provider, out result) => dateOnly.TryParse(dateOnly.ToString().AsSpan(), provider, DateTimeStyles.None, out result),
+            (dateOnly, provider, out result) => dateOnly.TryParse(dateOnly.ToString().AsSpan(), provider, out result),
             values,
             formatProviders);
 
         // redundant argument range
 
-        Test(dateOnly => DateOnly.Parse(dateOnly.ToString(), null, DateTimeStyles.None), dateOnly => DateOnly.Parse(dateOnly.ToString()), values);
+        Test(dateOnly => dateOnly.Parse(dateOnly.ToString(), null, DateTimeStyles.None), dateOnly => dateOnly.Parse(dateOnly.ToString()), values);
 
         Test(
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format), format, null, DateTimeStyles.None),
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format), format),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format), format, null, DateTimeStyles.None),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format), format),
             values,
             formats);
         Test(
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format), formats, null),
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format), formats),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format), formats, null),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format), formats),
             values,
             formats);
         Test(
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), formats, null),
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), formats),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), formats, null),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), formats),
             values,
             formats);
 
-        Test<DateOnly, string, DateOnly, bool>(
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), format, null, DateTimeStyles.None, out result),
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), format, out result),
+        Test<dateOnly, string, dateOnly, bool>(
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), format, null, DateTimeStyles.None, out result),
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), format, out result),
             values,
             formats);
-        Test<DateOnly, string, DateOnly, bool>(
-            (dateOnly, format, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, dateOnly, bool>(
+            (dateOnly, format, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format).AsSpan(),
                 format.AsSpan(),
                 null,
                 DateTimeStyles.None,
                 out result),
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format).AsSpan(), format.AsSpan(), out result),
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format).AsSpan(), format.AsSpan(), out result),
             values,
             formats);
-        Test<DateOnly, string, DateOnly, bool>(
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), formats, null, DateTimeStyles.None, out result),
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), format, out result),
+        Test<dateOnly, string, dateOnly, bool>(
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), formats, null, DateTimeStyles.None, out result),
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), format, out result),
             values,
             formats);
-        Test<DateOnly, string, DateOnly, bool>(
-            (dateOnly, format, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, dateOnly, bool>(
+            (dateOnly, format, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format).AsSpan(),
                 formats,
                 null,
                 DateTimeStyles.None,
                 out result),
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format).AsSpan(), formats, out result),
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format).AsSpan(), formats, out result),
             values,
             formats);
 
         // redundant collection element
 
         Test(
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format), ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"]),
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format), ["d", "D", "m", "o", "r", "y"]),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format), ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"]),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format), ["d", "D", "m", "o", "r", "y"]),
             values,
             formats);
         Test(
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"]),
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), ["d", "D", "m", "o", "r", "y"]),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"]),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format).AsSpan(), ["d", "D", "m", "o", "r", "y"]),
             values,
             formats);
         Test(
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(
                 dateOnly.ToString(format, provider),
                 ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
                 provider,
                 style),
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(
                 dateOnly.ToString(format, provider),
                 ["d", "D", "m", "o", "r", "y"],
                 provider,
@@ -2387,12 +2416,12 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
                 ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
                 provider,
                 style),
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
                 ["d", "D", "m", "o", "r", "y"],
                 provider,
@@ -2402,30 +2431,30 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatProviders,
             dateTimeStyles);
 
-        Test<DateOnly, string, DateOnly, bool>(
-            (dateOnly, format, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, dateOnly, bool>(
+            (dateOnly, format, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format),
                 ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
                 out result),
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), ["d", "D", "m", "o", "r", "y"], out result),
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), ["d", "D", "m", "o", "r", "y"], out result),
             values,
             formats);
-        Test<DateOnly, string, DateOnly, bool>(
-            (dateOnly, format, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, dateOnly, bool>(
+            (dateOnly, format, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format).AsSpan(),
                 ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
                 out result),
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format).AsSpan(), ["d", "D", "m", "o", "r", "y"], out result),
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format).AsSpan(), ["d", "D", "m", "o", "r", "y"], out result),
             values,
             formats);
-        Test<DateOnly, string, IFormatProvider?, DateTimeStyles, DateOnly, bool>(
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, IFormatProvider?, DateTimeStyles, dateOnly, bool>(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider),
                 ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
                 provider,
                 style,
                 out result),
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider),
                 ["d", "D", "m", "o", "r", "y"],
                 provider,
@@ -2435,14 +2464,14 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formats,
             formatProviders,
             dateTimeStyles);
-        Test<DateOnly, string, IFormatProvider?, DateTimeStyles, DateOnly, bool>(
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, IFormatProvider?, DateTimeStyles, dateOnly, bool>(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
                 ["d", "d", "D", "m", "M", "o", "O", "r", "R", "y", "Y"],
                 provider,
                 style,
                 out result),
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
                 ["d", "D", "m", "o", "r", "y"],
                 provider,
@@ -2456,63 +2485,63 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         // other argument
 
         Test(
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format), [format]),
-            (dateOnly, format) => DateOnly.ParseExact(dateOnly.ToString(format), format),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format), [format]),
+            (dateOnly, format) => dateOnly.ParseExact(dateOnly.ToString(format), format),
             values,
             formats);
         Test(
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(dateOnly.ToString(format, provider), format, provider, style),
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(dateOnly.ToString(format, provider), format, null, style),
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(dateOnly.ToString(format, provider), format, provider, style),
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(dateOnly.ToString(format, provider), format, null, style),
             values,
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(dateOnly.ToString(format, provider), [format], provider, style),
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(dateOnly.ToString(format, provider), format, provider, style),
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(dateOnly.ToString(format, provider), [format], provider, style),
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(dateOnly.ToString(format, provider), format, provider, style),
             values,
             formats,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(dateOnly.ToString(format, provider), formatsInvariant, provider, style),
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(dateOnly.ToString(format, provider), formatsInvariant, null, style),
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(dateOnly.ToString(format, provider), formatsInvariant, provider, style),
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(dateOnly.ToString(format, provider), formatsInvariant, null, style),
             values,
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test(
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 provider,
                 style),
-            (dateOnly, format, provider, style) => DateOnly.ParseExact(dateOnly.ToString(format, provider).AsSpan(), formatsInvariant, null, style),
+            (dateOnly, format, provider, style) => dateOnly.ParseExact(dateOnly.ToString(format, provider).AsSpan(), formatsInvariant, null, style),
             values,
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
 
-        Test<DateOnly, string, DateOnly, bool>(
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), [format], out result),
-            (dateOnly, format, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), format, out result),
+        Test<dateOnly, string, dateOnly, bool>(
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), [format], out result),
+            (dateOnly, format, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), format, out result),
             values,
             formats);
-        Test<DateOnly, string, IFormatProvider?, DateTimeStyles, DateOnly, bool>(
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), format, provider, style, out result),
-            (dateOnly, format, _, style, out result) => DateOnly.TryParseExact(dateOnly.ToString(format), format, null, style, out result),
+        Test<dateOnly, string, IFormatProvider?, DateTimeStyles, dateOnly, bool>(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), format, provider, style, out result),
+            (dateOnly, format, _, style, out result) => dateOnly.TryParseExact(dateOnly.ToString(format), format, null, style, out result),
             values,
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
-        Test<DateOnly, string, IFormatProvider?, DateTimeStyles, DateOnly, bool>(
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, IFormatProvider?, DateTimeStyles, dateOnly, bool>(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider),
                 [format],
                 provider,
                 style,
                 out result),
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider),
                 format,
                 provider,
@@ -2522,14 +2551,14 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formats,
             formatProviders,
             dateTimeStyles);
-        Test<DateOnly, string, IFormatProvider?, DateTimeStyles, DateOnly, bool>(
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, IFormatProvider?, DateTimeStyles, dateOnly, bool>(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider),
                 formatsInvariant,
                 provider,
                 style,
                 out result),
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider),
                 formatsInvariant,
                 null,
@@ -2539,14 +2568,14 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
-        Test<DateOnly, string, IFormatProvider?, DateTimeStyles, DateOnly, bool>(
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+        Test<dateOnly, string, IFormatProvider?, DateTimeStyles, dateOnly, bool>(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 provider,
                 style,
                 out result),
-            (dateOnly, format, provider, style, out result) => DateOnly.TryParseExact(
+            (dateOnly, format, provider, style, out result) => dateOnly.TryParseExact(
                 dateOnly.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 null,
@@ -2557,17 +2586,17 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatProviders,
             dateTimeStyles);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp120)]
     [TestNet70]
-    public void TestTimeOnly()
+    public void TimeOnly()
     {
-        var values = new[] { TimeOnly.MinValue, TimeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5) };
-        var formats = new[] { "t", "T", "o", "O", "r", "R" };
-        var formatsInvariant = new[] { "o", "O", "r", "R" };
+        timeOnly[] values = [timeOnly.MinValue, timeOnly.MaxValue, new(0, 0, 1), new(0, 1, 0), new(1, 0, 0), new(1, 2, 3, 4, 5)];
+        string[] formats = ["t", "T", "o", "O", "r", "R"];
+        string[] formatsInvariant = ["o", "O", "r", "R"];
 
         // redundant argument
 
@@ -2575,7 +2604,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             (timeOnly, value) => timeOnly.Add(value, out _),
             (timeOnly, value) => timeOnly.Add(value),
             values,
-            [TimeSpan.FromDays(2), TimeSpan.FromDays(-2), TimeSpan.FromHours(23), TimeSpan.FromHours(-23)]);
+            [System.TimeSpan.FromDays(2), System.TimeSpan.FromDays(-2), System.TimeSpan.FromHours(23), System.TimeSpan.FromHours(-23)]);
 
         Test((timeOnly, value) => timeOnly.AddHours(value, out _), (timeOnly, value) => timeOnly.AddHours(value), values, [48, -48, 23, -23]);
 
@@ -2585,110 +2614,110 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             values,
             [48 * 60, -48 * 60, 23 * 60, -23 * 60]);
 
-        Test(timeOnly => TimeOnly.Parse(timeOnly.ToString(), null), timeOnly => TimeOnly.Parse(timeOnly.ToString()), values);
-        Test(timeOnly => TimeOnly.Parse(timeOnly.ToString().AsSpan(), null), timeOnly => TimeOnly.Parse(timeOnly.ToString().AsSpan()), values);
+        Test(timeOnly => timeOnly.Parse(timeOnly.ToString(), null), timeOnly => timeOnly.Parse(timeOnly.ToString()), values);
+        Test(timeOnly => timeOnly.Parse(timeOnly.ToString().AsSpan(), null), timeOnly => timeOnly.Parse(timeOnly.ToString().AsSpan()), values);
 
         Test(
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format), formats, null),
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format), formats),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format), formats, null),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format), formats),
             values,
             formats);
         Test(
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), formats, null),
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), formats),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), formats, null),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), formats),
             values,
             formats);
 
-        Test<TimeOnly, TimeOnly, bool>(
-            (timeOnly, out result) => TimeOnly.TryParse(timeOnly.ToString(), null, out result),
-            (timeOnly, out result) => TimeOnly.TryParse(timeOnly.ToString(), out result),
+        Test<timeOnly, timeOnly, bool>(
+            (timeOnly, out result) => timeOnly.TryParse(timeOnly.ToString(), null, out result),
+            (timeOnly, out result) => timeOnly.TryParse(timeOnly.ToString(), out result),
             values);
-        Test<TimeOnly, TimeOnly, bool>(
-            (timeOnly, out result) => TimeOnly.TryParse(timeOnly.ToString().AsSpan(), null, out result),
-            (timeOnly, out result) => TimeOnly.TryParse(timeOnly.ToString().AsSpan(), out result),
+        Test<timeOnly, timeOnly, bool>(
+            (timeOnly, out result) => timeOnly.TryParse(timeOnly.ToString().AsSpan(), null, out result),
+            (timeOnly, out result) => timeOnly.TryParse(timeOnly.ToString().AsSpan(), out result),
             values);
-        Test<TimeOnly, IFormatProvider?, TimeOnly, bool>(
-            (timeOnly, provider, out result) => TimeOnly.TryParse(timeOnly.ToString(), provider, DateTimeStyles.None, out result),
-            (timeOnly, provider, out result) => TimeOnly.TryParse(timeOnly.ToString(), provider, out result),
+        Test<timeOnly, IFormatProvider?, timeOnly, bool>(
+            (timeOnly, provider, out result) => timeOnly.TryParse(timeOnly.ToString(), provider, DateTimeStyles.None, out result),
+            (timeOnly, provider, out result) => timeOnly.TryParse(timeOnly.ToString(), provider, out result),
             values,
             formatProviders);
-        Test<TimeOnly, IFormatProvider?, TimeOnly, bool>(
-            (timeOnly, provider, out result) => TimeOnly.TryParse(timeOnly.ToString().AsSpan(), provider, DateTimeStyles.None, out result),
-            (timeOnly, provider, out result) => TimeOnly.TryParse(timeOnly.ToString().AsSpan(), provider, out result),
+        Test<timeOnly, IFormatProvider?, timeOnly, bool>(
+            (timeOnly, provider, out result) => timeOnly.TryParse(timeOnly.ToString().AsSpan(), provider, DateTimeStyles.None, out result),
+            (timeOnly, provider, out result) => timeOnly.TryParse(timeOnly.ToString().AsSpan(), provider, out result),
             values,
             formatProviders);
 
         // redundant argument range
 
-        Test(timeOnly => TimeOnly.Parse(timeOnly.ToString(), null, DateTimeStyles.None), timeOnly => TimeOnly.Parse(timeOnly.ToString()), values);
+        Test(timeOnly => timeOnly.Parse(timeOnly.ToString(), null, DateTimeStyles.None), timeOnly => timeOnly.Parse(timeOnly.ToString()), values);
 
         Test(
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format), format, null, DateTimeStyles.None),
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format), format),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format), format, null, DateTimeStyles.None),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format), format),
             values,
             formats);
 
-        Test<TimeOnly, string, TimeOnly, bool>(
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), format, null, DateTimeStyles.None, out result),
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), format, out result),
+        Test<timeOnly, string, timeOnly, bool>(
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), format, null, DateTimeStyles.None, out result),
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), format, out result),
             values,
             formats);
-        Test<TimeOnly, string, TimeOnly, bool>(
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(
+        Test<timeOnly, string, timeOnly, bool>(
+            (timeOnly, format, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format).AsSpan(),
                 format.AsSpan(),
                 null,
                 DateTimeStyles.None,
                 out result),
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format).AsSpan(), format.AsSpan(), out result),
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format).AsSpan(), format.AsSpan(), out result),
             values,
             formats);
-        Test<TimeOnly, string, TimeOnly, bool>(
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), formats, null, DateTimeStyles.None, out result),
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), formats, out result),
+        Test<timeOnly, string, timeOnly, bool>(
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), formats, null, DateTimeStyles.None, out result),
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), formats, out result),
             values,
             formats);
-        Test<TimeOnly, string, TimeOnly, bool>(
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(
+        Test<timeOnly, string, timeOnly, bool>(
+            (timeOnly, format, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format).AsSpan(),
                 formats,
                 null,
                 DateTimeStyles.None,
                 out result),
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format).AsSpan(), formats, out result),
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format).AsSpan(), formats, out result),
             values,
             formats);
 
         // redundant collection element
 
         Test(
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format), ["t", "t", "T", "o", "O", "r", "R"]),
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format), ["t", "T", "o", "r"]),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format), ["t", "t", "T", "o", "O", "r", "R"]),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format), ["t", "T", "o", "r"]),
             values,
             formats);
         Test(
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), ["t", "t", "T", "o", "O", "r", "R"]),
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), ["t", "T", "o", "r"]),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), ["t", "t", "T", "o", "O", "r", "R"]),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format).AsSpan(), ["t", "T", "o", "r"]),
             values,
             formats);
         Test(
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(
                 timeOnly.ToString(format, provider),
                 ["t", "t", "T", "o", "O", "r", "R"],
                 provider,
                 style),
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(timeOnly.ToString(format, provider), ["t", "T", "o", "r"], provider, style),
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(timeOnly.ToString(format, provider), ["t", "T", "o", "r"], provider, style),
             values,
             formats,
             formatProviders,
             dateTimeStyles);
         Test(
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(
                 timeOnly.ToString(format, provider).AsSpan(),
                 ["t", "t", "T", "o", "O", "r", "R"],
                 provider,
                 style),
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(
                 timeOnly.ToString(format, provider).AsSpan(),
                 ["t", "T", "o", "r"],
                 provider,
@@ -2698,27 +2727,27 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatProviders,
             dateTimeStyles);
 
-        Test<TimeOnly, string, TimeOnly, bool>(
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), ["t", "t", "T", "o", "O", "r", "R"], out result),
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), ["t", "T", "o", "r"], out result),
+        Test<timeOnly, string, timeOnly, bool>(
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), ["t", "t", "T", "o", "O", "r", "R"], out result),
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), ["t", "T", "o", "r"], out result),
             values,
             formats);
-        Test<TimeOnly, string, TimeOnly, bool>(
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(
+        Test<timeOnly, string, timeOnly, bool>(
+            (timeOnly, format, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format).AsSpan(),
                 ["t", "t", "T", "o", "O", "r", "R"],
                 out result),
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format).AsSpan(), ["t", "T", "o", "r"], out result),
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format).AsSpan(), ["t", "T", "o", "r"], out result),
             values,
             formats);
-        Test<TimeOnly, string, IFormatProvider?, DateTimeStyles, TimeOnly, bool>(
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+        Test<timeOnly, string, IFormatProvider?, DateTimeStyles, timeOnly, bool>(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider),
                 ["t", "t", "T", "o", "O", "r", "R"],
                 provider,
                 style,
                 out result),
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider),
                 ["t", "T", "o", "r"],
                 provider,
@@ -2728,14 +2757,14 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formats,
             formatProviders,
             dateTimeStyles);
-        Test<TimeOnly, string, IFormatProvider?, DateTimeStyles, TimeOnly, bool>(
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+        Test<timeOnly, string, IFormatProvider?, DateTimeStyles, timeOnly, bool>(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider).AsSpan(),
                 ["t", "t", "T", "o", "O", "r", "R"],
                 provider,
                 style,
                 out result),
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider).AsSpan(),
                 ["t", "T", "o", "r"],
                 provider,
@@ -2749,63 +2778,63 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         // other argument
 
         Test(
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format), [format]),
-            (timeOnly, format) => TimeOnly.ParseExact(timeOnly.ToString(format), format),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format), [format]),
+            (timeOnly, format) => timeOnly.ParseExact(timeOnly.ToString(format), format),
             values,
             formats);
         Test(
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(timeOnly.ToString(format, provider), format, provider, style),
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(timeOnly.ToString(format, provider), format, null, style),
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(timeOnly.ToString(format, provider), format, provider, style),
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(timeOnly.ToString(format, provider), format, null, style),
             values,
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test(
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(timeOnly.ToString(format, provider), [format], provider, style),
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(timeOnly.ToString(format, provider), format, provider, style),
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(timeOnly.ToString(format, provider), [format], provider, style),
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(timeOnly.ToString(format, provider), format, provider, style),
             values,
             formats,
             formatProviders,
             dateTimeStyles);
         Test(
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(timeOnly.ToString(format, provider), formatsInvariant, provider, style),
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(timeOnly.ToString(format, provider), formatsInvariant, null, style),
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(timeOnly.ToString(format, provider), formatsInvariant, provider, style),
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(timeOnly.ToString(format, provider), formatsInvariant, null, style),
             values,
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
         Test(
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(
                 timeOnly.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 provider,
                 style),
-            (timeOnly, format, provider, style) => TimeOnly.ParseExact(timeOnly.ToString(format, provider).AsSpan(), formatsInvariant, null, style),
+            (timeOnly, format, provider, style) => timeOnly.ParseExact(timeOnly.ToString(format, provider).AsSpan(), formatsInvariant, null, style),
             values,
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
 
-        Test<TimeOnly, string, TimeOnly, bool>(
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), [format], out result),
-            (timeOnly, format, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), format, out result),
+        Test<timeOnly, string, timeOnly, bool>(
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), [format], out result),
+            (timeOnly, format, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), format, out result),
             values,
             formats);
-        Test<TimeOnly, string, IFormatProvider?, DateTimeStyles, TimeOnly, bool>(
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), format, provider, style, out result),
-            (timeOnly, format, _, style, out result) => TimeOnly.TryParseExact(timeOnly.ToString(format), format, null, style, out result),
+        Test<timeOnly, string, IFormatProvider?, DateTimeStyles, timeOnly, bool>(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), format, provider, style, out result),
+            (timeOnly, format, _, style, out result) => timeOnly.TryParseExact(timeOnly.ToString(format), format, null, style, out result),
             values,
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
-        Test<TimeOnly, string, IFormatProvider?, DateTimeStyles, TimeOnly, bool>(
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+        Test<timeOnly, string, IFormatProvider?, DateTimeStyles, timeOnly, bool>(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider),
                 [format],
                 provider,
                 style,
                 out result),
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider),
                 format,
                 provider,
@@ -2815,14 +2844,14 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formats,
             formatProviders,
             dateTimeStyles);
-        Test<TimeOnly, string, IFormatProvider?, DateTimeStyles, TimeOnly, bool>(
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+        Test<timeOnly, string, IFormatProvider?, DateTimeStyles, timeOnly, bool>(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider),
                 formatsInvariant,
                 provider,
                 style,
                 out result),
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider),
                 formatsInvariant,
                 null,
@@ -2832,14 +2861,14 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatsInvariant,
             formatProviders,
             dateTimeStyles);
-        Test<TimeOnly, string, IFormatProvider?, DateTimeStyles, TimeOnly, bool>(
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+        Test<timeOnly, string, IFormatProvider?, DateTimeStyles, timeOnly, bool>(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 provider,
                 style,
                 out result),
-            (timeOnly, format, provider, style, out result) => TimeOnly.TryParseExact(
+            (timeOnly, format, provider, style, out result) => timeOnly.TryParseExact(
                 timeOnly.ToString(format, provider).AsSpan(),
                 formatsInvariant,
                 null,
@@ -2850,7 +2879,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             formatProviders,
             dateTimeStyles);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -2862,17 +2891,17 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "RedundantCast")]
     [SuppressMessage("ReSharper", "UseOtherArgument")]
     [SuppressMessage("ReSharper", "UseOtherArgumentRange")]
-    public void TestString()
+    public void String()
     {
-        var values = new[] { null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.." };
-        var comparisons = new[]
-        {
+        string?[] values = [null, "", "abcde", "  abcde  ", "ab;cd;e", "ab;cd:e", "..abcde.."];
+        StringComparison[] comparisons =
+        [
             StringComparison.Ordinal,
             StringComparison.OrdinalIgnoreCase,
             StringComparison.CurrentCulture,
             StringComparison.CurrentCultureIgnoreCase,
-        };
-        var stringSplitOptions = new[] { StringSplitOptions.None, StringSplitOptions.RemoveEmptyEntries, StringSplitOptions.TrimEntries };
+        ];
+        StringSplitOptions[] stringSplitOptions = [StringSplitOptions.None, StringSplitOptions.RemoveEmptyEntries, StringSplitOptions.TrimEntries];
 
         // redundant argument
 
@@ -2958,7 +2987,7 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         Test(text => text?.Replace("c", "x"), text => text?.Replace('c', 'x'), values);
         Test(text => text?.Replace("c", "x", StringComparison.Ordinal), text => text?.Replace('c', 'x'), values);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
@@ -2967,9 +2996,9 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
     [SuppressMessage("ReSharper", "UseOtherArgument")]
     [SuppressMessage("ReSharper", "UseOtherArgumentRange")]
     [SuppressMessage("ReSharper", "RedundantCast")]
-    public void TestStringBuilder()
+    public void StringBuilder()
     {
-        var values = new[] { "", "abcde" };
+        string[] values = ["", "abcde"];
 
         // redundant argument
 
@@ -3010,17 +3039,17 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         TestStringBuilder(builder => builder.Replace("c", "x"), builder => builder.Replace('c', 'x'), values);
         TestStringBuilder(builder => builder.Replace("c", "x", 1, 3), builder => builder.Replace('c', 'x', 1, 3), [..values.Except([""])]);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestMath()
+    public void Math()
     {
-        var decimalValues = new[] { 0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue };
-        var doubleValues = new[]
-        {
+        decimal[] decimalValues = [0, -0.0m, 1, 2, -1, -2, 1.2m, -1.2m, decimal.MaxValue, decimal.MinValue];
+        double[] doubleValues =
+        [
             0,
             -0d,
             1,
@@ -3035,35 +3064,39 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             double.NaN,
             double.PositiveInfinity,
             double.NegativeInfinity,
-        };
+        ];
 
         // redundant argument
 
-        Test(n => Math.Round(n, 0), n => Math.Round(n), decimalValues);
-        Test(n => Math.Round(n, MidpointRounding.ToEven), n => Math.Round(n), decimalValues);
-        Test((n, mode) => Math.Round(n, 0, mode), (n, mode) => Math.Round(n, mode), decimalValues, roundings);
+        Test(n => System.Math.Round(n, 0), n => System.Math.Round(n), decimalValues);
+        Test(n => System.Math.Round(n, MidpointRounding.ToEven), n => System.Math.Round(n), decimalValues);
+        Test((n, mode) => System.Math.Round(n, 0, mode), (n, mode) => System.Math.Round(n, mode), decimalValues, roundings);
         Test(
-            (n, decimals) => Math.Round(n, decimals, MidpointRounding.ToEven),
-            (n, decimals) => Math.Round(n, decimals),
+            (n, decimals) => System.Math.Round(n, decimals, MidpointRounding.ToEven),
+            (n, decimals) => System.Math.Round(n, decimals),
             decimalValues,
             digitsValues);
 
-        Test(n => Math.Round(n, 0), n => Math.Round(n), doubleValues);
-        Test(n => Math.Round(n, MidpointRounding.ToEven), n => Math.Round(n), doubleValues);
-        Test((n, mode) => Math.Round(n, 0, mode), (n, mode) => Math.Round(n, mode), doubleValues, roundings);
-        Test((n, digits) => Math.Round(n, digits, MidpointRounding.ToEven), (n, digits) => Math.Round(n, digits), doubleValues, digitsValues);
+        Test(n => System.Math.Round(n, 0), n => System.Math.Round(n), doubleValues);
+        Test(n => System.Math.Round(n, MidpointRounding.ToEven), n => System.Math.Round(n), doubleValues);
+        Test((n, mode) => System.Math.Round(n, 0, mode), (n, mode) => System.Math.Round(n, mode), doubleValues, roundings);
+        Test(
+            (n, digits) => System.Math.Round(n, digits, MidpointRounding.ToEven),
+            (n, digits) => System.Math.Round(n, digits),
+            doubleValues,
+            digitsValues);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNetCore20]
     [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestMathF()
+    public void MathF()
     {
-        var values = new[]
-        {
+        float[] values =
+        [
             0,
             -0f,
             1,
@@ -3078,22 +3111,22 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
             float.NaN,
             float.PositiveInfinity,
             float.NegativeInfinity,
-        };
+        ];
 
         // redundant argument
 
-        Test(n => MathF.Round(n, 0), n => MathF.Round(n), values);
-        Test(n => MathF.Round(n, MidpointRounding.ToEven), n => MathF.Round(n), values);
-        Test((n, mode) => MathF.Round(n, 0, mode), (n, mode) => MathF.Round(n, mode), values, roundings);
-        Test((n, digits) => MathF.Round(n, digits, MidpointRounding.ToEven), (n, digits) => MathF.Round(n, digits), values, digitsValues);
+        Test(n => mathF.Round(n, 0), n => mathF.Round(n), values);
+        Test(n => mathF.Round(n, MidpointRounding.ToEven), n => mathF.Round(n), values);
+        Test((n, mode) => mathF.Round(n, 0, mode), (n, mode) => mathF.Round(n, mode), values, roundings);
+        Test((n, digits) => mathF.Round(n, digits, MidpointRounding.ToEven), (n, digits) => mathF.Round(n, digits), values, digitsValues);
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 
     [Test]
     [TestNet60]
     [SuppressMessage("ReSharper", "RedundantArgument")]
-    public void TestRandom()
+    public void Random()
     {
         // redundant argument
 
@@ -3103,6 +3136,6 @@ public sealed class ArgumentAnalyzerTests : CSharpAnalyzerTests
         TestRandom(random => random.NextInt64(long.MaxValue), random => random.NextInt64());
         TestRandom(random => random.NextInt64(0, 10), random => random.NextInt64(10));
 
-        DoNamedTest2();
+        DoNamedTest();
     }
 }

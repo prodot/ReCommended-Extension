@@ -14,59 +14,59 @@ public sealed class ReplaceWithCollectionExpressionQuickFixTests : QuickFixTestB
     protected override string RelativeTestDataPath => @"Analyzers\Collection\QuickFixes";
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_Array_Field() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_Array_Field() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_Array_MethodArgument() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_Array_MethodArgument() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_Array_GenericMethodArgument_InferredTypeArguments_1() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_Array_GenericMethodArgument_InferredTypeArguments_1() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_Array_GenericMethodArgument_InferredTypeArguments_2() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_Array_GenericMethodArgument_InferredTypeArguments_2() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_Array_GenericMethodArgument_InferredTypeArguments_3() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_Array_GenericMethodArgument_InferredTypeArguments_3() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_IEnumerable_Field() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_IEnumerable_Field() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Array_Target_IEnumerable_GenericMethodArgument() => DoNamedTest2();
+    public void CollectionInitialization_Array_Target_IEnumerable_GenericMethodArgument() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_List_Target_IEnumerable_Field() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IEnumerable_Field() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_List_Target_IEnumerable_Field_Empty_1() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IEnumerable_Field_Empty_1() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_List_Target_IEnumerable_Field_Empty_2() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IEnumerable_Field_Empty_2() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_List_Target_IEnumerable_Variable_1() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IEnumerable_Variable_1() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_List_Target_IEnumerable_Variable_2() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IEnumerable_Variable_2() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_List_Target_IEnumerable_GenericMethodArgument_InferredTypeArguments() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IEnumerable_GenericMethodArgument_InferredTypeArguments() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_List_Target_IEnumerable_GenericMethodArgument_NoInferredTypeArguments() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IEnumerable_GenericMethodArgument_NoInferredTypeArguments() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_List_Target_IEnumerable_GenericMethodArgument() => DoNamedTest2();
+    public void CollectionInitialization_List_Target_IEnumerable_GenericMethodArgument() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Dictionary_Target_Dictionary_Field() => DoNamedTest2();
+    public void CollectionInitialization_Dictionary_Target_Dictionary_Field() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Dictionary_Target_Dictionary_Property() => DoNamedTest2();
+    public void CollectionInitialization_Dictionary_Target_Dictionary_Property() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Dictionary_Target_Dictionary_MethodArgument() => DoNamedTest2();
+    public void CollectionInitialization_Dictionary_Target_Dictionary_MethodArgument() => DoNamedTest();
 
     [Test]
-    public void TestCollectionInitialization_Dictionary_Target_Dictionary_GenericMethodArgument_InferredTypeArguments() => DoNamedTest2();
+    public void CollectionInitialization_Dictionary_Target_Dictionary_GenericMethodArgument_InferredTypeArguments() => DoNamedTest();
 }

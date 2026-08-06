@@ -12,5 +12,5 @@ public sealed class NotifyPropertyChangedInvocatorFromConstructorAnalyzerTests :
     protected override bool UseHighlighting(IHighlighting highlighting) => highlighting is NotifyPropertyChangedInvocatorFromConstructorWarning;
 
     [Test]
-    public void TestNotifyPropertyChangedInvocatorFromConstructor() => DoNamedTest2();
+    public void NotifyPropertyChangedInvocatorFromConstructor() => DoNamedTest();
 }

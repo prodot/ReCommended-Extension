@@ -14,35 +14,35 @@ public sealed class NumericPositiveExecuteTests : CSharpContextActionExecuteTest
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\NumericPositive";
 
     [Test]
-    public void TestExecuteInt() => DoNamedTest2();
+    public void ExecuteInt() => DoNamedTest();
 
     [Test]
-    public void TestExecuteUInt() => DoNamedTest2();
+    public void ExecuteUInt() => DoNamedTest();
 
     [Test]
-    public void TestExecuteLong() => DoNamedTest2();
+    public void ExecuteLong() => DoNamedTest();
 
     [Test]
-    public void TestExecuteUlong() => DoNamedTest2();
+    public void ExecuteUlong() => DoNamedTest();
 
     [Test]
-    public void TestExecuteByte() => DoNamedTest2();
+    public void ExecuteByte() => DoNamedTest();
 
     [Test]
-    public void TestExecuteSbyte() => DoNamedTest2();
+    public void ExecuteSbyte() => DoNamedTest();
 
     [Test]
-    public void TestExecuteShort() => DoNamedTest2();
+    public void ExecuteShort() => DoNamedTest();
 
     [Test]
-    public void TestExecuteUshort() => DoNamedTest2();
+    public void ExecuteUshort() => DoNamedTest();
 
     [Test]
-    public void TestExecuteDecimal() => DoNamedTest2();
+    public void ExecuteDecimal() => DoNamedTest();
 
     [Test]
-    public void TestExecuteDouble() => DoNamedTest2();
+    public void ExecuteDouble() => DoNamedTest();
 
     [Test]
-    public void TestExecuteFloat() => DoNamedTest2();
+    public void ExecuteFloat() => DoNamedTest();
 }

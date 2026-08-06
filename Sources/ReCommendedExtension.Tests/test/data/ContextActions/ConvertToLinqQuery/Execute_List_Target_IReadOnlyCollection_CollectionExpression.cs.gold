@@ -6,7 +6,7 @@ namespace Test
     {
         public void Method(List<int> source)
         {
-            IReadOnlyCollection<int> result = [..from item in sour{caret}ce select item];
+            IReadOnlyCollection<int> result = [.. from item in sour{caret}ce select item];
         }
     }
 }

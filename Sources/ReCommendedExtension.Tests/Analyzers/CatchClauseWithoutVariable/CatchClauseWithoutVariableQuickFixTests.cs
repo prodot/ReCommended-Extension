@@ -10,8 +10,8 @@ public sealed class CatchClauseWithoutVariableQuickFixTests : QuickFixTestBase<C
     protected override string RelativeTestDataPath => @"Analyzers\CatchClauseWithoutVariable\QuickFixes";
 
     [Test]
-    public void TestCatchClauseWithoutVariable() => DoNamedTest2();
+    public void CatchClauseWithoutVariable() => DoNamedTest();
 
     [Test]
-    public void TestCatchClauseWithoutVariable2() => DoNamedTest2();
+    public void CatchClauseWithoutVariable2() => DoNamedTest();
 }

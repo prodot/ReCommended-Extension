@@ -12,5 +12,5 @@ public sealed class AnnotateWithEditorBrowsableNeverExecuteTests : CSharpContext
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithEditorBrowsableNever";
 
     [Test]
-    public void TestExecute() => DoNamedTest2();
+    public void Execute() => DoNamedTest();
 }

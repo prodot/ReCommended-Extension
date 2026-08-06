@@ -16,28 +16,28 @@ public sealed class AnnotateWithInstantHandleAvailabilityTests : CSharpContextAc
     protected override string RelativeTestDataPath => @"ContextActions\AnnotateWithInstantHandle";
 
     [Test]
-    public void TestAvailabilityCS80() => DoNamedTest2();
+    public void AvailabilityCS80() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
-    public void TestAvailabilityCS90() => DoNamedTest2();
+    public void AvailabilityCS90() => DoNamedTest();
 
     [Test]
     [TestNetCore30(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityAsyncEnumerableCS80() => DoNamedTest2();
+    public void AvailabilityAsyncEnumerableCS80() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet50(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityAsyncEnumerableCS90() => DoNamedTest2();
+    public void AvailabilityAsyncEnumerableCS90() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp90)]
     [TestNet50(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityLambdaCS90() => DoNamedTest2();
+    public void AvailabilityLambdaCS90() => DoNamedTest();
 
     [Test]
     [CSharpLanguageLevel(CSharpLanguageLevel.CSharp100)]
     [TestNet60(ANNOTATIONS_PACKAGE)]
-    public void TestAvailabilityLambdaCS100() => DoNamedTest2();
+    public void AvailabilityLambdaCS100() => DoNamedTest();
 }

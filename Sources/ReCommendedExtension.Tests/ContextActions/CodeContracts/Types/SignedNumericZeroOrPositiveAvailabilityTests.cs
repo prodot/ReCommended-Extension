@@ -14,5 +14,5 @@ public sealed class SignedNumericZeroOrPositiveAvailabilityTests : CSharpContext
     protected override string RelativeTestDataPath => @"ContextActions\CodeContracts\Types\SignedNumericZeroOrPositive";
 
     [Test]
-    public void TestAvailability() => DoNamedTest2();
+    public void Availability() => DoNamedTest();
 }
