@@ -114,7 +114,7 @@ internal abstract record ContractInfo
         TreeNodeCollection<P> destination,
         [InstantHandle] Action<ITypeParameterConstraintsClause> addClause) where P : class, ITypeParameterDeclaration
     {
-        var typeParameterMap = new Dictionary<ITypeParameter, IType>();
+        Dictionary<ITypeParameter, IType> typeParameterMap = [];
         for (var i = 0; i < source.Count; i++)
         {
             var typeParameterDeclaration = destination[i];

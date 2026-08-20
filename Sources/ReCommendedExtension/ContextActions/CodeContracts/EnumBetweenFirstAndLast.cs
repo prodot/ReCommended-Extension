@@ -55,7 +55,7 @@ public sealed class EnumBetweenFirstAndLast(ICSharpContextActionDataProvider pro
             Func<E, E> getNext,
             Func<ConstantValue, E> extractConstantValue)
         {
-            var valueMembers = new Dictionary<E, IField>();
+            Dictionary<E, IField> valueMembers = [];
 
             foreach (var field in members.WithoutObsolete())
             {
