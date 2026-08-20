@@ -58,7 +58,7 @@ public sealed class EnumFlags(ICSharpContextActionDataProvider provider) : AddCo
             string cSharpLiteralSuffix,
             Func<ConstantValue, E> extractConstantValue)
         {
-            var valueMembers = new Dictionary<E, IField>();
+            Dictionary<E, IField> valueMembers = [];
 
             foreach (var member in members.WithoutObsolete())
             {
