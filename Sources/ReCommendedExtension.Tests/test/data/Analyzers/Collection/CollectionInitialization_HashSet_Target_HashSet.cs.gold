@@ -177,8 +177,8 @@ namespace TargetHashSet
         {
             HashSet<A> var14 = |new|(51)() { a, b, c };
             HashSet<A> var16 = new(8) { a, b, c };
-            HashSet<A> var17 = new(seq);
-            HashSet<A> var18 = new(seq) { a, b, c };
+            HashSet<A> var17 = |new|(52)(seq);
+            HashSet<A> var18 = |new|(53)(seq) { a, b, c };
             HashSet<A> var19 = new(comparer);
             HashSet<A> var20 = new(comparer) { a, b, c };
             HashSet<A> var21 = new(8, comparer);
@@ -186,10 +186,10 @@ namespace TargetHashSet
             HashSet<A> var23 = new(seq, comparer);
             HashSet<A> var24 = new(seq, comparer) { a, b, c };
 
-            Consumer(|new|(52)() { a, b, c });
+            Consumer(|new|(54)() { a, b, c });
             Consumer(new(8) { a, b, c });
-            Consumer(new(seq));
-            Consumer(new(seq) { a, b, c });
+            Consumer(|new|(55)(seq));
+            Consumer(|new|(56)(seq) { a, b, c });
             Consumer(new(comparer));
             Consumer(new(comparer) { a, b, c });
             Consumer(new(8, comparer));
@@ -200,8 +200,8 @@ namespace TargetHashSet
 
         void Consumer(HashSet<A> items) { }
 
-        HashSet<A> Property13 => |new|(53)();
-        HashSet<A> Property14 => |new|(54)() { new B(1), new B(2), new B(3) };
+        HashSet<A> Property13 => |new|(57)();
+        HashSet<A> Property14 => |new|(58)() { new B(1), new B(2), new B(3) };
         HashSet<A> Property15 => new(8);
         HashSet<A> Property16 => new(8) { new B(1), new B(2), new B(3) };
     }
@@ -259,6 +259,10 @@ namespace TargetHashSet
 (49): ReSharper Hint: Use collection expression
 (50): ReSharper Suggestion: Use collection expression
 (51): ReSharper Suggestion: Use collection expression
-(52): ReSharper Suggestion: Use collection expression
-(53): ReSharper Hint: Use collection expression
+(52): ReSharper Hint: Use collection expression
+(53): ReSharper Suggestion: Use collection expression
 (54): ReSharper Suggestion: Use collection expression
+(55): ReSharper Hint: Use collection expression
+(56): ReSharper Suggestion: Use collection expression
+(57): ReSharper Hint: Use collection expression
+(58): ReSharper Suggestion: Use collection expression
