@@ -43,13 +43,13 @@ internal static class MissingUIntPtrMethods
         public static nuint Min(nuint x, nuint y) => x <= y ? x : y;
 
         [Pure]
-        public static nuint Parse(string s) => Parse(s, NumberStyles.Integer, provider: null);
+        public static nuint Parse(string s) => nuint.Parse(s, NumberStyles.Integer, provider: null);
 
         [Pure]
-        public static nuint Parse(string s, NumberStyles style) => Parse(s, style, provider: null);
+        public static nuint Parse(string s, NumberStyles style) => nuint.Parse(s, style, provider: null);
 
         [Pure]
-        public static nuint Parse(string s, IFormatProvider? provider) => Parse(s, NumberStyles.Integer, provider);
+        public static nuint Parse(string s, IFormatProvider? provider) => nuint.Parse(s, NumberStyles.Integer, provider);
 
         [Pure]
         public static nuint Parse(string s, NumberStyles style, IFormatProvider? provider)
@@ -63,18 +63,18 @@ internal static class MissingUIntPtrMethods
 
         [Pure]
         public static nuint Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider)
-            => Parse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Integer, provider);
+            => nuint.Parse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Integer, provider);
 
         [Pure]
         public static nuint Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-            => Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
+            => nuint.Parse(Encoding.UTF8.GetString([..utf8Text]), style, provider);
 
         [Pure]
-        public static nuint Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s.ToString(), NumberStyles.Integer, provider);
+        public static nuint Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => nuint.Parse(s.ToString(), NumberStyles.Integer, provider);
 
         [Pure]
         public static nuint Parse(ReadOnlySpan<char> s, NumberStyles style = NumberStyles.Integer, IFormatProvider? provider = null)
-            => Parse(s.ToString(), style, provider);
+            => nuint.Parse(s.ToString(), style, provider);
 
         [Pure]
         public static nuint RotateLeft(nuint value, int rotateAmount)
@@ -106,11 +106,11 @@ internal static class MissingUIntPtrMethods
         public string ToString(string? format, IFormatProvider? provider) => source.ToString();
 
         [Pure]
-        public static bool TryParse([NotNullWhen(true)] string? s, out nuint result) => TryParse(s, NumberStyles.Number, null, out result);
+        public static bool TryParse([NotNullWhen(true)] string? s, out nuint result) => nuint.TryParse(s, NumberStyles.Number, null, out result);
 
         [Pure]
         public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out nuint result)
-            => TryParse(s, NumberStyles.Number, provider, out result);
+            => nuint.TryParse(s, NumberStyles.Number, provider, out result);
 
         [Pure]
         public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out nuint result)
@@ -142,24 +142,25 @@ internal static class MissingUIntPtrMethods
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out nuint result)
-            => TryParse(s.ToString(), style, provider, out result);
+            => nuint.TryParse(s.ToString(), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out nuint result)
-            => TryParse(s.ToString(), NumberStyles.Number, provider, out result);
+            => nuint.TryParse(s.ToString(), NumberStyles.Number, provider, out result);
 
         [Pure]
-        public static bool TryParse(ReadOnlySpan<char> s, out nuint result) => TryParse(s.ToString(), out result);
+        public static bool TryParse(ReadOnlySpan<char> s, out nuint result) => nuint.TryParse(s.ToString(), out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider? provider, out nuint result)
-            => TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
+            => nuint.TryParse(Encoding.UTF8.GetString([..utf8Text]), style, provider, out result);
 
         [Pure]
         public static bool TryParse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider, out nuint result)
-            => TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Number, provider, out result);
+            => nuint.TryParse(Encoding.UTF8.GetString([..utf8Text]), NumberStyles.Number, provider, out result);
 
         [Pure]
-        public static bool TryParse(ReadOnlySpan<byte> utf8Text, out nuint result) => TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
+        public static bool TryParse(ReadOnlySpan<byte> utf8Text, out nuint result)
+            => nuint.TryParse(Encoding.UTF8.GetString([..utf8Text]), out result);
     }
 }
