@@ -57,9 +57,10 @@ namespace ExtensionActivator
     /// </summary>
     [ZoneActivator]
     [ZoneMarker(typeof(IVisualStudioFrontendEnvZone))]
-    public sealed class ReCommendedExtensionActivator(VisualStudioProtocolConnector protocolConnector) : IActivateDynamic<IReCommendedExtensionZone>
+    public sealed class ReCommendedExtensionActivator(VisualStudioOutOfProcessMode visualStudioOutOfProcessMode)
+        : IActivateDynamic<IReCommendedExtensionZone>
     {
-        public bool ActivatorEnabled() => !protocolConnector.OopMode.IsOutOfProcess;
+        public bool ActivatorEnabled() => !visualStudioOutOfProcessMode.IsOutOfProcess;
     }
 
     /// <summary>

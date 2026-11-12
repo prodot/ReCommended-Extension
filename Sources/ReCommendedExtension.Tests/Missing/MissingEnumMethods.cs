@@ -62,10 +62,10 @@ internal static class MissingEnumMethods
 
         [Pure]
         public static bool TryParse(Type enumType, ReadOnlySpan<char> value, bool ignoreCase, [NotNullWhen(true)] out object? result)
-            => TryParse(enumType, value.ToString(), ignoreCase, out result);
+            => Enum.TryParse(enumType, value.ToString(), ignoreCase, out result);
 
         [Pure]
         public static bool TryParse(Type enumType, ReadOnlySpan<char> value, [NotNullWhen(true)] out object? result)
-            => TryParse(enumType, value.ToString(), out result);
+            => Enum.TryParse(enumType, value.ToString(), out result);
     }
 }

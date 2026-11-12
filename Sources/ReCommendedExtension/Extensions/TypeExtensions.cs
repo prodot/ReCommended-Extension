@@ -58,19 +58,13 @@ internal static class TypeExtensions
         public bool IsReadOnlySpanOfByte() => type.IsReadOnlySpan(out var spanTypeArgument) && spanTypeArgument.IsByte();
 
         [Pure]
-        public bool IsInt128() => type.IsClrType(ClrTypeNames.Int128);
+        public bool IsInt128() => type.IsClrType(PredefinedType.INT128_FQN);
 
         [Pure]
-        public bool IsUInt128() => type.IsClrType(ClrTypeNames.UInt128);
+        public bool IsUInt128() => type.IsClrType(PredefinedType.UINT128_FQN);
 
         [Pure]
-        public bool IsHalf() => type.IsClrType(ClrTypeNames.Half);
-
-        [Pure]
-        public bool IsDateOnly() => type.IsClrType(PredefinedType.DATE_ONLY_FQN);
-
-        [Pure]
-        public bool IsTimeOnly() => type.IsClrType(PredefinedType.TIME_ONLY_FQN);
+        public bool IsHalf() => type.IsClrType(PredefinedType.HALF_FQN);
 
         [Pure]
         public bool IsTimeSpanStyles() => type.IsClrType(ClrTypeNames.TimeSpanStyles);

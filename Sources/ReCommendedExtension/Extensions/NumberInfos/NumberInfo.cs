@@ -1045,7 +1045,7 @@ public abstract record NumberInfo
 
     static NumberInfo<Int128> Int128 { get; } = new()
     {
-        ClrTypeName = ClrTypeNames.Int128,
+        ClrTypeName = PredefinedType.INT128_FQN,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
             | FormatSpecifiers.GeneralZeroPrecisionRedundant
@@ -1067,7 +1067,7 @@ public abstract record NumberInfo
 
     static NumberInfo<UInt128> UInt128 { get; } = new()
     {
-        ClrTypeName = ClrTypeNames.UInt128,
+        ClrTypeName = PredefinedType.UINT128_FQN,
         FormatSpecifiers =
             FormatSpecifiers.GeneralCaseInsensitiveWithoutPrecision
             | FormatSpecifiers.GeneralZeroPrecisionRedundant
@@ -1157,7 +1157,7 @@ public abstract record NumberInfo
 
     static NumberInfo<Half> Half { get; } = new()
     {
-        ClrTypeName = ClrTypeNames.Half,
+        ClrTypeName = PredefinedType.HALF_FQN,
         FormatSpecifiers = FormatSpecifiers.GeneralZeroPrecisionRedundant | FormatSpecifiers.RoundtripPrecisionRedundant,
         TryGetConstant = TryGetHalfConstant,
         Cast = expression => expression.Cast("Half").GetText(),

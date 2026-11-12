@@ -39,7 +39,7 @@ internal static class MissingDateTimeMembers
             [ValueRange(0, 59)] int second,
             [ValueRange(0, 999)] int millisecond,
             [ValueRange(0, 999)] int microsecond)
-            => _Ctor(year, month, day, hour, minute, second, millisecond, microsecond, DateTimeKind.Unspecified);
+            => DateTime._Ctor(year, month, day, hour, minute, second, millisecond, microsecond, DateTimeKind.Unspecified);
 
         [Pure]
         public static DateTime _Ctor(

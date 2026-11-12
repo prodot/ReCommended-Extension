@@ -4,23 +4,6 @@
 	<s:Boolean x:Key="/Default/CodeEditing/ContextActionTable/DisabledContextActions/=JetBrains_002EReSharper_002EIntentions_002ECSharp_002EContextActions_002EPullExpressionAction/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeEditing/ContextActionTable/DisabledContextActions/=JetBrains_002EReSharper_002EIntentions_002ECSharp_002EContextActions_002EPushExpressionAction/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/CSharpAdvancedCodeCompletion/InsertLambdaAsTemplate/@EntryValue">False</s:Boolean>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/Display/TextFormattingMode/@EntryValue">Display</s:String>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/Display/TooltipColorSource/@EntryValue">EnvironmentSettings</s:String>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/AttributeConstructorReferenceDisplay/@EntryValue">Both</s:String>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/AttributesFormattingMode/@EntryValue">OnePerLineIfMultiple</s:String>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/BaseTypeDisplayKind/@EntryValue">OnlyIfNotSystemObject</s:String>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/ConstructorReferenceDisplay/@EntryValue">Both</s:String>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/ImplementedInterfacesDisplayKind/@EntryValue">Always</s:String>
-	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/ShowAccessRights/@EntryValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/ShowArgumentsRole/@EntryValue">True</s:Boolean>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/ShowIdentifierAttributes/@EntryValue">Always</s:String>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/ShowParametersAttributes/@EntryValue">Always</s:String>
-	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/ShowReturn/@EntryValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/ShowValue/@EntryValue">True</s:Boolean>
-	<s:String x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/SolutionCodeNamespaceDisplayKind/@EntryValue">Smart</s:String>
-	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/UseClassModifiersInKind/@EntryValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/UseMethodModifiersInKind/@EntryValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/EnhancedTooltipSettingsRoot/IdentifierTooltip/UseStructModifiersInKind/@EntryValue">True</s:Boolean>
 	<s:Int64 x:Key="/Default/CodeEditing/Intellisense/ParameterInfo/MaxCandidates/@EntryValue">12</s:Int64>
 	<s:String x:Key="/Default/CodeEditing/Intellisense/ParameterInfo/ShowAnnotations/@EntryValue">All</s:String>
 	<s:Boolean x:Key="/Default/CodeEditing/Intellisense/ParameterInfo/UseArrowsForSignatureNavigation/@EntryValue">False</s:Boolean>
@@ -36,10 +19,9 @@
 	<s:Boolean x:Key="/Default/CodeEditing/TypingAssist/Xaml/CreateCollapsedTagsInCodeCompletion/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/CqrsGeneralOptions/EnableCqrsValidation/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/CqrsGeneralOptions/WhetherToSearchCqrsByName/@EntryValue">False</s:Boolean>
-	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=6E0849CB_002D4807_002D099C_002DFA9B_002D4ACA3C99F6E7_002Fd_003Atest/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/GeneratedCode/GeneratedCodeRegions/=Contracts/@EntryIndexedValue">Contracts</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">SOLUTION</s:String>
-	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/CapturedPrimaryConstructorParameterIsMutable/IncludeUnconstrainedGenerics/@EntryValue">True</s:Boolean>	
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/CapturedPrimaryConstructorParameterIsMutable/IncludeUnconstrainedGenerics/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/CodeIssueFilter/IssueTypesToHide/=_003CConfigurableSeverity_0020Id_003D_0022ConvertIfStatementToConditionalTernaryExpression_0022_0020_002F_003E/@EntryIndexedValue">DoShow</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/CodeIssueFilter/IssueTypesToHide/=_003CConfigurableSeverity_0020Id_003D_0022ConvertIfStatementToNullCoalescingExpression_0022_0020_002F_003E/@EntryIndexedValue">DoShow</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/CodeIssueFilter/IssueTypesToHide/=_003CConfigurableSeverity_0020Id_003D_0022ConvertIfStatementToReturnStatement_0022_0020_002F_003E/@EntryIndexedValue">DoShow</s:String>
@@ -82,6 +64,7 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/CodeIssueFilter/IssueTypesToHide/=_003CStaticSeverity_0020Severity_003D_00222_0022_0020Title_003D_0022Structural_0020Search_0020Hints_0022_0020GroupId_003D_0022StructuralSearch_0022_0020_002F_003E/@EntryIndexedValue">DoShow</s:String>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ConvertToExtensionBlock/ConvertSingleExtensionMethod/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ConvertToExtensionBlock/NameSensitive/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ConvertToLambdaExpression/ApplyStyleHeuristics/@EntryValue">False</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/DisposeAnalysisMode/@EntryValue">PESSIMISTIC</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=AccessToStaticMemberViaDerivedType/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=ArgumentsStyleAnonymousFunction/@EntryIndexedValue">HINT</s:String>
@@ -179,6 +162,7 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=ConvertToLambdaExpressionWhenPossible/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=ConvertTypeCheckPatternToNullCheck/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=ConvertTypeCheckToNullCheck/@EntryIndexedValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=CSharp14OverloadResolutionWithSpanBreakingChange/@EntryIndexedValue">WARNING</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=DoubleNegationOperator/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=Dp_002EMismatchedDpDefaultValueType/@EntryIndexedValue">WARNING</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=DuplicatedChainedIfBodies/@EntryIndexedValue">SUGGESTION</s:String>
@@ -215,6 +199,7 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=InParameterWithMustDisposeResourceAttribute/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=IntroduceOptionalParameters_002EGlobal/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=InvocationIsSkipped/@EntryIndexedValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=InvokeAsExtensionMemberFromSameClass/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=IteratorMethodResultIsIgnored/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=JoinNullCheckWithUsageWhenPossible/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=LambdaExpressionCanBeMadeStatic/@EntryIndexedValue">HINT</s:String>
@@ -284,6 +269,7 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantBlankLines/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantBoolCompare/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantCallerArgumentExpressionDefaultValue/@EntryIndexedValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantCapacityArgument/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantCaseLabel/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantCast/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantCast_002E0/@EntryIndexedValue">SUGGESTION</s:String>
@@ -394,6 +380,7 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=ShiftExpressionRealShiftCountIsZero/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=SimilarAnonymousTypeNearby/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=SimplifyLinqExpressionUseMinByAndMaxBy/@EntryIndexedValue">WARNING</s:String>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=SpecifyStringComparison/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=StaticFieldInGenericType/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=StaticMemberInGenericType/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=StringEndsWithIsCultureSpecific/@EntryIndexedValue">WARNING</s:String>
@@ -459,13 +446,17 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=Xaml_002ERedundantPropertyTypeQualifier/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=Xaml_002ERedundantResource/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=Xaml_002ERedundantUpdateSourceTriggerAttribute/@EntryIndexedValue">SUGGESTION</s:String>
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/InvocationIsCultureSensitive/CheckStringStartsWithEndsWith/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/MergeIntoLogicalPattern/ForceMergeSequentialOrChecks/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/RedundantBoolCompare/CheckForFalseSeverity/@EntryValue">SUGGESTION</s:String>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ShowMissingConstructHints/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ShowResourcesDisposePoints/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ShowVsLightBulbActionsInSubmenu/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/SpecifyStringComparison/InvariantComparisonSeverity/@EntryValue">WARNING</s:String>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/SuggestBaseTypeForParameter/SuggestBaseTypeForParameter_AvoidMemberVirtualization/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/SuppressVsSquiggles/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/UseCollectionExpression/ConvertEmptyCollection/@EntryValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/UseCollectionExpression/SuggestCollectionExpressionWithSingleSpread/@EntryValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/VsLightBulbDisplayMode/@EntryValue">MergeVsActionsIntoResharperMenu</s:String>
 	<s:String x:Key="/Default/CodeStyle/CodeCleanup/SilentCleanupProfile/@EntryValue">Built-in: Reformat Code</s:String>
 	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpCodeStyle/BRACES_FOR_FOR/@EntryValue">Required</s:String>
@@ -606,6 +597,37 @@
 	<s:Boolean x:Key="/Default/Housekeeping/VsHighlighting/ShowVsLightBulbActionsInSubmenu/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Housekeeping/VsHighlighting/SuppressVsSquiggles/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/Housekeeping/VsHighlighting/VsLightBulbDisplayMode/@EntryValue">MergeVsActionsIntoResharperMenu</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=06E0B5326F2C40588720EE747CA86EE5/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=12037952FB3E3C5483C767E0ED2BC2D1/Field/=size/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=12037952FB3E3C5483C767E0ED2BC2D1/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4162F7CFEE9D0D57818E26901B9038A6/Field/=columns/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4162F7CFEE9D0D57818E26901B9038A6/Field/=info/Order/@EntryValue">2</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4162F7CFEE9D0D57818E26901B9038A6/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=53F6FCAC86FB265F8C07DB79D85C48F1/Field/=condition/Order/@EntryValue">2</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=53F6FCAC86FB265F8C07DB79D85C48F1/Field/=src1/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=53F6FCAC86FB265F8C07DB79D85C48F1/Field/=src2/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6A12208A3767B459875BAE2F16DB1F12/Field/=col/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6A12208A3767B459875BAE2F16DB1F12/Field/=value/Order/@EntryValue">2</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=73DB1A9093BC3555944CB6697D7ADC0E/Field/=size/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=73DB1A9093BC3555944CB6697D7ADC0E/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=75FF192AAB2D7B5F9F2A2885642C9E65/Field/=alias/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=75FF192AAB2D7B5F9F2A2885642C9E65/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=76F670AC8ED1C558AC4117F02DC3C7C5/Field/=col/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=76F670AC8ED1C558AC4117F02DC3C7C5/Field/=null/Order/@EntryValue">3</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=76F670AC8ED1C558AC4117F02DC3C7C5/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=76F670AC8ED1C558AC4117F02DC3C7C5/Field/=type/Order/@EntryValue">2</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8BA1F9C8C49B765C85965EDCC8FE8B44/Field/=col/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8BA1F9C8C49B765C85965EDCC8FE8B44/Field/=null/Order/@EntryValue">2</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8BA1F9C8C49B765C85965EDCC8FE8B44/Field/=type/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AFD61AF46C31125AA2138D9D6109A63F/Field/=alias/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AFD61AF46C31125AA2138D9D6109A63F/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B672577C8CC1EF51B0753529E944F88B/Field/=table/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B672577C8CC1EF51B0753529E944F88B/Field/=view/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B76382EA2248705C87F2C8C21758FA26/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=C2827EE21D7EE85591A2FDCFB158EB07/Field/=size/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=C2827EE21D7EE85591A2FDCFB158EB07/Field/=table/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DDE95C42052B4557924B6E68F16EC8F1/Field/=size/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DDE95C42052B4557924B6E68F16EC8F1/Field/=table/Order/@EntryValue">0</s:Int64>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=CD7E58A093F48F42A3F6E47D1433FBAF/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=CD7E58A093F48F42A3F6E47D1433FBAF/Comment/@EntryValue">Use pattern matching (for null checks)</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=CD7E58A093F48F42A3F6E47D1433FBAF/CustomPatternPlaceholder/=e/@KeyIndexDefined">True</s:Boolean>

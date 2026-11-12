@@ -92,12 +92,6 @@ public static class ClrTypeNames
 
     internal static readonly IClrTypeName EditorBrowsableState = GetClrTypeName<EditorBrowsableState>();
 
-    internal static readonly IClrTypeName Int128 = new ClrTypeName("System.Int128");
-
-    internal static readonly IClrTypeName UInt128 = new ClrTypeName("System.UInt128");
-
-    internal static readonly IClrTypeName Half = new ClrTypeName("System.Half");
-
     internal static readonly IClrTypeName AppendInterpolatedStringHandler =
         new ClrTypeName("System.Text.StringBuilder.AppendInterpolatedStringHandler");
 
