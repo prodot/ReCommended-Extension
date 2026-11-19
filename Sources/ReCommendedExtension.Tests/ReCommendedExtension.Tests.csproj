@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net481</TargetFramework>
+        <ReSharperSdkVersion>2026.3.0.1</ReSharperSdkVersion>
         <DefaultItemExcludes>$(DefaultItemExcludes);test\packages\**</DefaultItemExcludes>
         <NoWarn>$(NoWarn);NU1903</NoWarn> <!-- transitive package has a known high severity vulnerability -->
     </PropertyGroup>
@@ -14,16 +15,16 @@
     <ItemGroup>
         <PackageReference Include="JetBrains.Lifetimes" Version="2026.3.2" />
         <PackageReference Condition="'$(Configuration)'=='DebugReSharper' OR '$(Configuration)'=='ReleaseReSharper'" 
-                          Include="JetBrains.ReSharper.SDK.Tests" Version="2026.3.0">
+                          Include="JetBrains.ReSharper.SDK.Tests" Version="$(ReSharperSdkVersion)">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Condition="'$(Configuration)'=='DebugRider' OR '$(Configuration)'=='ReleaseRider'" 
-                          Include="JetBrains.Rider.SDK.Tests" Version="2026.3.0">
+                          Include="JetBrains.Rider.SDK.Tests" Version="$(ReSharperSdkVersion)">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
         <PackageReference Include="NUnit" Version="3.14.0" />
     </ItemGroup>
 

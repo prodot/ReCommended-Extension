@@ -10,8 +10,10 @@
         <Company>prodot GmbH</Company>
         <Copyright>© 2012-2026 $(Company)</Copyright>
 
-        <FileVersion>8.3.19</FileVersion>
+        <FileVersion>8.3.20</FileVersion>
         <Version>$(FileVersion).0</Version>
+
+        <ReSharperSdkVersion>2026.3.0.1</ReSharperSdkVersion>
 
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
@@ -48,12 +50,12 @@
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
         <PackageReference Condition="'$(Configuration)'=='DebugReSharper' OR '$(Configuration)'=='ReleaseReSharper'"
-                          Include="JetBrains.ReSharper.SDK" Version="2026.3.0">
+                          Include="JetBrains.ReSharper.SDK" Version="$(ReSharperSdkVersion)">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Condition="'$(Configuration)'=='DebugRider' OR '$(Configuration)'=='ReleaseRider'"
-                          Include="JetBrains.Rider.SDK" Version="2026.3.0">
+                          Include="JetBrains.Rider.SDK" Version="$(ReSharperSdkVersion)">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
