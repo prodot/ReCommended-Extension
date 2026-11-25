@@ -13,7 +13,7 @@
         <FileVersion>8.3.20</FileVersion>
         <Version>$(FileVersion).0</Version>
 
-        <ReSharperSdkVersion>2026.3.0.1</ReSharperSdkVersion>
+        <ReSharperSdkVersion>2026.3.0.2</ReSharperSdkVersion>
 
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
